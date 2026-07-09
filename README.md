@@ -6,9 +6,11 @@
 
 ReFS is Microsoft's modern file system, increasingly deployed on Windows Server and Windows 11. Public forensic documentation has been limited to ReFS 3.4 (the excellent work of Paul Prade et al., *"Forensic analysis of the resilient file system (ReFS) version 3.4"*, 2019). This project updates that knowledge to the current version 3.14 and provides:
 
-- **A forensic tool (forefst)** - a forensic file lister and analysis tool for ReFS volumes
+- **A forensic tool ([forefst](forefst.py))** - a forensic file lister and analysis tool for ReFS volumes
 - **[Structural documentation](docs/)** of every on-disk format decoded during the analysis 
-- **An analysis tool (refsanalysis), laboratory procedures and laboratory scripts** for creating controlled ReFS test images and analyzing them 
+- **An analysis tool ([refsanalysis](refsanalysis.py)) and the [lab and verification materials](analysis/)** for creating controlled ReFS test images and analyzing them 
+
+**The structural documentation is also published as a browsable website at [xbpt.gitlab.io/forefst](https://xbpt.gitlab.io/forefst/).**
 
 All versions 3.4–3.14 parse; some enriched fields are version-dependent (best coverage on 3.10+/3.14). Python 3.6+, stdlib only, no install. 
 
