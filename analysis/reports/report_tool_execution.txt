@@ -1,0 +1,135 @@
+========================================================================
+  TOOL EXECUTION LOG
+  Date: 2026-07-05 10:26:56
+  Images: 20
+  Commands executed: 71
+========================================================================
+
+Total execution time: 7.7s
+
+win10refsmini                  boot               exit=0   0.2s  stdout=2033B
+win11refsmini                  boot               exit=0   0.1s  stdout=2318B
+win11refs5g64k                 boot               exit=0   0.1s  stdout=2318B
+win11refs2g_sha256             boot               exit=0   0.1s  stdout=2318B
+win10to11_upgraded             boot               exit=0   0.1s  stdout=2033B
+wininsiderrefs2t               boot               exit=0   0.1s  stdout=2318B
+win1121h2test                  boot               exit=0   0.1s  stdout=2033B
+win1122h2test                  boot               exit=0   0.1s  stdout=2033B
+win1123h2test                  boot               exit=0   0.1s  stdout=2318B
+win11refs8gdedup               boot               exit=0   0.1s  stdout=2318B
+win11refs4gattributes          boot               exit=0   0.1s  stdout=2318B
+win11refslasttests             boot               exit=0   0.1s  stdout=2318B
+win11refstestmftecmd           boot               exit=0   0.1s  stdout=2318B
+win11refs8g_zstd               boot               exit=0   0.1s  stdout=2318B
+win11refs2tintegrity           boot               exit=0   0.1s  stdout=2318B
+win11refs2t64ksha256           boot               exit=0   0.1s  stdout=2318B
+win11refs2g_integrity1         boot               exit=0   0.1s  stdout=2318B
+win11refs2tsnapshots           boot               exit=0   0.1s  stdout=2318B
+win11refs2tspecials            boot               exit=0   0.1s  stdout=2318B
+win11refsbitlocked             boot               exit=1   0.1s  stdout=0B
+  stderr: refsanalysis: error: no ReFS or GPT signature found (use --partition-start for raw partitions)
+
+win10refsmini                  supb               exit=0   0.1s  stdout=1595B
+win11refsmini                  supb               exit=0   0.1s  stdout=1595B
+win11refs5g64k                 supb               exit=0   0.1s  stdout=1599B
+win11refs2g_sha256             supb               exit=0   0.1s  stdout=1599B
+win10to11_upgraded             supb               exit=0   0.1s  stdout=1597B
+win10refsmini                  chkp               exit=0   0.1s  stdout=3435B
+win11refsmini                  chkp               exit=0   0.1s  stdout=3470B
+win11refs5g64k                 chkp               exit=0   0.1s  stdout=3470B
+win11refs2g_sha256             chkp               exit=0   0.1s  stdout=3470B
+win10to11_upgraded             chkp               exit=0   0.1s  stdout=3498B
+wininsiderrefs2t               chkp               exit=0   0.1s  stdout=3533B
+win11refs2t64ksha256           chkp               exit=0   0.1s  stdout=3474B
+win10refsmini                  schema             exit=0   0.1s  stdout=2336B
+win1121h2test                  schema             exit=0   0.1s  stdout=2522B
+win1122h2test                  schema             exit=0   0.1s  stdout=2584B
+win1123h2test                  schema             exit=0   0.1s  stdout=2522B
+win11refsmini                  schema             exit=0   0.1s  stdout=2456B
+wininsiderrefs2t               schema             exit=0   0.1s  stdout=2520B
+win11refs8gdedup               schema             exit=0   0.1s  stdout=2456B
+win11refs4gattributes          schema             exit=0   0.1s  stdout=2456B
+win11refslasttests             schema             exit=0   0.1s  stdout=2456B
+win11refstestmftecmd           schema             exit=0   0.1s  stdout=2456B
+win11refs8g_zstd               schema             exit=0   0.1s  stdout=2456B
+win11refs2tintegrity           schema             exit=0   0.1s  stdout=2456B
+win11refs2g_integrity1         schema             exit=0   0.1s  stdout=2456B
+win11refs2tsnapshots           schema             exit=0   0.1s  stdout=2456B
+win11refs2tspecials            schema             exit=0   0.1s  stdout=2456B
+win1123h2test                  chkp               exit=0   0.1s  stdout=3428B
+win10refsmini                  forefst            exit=0   0.1s  stdout=4676B
+  stderr: [forefst] Opening win10refsmini.raw...
+[forefst] ReFS 3.4 | 17 objects | cluster_size=4096
+[forefst]
+win11refsmini                  forefst            exit=0   0.1s  stdout=7368B
+  stderr: [forefst] Opening win11refsmini.raw...
+[forefst] ReFS 3.14 | 24 objects | cluster_size=4096
+[forefst
+win11refs5g64k                 forefst            exit=0   0.1s  stdout=125882B
+  stderr: [forefst] Opening win11refs5g64k.raw...
+[forefst] ReFS 3.14 | 51 objects | cluster_size=65536
+[foref
+win11refs2g_sha256             forefst            exit=0   0.1s  stdout=125865B
+  stderr: [forefst] Opening win11refs2g_sha256checksums.raw...
+[forefst] ReFS 3.14 | 52 objects | cluster_size
+win10to11_upgraded             forefst            exit=0   0.1s  stdout=123219B
+  stderr: [forefst] Opening win10to11refs4g_afterwin11mount.raw...
+[forefst] ReFS 3.14 | 51 objects | cluster_
+wininsiderrefs2t               forefst            exit=0   0.2s  stdout=496101B
+  stderr: [forefst] Opening wininsiderrefs2t.raw...
+[forefst] ReFS 3.14 | 124 objects | cluster_size=4096
+[for
+win1121h2test                  forefst            exit=0   0.2s  stdout=387541B
+  stderr: [forefst] Opening win1121h2test.raw...
+[forefst] ReFS 3.7 | 121 objects | cluster_size=4096
+[forefst
+win1122h2test                  forefst            exit=0   0.2s  stdout=582838B
+  stderr: [forefst] Opening win1122h2test.raw...
+[forefst] ReFS 3.9 | 148 objects | cluster_size=4096
+[forefst
+win1123h2test                  forefst            exit=0   0.1s  stdout=320606B
+  stderr: [forefst] Opening win1123h2test.raw...
+[forefst] ReFS 3.10 | 100 objects | cluster_size=4096
+[forefs
+win11refs8gdedup               forefst            exit=0   0.2s  stdout=365834B
+  stderr: [forefst] Opening win11refs8gdedup.raw...
+[forefst] ReFS 3.14 | 116 objects | cluster_size=4096
+[for
+win11refs4gattributes          forefst            exit=0   0.2s  stdout=503937B
+  stderr: [forefst] Opening win11refs4gattributes.raw...
+[forefst] ReFS 3.14 | 126 objects | cluster_size=4096
+win11refslasttests             forefst            exit=0   0.1s  stdout=8414B
+  stderr: [forefst] Opening win11refslasttests.raw...
+[forefst] ReFS 3.14 | 23 objects | cluster_size=4096 | U
+win11refstestmftecmd           forefst            exit=0   0.2s  stdout=946995B
+  stderr: [forefst] Opening win11refstestmftecmd.raw...
+[forefst] ReFS 3.14 | 250 objects | cluster_size=4096 
+win11refs8g_zstd               forefst            exit=0   0.2s  stdout=368135B
+  stderr: [forefst] Opening win11refs8gtestcompression_zstdenabled.raw...
+[forefst] ReFS 3.14 | 114 objects | 
+win11refs2tintegrity           forefst            exit=0   0.2s  stdout=381471B
+  stderr: [forefst] Opening win11refs2tintegrity.raw...
+[forefst] ReFS 3.14 | 113 objects | cluster_size=4096
+
+win11refs2t64ksha256           forefst            exit=0   0.2s  stdout=123020B
+  stderr: [forefst] Opening win11refs2t64ksha256checksums.raw...
+[forefst] ReFS 3.14 | 46 objects | cluster_si
+win11refs2g_integrity1         forefst            exit=0   0.1s  stdout=130409B
+  stderr: [forefst] Opening win11refs2g_setintegritystreams1.raw...
+[forefst] ReFS 3.14 | 51 objects | cluster
+win11refs2tsnapshots           forefst            exit=0   0.2s  stdout=126172B
+  stderr: [forefst] Opening win11refs2tsnapshots.raw...
+[forefst] ReFS 3.14 | 47 objects | cluster_size=4096
+[
+win11refs2tspecials            forefst            exit=0   0.2s  stdout=897143B
+  stderr: [forefst] Opening win11refs2tspecials.raw...
+[forefst] ReFS 3.14 | 230 objects | cluster_size=4096
+[
+win11refsbitlocked             forefst            exit=1   0.1s  stdout=0B
+  stderr: [forefst] Opening win11refsbitlocked.raw...
+forefst: error: no GPT partition table found (use --part
+win11refs2tsnapshots           forefst      ('',) exit=2   0.1s  stdout=0B
+  stderr: usage: forefst [-h] [--version] [-o OUTPUT] [--body] [--full-path-column]
+               [--json] [-
+win11refs8gdedup               chkp               exit=0   0.1s  stdout=3540B
+win11refsmini                  containers         exit=0   0.1s  stdout=1339B

@@ -1,0 +1,88 @@
+# forefst wininsiderrefs8gtest2.raw summary -q
+# ----------------------------------------------------------------------------
+==============================================================================
+ReFS Volume Fast Extended Summary
+==============================================================================
+  Image:              wininsiderrefs8gtest2.raw
+  Image size:         8.0 GB
+  ReFS version:       3.14
+  Volume GUID:        40c09f25-7f3f-4813-88be-e28be75c7526
+  Volume serial:      0x54709fdd709fc3e0
+  Volume label:       winsiderrefs8gtest2
+  Volume size:        7.9 GB
+  Cluster size:       0x10000 (64.0 KB)
+  Container size:     0x4000000 (64.0 MB)
+  Checksum:           SHA-256
+
+------------------------------------------------------------------------------
+Hashes
+------------------------------------------------------------------------------
+  VBR SHA-256:        ae4fee4b0bf7d973a0ceffc9d5fbf7b0a69d38740b560a44cc6084c64b1fae72
+  SUPB SHA-256:       4e456243e25316f916e54b8d6342afa28bd31b1431aba62f99ab647691d6cd22
+  CHKP SHA-256:       86401c7abebf1062f11eaaa4bfb4d4d0ab325528234b74df4ee6ef45e0822bd1
+
+------------------------------------------------------------------------------
+Checkpoint
+------------------------------------------------------------------------------
+  Virtual clock:      161
+  Flags:              0x2682
+                        · 0x002 = always-set
+                        · 0x080 = native-Win11-format (v3.10+)
+                        · 0x200 = indirect-root-list
+                        · 0x400 = metadata-checksum (CRC64/SHA-256)
+                        · 0x2000 = insider-build flag (29574+)
+  Objects:            132
+  Containers mapped:  127
+
+------------------------------------------------------------------------------
+Global Root Tables
+------------------------------------------------------------------------------
+  Object ID Table                 132 rows
+  Medium Allocator                 24 rows
+  Container Allocator               2 rows
+  Schema Table                     30 rows
+  Parent-Child Table              119 rows
+  Object ID Table dup             132 rows
+  Block RefCount                    4 rows
+  Container Table                 127 rows
+  Container Table dup             127 rows
+  Schema Table dup                 30 rows
+  Container Index                   0 rows
+  Integrity State                   1 rows
+  Small Allocator                   2 rows
+
+------------------------------------------------------------------------------
+Volume Detail
+------------------------------------------------------------------------------
+  Volume version:     3.14
+  Driver version:     3.15
+  Volume created:     2026-05-19 19:56:46.8989928
+  Volume modified:    2026-05-19 19:56:47.3896445
+  Volume state:       ⚠ APPEARS UPGRADED (formatted v3.14, now running v3.14)
+                        • format-time v3.14 ≠ driver v3.15 ($VOLUME_INFORMATION stamp)
+  Security descs:     7
+  Reparse index:      173 entries
+  Trash table:        0 entries
+  Containers used:    126 / 127 (99.2%)
+  Free space (est):   64.0 MB
+  FS Metadata rows:   1
+  USN Journal:        Inactive
+
+For complete file statistics, use the `summary` subcommand (full directory walk)
+
+------------------------------------------------------------------------------
+File System Content (from directory walk)
+------------------------------------------------------------------------------
+  Directories:        118
+  Files:              776 (126 resident)
+  Total file size:    822.5 MB
+  Oldest timestamp:   2021-05-18 07:16:04.9990009
+  Newest timestamp:   2026-05-19 20:00:58.3654380
+  Encrypted files:    0
+  Integrity files:    0
+  Compressed files:   0
+  Hard links (extra): 144
+  Snapshots:          0
+  ADS entries:        35
+
+Tip: the `fastsummary` subcommand gives quick volume metadata without a directory walk

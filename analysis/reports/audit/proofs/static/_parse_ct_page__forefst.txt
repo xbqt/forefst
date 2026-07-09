@@ -1,0 +1,31 @@
+def _parse_ct_page(page, f, ps, cs):
+ if page[:4] != b"MSB+": return {}
+ thoff = 0x50 + le32(page, 0x50)
+ if thoff + 40 > len(page): return {}
+ tbl = struct.unpack_from("<10I", page, thoff)
+ is_inner = bool(tbl[3] & 0x100)
+ astart, aend = tbl[4], tbl[8]
+ if astart >= aend: return {}
+ result = {}
+ for i in range((aend - astart) // 4):
+ aa = thoff + astart + i * 4
+ if aa + 4 > len(page): break
+ ro = thoff + le16(page, aa)
+ if ro + 16 > len(page): break
+ rh = struct.unpack_from("<I6H", page, ro)
+ _, ko, kl, _, vo, vl, _ = rh
+ kd = page[ro+ko:ro+ko+kl] if kl > 0 else b""
+ vd = page[ro+vo:ro+vo+vl] if vl > 0 else b""
+ key = le64(kd, 0) if len(kd) >= 8 else 0
+ if is_inner:
+ if len(vd) >= 32:
+ cls = [le64(vd, j*8) for j in range(4)]
+ valid = [x for x in cls if x not in (0, 0xFFFFFFFFFFFFFFFF)]
+ if valid:
+ cd = b""
+ for l in valid: f.seek(ps + l * cs); cd += f.read(cs)
+ result.update(_parse_ct_page(cd, f, ps, cs))
+ else:
+ if len(vd) >= 0x98:
+ result[key] = (le64(vd, len(vd) - 16), le32(vd, 0x18))
+ return result

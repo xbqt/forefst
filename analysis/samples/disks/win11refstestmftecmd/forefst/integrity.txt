@@ -1,0 +1,41 @@
+# forefst win11refstestmftecmd.raw integrity
+# ----------------------------------------------------------------------------
+==============================================================================
+ReFS Metadata Integrity Report
+==============================================================================
+  Image:           analysis/rawdisk/disks/step5/win11refstestmftecmd.raw
+  ReFS version:    3.14
+  Cluster size:    0x1000
+  Checksum type:   CRC64
+  Checkpoint VC:   617
+  Volume sig:      0xaa49cc5f
+  Container map:   63 entries
+
+------------------------------------------------------------------------------
+Page Statistics
+------------------------------------------------------------------------------
+  Pages checked:           378
+  Valid signatures:        378
+  Invalid signatures:      0
+  Volume sig matches:      378
+  Volume sig mismatches:   0
+  VC within bounds:        378
+  VC exceeds checkpoint:   0
+  Self-address valid:      378
+  Self-address invalid:    0
+  B+-tree inner nodes OK:  46
+  B+-tree leaf nodes OK:   332
+  B+-tree struct errors:   0
+
+------------------------------------------------------------------------------
+Redundancy / Backup Copies
+------------------------------------------------------------------------------
+  Boot sector (primary):   LBA 0 — OK
+  Boot sector (backup):    LBA 8257535 — present, identical to primary, checksum OK
+  Checkpoint [backup ]:   LCN 0x2874 — valid, vclock=616
+  Checkpoint [PRIMARY]:   LCN 0x1e3f4 — valid, vclock=617
+  Superblock copies:       3 (LCN 0x1e, 0xfbffd, 0xfbffe)
+
+------------------------------------------------------------------------------
+Verdict: PASS — all metadata pages structurally valid (run --checksums / --fullchecksums to verify CRC64/SHA-256)
+------------------------------------------------------------------------------

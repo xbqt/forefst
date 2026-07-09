@@ -1,0 +1,65 @@
+
+ReFS Superblock (SUPB)
+========================================================================
+Image:            win11refs2tsnapshots.raw
+SUPB SHA-256:     85cb53e7d4b181d5b5af37061bb9f8413167b968f11ef59287f075433f80ad20
+SUPB offset:      0x101e000
+Cluster size:     0x1000
+
+Interpreted values
+------------------------------------------------------------------------
+Field                     Value                                       
+------------------------  --------------------------------------------
+signature                 SUPB                                        
+self_block                0x1e                                        
+expected_self_block       0x1e                                        
+self_block_matches        True                                        
+volume_guid               c2b2e9e9-007b-49bf-92ec-5690bfd86923        
+guid_xor                  0x3832ddbf                                  
+superblock_version        1                                           
+checkpoint_count          2                                           
+latest_checkpoint         checkpoint #1 @ 0x51fb04000 (vc=265, ac=262)
+self_desc_length_profile  0x30 (v3.14)                                
+
+Field                   Offset  Raw bytes                                            Interpreted                         
+----------------------  ------  ---------------------------------------------------  ------------------------------------
+Signature               0x00    53 55 50 42                                          SUPB                                
+Page header             0x00    53 55 50 42 02 00 00 00 00 00 00 00 bf dd 32 38 ...                                      
+Volume GUID             0x50    e9 e9 b2 c2 7b 00 bf 49 92 ec 56 90 bf d8 69 23      c2b2e9e9-007b-49bf-92ec-5690bfd86923
+GUID XOR (vol sig)         -                                                         0x3832DDBF                          
+Superblock version      0x68    01 00 00 00 00 00 00 00                              1                                   
+Checkpoint refs offset  0x70    c0 00 00 00                                          SUPB+0xC0                           
+Checkpoint refs count   0x74    02 00 00 00                                          2                                   
+Self-desc offset        0x78    d0 00 00 00                                          SUPB+0xD0                           
+Self-desc length        0x7C    30 00 00 00                                          0x30 (48)                           
+
+Checkpoint references
+------------------------------------------------------------------------
+  #1: cluster 0x51EB04 -> 0x51FB04000
+       sig=CHKP vc=265 ac=262 ver=3.14 <- active
+  #2: cluster 0x3D702AC -> 0x3D712AC000
+       sig=CHKP vc=264 ac=261 ver=3.14
+
+Verbose calculations
+------------------------------------------------------------------------
+  SUPB offset     = 0x101e000
+  partition start = 0x1000000
+  relative offset = 0x1e000
+  expected self   = 0x1e
+  stored self     = 0x1e
+
+  GUID raw        = e9 e9 b2 c2 7b 00 bf 49 92 ec 56 90 bf d8 69 23
+  GUID text       = c2b2e9e9-007b-49bf-92ec-5690bfd86923
+  GUID XOR        = 0x3832ddbf
+
+  Checkpoint #1: block=0x51eb04 -> 0x51fb04000
+    sig=b'CHKP' vc=265 ac=262
+    self_block=0x51eb04 ver=3.14
+
+  Checkpoint #2: block=0x3d702ac -> 0x3d712ac000
+    sig=b'CHKP' vc=264 ac=261
+    self_block=0x3d702ac ver=3.14
+
+  Self-descriptor: offset=0xd0 len=0x30
+  Raw: 1e 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 01 08 04 00 00 00 f0 e1 fa 1c 00 00 00 00
+

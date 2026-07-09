@@ -1,0 +1,20 @@
+
+// === MsSetMinimumNewObjectId @ 1400b0814 ===
+
+/* WARNING: Function: __security_check_cookie replaced with injection: security_check_cookie */
+
+undefined4 MsSetMinimumNewObjectId(longlong param_1)
+
+{
+ longlong lVar1;
+ ulonglong uVar2;
+ undefined1 auStack_78 [32];
+ int local_58;
+ undefined8 local_48;
+ undefined8 uStack_40;
+ ulonglong local_38 [6];
+ 
+ local_38[2] = __security_cookie ^ (ulonglong)auStack_78;
+ local_48 = 0;
+ uStack_40 = 0x700;
+ local_38[0] = 0;

@@ -1,0 +1,20 @@
+<svg class="diagram" viewBox="0 0 720 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Tree namespace versus directed-graph namespace">
+<defs><marker id="ng-a" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path class="dg-arrowhead" d="M0,0 L6,3 L0,6 Z"/></marker></defs>
+<text class="dg-title" x="30" y="26" font-size="13" font-weight="700">Tree (one parent per file)</text>
+<circle class="dg-box-accent" cx="170" cy="56" r="18"/><text class="dg-accent" x="170" y="61" text-anchor="middle" font-size="11">/</text>
+<circle class="dg-box" cx="100" cy="130" r="16"/><text class="dg-muted" x="100" y="135" text-anchor="middle" font-size="10">A</text>
+<circle class="dg-box" cx="240" cy="130" r="16"/><text class="dg-muted" x="240" y="135" text-anchor="middle" font-size="10">B</text>
+<circle class="dg-box" cx="70"  cy="196" r="14"/><text class="dg-muted" x="70"  y="200" text-anchor="middle" font-size="9">f</text>
+<circle class="dg-box" cx="130" cy="196" r="14"/><text class="dg-muted" x="130" y="200" text-anchor="middle" font-size="9">g</text>
+<circle class="dg-box" cx="240" cy="196" r="14"/><text class="dg-muted" x="240" y="200" text-anchor="middle" font-size="9">h</text>
+<line class="dg-line" x1="158" y1="70" x2="110" y2="116" marker-end="url(#ng-a)"/><line class="dg-line" x1="182" y1="70" x2="230" y2="116" marker-end="url(#ng-a)"/>
+<line class="dg-line" x1="92" y1="144" x2="74" y2="184" marker-end="url(#ng-a)"/><line class="dg-line" x1="108" y1="144" x2="126" y2="184" marker-end="url(#ng-a)"/><line class="dg-line" x1="240" y1="146" x2="240" y2="184" marker-end="url(#ng-a)"/>
+<text class="dg-title" x="430" y="26" font-size="13" font-weight="700">Directed graph (hard links)</text>
+<circle class="dg-box-accent" cx="560" cy="56" r="18"/><text class="dg-accent" x="560" y="61" text-anchor="middle" font-size="11">/</text>
+<circle class="dg-box" cx="490" cy="130" r="16"/><text class="dg-muted" x="490" y="135" text-anchor="middle" font-size="10">A</text>
+<circle class="dg-box" cx="630" cy="130" r="16"/><text class="dg-muted" x="630" y="135" text-anchor="middle" font-size="10">B</text>
+<circle class="dg-box-accent" cx="560" cy="196" r="15"/><text class="dg-accent" x="560" y="200" text-anchor="middle" font-size="9">f</text>
+<line class="dg-line" x1="548" y1="70" x2="500" y2="116" marker-end="url(#ng-a)"/><line class="dg-line" x1="572" y1="70" x2="620" y2="116" marker-end="url(#ng-a)"/>
+<line class="dg-line" x1="498" y1="144" x2="548" y2="184" marker-end="url(#ng-a)"/><line class="dg-line" x1="622" y1="144" x2="572" y2="184" marker-end="url(#ng-a)"/>
+<text class="dg-muted" x="560" y="224" text-anchor="middle" font-size="10">one file, two names</text>
+</svg>

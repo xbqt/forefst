@@ -1,0 +1,64 @@
+
+// === RefsFsdSetInformation @ 140068690 ===
+
+/* WARNING: Function: __security_check_cookie replaced with injection: security_check_cookie */
+/* WARNING: Removing unreachable block (ram,0x0001400689bf) */
+/* long __cdecl RefsFsdSetInformation(struct _VOLUME_DEVICE_OBJECT * __ptr64,struct _IRP * __ptr64)
+ */
+
+long __cdecl RefsFsdSetInformation(_VOLUME_DEVICE_OBJECT *param_1,_IRP *param_2)
+
+{
+ byte bVar1;
+ int iVar2;
+ long lVar3;
+ undefined8 *puVar4;
+ uint uVar5;
+ _KEVENT *p_Var6;
+ _IRP_CONTEXT *p_Var7;
+ _IRP_CONTEXT *p_Var8;
+ _IRP_CONTEXT *p_Var9;
+ bool bVar10;
+ bool bVar11;
+ undefined1 auStack_c8 [32];
+ _IRP_CONTEXT *local_a8;
+ uint local_a0;
+ long local_9c;
+ int local_98;
+ undefined8 local_90;
+ undefined8 *puStack_88;
+ undefined8 local_80;
+ _IRP *local_78;
+ undefined8 *local_70;
+ undefined8 local_68;
+ undefined8 local_60;
+ undefined8 uStack_58;
+ undefined8 local_50;
+ undefined8 local_48;
+ undefined8 uStack_40;
+ ulonglong local_38;
+ 
+ local_38 = __security_cookie ^ (ulonglong)auStack_c8;
+ local_90 = 0;
+ puStack_88 = (undefined8 *)0x0;
+ local_80 = 0;
+ p_Var7 = (_IRP_CONTEXT *)0x0;
+ local_a8 = (_IRP_CONTEXT *)0x0;
+ local_a0 = 0;
+ local_60 = 0;
+ uStack_58 = 0;
+ local_50 = 0;
+ local_48 = 0;
+ uStack_40 = 0;
+ local_68 = 0;
+ local_78 = param_2;
+ KeInitializeEvent(&local_60,0,0);
+ KeEnterCriticalRegion();
+ local_98 = IoPropagateActivityIdToThread(param_2,&local_48,&local_68);
+ bVar10 = true;
+ bVar11 = false;
+ puVar4 = (undefined8 *)IoGetTopLevelIrp();
+ p_Var6 = (_KEVENT *)0x18;
+ iVar2 = IoWithinStackLimits(puVar4);
+ if ((iVar2 != 0) && (((ulonglong)puVar4 & 3) == 0)) {
+ bVar11 = *(int *)((longlong)puVar4 + 4) == 0x5346abba;

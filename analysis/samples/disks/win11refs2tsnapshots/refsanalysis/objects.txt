@@ -1,0 +1,54 @@
+
+ReFS Object ID Table
+
+Total objects: 47
+
+  OID      Name                             Root LCN
+  --------------------------------------------------
+  0x7      Upcase Table                      0x10050
+  0x8      Upcase Table (dup)                0x1004c
+  0x9      Logfile Information Table         0x100a8
+  0xa      Logfile Information (dup)         0x100a4
+  0xd      Trash Table                       0x100ac
+  0x30     Session Activity Table            0x11604
+  0x500    Volume Information                0x10e00
+  0x501    Volume Information (dup)          0x11200
+  0x520    FS Metadata                       0x12a00
+  0x530    Security Descriptor Stream        0x10600
+  0x540    Reparse Point Index               0x11010
+  0x541    Reparse Point Index (dup)         0x13a28
+  0x600    Root Directory                    0x13800
+  0x701    Directory/File (0x701)            0x13e00
+  0x702    Directory/File (0x702)            0x11608
+  0x703    Directory/File (0x703)            0x12a2c
+  0x704    Directory/File (0x704)            0x11e14
+  0x706    Directory/File (0x706)            0x12010
+  0x707    Directory/File (0x707)            0x11a18
+  0x708    Directory/File (0x708)            0x10a0c
+  0x70b    Directory/File (0x70b)            0x10c14
+  0x70d    Directory/File (0x70d)            0x11c24
+  0x70f    Directory/File (0x70f)            0x11014
+  0x710    Directory/File (0x710)            0x13618
+  0x711    Directory/File (0x711)            0x11610
+  0x712    Directory/File (0x712)            0x12e14
+  0x715    Directory/File (0x715)            0x10420
+  0x717    Directory/File (0x717)            0x12a1c
+  0x718    Directory/File (0x718)            0x11018
+  0x719    Directory/File (0x719)            0x13408
+  0x71a    Directory/File (0x71a)            0x11a20
+  0x721    Directory/File (0x721)            0x12810
+  0x722    Directory/File (0x722)            0x12a24
+  0x723    Directory/File (0x723)            0x10c10
+  0x724    Directory/File (0x724)            0x12e0c
+  0x725    Directory/File (0x725)            0x13c14
+  0x72a    Directory/File (0x72a)            0x12228
+  0x72b    Directory/File (0x72b)            0x12c1c
+  0x72f    Directory/File (0x72f)            0x1381c
+  0x730    Directory/File (0x730)            0x1160c
+  0x731    Directory/File (0x731)            0x10210
+  0x734    Directory/File (0x734)            0x12a20
+  0x737    Directory/File (0x737)            0x13820
+  0x739    Directory/File (0x739)            0x11c1c
+  0x73a    Directory/File (0x73a)            0x12a30
+  0x73b    Directory/File (0x73b)            0x10820
+  0x73c    Directory/File (0x73c)            0x12400

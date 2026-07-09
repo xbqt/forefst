@@ -1,0 +1,20 @@
+{{ define "main" }}
+<article>
+  <div class="hero">
+    <h1>{{ site.Title }}</h1>
+    <p class="tagline">{{ site.Params.tagline }}</p>
+  </div>
+  {{ .Content }}
+  <h2>Browse the reference</h2>
+  <div class="card-grid">
+    {{ range site.Home.Sections.ByWeight }}
+      <a class="card" href="{{ .RelPermalink }}">
+        <div class="c-title">{{ .Title }}</div>
+        <div class="c-desc">{{ .Summary | plainify | truncate 130 }}</div>
+      </a>
+    {{ end }}
+    <a class="card" href="{{ "/glossary/" | relURL }}"><div class="c-title">Glossary</div><div class="c-desc">Terminology used across the reference.</div></a>
+    <a class="card" href="{{ "/about/" | relURL }}"><div class="c-title">About</div><div class="c-desc">Context, the thesis, how this was built and verified.</div></a>
+  </div>
+</article>
+{{ end }}

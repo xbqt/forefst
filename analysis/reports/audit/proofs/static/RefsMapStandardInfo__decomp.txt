@@ -1,0 +1,37 @@
+
+// === RefsMapStandardInfo @ 140073970 ===
+
+/* struct _REFS_STANDARD_INFORMATION * __ptr64 __cdecl RefsMapStandardInfo(struct _IRP_CONTEXT *
+ __ptr64,struct _FCB * __ptr64,struct _SmsPinContext * __ptr64,unsigned char,unsigned long *
+ __ptr64) */
+
+_REFS_STANDARD_INFORMATION * __cdecl
+RefsMapStandardInfo(_IRP_CONTEXT *param_1,_FCB *param_2,_SmsPinContext *param_3,uchar param_4,
+ ulong *param_5)
+
+{
+ long lVar1;
+ int iVar2;
+ _REFS_STANDARD_INFORMATION *p_Var3;
+ ulong uVar4;
+ _SmsPinContext *p_Var5;
+ uint local_res20 [2];
+ 
+ param_5 = (ulong *)0x0;
+ local_res20[0] = 0;
+ p_Var5 = param_3;
+ lVar1 = RefsBindMinstoreTransactionNoRaise(param_1);
+ uVar4 = (ulong)p_Var5;
+ if (lVar1 < 0) {
+ if ((((undefined **)WPP_GLOBAL_Control != &WPP_GLOBAL_Control) &&
+ ((*(uint *)(WPP_GLOBAL_Control + 0x2c) & 0x100) != 0)) &&
+ (3 < (byte)WPP_GLOBAL_Control[0x29])) {
+ uVar4 = 0x401ce330;
+ WPP_SF_D(*(undefined8 *)(WPP_GLOBAL_Control + 0x18),0x10,
+ &WPP_b03ee32cc23f38d8621876c651aaccc5_Traceguids,lVar1);
+ }
+ if (RefsStatusDebugEnabled != '\0') {
+ uVar4 = 0x401d3d10;
+ RefsStatusDebug(lVar1,param_1,"ProtogonOjectTable.c",0xe3);
+ }
+ /* WARNING: Subroutine does not return */

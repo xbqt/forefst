@@ -1,0 +1,37 @@
+==============================================================================
+ReFS MLog Analysis — win11refs2tsnapshots.raw
+ReFS v3.14 | cluster_size=0x1000 | objects=47
+==============================================================================
+
+==============================================================================
+MLog Control Area
+==============================================================================
+  Control PLCN:      0x31
+  Signature:         MLog
+  Format magic:      0x3832ddbf (per-volume const, NOT a CRC — E42/#343; differs after a reformat)
+  Version:           1
+  Sector size:       0x1000
+  UUID:              9c6d6a27-cb84-45b7-9f7a-d56532ce5aea
+  Sequence:          138
+  Write counter:     2
+  Flags:             0x1
+  Total entries:     0
+  Generation:        2275
+  Data area:         0x8000 - 0x48000 (262144 clusters)
+  LSN oldest:        0x8e3.1
+  Dispatch table:    v3.14 (44 opcodes)
+
+==============================================================================
+Data Area Summary
+==============================================================================
+  Total pages:       262144
+  zero                 259870  ( 99.1%)
+  MLog                   2274  (  0.9%)
+
+==============================================================================
+Redo Records
+==============================================================================
+  Total records:      2808
+  Transaction starts: 1344
+  Transaction commits: 0
+

@@ -1,0 +1,46 @@
+﻿GENERATE-FSACTIVITY v3.18 - REPLAY REPORT
+===========================================
+Replay input : C:\tools\logmftecmdtest\fsactivity_20260523_093947_replay.json
+OriginalRoot : m:\testspecials
+ReplayRoot   : n:\testspecials
+Actions      : 1000
+Duration     : 00:00:07.9706235
+CSV log      : C:\tools\logmftecmdtest\fsactivity_20260523_094415_replay_log.csv
+
+Action statistics:
+  APPEND_FILE|OK                          17
+  APPEND_FILE|SKIP                         8
+  COPY_FILE|OK                            25
+  COPY_FILE|SKIP                           8
+  CREATE_ADS|OK                          150
+  CREATE_ADS|SKIP                         38
+  CREATE_DIR|OK                          100
+  CREATE_FILE|OK                         144
+  CREATE_HARDLINK|OK                     161
+  CREATE_SYMLINK_FILE|OK                 178
+  DELETE_DIR|OK                           15
+  DELETE_FILE|OK                          28
+  MOVE_DIR|OK                             26
+  MOVE_FILE|OK                            26
+  RENAME_DIR|OK                           18
+  RENAME_FILE|OK                          23
+  SET_TIMESTAMPS|OK                       15
+  SET_TIMESTAMPS|SKIP                      3
+  WRITE_FILE|OK                           14
+  WRITE_FILE|SKIP                          3
+
+First replay errors/skips:
+  #80 CREATE_ADS/SKIP: Could not open the alternate data stream 'hidden_8007' of the file 'M:\testspecials\dir_audit_640029\xbpt_symlink_romeo_655979.lnk'.
+  #83 CREATE_ADS/SKIP: Could not open the alternate data stream 'hidden_6282' of the file 'M:\testspecials\dir_audit_640029\xbpt_symlink_romeo_655979.lnk'.
+  #93 CREATE_ADS/SKIP: Could not open the alternate data stream 'hidden_1956' of the file 'M:\testspecials\dir_audit_640029\xbpt_symlink_sierra_208965.lnk'.
+  #174 COPY_FILE/SKIP: Exception calling "Copy" with "3" argument(s): "Could not find file 'M:\testspecials\xbpt_hardlink_zulu_840476.lnk'."
+  #187 APPEND_FILE/SKIP: Exception calling "Open" with "3" argument(s): "Could not find a part of the path 'M:\testspecials\dir_papa_986752\xbpt_hardlink_oscar_929704.lnk'."
+  #234 CREATE_ADS/SKIP: Could not open the alternate data stream 'hidden_9763' of the file 'M:\testspecials\dir_lima_956636\xbpt_hardlink_delta_938488.lnk'.
+  #260 SET_TIMESTAMPS/SKIP: Exception calling "SetCreationTimeUtc" with "2" argument(s): "Could not find a part of the path 'M:\testspecials\dir_audit_640029\dir_audit_182848\xbpt_symlink_kilo_256959.lnk'."
+  #274 CREATE_ADS/SKIP: Could not open the alternate data stream 'hidden_9995' of the file 'M:\testspecials\dir_audit_640029\xbpt_symlink_romeo_655979.lnk'.
+  #317 CREATE_ADS/SKIP: Could not open the alternate data stream 'hidden_1692' of the file 'M:\testspecials\dir_alpha_948808\xbpt_symlink_record_262426.lnk'.
+  #348 CREATE_ADS/SKIP: Could not open the alternate data stream 'hidden_4065' of the file 'M:\testspecials\xbpt_symlink_audit_229662.lnk'.
+
+Replay note: JSON replay files support root remapping from original root_dir to -RootDir. Missing parents and missing replay sources are recreated when required, and the Error column contains the real exception for remaining failures. v3.18 uses fast replay sizing for large files with FileStream.SetLength, avoiding slow per-byte replay writes near the end of large workloads.
+CSV log replay uses the paths stored in the CSV because the original root is not encoded separately.
+Some privileged or filesystem-specific actions, such as symlinks or ADS, may be skipped without Administrator rights or filesystem support.

@@ -1,0 +1,10 @@
+<svg class="diagram" viewBox="0 0 700 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The two layers of ReFS">
+<rect class="dg-box-accent" x="20" y="20" width="660" height="78" rx="9"/>
+<text class="dg-title" x="40" y="46" font-size="14" font-weight="700">Object / file layer</text>
+<text class="dg-muted" x="40" y="68" font-size="11.5">directories · files · attributes ($SI, $DATA, …) · object IDs · the namespace</text>
+<text class="dg-muted" x="40" y="86" font-size="11.5">“what the volume contains”</text>
+<rect class="dg-box" x="20" y="118" width="660" height="82" rx="9"/>
+<text class="dg-title" x="40" y="144" font-size="14" font-weight="700">Minstore — B+-tree storage engine</text>
+<text class="dg-muted" x="40" y="166" font-size="11.5">pages · B+-trees · copy-on-write · the allocator · checksums · the container map</text>
+<text class="dg-muted" x="40" y="184" font-size="11.5">“how it is stored, atomically and resiliently”</text>
+</svg>

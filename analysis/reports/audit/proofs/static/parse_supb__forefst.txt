@@ -1,0 +1,5 @@
+def parse_supb(f, ps, cs):
+ f.seek(ps + SUPB_LCN * cs); data = f.read(cs)
+ if data[:4] != b"SUPB": raise ValueError("Bad SUPB")
+ off = le32(data, 0x70); cnt = le32(data, 0x74)
+ return [le64(data, off + i * 8) for i in range(cnt)]

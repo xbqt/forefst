@@ -1,0 +1,52 @@
+﻿GENERATE-FSACTIVITY v3.20 - SUMMARY REPORT
+================================================
+Root        : r:\testspecials
+Seed        : 873015
+Requested total actions : 1000
+Executed/logged actions : 1000
+FileMarker  : 
+DirMarker   : 
+FileContentMarker : 
+MaxFileSize : 512 KB normal files
+Large files : 64,65,66,133 MB; exactly one protected chunked CREATE_FILE per listed value, duplicates preserved; included in Count; filename contains the size marker such as 2mb or 149mb
+HeavySpcials: True
+SpecialEveryN: 25 (0 means default frequency)
+Specials    : CREATE_HARDLINK, CREATE_SYMLINK_FILE and CREATE_ADS frequency controlled by HeavySpcials/SpecialEveryN
+Directory target : about 5 percent CREATE_DIR actions; directories may later be renamed, moved or deleted
+Duration    : 00:01:42.4748929
+Final files : 558
+Final dirs  : 75
+CSV log     : c:\tools\log\fsactivity_20260519_124238_log.csv
+Replay JSON : c:\tools\log\fsactivity_20260519_124238_replay.json
+
+Important note: the final directory is not supposed to contain Count files.
+Some actions delete, rename, or move previous files/directories. The CSV log is the ground truth.
+Special artefact frequency is controlled by HeavySpcials and SpecialEveryN. Default behavior keeps one full set per 250 actions; -HeavySpcials increases the default to one full set per 25 actions, unless -SpecialEveryN is specified. Unsupported/permitted failures are logged as SKIP with the reason and a fallback CREATE_FILE is attempted in the same logged row. About 5 percent of Count is planned as CREATE_DIR, although some directories may later be renamed, moved, or deleted.
+Markers are applied to newly generated file/directory names. Use -CleanRoot if you want the final tree to contain only marker-generated names.
+
+Action statistics:
+  APPEND_FILE|ERROR                        5
+  APPEND_FILE|OK                          20
+  COPY_FILE|ERROR                          6
+  COPY_FILE|OK                            18
+  CREATE_ADS|OK                          104
+  CREATE_ADS|SKIP                         52
+  CREATE_DIR|OK                           96
+  CREATE_FILE|OK                         157
+  CREATE_HARDLINK|OK                     172
+  CREATE_SYMLINK_FILE|OK                 182
+  DELETE_DIR|OK                           22
+  DELETE_FILE|OK                          26
+  MOVE_DIR|OK                             28
+  MOVE_FILE|OK                            15
+  RENAME_DIR|OK                           27
+  RENAME_FILE|OK                          29
+  SET_TIMESTAMPS|ERROR                     9
+  SET_TIMESTAMPS|OK                       11
+  WRITE_FILE|ERROR                         2
+  WRITE_FILE|OK                           19
+
+Admin / non-admin behavior:
+  Normal file creation, deletion, copy, rename, move, write and timestamp actions do not require Administrator rights.
+  Symbolic links may require Administrator rights, Windows Developer Mode, or SeCreateSymbolicLinkPrivilege.
+  Hard links and ADS may be unavailable depending on the target file system and permissions.

@@ -1,0 +1,91 @@
+<svg class="diagram" viewBox="0 0 760 524" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Conceptual view of a local Windows file-open operation">
+  <defs>
+    <marker id="wfo-ah" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="userSpaceOnUse">
+      <path class="dg-arrowhead" d="M0,0 L7,3 L0,6 Z"/>
+    </marker>
+    <marker id="wfo-ah2" markerWidth="9" markerHeight="9" refX="2" refY="3" orient="auto" markerUnits="userSpaceOnUse">
+      <path class="dg-arrowhead" d="M9,0 L2,3 L9,6 Z"/>
+    </marker>
+  </defs>
+
+  <!-- ===== main vertical stack ===== -->
+  <g text-anchor="middle">
+    <rect class="dg-box" x="140" y="24" width="300" height="38" rx="4"/>
+    <text class="dg-text" x="290" y="48" font-size="11.5">Application</text>
+
+    <rect class="dg-box" x="140" y="80" width="300" height="44" rx="4"/>
+    <text class="dg-text" x="290" y="100" font-size="11.5">Win32 subsystem DLLs</text>
+    <text class="dg-muted" x="290" y="115" font-size="9">(e.g., <tspan font-family="'JetBrains Mono',monospace">Kernel32.dll</tspan>)</text>
+
+    <rect class="dg-box" x="140" y="140" width="300" height="44" rx="4"/>
+    <text class="dg-text" x="290" y="160" font-size="11.5">System service dispatch stub</text>
+    <text class="dg-muted" x="290" y="175" font-size="9" font-family="'JetBrains Mono',monospace">ntdll.dll</text>
+
+    <rect class="dg-box" x="140" y="216" width="300" height="38" rx="4"/>
+    <text class="dg-text" x="290" y="240" font-size="11.5">System Service Dispatcher</text>
+
+    <rect class="dg-box" x="140" y="272" width="300" height="38" rx="4"/>
+    <text class="dg-text" x="290" y="296" font-size="11.5">Object Manager + I/O Manager</text>
+
+    <rect class="dg-box" x="140" y="340" width="300" height="38" rx="4" stroke-dasharray="5 4"/>
+    <text class="dg-text" x="290" y="364" font-size="11.5">Filter Manager + minifilters</text>
+
+    <rect class="dg-box-accent" x="140" y="402" width="300" height="42" rx="4"/>
+    <text class="dg-accent" x="290" y="428" font-size="11.5">File-system driver (FSD)</text>
+  </g>
+
+  <!-- Security Reference Monitor (side) -->
+  <rect class="dg-box" x="560" y="358" width="180" height="46" rx="4"/>
+  <text class="dg-text" x="650" y="377" text-anchor="middle" font-size="10">Security Reference</text>
+  <text class="dg-text" x="650" y="391" text-anchor="middle" font-size="10">Monitor (SRM)</text>
+
+  <!-- ===== main arrows ===== -->
+  <g class="dg-line" marker-end="url(#wfo-ah)" fill="none">
+    <path d="M290,62 L290,79"/>
+    <path d="M290,124 L290,139"/>
+    <path d="M290,184 L290,215"/>
+    <path d="M290,254 L290,271"/>
+    <path d="M290,310 L290,339"/>
+    <path d="M290,378 L290,401"/>
+  </g>
+  <!-- step 8: FSD <-> SRM (double headed) -->
+  <line x1="440" y1="420" x2="560" y2="381" class="dg-line" marker-start="url(#wfo-ah2)" marker-end="url(#wfo-ah)"/>
+  <!-- step 9: drop below FSD -->
+  <line x1="290" y1="444" x2="290" y2="474" class="dg-line"/>
+  <!-- step 10: return-to-caller path -->
+  <g class="dg-line" fill="none">
+    <path d="M290,474 L290,492 L662,492" stroke-linejoin="round"/>
+  </g>
+  <line x1="662" y1="492" x2="662" y2="423" class="dg-line" marker-end="url(#wfo-ah)"/>
+
+  <!-- ===== user / kernel boundary ===== -->
+  <line x1="60" y1="200" x2="744" y2="200" class="dg-line" stroke-dasharray="6 4" stroke-width="1.5" opacity="0.8"/>
+  <text class="dg-muted" x="742" y="194" text-anchor="end" font-size="9">User mode</text>
+  <text class="dg-muted" x="742" y="214" text-anchor="end" font-size="9">Kernel mode</text>
+
+  <!-- ===== numbered steps (left) ===== -->
+  <g text-anchor="middle" font-size="10" font-weight="700">
+    <circle class="dg-box" cx="48" cy="71"  r="11"/><text class="dg-text" x="48" y="75">1</text>
+    <circle class="dg-box" cx="48" cy="132" r="11"/><text class="dg-text" x="48" y="136">2</text>
+    <circle class="dg-box" cx="48" cy="200" r="11"/><text class="dg-text" x="48" y="204">3</text>
+    <circle class="dg-box" cx="48" cy="263" r="11"/><text class="dg-text" x="48" y="267">4</text>
+    <circle class="dg-box" cx="48" cy="325" r="11"/><text class="dg-text" x="48" y="329">5</text>
+    <circle class="dg-box" cx="48" cy="390" r="11"/><text class="dg-text" x="48" y="394">6</text>
+    <circle class="dg-box" cx="108" cy="423" r="11"/><text class="dg-text" x="108" y="427">7</text>
+    <circle class="dg-box" cx="500" cy="386" r="11"/><text class="dg-text" x="500" y="390">8</text>
+    <circle class="dg-box" cx="48" cy="465" r="11"/><text class="dg-text" x="48" y="469">9</text>
+    <circle class="dg-box" cx="636" cy="455" r="11"/><text class="dg-text" x="636" y="459">10</text>
+  </g>
+
+  <!-- ===== artefact tags ===== -->
+  <g font-size="8.5" font-family="'JetBrains Mono',monospace">
+    <rect class="dg-fill-surface" x="455" y="62"  width="78"  height="17" rx="3"/><text class="dg-text" x="460" y="74">CreateFileW</text>
+    <rect class="dg-fill-surface" x="455" y="123" width="86"  height="17" rx="3"/><text class="dg-text" x="460" y="135">NtCreateFile</text>
+    <rect class="dg-fill-surface" x="455" y="191" width="56"  height="17" rx="3"/><text class="dg-text" x="460" y="203">syscall</text>
+    <rect class="dg-fill-surface" x="455" y="254" width="86"  height="17" rx="3"/><text class="dg-text" x="460" y="266">NtCreateFile</text>
+    <rect class="dg-fill-surface" x="455" y="300" width="74"  height="17" rx="3"/><text class="dg-text" x="460" y="312">file object</text>
+    <rect class="dg-fill-surface" x="455" y="320" width="100" height="17" rx="3"/><text class="dg-text" x="460" y="332">IRP_MJ_CREATE</text>
+    <rect class="dg-fill-surface" x="316" y="456" width="38"  height="17" rx="3"/><text class="dg-text" x="321" y="468">FCB</text>
+    <rect class="dg-fill-surface" x="668" y="447" width="56"  height="17" rx="3"/><text class="dg-text" x="673" y="459">handle</text>
+  </g>
+</svg>

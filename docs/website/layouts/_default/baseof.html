@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="{{ site.Params.defaultTheme | default "light" }}">
+<head>{{ partial "head.html" . }}</head>
+<body>
+  {{ partial "topbar.html" . }}
+  <div class="layout{{ if .IsHome }} layout-home{{ end }}">
+    {{ partial "sidebar.html" . }}
+    <main class="content">
+      {{ block "main" . }}{{ end }}
+    </main>
+    {{ partial "toc.html" . }}
+  </div>
+  <footer class="page-footer">
+    {{ with site.Params.github }}<a href="{{ . }}">Source &amp; tools on GitHub</a> · {{ end }}
+    Generated from the project documentation · ReFS Reference
+  </footer>
+  <script>window.SEARCH_INDEX = "{{ "index.json" | relURL }}";</script>
+  <script src="{{ "js/theme.js" | relURL }}"></script>
+  <script src="{{ "js/search.js" | relURL }}" defer></script>
+</body>
+</html>

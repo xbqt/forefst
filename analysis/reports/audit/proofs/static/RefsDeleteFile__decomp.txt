@@ -1,0 +1,75 @@
+
+// === RefsDeleteFile @ 1400a4098 ===
+
+/* void __cdecl RefsDeleteFile(struct _IRP_CONTEXT * __ptr64,struct _FCB * __ptr64,struct _SCB *
+ __ptr64,struct _UNICODE_STRING const * __ptr64,struct _SCB * __ptr64 * __ptr64) */
+
+void __cdecl
+RefsDeleteFile(_IRP_CONTEXT *param_1,_FCB *param_2,_SCB *param_3,_UNICODE_STRING *param_4,
+ _SCB **param_5)
+
+{
+ _FCB *p_Var1;
+ longlong lVar2;
+ bool bVar3;
+ uchar uVar4;
+ int iVar5;
+ ulonglong *puVar6;
+ _FCB *p_Var7;
+ _SCB *p_Var8;
+ ulong uVar9;
+ char cVar10;
+ _FCB *local_res10;
+ char local_38;
+ char local_37;
+ char local_36;
+ _IRP_CONTEXT local_30 [8];
+ 
+ p_Var8 = (_SCB *)0x0;
+ local_37 = '\0';
+ lVar2 = *(longlong *)(param_2 + 0x58);
+ if ((*(longlong *)(lVar2 + 0xf8) != 0) || (bVar3 = true, *(longlong *)(lVar2 + 0x100) == 0)) {
+ bVar3 = false;
+ }
+ if (((bVar3) || ((*(uint *)(param_2 + 8) >> 0x1c & 1) != 0)) ||
+ (cVar10 = '\x01',
+ *(longlong *)(lVar2 + 0x100) ==
+ *(longlong *)(*(longlong *)(*(longlong *)(param_3 + 0x88) + 0x58) + 0x100))) {
+ cVar10 = '\0';
+ }
+ local_38 = '\0';
+ local_res10 = param_2;
+ local_36 = cVar10;
+ if ((((*(uint *)(param_2 + 8) >> 0x1c & 1) != 0) && (param_3 != *(_SCB **)(param_2 + 0x148))) &&
+ (*param_5 == (_SCB *)0x0)) {
+ *(uint *)(param_1 + 4) = *(uint *)(param_1 + 4) | 0x10000;
+ uVar9 = 0;
+ uVar4 = RefsAcquireFcbWithPaging
+ (param_1,*(_FCB **)(*(longlong *)(param_2 + 0x148) + 0x88),(_SCB *)0x0,
+ (-(uint)((*(uint *)(param_1 + 8) & 0x100) != 0) & 2) + 0x33);
+ if (uVar4 == '\0') {
+ *(ulonglong *)(param_1 + 8) = *(ulonglong *)(param_1 + 8) | 0x100;
+ if ((((undefined **)WPP_GLOBAL_Control != &WPP_GLOBAL_Control) &&
+ ((*(uint *)(WPP_GLOBAL_Control + 0x2c) & 0x100) != 0)) &&
+ (3 < (byte)WPP_GLOBAL_Control[0x29])) {
+ uVar9 = 0x401d3d30;
+ WPP_SF_(*(undefined8 *)(WPP_GLOBAL_Control + 0x18),0x32);
+ }
+ if (RefsStatusDebugEnabled != '\0') {
+ uVar9 = 0x401d3d40;
+ RefsStatusDebug(-0x3fffff28,param_1,"ProtogonFiles.c",0x92b);
+ }
+ /* WARNING: Subroutine does not return */
+ RefsRaiseStatusInternal(param_1,-0x3fffff28,uVar9);
+ }
+ *param_5 = *(_SCB **)(param_2 + 0x148);
+ }
+ if ((cVar10 != '\0') && (*param_5 == (_SCB *)0x0)) {
+ puVar6 = (ulonglong *)RefsCreateAndAcquireFileIdParent(local_30,(_FCB *)param_1);
+ *param_5 = (_SCB *)(*puVar6 & 0xfffffffffffffff8);
+ }
+ if (param_1[0x28] == (_IRP_CONTEXT)0x12) {
+ *(uint *)(param_1 + 4) = *(uint *)(param_1 + 4) | 0x20;
+ }
+ if ((*(longlong *)(*(longlong *)(param_2 + 0x58) + 0xf8) != 0) ||
+ (bVar3 = true, *(longlong *)(*(longlong *)(param_2 + 0x58) + 0x100) == 0)) {

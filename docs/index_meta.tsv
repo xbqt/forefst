@@ -1,0 +1,20 @@
+# index_meta.tsv — structural identifiers for the auto-generated directory indexes (build_docs_index.py).
+# Values cross-checked against structures/chkp.md (13-root map) and structures/system_oids.md.
+# structures pages NOT listed here are rendered in the 'On-disk formats & row types' table.
+# Columns (tab-separated): file<TAB>group<TAB>root_oid<TAB>table_id<TAB>schema<TAB>what<TAB>subcommands
+file	group	root_oid	table_id	schema	what	subcommands
+object_table.md	system-table	#0 / #5	0x02 / 0x04	0xe030	Master OID → table-location map for every persistent object	
+allocators.md	system-table	#1 / #2 / #12	0x21 / 0x20 / 0x22	0xe010	Three-tier cluster allocator (Medium / Container / Small)	
+parent_child_table.md	system-table	#4	0x03	0xe040	Directory hierarchy index (parent → child OIDs)	
+schema_table.md	system-table	#3 / #9	0x01 / 0x06	0xe060	Self-describing per-table key-comparison rules	
+block_refcount.md	system-table	#6	0x05	0xe0b0	Shared-block refcounts (snapshots, dedup, clones)	
+container_table.md	system-table	#7 / #8	0x0B / 0x0C	0xe0c0	VLCN → PLCN translation (virtual container map)	
+container_index.md	system-table	#10	0x0E	0xe100	Alternate index over the Container Table by free space	
+integrity_state.md	system-table	#11	0x0F	0xe080	Volume-level integrity-stream coverage	
+upcase_table.md	system-table	OID 0x07 / 0x08	—	0xe090	Unicode uppercase map for case-insensitive compare	
+trash_table.md	system-table	OID 0x0D	—	0xe0d0	Asynchronous deletion queue	
+volume_info.md	system-table	OID 0x500 / 0x501	—	0x150	Volume label, timestamps, version flags	
+security_descriptors.md	system-table	OID 0x530	—	— (stream)	Central SecurityId → owner / DACL / SACL store	
+reparse_points.md	system-table	OID 0x540 / 0x541	—	0x160	Global reparse-point index (by tag + file reference)	
+forefst.md	tool					Unified forensic tool (subcommand CLI): files (CSV/body/json/jsonl, --filter, --deleted, --timestomp, --cow-before) · summary · search · details · forensic suite (usn·mlog·timeline·timestomp·extract·security·reparse·deleted·snapshots·integrity·export·dataruns)
+refsanalysis.md	tool					Structure/lab tool: Quick (summary·summary++·all) · Content (files·attributes·details) · Structure (boot·supb·chkp·objects·schema·parentchild·containers·upcase·oid30) · Repair (bootedit). Forensic commands moved to forefst.

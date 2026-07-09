@@ -1,0 +1,17 @@
+<svg class="diagram" viewBox="0 0 700 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="B+-tree traversal">
+<defs><marker id="bx-a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path class="dg-arrowhead" d="M0,0 L7,3 L0,6 Z"/></marker></defs>
+<rect class="dg-box-accent" x="280" y="16" width="140" height="38" rx="7"/><text class="dg-accent" x="350" y="40" text-anchor="middle" font-size="12">root node — keys</text>
+<rect class="dg-box-accent" x="120" y="100" width="150" height="38" rx="7"/><text class="dg-accent" x="195" y="124" text-anchor="middle" font-size="12">internal node</text>
+<rect class="dg-box" x="430" y="100" width="150" height="38" rx="7"/><text class="dg-text" x="505" y="124" text-anchor="middle" font-size="12">internal node</text>
+<rect class="dg-box-accent" x="40"  y="190" width="120" height="44" rx="6"/><text class="dg-accent" x="100" y="210" text-anchor="middle" font-size="11">leaf — rows</text><text class="dg-muted" x="100" y="226" text-anchor="middle" font-size="10">key→value</text>
+<rect class="dg-box" x="180" y="190" width="110" height="44" rx="6"/><text class="dg-muted" x="235" y="216" text-anchor="middle" font-size="10.5">leaf</text>
+<rect class="dg-box" x="430" y="190" width="110" height="44" rx="6"/><text class="dg-muted" x="485" y="216" text-anchor="middle" font-size="10.5">leaf</text>
+<rect class="dg-box" x="555" y="190" width="110" height="44" rx="6"/><text class="dg-muted" x="610" y="216" text-anchor="middle" font-size="10.5">leaf</text>
+<line class="dg-line" x1="320" y1="54" x2="200" y2="96" marker-end="url(#bx-a)"/>
+<line class="dg-line" x1="380" y1="54" x2="500" y2="96" marker-end="url(#bx-a)"/>
+<line class="dg-line" x1="170" y1="138" x2="105" y2="186" marker-end="url(#bx-a)"/>
+<line class="dg-line" x1="215" y1="138" x2="232" y2="186"/>
+<line class="dg-line" x1="490" y1="138" x2="485" y2="186"/>
+<line class="dg-line" x1="525" y1="138" x2="600" y2="186"/>
+<text class="dg-accent" x="350" y="246" text-anchor="middle" font-size="10.5">a lookup descends root → internal → leaf following the key order</text>
+</svg>

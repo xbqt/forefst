@@ -1,0 +1,24 @@
+
+ReFS Boot Sector at offset 0x1000000
+SHA-256: 00957160bee5e503ed917d64bb2890456135d59148213915559c349a129a5af9
+
+Field                 Offset  Raw bytes                                        Interpreted                         
+--------------------  ------  -----------------------------------------------  ------------------------------------
+Jump instruction      0x00    00 00 00                                                                             
+FS name (ReFS)        0x03    52 65 46 53 00 00 00 00                          ReFS....                            
+Reserved              0x0B    00 00 00 00 00                                                                       
+FSRS identifier       0x10    46 53 52 53                                      FSRS                                
+VBR size              0x14    00 02                                            512 (0x0200)                        
+Checksum              0x16    95 7b                                            0x7B95 [OK]                         
+Total sector count    0x18    00 00 3e 00 00 00 00 00                          4063232 (1.9 GiB)                   
+Bytes per sector      0x20    00 02 00 00                                      512                                 
+Sectors per cluster   0x24    08 00 00 00                                      8 (cluster = 4.0 KiB)               
+Version               0x28    03 0e                                            3.14                                
+Checksum algorithm    0x2A    04 00                                            0x0004 (SHA256)                     
+Volume flags          0x2C    66 00 00 00                                      0x00000066                          
+Reserved              0x30    00 00 00 00 00 00 00 00                                                              
+Volume serial         0x38    fc 0d 5a 0a 2f 5a 0a 54                          0x540A5A2F0A5A0DFC                  
+Bytes per container   0x40    00 00 00 04 00 00 00 00                          64.0 MiB                            
+Format instance GUID  0x48    f0 4a 23 67 7d 83 0b 4f b9 76 09 d2 b7 01 d0 14  67234af0-837d-4f0b-b976-09d2b701d014
+Reserved (trailing)   0x58    424 bytes                                        all zero                            
+

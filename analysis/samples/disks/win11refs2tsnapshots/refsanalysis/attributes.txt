@@ -1,0 +1,2352 @@
+==============================================================================
+ReFS File Attribute Analysis
+==============================================================================
+  Image:        win11refs2tsnapshots.raw
+  ReFS version: 3.14
+  Cluster size: 0x1000
+  Start OID:    0x600
+
+  Summary:
+    Total entries:     304
+    Directories:       34
+    Files:             270
+    Resident files:    219
+    EFS encrypted:     0
+    WSL metadata:      0
+    Reparse points:    3
+    With snapshots:    5
+
+==============================================================================
+Detailed Attributes
+==============================================================================
+
+  DIR  System Volume Information
+    Created:     2026-05-16 16:50:46 UTC
+    Modified:    2026-05-16 16:50:55 UTC
+    Changed:     2026-05-16 16:50:55 UTC
+    Attributes:  HIDDEN | SYSTEM | DIRECTORY_INTERNAL (0x10000006)
+
+  FILE System Volume Information/FVE2.{8252fd17-a486-4ad4-b1ca-f4fe64d23218}
+    Created:     2026-05-16 16:50:53 UTC
+    Modified:    2026-05-16 16:50:53 UTC
+    Changed:     2026-05-16 16:50:53 UTC
+    Attributes:  HIDDEN | SYSTEM | ARCHIVE (0x26)
+    IntFlags:    HAS_EA (0x8)
+    SecurityId:  0x10a9f9562
+    Storage:     RESIDENT (312 bytes)
+
+  FILE System Volume Information/WPSettings.dat
+    Created:     2026-05-16 16:50:46 UTC
+    Modified:    2026-05-16 16:50:46 UTC
+    Changed:     2026-05-16 16:50:46 UTC
+    Attributes:  ARCHIVE (0x20)
+    IntFlags:    HAS_EA (0x8)
+    SecurityId:  0x123d306f5
+    Storage:     RESIDENT (328 bytes)
+
+  DIR  test
+    Created:     2026-05-16 16:51:49 UTC
+    Modified:    2026-05-16 16:52:03 UTC
+    Changed:     2026-05-16 16:52:03 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  DIR  test/elvis_dir_index_149423
+    Created:     2026-05-16 16:51:57 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  DIR  test/elvis_dir_index_149423/elvis_dir_victor_121923
+    Created:     2026-05-16 16:52:00 UTC
+    Modified:    2026-05-16 16:52:03 UTC
+    Changed:     2026-05-16 16:52:03 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  DIR  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324
+    Created:     2026-05-16 16:52:00 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  DIR  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165
+    Created:     2026-05-16 16:52:00 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  DIR  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/elvis_dir_oscar_874075
+    Created:     2026-05-16 16:51:59 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/elvis_dir_oscar_874075/xbpt_delta_victor_412034.ini
+    Created:     2026-05-16 16:51:54 UTC
+    Modified:    2026-05-16 16:51:55 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x717)
+
+  FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/elvis_dir_oscar_874075/xbpt_zulu_mike_340372.cfg
+    Created:     2026-05-16 16:51:59 UTC
+    Modified:    2026-05-16 16:51:59 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (632 bytes)
+
+  FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_audit_echo_178867.tmp
+    Created:     2026-01-01 07:16:17 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x70b)
+
+  FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_log_foxtrot_796125.ini
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_oscar_foxtrot_866936.json
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_output_lima_215617.json
+    Created:     2026-05-16 16:51:52 UTC
+    Modified:    2026-05-16 16:51:52 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x707)
+
+  FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_papa_archive_660135.txt
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_zulu_india_473528.csv
+    Created:     2024-08-03 07:17:33 UTC
+    Modified:    2024-08-03 07:17:33 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_cache_sync_352758.ini
+    Created:     2026-05-16 16:51:55 UTC
+    Modified:    2026-05-16 16:51:55 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x704)
+
+  FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_cache_temp_298348.bak
+    Created:     2026-05-16 16:52:02 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_log_romeo_711888.cfg
+    Created:     2026-05-16 16:52:00 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_november_yankee_663510.csv
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2025-04-01 07:16:26 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_trace_gamma_472483.cfg
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_zulu_audit_805568.ini
+    Created:     2026-05-16 16:52:02 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_hotel_mike_996142.cfg
+    Created:     2026-05-16 16:52:02 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_hotel_victor_678038.txt
+    Created:     2026-05-16 16:52:02 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x707)
+
+  FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_large_5mb_romeo_293003.dat
+    Created:     2026-05-16 16:52:03 UTC
+    Modified:    2026-05-16 16:52:03 UTC
+    Changed:     2026-05-16 16:52:03 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_temp_uniform_753565.cfg
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_whiskey_delta_922359.tmp
+    Created:     2024-11-23 07:17:31 UTC
+    Modified:    2024-11-23 07:17:31 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x718)
+
+  FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_zulu_echo_160107.cfg
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_zulu_papa_839258.bin
+    Created:     2026-05-16 16:52:00 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_index_149423/xbpt_beta_archive_985685.tmp
+    Created:     2023-11-27 07:16:30 UTC
+    Modified:    2023-11-27 07:16:30 UTC
+    Changed:     2026-05-16 16:51:58 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x704)
+
+  FILE test/elvis_dir_index_149423/xbpt_config_sync_830891.tmp
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2022-02-07 07:16:33 UTC
+    Changed:     2026-05-16 16:51:56 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_index_149423/xbpt_draft_india_626576.tmp
+    Created:     2026-05-16 16:51:58 UTC
+    Modified:    2026-05-16 16:51:58 UTC
+    Changed:     2026-05-16 16:51:58 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_index_149423/xbpt_draft_record_749595.cfg
+    Created:     2026-05-16 16:51:54 UTC
+    Modified:    2026-05-16 16:51:54 UTC
+    Changed:     2026-05-16 16:51:58 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x710)
+
+  FILE test/elvis_dir_index_149423/xbpt_kilo_draft_550251.bin
+    Created:     2026-05-16 16:51:58 UTC
+    Modified:    2026-05-16 16:51:56 UTC
+    Changed:     2026-05-16 16:51:56 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_index_149423/xbpt_papa_papa_899322.md
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_index_149423/xbpt_quebec_kilo_982841.tmp
+    Created:     2026-05-16 16:52:00 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_index_149423/xbpt_sync_output_795963.bin
+    Created:     2026-05-16 16:52:00 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_index_149423/xbpt_victor_gamma_564302.csv
+    Created:     2026-05-16 16:51:56 UTC
+    Modified:    2026-05-16 16:51:52 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x706)
+
+  FILE test/elvis_dir_index_149423/xbpt_yankee_draft_816830.dat
+    Created:     2026-05-16 16:52:02 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_index_149423/xbpt_zulu_kilo_319858.csv
+    Created:     2022-05-20 07:16:16 UTC
+    Modified:    2022-05-20 07:16:16 UTC
+    Changed:     2026-05-16 16:51:57 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x711)
+
+  DIR  test/elvis_dir_india_800575
+    Created:     2026-05-16 16:51:57 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  FILE test/elvis_dir_india_800575/xbpt_beta_archive_202282.json
+    Created:     2026-05-16 16:51:57 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_india_800575/xbpt_cache_index_408825.bin
+    Created:     2026-05-16 16:52:02 UTC
+    Modified:    2026-05-16 16:51:57 UTC
+    Changed:     2026-05-16 16:51:57 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_india_800575/xbpt_cache_lima_454391.txt
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_india_800575/xbpt_delta_lima_807650.tmp
+    Created:     2026-05-16 16:52:02 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_india_800575/xbpt_foxtrot_zulu_156856.csv
+    Created:     2026-05-16 16:51:57 UTC
+    Modified:    2026-05-16 16:51:57 UTC
+    Changed:     2026-05-16 16:51:58 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x70f)
+
+  FILE test/elvis_dir_india_800575/xbpt_kilo_config_292054.json
+    Created:     2026-05-16 16:51:58 UTC
+    Modified:    2026-05-16 16:51:59 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/elvis_dir_india_800575/xbpt_large_2mb_report_507726.txt
+    Created:     2026-05-16 16:52:02 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_india_800575/xbpt_log_beta_973172.txt
+    Created:     2026-05-16 16:52:00 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_india_800575/xbpt_oscar_backup_284025.json
+    Created:     2026-05-16 16:52:00 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_india_800575/xbpt_output_config_975939.bak
+    Created:     2026-05-16 16:51:58 UTC
+    Modified:    2026-05-16 16:51:58 UTC
+    Changed:     2026-05-16 16:51:58 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_india_800575/xbpt_output_victor_198806.ini
+    Created:     2026-05-16 16:52:00 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_india_800575/xbpt_report_temp_854937.tmp
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2022-02-07 07:16:33 UTC
+    Changed:     2026-05-16 16:51:56 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_india_800575/xbpt_sierra_beta_228555.dat
+    Created:     2026-05-16 16:51:57 UTC
+    Modified:    2026-05-16 16:51:53 UTC
+    Changed:     2026-05-16 16:51:53 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_india_800575/xbpt_sierra_data_271533.bin
+    Created:     2026-05-16 16:51:59 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/elvis_dir_india_800575/xbpt_uniform_lima_155750.md
+    Created:     2026-05-16 16:51:54 UTC
+    Modified:    2026-05-16 16:51:54 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x702)
+
+  DIR  test/elvis_dir_papa_805353
+    Created:     2026-05-16 16:51:57 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  DIR  test/elvis_dir_papa_805353/elvis_dir_november_478580
+    Created:     2026-05-16 16:51:52 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  DIR  test/elvis_dir_papa_805353/elvis_dir_november_478580/elvis_dir_kilo_751807
+    Created:     2026-05-16 16:52:02 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/elvis_dir_kilo_751807/xbpt_delta_zulu_595944.bak
+    Created:     2026-05-16 16:51:54 UTC
+    Modified:    2026-05-16 16:51:58 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x702)
+
+  FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/elvis_dir_kilo_751807/xbpt_temp_backup_816270.cfg
+    Created:     2026-05-16 16:52:02 UTC
+    Modified:    2026-05-16 16:51:59 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_alpha_cache_742120.dat
+    Created:     2026-05-16 16:52:02 UTC
+    Modified:    2026-05-16 16:51:59 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_archive_trace_798923.cfg
+    Created:     2026-05-16 16:51:59 UTC
+    Modified:    2026-05-16 16:51:53 UTC
+    Changed:     2026-05-16 16:51:56 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_audit_sync_528794.xml
+    Created:     2026-05-16 16:52:00 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_backup_mike_407434.log
+    Created:     2021-05-18 07:16:04 UTC
+    Modified:    2026-05-16 16:51:54 UTC
+    Changed:     2026-05-16 16:51:58 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x702)
+
+  FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_beta_echo_977425.bin
+    Created:     2026-05-16 16:52:00 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_config_log_890790.bak
+    Created:     2026-05-16 16:52:00 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_delta_echo_268401.csv
+    Created:     2024-01-13 07:17:04 UTC
+    Modified:    2024-01-13 07:17:04 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_delta_report_275249.dat
+    Created:     2026-05-16 16:51:59 UTC
+    Modified:    2026-05-16 16:51:56 UTC
+    Changed:     2026-05-16 16:51:56 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_hardlink_echo_387599.ini
+    Created:     2025-02-09 07:17:09 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x70f)
+
+  FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_hotel_kilo_705007.cfg
+    Created:     2026-05-16 16:51:58 UTC
+    Modified:    2026-05-16 16:51:54 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x711)
+
+  FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_index_index_579494.cfg
+    Created:     2026-05-16 16:52:00 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x72f)
+
+  FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_kilo_output_350111.log
+    Created:     2026-05-16 16:51:52 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_lima_temp_514782.csv
+    Created:     2026-05-16 16:51:55 UTC
+    Modified:    2026-05-16 16:51:58 UTC
+    Changed:     2026-05-16 16:51:58 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (712 bytes)
+
+  FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_lima_victor_941030.cfg
+    Created:     2025-07-16 07:17:35 UTC
+    Modified:    2025-07-16 07:17:35 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_log_output_579275.dat
+    Created:     2026-05-16 16:51:53 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x711)
+
+  FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_oscar_archive_384713.txt
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_oscar_foxtrot_635028.xml
+    Created:     2026-05-16 16:51:54 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_papa_index_238422.csv
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_quebec_papa_978800.txt
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x702)
+
+  FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_sierra_echo_921063.xml
+    Created:     2025-04-02 07:16:24 UTC
+    Modified:    2026-05-16 16:51:55 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x715)
+
+  FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_tango_echo_291736.csv
+    Created:     2025-04-01 07:16:26 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x711)
+
+  FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_temp_sierra_130629.tmp
+    Created:     2022-02-07 07:16:33 UTC
+    Modified:    2022-02-07 07:16:33 UTC
+    Changed:     2026-05-16 16:51:56 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_trace_gamma_651618.dat
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2021-10-19 07:16:21 UTC
+    Changed:     2026-05-16 16:51:56 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_victor_tango_152379.bin
+    Created:     2026-05-16 16:51:56 UTC
+    Modified:    2026-05-16 16:51:56 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x718)
+
+  FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_yankee_victor_114004.ini
+    Created:     2026-05-16 16:51:59 UTC
+    Modified:    2026-05-16 16:51:59 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_papa_805353/xbpt_audit_index_229436.csv
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_papa_805353/xbpt_mike_oscar_154118.csv
+    Created:     2026-05-16 16:51:58 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/elvis_dir_papa_805353/xbpt_november_hotel_509136.md
+    Created:     2026-05-16 16:52:02 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_papa_805353/xbpt_november_record_124675.bak
+    Created:     2026-05-16 16:51:59 UTC
+    Modified:    2026-05-16 16:51:55 UTC
+    Changed:     2026-05-16 16:51:55 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_papa_805353/xbpt_november_sierra_312346.xml
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_papa_805353/xbpt_oscar_archive_362034.json
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_papa_805353/xbpt_papa_victor_656146.log
+    Created:     2026-05-16 16:52:02 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_papa_805353/xbpt_temp_data_294711.md
+    Created:     2026-05-16 16:52:02 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/elvis_dir_papa_805353/xbpt_temp_log_141240.cfg
+    Created:     2026-05-16 16:51:58 UTC
+    Modified:    2026-05-16 16:51:59 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x710)
+
+  DIR  test/elvis_dir_record_449015
+    Created:     2026-05-16 16:51:52 UTC
+    Modified:    2026-05-16 16:52:03 UTC
+    Changed:     2026-05-16 16:52:03 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  DIR  test/elvis_dir_record_449015/elvis_dir_lima_252141
+    Created:     2026-05-16 16:51:59 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  DIR  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778
+    Created:     2026-05-16 16:51:52 UTC
+    Modified:    2026-05-16 16:52:03 UTC
+    Changed:     2026-05-16 16:52:03 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  DIR  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608
+    Created:     2026-05-16 16:51:52 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_cache_zulu_259753.dat
+    Created:     2026-03-01 07:16:07 UTC
+    Modified:    2026-03-01 07:16:07 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x704)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_delta_india_877880.dat
+    Created:     2026-05-16 16:51:52 UTC
+    Modified:    2026-05-16 16:51:59 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_delta_temp_981764.tmp
+    Created:     2023-08-26 07:16:12 UTC
+    Modified:    2023-08-26 07:16:12 UTC
+    Changed:     2026-05-16 16:51:52 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x70b)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_mike_quebec_329740.dat
+    Created:     2026-05-16 16:51:52 UTC
+    Modified:    2026-05-16 16:51:57 UTC
+    Changed:     2026-05-16 16:51:57 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  DIR  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509
+    Created:     2026-05-16 16:51:54 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509/xbpt_mike_trace_701071.dat
+    Created:     2026-05-16 16:51:55 UTC
+    Modified:    2026-05-16 16:51:55 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  DIR  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264
+    Created:     2026-05-16 16:51:52 UTC
+    Modified:    2026-05-16 16:51:57 UTC
+    Changed:     2026-05-16 16:51:57 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_audit_config_255291.dat
+    Created:     2021-10-19 07:16:21 UTC
+    Modified:    2021-10-19 07:16:21 UTC
+    Changed:     2026-05-16 16:51:56 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x703)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_beta_report_756229.csv
+    Created:     2026-05-16 16:51:56 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_november_cache_127869.dat
+    Created:     2026-05-16 16:51:53 UTC
+    Modified:    2026-05-16 16:51:56 UTC
+    Changed:     2026-05-16 16:51:56 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_zulu_trace_481495.md
+    Created:     2024-06-07 07:17:11 UTC
+    Modified:    2024-06-07 07:17:11 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_backup_echo_585708.csv
+    Created:     2022-06-17 07:16:38 UTC
+    Modified:    2022-06-17 07:16:38 UTC
+    Changed:     2026-05-16 16:51:57 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_beta_archive_448246.ini
+    Created:     2026-05-16 16:51:54 UTC
+    Modified:    2026-05-16 16:51:58 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_draft_oscar_719333.tmp
+    Created:     2026-05-16 16:51:52 UTC
+    Modified:    2026-05-16 16:51:52 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_kilo_beta_246643.bin
+    Created:     2026-05-16 16:52:02 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_large_7mb_india_845613.txt
+    Created:     2026-05-16 16:52:03 UTC
+    Modified:    2026-05-16 16:52:03 UTC
+    Changed:     2026-05-16 16:52:03 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_large_86mb_india_568540.txt
+    Created:     2026-05-16 16:52:03 UTC
+    Modified:    2026-05-16 16:52:03 UTC
+    Changed:     2026-05-16 16:52:03 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_log_romeo_319918.txt
+    Created:     2026-05-16 16:51:59 UTC
+    Modified:    2026-05-16 16:51:59 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_mike_trace_484217.ini
+    Created:     2026-05-16 16:51:58 UTC
+    Modified:    2026-05-16 16:51:58 UTC
+    Changed:     2026-05-16 16:51:58 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_mike_uniform_215836.txt
+    Created:     2026-05-16 16:51:51 UTC
+    Modified:    2026-05-16 16:51:52 UTC
+    Changed:     2026-05-16 16:51:53 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x703)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_report_india_560484.txt
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_romeo_output_531365.cfg
+    Created:     2022-08-02 07:16:28 UTC
+    Modified:    2026-05-16 16:51:56 UTC
+    Changed:     2026-05-16 16:51:56 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x703)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_sync_echo_156375.ini
+    Created:     2026-05-16 16:52:00 UTC
+    Modified:    2026-05-16 16:51:57 UTC
+    Changed:     2026-05-16 16:51:57 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_temp_mike_134457.bak
+    Created:     2025-12-30 07:17:16 UTC
+    Modified:    2025-12-30 07:17:16 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_trace_delta_811163.txt
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_yankee_tango_103961.bin
+    Created:     2026-05-16 16:51:58 UTC
+    Modified:    2026-05-16 16:51:58 UTC
+    Changed:     2026-05-16 16:51:58 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_zulu_hotel_433348.log
+    Created:     2026-05-16 16:51:54 UTC
+    Modified:    2026-05-16 16:51:53 UTC
+    Changed:     2026-05-16 16:51:56 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x715)
+
+  DIR  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_report_664539
+    Created:     2026-05-16 16:52:02 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_alpha_delta_877195.json
+    Created:     2026-05-16 16:52:00 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_index_draft_129088.bin
+    Created:     2026-05-16 16:51:56 UTC
+    Modified:    2026-05-16 16:51:56 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x70f)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_kilo_quebec_845728.bak
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_tango_record_232127.csv
+    Created:     2026-05-16 16:51:59 UTC
+    Modified:    2026-05-16 16:51:59 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_temp_index_659152.xml
+    Created:     2026-05-16 16:51:59 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_uniform_mike_713257.xml
+    Created:     2026-05-16 16:51:59 UTC
+    Modified:    2026-05-16 16:51:59 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_yankee_report_288078.log
+    Created:     2026-05-16 16:51:59 UTC
+    Modified:    2026-05-16 16:51:59 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  DIR  test/elvis_dir_record_449015/elvis_dir_papa_104235
+    Created:     2026-05-16 16:51:56 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  DIR  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743
+    Created:     2026-05-16 16:51:51 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  DIR  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016
+    Created:     2026-05-16 16:51:51 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  DIR  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_archive_704644
+    Created:     2026-05-16 16:51:57 UTC
+    Modified:    2026-05-16 16:51:57 UTC
+    Changed:     2026-05-16 16:51:57 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_archive_704644/xbpt_uniform_oscar_320878.log
+    Created:     2026-05-16 16:51:57 UTC
+    Modified:    2026-05-16 16:51:57 UTC
+    Changed:     2026-05-16 16:51:57 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  DIR  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148
+    Created:     2026-05-16 16:51:50 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_config_archive_855545.dat
+    Created:     2026-05-16 16:51:55 UTC
+    Modified:    2026-05-16 16:51:53 UTC
+    Changed:     2026-05-16 16:51:53 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_data_victor_588744.ini
+    Created:     2026-05-16 16:51:54 UTC
+    Modified:    2026-05-16 16:51:54 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_delta_sierra_216359.bin
+    Created:     2024-04-04 07:17:02 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_hotel_data_899354.bak
+    Created:     2026-05-16 16:51:51 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_index_zulu_828859.bak
+    Created:     2026-05-16 16:51:51 UTC
+    Modified:    2026-05-16 16:51:52 UTC
+    Changed:     2026-05-16 16:51:52 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_lima_mike_622053.csv
+    Created:     2026-05-16 16:51:56 UTC
+    Modified:    2026-05-16 16:51:56 UTC
+    Changed:     2026-05-16 16:51:56 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_papa_audit_649170.md
+    Created:     2026-05-16 16:51:53 UTC
+    Modified:    2026-05-16 16:51:53 UTC
+    Changed:     2026-05-16 16:51:53 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_sierra_log_210965.log
+    Created:     2026-05-16 16:51:52 UTC
+    Modified:    2026-05-16 16:51:52 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (712 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_tango_mike_573093.dat
+    Created:     2026-05-16 16:51:51 UTC
+    Modified:    2026-05-16 16:51:51 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x703)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_temp_audit_764882.bak
+    Created:     2026-05-16 16:51:53 UTC
+    Modified:    2026-05-16 16:51:56 UTC
+    Changed:     2026-05-16 16:51:56 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_uniform_alpha_203203.json
+    Created:     2026-05-16 16:51:53 UTC
+    Modified:    2026-05-16 16:51:53 UTC
+    Changed:     2026-05-16 16:51:53 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_whiskey_kilo_275488.json
+    Created:     2026-05-16 16:51:52 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_whiskey_romeo_757926.txt
+    Created:     2026-05-16 16:51:55 UTC
+    Modified:    2026-05-16 16:51:54 UTC
+    Changed:     2026-05-16 16:51:55 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_yankee_foxtrot_727835.bak
+    Created:     2022-04-19 07:16:47 UTC
+    Modified:    2022-04-19 07:16:47 UTC
+    Changed:     2026-05-16 16:51:58 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  DIR  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790
+    Created:     2026-05-16 16:51:55 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790/xbpt_delta_delta_676812.xml
+    Created:     2026-05-16 16:51:55 UTC
+    Modified:    2026-05-16 16:51:59 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (712 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790/xbpt_draft_india_571157.ini
+    Created:     2026-05-16 16:51:55 UTC
+    Modified:    2026-05-16 16:51:54 UTC
+    Changed:     2026-05-16 16:51:54 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  DIR  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398
+    Created:     2026-05-16 16:51:54 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  DIR  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805
+    Created:     2026-05-16 16:51:51 UTC
+    Modified:    2026-05-16 16:51:58 UTC
+    Changed:     2026-05-16 16:51:58 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  DIR  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083
+    Created:     2026-05-16 16:51:53 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083/xbpt_yankee_echo_729349.tmp
+    Created:     2026-05-16 16:51:54 UTC
+    Modified:    2026-05-16 16:51:58 UTC
+    Changed:     2026-05-16 16:51:58 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_alpha_delta_830163.ini
+    Created:     2026-05-16 16:51:52 UTC
+    Modified:    2026-05-16 16:51:58 UTC
+    Changed:     2026-05-16 16:51:58 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_backup_draft_411674.log
+    Created:     2026-05-16 16:51:54 UTC
+    Modified:    2026-05-16 16:51:54 UTC
+    Changed:     2026-05-16 16:51:54 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_delta_cache_147912.bin
+    Created:     2021-09-26 07:16:24 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_hardlink_audit_219848.cfg
+    Created:     2026-05-16 16:51:51 UTC
+    Modified:    2026-05-16 16:51:54 UTC
+    Changed:     2026-05-16 16:51:54 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x703)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_log_backup_939898.json
+    Created:     2026-05-16 16:51:54 UTC
+    Modified:    2026-05-16 16:51:56 UTC
+    Changed:     2026-05-16 16:51:56 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_report_audit_396522.txt
+    Created:     2021-09-29 07:16:41 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x702)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_symlink_gamma_582874.lnk
+    Created:     2026-05-16 16:51:53 UTC
+    Modified:    2026-05-16 16:51:53 UTC
+    Changed:     2026-05-16 16:51:53 UTC
+    Attributes:  ARCHIVE | REPARSE_POINT (0x420)
+    IntFlags:    HAS_EA | REDIRECT_TRUST (0x28)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (536 bytes)
+    *** REPARSE POINT (symlink/WSL special file) ***
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/xbpt_india_temp_254875.bak
+    Created:     2026-05-16 16:51:56 UTC
+    Modified:    2026-05-16 16:51:58 UTC
+    Changed:     2026-05-16 16:51:58 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_alpha_victor_250409.ini
+    Created:     2026-02-23 07:17:05 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_audit_data_566396.txt
+    Created:     2026-05-16 16:51:55 UTC
+    Modified:    2026-05-16 16:51:55 UTC
+    Changed:     2026-05-16 16:51:55 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_audit_india_563500.bin
+    Created:     2026-05-16 16:51:55 UTC
+    Modified:    2026-05-16 16:51:56 UTC
+    Changed:     2026-05-16 16:51:56 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_audit_log_130131.ini
+    Created:     2021-10-14 07:17:10 UTC
+    Modified:    2021-10-14 07:17:10 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_beta_cache_861983.json
+    Created:     2025-06-11 07:16:10 UTC
+    Modified:    2025-06-11 07:16:10 UTC
+    Changed:     2026-05-16 16:51:57 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x704)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_lima_lima_890070.dat
+    Created:     2026-05-16 16:51:52 UTC
+    Modified:    2026-05-16 16:51:57 UTC
+    Changed:     2026-05-16 16:51:57 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_lima_oscar_843603.tmp
+    Created:     2026-05-16 16:51:53 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_mike_tango_822153.dat
+    Created:     2026-05-16 16:51:53 UTC
+    Modified:    2026-05-16 16:51:53 UTC
+    Changed:     2026-05-16 16:51:53 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_romeo_gamma_831931.dat
+    Created:     2025-02-23 07:17:23 UTC
+    Modified:    2025-02-23 07:17:23 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (792 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_tango_victor_844323.json
+    Created:     2025-03-31 07:17:11 UTC
+    Modified:    2025-03-31 07:17:11 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_temp_output_522138.tmp
+    Created:     2026-05-16 16:51:56 UTC
+    Modified:    2026-05-16 16:51:56 UTC
+    Changed:     2026-05-16 16:51:56 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_trace_quebec_127743.bin
+    Created:     2026-05-16 16:51:57 UTC
+    Modified:    2026-05-16 16:51:58 UTC
+    Changed:     2026-05-16 16:51:58 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  DIR  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462
+    Created:     2026-05-16 16:51:50 UTC
+    Modified:    2026-05-16 16:51:59 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  DIR  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899
+    Created:     2026-05-16 16:51:51 UTC
+    Modified:    2026-05-16 16:51:57 UTC
+    Changed:     2026-05-16 16:51:58 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899/xbpt_config_record_746941.dat
+    Created:     2024-05-06 07:17:31 UTC
+    Modified:    2024-05-06 07:17:31 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x702)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_index_uniform_409576.json
+    Created:     2024-12-12 07:16:57 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_victor_echo_578793.cfg
+    Created:     2023-10-15 07:17:00 UTC
+    Modified:    2023-10-15 07:17:00 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_zulu_output_293634.cfg
+    Created:     2023-11-21 07:17:13 UTC
+    Modified:    2023-11-21 07:17:13 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_archive_whiskey_718198.csv
+    Created:     2026-05-16 16:51:52 UTC
+    Modified:    2026-05-16 16:51:52 UTC
+    Changed:     2026-05-16 16:51:56 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_audit_november_543757.cfg
+    Created:     2026-05-16 16:52:02 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_cache_beta_265588.tmp
+    Created:     2022-03-06 07:16:22 UTC
+    Modified:    2022-03-06 07:16:22 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_config_beta_555315.bin
+    Created:     2026-05-16 16:51:58 UTC
+    Modified:    2026-05-16 16:51:58 UTC
+    Changed:     2026-05-16 16:51:58 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_config_india_582905.json
+    Created:     2026-05-16 16:51:53 UTC
+    Modified:    2026-05-16 16:51:53 UTC
+    Changed:     2026-05-16 16:51:53 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_draft_beta_656043.txt
+    Created:     2026-05-16 16:51:51 UTC
+    Modified:    2026-05-16 16:51:53 UTC
+    Changed:     2026-05-16 16:51:56 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x704)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_gamma_victor_852781.bak
+    Created:     2026-05-16 16:52:02 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_hotel_sync_810225.ini
+    Created:     2026-05-16 16:51:52 UTC
+    Modified:    2026-05-16 16:51:57 UTC
+    Changed:     2026-05-16 16:51:57 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_index_temp_198731.cfg
+    Created:     2022-02-28 07:17:26 UTC
+    Modified:    2022-02-28 07:17:26 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_india_whiskey_159747.csv
+    Created:     2026-05-16 16:51:57 UTC
+    Modified:    2026-05-16 16:51:57 UTC
+    Changed:     2026-05-16 16:51:57 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_log_whiskey_169575.dat
+    Created:     2022-12-26 07:16:15 UTC
+    Modified:    2022-12-26 07:16:15 UTC
+    Changed:     2026-05-16 16:51:53 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_mike_uniform_966879.xml
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_oscar_report_193920.cfg
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_quebec_audit_121864.cfg
+    Created:     2024-10-16 07:17:27 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (712 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_record_delta_426347.json
+    Created:     2026-05-16 16:51:57 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x70f)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_record_index_307951.json
+    Created:     2026-05-16 16:51:55 UTC
+    Modified:    2026-05-16 16:51:55 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x71a)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_report_alpha_806856.csv
+    Created:     2026-05-16 16:51:57 UTC
+    Modified:    2026-05-16 16:51:57 UTC
+    Changed:     2026-05-16 16:51:57 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_temp_echo_351548.json
+    Created:     2026-05-16 16:51:56 UTC
+    Modified:    2026-05-16 16:51:56 UTC
+    Changed:     2026-05-16 16:51:56 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  DIR  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_whiskey_835215
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_whiskey_835215/xbpt_alpha_romeo_974930.bin
+    Created:     2026-05-16 16:51:58 UTC
+    Modified:    2026-05-16 16:51:58 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x706)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_backup_sierra_949923.ini
+    Created:     2026-05-16 16:51:59 UTC
+    Modified:    2026-05-16 16:51:59 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_delta_log_234524.log
+    Created:     2026-05-16 16:52:00 UTC
+    Modified:    2026-05-16 16:51:54 UTC
+    Changed:     2026-05-16 16:51:54 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_draft_draft_797325.txt
+    Created:     2026-05-16 16:51:57 UTC
+    Modified:    2026-05-16 16:51:58 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x702)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_foxtrot_cache_816969.xml
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x710)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_hotel_yankee_781098.log
+    Created:     2026-05-16 16:51:59 UTC
+    Modified:    2026-05-16 16:51:59 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_kilo_sync_474043.csv
+    Created:     2026-05-16 16:52:00 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_lima_config_611703.json
+    Created:     2026-05-16 16:51:59 UTC
+    Modified:    2026-05-16 16:51:59 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_log_mike_997799.bin
+    Created:     2026-05-16 16:52:00 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_output_temp_864816.txt
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_record_cache_584285.json
+    Created:     2026-05-16 16:51:59 UTC
+    Modified:    2026-05-16 16:51:59 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_sierra_record_710410.bin
+    Created:     2026-05-16 16:51:57 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_temp_foxtrot_475776.md
+    Created:     2025-04-08 07:17:35 UTC
+    Modified:    2025-04-08 07:17:35 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_trace_report_848037.cfg
+    Created:     2026-05-16 16:52:00 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_victor_sync_949138.bak
+    Created:     2026-05-16 16:51:51 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x708)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_zulu_hotel_356824.dat
+    Created:     2026-05-16 16:51:59 UTC
+    Modified:    2026-05-16 16:51:57 UTC
+    Changed:     2026-05-16 16:51:57 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_zulu_sync_665668.bin
+    Created:     2026-05-16 16:52:02 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  DIR  test/elvis_dir_record_449015/elvis_dir_tango_434284
+    Created:     2026-05-16 16:52:02 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  DIR  test/elvis_dir_record_449015/elvis_dir_tango_434284/elvis_dir_record_864004
+    Created:     2026-05-16 16:52:02 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  FILE test/elvis_dir_record_449015/elvis_dir_tango_434284/xbpt_data_config_437965.csv
+    Created:     2026-05-16 16:52:02 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/xbpt_alpha_echo_381900.ini
+    Created:     2026-05-16 16:52:00 UTC
+    Modified:    2026-05-16 16:51:59 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/xbpt_archive_audit_104959.tmp
+    Created:     2026-05-16 16:51:52 UTC
+    Modified:    2026-05-16 16:51:57 UTC
+    Changed:     2026-05-16 16:51:57 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/elvis_dir_record_449015/xbpt_backup_delta_809262.csv
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/elvis_dir_record_449015/xbpt_beta_mike_393018.xml
+    Created:     2026-05-16 16:51:59 UTC
+    Modified:    2026-05-16 16:51:59 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/xbpt_config_uniform_831195.csv
+    Created:     2026-05-16 16:51:59 UTC
+    Modified:    2026-05-16 16:51:59 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/xbpt_delta_log_356379.tmp
+    Created:     2026-05-16 16:51:54 UTC
+    Modified:    2026-05-16 16:51:54 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/elvis_dir_record_449015/xbpt_foxtrot_lima_318386.tmp
+    Created:     2026-05-16 16:52:02 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/xbpt_gamma_archive_952302.cfg
+    Created:     2026-05-16 16:51:58 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/xbpt_india_delta_132534.bak
+    Created:     2026-05-16 16:51:54 UTC
+    Modified:    2026-05-16 16:51:54 UTC
+    Changed:     2026-05-16 16:51:54 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/xbpt_kilo_papa_445436.xml
+    Created:     2026-05-16 16:52:00 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/xbpt_large_14mb_foxtrot_773062.bak
+    Created:     2026-05-16 16:52:03 UTC
+    Modified:    2026-05-16 16:52:03 UTC
+    Changed:     2026-05-16 16:52:03 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/xbpt_log_india_171227.csv
+    Created:     2026-05-16 16:51:52 UTC
+    Modified:    2026-05-16 16:51:59 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x70d)
+
+  FILE test/elvis_dir_record_449015/xbpt_mike_trace_772216.dat
+    Created:     2026-05-16 16:51:57 UTC
+    Modified:    2026-05-16 16:51:57 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/xbpt_november_quebec_231876.bak
+    Created:     2026-05-16 16:51:57 UTC
+    Modified:    2026-05-16 16:51:57 UTC
+    Changed:     2026-05-16 16:51:57 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/xbpt_oscar_victor_509674.md
+    Created:     2026-05-16 16:51:58 UTC
+    Modified:    2026-05-16 16:51:58 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/xbpt_output_papa_412411.log
+    Created:     2022-06-11 07:16:28 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/xbpt_sierra_kilo_206137.json
+    Created:     2026-05-16 16:51:54 UTC
+    Modified:    2026-05-16 16:51:52 UTC
+    Changed:     2026-05-16 16:51:52 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/xbpt_sierra_victor_685719.xml
+    Created:     2026-05-16 16:51:56 UTC
+    Modified:    2026-05-16 16:51:55 UTC
+    Changed:     2026-05-16 16:51:55 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/xbpt_uniform_record_153192.json
+    Created:     2026-05-16 16:51:56 UTC
+    Modified:    2026-05-16 16:51:56 UTC
+    Changed:     2026-05-16 16:51:56 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_record_449015/xbpt_whiskey_sync_681180.xml
+    Created:     2026-05-16 16:51:57 UTC
+    Modified:    2026-05-16 16:51:57 UTC
+    Changed:     2026-05-16 16:51:57 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  DIR  test/elvis_dir_victor_783323
+    Created:     2026-05-16 16:51:54 UTC
+    Modified:    2026-05-16 16:52:03 UTC
+    Changed:     2026-05-16 16:52:03 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  FILE test/elvis_dir_victor_783323/xbpt_audit_november_550810.ini
+    Created:     2026-05-16 16:51:54 UTC
+    Modified:    2026-05-16 16:51:55 UTC
+    Changed:     2026-05-16 16:51:57 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/elvis_dir_victor_783323/xbpt_cache_alpha_953426.ini
+    Created:     2026-05-16 16:52:00 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_victor_783323/xbpt_cache_quebec_319176.xml
+    Created:     2026-05-16 16:52:02 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_victor_783323/xbpt_data_romeo_946788.bin
+    Created:     2026-05-16 16:51:56 UTC
+    Modified:    2026-05-16 16:51:56 UTC
+    Changed:     2026-05-16 16:51:56 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_victor_783323/xbpt_delta_echo_626074.json
+    Created:     2025-04-19 07:17:09 UTC
+    Modified:    2025-04-19 07:17:09 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_victor_783323/xbpt_draft_november_935526.json
+    Created:     2026-05-16 16:51:59 UTC
+    Modified:    2026-05-16 16:51:59 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_victor_783323/xbpt_hotel_yankee_684408.cfg
+    Created:     2026-05-16 16:51:54 UTC
+    Modified:    2026-05-16 16:51:54 UTC
+    Changed:     2026-05-16 16:51:57 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_victor_783323/xbpt_india_quebec_883273.bak
+    Created:     2026-05-16 16:51:55 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_victor_783323/xbpt_large_149mb_alpha_610845.dat
+    Created:     2026-05-16 16:52:03 UTC
+    Modified:    2026-05-16 16:52:03 UTC
+    Changed:     2026-05-16 16:52:03 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_victor_783323/xbpt_november_quebec_999278.md
+    Created:     2026-05-16 16:52:02 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_victor_783323/xbpt_oscar_delta_192166.ini
+    Created:     2026-05-16 16:51:59 UTC
+    Modified:    2026-05-16 16:51:59 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_victor_783323/xbpt_quebec_echo_201709.md
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_victor_783323/xbpt_record_mike_276675.tmp
+    Created:     2025-12-01 07:17:11 UTC
+    Modified:    2025-12-01 07:17:11 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_victor_783323/xbpt_report_quebec_867569.md
+    Created:     2025-05-12 07:17:04 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x708)
+
+  FILE test/elvis_dir_victor_783323/xbpt_romeo_quebec_189040.ini
+    Created:     2026-05-16 16:51:58 UTC
+    Modified:    2026-05-16 16:51:58 UTC
+    Changed:     2026-05-16 16:51:58 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_victor_783323/xbpt_romeo_yankee_383561.cfg
+    Created:     2022-05-31 07:17:29 UTC
+    Modified:    2022-05-31 07:17:29 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/elvis_dir_victor_783323/xbpt_sierra_echo_709659.md
+    Created:     2026-05-16 16:52:02 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_victor_783323/xbpt_sierra_gamma_615567.ini
+    Created:     2026-05-16 16:52:01 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_victor_783323/xbpt_trace_cache_289808.json
+    Created:     2026-05-16 16:51:59 UTC
+    Modified:    2026-05-16 16:51:59 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x72b)
+
+  FILE test/elvis_dir_victor_783323/xbpt_trace_config_794136.tmp
+    Created:     2021-10-04 07:16:49 UTC
+    Modified:    2021-10-04 07:16:49 UTC
+    Changed:     2026-05-16 16:51:58 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/elvis_dir_victor_783323/xbpt_trace_hotel_502150.xml
+    Created:     2026-05-16 16:51:59 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/elvis_dir_victor_783323/xbpt_yankee_output_781405.csv
+    Created:     2025-09-04 07:16:57 UTC
+    Modified:    2025-09-04 07:16:57 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/xbpt_archive_romeo_596174.txt
+    Created:     2026-05-16 16:51:53 UTC
+    Modified:    2026-05-16 16:51:53 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x710)
+
+  FILE test/xbpt_beta_sierra_570651.json
+    Created:     2026-05-16 16:51:59 UTC
+    Modified:    2026-05-16 16:51:59 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/xbpt_config_hotel_558589.txt
+    Created:     2026-05-16 16:51:54 UTC
+    Modified:    2026-05-16 16:51:54 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x715)
+
+  FILE test/xbpt_config_log_714507.md
+    Created:     2026-05-16 16:51:57 UTC
+    Modified:    2026-05-16 16:51:58 UTC
+    Changed:     2026-05-16 16:51:58 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/xbpt_config_log_982725.bin
+    Created:     2021-10-15 07:17:19 UTC
+    Modified:    2021-10-15 07:17:19 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/xbpt_draft_tango_958869.bin
+    Created:     2026-05-16 16:51:57 UTC
+    Modified:    2026-05-16 16:51:57 UTC
+    Changed:     2026-05-16 16:51:57 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/xbpt_foxtrot_config_966558.log
+    Created:     2025-11-05 07:16:31 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/xbpt_gamma_temp_372257.bak
+    Created:     2026-05-16 16:51:56 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/xbpt_index_india_423224.csv
+    Created:     2025-06-06 07:17:11 UTC
+    Modified:    2025-06-06 07:17:11 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/xbpt_india_papa_801739.json
+    Created:     2025-08-11 07:17:32 UTC
+    Modified:    2025-08-11 07:17:32 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/xbpt_india_temp_831504.csv
+    Created:     2024-04-02 07:16:32 UTC
+    Modified:    2024-04-02 07:16:32 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x706)
+
+  FILE test/xbpt_india_trace_307426.json
+    Created:     2026-05-16 16:51:56 UTC
+    Modified:    2026-05-16 16:51:56 UTC
+    Changed:     2026-05-16 16:51:56 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/xbpt_large_99mb_report_414178.tmp
+    Created:     2026-05-16 16:52:03 UTC
+    Modified:    2026-05-16 16:52:03 UTC
+    Changed:     2026-05-16 16:52:03 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/xbpt_log_november_496320.csv
+    Created:     2026-05-16 16:51:59 UTC
+    Modified:    2026-05-16 16:51:58 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x710)
+
+  FILE test/xbpt_marked_eveliselaurence_670394.txt
+    Created:     2026-05-16 16:52:02 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    IntFlags:    HAS_EA (0x8)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (488 bytes)
+
+  FILE test/xbpt_sierra_sync_956584.ini
+    Created:     2026-05-16 16:51:54 UTC
+    Modified:    2026-05-16 16:52:02 UTC
+    Changed:     2026-05-16 16:52:02 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x70f)
+
+  FILE test/xbpt_symlink_hotel_632659.lnk
+    Created:     2026-05-16 16:51:57 UTC
+    Modified:    2026-05-16 16:51:57 UTC
+    Changed:     2026-05-16 16:51:57 UTC
+    Attributes:  ARCHIVE | REPARSE_POINT (0x420)
+    IntFlags:    HAS_EA | REDIRECT_TRUST (0x28)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (896 bytes)
+    *** REPARSE POINT (symlink/WSL special file) ***
+
+  FILE test/xbpt_symlink_output_831744.lnk
+    Created:     2026-05-16 16:52:00 UTC
+    Modified:    2026-05-16 16:52:00 UTC
+    Changed:     2026-05-16 16:52:00 UTC
+    Attributes:  ARCHIVE | REPARSE_POINT (0x420)
+    IntFlags:    HAS_EA | REDIRECT_TRUST (0x28)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (536 bytes)
+    *** REPARSE POINT (symlink/WSL special file) ***
+
+  FILE test/xbpt_sync_zulu_911953.ini
+    Created:     2026-05-16 16:51:51 UTC
+    Modified:    2026-05-16 16:51:52 UTC
+    Changed:     2026-05-16 16:51:57 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/xbpt_tango_archive_828215.dat
+    Created:     2026-05-16 16:51:52 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (832 bytes)
+
+  FILE test/xbpt_tango_foxtrot_898933.txt
+    Created:     2026-05-16 16:51:57 UTC
+    Modified:    2026-05-16 16:51:58 UTC
+    Changed:     2026-05-16 16:51:59 UTC
+    Attributes:  ARCHIVE (0x20)
+    Storage:     NON-RESIDENT (OID 0x723)
+
+  FILE test/xbpt_uniform_victor_168724.txt
+    Created:     2026-05-16 16:51:57 UTC
+    Modified:    2026-05-16 16:51:53 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (688 bytes)
+
+  FILE test/xbpt_victor_lima_251467.cfg
+    Created:     2026-05-16 16:51:51 UTC
+    Modified:    2026-05-16 16:51:57 UTC
+    Changed:     2026-05-16 16:51:57 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (656 bytes)
+
+  FILE test/xbpt_yankee_audit_433793.xml
+    Created:     2022-02-12 07:16:16 UTC
+    Modified:    2022-02-12 07:16:16 UTC
+    Changed:     2026-05-16 16:51:55 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  FILE test/xbpt_zulu_hotel_479124.bin
+    Created:     2026-05-16 16:51:59 UTC
+    Modified:    2026-05-16 16:52:01 UTC
+    Changed:     2026-05-16 16:52:01 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (616 bytes)
+
+  DIR  testsnapshots
+    Created:     2026-05-16 16:54:44 UTC
+    Modified:    2026-05-16 17:34:52 UTC
+    Changed:     2026-05-16 17:34:52 UTC
+    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+
+  FILE testsnapshots/arg.txt
+    Created:     2026-05-16 16:55:20 UTC
+    Modified:    2026-05-16 17:12:30 UTC
+    Changed:     2026-05-16 17:12:30 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (1096 bytes)
+    *** STREAM SNAPSHOTS (large embedded data: 1096 bytes) ***
+
+  FILE testsnapshots/arg.txt.bak.20260516191516
+    Created:     2026-05-16 17:15:16 UTC
+    Modified:    2026-05-16 17:12:30 UTC
+    Changed:     2026-05-16 17:12:30 UTC
+    Attributes:  ARCHIVE (0x20)
+    IntFlags:    HAS_EA (0x8)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (328 bytes)
+
+  FILE testsnapshots/arg.txt.bak.20260516191620
+    Created:     2026-05-16 17:16:20 UTC
+    Modified:    2026-05-16 17:12:30 UTC
+    Changed:     2026-05-16 17:12:30 UTC
+    Attributes:  ARCHIVE (0x20)
+    IntFlags:    HAS_EA (0x8)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (328 bytes)
+
+  FILE testsnapshots/lasttest.txt
+    Created:     2026-05-16 17:34:52 UTC
+    Modified:    2026-05-16 17:35:57 UTC
+    Changed:     2026-05-16 17:35:57 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (1600 bytes)
+    *** STREAM SNAPSHOTS (large embedded data: 1600 bytes) ***
+
+  FILE testsnapshots/test.txt
+    Created:     2026-05-16 17:16:47 UTC
+    Modified:    2026-05-16 17:19:37 UTC
+    Changed:     2026-05-16 17:19:37 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (2520 bytes)
+    *** STREAM SNAPSHOTS (large embedded data: 2520 bytes) ***
+
+  FILE testsnapshots/testads.txt
+    Created:     2026-05-16 17:26:23 UTC
+    Modified:    2026-05-16 17:27:58 UTC
+    Changed:     2026-05-16 17:27:58 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (1768 bytes)
+    *** STREAM SNAPSHOTS (large embedded data: 1768 bytes) ***
+
+  FILE testsnapshots/testxyz.txt
+    Created:     2026-05-16 17:21:14 UTC
+    Modified:    2026-05-16 17:19:37 UTC
+    Changed:     2026-05-16 17:19:37 UTC
+    Attributes:  ARCHIVE (0x20)
+    IntFlags:    HAS_EA (0x8)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (320 bytes)
+
+  FILE testsnapshots/xbpt_beta_sierra_570651.json
+    Created:     2026-05-16 17:30:57 UTC
+    Modified:    2026-05-16 17:34:32 UTC
+    Changed:     2026-05-16 17:34:32 UTC
+    Attributes:  ARCHIVE (0x20)
+    SecurityId:  0x1348ee884
+    Storage:     RESIDENT (1888 bytes)
+    *** STREAM SNAPSHOTS (large embedded data: 1888 bytes) ***
+

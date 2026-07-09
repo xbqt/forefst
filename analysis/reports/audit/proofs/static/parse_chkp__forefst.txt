@@ -1,0 +1,21 @@
+def parse_chkp(f, ps, cs, lcn):
+ f.seek(ps + lcn * cs); raw = f.read(4 * cs)
+ if raw[:4] != b"CHKP": raise ValueError("Bad CHKP")
+ vclock = le64(raw, 0x10)
+ flags = le32(raw, 0x78)
+ desc_len = le32(raw, 0x5c)
+ indirect = bool(flags & 0x200)
+ root_count = le32(raw, 0x90)
+ olb = le32(raw, 0x94) if indirect else 0x94
+ roots = []
+ for idx in range(root_count):
+ oe = olb + idx * 4
+ if oe + 4 > len(raw): roots.append([]); continue
+ ro = le32(raw, oe)
+ if ro == 0 or ro + desc_len > len(raw): roots.append([]); continue
+ rec = raw[ro:ro+desc_len]
+ slots = [le64(rec, i*8) for i in range(4)]
+ roots.append([s for s in slots if s not in (0, 0xFFFFFFFFFFFFFFFF)])
+ return vclock, flags, roots
+
+# ─── Container Table + Translator ─────────────────────────────────────

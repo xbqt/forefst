@@ -1,0 +1,10 @@
+<svg class="diagram" viewBox="0 0 720 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Main Windows I/O paths">
+<defs><marker id="wi-a" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path class="dg-arrowhead" d="M0,0 L7,3 L0,6 Z"/></marker></defs>
+<rect class="dg-box-accent" x="280" y="20" width="170" height="40" rx="7"/><text class="dg-accent" x="365" y="45" text-anchor="middle" font-size="12" font-weight="700">refs.sys (FSD)</text>
+<rect class="dg-box" x="60" y="110" width="220" height="46" rx="7"/><text class="dg-text" x="170" y="132" text-anchor="middle" font-size="11.5">Cache Manager</text><text class="dg-muted" x="170" y="148" text-anchor="middle" font-size="10">cached read/write ⇄ memory</text>
+<rect class="dg-box" x="440" y="110" width="220" height="46" rx="7"/><text class="dg-text" x="550" y="132" text-anchor="middle" font-size="11.5">Storage stack → disk</text><text class="dg-muted" x="550" y="148" text-anchor="middle" font-size="10">non-cached / paging I/O</text>
+<line class="dg-line" x1="330" y1="60" x2="200" y2="106" marker-end="url(#wi-a)"/>
+<line class="dg-line" x1="400" y1="60" x2="520" y2="106" marker-end="url(#wi-a)"/>
+<path class="dg-dash" d="M170 156 C170 185, 550 185, 550 158" marker-end="url(#wi-a)"/>
+<text class="dg-muted" x="360" y="195" text-anchor="middle" font-size="10">cache misses fall through to the storage stack</text>
+</svg>

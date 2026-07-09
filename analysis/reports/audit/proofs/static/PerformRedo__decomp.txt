@@ -1,0 +1,185 @@
+
+// === PerformRedo @ 14012e65c ===
+
+/* WARNING: Function: _guard_dispatch_icall replaced with injection: guard_dispatch_icall */
+/* private: long __cdecl CmsLogRedoQueue::PerformRedo(class CmsTransactionContext * __ptr64,struct
+ _SmsRedoRecord * __ptr64) __ptr64 */
+
+long __thiscall
+CmsLogRedoQueue::PerformRedo
+ (CmsLogRedoQueue *this,CmsTransactionContext *param_1,_SmsRedoRecord *param_2)
+
+{
+ _CmsKey *p_Var1;
+ uint uVar2;
+ CmsStream *pCVar3;
+ CmsTableSetBase *this_00;
+ long lVar4;
+ CmsBPlusTable *pCVar5;
+ SmsBigIdentifier *this_01;
+ code *pcVar6;
+ SmsBigIdentifier *this_02;
+ CmsBPlusTable *in_R9;
+ SmsBigIdentifier *pSVar7;
+ longlong *plVar9;
+ SmsBigIdentifier *pSVar10;
+ SmsBigIdentifier *pSVar11;
+ bool bVar12;
+ SmsBigIdentifier *local_res20;
+ CmsBPlusTable *in_stack_ffffffffffffff98;
+ uchar in_stack_ffffffffffffffa0;
+ Value in_stack_ffffffffffffffa8;
+ SmsBigIdentifier *local_48;
+ SmsBigIdentifier *pSStack_40;
+ long local_38 [2];
+ SmsBigIdentifier *local_30;
+ SmsBigIdentifier *pSVar8;
+ SmsBigIdentifier *this_03;
+ 
+ this_03 = (SmsBigIdentifier *)0x0;
+ pSVar11 = (SmsBigIdentifier *)0x0;
+ this_01 = (SmsBigIdentifier *)0x0;
+ pSVar10 = (SmsBigIdentifier *)0x0;
+ local_res20 = (SmsBigIdentifier *)0x0;
+ if (DAT_140228800 != 0) {
+ return 0;
+ }
+ p_Var1 = (_CmsKey *)(this + 0xa0);
+ this_02 = (SmsBigIdentifier *)0x0;
+ lVar4 = ObjectIdFromRedoHelper((_SmsRedoRecord *)0x0,p_Var1,(SmsBigIdentifier *)&local_48);
+ pSVar8 = (SmsBigIdentifier *)0x0;
+ pSVar7 = (SmsBigIdentifier *)0x0;
+ if (lVar4 < 0) {
+ return lVar4;
+ }
+ uVar2 = *(uint *)(param_2 + 4);
+ if (uVar2 < 0x17) {
+ if ((((uVar2 != 0x16) && (uVar2 != 0)) &&
+ ((uVar2 != 0x11 &&
+ ((pSVar8 = pSVar7, this_01 = pSVar10, this_03 = pSVar11, uVar2 != 0x12 && (uVar2 != 0x13)))
+ ))) && (uVar2 != 0x14)) {
+ bVar12 = uVar2 == 0x15;
+LAB_14012e726:
+ pSVar8 = pSVar7;
+ this_01 = pSVar10;
+ this_03 = pSVar11;
+ if (!bVar12) {
+ if ((*(int *)(param_2 + 8) == 0) ||
+ (((*(uint *)(param_2 + 0x2c) & 1) != 0 &&
+ (bVar12 = _CmsKey::operator==((_CmsKey *)(this + 0xf8),p_Var1), bVar12)))) {
+ pSVar8 = (SmsBigIdentifier *)0x0;
+ this_03 = *(SmsBigIdentifier **)(this + 0xf0);
+ if ((this_03 == (SmsBigIdentifier *)0x0) ||
+ (this_02 = this_03, local_res20 = this_03,
+ pCVar5 = SmsOpenTable::GetTable((SmsOpenTable *)this_03),
+ pCVar5 == (CmsBPlusTable *)0x0)) {
+ return -0x3fffffce;
+ }
+ }
+ else {
+ in_stack_ffffffffffffff98 = (CmsBPlusTable *)&local_res20;
+ in_R9 = (CmsBPlusTable *)0x2;
+ this_02 = (SmsBigIdentifier *)this;
+ lVar4 = OpenTableFromTablePath
+ (this,param_1,p_Var1,2,(SmsOpenTable **)in_stack_ffffffffffffff98,
+ in_stack_ffffffffffffffa0);
+ pSVar8 = (SmsBigIdentifier *)0x0;
+ this_03 = local_res20;
+ if (lVar4 < 0) {
+ return lVar4;
+ }
+ }
+ this_01 = pSVar8;
+ if (this_03 != (SmsBigIdentifier *)0x0) {
+ this_02 = this_03;
+ this_01 = (SmsBigIdentifier *)SmsOpenTable::GetTable((SmsOpenTable *)this_03);
+ }
+ }
+ }
+ }
+ else {
+ pSVar8 = pSVar7;
+ this_01 = pSVar10;
+ this_03 = pSVar11;
+ if ((((uVar2 != 0x18) && (uVar2 != 0x19)) && (uVar2 != 0x1a)) && (uVar2 != 0x1c)) {
+ bVar12 = uVar2 == 0x27;
+ goto LAB_14012e726;
+ }
+ }
+ uVar2 = *(uint *)(param_2 + 4);
+ lVar4 = (long)pSVar8;
+ if (uVar2 < 0x17) {
+ if (uVar2 == 0x16) {
+ local_48 = pSVar8;
+ pSStack_40 = pSVar8;
+ lVar4 = RedoValueAsRange(param_2,0,(_RANGE *)&local_48);
+ }
+ else if (uVar2 < 0xc) {
+ if (uVar2 == 0xb) {
+ lVar4 = RedoModifyStreamExtent(this,param_1,param_2,in_R9,*(CmsStream **)(this_03 + 0x30));
+ }
+ else if (uVar2 < 6) {
+ if (uVar2 == 5) {
+ lVar4 = RedoReparentTable(this,param_1,param_2,(SmsOpenTable *)this_03);
+ }
+ else if (uVar2 == 0) {
+ lVar4 = OpenTableFromTablePath
+ (this,param_1,p_Var1,1,(SmsOpenTable **)&local_res20,
+ in_stack_ffffffffffffffa0);
+ this_03 = local_res20;
+ }
+ else if (uVar2 == 1) {
+ lVar4 = RedoInsertRow((CmsLogRedoQueue *)this_02,param_1,param_2,(CmsBPlusTable *)this_01)
+ ;
+ }
+ else if (uVar2 == 2) {
+ lVar4 = RedoDeleteRow(this,param_1,param_2,(CmsBPlusTable *)this_01);
+ }
+ else if (uVar2 == 3) {
+ lVar4 = RedoUpdateRow(this,param_1,param_2,(CmsBPlusTable *)this_01);
+ }
+ else {
+ if (uVar2 != 4) {
+ return -0x3ffffbd9;
+ }
+ lVar4 = RedoUpdateDataWithRoot
+ (this,param_1,param_2,(CmsBPlusTable *)this_01,
+ *(CmsStream **)(this_03 + 0x30));
+ }
+ }
+ else if (uVar2 == 6) {
+ lVar4 = RedoAllocate(this,param_1,param_2,in_R9,*(CmsStream **)(this_03 + 0x30));
+ }
+ else if (uVar2 == 7) {
+ lVar4 = RedoFree(this,param_1,param_2,in_R9,*(CmsStream **)(this_03 + 0x30));
+ }
+ else if ((uVar2 == 8) || (uVar2 == 9)) {
+ lVar4 = RedoSetRangeState(this,param_1,param_2,in_R9,*(CmsStream **)(this_03 + 0x30));
+ }
+ else {
+ if (uVar2 != 10) {
+ return -0x3ffffbd9;
+ }
+ lVar4 = RedoDuplicateExtents(this,param_1,param_2,in_R9,*(CmsStream **)(this_03 + 0x30));
+ }
+ }
+ else if (uVar2 < 0x12) {
+ if (uVar2 == 0x11) {
+ lVar4 = RedoAddSchema(this,param_1,param_2);
+ }
+ else if (uVar2 == 0xc) {
+ pCVar3 = *(CmsStream **)(this_03 + 0x30);
+ local_res20 = pSVar8;
+ lVar4 = RedoValueAsUlonglong(param_2,0,(__uint64 *)&local_res20);
+ if (-1 < lVar4) {
+ CmsStream::StripAllChecksums
+ (pCVar3,param_1,(__int64)local_res20,
+ *(longlong *)(*(longlong *)(this + 0x150) + 0x70) <=
+ *(longlong *)(param_2 + 0x20),'\0');
+ }
+ }
+ else if (uVar2 == 0xd) {
+ local_48 = (SmsBigIdentifier *)CONCAT44(local_48._4_4_,lVar4);
+ pSStack_40 = pSVar8;
+ lVar4 = RedoValueAsData(param_2,0,(_CmsData *)&local_48);
+ if (-1 < lVar4) {

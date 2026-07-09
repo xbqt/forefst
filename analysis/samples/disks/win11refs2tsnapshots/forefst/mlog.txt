@@ -1,0 +1,71 @@
+# forefst win11refs2tsnapshots.raw mlog --stats
+# ----------------------------------------------------------------------------
+==============================================================================
+ReFS MLog Analysis — win11refs2tsnapshots.raw
+ReFS v3.14 | cluster_size=0x1000 | objects=47
+==============================================================================
+
+==============================================================================
+MLog Control Area
+==============================================================================
+  Control PLCN:      0x31
+  Signature:         MLog
+  Format magic:      0x3832ddbf (per-volume const, NOT a CRC — E42/#343; differs after a reformat)
+  Version:           1
+  Sector size:       0x1000
+  UUID:              9c6d6a27-cb84-45b7-9f7a-d56532ce5aea
+  Sequence:          138
+  Write counter:     2
+  Flags:             0x1
+  Total entries:     0
+  Generation:        2275
+  Data area:         0x8000 - 0x48000 (262144 clusters)
+  LSN oldest:        0x8e3.1
+  Dispatch table:    v3.14 (44 opcodes)
+
+==============================================================================
+Data Area Summary
+==============================================================================
+  Total pages:       262144
+  zero                 259870  ( 99.1%)
+  MLog                   2274  (  0.9%)
+
+==============================================================================
+Redo Records
+==============================================================================
+  Total records:      2808
+  Transaction starts: 1344
+  Transaction commits: 0
+
+==============================================================================
+Opcode Frequency
+==============================================================================
+
+  Opcode   Count      %  Name                                    
+  ──────  ──────  ─────  ────────────────────────────────────────
+  0x0000     144    5.1  OpenTableFromTablePath
+  0x0001     814   29.0  RedoInsertRow
+  0x0002     306   10.9  RedoDeleteRow
+  0x0003      16    0.6  RedoUpdateRow
+  0x0004       7    0.2  RedoUpdateDataWithRoot
+  0x0005      36    1.3  RedoReparentTable
+  0x0006     157    5.6  RedoAllocate
+  0x0007     559   19.9  RedoFree
+  0x000e      11    0.4  RedoSetParentId
+  0x000f      42    1.5  RedoDeleteTable
+  0x0010     243    8.7  CmsBPlusTable::SetObjectRecordPayload
+  0x0012      22    0.8  RedoMoveContainer
+  0x001e       1    0.0  CmsTableSetBase::PrepareEntryForMerge
+  0x001f     339   12.1  RedoUpdateStreamSummary
+  0x0020     111    4.0  CmsStream::UpdateStreamUserPayload
+
+  Category               Count      %
+  ────────────────────  ──────  ─────
+  btree                   1386   49.4
+  alloc                    716   25.5
+  stream                   450   16.0
+  table                    222    7.9
+  container                 22    0.8
+  namespace                 11    0.4
+  tableset                   1    0.0
+

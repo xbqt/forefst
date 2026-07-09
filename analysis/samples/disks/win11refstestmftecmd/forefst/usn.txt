@@ -1,0 +1,46 @@
+# forefst win11refstestmftecmd.raw usn --stats
+# ----------------------------------------------------------------------------
+==============================================================================
+USN Journal Statistics (6805 records)
+==============================================================================
+
+  Reason code distribution:
+    FILE_CREATE                     3279
+    CLOSE                           2505
+    DATA_EXTEND                     2333
+    DATA_OVERWRITE                  1573
+    BASIC_INFO_CHANGE               1195
+    RENAME_NEW_NAME                  684
+    DATA_TRUNCATION                  488
+    STREAM_CHANGE                    410
+    REPARSE_POINT_CHANGE             396
+    NAMED_DATA_EXTEND                391
+    RENAME_OLD_NAME                  342
+    HARD_LINK_CHANGE                 205
+    FILE_DELETE                      120
+    NAMED_DATA_OVERWRITE              40
+    INTEGRITY_CHANGE                   2
+
+  Top files by record count:
+    xbpt_index_beta_458108.bin                  52
+    xbpt_hardlink_log_697310.log                45
+    xbpt_hardlink_tango_460823.xml              37
+    xbpt_index_temp_559712.cfg                  33
+    xbpt_backup_backup_285884.cfg               33
+    xbpt_echo_backup_965317.ini                 27
+    xbpt_hardlink_romeo_125439.log              27
+    xbpt_quebec_victor_195703.tmp               27
+    xbpt_index_kilo_795802.md                   26
+    xbpt_victor_mike_621440.xml                 25
+    xbpt_beta_sierra_717306.cfg                 23
+    xbpt_delta_cache_147912.bin                 21
+    xbpt_quebec_foxtrot_777338.ini              21
+    xbpt_zulu_whiskey_391283.tmp                20
+    xbpt_echo_audit_435989.cfg                  20
+
+  Unique filenames:    1438
+  Unique parent dirs:  104
+  USN range:           0 — 917280
+  Time range:          2026-05-23 07:38:44 UTC
+                    to 2026-05-23 07:53:47 UTC
+

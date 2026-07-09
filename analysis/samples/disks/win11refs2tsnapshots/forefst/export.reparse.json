@@ -1,0 +1,58 @@
+{
+  "reparse_points": [
+    {
+      "name": "test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_symlink_gamma_582874.lnk",
+      "is_dir": false,
+      "file_attrs": 1056,
+      "has_reparse": true,
+      "reparse_data": {
+        "tag": 2684354572,
+        "tag_name": "IO_REPARSE_TAG_SYMLINK",
+        "data_len": 168,
+        "flags": 0,
+        "relative": false,
+        "substitute_name": "\\??\\K:\\test\\xbpt_foxtrot_india_714766.ini",
+        "print_name": "K:\\test\\xbpt_foxtrot_india_714766.ini"
+      },
+      "wsl_eas": {},
+      "reparse_target": "K:\\test\\xbpt_foxtrot_india_714766.ini",
+      "reparse_tag_value": 2684354572
+    },
+    {
+      "name": "test/xbpt_symlink_hotel_632659.lnk",
+      "is_dir": false,
+      "file_attrs": 1056,
+      "has_reparse": true,
+      "reparse_data": {
+        "tag": 2684354572,
+        "tag_name": "IO_REPARSE_TAG_SYMLINK",
+        "data_len": 524,
+        "flags": 0,
+        "relative": false,
+        "substitute_name": "\\??\\K:\\test\\elvis_dir_log_202031\\elvis_dir_record_340186\\elvis_dir_gamma_109016\\elvis_dir_config_541148\\xbpt_index_zulu_828859.bak",
+        "print_name": "K:\\test\\elvis_dir_log_202031\\elvis_dir_record_340186\\elvis_dir_gamma_109016\\elvis_dir_config_541148\\xbpt_index_zulu_828859.bak"
+      },
+      "wsl_eas": {},
+      "reparse_target": "K:\\test\\elvis_dir_log_202031\\elvis_dir_record_340186\\elvis_dir_gamma_109016\\elvis_dir_config_541148\\xbpt_index_zulu_828859.bak",
+      "reparse_tag_value": 2684354572
+    },
+    {
+      "name": "test/xbpt_symlink_output_831744.lnk",
+      "is_dir": false,
+      "file_attrs": 1056,
+      "has_reparse": true,
+      "reparse_data": {
+        "tag": 2684354572,
+        "tag_name": "IO_REPARSE_TAG_SYMLINK",
+        "data_len": 164,
+        "flags": 0,
+        "relative": false,
+        "substitute_name": "\\??\\K:\\test\\xbpt_yankee_audit_433793.xml",
+        "print_name": "K:\\test\\xbpt_yankee_audit_433793.xml"
+      },
+      "wsl_eas": {},
+      "reparse_target": "K:\\test\\xbpt_yankee_audit_433793.xml",
+      "reparse_tag_value": 2684354572
+    }
+  ]
+}
