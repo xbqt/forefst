@@ -1,0 +1,1547 @@
+# forefst wininsiderrefs8gtest2.raw deleted --max-scan 8000
+# ----------------------------------------------------------------------------
+==============================================================================
+ReFS Deleted File Finder
+==============================================================================
+  Image:        analysis/rawdisk/disks/step4/wininsiderrefs8gtest2.raw
+  ReFS version: 3.14
+  Cluster size: 0x10000
+  Checkpoints:  2 (VC: 161, 160)
+  Objects:      132
+
+── Trash Table (OID 0xD) ──
+  Empty (all deletions fully processed)
+
+── Checkpoint Comparison ──
+  Current checkpoint: VC=161
+  Previous checkpoint: VC=160
+  Same top-level files in both (change may be in subdirectories or metadata)
+
+── B+-tree Node Slack Scan (Method 5) ──
+  Recovering deleted directory entries from metadata-page free space
+  (ReFS deletion removes only the row's index slot; the row body persists).
+  Scanned 151 live pages + 0 orphan pages with recoverable slack rows
+
+  DELETED (name not in the live tree): 218  [218 with valid timestamps, 0 partial remnants]
+
+    FILE alpha_output_778681.csv  (resident, live-slack @ cluster 62 off 0x378)
+      Deleted from: /testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_report_888370  (table 0x715)
+      Created:  2026-05-19 19:57:34 UTC
+      Modified: 2026-05-19 19:57:34 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE audit_audit_429352.bin  (resident, live-slack @ cluster 534 off 0x2c08)
+      Deleted from: /testspecials/dir_config_384571/dir_backup_503994/dir_romeo_941465  (table 0x71a)
+      Created:  2026-05-19 19:57:45 UTC
+      Modified: 2026-05-19 19:57:45 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE audit_oscar_799900.ini  (resident, live-slack @ cluster 66 off 0x378)
+      Deleted from: /testspecials/dir_record_119518/dir_delta_826049/dir_record_790212  (table 0x71f)
+      Created:  2026-05-19 19:57:41 UTC
+      Modified: 2026-05-19 19:57:41 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE cache_november_971748.ini  (resident, live-slack @ cluster 527 off 0x3018)
+      Deleted from: /testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344  (table 0x710)
+      Created:  2026-05-19 19:57:52 UTC
+      Modified: 2026-05-19 19:57:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_alpha_489584  (non-resident, live-slack @ cluster 76 off 0x77a0)
+      Deleted from: /testspecials/dir_config_384571  (table 0x72b)
+      Created:  2026-05-19 19:58:24 UTC
+      Modified: 2026-05-19 19:59:16 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_archive_892810  (non-resident, live-slack @ cluster 542 off 0x5d8)
+      Deleted from: /testspecials/dir_config_384571/dir_beta_813541  (table 0x731)
+      Created:  2026-05-19 19:58:12 UTC
+      Modified: 2026-05-19 19:58:19 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_backup_591337  (non-resident, live-slack @ cluster 542 off 0x548)
+      Deleted from: /testspecials/dir_config_384571/dir_beta_813541  (table 0x731)
+      Created:  2026-05-19 19:58:07 UTC
+      Modified: 2026-05-19 19:58:58 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_backup_714526  (non-resident, live-slack @ cluster 530 off 0x2820)
+      Deleted from: /testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_record_422737  (table 0x714)
+      Created:  2026-05-19 19:57:57 UTC
+      Modified: 2026-05-19 19:57:57 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_beta_128424  (non-resident, live-slack @ cluster 76 off 0x1cc8)
+      Deleted from: /testspecials/dir_config_384571  (table 0x72b)
+      Created:  2026-05-19 19:57:55 UTC
+      Modified: 2026-05-19 19:59:05 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_beta_149849  (non-resident, live-slack @ cluster 57 off 0x54d8)
+      Deleted from: /testspecials/dir_oscar_288048  (table 0x70b)
+      Created:  2026-05-19 19:57:29 UTC
+      Modified: 2026-05-19 19:57:50 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_beta_605056  (non-resident, live-slack @ cluster 57 off 0x3118)
+      Deleted from: /testspecials/dir_oscar_288048  (table 0x70b)
+      Created:  2026-05-19 19:57:33 UTC
+      Modified: 2026-05-19 19:57:33 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_foxtrot_847052  (non-resident, live-slack @ cluster 526 off 0xa90)
+      Deleted from: /testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/dir_oscar_729924  (table 0x70c)
+      Created:  2026-05-19 19:57:46 UTC
+      Modified: 2026-05-19 19:57:46 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_gamma_642925  (non-resident, live-slack @ cluster 546 off 0x378)
+      Deleted from: /testspecials/dir_gamma_666805/dir_data_621988  (table 0x73c)
+      Created:  2026-05-19 19:58:12 UTC
+      Modified: 2026-05-19 19:58:33 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_gamma_748265  (non-resident, live-slack @ cluster 57 off 0x6270)
+      Deleted from: /testspecials/dir_oscar_288048  (table 0x70b)
+      Created:  2026-05-19 19:57:42 UTC
+      Modified: 2026-05-19 19:57:56 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_hotel_375295  (non-resident, live-slack @ cluster 57 off 0x378)
+      Deleted from: /testspecials/dir_oscar_288048  (table 0x70b)
+      Created:  2026-05-19 19:57:29 UTC
+      Modified: 2026-05-19 19:57:39 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_hotel_606115  (non-resident, live-slack @ cluster 515 off 0x1ed8)
+      Deleted from: /testspecials/dir_record_119518/dir_mike_657912/dir_sync_665841  (table 0x72c)
+      Created:  2026-05-19 19:58:14 UTC
+      Modified: 2026-05-19 19:58:14 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_hotel_777120  (non-resident, live-slack @ cluster 57 off 0x408)
+      Deleted from: /testspecials/dir_oscar_288048  (table 0x70b)
+      Created:  2026-05-19 19:57:30 UTC
+      Modified: 2026-05-19 19:57:30 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_index_835866  (non-resident, live-slack @ cluster 539 off 0x18f0)
+      Deleted from: /testspecials/dir_oscar_288048/dir_sync_959703  (table 0x729)
+      Created:  2026-05-19 19:57:59 UTC
+      Modified: 2026-05-19 19:59:14 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_lima_507826  (non-resident, live-slack @ cluster 85 off 0x378)
+      Deleted from: /testspecials/dir_oscar_738992  (table 0x738)
+      Created:  2026-05-19 19:58:07 UTC
+      Modified: 2026-05-19 19:58:12 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_lima_907209  (non-resident, live-slack @ cluster 539 off 0x4c0)
+      Deleted from: /testspecials/dir_oscar_288048/dir_sync_959703  (table 0x729)
+      Created:  2026-05-19 19:57:59 UTC
+      Modified: 2026-05-19 19:58:00 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_log_888638  (non-resident, live-slack @ cluster 71 off 0x418)
+      Deleted from: /testspecials/dir_config_384571/dir_backup_503994/dir_romeo_941465/dir_mike_372259  (table 0x727)
+      Created:  2026-05-19 19:57:50 UTC
+      Modified: 2026-05-19 19:57:50 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_mike_752990  (non-resident, live-slack @ cluster 57 off 0x7110)
+      Deleted from: /testspecials/dir_oscar_288048  (table 0x70b)
+      Created:  2026-05-19 19:57:47 UTC
+      Modified: 2026-05-19 19:58:20 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_oscar_652789  (non-resident, live-slack @ cluster 539 off 0x550)
+      Deleted from: /testspecials/dir_oscar_288048/dir_sync_959703  (table 0x729)
+      Created:  2026-05-19 19:57:31 UTC
+      Modified: 2026-05-19 19:58:09 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_record_829124  (non-resident, live-slack @ cluster 528 off 0x3370)
+      Deleted from: /testspecials/dir_record_119518/dir_mike_657912  (table 0x712)
+      Created:  2026-05-19 19:57:49 UTC
+      Modified: 2026-05-19 19:57:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_report_364731  (non-resident, live-slack @ cluster 542 off 0x4b8)
+      Deleted from: /testspecials/dir_config_384571/dir_beta_813541  (table 0x731)
+      Created:  2026-05-19 19:57:59 UTC
+      Modified: 2026-05-19 19:58:37 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_romeo_561298  (non-resident, live-slack @ cluster 536 off 0x2410)
+      Deleted from: /testspecials/dir_record_119518/dir_yankee_902047  (table 0x723)
+      Created:  2026-05-19 19:57:55 UTC
+      Modified: 2026-05-19 19:58:02 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_sierra_767456  (non-resident, live-slack @ cluster 41 off 0x378)
+      Deleted from: /testspecials/dir_gamma_666805  (table 0x71b)
+      Created:  2026-05-19 19:57:39 UTC
+      Modified: 2026-05-19 19:57:39 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_tango_207226  (non-resident, live-slack @ cluster 536 off 0x2540)
+      Deleted from: /testspecials/dir_record_119518/dir_yankee_902047  (table 0x723)
+      Created:  2026-05-19 19:57:55 UTC
+      Modified: 2026-05-19 19:58:26 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_tango_557776  (non-resident, live-slack @ cluster 66 off 0xf28)
+      Deleted from: /testspecials/dir_record_119518/dir_delta_826049/dir_record_790212  (table 0x71f)
+      Created:  2026-05-19 19:57:40 UTC
+      Modified: 2026-05-19 19:57:40 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_trace_361770  (non-resident, live-slack @ cluster 57 off 0x63a0)
+      Deleted from: /testspecials/dir_oscar_288048  (table 0x70b)
+      Created:  2026-05-19 19:57:36 UTC
+      Modified: 2026-05-19 19:58:41 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_uniform_897003  (non-resident, live-slack @ cluster 527 off 0x2328)
+      Deleted from: /testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344  (table 0x710)
+      Created:  2026-05-19 19:57:37 UTC
+      Modified: 2026-05-19 19:57:37 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_victor_786949  (non-resident, live-slack @ cluster 76 off 0x6af8)
+      Deleted from: /testspecials/dir_config_384571  (table 0x72b)
+      Created:  2026-05-19 19:58:32 UTC
+      Modified: 2026-05-19 19:59:09 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_yankee_851954  (non-resident, live-slack @ cluster 76 off 0x5720)
+      Deleted from: /testspecials/dir_config_384571  (table 0x72b)
+      Created:  2026-05-19 19:58:24 UTC
+      Modified: 2026-05-19 19:58:53 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_archive_539743  (non-resident, live-slack @ cluster 60 off 0x4aa8)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016  (table 0x773)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:53 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_archive_998549  (non-resident, live-slack @ cluster 573 off 0x7390)
+      Deleted from: /testintegrity/elvis_dir_victor_783323  (table 0x784)
+      Created:  2026-05-19 20:00:56 UTC
+      Modified: 2026-05-19 20:00:56 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_audit_388279  (non-resident, live-slack @ cluster 573 off 0x2728)
+      Deleted from: /testintegrity/elvis_dir_victor_783323  (table 0x784)
+      Created:  2026-05-19 20:00:51 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_backup_752812  (non-resident, live-slack @ cluster 119 off 0xff0)
+      Deleted from: /testintegrity/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/elvis_dir_oscar_874075  (table 0x798)
+      Created:  2026-05-19 20:00:56 UTC
+      Modified: 2026-05-19 20:00:56 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_beta_261576  (non-resident, live-slack @ cluster 60 off 0x51d8)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016  (table 0x773)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:53 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_beta_786640  (non-resident, live-slack @ cluster 61 off 0x7c58)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743  (table 0x774)
+      Created:  2026-05-19 20:00:57 UTC
+      Modified: 2026-05-19 20:00:57 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_cache_167153  (non-resident, live-slack @ cluster 118 off 0x2860)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141  (table 0x797)
+      Created:  2026-05-19 20:00:57 UTC
+      Modified: 2026-05-19 20:00:57 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_draft_401781  (non-resident, live-slack @ cluster 114 off 0x41e8)
+      Deleted from: /testintegrity/elvis_dir_india_800575  (table 0x790)
+      Created:  2026-05-19 20:00:53 UTC
+      Modified: 2026-05-19 20:00:58 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_echo_418892  (non-resident, live-slack @ cluster 60 off 0x70c0)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016  (table 0x773)
+      Created:  2026-05-19 20:00:54 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_echo_426942  (non-resident, live-slack @ cluster 115 off 0x1898)
+      Deleted from: /testintegrity/elvis_dir_papa_805353  (table 0x792)
+      Created:  2026-05-19 20:00:55 UTC
+      Modified: 2026-05-19 20:00:57 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_gamma_237351  (non-resident, live-slack @ cluster 119 off 0x960)
+      Deleted from: /testintegrity/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/elvis_dir_oscar_874075  (table 0x798)
+      Created:  2026-05-19 20:00:56 UTC
+      Modified: 2026-05-19 20:00:56 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_gamma_328350  (non-resident, live-slack @ cluster 61 off 0x29c0)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743  (table 0x774)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_hotel_923392  (non-resident, live-slack @ cluster 61 off 0x1c98)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743  (table 0x774)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_index_711747  (non-resident, live-slack @ cluster 573 off 0x86c0)
+      Deleted from: /testintegrity/elvis_dir_victor_783323  (table 0x784)
+      Created:  2026-05-19 20:00:57 UTC
+      Modified: 2026-05-19 20:00:57 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_index_826518  (non-resident, live-slack @ cluster 72 off 0x60c8)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778  (table 0x77e)
+      Created:  2026-05-19 20:00:55 UTC
+      Modified: 2026-05-19 20:00:55 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_india_806655  (non-resident, live-slack @ cluster 578 off 0xa10)
+      Deleted from: /testintegrity/elvis_dir_index_149423  (table 0x78f)
+      Created:  2026-05-19 20:00:55 UTC
+      Modified: 2026-05-19 20:00:55 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_kilo_908237  (non-resident, live-slack @ cluster 61 off 0x4ea0)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743  (table 0x774)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_november_804548  (non-resident, live-slack @ cluster 573 off 0x6070)
+      Deleted from: /testintegrity/elvis_dir_victor_783323  (table 0x784)
+      Created:  2026-05-19 20:00:54 UTC
+      Modified: 2026-05-19 20:00:55 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_oscar_766684  (non-resident, live-slack @ cluster 114 off 0x1010)
+      Deleted from: /testintegrity/elvis_dir_india_800575  (table 0x790)
+      Created:  2026-05-19 20:00:55 UTC
+      Modified: 2026-05-19 20:00:55 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_output_527690  (non-resident, live-slack @ cluster 115 off 0xa08)
+      Deleted from: /testintegrity/elvis_dir_papa_805353  (table 0x792)
+      Created:  2026-05-19 20:00:55 UTC
+      Modified: 2026-05-19 20:00:56 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_papa_455656  (non-resident, live-slack @ cluster 573 off 0x6708)
+      Deleted from: /testintegrity/elvis_dir_victor_783323  (table 0x784)
+      Created:  2026-05-19 20:00:54 UTC
+      Modified: 2026-05-19 20:00:57 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_papa_867118  (non-resident, live-slack @ cluster 573 off 0x3ff0)
+      Deleted from: /testintegrity/elvis_dir_victor_783323  (table 0x784)
+      Created:  2026-05-19 20:00:51 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_quebec_639493  (non-resident, live-slack @ cluster 58 off 0x71e8)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_quebec_708624  (non-resident, live-slack @ cluster 58 off 0x5388)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_quebec_873661  (non-resident, live-slack @ cluster 61 off 0x2328)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743  (table 0x774)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_quebec_896971  (non-resident, live-slack @ cluster 578 off 0x38c0)
+      Deleted from: /testintegrity/elvis_dir_index_149423  (table 0x78f)
+      Created:  2026-05-19 20:00:57 UTC
+      Modified: 2026-05-19 20:00:57 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_record_340186  (non-resident, live-slack @ cluster 573 off 0x4670)
+      Deleted from: /testintegrity/elvis_dir_victor_783323  (table 0x784)
+      Created:  2026-05-19 20:00:51 UTC
+      Modified: 2026-05-19 20:00:55 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_record_659070  (non-resident, live-slack @ cluster 58 off 0x52e8)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2026-05-19 20:00:51 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_record_986693  (non-resident, live-slack @ cluster 118 off 0x3020)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141  (table 0x797)
+      Created:  2026-05-19 20:00:57 UTC
+      Modified: 2026-05-19 20:00:57 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_report_590629  (non-resident, live-slack @ cluster 578 off 0x2c40)
+      Deleted from: /testintegrity/elvis_dir_index_149423  (table 0x78f)
+      Created:  2026-05-19 20:00:56 UTC
+      Modified: 2026-05-19 20:00:57 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_report_645101  (non-resident, live-slack @ cluster 61 off 0x68e8)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743  (table 0x774)
+      Created:  2026-05-19 20:00:55 UTC
+      Modified: 2026-05-19 20:00:55 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_romeo_252706  (non-resident, live-slack @ cluster 118 off 0xff8)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141  (table 0x797)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:57 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_romeo_277556  (non-resident, live-slack @ cluster 72 off 0x3488)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778  (table 0x77e)
+      Created:  2026-05-19 20:00:53 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_sierra_201753  (non-resident, live-slack @ cluster 58 off 0x8518)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2026-05-19 20:00:54 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_sierra_577790  (non-resident, live-slack @ cluster 115 off 0x1150)
+      Deleted from: /testintegrity/elvis_dir_papa_805353  (table 0x792)
+      Created:  2026-05-19 20:00:55 UTC
+      Modified: 2026-05-19 20:00:57 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_sierra_678563  (non-resident, live-slack @ cluster 83 off 0x378)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083  (table 0x782)
+      Created:  2026-05-19 20:00:53 UTC
+      Modified: 2026-05-19 20:00:53 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_tango_224437  (non-resident, live-slack @ cluster 118 off 0x28f8)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141  (table 0x797)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:57 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_tango_309854  (non-resident, live-slack @ cluster 60 off 0x2c68)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016  (table 0x773)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:53 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_tango_787748  (non-resident, live-slack @ cluster 573 off 0x8030)
+      Deleted from: /testintegrity/elvis_dir_victor_783323  (table 0x784)
+      Created:  2026-05-19 20:00:56 UTC
+      Modified: 2026-05-19 20:00:56 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_trace_775911  (non-resident, live-slack @ cluster 114 off 0x1d40)
+      Deleted from: /testintegrity/elvis_dir_india_800575  (table 0x790)
+      Created:  2026-05-19 20:00:53 UTC
+      Modified: 2026-05-19 20:00:56 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_whiskey_224508  (non-resident, live-slack @ cluster 118 off 0x960)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141  (table 0x797)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:55 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_yankee_334324  (non-resident, live-slack @ cluster 61 off 0x970)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743  (table 0x774)
+      Created:  2026-05-19 20:00:51 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_zulu_127761  (non-resident, live-slack @ cluster 573 off 0x4cf8)
+      Deleted from: /testintegrity/elvis_dir_victor_783323  (table 0x784)
+      Created:  2026-05-19 20:00:54 UTC
+      Modified: 2026-05-19 20:00:55 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  elvis_dir_zulu_460102  (non-resident, live-slack @ cluster 61 off 0x4218)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743  (table 0x774)
+      Created:  2026-05-19 20:00:51 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE gamma_beta_582761.xml  (resident, live-slack @ cluster 66 off 0x950)
+      Deleted from: /testspecials/dir_record_119518/dir_delta_826049/dir_record_790212  (table 0x71f)
+      Created:  2026-05-19 19:57:41 UTC
+      Modified: 2026-05-19 19:57:41 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE hardlink_alpha_702517.lnk  (non-resident, live-slack @ cluster 526 off 0x9f0)
+      Deleted from: /testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/dir_oscar_729924  (table 0x70c)
+      Created:  2026-05-19 19:57:37 UTC
+      Modified: 2026-05-19 19:57:37 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE hardlink_backup_375776.csv  (non-resident, live-slack @ cluster 526 off 0x950)
+      Deleted from: /testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/dir_oscar_729924  (table 0x70c)
+      Created:  2026-05-19 19:57:34 UTC
+      Modified: 2026-05-19 19:57:40 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE hardlink_hotel_612062.lnk  (non-resident, live-slack @ cluster 528 off 0x1678)
+      Deleted from: /testspecials/dir_record_119518/dir_mike_657912  (table 0x712)
+      Created:  2026-05-19 19:57:33 UTC
+      Modified: 2026-05-19 19:57:33 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE hardlink_romeo_557067.lnk  (non-resident, live-slack @ cluster 527 off 0x16d8)
+      Deleted from: /testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344  (table 0x710)
+      Created:  2026-05-19 19:57:28 UTC
+      Modified: 2026-05-19 19:57:28 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE hardlink_sierra_457633.lnk  (non-resident, live-slack @ cluster 528 off 0x17b8)
+      Deleted from: /testspecials/dir_record_119518/dir_mike_657912  (table 0x712)
+      Created:  2026-05-19 19:57:29 UTC
+      Modified: 2026-05-19 19:57:29 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE hardlink_zulu_868978.lnk  (non-resident, live-slack @ cluster 62 off 0x10d0)
+      Deleted from: /testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_report_888370  (table 0x715)
+      Created:  2026-05-19 19:57:28 UTC
+      Modified: 2026-05-19 19:57:28 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE november_audit_378684.lnk  (resident, live-slack @ cluster 520 off 0x378)
+      Deleted from: /testspecials/dir_record_119518/dir_delta_826049  (table 0x704)
+      Created:  2026-05-19 19:57:28 UTC
+      Modified: 2026-05-19 19:57:42 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE papa_uniform_345232.tmp  (resident, live-slack @ cluster 79 off 0x378)
+      Deleted from: /testspecials/dir_oscar_288048/dir_beta_718060  (table 0x732)
+      Created:  2026-05-19 19:57:57 UTC
+      Modified: 2026-05-19 19:58:01 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE record_echo_483079.dat  (resident, live-slack @ cluster 85 off 0xa80)
+      Deleted from: /testspecials/dir_oscar_738992  (table 0x738)
+      Created:  2026-05-19 19:58:17 UTC
+      Modified: 2026-01-01 19:57:30 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE symlink_beta_897418.lnk  (resident, live-slack @ cluster 76 off 0x960)
+      Deleted from: /testspecials/dir_config_384571  (table 0x72b)
+      Created:  2026-05-19 19:57:48 UTC
+      Modified: 2026-05-19 19:57:48 UTC
+      Recoverable: FULL FILE recoverable (resident — 0 B stored inline in the record)
+    FILE symlink_delta_527768.lnk  (resident, live-slack @ cluster 101 off 0xa80)
+      Deleted from: /testspecials/dir_oscar_288048/dir_sync_959703/dir_kilo_430451  (table 0x756)
+      Created:  2026-05-19 19:59:07 UTC
+      Modified: 2026-05-19 19:59:07 UTC
+      Recoverable: FULL FILE recoverable (resident — 0 B stored inline in the record)
+    FILE symlink_foxtrot_353599.lnk  (resident, live-slack @ cluster 57 off 0x4000)
+      Deleted from: /testspecials/dir_oscar_288048  (table 0x70b)
+      Created:  2026-05-19 19:57:36 UTC
+      Modified: 2026-05-19 19:57:36 UTC
+      Recoverable: FULL FILE recoverable (resident — 0 B stored inline in the record)
+    FILE symlink_gamma_311277.lnk  (resident, live-slack @ cluster 79 off 0x22c0)
+      Deleted from: /testspecials/dir_oscar_288048/dir_beta_718060  (table 0x732)
+      Created:  2026-05-19 19:58:42 UTC
+      Modified: 2026-05-19 19:58:42 UTC
+      Recoverable: FULL FILE recoverable (resident — 0 B stored inline in the record)
+    FILE symlink_trace_963028.lnk  (resident, live-slack @ cluster 546 off 0x1e30)
+      Deleted from: /testspecials/dir_gamma_666805/dir_data_621988  (table 0x73c)
+      Created:  2026-05-19 19:58:32 UTC
+      Modified: 2026-05-19 19:58:32 UTC
+      Recoverable: FULL FILE recoverable (resident — 0 B stored inline in the record)
+    FILE temp_draft_179756.dat  (resident, live-slack @ cluster 530 off 0x9f0)
+      Deleted from: /testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_record_422737  (table 0x714)
+      Created:  2026-05-19 19:57:38 UTC
+      Modified: 2026-05-19 19:59:16 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE trace_beta_283469.lnk  (non-resident, live-slack @ cluster 528 off 0x25a8)
+      Deleted from: /testspecials/dir_record_119518/dir_mike_657912  (table 0x712)
+      Created:  2026-05-19 19:57:33 UTC
+      Modified: 2026-05-19 19:57:33 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE whiskey_papa_601197.lnk  (non-resident, live-slack @ cluster 542 off 0x418)
+      Deleted from: /testspecials/dir_config_384571/dir_beta_813541  (table 0x731)
+      Created:  2026-05-19 19:57:32 UTC
+      Modified: 2026-05-19 19:57:32 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_alpha_beta_546905.tmp  (resident, live-slack @ cluster 72 off 0x378)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778  (table 0x77e)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_alpha_cache_670031.txt  (non-resident, live-slack @ cluster 58 off 0x8470)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_alpha_sync_306877.cfg  (resident, live-slack @ cluster 60 off 0xa8d8)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016  (table 0x773)
+      Created:  2022-03-22 07:16:56 UTC
+      Modified: 2022-03-22 07:16:56 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_alpha_victor_764737.log  (resident, live-slack @ cluster 83 off 0x21f0)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083  (table 0x782)
+      Created:  2026-05-19 20:00:53 UTC
+      Modified: 2026-05-19 20:00:53 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_alpha_yankee_153471.txt  (resident, live-slack @ cluster 58 off 0x2878)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2025-10-13 07:16:05 UTC
+      Modified: 2025-10-13 07:16:05 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_archive_archive_963000.bin  (resident, live-slack @ cluster 92 off 0x378)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509  (table 0x786)
+      Created:  2023-03-16 07:16:35 UTC
+      Modified: 2026-05-19 20:00:56 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_archive_india_944507.txt  (non-resident, live-slack @ cluster 578 off 0xb50)
+      Deleted from: /testintegrity/elvis_dir_index_149423  (table 0x78f)
+      Created:  2026-05-19 20:00:55 UTC
+      Modified: 2026-05-19 20:00:55 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_archive_log_561904.tmp  (resident, live-slack @ cluster 98 off 0x2748)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790  (table 0x787)
+      Created:  2026-05-19 20:00:54 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_archive_record_387558.cfg  (resident, live-slack @ cluster 123 off 0xa10)
+      Deleted from: /testintegrity/elvis_dir_index_149423/elvis_dir_victor_121923  (table 0x79c)
+      Created:  2026-05-19 20:00:57 UTC
+      Modified: 2026-05-19 20:00:57 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_archive_sierra_974936.cfg  (resident, live-slack @ cluster 110 off 0x3a50)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235  (table 0x78e)
+      Created:  2026-05-19 20:00:56 UTC
+      Modified: 2023-10-15 07:17:00 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_archive_sync_589134.csv  (resident, live-slack @ cluster 554 off 0x378)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608  (table 0x77a)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_archive_temp_427331.xml  (resident, live-slack @ cluster 60 off 0x64d0)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016  (table 0x773)
+      Created:  2026-05-19 20:00:54 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_archive_uniform_901294.cfg  (resident, live-slack @ cluster 58 off 0x2f18)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2026-05-19 20:00:51 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_audit_data_437649.txt  (resident, live-slack @ cluster 61 off 0x9558)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743  (table 0x774)
+      Created:  2026-05-19 20:00:57 UTC
+      Modified: 2026-05-19 20:00:57 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_audit_foxtrot_604743.xml  (resident, live-slack @ cluster 83 off 0x1bf8)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083  (table 0x782)
+      Created:  2025-04-02 07:16:24 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_audit_oscar_237968.log  (resident, live-slack @ cluster 58 off 0xf68)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2026-05-19 20:00:51 UTC
+      Modified: 2026-05-19 20:00:51 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_audit_oscar_497672.tmp  (resident, live-slack @ cluster 83 off 0x1008)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083  (table 0x782)
+      Created:  2026-05-19 20:00:53 UTC
+      Modified: 2026-05-19 20:00:53 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_backup_cache_508118.csv  (resident, live-slack @ cluster 58 off 0x9738)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2026-05-19 20:00:54 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_backup_victor_882223.log  (non-resident, live-slack @ cluster 58 off 0x5fb0)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2026-05-19 20:00:51 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_beta_audit_333607.json  (resident, live-slack @ cluster 61 off 0x1d30)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743  (table 0x774)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_beta_backup_564672.csv  (non-resident, live-slack @ cluster 114 off 0x10a8)
+      Deleted from: /testintegrity/elvis_dir_india_800575  (table 0x790)
+      Created:  2026-05-19 20:00:54 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_beta_delta_991192.tmp  (resident, live-slack @ cluster 550 off 0x970)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805  (table 0x778)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_beta_echo_315584.ini  (resident, live-slack @ cluster 573 off 0xf58)
+      Deleted from: /testintegrity/elvis_dir_victor_783323  (table 0x784)
+      Created:  2026-05-19 20:00:53 UTC
+      Modified: 2026-05-19 20:00:53 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_cache_archive_380820.cfg  (resident, live-slack @ cluster 58 off 0x4cf0)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2026-05-19 20:00:51 UTC
+      Modified: 2026-05-19 20:00:51 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_cache_data_251427.md  (resident, live-slack @ cluster 578 off 0x1920)
+      Deleted from: /testintegrity/elvis_dir_index_149423  (table 0x78f)
+      Created:  2026-05-19 20:00:56 UTC
+      Modified: 2024-04-12 07:16:51 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_cache_hotel_141725.bak  (non-resident, live-slack @ cluster 98 off 0x2d40)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790  (table 0x787)
+      Created:  2026-05-19 20:00:53 UTC
+      Modified: 2026-05-19 20:00:55 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_cache_sierra_450420.xml  (resident, live-slack @ cluster 98 off 0x1560)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790  (table 0x787)
+      Created:  2026-05-19 20:00:54 UTC
+      Modified: 2026-05-19 20:00:56 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_config_draft_453929.log  (non-resident, live-slack @ cluster 58 off 0x21d8)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2026-05-19 20:00:51 UTC
+      Modified: 2026-05-19 20:00:51 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_config_india_411380.md  (resident, live-slack @ cluster 110 off 0xa08)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235  (table 0x78e)
+      Created:  2024-04-12 07:16:51 UTC
+      Modified: 2024-04-12 07:16:51 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_data_beta_187732.md  (resident, live-slack @ cluster 88 off 0xa08)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398  (table 0x785)
+      Created:  2026-05-19 20:00:54 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_data_output_207912.ini  (resident, live-slack @ cluster 60 off 0x980)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016  (table 0x773)
+      Created:  2026-05-19 20:00:51 UTC
+      Modified: 2026-05-19 20:00:53 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_data_sierra_654595.cfg  (resident, live-slack @ cluster 60 off 0x1b48)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016  (table 0x773)
+      Created:  2022-03-22 07:16:56 UTC
+      Modified: 2022-03-22 07:16:56 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_delta_index_269434.cfg  (resident, live-slack @ cluster 58 off 0x2280)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2026-05-19 20:00:51 UTC
+      Modified: 2026-05-19 20:00:51 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_delta_papa_782300.cfg  (resident, live-slack @ cluster 72 off 0x5ae0)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778  (table 0x77e)
+      Created:  2026-05-19 20:00:55 UTC
+      Modified: 2026-05-19 20:00:53 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_delta_tango_723311.bin  (resident, live-slack @ cluster 58 off 0x6650)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_draft_cache_206712.txt  (resident, live-slack @ cluster 83 off 0x2d58)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083  (table 0x782)
+      Created:  2026-05-19 20:00:53 UTC
+      Modified: 2026-05-19 20:00:53 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_draft_romeo_160891.cfg  (non-resident, live-slack @ cluster 573 off 0x5980)
+      Deleted from: /testintegrity/elvis_dir_victor_783323  (table 0x784)
+      Created:  2026-05-19 20:00:51 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_draft_trace_483429.dat  (resident, live-slack @ cluster 58 off 0x46f8)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2021-10-19 07:16:21 UTC
+      Modified: 2021-10-19 07:16:21 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_draft_victor_387228.txt  (resident, live-slack @ cluster 114 off 0xa18)
+      Deleted from: /testintegrity/elvis_dir_india_800575  (table 0x790)
+      Created:  2026-05-19 20:00:55 UTC
+      Modified: 2026-05-19 20:00:55 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_echo_foxtrot_782748.md  (resident, live-slack @ cluster 545 off 0xa18)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899  (table 0x775)
+      Created:  2025-01-31 07:16:19 UTC
+      Modified: 2026-05-19 20:00:53 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_echo_tango_714597.log  (resident, live-slack @ cluster 61 off 0x42b0)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743  (table 0x774)
+      Created:  2021-09-26 07:16:46 UTC
+      Modified: 2021-09-26 07:16:46 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_echo_whiskey_534063.tmp  (resident, live-slack @ cluster 550 off 0x378)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805  (table 0x778)
+      Created:  2026-01-01 07:16:17 UTC
+      Modified: 2026-01-01 07:16:17 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_foxtrot_alpha_964103.json  (resident, live-slack @ cluster 72 off 0x46e8)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778  (table 0x77e)
+      Created:  2026-05-19 20:00:54 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_foxtrot_mike_237178.cfg  (resident, live-slack @ cluster 58 off 0x6058)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2026-05-19 20:00:51 UTC
+      Modified: 2026-05-19 20:00:51 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_foxtrot_november_512737.dat  (non-resident, live-slack @ cluster 61 off 0x1008)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743  (table 0x774)
+      Created:  2024-08-15 07:16:05 UTC
+      Modified: 2026-05-19 20:00:51 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_foxtrot_romeo_979913.json  (resident, live-slack @ cluster 98 off 0x1b58)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790  (table 0x787)
+      Created:  2026-05-19 20:00:54 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_gamma_beta_871678.log  (non-resident, live-slack @ cluster 72 off 0x33e8)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778  (table 0x77e)
+      Created:  2026-05-19 20:00:53 UTC
+      Modified: 2026-05-19 20:00:53 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_gamma_whiskey_418191.csv  (resident, live-slack @ cluster 72 off 0x960)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778  (table 0x77e)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_hardlink_alpha_263601.log  (non-resident, live-slack @ cluster 58 off 0x1b38)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2026-05-19 20:00:51 UTC
+      Modified: 2026-05-19 20:00:51 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_hotel_cache_656385.bin  (resident, live-slack @ cluster 88 off 0xff0)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398  (table 0x785)
+      Created:  2026-05-19 20:00:54 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_hotel_india_732721.csv  (non-resident, live-slack @ cluster 114 off 0x378)
+      Deleted from: /testintegrity/elvis_dir_india_800575  (table 0x790)
+      Created:  2026-05-19 20:00:54 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_index_november_257579.json  (resident, live-slack @ cluster 110 off 0x1c78)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235  (table 0x78e)
+      Created:  2026-05-19 20:00:56 UTC
+      Modified: 2026-05-19 20:00:56 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_index_report_220394.cfg  (resident, live-slack @ cluster 573 off 0x1540)
+      Deleted from: /testintegrity/elvis_dir_victor_783323  (table 0x784)
+      Created:  2026-05-19 20:00:53 UTC
+      Modified: 2026-05-19 20:00:53 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_index_trace_419523.txt  (resident, live-slack @ cluster 58 off 0x3b18)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2025-10-13 07:16:05 UTC
+      Modified: 2025-10-13 07:16:05 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_india_cache_358425.dat  (resident, live-slack @ cluster 60 off 0x44b0)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016  (table 0x773)
+      Created:  2026-05-19 20:00:53 UTC
+      Modified: 2026-05-19 20:00:53 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_india_data_923399.xml  (non-resident, live-slack @ cluster 578 off 0xbf8)
+      Deleted from: /testintegrity/elvis_dir_index_149423  (table 0x78f)
+      Created:  2026-05-19 20:00:54 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_india_hotel_402769.csv  (non-resident, live-slack @ cluster 550 off 0x2080)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805  (table 0x778)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_india_papa_704662.ini  (resident, live-slack @ cluster 573 off 0x4710)
+      Deleted from: /testintegrity/elvis_dir_victor_783323  (table 0x784)
+      Created:  2026-05-19 20:00:53 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_kilo_kilo_772105.txt  (resident, live-slack @ cluster 58 off 0x59c8)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2024-12-14 07:16:17 UTC
+      Modified: 2026-05-19 20:00:53 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_kilo_trace_156900.tmp  (resident, live-slack @ cluster 60 off 0x1560)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016  (table 0x773)
+      Created:  2026-05-19 20:00:51 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_lima_beta_726383.csv  (resident, live-slack @ cluster 550 off 0x2e60)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805  (table 0x778)
+      Created:  2026-05-19 20:00:53 UTC
+      Modified: 2026-05-19 20:00:53 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_lima_cache_587912.csv  (resident, live-slack @ cluster 72 off 0x3520)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778  (table 0x77e)
+      Created:  2022-05-20 07:16:16 UTC
+      Modified: 2022-05-20 07:16:16 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_lima_mike_416685.csv  (resident, live-slack @ cluster 573 off 0x378)
+      Deleted from: /testintegrity/elvis_dir_victor_783323  (table 0x784)
+      Created:  2026-05-19 20:00:53 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_lima_uniform_330272.xml  (resident, live-slack @ cluster 98 off 0xf68)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790  (table 0x787)
+      Created:  2026-05-19 20:00:54 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_log_log_475663.dat  (resident, live-slack @ cluster 58 off 0x4110)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2026-05-19 20:00:51 UTC
+      Modified: 2026-05-19 20:00:51 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_mike_audit_688657.cfg  (resident, live-slack @ cluster 72 off 0x4100)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778  (table 0x77e)
+      Created:  2026-05-19 20:00:53 UTC
+      Modified: 2026-05-19 20:00:53 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_mike_india_444246.xml  (resident, live-slack @ cluster 110 off 0x378)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235  (table 0x78e)
+      Created:  2026-05-19 20:00:54 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_mike_whiskey_306157.csv  (resident, live-slack @ cluster 60 off 0x8a80)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016  (table 0x773)
+      Created:  2026-05-19 20:00:54 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_oscar_data_366966.json  (non-resident, live-slack @ cluster 573 off 0x5a28)
+      Deleted from: /testintegrity/elvis_dir_victor_783323  (table 0x784)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_oscar_output_507222.json  (resident, live-slack @ cluster 119 off 0x9f8)
+      Deleted from: /testintegrity/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/elvis_dir_oscar_874075  (table 0x798)
+      Created:  2026-05-19 20:00:56 UTC
+      Modified: 2026-05-19 20:00:56 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_oscar_record_681996.cfg  (resident, live-slack @ cluster 61 off 0x378)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743  (table 0x774)
+      Created:  2025-02-11 07:16:06 UTC
+      Modified: 2025-02-11 07:16:06 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_oscar_sierra_369457.log  (resident, live-slack @ cluster 83 off 0x1600)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083  (table 0x782)
+      Created:  2026-05-19 20:00:53 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_output_index_114298.xml  (resident, live-slack @ cluster 98 off 0x2150)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790  (table 0x787)
+      Created:  2026-05-19 20:00:54 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_output_mike_288678.dat  (resident, live-slack @ cluster 550 off 0x21d0)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805  (table 0x778)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:53 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_papa_archive_211574.json  (non-resident, live-slack @ cluster 123 off 0x1600)
+      Deleted from: /testintegrity/elvis_dir_index_149423/elvis_dir_victor_121923  (table 0x79c)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_papa_lima_812866.dat  (resident, live-slack @ cluster 554 off 0xf68)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608  (table 0x77a)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2021-10-05 07:16:06 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_papa_yankee_216873.tmp  (resident, live-slack @ cluster 72 off 0x1488)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778  (table 0x77e)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_papa_yankee_294587.tmp  (resident, live-slack @ cluster 573 off 0x6110)
+      Deleted from: /testintegrity/elvis_dir_victor_783323  (table 0x784)
+      Created:  2026-05-19 20:00:55 UTC
+      Modified: 2026-05-19 20:00:55 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_quebec_backup_495340.cfg  (non-resident, live-slack @ cluster 72 off 0x3340)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778  (table 0x77e)
+      Created:  2022-08-02 07:16:28 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_quebec_draft_443236.cfg  (resident, live-slack @ cluster 58 off 0x7288)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2026-05-19 20:00:51 UTC
+      Modified: 2026-05-19 20:00:53 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_quebec_foxtrot_777338.ini  (resident, live-slack @ cluster 61 off 0x3040)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743  (table 0x774)
+      Created:  2021-07-27 07:16:40 UTC
+      Modified: 2021-07-27 07:16:40 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_quebec_hotel_768254.txt  (non-resident, live-slack @ cluster 61 off 0x4f38)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743  (table 0x774)
+      Created:  2026-05-19 20:00:53 UTC
+      Modified: 2026-05-19 20:00:53 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_quebec_temp_412114.ini  (resident, live-slack @ cluster 72 off 0x3b08)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778  (table 0x77e)
+      Created:  2026-05-19 20:00:53 UTC
+      Modified: 2026-05-19 20:00:55 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_record_kilo_574610.bak  (resident, live-slack @ cluster 545 off 0x378)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899  (table 0x775)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_record_temp_940076.txt  (resident, live-slack @ cluster 83 off 0xa10)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083  (table 0x782)
+      Created:  2026-05-19 20:00:53 UTC
+      Modified: 2026-05-19 20:00:53 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_report_whiskey_438679.dat  (resident, live-slack @ cluster 72 off 0x1a80)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778  (table 0x77e)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_romeo_output_514691.txt  (resident, live-slack @ cluster 550 off 0x27c8)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805  (table 0x778)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_romeo_temp_949964.dat  (resident, live-slack @ cluster 60 off 0xf78)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016  (table 0x773)
+      Created:  2021-10-05 07:16:06 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_sierra_foxtrot_679722.md  (resident, live-slack @ cluster 88 off 0x15e8)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398  (table 0x785)
+      Created:  2026-05-19 20:00:54 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_sierra_papa_124233.bin  (resident, live-slack @ cluster 60 off 0xa2e0)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016  (table 0x773)
+      Created:  2026-05-19 20:00:55 UTC
+      Modified: 2026-05-19 20:00:55 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_sync_echo_229861.md  (resident, live-slack @ cluster 60 off 0x5308)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016  (table 0x773)
+      Created:  2026-05-19 20:00:53 UTC
+      Modified: 2026-05-19 20:00:53 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_sync_hotel_872151.tmp  (resident, live-slack @ cluster 61 off 0x16b0)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743  (table 0x774)
+      Created:  2022-03-06 07:16:22 UTC
+      Modified: 2022-03-06 07:16:22 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_tango_archive_240492.tmp  (resident, live-slack @ cluster 60 off 0x32e8)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016  (table 0x773)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_tango_archive_367353.ini  (non-resident, live-slack @ cluster 115 off 0x378)
+      Deleted from: /testintegrity/elvis_dir_papa_805353  (table 0x792)
+      Created:  2026-05-19 20:00:53 UTC
+      Modified: 2026-05-19 20:00:53 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_tango_draft_409450.csv  (resident, live-slack @ cluster 60 off 0x7d48)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016  (table 0x773)
+      Created:  2026-05-19 20:00:54 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_temp_data_611327.csv  (resident, live-slack @ cluster 61 off 0x3c30)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743  (table 0x774)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_temp_data_760681.xml  (resident, live-slack @ cluster 118 off 0x1688)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141  (table 0x797)
+      Created:  2026-05-19 20:00:56 UTC
+      Modified: 2026-05-19 20:00:56 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_temp_whiskey_187024.dat  (resident, live-slack @ cluster 58 off 0x1be0)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2026-05-19 20:00:51 UTC
+      Modified: 2026-05-19 20:00:51 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_trace_echo_135772.csv  (resident, live-slack @ cluster 72 off 0x2118)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778  (table 0x77e)
+      Created:  2022-05-20 07:16:16 UTC
+      Modified: 2022-05-20 07:16:16 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_trace_index_613763.tmp  (resident, live-slack @ cluster 61 off 0x7cf0)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743  (table 0x774)
+      Created:  2022-03-06 07:16:22 UTC
+      Modified: 2022-03-06 07:16:22 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_trace_yankee_986396.csv  (resident, live-slack @ cluster 61 off 0x23c8)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743  (table 0x774)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_uniform_backup_459285.xml  (resident, live-slack @ cluster 60 off 0x7158)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016  (table 0x773)
+      Created:  2026-05-19 20:00:54 UTC
+      Modified: 2026-05-19 20:00:55 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_uniform_cache_833806.bak  (resident, live-slack @ cluster 73 off 0x10a8)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264  (table 0x77f)
+      Created:  2026-05-19 20:00:54 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_uniform_november_873087.json  (non-resident, live-slack @ cluster 123 off 0x378)
+      Deleted from: /testintegrity/elvis_dir_index_149423/elvis_dir_victor_121923  (table 0x79c)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_uniform_papa_774073.tmp  (resident, live-slack @ cluster 578 off 0x378)
+      Deleted from: /testintegrity/elvis_dir_index_149423  (table 0x78f)
+      Created:  2026-05-19 20:00:54 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_victor_backup_413048.dat  (non-resident, live-slack @ cluster 554 off 0x1be8)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608  (table 0x77a)
+      Created:  2026-03-01 07:16:07 UTC
+      Modified: 2026-03-01 07:16:07 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_victor_echo_253988.txt  (resident, live-slack @ cluster 58 off 0x9d30)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2024-12-14 07:16:17 UTC
+      Modified: 2026-05-19 20:00:53 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_victor_oscar_669232.csv  (non-resident, live-slack @ cluster 73 off 0x378)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264  (table 0x77f)
+      Created:  2025-04-01 07:16:26 UTC
+      Modified: 2025-04-01 07:16:26 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_victor_output_615372.log  (resident, live-slack @ cluster 61 off 0xa10)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743  (table 0x774)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_whiskey_archive_229625.tmp  (resident, live-slack @ cluster 60 off 0x378)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016  (table 0x773)
+      Created:  2026-05-19 20:00:51 UTC
+      Modified: 2026-05-19 20:00:51 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_whiskey_data_874109.dat  (non-resident, live-slack @ cluster 58 off 0x2e70)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2024-08-15 07:16:05 UTC
+      Modified: 2026-05-19 20:00:51 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_whiskey_mike_200124.xml  (resident, live-slack @ cluster 58 off 0x970)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2026-05-19 20:00:51 UTC
+      Modified: 2026-05-19 20:00:51 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_whiskey_tango_704744.ini  (resident, live-slack @ cluster 573 off 0x960)
+      Deleted from: /testintegrity/elvis_dir_victor_783323  (table 0x784)
+      Created:  2026-05-19 20:00:53 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_yankee_archive_557245.md  (resident, live-slack @ cluster 58 off 0x378)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2026-05-19 20:00:51 UTC
+      Modified: 2026-05-19 20:00:51 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_yankee_foxtrot_198114.bak  (non-resident, live-slack @ cluster 110 off 0x960)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235  (table 0x78e)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_yankee_gamma_631547.txt  (resident, live-slack @ cluster 58 off 0x3520)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2026-05-19 20:00:51 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_yankee_kilo_634787.dat  (resident, live-slack @ cluster 554 off 0x970)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608  (table 0x77a)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_yankee_log_978386.xml  (resident, live-slack @ cluster 58 off 0x9150)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x770)
+      Created:  2026-05-19 20:00:54 UTC
+      Modified: 2026-05-19 20:00:54 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_yankee_mike_602825.log  (resident, live-slack @ cluster 98 off 0x970)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790  (table 0x787)
+      Created:  2026-05-19 20:00:53 UTC
+      Modified: 2026-05-19 20:00:56 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_yankee_output_689860.csv  (resident, live-slack @ cluster 60 off 0x2140)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016  (table 0x773)
+      Created:  2026-05-19 20:00:52 UTC
+      Modified: 2026-05-19 20:00:52 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_zulu_temp_484448.tmp  (resident, live-slack @ cluster 60 off 0x9700)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016  (table 0x773)
+      Created:  2026-05-19 20:00:51 UTC
+      Modified: 2026-05-19 20:00:56 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_zulu_whiskey_391283.tmp  (resident, live-slack @ cluster 88 off 0x410)
+      Deleted from: /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398  (table 0x785)
+      Created:  2024-11-23 07:17:31 UTC
+      Modified: 2024-11-23 07:17:31 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE zulu_yankee_536329.xml  (resident, live-slack @ cluster 536 off 0xa08)
+      Deleted from: /testspecials/dir_record_119518/dir_yankee_902047  (table 0x723)
+      Created:  2026-05-19 19:57:45 UTC
+      Modified: 2026-05-19 19:57:45 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+
+  PRIOR VERSIONS of files still present (CoW slack remnants): 409  [409 with valid timestamps]
+    WPSettings.dat  (live-slack @ cluster 45 off 0x378) — FULL FILE recoverable (resident — 12 B stored inline in the record)
+    alpha_alpha_560203.txt  (live-slack @ cluster 530 off 0x1c70) — metadata only (non-resident — file data is NOT in this remnant)
+    alpha_audit_409219.ini  (live-slack @ cluster 79 off 0xfd8) — metadata only (non-resident — file data is NOT in this remnant)
+    alpha_foxtrot_367429.log  (live-slack @ cluster 515 off 0x4a8) — metadata only (non-resident — file data is NOT in this remnant)
+    archive_gamma_205628.bin  (live-slack @ cluster 56 off 0x22d8) — metadata only (non-resident — file data is NOT in this remnant)
+    archive_index_532684.csv  (live-slack @ cluster 534 off 0x3858) — metadata only (non-resident — file data is NOT in this remnant)
+    archive_tango_662447.tmp  (live-slack @ cluster 76 off 0x5138) — metadata only (non-resident — file data is NOT in this remnant)
+    audit_audit_775578.ini  (live-slack @ cluster 551 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
+    audit_zulu_568637.md  (live-slack @ cluster 55 off 0x1d08) — metadata only (non-resident — file data is NOT in this remnant)
+    backup_kilo_519837.cfg  (live-slack @ cluster 81 off 0x1278) — metadata only (non-resident — file data is NOT in this remnant)
+    backup_output_139852.bak  (live-slack @ cluster 563 off 0x1050) — metadata only (non-resident — file data is NOT in this remnant)
+    backup_romeo_118468.bak  (live-slack @ cluster 57 off 0x93c8) — metadata only (non-resident — file data is NOT in this remnant)
+    backup_romeo_182572.log  (live-slack @ cluster 57 off 0x5568) — metadata only (non-resident — file data is NOT in this remnant)
+    backup_yankee_435664.log  (live-slack @ cluster 79 off 0x15b0) — metadata only (non-resident — file data is NOT in this remnant)
+    beta_data_606746.tmp  (live-slack @ cluster 528 off 0x34a0) — metadata only (non-resident — file data is NOT in this remnant)
+    cache_delta_383432.dat  (live-slack @ cluster 534 off 0x3280) — metadata only (non-resident — file data is NOT in this remnant)
+    cache_hotel_105430.tmp  (live-slack @ cluster 76 off 0x6520) — metadata only (non-resident — file data is NOT in this remnant)
+    cache_log_172099.txt  (live-slack @ cluster 566 off 0x10a0) — metadata only (non-resident — file data is NOT in this remnant)
+    cache_uniform_583408.lnk  (live-slack @ cluster 55 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
+    cache_victor_785990.json  (live-slack @ cluster 41 off 0x3078) — metadata only (non-resident — file data is NOT in this remnant)
+    cache_zulu_982585.lnk  (live-slack @ cluster 527 off 0x1d50) — metadata only (non-resident — file data is NOT in this remnant)
+    config_report_394730.ini  (live-slack @ cluster 520 off 0x1128) — metadata only (non-resident — file data is NOT in this remnant)
+    config_whiskey_965635.json  (live-slack @ cluster 523 off 0xab8) — metadata only (non-resident — file data is NOT in this remnant)
+    data_yankee_445185.bak  (live-slack @ cluster 524 off 0xb78) — metadata only (non-resident — file data is NOT in this remnant)
+    delta_kilo_576687.bak  (live-slack @ cluster 527 off 0x3740) — metadata only (non-resident — file data is NOT in this remnant)
+    delta_output_806103.bak  (live-slack @ cluster 57 off 0x9ca8) — metadata only (non-resident — file data is NOT in this remnant)
+    draft_archive_819011.tmp  (live-slack @ cluster 89 off 0x4450) — metadata only (non-resident — file data is NOT in this remnant)
+    draft_draft_597138.json  (live-slack @ cluster 41 off 0x10e0) — metadata only (non-resident — file data is NOT in this remnant)
+    draft_hotel_668322.bak  (live-slack @ cluster 530 off 0x2248) — metadata only (non-resident — file data is NOT in this remnant)
+    draft_mike_250342.txt  (live-slack @ cluster 41 off 0x4310) — metadata only (non-resident — file data is NOT in this remnant)
+    draft_quebec_381663.json  (live-slack @ cluster 71 off 0x1a28) — metadata only (non-resident — file data is NOT in this remnant)
+    draft_yankee_934064.cfg  (live-slack @ cluster 89 off 0x1df8) — metadata only (non-resident — file data is NOT in this remnant)
+    echo_alpha_981372.md  (live-slack @ cluster 71 off 0x1308) — metadata only (non-resident — file data is NOT in this remnant)
+    echo_archive_434454.bin  (live-slack @ cluster 532 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
+    echo_data_580066.cfg  (live-slack @ cluster 89 off 0x3dd0) — metadata only (non-resident — file data is NOT in this remnant)
+    echo_data_985647.dat  (live-slack @ cluster 541 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
+    echo_delta_498773.xml  (live-slack @ cluster 530 off 0x1600) — metadata only (non-resident — file data is NOT in this remnant)
+    echo_output_850558.lnk  (live-slack @ cluster 546 off 0x3fd0) — metadata only (non-resident — file data is NOT in this remnant)
+    foxtrot_config_649945.md  (live-slack @ cluster 528 off 0x6978) — metadata only (non-resident — file data is NOT in this remnant)
+    foxtrot_yankee_858769.md  (live-slack @ cluster 515 off 0xb30) — metadata only (non-resident — file data is NOT in this remnant)
+    gamma_data_350083.ini  (live-slack @ cluster 66 off 0x3ce8) — metadata only (non-resident — file data is NOT in this remnant)
+    gamma_echo_119162.lnk  (live-slack @ cluster 101 off 0x1068) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    gamma_sync_290344.bak  (live-slack @ cluster 558 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
+    hotel_audit_578337.bin  (live-slack @ cluster 85 off 0x408) — metadata only (non-resident — file data is NOT in this remnant)
+    hotel_cache_328559.cfg  (live-slack @ cluster 86 off 0x11b8) — metadata only (non-resident — file data is NOT in this remnant)
+    hotel_draft_765897.cfg  (live-slack @ cluster 70 off 0x1cc0) — metadata only (non-resident — file data is NOT in this remnant)
+    hotel_echo_270487.tmp  (live-slack @ cluster 520 off 0x7020) — metadata only (non-resident — file data is NOT in this remnant)
+    hotel_tango_264291.cfg  (live-slack @ cluster 528 off 0x6f60) — metadata only (non-resident — file data is NOT in this remnant)
+    hotel_temp_100802.log  (live-slack @ cluster 542 off 0x708) — metadata only (non-resident — file data is NOT in this remnant)
+    index_cache_749686.json  (live-slack @ cluster 549 off 0x1fa0) — metadata only (non-resident — file data is NOT in this remnant)
+    index_config_670980.bak  (live-slack @ cluster 541 off 0x1188) — metadata only (non-resident — file data is NOT in this remnant)
+    index_gamma_836180.xml  (live-slack @ cluster 41 off 0x48e8) — metadata only (non-resident — file data is NOT in this remnant)
+    india_cache_398120.ini  (live-slack @ cluster 553 off 0x1060) — metadata only (non-resident — file data is NOT in this remnant)
+    india_india_100633.txt  (live-slack @ cluster 530 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
+    india_quebec_345898.tmp  (live-slack @ cluster 527 off 0x2458) — metadata only (non-resident — file data is NOT in this remnant)
+    india_uniform_529180.dat  (live-slack @ cluster 536 off 0x25d0) — metadata only (non-resident — file data is NOT in this remnant)
+    kilo_beta_141751.dat  (live-slack @ cluster 528 off 0x5510) — metadata only (non-resident — file data is NOT in this remnant)
+    kilo_index_401415.dat  (live-slack @ cluster 101 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
+    kilo_quebec_708544.ini  (live-slack @ cluster 82 off 0x12a0) — metadata only (non-resident — file data is NOT in this remnant)
+    kilo_trace_218089.xml  (live-slack @ cluster 76 off 0x16f0) — metadata only (non-resident — file data is NOT in this remnant)
+    large_65mb_india_845752.bin  (live-slack @ cluster 85 off 0x1db0) — metadata only (non-resident — file data is NOT in this remnant)
+    large_66mb_log_643652.bin  (live-slack @ cluster 532 off 0xa80) — metadata only (non-resident — file data is NOT in this remnant)
+    lima_config_497416.csv  (live-slack @ cluster 519 off 0x3a0) — metadata only (non-resident — file data is NOT in this remnant)
+    lima_config_610449.dat  (live-slack @ cluster 536 off 0x1e38) — metadata only (non-resident — file data is NOT in this remnant)
+    lima_record_401932.ini  (live-slack @ cluster 70 off 0x2a00) — metadata only (non-resident — file data is NOT in this remnant)
+    log_cache_318669.ini  (live-slack @ cluster 56 off 0x28c0) — metadata only (non-resident — file data is NOT in this remnant)
+    log_uniform_222343.txt  (live-slack @ cluster 57 off 0x8df0) — metadata only (non-resident — file data is NOT in this remnant)
+    mike_delta_729757.bak  (live-slack @ cluster 76 off 0x6b88) — metadata only (non-resident — file data is NOT in this remnant)
+    november_backup_124237.lnk  (live-slack @ cluster 520 off 0xa248) — metadata only (non-resident — file data is NOT in this remnant)
+    november_beta_810112.tmp  (live-slack @ cluster 549 off 0x2588) — metadata only (non-resident — file data is NOT in this remnant)
+    november_november_530709.bin  (live-slack @ cluster 523 off 0x418) — metadata only (non-resident — file data is NOT in this remnant)
+    november_report_688094.tmp  (live-slack @ cluster 66 off 0x2968) — metadata only (non-resident — file data is NOT in this remnant)
+    oscar_quebec_895891.md  (live-slack @ cluster 539 off 0x3558) — metadata only (non-resident — file data is NOT in this remnant)
+    oscar_temp_183561.log  (live-slack @ cluster 536 off 0x37d0) — metadata only (non-resident — file data is NOT in this remnant)
+    oscar_zulu_682719.dat  (live-slack @ cluster 541 off 0xa80) — metadata only (non-resident — file data is NOT in this remnant)
+    output_output_354931.bin  (live-slack @ cluster 536 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
+    output_sierra_516344.cfg  (live-slack @ cluster 528 off 0x6390) — metadata only (non-resident — file data is NOT in this remnant)
+    output_sync_339448.bak  (live-slack @ cluster 553 off 0x16d8) — metadata only (non-resident — file data is NOT in this remnant)
+    papa_trace_470127.dat  (live-slack @ cluster 56 off 0xc10) — metadata only (non-resident — file data is NOT in this remnant)
+    quebec_romeo_411474.cfg  (live-slack @ cluster 546 off 0x1260) — metadata only (non-resident — file data is NOT in this remnant)
+    record_log_195552.md  (live-slack @ cluster 76 off 0x1d58) — metadata only (non-resident — file data is NOT in this remnant)
+    record_report_461998.xml  (live-slack @ cluster 520 off 0x3da8) — metadata only (non-resident — file data is NOT in this remnant)
+    report_echo_372097.ini  (live-slack @ cluster 527 off 0x1778) — metadata only (non-resident — file data is NOT in this remnant)
+    report_india_760513.txt  (live-slack @ cluster 534 off 0x10a8) — metadata only (non-resident — file data is NOT in this remnant)
+    romeo_beta_295611.tmp  (live-slack @ cluster 79 off 0xa00) — metadata only (non-resident — file data is NOT in this remnant)
+    romeo_cache_314788.log  (live-slack @ cluster 71 off 0x2010) — metadata only (non-resident — file data is NOT in this remnant)
+    romeo_delta_145414.tmp  (live-slack @ cluster 527 off 0x2a40) — metadata only (non-resident — file data is NOT in this remnant)
+    romeo_draft_937198.dat  (live-slack @ cluster 57 off 0x498) — metadata only (non-resident — file data is NOT in this remnant)
+    romeo_kilo_561520.txt  (live-slack @ cluster 70 off 0x1060) — metadata only (non-resident — file data is NOT in this remnant)
+    romeo_november_711677.txt  (live-slack @ cluster 527 off 0x4c10) — metadata only (non-resident — file data is NOT in this remnant)
+    romeo_temp_182346.md  (live-slack @ cluster 539 off 0x21c8) — metadata only (non-resident — file data is NOT in this remnant)
+    sierra_archive_396584.csv  (live-slack @ cluster 514 off 0x4260) — metadata only (non-resident — file data is NOT in this remnant)
+    sierra_data_986663.xml  (live-slack @ cluster 542 off 0xce0) — metadata only (non-resident — file data is NOT in this remnant)
+    sierra_delta_359275.lnk  (live-slack @ cluster 79 off 0x3e08) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    sierra_index_671660.md  (live-slack @ cluster 526 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
+    symlink_alpha_610118.lnk  (live-slack @ cluster 541 off 0x38a8) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_alpha_655546.lnk  (live-slack @ cluster 534 off 0x4c38) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_alpha_713448.lnk  (live-slack @ cluster 89 off 0x5020) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_alpha_949818.lnk  (live-slack @ cluster 89 off 0x29c8) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_audit_403269.lnk  (live-slack @ cluster 528 off 0x40f0) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_audit_821583.lnk  (live-slack @ cluster 539 off 0xbc8) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_backup_123854.lnk  (live-slack @ cluster 541 off 0x2b18) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_backup_127636.lnk  (live-slack @ cluster 520 off 0x4ac0) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_backup_421155.lnk  (live-slack @ cluster 527 off 0x960) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_backup_601503.lnk  (live-slack @ cluster 66 off 0x35e0) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_beta_466718.lnk  (live-slack @ cluster 76 off 0x7ea8) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_beta_783219.lnk  (live-slack @ cluster 89 off 0x36e8) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_cache_453807.lnk  (live-slack @ cluster 528 off 0x1ee0) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_cache_806350.lnk  (live-slack @ cluster 520 off 0x26f0) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_config_465767.lnk  (live-slack @ cluster 520 off 0x1778) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_config_745013.lnk  (live-slack @ cluster 523 off 0x2240) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_config_869687.lnk  (live-slack @ cluster 536 off 0x4390) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_data_600139.lnk  (live-slack @ cluster 549 off 0x1938) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_data_611203.lnk  (live-slack @ cluster 520 off 0x52f0) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_data_727776.lnk  (live-slack @ cluster 536 off 0x4ae0) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_data_784025.lnk  (live-slack @ cluster 56 off 0x4578) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_draft_338836.lnk  (live-slack @ cluster 41 off 0x2990) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_foxtrot_127700.lnk  (live-slack @ cluster 57 off 0x2a70) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_foxtrot_182293.lnk  (live-slack @ cluster 517 off 0x9f8) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_foxtrot_376349.lnk  (live-slack @ cluster 66 off 0x5680) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_foxtrot_386926.lnk  (live-slack @ cluster 551 off 0x28c8) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_foxtrot_464100.lnk  (live-slack @ cluster 515 off 0x4d20) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_gamma_320457.lnk  (live-slack @ cluster 515 off 0x1700) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_gamma_582996.lnk  (live-slack @ cluster 534 off 0x5a50) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_gamma_590021.lnk  (live-slack @ cluster 41 off 0x5538) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_gamma_620219.lnk  (live-slack @ cluster 553 off 0x960) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_gamma_990664.lnk  (live-slack @ cluster 566 off 0x960) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_hotel_347915.lnk  (live-slack @ cluster 76 off 0x4960) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_hotel_406164.lnk  (live-slack @ cluster 66 off 0x7978) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_hotel_869229.lnk  (live-slack @ cluster 57 off 0x7ef0) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_hotel_961446.lnk  (live-slack @ cluster 539 off 0x2d88) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_index_214584.lnk  (live-slack @ cluster 70 off 0x960) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_index_995562.lnk  (live-slack @ cluster 66 off 0x48a8) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_india_339183.lnk  (live-slack @ cluster 66 off 0x2280) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_india_820108.lnk  (live-slack @ cluster 57 off 0x10f8) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_kilo_166053.lnk  (live-slack @ cluster 515 off 0x32d0) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_kilo_462105.lnk  (live-slack @ cluster 541 off 0x1d58) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_lima_134000.lnk  (live-slack @ cluster 96 off 0x960) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_lima_197961.lnk  (live-slack @ cluster 534 off 0x1c78) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_lima_649785.lnk  (live-slack @ cluster 517 off 0x3230) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_log_824484.lnk  (live-slack @ cluster 515 off 0x62c0) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_mike_662904.lnk  (live-slack @ cluster 528 off 0x4e10) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_mike_693652.lnk  (live-slack @ cluster 523 off 0x2f40) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_november_481324.lnk  (live-slack @ cluster 81 off 0x24c0) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_november_517898.lnk  (live-slack @ cluster 41 off 0x7080) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_november_569529.lnk  (live-slack @ cluster 520 off 0x36a0) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_oscar_142882.lnk  (live-slack @ cluster 547 off 0xf48) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_oscar_179484.lnk  (live-slack @ cluster 66 off 0x6440) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_oscar_486618.lnk  (live-slack @ cluster 71 off 0xbc8) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_oscar_911350.lnk  (live-slack @ cluster 520 off 0x2dc0) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_oscar_984316.lnk  (live-slack @ cluster 563 off 0x960) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_output_551469.lnk  (live-slack @ cluster 76 off 0x5d98) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_papa_163906.lnk  (live-slack @ cluster 57 off 0x1e18) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_papa_502518.lnk  (live-slack @ cluster 96 off 0x1d10) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_papa_790269.lnk  (live-slack @ cluster 515 off 0x2550) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_papa_971442.lnk  (live-slack @ cluster 62 off 0x17e8) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_quebec_109597.lnk  (live-slack @ cluster 57 off 0x6a18) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_quebec_401526.lnk  (live-slack @ cluster 86 off 0xa00) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_quebec_684050.lnk  (live-slack @ cluster 558 off 0xf38) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_quebec_727318.lnk  (live-slack @ cluster 520 off 0x1ee0) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_quebec_925030.lnk  (live-slack @ cluster 516 off 0x1850) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_record_764274.lnk  (live-slack @ cluster 56 off 0x5d38) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_report_682518.lnk  (live-slack @ cluster 517 off 0x2520) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_report_828976.lnk  (live-slack @ cluster 55 off 0x1688) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_romeo_447093.lnk  (live-slack @ cluster 515 off 0x3ff8) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_sierra_137079.lnk  (live-slack @ cluster 54 off 0x250) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_sierra_203526.lnk  (live-slack @ cluster 76 off 0x3c28) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_sierra_305311.lnk  (live-slack @ cluster 79 off 0x4c38) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_sync_294080.lnk  (live-slack @ cluster 516 off 0x960) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_sync_472549.lnk  (live-slack @ cluster 41 off 0x1cb0) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_sync_972861.lnk  (live-slack @ cluster 56 off 0x36b8) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_tango_121575.lnk  (live-slack @ cluster 549 off 0x960) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_tango_514696.lnk  (live-slack @ cluster 570 off 0x960) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_tango_551004.lnk  (live-slack @ cluster 517 off 0x1770) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_tango_748172.lnk  (live-slack @ cluster 551 off 0xf38) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_temp_313390.lnk  (live-slack @ cluster 89 off 0x1678) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_temp_349339.lnk  (live-slack @ cluster 66 off 0x1630) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_temp_633497.lnk  (live-slack @ cluster 55 off 0x9c8) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_temp_793867.lnk  (live-slack @ cluster 536 off 0x16f8) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_trace_139235.lnk  (live-slack @ cluster 56 off 0x55c0) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_trace_182651.lnk  (live-slack @ cluster 514 off 0x3ac8) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_trace_403082.lnk  (live-slack @ cluster 520 off 0x8590) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_trace_656721.lnk  (live-slack @ cluster 546 off 0x2b98) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_uniform_227241.lnk  (live-slack @ cluster 534 off 0x960) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_victor_320333.lnk  (live-slack @ cluster 79 off 0x2fe8) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_victor_507560.lnk  (live-slack @ cluster 57 off 0x4e28) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_victor_643160.lnk  (live-slack @ cluster 57 off 0xb120) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_victor_651544.lnk  (live-slack @ cluster 524 off 0x470) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_victor_833020.lnk  (live-slack @ cluster 546 off 0x3838) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_whiskey_280801.lnk  (live-slack @ cluster 89 off 0x960) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_whiskey_288934.lnk  (live-slack @ cluster 81 off 0xaa8) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_whiskey_295784.lnk  (live-slack @ cluster 551 off 0x1be8) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_whiskey_552838.lnk  (live-slack @ cluster 41 off 0x9f0) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_whiskey_639470.lnk  (live-slack @ cluster 82 off 0xbb0) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_yankee_145840.lnk  (live-slack @ cluster 520 off 0x68d8) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_yankee_330941.lnk  (live-slack @ cluster 101 off 0x1da8) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_yankee_403795.lnk  (live-slack @ cluster 56 off 0x1250) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_yankee_949117.lnk  (live-slack @ cluster 514 off 0x638) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_zulu_264848.lnk  (live-slack @ cluster 546 off 0x5738) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_zulu_730907.lnk  (live-slack @ cluster 528 off 0x2c28) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_zulu_746637.lnk  (live-slack @ cluster 528 off 0x960) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_zulu_759409.lnk  (live-slack @ cluster 76 off 0x2f90) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    symlink_zulu_965034.lnk  (live-slack @ cluster 527 off 0x4430) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    sync_beta_248178.ini  (live-slack @ cluster 528 off 0x10a0) — metadata only (non-resident — file data is NOT in this remnant)
+    sync_kilo_900783.dat  (live-slack @ cluster 41 off 0x3660) — metadata only (non-resident — file data is NOT in this remnant)
+    sync_output_400218.log  (live-slack @ cluster 536 off 0x2bb8) — metadata only (non-resident — file data is NOT in this remnant)
+    tango_hotel_724623.csv  (live-slack @ cluster 527 off 0x1100) — metadata only (non-resident — file data is NOT in this remnant)
+    temp_foxtrot_306714.dat  (live-slack @ cluster 96 off 0x1140) — metadata only (non-resident — file data is NOT in this remnant)
+    trace_index_387215.md  (live-slack @ cluster 534 off 0x6280) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    uniform_output_468590.bin  (live-slack @ cluster 70 off 0x1638) — metadata only (non-resident — file data is NOT in this remnant)
+    uniform_trace_241041.tmp  (live-slack @ cluster 41 off 0x64a0) — metadata only (non-resident — file data is NOT in this remnant)
+    uniform_whiskey_678922.bin  (live-slack @ cluster 520 off 0x93d8) — metadata only (non-resident — file data is NOT in this remnant)
+    uniform_zulu_344431.cfg  (live-slack @ cluster 539 off 0x1308) — metadata only (non-resident — file data is NOT in this remnant)
+    victor_backup_919051.cfg  (live-slack @ cluster 547 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
+    victor_config_201674.tmp  (live-slack @ cluster 66 off 0x8030) — metadata only (non-resident — file data is NOT in this remnant)
+    victor_papa_318630.json  (live-slack @ cluster 85 off 0x1190) — metadata only (non-resident — file data is NOT in this remnant)
+    victor_report_186047.json  (live-slack @ cluster 520 off 0x8df0) — metadata only (non-resident — file data is NOT in this remnant)
+    whiskey_alpha_816288.bak  (live-slack @ cluster 527 off 0x5470) — metadata only (non-resident — file data is NOT in this remnant)
+    whiskey_audit_532580.log  (live-slack @ cluster 76 off 0x2330) — metadata only (non-resident — file data is NOT in this remnant)
+    whiskey_oscar_373774.log  (live-slack @ cluster 514 off 0x2798) — metadata only (non-resident — file data is NOT in this remnant)
+    whiskey_temp_371765.dat  (live-slack @ cluster 539 off 0x1a10) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_alpha_delta_830163.ini  (live-slack @ cluster 550 off 0x1490) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_alpha_delta_877195.json  (live-slack @ cluster 118 off 0x2268) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_alpha_echo_381900.ini  (live-slack @ cluster 561 off 0x51a0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_alpha_victor_250409.ini  (live-slack @ cluster 60 off 0x4be0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_archive_audit_104959.tmp  (live-slack @ cluster 561 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_archive_whiskey_718198.csv  (live-slack @ cluster 61 off 0x4898) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_audit_data_566396.txt  (live-slack @ cluster 60 off 0x5ee8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_audit_index_229436.csv  (live-slack @ cluster 115 off 0x1930) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_audit_india_563500.bin  (live-slack @ cluster 60 off 0x58f0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_audit_log_130131.ini  (live-slack @ cluster 60 off 0x9078) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_audit_november_543757.cfg  (live-slack @ cluster 61 off 0x9b40) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_audit_november_550810.ini  (live-slack @ cluster 573 off 0x4d90) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_backup_draft_411674.log  (live-slack @ cluster 550 off 0x4770) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_backup_echo_585708.csv  (live-slack @ cluster 72 off 0x2d48) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_backup_sierra_949923.ini  (live-slack @ cluster 110 off 0x2878) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_beta_archive_202282.json  (live-slack @ cluster 114 off 0x420) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_beta_archive_448246.ini  (live-slack @ cluster 72 off 0x7910) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_beta_report_756229.csv  (live-slack @ cluster 73 off 0x16a0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_cache_alpha_953426.ini  (live-slack @ cluster 573 off 0x80c8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_cache_beta_265588.tmp  (live-slack @ cluster 61 off 0x8978) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_cache_index_408825.bin  (live-slack @ cluster 114 off 0x54f0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_cache_lima_454391.txt  (live-slack @ cluster 114 off 0x4920) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_cache_quebec_319176.xml  (live-slack @ cluster 573 off 0x9f18) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_cache_temp_298348.bak  (live-slack @ cluster 584 off 0x1c88) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_config_archive_855545.dat  (live-slack @ cluster 537 off 0x2cb8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_config_beta_555315.bin  (live-slack @ cluster 61 off 0x7068) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_config_india_582905.json  (live-slack @ cluster 61 off 0x3638) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_config_sync_830891.tmp  (live-slack @ cluster 578 off 0x2ce0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_config_uniform_831195.csv  (live-slack @ cluster 561 off 0x4ba8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_data_config_437965.csv  (live-slack @ cluster 113 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_data_romeo_946788.bin  (live-slack @ cluster 573 off 0x4088) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_data_victor_588744.ini  (live-slack @ cluster 537 off 0x4500) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_delta_cache_147912.bin  (live-slack @ cluster 550 off 0x1a88) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_delta_delta_676812.xml  (live-slack @ cluster 98 off 0x2de8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_delta_echo_268401.csv  (live-slack @ cluster 69 off 0x2e68) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_delta_echo_626074.json  (live-slack @ cluster 573 off 0x1b38) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_delta_india_877880.dat  (live-slack @ cluster 554 off 0x1c90) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_delta_lima_807650.tmp  (live-slack @ cluster 114 off 0x4f08) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_delta_log_234524.log  (live-slack @ cluster 110 off 0x4c28) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_delta_log_356379.tmp  (live-slack @ cluster 561 off 0x6418) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_delta_report_275249.dat  (live-slack @ cluster 69 off 0x2870) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_draft_india_571157.ini  (live-slack @ cluster 98 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_draft_india_626576.tmp  (live-slack @ cluster 578 off 0x1328) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_draft_november_935526.json  (live-slack @ cluster 573 off 0x7430) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_draft_oscar_719333.tmp  (live-slack @ cluster 72 off 0x7f08) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_draft_tango_958869.bin  (live-slack @ cluster 51 off 0x4310) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_foxtrot_config_966558.log  (live-slack @ cluster 51 off 0x19b0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_gamma_temp_372257.bak  (live-slack @ cluster 51 off 0x3d28) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_gamma_victor_852781.bak  (live-slack @ cluster 61 off 0xa6d8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hotel_data_899354.bak  (live-slack @ cluster 537 off 0x5680) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hotel_mike_996142.cfg  (live-slack @ cluster 123 off 0x1dd0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hotel_sync_810225.ini  (live-slack @ cluster 61 off 0x2a58) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hotel_yankee_684408.cfg  (live-slack @ cluster 573 off 0x5388) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hotel_yankee_781098.log  (live-slack @ cluster 110 off 0x2280) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_index_india_423224.csv  (live-slack @ cluster 51 off 0x3138) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_index_temp_198731.cfg  (live-slack @ cluster 61 off 0x8390) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_index_uniform_409576.json  (live-slack @ cluster 58 off 0xa9c0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_index_zulu_828859.bak  (live-slack @ cluster 537 off 0xf10) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_india_delta_132534.bak  (live-slack @ cluster 561 off 0xf68) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_india_papa_801739.json  (live-slack @ cluster 51 off 0x5b28) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_india_quebec_883273.bak  (live-slack @ cluster 573 off 0x3458) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_india_temp_254875.bak  (live-slack @ cluster 88 off 0x1be0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_india_trace_307426.json  (live-slack @ cluster 51 off 0x3730) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_india_whiskey_159747.csv  (live-slack @ cluster 61 off 0x5c60) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_kilo_beta_246643.bin  (live-slack @ cluster 72 off 0x9690) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_kilo_config_292054.json  (live-slack @ cluster 114 off 0x1748) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_kilo_draft_550251.bin  (live-slack @ cluster 578 off 0xd40) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_kilo_output_350111.log  (live-slack @ cluster 69 off 0x21d0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_kilo_papa_445436.xml  (live-slack @ cluster 561 off 0x5d28) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_kilo_quebec_845728.bak  (live-slack @ cluster 118 off 0x2990) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_kilo_sync_474043.csv  (live-slack @ cluster 110 off 0x3468) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_large_149mb_alpha_610845.dat  (live-slack @ cluster 573 off 0xabb0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_large_2mb_report_507726.txt  (live-slack @ cluster 114 off 0x5ae8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_large_5mb_romeo_293003.dat  (live-slack @ cluster 123 off 0x2a00) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_large_7mb_india_845613.txt  (live-slack @ cluster 72 off 0xa280) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_large_86mb_india_568540.txt  (live-slack @ cluster 72 off 0x9c78) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_lima_config_611703.json  (live-slack @ cluster 110 off 0x2e70) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_lima_lima_890070.dat  (live-slack @ cluster 60 off 0x2d00) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_lima_oscar_843603.tmp  (live-slack @ cluster 60 off 0x3ec8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_lima_temp_514782.csv  (live-slack @ cluster 69 off 0x1008) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_log_backup_939898.json  (live-slack @ cluster 550 off 0x4178) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_log_beta_973172.txt  (live-slack @ cluster 114 off 0x3c00) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_log_foxtrot_796125.ini  (live-slack @ cluster 124 off 0x410) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_log_mike_997799.bin  (live-slack @ cluster 110 off 0x4048) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_log_romeo_319918.txt  (live-slack @ cluster 72 off 0x6d40) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_log_romeo_711888.cfg  (live-slack @ cluster 584 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_log_whiskey_169575.dat  (live-slack @ cluster 61 off 0x10b8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_mike_oscar_154118.csv  (live-slack @ cluster 115 off 0x420) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_mike_quebec_329740.dat  (live-slack @ cluster 554 off 0x15f0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_mike_tango_822153.dat  (live-slack @ cluster 60 off 0x38e0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_mike_trace_484217.ini  (live-slack @ cluster 72 off 0x5460) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_mike_trace_701071.dat  (live-slack @ cluster 92 off 0x980) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_mike_trace_772216.dat  (live-slack @ cluster 561 off 0x6a00) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_mike_uniform_966879.xml  (live-slack @ cluster 61 off 0x7660) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_november_cache_127869.dat  (live-slack @ cluster 73 off 0x420) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_november_hotel_509136.md  (live-slack @ cluster 115 off 0x2520) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_november_quebec_231876.bak  (live-slack @ cluster 561 off 0x3890) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_november_quebec_999278.md  (live-slack @ cluster 573 off 0xa510) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_november_record_124675.bak  (live-slack @ cluster 115 off 0xb48) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_november_sierra_312346.xml  (live-slack @ cluster 115 off 0x1290) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_november_yankee_663510.csv  (live-slack @ cluster 584 off 0xff8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_oscar_archive_362034.json  (live-slack @ cluster 115 off 0x1f28) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_oscar_backup_284025.json  (live-slack @ cluster 114 off 0x3010) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_oscar_delta_192166.ini  (live-slack @ cluster 573 off 0x7a38) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_oscar_foxtrot_635028.xml  (live-slack @ cluster 69 off 0x418) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_oscar_foxtrot_866936.json  (live-slack @ cluster 124 off 0xa08) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_oscar_report_193920.cfg  (live-slack @ cluster 61 off 0x8f60) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_oscar_victor_509674.md  (live-slack @ cluster 561 off 0x4548) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_output_config_975939.bak  (live-slack @ cluster 114 off 0x2420) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_output_papa_412411.log  (live-slack @ cluster 561 off 0x970) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_output_temp_864816.txt  (live-slack @ cluster 110 off 0x5358) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_output_victor_198806.ini  (live-slack @ cluster 114 off 0x3608) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_papa_archive_660135.txt  (live-slack @ cluster 124 off 0x15e8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_papa_audit_649170.md  (live-slack @ cluster 537 off 0x20d8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_papa_papa_899322.md  (live-slack @ cluster 578 off 0x32d8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_papa_victor_656146.log  (live-slack @ cluster 115 off 0x3100) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_quebec_audit_121864.cfg  (live-slack @ cluster 61 off 0x5668) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_quebec_echo_201709.md  (live-slack @ cluster 573 off 0x8758) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_quebec_kilo_982841.tmp  (live-slack @ cluster 578 off 0x1fb0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_record_cache_584285.json  (live-slack @ cluster 110 off 0x5f48) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_record_mike_276675.tmp  (live-slack @ cluster 573 off 0x2130) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_report_alpha_806856.csv  (live-slack @ cluster 61 off 0x62f0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_report_india_560484.txt  (live-slack @ cluster 72 off 0x8aa0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_report_temp_854937.tmp  (live-slack @ cluster 114 off 0x4328) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_romeo_gamma_831931.dat  (live-slack @ cluster 60 off 0x7750) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_romeo_quebec_189040.ini  (live-slack @ cluster 573 off 0x67a0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_romeo_yankee_383561.cfg  (live-slack @ cluster 573 off 0x9920) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_sierra_beta_228555.dat  (live-slack @ cluster 114 off 0x1150) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_sierra_data_271533.bin  (live-slack @ cluster 114 off 0x2a18) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_sierra_echo_709659.md  (live-slack @ cluster 573 off 0x9338) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_sierra_gamma_615567.ini  (live-slack @ cluster 573 off 0x8d40) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_sierra_kilo_206137.json  (live-slack @ cluster 561 off 0x1560) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_sierra_log_210965.log  (live-slack @ cluster 537 off 0x4af8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_sierra_record_710410.bin  (live-slack @ cluster 110 off 0x1000) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_sierra_victor_685719.xml  (live-slack @ cluster 561 off 0x1b58) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_symlink_gamma_582874.lnk  (live-slack @ cluster 550 off 0x3ae8) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    xbpt_symlink_hotel_632659.lnk  (live-slack @ cluster 51 off 0x49e0) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    xbpt_sync_echo_156375.ini  (live-slack @ cluster 72 off 0x7328) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_sync_output_795963.bin  (live-slack @ cluster 578 off 0x25a8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_sync_zulu_911953.ini  (live-slack @ cluster 51 off 0x51d0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_tango_archive_828215.dat  (live-slack @ cluster 51 off 0x1fa8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_tango_record_232127.csv  (live-slack @ cluster 118 off 0x1c70) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_tango_victor_844323.json  (live-slack @ cluster 60 off 0x6ac8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_temp_audit_764882.bak  (live-slack @ cluster 537 off 0x14f8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_temp_backup_816270.cfg  (live-slack @ cluster 588 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_temp_data_294711.md  (live-slack @ cluster 115 off 0x2b18) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_temp_echo_351548.json  (live-slack @ cluster 61 off 0x5080) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_temp_foxtrot_475776.md  (live-slack @ cluster 110 off 0x5950) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_temp_index_659152.xml  (live-slack @ cluster 118 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_temp_mike_134457.bak  (live-slack @ cluster 72 off 0x6758) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_temp_output_522138.tmp  (live-slack @ cluster 60 off 0x83e0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_temp_sierra_130629.tmp  (live-slack @ cluster 69 off 0xa10) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_temp_uniform_753565.cfg  (live-slack @ cluster 123 off 0x1008) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_trace_config_794136.tmp  (live-slack @ cluster 573 off 0x27c0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_trace_delta_811163.txt  (live-slack @ cluster 72 off 0x9098) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_trace_gamma_472483.cfg  (live-slack @ cluster 584 off 0x960) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_trace_hotel_502150.xml  (live-slack @ cluster 573 off 0x6d98) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_trace_quebec_127743.bin  (live-slack @ cluster 60 off 0x9ce8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_trace_report_848037.cfg  (live-slack @ cluster 110 off 0x4630) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_uniform_alpha_203203.json  (live-slack @ cluster 537 off 0x1ae0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_uniform_mike_713257.xml  (live-slack @ cluster 118 off 0xa00) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_uniform_oscar_320878.log  (live-slack @ cluster 579 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_uniform_record_153192.json  (live-slack @ cluster 561 off 0x2150) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_uniform_victor_168724.txt  (live-slack @ cluster 51 off 0x68d0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_victor_echo_578793.cfg  (live-slack @ cluster 58 off 0xa328) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_victor_lima_251467.cfg  (live-slack @ cluster 51 off 0xe18) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_whiskey_kilo_275488.json  (live-slack @ cluster 537 off 0x918) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_whiskey_romeo_757926.txt  (live-slack @ cluster 537 off 0x32b0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_whiskey_sync_681180.xml  (live-slack @ cluster 561 off 0x3298) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_yankee_audit_433793.xml  (live-slack @ cluster 51 off 0x25a0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_yankee_draft_816830.dat  (live-slack @ cluster 578 off 0x3960) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_yankee_echo_729349.tmp  (live-slack @ cluster 83 off 0x418) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_yankee_foxtrot_727835.bak  (live-slack @ cluster 537 off 0x26c0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_yankee_output_781405.csv  (live-slack @ cluster 573 off 0x2e60) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_yankee_report_288078.log  (live-slack @ cluster 118 off 0x1090) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_yankee_tango_103961.bin  (live-slack @ cluster 72 off 0x6160) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_yankee_victor_114004.ini  (live-slack @ cluster 69 off 0x3a98) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_zulu_audit_805568.ini  (live-slack @ cluster 584 off 0x1600) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_zulu_echo_160107.cfg  (live-slack @ cluster 123 off 0x16a8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_zulu_hotel_356824.dat  (live-slack @ cluster 110 off 0x1690) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_zulu_india_473528.csv  (live-slack @ cluster 124 off 0x1000) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_zulu_mike_340372.cfg  (live-slack @ cluster 119 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_zulu_output_293634.cfg  (live-slack @ cluster 58 off 0x8b58) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_zulu_papa_839258.bin  (live-slack @ cluster 123 off 0x428) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_zulu_sync_665668.bin  (live-slack @ cluster 110 off 0x6690) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_zulu_trace_481495.md  (live-slack @ cluster 73 off 0xa18) — metadata only (non-resident — file data is NOT in this remnant)
+    yankee_whiskey_958256.md  (live-slack @ cluster 81 off 0x18e0) — metadata only (non-resident — file data is NOT in this remnant)
+    zulu_beta_358052.md  (live-slack @ cluster 514 off 0x2d80) — metadata only (non-resident — file data is NOT in this remnant)
+
+  NOTE: slack rows are unindexed remnants. 'with valid timestamps' rows decode a full
+        $SI (high confidence); 'partial remnants' are name fragments from a row whose
+        body was partly overwritten — always corroborate before relying on one entry.
+── Recovery methods ──
+  Ran: Trash table (0xD), checkpoint diff, B+-tree node-slack scan (deleted rows + recoverability).
+  Options: --no-slack (fast Trash+checkpoint only) · --scan-pages (also orphaned pages) ·
+           --search SUB (filter) · `export deleted DIR [--carve]` (write files out).
+  (Windows Recycle Bin is separate: see the `recyclebin` command.)
+
+  DELETED files: 5 of 218 are RESIDENT with full content recoverable; 0 are non-resident (carve-able with --carve).
+  PRIOR versions of live files: 114 of 409 decode to a file.
+  Restorability: a RESIDENT deleted file's FULL content is recoverable from the remnant
+       (written as .recovered). A NON-RESIDENT file keeps its data in on-disk extents — if the
+       extent map survives in the remnant ('extent_backed'), `export deleted --carve`
+       reconstructs it best-effort (bytes may be stale); otherwise only METADATA survives
+       (name/size/timestamps). See the `export deleted` docs.
+  Next: `export deleted <DIR>` writes each entry's raw .row (evidence) + a .recovered for
+        resident files; add --carve to also reconstruct non-resident (extent-backed) files.
+

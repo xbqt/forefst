@@ -1,0 +1,391 @@
+==============================================================================
+ReFS Timestamp-Anomaly (Timestomp) Detection
+==============================================================================
+  Image:           win11refstestmftecmd.raw  (ReFS 3.14)
+  Volume created:  2026-05-23 06:04:52
+  Volume modified: 2026-05-23 11:15:52
+  USN journal:     present (authoritative cross-check ON)
+  Files examined:  1507
+  Flagged:         184  (HIGH 109 / MEDIUM 67 / LOW 8)
+
+  Conf    Created (forged?)     Changed (real write)  Path
+  ----------------------------------------------------------------------------------------------
+  HIGH    2024-08-03 07:17:33   2026-05-23 07:34:05   test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_zulu_india_473528.csv
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2024-11-23 07:17:31   2026-05-23 07:34:05   test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_whiskey_delta_922359.tmp
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2023-11-27 07:16:30   2026-05-23 07:34:03   test/elvis_dir_index_149423/xbpt_beta_archive_985685.tmp
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2022-05-20 07:16:16   2026-05-23 07:34:02   test/elvis_dir_index_149423/xbpt_zulu_kilo_319858.csv
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2024-01-13 07:17:04   2026-05-23 07:34:04   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_delta_echo_268401.csv
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2025-07-16 07:17:35   2026-05-23 07:34:05   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_lima_victor_941030.cfg
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2022-02-07 07:16:33   2026-05-23 07:34:02   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_temp_sierra_130629.tmp
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2026-03-01 07:16:07   2026-05-23 07:34:04   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_cache_zulu_259753.dat
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2023-08-26 07:16:12   2026-05-23 07:33:59   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_delta_temp_981764.tmp
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2021-10-19 07:16:21   2026-05-23 07:34:01   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_audit_config_255291.dat
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2024-06-07 07:17:11   2026-05-23 07:34:04   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_zulu_trace_481495.md
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2022-06-17 07:16:38   2026-05-23 07:34:02   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_backup_echo_585708.csv
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2025-12-30 07:17:16   2026-05-23 07:34:04   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_temp_mike_134457.bak
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2022-04-19 07:16:47   2026-05-23 07:34:03   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_yankee_foxtrot_727835.bak
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2021-10-14 07:17:10   2026-05-23 07:34:04   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_audit_log_130131.ini
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2025-06-11 07:16:10   2026-05-23 07:34:02   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_beta_cache_861983.json
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2025-02-23 07:17:23   2026-05-23 07:34:05   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_romeo_gamma_831931.dat
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2025-03-31 07:17:11   2026-05-23 07:34:04   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_tango_victor_844323.json
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2024-05-06 07:17:31   2026-05-23 07:34:05   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899/xbpt_config_record_746941.dat
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2023-10-15 07:17:00   2026-05-23 07:34:04   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_victor_echo_578793.cfg
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2023-11-21 07:17:13   2026-05-23 07:34:04   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_zulu_output_293634.cfg
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2022-03-06 07:16:22   2026-05-23 07:34:05   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_cache_beta_265588.tmp
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2022-02-28 07:17:26   2026-05-23 07:34:05   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_index_temp_198731.cfg
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2022-12-26 07:16:15   2026-05-23 07:34:00   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_log_whiskey_169575.dat
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2025-04-08 07:17:35   2026-05-23 07:34:05   test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_temp_foxtrot_475776.md
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2025-04-19 07:17:09   2026-05-23 07:34:04   test/elvis_dir_victor_783323/xbpt_delta_echo_626074.json
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2025-12-01 07:17:11   2026-05-23 07:34:04   test/elvis_dir_victor_783323/xbpt_record_mike_276675.tmp
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2022-05-31 07:17:29   2026-05-23 07:34:05   test/elvis_dir_victor_783323/xbpt_romeo_yankee_383561.cfg
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2021-10-04 07:16:49   2026-05-23 07:34:03   test/elvis_dir_victor_783323/xbpt_trace_config_794136.tmp
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2025-09-04 07:16:57   2026-05-23 07:34:03   test/elvis_dir_victor_783323/xbpt_yankee_output_781405.csv
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2021-10-15 07:17:19   2026-05-23 07:34:05   test/xbpt_config_log_982725.bin
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2025-06-06 07:17:11   2026-05-23 07:34:04   test/xbpt_index_india_423224.csv
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2025-08-11 07:17:32   2026-05-23 07:34:05   test/xbpt_india_papa_801739.json
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2024-04-02 07:16:32   2026-05-23 07:34:03   test/xbpt_india_temp_831504.csv
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2022-02-12 07:16:16   2026-05-23 07:34:01   test/xbpt_yankee_audit_433793.xml
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2024-08-03 07:17:33   2026-05-23 07:38:52   test2/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_zulu_india_473528.csv
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2024-11-23 07:17:31   2026-05-23 07:38:52   test2/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_whiskey_delta_922359.tmp
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2023-11-27 07:16:30   2026-05-23 07:38:49   test2/elvis_dir_index_149423/xbpt_beta_archive_985685.tmp
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2022-05-20 07:16:16   2026-05-23 07:38:48   test2/elvis_dir_index_149423/xbpt_zulu_kilo_319858.csv
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2024-01-13 07:17:04   2026-05-23 07:38:50   test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_delta_echo_268401.csv
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2025-07-16 07:17:35   2026-05-23 07:38:52   test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_lima_victor_941030.cfg
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2022-02-07 07:16:33   2026-05-23 07:38:48   test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_temp_sierra_130629.tmp
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2026-03-01 07:16:07   2026-05-23 07:38:50   test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_cache_zulu_259753.dat
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2023-08-26 07:16:12   2026-05-23 07:38:46   test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_delta_temp_981764.tmp
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2021-10-19 07:16:21   2026-05-23 07:38:48   test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_audit_config_255291.dat
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2024-06-07 07:17:11   2026-05-23 07:38:50   test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_zulu_trace_481495.md
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2022-06-17 07:16:38   2026-05-23 07:38:48   test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_backup_echo_585708.csv
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2025-12-30 07:17:16   2026-05-23 07:38:51   test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_temp_mike_134457.bak
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2022-04-19 07:16:47   2026-05-23 07:38:49   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_yankee_foxtrot_727835.bak
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2021-10-14 07:17:10   2026-05-23 07:38:50   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_audit_log_130131.ini
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2025-06-11 07:16:10   2026-05-23 07:38:48   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_beta_cache_861983.json
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2025-02-23 07:17:23   2026-05-23 07:38:51   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_romeo_gamma_831931.dat
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2025-03-31 07:17:11   2026-05-23 07:38:51   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_tango_victor_844323.json
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2024-05-06 07:17:31   2026-05-23 07:38:51   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899/xbpt_config_record_746941.dat
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2023-10-15 07:17:00   2026-05-23 07:38:50   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_victor_echo_578793.cfg
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2023-11-21 07:17:13   2026-05-23 07:38:51   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_zulu_output_293634.cfg
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2022-03-06 07:16:22   2026-05-23 07:38:51   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_cache_beta_265588.tmp
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2022-02-28 07:17:26   2026-05-23 07:38:51   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_index_temp_198731.cfg
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2022-12-26 07:16:15   2026-05-23 07:38:46   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_log_whiskey_169575.dat
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2025-04-08 07:17:35   2026-05-23 07:38:52   test2/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_temp_foxtrot_475776.md
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2025-04-19 07:17:09   2026-05-23 07:38:50   test2/elvis_dir_victor_783323/xbpt_delta_echo_626074.json
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2025-12-01 07:17:11   2026-05-23 07:38:50   test2/elvis_dir_victor_783323/xbpt_record_mike_276675.tmp
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2022-05-31 07:17:29   2026-05-23 07:38:51   test2/elvis_dir_victor_783323/xbpt_romeo_yankee_383561.cfg
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2021-10-04 07:16:49   2026-05-23 07:38:49   test2/elvis_dir_victor_783323/xbpt_trace_config_794136.tmp
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2025-09-04 07:16:57   2026-05-23 07:38:50   test2/elvis_dir_victor_783323/xbpt_yankee_output_781405.csv
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2021-10-15 07:17:19   2026-05-23 07:38:51   test2/xbpt_config_log_982725.bin
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2025-06-06 07:17:11   2026-05-23 07:38:51   test2/xbpt_index_india_423224.csv
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2025-08-11 07:17:32   2026-05-23 07:38:51   test2/xbpt_india_papa_801739.json
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2024-04-02 07:16:32   2026-05-23 07:38:49   test2/xbpt_india_temp_831504.csv
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2022-02-12 07:16:16   2026-05-23 07:38:47   test2/xbpt_yankee_audit_433793.xml
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2026-04-18 07:48:17   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/dir_zulu_312953/xbpt_hardlink_tango_212500.json
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2024-05-21 07:48:14   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/xbpt_record_cache_677917.dat
+          signals: PRE_FORMAT, USN_CREATE_MISMATCH
+  HIGH    2022-04-18 07:50:12   2026-05-23 07:53:54   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_oscar_342854/dir_archive_860003/xbpt_hardlink_backup_502262.bin
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2025-05-13 07:49:57   2026-05-23 07:53:53   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_report_930793/xbpt_output_temp_615727.cfg
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2023-02-21 07:48:51   2026-05-23 07:53:51   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_backup_240201/dir_draft_203180/dir_zulu_409792/xbpt_data_romeo_992013.json
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2023-01-31 07:49:20   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/xbpt_config_cache_208102.md
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2022-01-16 07:49:30   2026-05-23 07:53:53   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_papa_189433/xbpt_hardlink_beta_609618.bak
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2023-05-02 07:49:07   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/xbpt_zulu_index_584442.dat
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2024-05-22 07:50:02   2026-05-23 07:53:53   testintegrity/dir_romeo_348517/dir_alpha_208192/dir_november_114124/xbpt_hardlink_victor_401815.log
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2023-02-26 07:47:56   2026-05-23 07:53:49   testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_record_index_333773.cfg
+          signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
+  HIGH    2024-03-14 07:48:36   2026-05-23 07:53:51   testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_whiskey_kilo_696933.md
+          signals: PRE_FORMAT, USN_CREATE_MISMATCH
+  HIGH    2023-08-09 07:47:55   2026-05-23 07:53:52   testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_log_alpha_992477.dat
+          signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
+  HIGH    2024-11-17 07:48:36   2026-05-23 07:53:50   testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_oscar_audit_617257.json
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2024-07-02 07:49:01   2026-05-23 07:53:51   testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_hardlink_beta_222943.txt
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2026-04-18 07:48:17   2026-05-23 07:53:49   testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_hardlink_index_906427.json
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2025-05-28 07:50:04   2026-05-23 07:53:53   testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_hardlink_quebec_103258.csv
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2022-01-16 07:49:30   2026-05-23 07:53:53   testintegrity/dir_romeo_348517/xbpt_hardlink_india_193722.bak
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2022-05-22 07:48:52   2026-05-23 07:53:51   testintegrity/dir_romeo_348517/xbpt_tango_record_968896.md
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2021-07-21 07:48:20   2026-05-23 07:53:53   testintegrity/xbpt_foxtrot_kilo_188200.bin
+          signals: PRE_FORMAT, USN_CREATE_MISMATCH
+  HIGH    2026-04-18 07:48:17   2026-05-23 07:53:53   testintegrity/xbpt_gamma_data_633866.json
+          signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE
+  HIGH    2021-12-28 07:49:15   2026-05-23 07:53:53   testintegrity/xbpt_hardlink_backup_104228.log
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2025-03-09 07:48:01   2026-05-23 07:53:50   testintegrity/xbpt_index_victor_598659.bak
+          signals: PRE_FORMAT, USN_CREATE_MISMATCH
+  HIGH    2023-01-05 07:48:06   2026-05-23 07:53:49   testintegrity/xbpt_india_yankee_623909.dat
+          signals: CHANGE_LATE, PRE_FORMAT, USN_CREATE_MISMATCH
+  HIGH    2021-12-28 07:49:15   2026-05-23 07:53:53   testintegrity/xbpt_uniform_kilo_835445.log
+          signals: PRE_FORMAT, USN_CREATE_MISMATCH
+  HIGH    2022-11-01 07:39:55   2026-05-23 07:44:19   testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/xbpt_archive_draft_753371.cfg
+          signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
+  HIGH    2021-08-06 07:40:34   2026-05-23 07:44:20   testspecials/dir_echo_260113/xbpt_lima_audit_873256.log
+          signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
+  HIGH    2021-12-11 07:40:20   2026-05-23 07:44:19   testspecials/dir_mike_420327/xbpt_hardlink_romeo_520215.json
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2025-10-27 07:42:06   2026-05-23 07:44:23   testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_hardlink_data_733507.log
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2022-07-16 07:41:15   2026-05-23 07:44:21   testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_index_kilo_795802.md
+          signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
+  HIGH    2024-09-02 07:42:02   2026-05-23 07:44:23   testspecials/dir_romeo_413583/dir_kilo_704584/dir_report_123351/xbpt_quebec_cache_515604.cfg
+          signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
+  HIGH    2023-03-25 07:40:58   2026-05-23 07:44:21   testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_mike_981731/xbpt_echo_beta_386853.csv
+          signals: CHANGE_LATE, PRE_FORMAT, USN_CREATE_MISMATCH
+  HIGH    2022-11-01 07:39:55   2026-05-23 07:44:17   testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_gamma_421188/dir_uniform_641683/dir_echo_253572/xbpt_hardlink_quebec_835914.cfg
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2023-07-08 07:39:50   2026-05-23 07:44:20   testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_gamma_421188/xbpt_trace_kilo_387263.ini
+          signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE
+  HIGH    2021-12-11 07:40:20   2026-05-23 07:44:19   testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_sierra_120452/xbpt_oscar_yankee_456045.json
+          signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
+  HIGH    2025-10-27 07:42:06   2026-05-23 07:44:23   testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_delta_alpha_671390.log
+          signals: PRE_FORMAT, USN_CREATE_MISMATCH
+  HIGH    2022-06-08 07:41:16   2026-05-23 07:44:21   testspecials/dir_romeo_413583/xbpt_hardlink_tango_845190.ini
+          signals: CHANGE_LATE, PRE_FORMAT
+  HIGH    2024-12-22 07:39:57   2026-05-23 07:44:22   testspecials/xbpt_archive_record_237501.xml
+          signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
+  HIGH    2022-07-05 07:39:53   2026-05-23 07:44:18   testspecials/xbpt_hardlink_tango_460823.xml
+          signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE
+  HIGH    2021-11-15 07:39:56   2026-05-23 07:44:18   testspecials/xbpt_uniform_beta_276130.dat
+          signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
+  MEDIUM  2026-01-01 07:16:17   2026-05-23 07:34:05   test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_audit_echo_178867.tmp
+          signals: PRE_FORMAT
+  MEDIUM  2021-05-18 07:16:04   2026-05-23 07:34:03   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_backup_mike_407434.log
+          signals: PRE_FORMAT
+  MEDIUM  2025-02-09 07:17:09   2026-05-23 07:34:05   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_hardlink_echo_387599.ini
+          signals: PRE_FORMAT
+  MEDIUM  2025-04-02 07:16:24   2026-05-23 07:34:03   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_sierra_echo_921063.xml
+          signals: PRE_FORMAT
+  MEDIUM  2025-04-01 07:16:26   2026-05-23 07:34:04   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_tango_echo_291736.csv
+          signals: PRE_FORMAT
+  MEDIUM  2022-08-02 07:16:28   2026-05-23 07:34:02   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_romeo_output_531365.cfg
+          signals: PRE_FORMAT
+  MEDIUM  2024-04-04 07:17:02   2026-05-23 07:34:06   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_delta_sierra_216359.bin
+          signals: PRE_FORMAT
+  MEDIUM  2021-09-26 07:16:24   2026-05-23 07:34:04   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_delta_cache_147912.bin
+          signals: PRE_FORMAT
+  MEDIUM  2021-09-29 07:16:41   2026-05-23 07:34:04   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_report_audit_396522.txt
+          signals: PRE_FORMAT
+  MEDIUM  2026-02-23 07:17:05   2026-05-23 07:34:04   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_alpha_victor_250409.ini
+          signals: PRE_FORMAT
+  MEDIUM  2024-12-12 07:16:57   2026-05-23 07:34:05   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_index_uniform_409576.json
+          signals: PRE_FORMAT
+  MEDIUM  2024-10-16 07:17:27   2026-05-23 07:34:05   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_quebec_audit_121864.cfg
+          signals: PRE_FORMAT
+  MEDIUM  2022-06-11 07:16:28   2026-05-23 07:34:04   test/elvis_dir_record_449015/xbpt_output_papa_412411.log
+          signals: PRE_FORMAT
+  MEDIUM  2025-05-12 07:17:04   2026-05-23 07:34:06   test/elvis_dir_victor_783323/xbpt_report_quebec_867569.md
+          signals: PRE_FORMAT
+  MEDIUM  2025-11-05 07:16:31   2026-05-23 07:34:05   test/xbpt_foxtrot_config_966558.log
+          signals: PRE_FORMAT
+  MEDIUM  2026-01-01 07:16:17   2026-05-23 07:38:51   test2/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_audit_echo_178867.tmp
+          signals: PRE_FORMAT
+  MEDIUM  2021-05-18 07:16:04   2026-05-23 07:38:49   test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_backup_mike_407434.log
+          signals: PRE_FORMAT
+  MEDIUM  2025-02-09 07:17:09   2026-05-23 07:38:51   test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_hardlink_echo_387599.ini
+          signals: PRE_FORMAT
+  MEDIUM  2025-04-02 07:16:24   2026-05-23 07:38:50   test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_sierra_echo_921063.xml
+          signals: PRE_FORMAT
+  MEDIUM  2025-04-01 07:16:26   2026-05-23 07:38:51   test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_tango_echo_291736.csv
+          signals: PRE_FORMAT
+  MEDIUM  2022-08-02 07:16:28   2026-05-23 07:38:48   test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_romeo_output_531365.cfg
+          signals: PRE_FORMAT
+  MEDIUM  2024-04-04 07:17:02   2026-05-23 07:38:52   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_delta_sierra_216359.bin
+          signals: PRE_FORMAT
+  MEDIUM  2021-09-26 07:16:24   2026-05-23 07:38:50   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_delta_cache_147912.bin
+          signals: PRE_FORMAT
+  MEDIUM  2021-09-29 07:16:41   2026-05-23 07:38:50   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_report_audit_396522.txt
+          signals: PRE_FORMAT
+  MEDIUM  2026-02-23 07:17:05   2026-05-23 07:38:50   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_alpha_victor_250409.ini
+          signals: PRE_FORMAT
+  MEDIUM  2024-12-12 07:16:57   2026-05-23 07:38:51   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_index_uniform_409576.json
+          signals: PRE_FORMAT
+  MEDIUM  2024-10-16 07:17:27   2026-05-23 07:38:52   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_quebec_audit_121864.cfg
+          signals: PRE_FORMAT
+  MEDIUM  2022-06-11 07:16:28   2026-05-23 07:38:50   test2/elvis_dir_record_449015/xbpt_output_papa_412411.log
+          signals: PRE_FORMAT
+  MEDIUM  2025-05-12 07:17:04   2026-05-23 07:38:52   test2/elvis_dir_victor_783323/xbpt_report_quebec_867569.md
+          signals: PRE_FORMAT
+  MEDIUM  2025-11-05 07:16:31   2026-05-23 07:38:52   test2/xbpt_foxtrot_config_966558.log
+          signals: PRE_FORMAT
+  MEDIUM  2023-01-05 07:48:06   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_sync_430576/xbpt_hardlink_gamma_309164.dat
+          signals: PRE_FORMAT
+  MEDIUM  2024-05-21 07:48:14   2026-05-23 07:53:53   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/xbpt_hardlink_beta_501725.dat
+          signals: PRE_FORMAT
+  MEDIUM  2022-07-05 07:48:05   2026-05-23 07:53:51   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/xbpt_hardlink_yankee_522047.bak
+          signals: PRE_FORMAT
+  MEDIUM  2022-07-05 07:48:05   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_papa_189433/xbpt_data_whiskey_285684.bak
+          signals: PRE_FORMAT
+  MEDIUM  2023-02-26 07:47:56   2026-05-23 07:53:53   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/dir_victor_956392/xbpt_hardlink_trace_249765.cfg
+          signals: PRE_FORMAT
+  MEDIUM  2022-01-16 07:49:30   2026-05-23 07:53:53   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_hardlink_mike_495558.bak
+          signals: PRE_FORMAT
+  MEDIUM  2024-07-02 07:49:01   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_trace_cache_917768.txt
+          signals: PRE_FORMAT
+  MEDIUM  2021-07-21 07:48:20   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_cache_foxtrot_199130.bin
+          signals: PRE_FORMAT
+  MEDIUM  2023-01-05 07:48:06   2026-05-23 07:53:52   testintegrity/dir_romeo_348517/dir_alpha_208192/dir_yankee_687993/xbpt_hardlink_victor_889551.dat
+          signals: PRE_FORMAT
+  MEDIUM  2023-02-26 07:47:56   2026-05-23 07:53:53   testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/xbpt_hardlink_kilo_270086.cfg
+          signals: PRE_FORMAT
+  MEDIUM  2023-08-09 07:47:55   2026-05-23 07:53:52   testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/dir_cache_820752/xbpt_hardlink_tango_632919.dat
+          signals: PRE_FORMAT
+  MEDIUM  2023-01-05 07:48:06   2026-05-23 07:53:53   testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_tango_lima_130282.dat
+          signals: PRE_FORMAT
+  MEDIUM  2023-01-05 07:48:06   2026-05-23 07:53:52   testintegrity/dir_tango_306249/xbpt_hardlink_whiskey_641860.dat
+          signals: PRE_FORMAT
+  MEDIUM  2021-07-21 07:48:20   2026-05-23 07:53:51   testintegrity/xbpt_hardlink_quebec_884679.bin
+          signals: PRE_FORMAT
+  MEDIUM  2024-02-04 07:47:54   2026-05-23 07:53:49   testintegrity/xbpt_india_lima_261899.json
+          signals: PRE_FORMAT
+  MEDIUM  2022-07-05 07:39:53   2026-05-23 07:44:21   testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_backup_delta_269905.xml
+          signals: PRE_FORMAT
+  MEDIUM  2022-07-05 07:39:53   2026-05-23 07:44:21   testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_hardlink_delta_451055.xml
+          signals: PRE_FORMAT
+  MEDIUM  2022-07-05 07:39:53   2026-05-23 07:44:21   testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_hardlink_draft_275004.xml
+          signals: PRE_FORMAT
+  MEDIUM  2025-06-11 07:40:00   2026-05-23 07:44:23   testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_hardlink_kilo_974260.md
+          signals: PRE_FORMAT
+  MEDIUM  2021-11-15 07:39:56   2026-05-23 07:44:21   testspecials/dir_mike_420327/xbpt_hardlink_draft_104643.dat
+          signals: PRE_FORMAT
+  MEDIUM  2025-10-27 07:42:06   2026-05-23 07:44:23   testspecials/dir_mike_420327/xbpt_hardlink_tango_580634.log
+          signals: PRE_FORMAT
+  MEDIUM  2025-06-11 07:40:00   2026-05-23 07:44:23   testspecials/dir_romeo_413583/dir_audit_570908/dir_quebec_863524/xbpt_hardlink_config_636787.md
+          signals: PRE_FORMAT
+  MEDIUM  2022-07-05 07:39:53   2026-05-23 07:44:21   testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_hardlink_archive_353087.xml
+          signals: PRE_FORMAT
+  MEDIUM  2022-07-05 07:39:53   2026-05-23 07:44:19   testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_hardlink_kilo_790796.xml
+          signals: PRE_FORMAT
+  MEDIUM  2022-07-05 07:39:53   2026-05-23 07:44:18   testspecials/dir_romeo_413583/dir_kilo_704584/dir_report_123351/xbpt_whiskey_report_114009.xml
+          signals: PRE_FORMAT
+  MEDIUM  2022-07-05 07:39:53   2026-05-23 07:44:22   testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_mike_981731/xbpt_hardlink_output_952583.xml
+          signals: PRE_FORMAT
+  MEDIUM  2021-11-15 07:39:56   2026-05-23 07:44:21   testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_zulu_992329/xbpt_hardlink_whiskey_429484.dat
+          signals: PRE_FORMAT
+  MEDIUM  2022-07-05 07:39:53   2026-05-23 07:44:18   testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/xbpt_hardlink_oscar_805467.xml
+          signals: PRE_FORMAT
+  MEDIUM  2022-07-05 07:39:53   2026-05-23 07:44:19   testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_sync_673137/xbpt_tango_backup_348569.xml
+          signals: PRE_FORMAT
+  MEDIUM  2024-12-22 07:39:57   2026-05-23 07:44:20   testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/xbpt_audit_romeo_148759.xml
+          signals: PRE_FORMAT
+  MEDIUM  2023-12-31 07:39:56   2026-05-23 07:44:22   testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_hardlink_foxtrot_415497.bin
+          signals: PRE_FORMAT
+  MEDIUM  2022-07-05 07:39:53   2026-05-23 07:44:19   testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_lima_trace_312755.xml
+          signals: PRE_FORMAT
+  MEDIUM  2025-06-11 07:40:00   2026-05-23 07:44:19   testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_zulu_backup_178692.md
+          signals: PRE_FORMAT
+  MEDIUM  2022-11-01 07:39:55   2026-05-23 07:44:19   testspecials/dir_romeo_413583/xbpt_hardlink_draft_744338.cfg
+          signals: PRE_FORMAT
+  MEDIUM  2022-07-05 07:39:53   2026-05-23 07:44:19   testspecials/dir_romeo_413583/xbpt_hardlink_temp_924985.xml
+          signals: PRE_FORMAT
+  MEDIUM  2024-12-22 07:39:57   2026-05-23 07:44:22   testspecials/xbpt_hardlink_archive_469036.xml
+          signals: PRE_FORMAT
+  MEDIUM  2022-11-01 07:39:55   2026-05-23 07:44:21   testspecials/xbpt_mike_mike_872519.cfg
+          signals: PRE_FORMAT
+  LOW     2026-05-23 07:34:04   2026-05-23 07:34:05   test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_november_yankee_663510.csv
+          signals: CREATE_GT_MODIFY
+  LOW     2026-05-23 07:34:05   2026-05-23 07:34:02   test/elvis_dir_index_149423/xbpt_config_sync_830891.tmp
+          signals: CREATE_GT_MODIFY
+  LOW     2026-05-23 07:34:05   2026-05-23 07:34:02   test/elvis_dir_india_800575/xbpt_report_temp_854937.tmp
+          signals: CREATE_GT_MODIFY
+  LOW     2026-05-23 07:34:04   2026-05-23 07:34:01   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_trace_gamma_651618.dat
+          signals: CREATE_GT_MODIFY
+  LOW     2026-05-23 07:38:51   2026-05-23 07:38:51   test2/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_november_yankee_663510.csv
+          signals: CREATE_GT_MODIFY
+  LOW     2026-05-23 07:38:51   2026-05-23 07:38:48   test2/elvis_dir_index_149423/xbpt_config_sync_830891.tmp
+          signals: CREATE_GT_MODIFY
+  LOW     2026-05-23 07:38:51   2026-05-23 07:38:48   test2/elvis_dir_india_800575/xbpt_report_temp_854937.tmp
+          signals: CREATE_GT_MODIFY
+  LOW     2026-05-23 07:38:51   2026-05-23 07:38:48   test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_trace_gamma_651618.dat
+          signals: CREATE_GT_MODIFY
+
+  Signal legend:
+    CHANGE_LATE           $SI change-time post-dates created/modified — common timestomp
+                          tools (SetFileTime/PowerShell/.NET) can't reach it; defeated by a
+                          native-API/raw-disk stomp that also sets the change time
+    USN_BASIC_INFO_CHANGE journal recorded a deliberate basic-info edit (no content change)
+    USN_CREATE_MISMATCH   $SI created differs from the FILE_CREATE journal record
+    PRE_FORMAT / FUTURE   created before the volume existed / after its last write
+    CREATE_GT_MODIFY      created after last write
+  Note: CHANGE_LATE / PRE_FORMAT also fire on creation-time-preserving copies
+  (robocopy /COPY:T, restore); HIGH requires independent-source agreement.

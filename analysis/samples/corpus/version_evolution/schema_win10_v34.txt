@@ -1,0 +1,41 @@
+
+ReFS Schema Table
+
+------------------------------------------------------------------------------
+System table schemas (15 entries)
+------------------------------------------------------------------------------
+  TypeID   Name                             Properties  Level
+  ------------------------------------------------------------
+  0xe010   Allocator Table                       57360  57360
+  0xe030   Object ID Table                           0  57392
+  0xe040   Parent-Child Table                        0  57408
+  0xe050   Object Data Table (legacy)                0  57424
+  0xe060   Schema Table                              0  57440
+  0xe070   Reserved / Placeholder (legacy)           0  57456
+  0xe080   Integrity State Table                     0  57472
+  0xe090   Upcase / Logfile Info Table               0  57488
+  0xe0b0   Block RefCount Table                      0  57520
+  0xe0c0   Container Table                           0  57536
+  0xe0d0   Trash Table                               0  57552
+  0xe0e0   System Directory Entry List (legacy)          1  57568
+  0xe0f0   System File Stream (legacy)               1  57584
+  0xe100   Container Index Table                     0  57600
+  0xe110   Read Cache Metadata                       0  57616
+
+------------------------------------------------------------------------------
+Attribute table schemas (12 entries)
+------------------------------------------------------------------------------
+  TypeID   Name                             Properties  Level
+  ------------------------------------------------------------
+  0x4      Allocator Medium Table (legacy)           0      4
+  0x6      Allocator Large Table (legacy)        57376      6
+  0x110    Directory Entry List                      1    272
+  0x120    File Stream                               1    288
+  0x130    Short Name Entry                          1    304
+  0x140    Long Name Entry                           1    320
+  0x150    Volume Information                        1    336
+  0x160    Reparse Index                             1    352
+  0x170    Reparse Point                             1    368
+  0x180    Standard Information                      1    384
+  0x190    File Name                                 1    400
+  0x1a0    Extended Attributes                       1    416

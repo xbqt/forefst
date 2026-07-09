@@ -1,0 +1,15 @@
+<svg class="diagram" viewBox="0 0 720 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sectors, clusters and slack space">
+<text class="dg-muted" x="20" y="28" font-size="11">A file occupies whole clusters; the last one is only partly filled.</text>
+<g>
+<rect class="dg-box-accent" x="20"  y="48" width="100" height="54" rx="5"/>
+<rect class="dg-box-accent" x="124" y="48" width="100" height="54" rx="5"/>
+<rect class="dg-box-accent" x="228" y="48" width="60"  height="54" rx="5"/>
+<rect class="dg-box" x="288" y="48" width="40" height="54" rx="5"/>
+<text class="dg-accent" x="170" y="80" text-anchor="middle" font-size="11.5">file data</text>
+<text class="dg-muted" x="308" y="80" text-anchor="middle" font-size="10.5">slack</text>
+</g>
+<rect class="dg-box" x="332" y="48" width="80" height="54" rx="5"/><text class="dg-muted" x="372" y="80" text-anchor="middle" font-size="10.5">free</text>
+<text class="dg-muted" x="20"  y="128" font-size="10.5">⟵ cluster ⟶</text>
+<line class="dg-line" x1="20" y1="116" x2="120" y2="116" stroke-width="1"/>
+<text class="dg-muted" x="228" y="148" font-size="10.5">last cluster: file data + slack space (old data may survive in the slack)</text>
+</svg>

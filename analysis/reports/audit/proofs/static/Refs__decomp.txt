@@ -1,0 +1,20 @@
+
+// === RefsCleanupAttributeExpression @ 1400091d0 ===
+
+/* void __cdecl RefsCleanupAttributeExpression(struct _ATTRIBUTE_EXPRESSION * __ptr64) */
+
+void __cdecl RefsCleanupAttributeExpression(_ATTRIBUTE_EXPRESSION *param_1)
+
+{
+ uint uStack_14;
+ 
+ if ((((byte)param_1[0x28] & 1) != 0) && (*(longlong *)(param_1 + 0x20) != 0)) {
+ ExFreePoolWithTag(*(longlong *)(param_1 + 0x20),0);
+ }
+ *(undefined4 *)(param_1 + 0x2c) = 0x20;
+ *(_ATTRIBUTE_EXPRESSION **)(param_1 + 0x20) = param_1 + 0x30;
+ *(undefined8 *)param_1 = 0;
+ *(undefined8 *)(param_1 + 8) = 0;
+ param_1[0x28] = (_ATTRIBUTE_EXPRESSION)0x0;
+ *(ulonglong *)(param_1 + 0x10) = (ulonglong)uStack_14 << 0x20;
+ *(undefined8 *)(param_1 + 0x18) = 0;

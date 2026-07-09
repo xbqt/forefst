@@ -1,0 +1,130 @@
+=== win1121h2test ===
+
+ReFS Boot Sector at offset 0x1000000
+SHA-256: 6b8eb897199c2e6f96e3d66a21b555aa3813eb2d1d306754342330291b3b4d68
+
+Field                 Offset  Raw bytes                                        Interpreted          
+--------------------  ------  -----------------------------------------------  ---------------------
+Jump instruction      0x00    00 00 00                                                              
+FS name (ReFS)        0x03    52 65 46 53 00 00 00 00                          ReFS....             
+Reserved              0x0B    00 00 00 00 00                                                        
+FSRS identifier       0x10    46 53 52 53                                      FSRS                 
+VBR size              0x14    00 02                                            512 (0x0200)         
+Checksum              0x16    3b 36                                            0x363B [OK]          
+Total sector count    0x18    00 00 7e 00 00 00 00 00                          8257536 (3.9 GiB)    
+Bytes per sector      0x20    00 02 00 00                                      512                  
+Sectors per cluster   0x24    08 00 00 00                                      8 (cluster = 4.0 KiB)
+Version               0x28    03 07                                            3.7                  
+Checksum algorithm    0x2A    00 00                                            0x0000 (None)        
+Volume flags          0x2C    26 00 00 00                                      0x00000026           
+Reserved              0x30    00 00 00 00 00 00 00 00                                               
+Volume serial         0x38    21 25 fe b0 3e fe b0 d6                          0xD6B0FE3EB0FE2521   
+Bytes per container   0x40    00 00 00 04 00 00 00 00                          64.0 MiB             
+Format instance GUID  0x48    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  (not set)            
+Reserved (trailing)   0x58    424 bytes                                        all zero             
+
+
+=== win1122h2test ===
+
+ReFS Boot Sector at offset 0x1000000
+SHA-256: b7918053e7205e6273c92ca7de048e3befde194ec3b977052722499d55988110
+
+Field                 Offset  Raw bytes                                        Interpreted          
+--------------------  ------  -----------------------------------------------  ---------------------
+Jump instruction      0x00    00 00 00                                                              
+FS name (ReFS)        0x03    52 65 46 53 00 00 00 00                          ReFS....             
+Reserved              0x0B    00 00 00 00 00                                                        
+FSRS identifier       0x10    46 53 52 53                                      FSRS                 
+VBR size              0x14    00 02                                            512 (0x0200)         
+Checksum              0x16    b9 0d                                            0x0DB9 [OK]          
+Total sector count    0x18    00 00 7e 00 00 00 00 00                          8257536 (3.9 GiB)    
+Bytes per sector      0x20    00 02 00 00                                      512                  
+Sectors per cluster   0x24    08 00 00 00                                      8 (cluster = 4.0 KiB)
+Version               0x28    03 09                                            3.9                  
+Checksum algorithm    0x2A    00 00                                            0x0000 (None)        
+Volume flags          0x2C    26 00 00 00                                      0x00000026           
+Reserved              0x30    00 00 00 00 00 00 00 00                                               
+Volume serial         0x38    75 17 1a bc 34 1a bc 8e                          0x8EBC1A34BC1A1775   
+Bytes per container   0x40    00 00 00 04 00 00 00 00                          64.0 MiB             
+Format instance GUID  0x48    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  (not set)            
+Reserved (trailing)   0x58    424 bytes                                        all zero             
+
+
+=== win1123h2test ===
+
+ReFS Boot Sector at offset 0x1000000
+SHA-256: efd82956827f224a87785937e8cf63bf1f2b916c3cbbfdb9e24be0ab541bda05
+
+Field                 Offset  Raw bytes                                        Interpreted                         
+--------------------  ------  -----------------------------------------------  ------------------------------------
+Jump instruction      0x00    00 00 00                                                                             
+FS name (ReFS)        0x03    52 65 46 53 00 00 00 00                          ReFS....                            
+Reserved              0x0B    00 00 00 00 00                                                                       
+FSRS identifier       0x10    46 53 52 53                                      FSRS                                
+VBR size              0x14    00 02                                            512 (0x0200)                        
+Checksum              0x16    56 16                                            0x1656 [OK]                         
+Total sector count    0x18    00 00 7e 00 00 00 00 00                          8257536 (3.9 GiB)                   
+Bytes per sector      0x20    00 02 00 00                                      512                                 
+Sectors per cluster   0x24    08 00 00 00                                      8 (cluster = 4.0 KiB)               
+Version               0x28    03 0a                                            3.10                                
+Checksum algorithm    0x2A    02 00                                            0x0002 (CRC64)                      
+Volume flags          0x2C    66 00 00 00                                      0x00000066                          
+Reserved              0x30    00 00 00 00 00 00 00 00                                                              
+Volume serial         0x38    ea 50 76 60 68 76 60 d4                          0xD4607668607650EA                  
+Bytes per container   0x40    00 00 00 04 00 00 00 00                          64.0 MiB                            
+Format instance GUID  0x48    7f 4a fe 94 f8 10 a2 4e a7 91 4f 84 06 76 28 ef  94fe4a7f-10f8-4ea2-a791-4f84067628ef
+Reserved (trailing)   0x58    424 bytes                                        all zero                            
+
+
+=== win1122h2test_afteropenedwithinsider ===
+
+ReFS Boot Sector at offset 0x1000000
+SHA-256: 61de518cc67544658e9fc81494bca48f83474a1856bf467505d4eb1b8c5b22be
+
+Field                 Offset  Raw bytes                                        Interpreted          
+--------------------  ------  -----------------------------------------------  ---------------------
+Jump instruction      0x00    00 00 00                                                              
+FS name (ReFS)        0x03    52 65 46 53 00 00 00 00                          ReFS....             
+Reserved              0x0B    00 00 00 00 00                                                        
+FSRS identifier       0x10    46 53 52 53                                      FSRS                 
+VBR size              0x14    00 02                                            512 (0x0200)         
+Checksum              0x16    b9 21                                            0x21B9 [OK]          
+Total sector count    0x18    00 00 7e 00 00 00 00 00                          8257536 (3.9 GiB)    
+Bytes per sector      0x20    00 02 00 00                                      512                  
+Sectors per cluster   0x24    08 00 00 00                                      8 (cluster = 4.0 KiB)
+Version               0x28    03 0e                                            3.14                 
+Checksum algorithm    0x2A    00 00                                            0x0000 (None)        
+Volume flags          0x2C    26 00 00 00                                      0x00000026           
+Reserved              0x30    00 00 00 00 00 00 00 00                                               
+Volume serial         0x38    75 17 1a bc 34 1a bc 8e                          0x8EBC1A34BC1A1775   
+Bytes per container   0x40    00 00 00 04 00 00 00 00                          64.0 MiB             
+Format instance GUID  0x48    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  (not set)            
+Reserved (trailing)   0x58    424 bytes                                        all zero             
+
+
+=== wininsiderrefs8gtest2 ===
+
+ReFS Boot Sector at offset 0x1000000
+SHA-256: ae4fee4b0bf7d973a0ceffc9d5fbf7b0a69d38740b560a44cc6084c64b1fae72
+
+Field                 Offset  Raw bytes                                        Interpreted                         
+--------------------  ------  -----------------------------------------------  ------------------------------------
+Jump instruction      0x00    00 00 00                                                                             
+FS name (ReFS)        0x03    52 65 46 53 00 00 00 00                          ReFS....                            
+Reserved              0x0B    00 00 00 00 00                                                                       
+FSRS identifier       0x10    46 53 52 53                                      FSRS                                
+VBR size              0x14    00 02                                            512 (0x0200)                        
+Checksum              0x16    f5 e9                                            0xE9F5 [OK]                         
+Total sector count    0x18    00 00 fe 00 00 00 00 00                          16646144 (7.9 GiB)                  
+Bytes per sector      0x20    00 02 00 00                                      512                                 
+Sectors per cluster   0x24    80 00 00 00                                      128 (cluster = 64.0 KiB)            
+Version               0x28    03 0e                                            3.14                                
+Checksum algorithm    0x2A    04 00                                            0x0004 (SHA256)                     
+Volume flags          0x2C    66 00 00 00                                      0x00000066                          
+Reserved              0x30    00 00 00 00 00 00 00 00                                                              
+Volume serial         0x38    e0 c3 9f 70 dd 9f 70 54                          0x54709FDD709FC3E0                  
+Bytes per container   0x40    00 00 00 04 00 00 00 00                          64.0 MiB                            
+Format instance GUID  0x48    ac 9f a3 f7 9d 95 d2 44 80 ca b2 2a 4c f6 36 a0  f7a39fac-959d-44d2-80ca-b22a4cf636a0
+Reserved (trailing)   0x58    424 bytes                                        all zero                            
+
+

@@ -1,0 +1,387 @@
+
+// === RefsSetEncryption @ 14025e194 ===
+
+/* WARNING: Function: __security_check_cookie replaced with injection: security_check_cookie */
+/* WARNING: Function: _guard_dispatch_icall replaced with injection: guard_dispatch_icall */
+/* WARNING: Removing unreachable block (ram,0x00014025f977) */
+/* WARNING: Removing unreachable block (ram,0x00014025f981) */
+/* WARNING: Removing unreachable block (ram,0x00014025f99d) */
+/* WARNING: Removing unreachable block (ram,0x00014025f9b6) */
+/* WARNING: Removing unreachable block (ram,0x00014025f9c2) */
+/* WARNING: Removing unreachable block (ram,0x00014025f646) */
+/* WARNING: Removing unreachable block (ram,0x00014025f658) */
+/* WARNING: Removing unreachable block (ram,0x00014025f666) */
+/* WARNING: Removing unreachable block (ram,0x00014025f67a) */
+/* WARNING: Removing unreachable block (ram,0x00014025f682) */
+/* WARNING: Removing unreachable block (ram,0x00014025f6c1) */
+/* WARNING: Removing unreachable block (ram,0x00014025f69b) */
+/* WARNING: Removing unreachable block (ram,0x00014025f6da) */
+/* WARNING: Removing unreachable block (ram,0x00014025f6a0) */
+/* WARNING: Removing unreachable block (ram,0x00014025f6bb) */
+/* WARNING: Removing unreachable block (ram,0x00014025f6e4) */
+/* WARNING: Removing unreachable block (ram,0x00014025f4e9) */
+/* WARNING: Removing unreachable block (ram,0x00014025f4fc) */
+/* WARNING: Removing unreachable block (ram,0x00014025f511) */
+/* WARNING: Removing unreachable block (ram,0x00014025f51f) */
+/* WARNING: Removing unreachable block (ram,0x00014025f525) */
+/* WARNING: Removing unreachable block (ram,0x00014026046a) */
+/* WARNING: Removing unreachable block (ram,0x00014026047d) */
+/* WARNING: Removing unreachable block (ram,0x000140260486) */
+/* WARNING: Removing unreachable block (ram,0x00014026048c) */
+/* WARNING: Removing unreachable block (ram,0x00014026049f) */
+/* WARNING: Removing unreachable block (ram,0x0001402604a9) */
+/* WARNING: Removing unreachable block (ram,0x0001402604c5) */
+/* WARNING: Removing unreachable block (ram,0x00014025f56e) */
+/* WARNING: Removing unreachable block (ram,0x00014025f588) */
+/* WARNING: Removing unreachable block (ram,0x00014025f573) */
+/* WARNING: Removing unreachable block (ram,0x00014025f593) */
+/* WARNING: Removing unreachable block (ram,0x00014025f0c0) */
+/* WARNING: Removing unreachable block (ram,0x00014025f0cb) */
+/* WARNING: Removing unreachable block (ram,0x00014025f105) */
+/* WARNING: Removing unreachable block (ram,0x00014025f115) */
+/* WARNING: Removing unreachable block (ram,0x00014025f42b) */
+/* WARNING: Removing unreachable block (ram,0x00014025f438) */
+/* WARNING: Removing unreachable block (ram,0x0001402603fe) */
+/* WARNING: Removing unreachable block (ram,0x000140260411) */
+/* WARNING: Removing unreachable block (ram,0x00014026041a) */
+/* WARNING: Removing unreachable block (ram,0x000140260420) */
+/* WARNING: Removing unreachable block (ram,0x000140260435) */
+/* WARNING: Removing unreachable block (ram,0x00014026043f) */
+/* WARNING: Removing unreachable block (ram,0x00014026045b) */
+/* WARNING: Removing unreachable block (ram,0x00014025f478) */
+/* WARNING: Removing unreachable block (ram,0x00014025f4a0) */
+/* WARNING: Removing unreachable block (ram,0x00014025f483) */
+/* WARNING: Removing unreachable block (ram,0x00014025f488) */
+/* WARNING: Removing unreachable block (ram,0x00014025f493) */
+/* WARNING: Removing unreachable block (ram,0x00014025f4ab) */
+/* WARNING: Removing unreachable block (ram,0x00014025f4b5) */
+/* WARNING: Removing unreachable block (ram,0x00014025f79b) */
+/* WARNING: Removing unreachable block (ram,0x00014025f7ac) */
+/* WARNING: Removing unreachable block (ram,0x00014025f7b8) */
+/* WARNING: Removing unreachable block (ram,0x00014025f7c5) */
+/* WARNING: Removing unreachable block (ram,0x00014025f7d6) */
+/* WARNING: Removing unreachable block (ram,0x00014025f7ea) */
+/* WARNING: Removing unreachable block (ram,0x00014025f81e) */
+/* WARNING: Removing unreachable block (ram,0x00014025f831) */
+/* WARNING: Removing unreachable block (ram,0x00014025f83a) */
+/* WARNING: Removing unreachable block (ram,0x00014025f840) */
+/* WARNING: Removing unreachable block (ram,0x00014025f855) */
+/* WARNING: Removing unreachable block (ram,0x00014025f866) */
+/* WARNING: Removing unreachable block (ram,0x00014025f886) */
+/* WARNING: Removing unreachable block (ram,0x00014025f8aa) */
+/* WARNING: Removing unreachable block (ram,0x00014025f8bd) */
+/* WARNING: Removing unreachable block (ram,0x00014025f8c6) */
+/* WARNING: Removing unreachable block (ram,0x00014025f8cc) */
+/* WARNING: Removing unreachable block (ram,0x00014025f8e7) */
+/* WARNING: Removing unreachable block (ram,0x00014025f8f8) */
+/* WARNING: Removing unreachable block (ram,0x00014025f903) */
+/* WARNING: Removing unreachable block (ram,0x00014025f907) */
+/* WARNING: Removing unreachable block (ram,0x00014025f91a) */
+/* WARNING: Removing unreachable block (ram,0x00014025f923) */
+/* WARNING: Removing unreachable block (ram,0x00014025f929) */
+/* WARNING: Removing unreachable block (ram,0x00014025f944) */
+/* WARNING: Removing unreachable block (ram,0x00014025f955) */
+/* WARNING: Removing unreachable block (ram,0x00014025f960) */
+/* WARNING: Removing unreachable block (ram,0x00014025efcd) */
+/* WARNING: Removing unreachable block (ram,0x00014025efd6) */
+/* WARNING: Removing unreachable block (ram,0x00014025efe5) */
+/* WARNING: Removing unreachable block (ram,0x00014025f000) */
+/* WARNING: Removing unreachable block (ram,0x00014025efee) */
+/* WARNING: Removing unreachable block (ram,0x00014025f005) */
+/* WARNING: Removing unreachable block (ram,0x00014025f018) */
+/* WARNING: Removing unreachable block (ram,0x00014025f021) */
+/* WARNING: Removing unreachable block (ram,0x00014025f027) */
+/* WARNING: Removing unreachable block (ram,0x00014025f03f) */
+/* WARNING: Removing unreachable block (ram,0x00014025f049) */
+/* WARNING: Removing unreachable block (ram,0x00014025f05f) */
+/* WARNING: Removing unreachable block (ram,0x0001402601a8) */
+/* WARNING: Removing unreachable block (ram,0x0001402601d2) */
+/* WARNING: Removing unreachable block (ram,0x0001402601ba) */
+/* WARNING: Removing unreachable block (ram,0x0001402601ca) */
+/* WARNING: Removing unreachable block (ram,0x0001402601e0) */
+/* WARNING: Removing unreachable block (ram,0x0001402601ff) */
+/* WARNING: Removing unreachable block (ram,0x0001402601ee) */
+/* WARNING: Removing unreachable block (ram,0x000140260219) */
+/* WARNING: Removing unreachable block (ram,0x000140260223) */
+/* WARNING: Removing unreachable block (ram,0x00014025f5f8) */
+/* WARNING: Removing unreachable block (ram,0x00014025f60a) */
+/* WARNING: Removing unreachable block (ram,0x00014025f614) */
+/* WARNING: Removing unreachable block (ram,0x00014025f630) */
+/* WARNING: Removing unreachable block (ram,0x000140260261) */
+/* long __cdecl RefsSetEncryption(struct _IRP_CONTEXT * __ptr64,struct _IRP * __ptr64) */
+
+long __cdecl RefsSetEncryption(_IRP_CONTEXT *param_1,_IRP *param_2)
+
+{
+ ushort uVar1;
+ longlong lVar2;
+ uint *puVar3;
+ bool bVar4;
+ bool bVar5;
+ bool bVar6;
+ bool bVar7;
+ bool bVar8;
+ _VCB *p_Var9;
+ char cVar10;
+ uchar uVar11;
+ bool bVar12;
+ uchar uVar13;
+ byte bVar14;
+ _TYPE_OF_OPEN _Var15;
+ _REFS_ATTRIBUTE_TYPE_CODE _Var16;
+ long lVar17;
+ undefined1 *puVar18;
+ _FCB *p_Var19;
+ _ROLLBACK_STRUCT *p_Var20;
+ _IRP_CONTEXT *p_Var21;
+ uint uVar22;
+ ulong uVar23;
+ uint uVar24;
+ _FILE_OBJECT *p_Var25;
+ int iVar26;
+ _SCB *p_Var27;
+ _UNICODE_STRING *p_Var28;
+ _SCB *p_Var29;
+ _SCB *p_Var30;
+ _FCB *this;
+ undefined1 auStackY_3e8 [32];
+ byte local_307;
+ long local_300;
+ _SCB *local_2e8;
+ undefined4 local_2e0;
+ _FCB *local_2d8;
+ undefined4 local_2d0;
+ undefined1 local_2cc;
+ uint *local_2c8;
+ _CCB *local_2c0;
+ _IRP_CONTEXT *local_2b8;
+ _SCB *local_2b0;
+ _VCB *local_2a8;
+ undefined8 local_2a0;
+ uint local_298;
+ _LCB *local_290;
+ longlong local_288;
+ _SCB *local_280;
+ _VCB *local_278;
+ undefined8 local_270;
+ code *local_268;
+ _IRP *local_260;
+ longlong local_258;
+ uint *local_250;
+ undefined1 *local_248;
+ RefsAttributeManager local_238 [8];
+ longlong local_230;
+ undefined2 local_1c0;
+ undefined8 local_40;
+ ulonglong local_38;
+ 
+ local_38 = __security_cookie ^ (ulonglong)auStackY_3e8;
+ local_300 = 0;
+ local_2a8 = (_VCB *)0x0;
+ local_2d8 = (_FCB *)0x0;
+ local_2e8 = (_SCB *)0x0;
+ local_2c0 = (_CCB *)0x0;
+ local_2b0 = (_SCB *)0x0;
+ local_280 = (_SCB *)0x0;
+ lVar2 = *(longlong *)(param_2 + 0xb8);
+ local_2d0 = 0;
+ local_40 = 0;
+ local_1c0 = 0;
+ local_2b8 = param_1;
+ local_288 = lVar2;
+ local_260 = param_2;
+ RefsAttributeManager::Initialize(local_238);
+ bVar5 = false;
+ local_307 = 0;
+ bVar7 = false;
+ bVar6 = false;
+ local_2a0 = 0xffffffffffffffff;
+ local_2e0 = 0;
+ bVar8 = false;
+ *(ulonglong *)(param_1 + 8) = *(ulonglong *)(param_1 + 8) | 1;
+ p_Var25 = *(_FILE_OBJECT **)(lVar2 + 0x30);
+ _Var15 = RefsDecodeFileObject(param_1,p_Var25,&local_2a8,&local_2d8,&local_2e8,&local_2c0,'\x01');
+ uVar23 = (ulong)p_Var25;
+ cVar10 = (char)_Var15;
+ Feature_ReFS_EFS__private_ReportDeviceUsage();
+ p_Var9 = local_2a8;
+ if (1 < (byte)(cVar10 - 2U)) {
+ lVar17 = -0x3ffffff3;
+ if (RefsStatusDebugEnabled != '\0') {
+ RefsStatusDebug(-0x3ffffff3,param_1,"Efssup.c",0x348);
+ }
+ RefsExtendedCompleteRequestInternal(param_1,param_2,-0x3ffffff3);
+ if ((((undefined **)WPP_GLOBAL_Control != &WPP_GLOBAL_Control) &&
+ ((*(uint *)(WPP_GLOBAL_Control + 0x2c) & 0x100) != 0)) &&
+ (3 < (byte)WPP_GLOBAL_Control[0x29])) {
+ WPP_SF_D(*(undefined8 *)(WPP_GLOBAL_Control + 0x18),0x12,
+ &WPP_0a5c0fa0825c343949261c118d3d78b7_Traceguids,0xc000000d);
+ }
+ if (RefsStatusDebugEnabled == '\0') {
+ return -0x3ffffff3;
+ }
+ uVar23 = 0x349;
+LAB_14026033f:
+ RefsStatusDebug(lVar17,(_IRP_CONTEXT *)0x0,"Efssup.c",uVar23);
+ return lVar17;
+ }
+ if ((*(uint *)(local_2a8 + 0x18) & 0x2000000) != 0) {
+ lVar17 = -0x3fffff5e;
+ if (RefsStatusDebugEnabled != '\0') {
+ RefsStatusDebug(-0x3fffff5e,param_1,"Efssup.c",0x352);
+ }
+ RefsExtendedCompleteRequestInternal(param_1,param_2,-0x3fffff5e);
+ if ((((undefined **)WPP_GLOBAL_Control != &WPP_GLOBAL_Control) &&
+ ((*(uint *)(WPP_GLOBAL_Control + 0x2c) & 0x100) != 0)) &&
+ (3 < (byte)WPP_GLOBAL_Control[0x29])) {
+ WPP_SF_D(*(undefined8 *)(WPP_GLOBAL_Control + 0x18),0x13,
+ &WPP_0a5c0fa0825c343949261c118d3d78b7_Traceguids,0xc00000a2);
+ }
+ if (RefsStatusDebugEnabled == '\0') {
+ return -0x3fffff5e;
+ }
+ uVar23 = 0x353;
+ goto LAB_14026033f;
+ }
+ if ((local_2c0 != (_CCB *)0x0) && ((*(uint *)(local_2c0 + 4) & 0x2000) != 0)) {
+ lVar17 = -0x3ffffff3;
+ if (RefsStatusDebugEnabled != '\0') {
+ RefsStatusDebug(-0x3ffffff3,param_1,"Efssup.c",0x35e);
+ }
+ RefsExtendedCompleteRequestInternal(param_1,param_2,-0x3ffffff3);
+ if ((((undefined **)WPP_GLOBAL_Control != &WPP_GLOBAL_Control) &&
+ ((*(uint *)(WPP_GLOBAL_Control + 0x2c) & 0x100) != 0)) &&
+ (3 < (byte)WPP_GLOBAL_Control[0x29])) {
+ WPP_SF_D(*(undefined8 *)(WPP_GLOBAL_Control + 0x18),0x14,
+ &WPP_0a5c0fa0825c343949261c118d3d78b7_Traceguids,0xc000000d);
+ }
+ if (RefsStatusDebugEnabled == '\0') {
+ return -0x3ffffff3;
+ }
+ uVar23 = 0x35f;
+ goto LAB_14026033f;
+ }
+ puVar3 = *(uint **)(lVar2 + 0x20);
+ uVar24 = *(uint *)(lVar2 + 0x10);
+ local_2c8 = puVar3;
+ local_298 = uVar24;
+ local_250 = puVar3;
+ puVar18 = RefsMapUserBuffer(param_2,uVar23);
+ iVar26 = *(int *)(lVar2 + 8);
+ local_248 = puVar18;
+ if ((uVar24 < 8) || ((puVar18 != (undefined1 *)0x0 && (iVar26 == 0)))) {
+ lVar17 = -0x3fffffdd;
+ if (RefsStatusDebugEnabled != '\0') {
+ RefsStatusDebug(-0x3fffffdd,param_1,"Efssup.c",0x376);
+ }
+ RefsExtendedCompleteRequestInternal(param_1,param_2,-0x3fffffdd);
+ if ((((undefined **)WPP_GLOBAL_Control != &WPP_GLOBAL_Control) &&
+ ((*(uint *)(WPP_GLOBAL_Control + 0x2c) & 0x100) != 0)) &&
+ (3 < (byte)WPP_GLOBAL_Control[0x29])) {
+ WPP_SF_D(*(undefined8 *)(WPP_GLOBAL_Control + 0x18),0x15,
+ &WPP_0a5c0fa0825c343949261c118d3d78b7_Traceguids,0xc0000023);
+ }
+ if (RefsStatusDebugEnabled == '\0') {
+ return -0x3fffffdd;
+ }
+ uVar23 = 0x377;
+ goto LAB_14026033f;
+ }
+ if ((param_2[0x40] != (_IRP)0x0) && (ProbeForRead(puVar3,uVar24,1), puVar18 != (undefined1 *)0x0))
+ {
+ ProbeForWrite(puVar18,iVar26,1);
+ }
+ uVar24 = *puVar3;
+ *(undefined8 *)(param_2 + 0x38) = 0;
+ if (puVar18 != (undefined1 *)0x0) {
+ *puVar18 = 0;
+ }
+ if (4 < uVar24) {
+ lVar17 = -0x3ffffff3;
+ if (RefsStatusDebugEnabled != '\0') {
+ RefsStatusDebug(-0x3ffffff3,param_1,"Efssup.c",0x398);
+ }
+ RefsExtendedCompleteRequestInternal(param_1,param_2,-0x3ffffff3);
+ if ((((undefined **)WPP_GLOBAL_Control != &WPP_GLOBAL_Control) &&
+ ((*(uint *)(WPP_GLOBAL_Control + 0x2c) & 0x100) != 0)) &&
+ (3 < (byte)WPP_GLOBAL_Control[0x29])) {
+ WPP_SF_D(*(undefined8 *)(WPP_GLOBAL_Control + 0x18),0x17,
+ &WPP_0a5c0fa0825c343949261c118d3d78b7_Traceguids,0xc000000d);
+ }
+ if (RefsStatusDebugEnabled == '\0') {
+ return -0x3ffffff3;
+ }
+ uVar23 = 0x399;
+ goto LAB_14026033f;
+ }
+ *(undefined4 *)(param_1 + 0x278) = *(undefined4 *)(local_2c0 + 0x54);
+ uVar11 = RefsIsEncryptionSupported(p_Var9);
+ if (uVar11 == '\0') {
+ lVar17 = -0x3ffffd64;
+ if (RefsStatusDebugEnabled != '\0') {
+ RefsStatusDebug(-0x3ffffd64,param_1,"Efssup.c",0x3a8);
+ }
+ RefsExtendedCompleteRequestInternal(param_1,param_2,-0x3ffffd64);
+ if ((((undefined **)WPP_GLOBAL_Control != &WPP_GLOBAL_Control) &&
+ ((*(uint *)(WPP_GLOBAL_Control + 0x2c) & 0x100) != 0)) &&
+ (3 < (byte)WPP_GLOBAL_Control[0x29])) {
+ WPP_SF_D(*(undefined8 *)(WPP_GLOBAL_Control + 0x18),0x18,
+ &WPP_0a5c0fa0825c343949261c118d3d78b7_Traceguids,0xc000029c);
+ }
+ if (RefsStatusDebugEnabled == '\0') {
+ return -0x3ffffd64;
+ }
+ uVar23 = 0x3a9;
+ goto LAB_14026033f;
+ }
+ lVar2 = *(longlong *)(*(longlong *)(local_288 + 0x30) + 0x18);
+ if ((lVar2 == 0) || ((*(byte *)(lVar2 + 7) & 0xf0) < 0x40)) {
+ iVar26 = 0;
+ }
+ else {
+ iVar26 = *(int *)(lVar2 + 0x68);
+ }
+ if (iVar26 != 0) {
+ lVar17 = -0x3ffffb39;
+ if (RefsStatusDebugEnabled != '\0') {
+ RefsStatusDebug(-0x3ffffb39,param_1,"Efssup.c",0x3b3);
+ }
+ RefsExtendedCompleteRequestInternal(param_1,param_2,-0x3ffffb39);
+ if ((((undefined **)WPP_GLOBAL_Control != &WPP_GLOBAL_Control) &&
+ ((*(uint *)(WPP_GLOBAL_Control + 0x2c) & 0x100) != 0)) &&
+ (3 < (byte)WPP_GLOBAL_Control[0x29])) {
+ WPP_SF_D(*(undefined8 *)(WPP_GLOBAL_Control + 0x18),0x19,
+ &WPP_0a5c0fa0825c343949261c118d3d78b7_Traceguids,0xc00004c7);
+ }
+ if (RefsStatusDebugEnabled == '\0') {
+ return -0x3ffffb39;
+ }
+ uVar23 = 0x3b4;
+ goto LAB_14026033f;
+ }
+ uVar11 = RefsAcquireSharedVcb(param_1,p_Var9,'\x01');
+ this = local_2d8;
+ p_Var30 = local_2e8;
+ if (*(longlong *)(local_2d8 + 0x60) == 0) {
+ RefsAcquireExclusiveScb(param_1,local_2e8,4);
+ if ((*(longlong *)(this + 0x60) != 0) &&
+ (uVar13 = RefsAcquireExclusivePagingIo(param_1,this,'\0'), uVar13 == '\0')) {
+ RefsReleaseFcb(param_1,*(_FCB **)(p_Var30 + 0x88));
+ RefsAcquireExclusivePagingIo(param_1,this,'\x01');
+ goto LAB_14025e821;
+ }
+ }
+ else {
+ RefsAcquireExclusivePagingIo(param_1,local_2d8,'\x01');
+ p_Var30 = local_2e8;
+LAB_14025e821:
+ RefsAcquireExclusiveScb(param_1,p_Var30,4);
+ }
+ if ((*(uint *)(p_Var9 + 0x18) & 1) == 0) {
+ if ((((undefined **)WPP_GLOBAL_Control != &WPP_GLOBAL_Control) &&
+ ((*(uint *)(WPP_GLOBAL_Control + 0x2c) >> 8 & 1) != 0)) &&
+ (3 < (byte)WPP_GLOBAL_Control[0x29])) {
+ WPP_SF_D(*(undefined8 *)(WPP_GLOBAL_Control + 0x18),0x1a,
+ &WPP_0a5c0fa0825c343949261c118d3d78b7_Traceguids,0xc000026e);
+ }
+ if (RefsStatusDebugEnabled !=

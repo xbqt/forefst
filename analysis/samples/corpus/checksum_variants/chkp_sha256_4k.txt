@@ -1,0 +1,49 @@
+
+ReFS Checkpoint (CHKP) at offset 0xFE34000
+SHA-256: 05dd5e18c0b7bd8006653ee94bf7bacc98c9407d9d215a0d0c0a856ebe4656d6
+
+Field                 Offset  Raw bytes                            Interpreted                
+--------------------  ------  -----------------------------------  ---------------------------
+Signature             0x00    43 48 4b 50                          CHKP                       
+Page hdr version      0x04    02 00 00 00                          0x2                        
+Volume signature      0x0C    dd 50 d2 f8                          0xF8D250DD                 
+Virtual clock         0x10    b7 00 00 00 00 00 00 00              183                        
+Self-block LCN        0x20    34 ee 00 00 00 00 00 00              0xee34                     
+Version echo          0x50    03 00 0e 00                          3.14                       
+Version               0x54    03 00 0e 00                          3.14                       
+Table desc end        0x58    e0 00 00 00                          0xE0                       
+Ref size (self-desc)  0x5C    48 00 00 00                          0x48 (72 bytes)            
+Virtual clock (body)  0x60    b7 00 00 00 00 00 00 00              183                        
+Allocator clock       0x68    b0 00 00 00 00 00 00 00              176                        
+Oldest log ref        0x70    df 04 00 00 03 00 00 00              offset=0x4DF, segment=3    
+Flags                 0x78    82 06 00 00                          0x00000682                 
+Reserved              0x7C    00 00 00 00 00 00 00 00 00 00 00 00  zero                       
+Data area end         0x88    d0 04 00 00                          0x4D0 (1232 bytes)         
+Max root capacity     0x8C    20 00 00 00                          32                         
+Root count            0x90    0d 00 00 00                          13                         
+Offset list pointer   0x94    a8 00 00 00                          0xA8 (indirect offset list)
+
+  Checkpoint flags (0x682):
+    0x002 = always-set
+    0x080 = native-Win11-format
+    0x200 = indirect-root-list
+    0x400 = metadata-checksum
+
+  Container entries: 31, CPC: 16384
+
+  Idx Table Name                    TID     Root LCN Physical LCN    Sig Note
+  ----------------------------------------------------------------------------
+  0   Object ID Table              0x02      0x12600       0x2600   MSB+ translated
+  1   Medium Allocator Table       0x21      0x5a204      0x22204   MSB+ translated
+  2   Container Allocator Table    0x20      0x5b604      0x23604   MSB+ translated
+  3   Schema Table                 0x01      0x50014       0x8014   MSB+ translated
+  4   Parent-Child Table           0x03      0x11618       0x1618   MSB+ translated
+  5   Object ID Table dup          0x04      0x11e08       0x1e08   MSB+ translated
+  6   Block RefCount Table         0x05      0x5800c      0x2000c   MSB+ translated
+  7   Container Table              0x0b         0x24         0x24   MSB+ real (bootstrap)
+  8   Container Table dup          0x0c         0x28         0x28   MSB+ real (bootstrap)
+  9   Schema Table dup             0x06      0x50018       0x8018   MSB+ translated
+  10  Container Index Table        0x0e      0x50004       0x8004   MSB+ translated
+  11  Integrity State Table        0x0f      0x58008      0x20008   MSB+ translated
+  12  Small Allocator Table        0x22         0x2c         0x2c   MSB+ real (bootstrap)
+

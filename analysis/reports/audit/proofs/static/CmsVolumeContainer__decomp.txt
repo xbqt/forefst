@@ -1,0 +1,44 @@
+
+// === CmsVolumeContainer @ 14010fe3c ===
+
+/* WARNING: Function: _guard_dispatch_icall replaced with injection: guard_dispatch_icall */
+/* public: __cdecl CmsVolumeContainer::CmsVolumeContainer(class CmsVolume * __ptr64,unsigned long)
+ __ptr64 */
+
+CmsVolumeContainer * __thiscall
+CmsVolumeContainer::CmsVolumeContainer(CmsVolumeContainer *this,CmsVolume *param_1,ulong param_2)
+
+{
+ CmsVolumeContainer CVar1;
+ uint uVar2;
+ undefined4 uVar3;
+ CmsVolume *this_00;
+ CmsVolumeContainer *pCVar4;
+ undefined4 in_register_00000084;
+ 
+ uVar2 = 0;
+ *(CmsVolume **)(this + 8) = param_1;
+ *this = (CmsVolumeContainer)0x1;
+ *(undefined8 *)(this + 0x10) = 0;
+ *(undefined8 *)(this + 0x18) = 0;
+ *(undefined8 *)(this + 0x20) = 0;
+ *(undefined8 *)(this + 0x30) = 0;
+ ExInitializeAutoExpandPushLock(this + 0x38,1,CONCAT44(in_register_00000084,param_2));
+ *(undefined4 *)(this + 0x1b8) = 0xffffffff;
+ *(undefined8 *)(this + 0x48) = 0;
+ pCVar4 = this + 0x260;
+ *(undefined2 *)(this + 0x118) = 0;
+ this[0x11a] = (CmsVolumeContainer)0x0;
+ *(undefined8 *)(this + 0x128) = 0;
+ *(undefined8 *)(this + 0x158) = 0;
+ *(undefined4 *)(this + 0x160) = 0;
+ *(undefined8 *)(this + 0x170) = 0;
+ *(undefined8 *)(this + 0x178) = 0;
+ *(undefined8 *)(this + 0x180) = 0;
+ this[0x189] = (CmsVolumeContainer)0x4;
+ *(undefined8 *)(this + 400) = 0;
+ *(undefined8 *)(this + 0x198) = 0;
+ *(undefined8 *)(this + 0x1b0) = 0;
+ *(undefined8 *)(this + 0x1c0) = 0;
+ *(undefined8 *)(this + 0x1c8) = 0;
+ *(undefined4 *)(this + 0x1d0) = 0;

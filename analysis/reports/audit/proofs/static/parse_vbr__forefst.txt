@@ -1,0 +1,17 @@
+def parse_vbr(f, ps):
+ f.seek(ps); bs = f.read(512)
+ if bs[3:7] != b"ReFS":
+ sig = bs[3:15].rstrip(b'\x00').decode('ascii', errors='replace')
+ if b"NTFS" in bs[:16]:
+ raise ValueError(f"partition contains NTFS, not ReFS (signature: '{sig}')")
+ elif b"-FVE-FS-" in bs[:16]:
+ raise ValueError("partition is BitLocker-encrypted (signature: -FVE-FS-)")
+ raise ValueError(f"partition does not contain ReFS (VBR signature: '{sig}')")
+ bps = le32(bs, 0x20)
+ spc = le32(bs, 0x24)
+ cs = bps * spc
+ vmaj = bs[0x28]
+ vmin = bs[0x29]
+ chk_algo = bs[0x2A]
+ bpc = le64(bs, 0x40) if le64(bs, 0x40) != 0 else 0x4000000
+ return cs, vmaj, vmin, chk_algo, bpc

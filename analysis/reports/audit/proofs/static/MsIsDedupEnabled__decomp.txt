@@ -1,0 +1,20 @@
+
+// === MsIsDedupEnabled @ 1400edcf0 ===
+
+ulonglong MsIsDedupEnabled(longlong param_1)
+
+{
+ ulonglong in_RAX;
+ ulonglong uVar1;
+ 
+ if (param_1 == 0) {
+ uVar1 = in_RAX & 0xffffffffffffff00;
+ }
+ else {
+ uVar1 = (ulonglong)(*(uint *)(*(longlong *)(param_1 + 0x6c8) + 0x78) >> 4) & 0xffffffffffffff01;
+ }
+ return uVar1;
+}
+
+
+// === MsIsDeleteNotificationDisabled @ 1400edd1c ===

@@ -1,0 +1,39 @@
+==============================================================================
+ReFS Metadata Integrity Report
+==============================================================================
+  Image:           win11refs2tspecials.raw
+  ReFS version:    3.14
+  Cluster size:    0x1000
+  Checksum type:   CRC64
+  Checkpoint VC:   367
+  Volume sig:      0x6dfbad7b
+  Container map:   32767 entries
+
+------------------------------------------------------------------------------
+Page Statistics
+------------------------------------------------------------------------------
+  Pages checked:           1125
+  Valid signatures:        1125
+  Invalid signatures:      0
+  Volume sig matches:      1125
+  Volume sig mismatches:   0
+  VC within bounds:        1125
+  VC exceeds checkpoint:   0
+  Self-address valid:      1125
+  Self-address invalid:    0
+  B+-tree inner nodes OK:  35
+  B+-tree leaf nodes OK:   1090
+  B+-tree struct errors:   0
+
+------------------------------------------------------------------------------
+Redundancy / Backup Copies
+------------------------------------------------------------------------------
+  Boot sector (primary):   LBA 0 — OK
+  Boot sector (backup):    LBA 4294836223 — present, identical to primary, checksum OK
+  Checkpoint [backup ]:   LCN 0x51eb04 — valid, vclock=366
+  Checkpoint [PRIMARY]:   LCN 0x3d702ac — valid, vclock=367
+  Superblock copies:       3 (LCN 0x1e, 0x1fffbffd, 0x1fffbffe)
+
+------------------------------------------------------------------------------
+Verdict: PASS — all metadata pages structurally valid (run --checksums / --fullchecksums to verify CRC64/SHA-256)
+------------------------------------------------------------------------------

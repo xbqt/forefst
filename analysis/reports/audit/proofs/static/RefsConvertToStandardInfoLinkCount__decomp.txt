@@ -1,0 +1,20 @@
+
+// === RefsConvertToStandardInfoLinkCount @ 1400e671c ===
+
+/* void __cdecl RefsConvertToStandardInfoLinkCount(struct _IRP_CONTEXT * __ptr64,struct _FCB *
+ __ptr64,unsigned long,union _REFS_STD_INFO_INTERNAL) */
+
+void __cdecl
+RefsConvertToStandardInfoLinkCount(_IRP_CONTEXT *param_1,_FCB *param_2,int param_3,uint param_4)
+
+{
+ int local_res18 [4];
+ _SmsPinContext *in_stack_ffffffffffffffe0;
+ uint local_18 [4];
+ 
+ local_res18[0] = param_3;
+ RefsPartialSetStandardInfo(param_1,param_2,local_res18,0x70,4,in_stack_ffffffffffffffe0);
+ if ((local_res18[0] == 0) && (param_4 != 0)) {
+ local_18[0] = RefsComputeStandardInformationInternalFromFcb(param_2);
+ local_18[0] = local_18[0] | param_4;
+ RefsPartialSetStandardInfo(param_1,param_2,local_18,0x24,4,in_stack_ffffffffffffffe0);

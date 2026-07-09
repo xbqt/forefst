@@ -1,0 +1,20 @@
+
+// === ValidateCheckpointRecordCallback @ 140105e10 ===
+
+/* public: static unsigned char __cdecl CmsVolume::ValidateCheckpointRecordCallback(class
+ CmsTransactionContext * __ptr64,class CmsVolume * __ptr64,void * __ptr64,union _LCN_TUPLE const *
+ __ptr64,unsigned long,void * __ptr64) */
+
+uchar __cdecl
+CmsVolume::ValidateCheckpointRecordCallback
+ (CmsTransactionContext *param_1,CmsVolume *param_2,void *param_3,_LCN_TUPLE *param_4,
+ ulong param_5,void *param_6)
+
+{
+ byte extraout_var;
+ CmsVolume *local_res8;
+ void *local_res10;
+ CmsTransactionContext *local_res18;
+ _LCN_TUPLE *local_res20;
+ void **local_48;
+ ulong *local_40;

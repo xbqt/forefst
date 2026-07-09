@@ -1,0 +1,31 @@
+{{- /* The bootstrap chain and the 13 checkpoint root tables. Links use relURL so they
+       survive a sub-path deploy (e.g. /refs/). Root data: structures/chkp.md. */ -}}
+<figure class="roots-figure">
+  <div class="roots-chain">
+    <a class="chain-node" href="{{ "structures/vbr/" | relURL }}"><b>VBR</b><small>sector 0 — version · cluster size · checksum</small></a>
+    <span class="chain-arrow" aria-hidden="true">&rarr;</span>
+    <a class="chain-node" href="{{ "structures/supb/" | relURL }}"><b>Superblock</b><small>LCN 0x1E — finds the checkpoints</small></a>
+    <span class="chain-arrow" aria-hidden="true">&rarr;</span>
+    <a class="chain-node" href="{{ "structures/chkp/" | relURL }}"><b>Checkpoint</b><small>higher clock — holds the 13 root pointers</small></a>
+    <span class="chain-arrow" aria-hidden="true">&rarr;</span>
+    <a class="chain-node accent" href="{{ "structures/container_table/" | relURL }}"><b>Container Table</b><small>roots 7 / 8 — VLCN&rarr;PLCN, real LCN</small></a>
+  </div>
+
+  <p class="roots-bridge">The Container Table is read first (real, physical LCNs); every other root is virtually addressed and resolves through it &mdash; the 13 roots, in 8 groups:</p>
+
+  <div class="roots-grid">
+    <a class="root-card" href="{{ "structures/object_table/" | relURL }}"><span class="root-n">roots 0 &middot; 5</span><b>Object Table</b><small>OID &rarr; location, for every object</small></a>
+    <a class="root-card" href="{{ "structures/schema_table/" | relURL }}"><span class="root-n">roots 3 &middot; 9</span><b>Schema Table</b><small>per-table key-comparison rules</small></a>
+    <a class="root-card real" href="{{ "structures/container_table/" | relURL }}"><span class="root-n">roots 7 &middot; 8</span><b>Container Table</b><small>VLCN &rarr; PLCN &middot; real LCN</small></a>
+    <a class="root-card" href="{{ "structures/allocators/" | relURL }}"><span class="root-n">roots 1 &middot; 2 &middot; 12</span><b>Allocators</b><small>Medium &middot; Container &middot; Small (12 = real LCN)</small></a>
+    <a class="root-card" href="{{ "structures/parent_child_table/" | relURL }}"><span class="root-n">root 4</span><b>Parent-Child</b><small>directory hierarchy</small></a>
+    <a class="root-card" href="{{ "structures/block_refcount/" | relURL }}"><span class="root-n">root 6</span><b>Block Refcount</b><small>snapshots &middot; dedup &middot; clones</small></a>
+    <a class="root-card" href="{{ "structures/container_index/" | relURL }}"><span class="root-n">root 10</span><b>Container Index</b><small>lookup by free-space state</small></a>
+    <a class="root-card" href="{{ "structures/integrity_state/" | relURL }}"><span class="root-n">root 11</span><b>Integrity State</b><small>checksum coverage</small></a>
+  </div>
+
+  <figcaption>
+    Paired roots (0/5, 3/9, 7/8) are failover duplicates; roots 7, 8 and 12 store <em>real</em> physical LCNs; the three allocators share one schema.
+    Full traversal: <a href="{{ "concepts/bootstrap_chain/" | relURL }}">Bootstrap Chain</a> &middot; per-table detail on each <a href="{{ "structures/" | relURL }}">structure page</a>.
+  </figcaption>
+</figure>

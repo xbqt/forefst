@@ -1,0 +1,3173 @@
+# forefst win11refstestmftecmd.raw reparse
+# ----------------------------------------------------------------------------
+==============================================================================
+ReFS Reparse Points
+==============================================================================
+  Image:        analysis/rawdisk/disks/step5/win11refstestmftecmd.raw
+  ReFS version: 3.14
+
+  Files with REPARSE_POINT flag: 444
+  Files with WSL EAs: 0
+  Total files scanned: 1744
+
+  Showing 444 entries:
+
+  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_symlink_gamma_582874.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\test\xbpt_foxtrot_india_714766.ini
+    Display:   N:\test\xbpt_foxtrot_india_714766.ini
+    Relative:  False
+
+  test/xbpt_symlink_hotel_632659.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\test\elvis_dir_log_202031\elvis_dir_record_340186\elvis_dir_gamma_109016\elvis_dir_config_541148\xbpt_index_zulu_828859.bak
+    Display:   N:\test\elvis_dir_log_202031\elvis_dir_record_340186\elvis_dir_gamma_109016\elvis_dir_config_541148\xbpt_index_zulu_828859.bak
+    Relative:  False
+
+  test/xbpt_symlink_output_831744.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\test\xbpt_yankee_audit_433793.xml
+    Display:   N:\test\xbpt_yankee_audit_433793.xml
+    Relative:  False
+
+  test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_symlink_gamma_582874.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\test2\xbpt_foxtrot_india_714766.ini
+    Display:   N:\test2\xbpt_foxtrot_india_714766.ini
+    Relative:  False
+
+  test2/xbpt_symlink_hotel_632659.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\test2\elvis_dir_log_202031\elvis_dir_record_340186\elvis_dir_gamma_109016\elvis_dir_config_541148\xbpt_index_zulu_828859.bak
+    Display:   N:\test2\elvis_dir_log_202031\elvis_dir_record_340186\elvis_dir_gamma_109016\elvis_dir_config_541148\xbpt_index_zulu_828859.bak
+    Relative:  False
+
+  test2/xbpt_symlink_output_831744.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\test2\xbpt_yankee_audit_433793.xml
+    Display:   N:\test2\xbpt_yankee_audit_433793.xml
+    Relative:  False
+
+  testintegrity/dir_backup_983023/dir_lima_860689/dir_output_274069/xbpt_hardlink_temp_854113.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\xbpt_india_sierra_627062.bak
+
+  testintegrity/dir_backup_983023/dir_lima_860689/dir_output_274069/xbpt_hardlink_trace_263121.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_quebec_504972\dir_beta_248924\xbpt_symlink_record_114151.lnk
+
+  testintegrity/dir_backup_983023/dir_lima_860689/dir_output_274069/xbpt_symlink_lima_723776.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_gamma_404999\dir_whiskey_550421\dir_sierra_463915\dir_yankee_672946\dir_report_930793\xbpt_backup_trace_904139.log
+    Display:   N:\testintegrity\dir_gamma_404999\dir_whiskey_550421\dir_sierra_463915\dir_yankee_672946\dir_report_930793\xbpt_backup_trace_904139.log
+    Relative:  False
+
+  testintegrity/dir_backup_983023/dir_lima_860689/dir_output_274069/xbpt_symlink_quebec_738449.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\dir_lima_228687\dir_india_641930\xbpt_hardlink_archive_775977.lnk
+    Display:   N:\testintegrity\dir_draft_196876\dir_lima_228687\dir_india_641930\xbpt_hardlink_archive_775977.lnk
+    Relative:  False
+
+  testintegrity/dir_backup_983023/dir_lima_860689/dir_output_274069/xbpt_symlink_sierra_906226.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\dir_lima_228687\dir_kilo_987907\xbpt_hardlink_yankee_108900.bak
+    Display:   N:\testintegrity\dir_draft_196876\dir_lima_228687\dir_kilo_987907\xbpt_hardlink_yankee_108900.bak
+    Relative:  False
+
+  testintegrity/dir_backup_983023/dir_lima_860689/xbpt_symlink_alpha_720119.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_gamma_404999\dir_whiskey_550421\dir_sierra_463915\xbpt_hardlink_whiskey_479738.lnk
+    Display:   N:\testintegrity\dir_gamma_404999\dir_whiskey_550421\dir_sierra_463915\xbpt_hardlink_whiskey_479738.lnk
+    Relative:  False
+
+  testintegrity/dir_backup_983023/dir_lima_860689/xbpt_symlink_index_953360.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_gamma_404999\dir_whiskey_550421\dir_sierra_463915\dir_yankee_672946\dir_uniform_914766\dir_quebec_957455\dir_victor_956392\xbpt_symlink_cache_827960.lnk
+    Display:   N:\testintegrity\dir_gamma_404999\dir_whiskey_550421\dir_sierra_463915\dir_yankee_672946\dir_uniform_914766\dir_quebec_957455\dir_victor_956392\xbpt_symlink_cache_827960.lnk
+    Relative:  False
+
+  testintegrity/dir_backup_983023/xbpt_hardlink_draft_761999.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_audit_india_294476.md
+
+  testintegrity/dir_backup_983023/xbpt_symlink_kilo_905448.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_foxtrot_302916\dir_report_930793\xbpt_config_backup_533618.json
+    Display:   N:\testintegrity\dir_foxtrot_302916\dir_report_930793\xbpt_config_backup_533618.json
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_mike_845145/dir_sierra_896134/xbpt_hardlink_oscar_835615.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\xbpt_hardlink_yankee_518134.dat
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/dir_output_967830/xbpt_hardlink_foxtrot_275487.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_uniform_914766\xbpt_symlink_zulu_866308.lnk
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/dir_zulu_312953/xbpt_symlink_delta_599276.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_foxtrot_302916\dir_uniform_914766\xbpt_temp_echo_636607.bak
+    Display:   N:\testintegrity\dir_foxtrot_302916\dir_uniform_914766\xbpt_temp_echo_636607.bak
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/dir_zulu_312953/xbpt_symlink_papa_414108.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_gamma_404999\dir_record_907427\dir_hotel_928595\dir_kilo_987907\xbpt_trace_audit_194295.json
+    Display:   N:\testintegrity\dir_gamma_404999\dir_record_907427\dir_hotel_928595\dir_kilo_987907\xbpt_trace_audit_194295.json
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/xbpt_backup_delta_895325.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_uniform_914766\xbpt_hardlink_cache_448049.lnk
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/xbpt_hardlink_gamma_853279.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_symlink_echo_566939.lnk
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/xbpt_symlink_gamma_282164.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_november_274328\dir_kilo_987907\xbpt_sierra_papa_493652.lnk
+    Display:   N:\testintegrity\dir_november_274328\dir_kilo_987907\xbpt_sierra_papa_493652.lnk
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/xbpt_symlink_index_146693.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_tango_306249\xbpt_symlink_mike_445436.lnk
+    Display:   N:\testintegrity\dir_tango_306249\xbpt_symlink_mike_445436.lnk
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_oscar_342854/dir_archive_860003/dir_cache_496228/xbpt_hardlink_foxtrot_860971.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_foxtrot_302916\xbpt_november_report_153874.txt
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_oscar_342854/dir_archive_860003/dir_cache_496228/xbpt_symlink_output_486781.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_report_583335\xbpt_hardlink_beta_447656.bak
+    Display:   N:\testintegrity\dir_report_583335\xbpt_hardlink_beta_447656.bak
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_oscar_342854/dir_archive_860003/dir_cache_496228/xbpt_symlink_quebec_918421.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_report_583335\dir_kilo_863699\xbpt_india_whiskey_111624.bak
+    Display:   N:\testintegrity\dir_report_583335\dir_kilo_863699\xbpt_india_whiskey_111624.bak
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_oscar_342854/dir_archive_860003/xbpt_archive_lima_326199.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_audit_india_294476.md
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_oscar_342854/dir_archive_860003/xbpt_hardlink_sierra_998780.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\xbpt_foxtrot_kilo_188200.bin
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_oscar_342854/dir_archive_860003/xbpt_symlink_foxtrot_172455.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\dir_alpha_208192\dir_yankee_687993\xbpt_hardlink_output_846987.lnk
+    Display:   N:\testintegrity\dir_draft_196876\dir_alpha_208192\dir_yankee_687993\xbpt_hardlink_output_846987.lnk
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_oscar_342854/dir_archive_860003/xbpt_symlink_mike_445004.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\xbpt_foxtrot_kilo_188200.bin
+    Display:   N:\testintegrity\xbpt_foxtrot_kilo_188200.bin
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_oscar_342854/dir_archive_860003/xbpt_symlink_uniform_926990.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_delta_mike_801553.tmp
+    Display:   N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_delta_mike_801553.tmp
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_oscar_342854/dir_archive_860003/xbpt_symlink_whiskey_684286.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_quebec_504972\dir_beta_248924\xbpt_beta_data_817933.dat
+    Display:   N:\testintegrity\dir_quebec_504972\dir_beta_248924\xbpt_beta_data_817933.dat
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_oscar_342854/dir_archive_860003/xbpt_uniform_mike_361953.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_gamma_333765\dir_echo_335275\xbpt_hardlink_trace_352790.tmp
+    Display:   N:\testintegrity\dir_gamma_333765\dir_echo_335275\xbpt_hardlink_trace_352790.tmp
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_oscar_342854/xbpt_hardlink_yankee_917045.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_uniform_914766\xbpt_hardlink_whiskey_163996.lnk
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_oscar_342854/xbpt_symlink_quebec_583144.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\dir_lima_228687\dir_kilo_987907\xbpt_echo_log_788132.txt
+    Display:   N:\testintegrity\dir_draft_196876\dir_lima_228687\dir_kilo_987907\xbpt_echo_log_788132.txt
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_report_930793/xbpt_hardlink_output_849867.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_audit_india_294476.md
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_report_930793/xbpt_hardlink_yankee_853715.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_romeo_329630\xbpt_hardlink_index_906427.json
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_report_930793/xbpt_symlink_index_831305.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_backup_645744\dir_kilo_987907\xbpt_symlink_trace_866671.lnk
+    Display:   N:\testintegrity\dir_backup_645744\dir_kilo_987907\xbpt_symlink_trace_866671.lnk
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_report_930793/xbpt_symlink_yankee_703392.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_foxtrot_302916\dir_beta_758689\xbpt_hardlink_temp_636663.tmp
+    Display:   N:\testintegrity\dir_foxtrot_302916\dir_beta_758689\xbpt_hardlink_temp_636663.tmp
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_backup_240201/dir_draft_203180/dir_zulu_409792/xbpt_hardlink_quebec_490116.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\xbpt_hardlink_yankee_518134.dat
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_backup_240201/dir_draft_203180/dir_zulu_409792/xbpt_hardlink_uniform_288185.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_symlink_echo_566939.lnk
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_backup_240201/dir_draft_203180/dir_zulu_409792/xbpt_symlink_index_716664.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\dir_data_379372\xbpt_symlink_uniform_926990.lnk
+    Display:   N:\testintegrity\dir_draft_196876\dir_data_379372\xbpt_symlink_uniform_926990.lnk
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_backup_240201/dir_draft_203180/xbpt_symlink_output_894924.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_foxtrot_302916\dir_uniform_914766\dir_quebec_957455\xbpt_oscar_papa_463922.bak
+    Display:   N:\testintegrity\dir_foxtrot_302916\dir_uniform_914766\dir_quebec_957455\xbpt_oscar_papa_463922.bak
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_backup_240201/dir_quebec_918931/xbpt_symlink_zulu_651233.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_output_201363\dir_backup_240201\dir_draft_203180\dir_zulu_409792\xbpt_data_romeo_992013.json
+    Display:   N:\testintegrity\dir_output_201363\dir_backup_240201\dir_draft_203180\dir_zulu_409792\xbpt_data_romeo_992013.json
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_backup_240201/xbpt_archive_beta_282319.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_report_583335\xbpt_symlink_cache_471699.lnk
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_backup_240201/xbpt_hardlink_log_867272.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_november_274328\xbpt_symlink_gamma_837222.lnk
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_backup_240201/xbpt_yankee_temp_658090.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\xbpt_foxtrot_kilo_188200.bin
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_sync_430576/xbpt_symlink_lima_766278.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_echo_oscar_993012.lnk
+    Display:   N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_echo_oscar_993012.lnk
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/xbpt_symlink_draft_897193.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\dir_kilo_310520\dir_oscar_738913\xbpt_hardlink_cache_151636.ini
+    Display:   N:\testintegrity\dir_draft_196876\dir_kilo_310520\dir_oscar_738913\xbpt_hardlink_cache_151636.ini
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/xbpt_symlink_draft_911889.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_foxtrot_302916\dir_oscar_342854\dir_archive_860003\xbpt_beta_quebec_468555.bak
+    Display:   N:\testintegrity\dir_foxtrot_302916\dir_oscar_342854\dir_archive_860003\xbpt_beta_quebec_468555.bak
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/xbpt_symlink_gamma_997513.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_foxtrot_302916\dir_zulu_845500\xbpt_echo_oscar_993012.lnk
+    Display:   N:\testintegrity\dir_foxtrot_302916\dir_zulu_845500\xbpt_echo_oscar_993012.lnk
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/xbpt_symlink_victor_316100.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_foxtrot_302916\dir_uniform_490900\dir_tango_606500\dir_temp_180881\dir_oscar_738913\xbpt_alpha_beta_164881.dat
+    Display:   N:\testintegrity\dir_foxtrot_302916\dir_uniform_490900\dir_tango_606500\dir_temp_180881\dir_oscar_738913\xbpt_alpha_beta_164881.dat
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/dir_victor_956392/dir_draft_180033/xbpt_symlink_uniform_598594.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_foxtrot_302916\dir_zulu_845500\xbpt_symlink_echo_566939.lnk
+    Display:   N:\testintegrity\dir_foxtrot_302916\dir_zulu_845500\xbpt_symlink_echo_566939.lnk
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/dir_victor_956392/xbpt_data_alpha_687052.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_uniform_914766\xbpt_symlink_zulu_866308.lnk
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/dir_victor_956392/xbpt_hardlink_log_242062.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_delta_mike_801553.tmp
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/dir_victor_956392/xbpt_hardlink_mike_348424.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_audit_india_294476.md
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/dir_victor_956392/xbpt_index_beta_226702.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_backup_645744\xbpt_hardlink_beta_222943.txt
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/dir_victor_956392/xbpt_symlink_backup_797643.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_foxtrot_302916\dir_uniform_490900\dir_tango_606500\dir_temp_180881\dir_oscar_738913\xbpt_hardlink_data_287531.lnk
+    Display:   N:\testintegrity\dir_foxtrot_302916\dir_uniform_490900\dir_tango_606500\dir_temp_180881\dir_oscar_738913\xbpt_hardlink_data_287531.lnk
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/dir_victor_956392/xbpt_symlink_cache_827960.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_uniform_914766\xbpt_symlink_zulu_866308.lnk
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/dir_victor_956392/xbpt_symlink_foxtrot_169980.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_tango_306249\xbpt_delta_log_857078.csv
+    Display:   N:\testintegrity\dir_tango_306249\xbpt_delta_log_857078.csv
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/dir_victor_956392/xbpt_symlink_mike_100866.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_foxtrot_302916\dir_report_930793\dir_uniform_960526\xbpt_cache_echo_580272.md
+    Display:   N:\testintegrity\dir_foxtrot_302916\dir_report_930793\dir_uniform_960526\xbpt_cache_echo_580272.md
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/dir_victor_956392/xbpt_symlink_uniform_241989.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_romeo_329630\dir_kilo_987907\xbpt_victor_yankee_759456.json
+    Display:   N:\testintegrity\dir_romeo_329630\dir_kilo_987907\xbpt_victor_yankee_759456.json
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/dir_victor_956392/xbpt_symlink_uniform_546047.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_backup_645744\dir_india_641930\dir_cache_422839\xbpt_papa_echo_912265.md
+    Display:   N:\testintegrity\dir_backup_645744\dir_india_641930\dir_cache_422839\xbpt_papa_echo_912265.md
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/dir_victor_956392/xbpt_symlink_yankee_659090.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_romeo_audit_439353.log
+    Display:   N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_romeo_audit_439353.log
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/xbpt_hardlink_index_924275.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\xbpt_hardlink_kilo_269719.lnk
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/xbpt_symlink_delta_287706.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\dir_data_379372\xbpt_hardlink_backup_502262.bin
+    Display:   N:\testintegrity\dir_draft_196876\dir_data_379372\xbpt_hardlink_backup_502262.bin
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_hardlink_audit_962379.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_uniform_914766\dir_lima_364837\xbpt_hardlink_beta_501725.dat
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_hardlink_beta_226735.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_quebec_504972\xbpt_hardlink_whiskey_944822.lnk
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_hardlink_cache_448049.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_november_274328\xbpt_symlink_gamma_837222.lnk
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_hardlink_romeo_537642.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_index_885031\xbpt_config_sierra_925103.ini
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_log_cache_206425.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\xbpt_uniform_kilo_835445.log
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_symlink_alpha_777420.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\xbpt_india_sierra_627062.bak
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_symlink_draft_955075.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\dir_lima_228687\dir_india_641930\xbpt_index_oscar_734738.json
+    Display:   N:\testintegrity\dir_draft_196876\dir_lima_228687\dir_india_641930\xbpt_index_oscar_734738.json
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_symlink_papa_366679.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_foxtrot_302916\xbpt_symlink_delta_376647.lnk
+    Display:   N:\testintegrity\dir_foxtrot_302916\xbpt_symlink_delta_376647.lnk
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_symlink_quebec_602997.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_gamma_404999\dir_record_907427\dir_hotel_928595\dir_india_641930\dir_cache_422839\dir_archive_332421\xbpt_sync_kilo_590293.bak
+    Display:   N:\testintegrity\dir_gamma_404999\dir_record_907427\dir_hotel_928595\dir_india_641930\dir_cache_422839\dir_archive_332421\xbpt_sync_kilo_590293.bak
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_symlink_record_727590.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\xbpt_zulu_index_720705.lnk
+    Display:   N:\testintegrity\dir_draft_196876\xbpt_zulu_index_720705.lnk
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_hardlink_kilo_269719.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\xbpt_index_victor_598659.bak
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_hotel_backup_359466.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_audit_india_294476.md
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_quebec_uniform_712946.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_uniform_919173\xbpt_symlink_yankee_659090.lnk
+    Display:   N:\testintegrity\dir_uniform_919173\xbpt_symlink_yankee_659090.lnk
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_symlink_beta_770708.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_report_583335\xbpt_tango_backup_189022.lnk
+    Display:   N:\testintegrity\dir_report_583335\xbpt_tango_backup_189022.lnk
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_symlink_delta_252704.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_audit_india_294476.md
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_symlink_delta_376647.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_symlink_victor_321005.lnk
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_symlink_foxtrot_278672.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_report_583335\xbpt_symlink_beta_248049.lnk
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_symlink_november_528290.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_backup_645744\dir_kilo_987907\xbpt_symlink_audit_699430.lnk
+    Display:   N:\testintegrity\dir_backup_645744\dir_kilo_987907\xbpt_symlink_audit_699430.lnk
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_symlink_record_218215.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_backup_645744\dir_kilo_987907\xbpt_output_quebec_864748.dat
+    Display:   N:\testintegrity\dir_backup_645744\dir_kilo_987907\xbpt_output_quebec_864748.dat
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_symlink_whiskey_148952.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_output_819015\xbpt_gamma_romeo_253136.bak
+    Display:   N:\testintegrity\dir_output_819015\xbpt_gamma_romeo_253136.bak
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_symlink_whiskey_577627.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_gamma_404999\dir_whiskey_550421\dir_sierra_463915\xbpt_beta_romeo_915995.xml
+    Display:   N:\testintegrity\dir_gamma_404999\dir_whiskey_550421\dir_sierra_463915\xbpt_beta_romeo_915995.xml
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/xbpt_hardlink_alpha_216580.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_backup_645744\xbpt_hardlink_beta_222943.txt
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/xbpt_hardlink_lima_552476.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\xbpt_foxtrot_kilo_188200.bin
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/xbpt_report_november_461960.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_uniform_919173\xbpt_symlink_uniform_241989.lnk
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/xbpt_symlink_audit_808442.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\dir_lima_228687\dir_india_641930\dir_cache_422839\dir_archive_332421\xbpt_sync_kilo_590293.bak
+    Display:   N:\testintegrity\dir_draft_196876\dir_lima_228687\dir_india_641930\dir_cache_422839\dir_archive_332421\xbpt_sync_kilo_590293.bak
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/xbpt_symlink_cache_471699.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\xbpt_hardlink_yankee_518134.dat
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/xbpt_symlink_data_634414.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\xbpt_hardlink_config_395241.md
+    Display:   N:\testintegrity\xbpt_hardlink_config_395241.md
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/xbpt_symlink_echo_957266.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_romeo_329630\dir_kilo_987907\xbpt_log_alpha_992477.dat
+    Display:   N:\testintegrity\dir_romeo_329630\dir_kilo_987907\xbpt_log_alpha_992477.dat
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/xbpt_symlink_output_582325.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\dir_alpha_542871\xbpt_symlink_oscar_222464.lnk
+    Display:   N:\testintegrity\dir_draft_196876\dir_alpha_542871\xbpt_symlink_oscar_222464.lnk
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/xbpt_symlink_romeo_247909.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\xbpt_uniform_kilo_835445.log
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/xbpt_tango_backup_189022.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\xbpt_uniform_zulu_842085.bak
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/xbpt_hardlink_yankee_131550.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_symlink_victor_321005.lnk
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/xbpt_symlink_kilo_525120.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_foxtrot_302916\dir_uniform_914766\dir_quebec_957455\dir_victor_956392\dir_draft_180033\dir_november_688575\xbpt_hardlink_alpha_736292.cfg
+    Display:   N:\testintegrity\dir_foxtrot_302916\dir_uniform_914766\dir_quebec_957455\dir_victor_956392\dir_draft_180033\dir_november_688575\xbpt_hardlink_alpha_736292.cfg
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_whiskey_550421/xbpt_symlink_oscar_948643.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\dir_alpha_208192\xbpt_quebec_quebec_839616.log
+    Display:   N:\testintegrity\dir_draft_196876\dir_alpha_208192\xbpt_quebec_quebec_839616.log
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_yankee_757223/dir_gamma_962278/xbpt_hardlink_archive_494814.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\xbpt_india_sierra_627062.bak
+
+  testintegrity/dir_gamma_404999/dir_yankee_757223/dir_gamma_962278/xbpt_symlink_sierra_537060.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_log_989773\dir_november_386060\xbpt_delta_data_953675.md
+    Display:   N:\testintegrity\dir_log_989773\dir_november_386060\xbpt_delta_data_953675.md
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_yankee_757223/dir_gamma_962278/xbpt_symlink_tango_260298.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_gamma_404999\dir_whiskey_550421\dir_sierra_463915\dir_yankee_672946\dir_uniform_735193\dir_backup_240201\xbpt_log_output_542121.csv
+    Display:   N:\testintegrity\dir_gamma_404999\dir_whiskey_550421\dir_sierra_463915\dir_yankee_672946\dir_uniform_735193\dir_backup_240201\xbpt_log_output_542121.csv
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/dir_yankee_757223/xbpt_hardlink_hotel_159465.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_uniform_914766\xbpt_hardlink_cache_448049.lnk
+
+  testintegrity/dir_gamma_404999/dir_yankee_757223/xbpt_hardlink_output_141148.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_report_583335\xbpt_symlink_beta_248049.lnk
+
+  testintegrity/dir_gamma_404999/xbpt_hardlink_hotel_381329.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_romeo_329630\dir_kilo_987907\xbpt_symlink_romeo_618064.lnk
+
+  testintegrity/dir_gamma_404999/xbpt_hardlink_papa_112044.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_uniform_914766\dir_lima_364837\xbpt_hardlink_beta_501725.dat
+
+  testintegrity/dir_gamma_404999/xbpt_symlink_archive_115861.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\dir_lima_228687\dir_kilo_987907\xbpt_symlink_tango_845857.lnk
+    Display:   N:\testintegrity\dir_draft_196876\dir_lima_228687\dir_kilo_987907\xbpt_symlink_tango_845857.lnk
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/xbpt_symlink_beta_951455.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\xbpt_uniform_tango_116837.lnk
+    Display:   N:\testintegrity\xbpt_uniform_tango_116837.lnk
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/xbpt_symlink_delta_831152.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_gamma_404999\dir_whiskey_550421\dir_sierra_463915\dir_yankee_672946\dir_uniform_914766\xbpt_hardlink_mike_495558.bak
+    Display:   N:\testintegrity\dir_gamma_404999\dir_whiskey_550421\dir_sierra_463915\dir_yankee_672946\dir_uniform_914766\xbpt_hardlink_mike_495558.bak
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/xbpt_symlink_lima_965690.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_draft_196876\dir_lima_228687\dir_kilo_987907\dir_cache_820752\xbpt_yankee_output_556619.ini
+
+  testintegrity/dir_gamma_404999/xbpt_symlink_oscar_222464.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_backup_645744\dir_kilo_987907\dir_tango_931330\xbpt_hardlink_backup_502262.bin
+    Display:   N:\testintegrity\dir_backup_645744\dir_kilo_987907\dir_tango_931330\xbpt_hardlink_backup_502262.bin
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/xbpt_symlink_temp_742877.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_foxtrot_302916\dir_zulu_845500\dir_november_114124\xbpt_symlink_delta_805114.lnk
+    Display:   N:\testintegrity\dir_foxtrot_302916\dir_zulu_845500\dir_november_114124\xbpt_symlink_delta_805114.lnk
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/xbpt_symlink_victor_142196.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\dir_data_379372\dir_cache_496228\xbpt_symlink_quebec_918421.lnk
+    Display:   N:\testintegrity\dir_draft_196876\dir_data_379372\dir_cache_496228\xbpt_symlink_quebec_918421.lnk
+    Relative:  False
+
+  testintegrity/dir_gamma_404999/xbpt_symlink_yankee_547491.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\dir_lima_228687\dir_kilo_987907\xbpt_hardlink_mike_291955.lnk
+    Display:   N:\testintegrity\dir_draft_196876\dir_lima_228687\dir_kilo_987907\xbpt_hardlink_mike_291955.lnk
+    Relative:  False
+
+  testintegrity/dir_log_989773/dir_beta_399822/dir_config_158774/xbpt_hardlink_output_810613.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\xbpt_uniform_zulu_842085.bak
+
+  testintegrity/dir_log_989773/dir_beta_399822/xbpt_symlink_data_316263.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\dir_alpha_208192\dir_tango_606500\dir_temp_180881\xbpt_papa_zulu_463037.dat
+    Display:   N:\testintegrity\dir_draft_196876\dir_alpha_208192\dir_tango_606500\dir_temp_180881\xbpt_papa_zulu_463037.dat
+    Relative:  False
+
+  testintegrity/dir_log_989773/dir_beta_399822/xbpt_symlink_foxtrot_984643.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_gamma_404999\xbpt_symlink_temp_742877.lnk
+    Display:   N:\testintegrity\dir_gamma_404999\xbpt_symlink_temp_742877.lnk
+    Relative:  False
+
+  testintegrity/dir_log_989773/dir_gamma_610434/dir_romeo_230799/xbpt_hardlink_foxtrot_433719.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_draft_196876\dir_lima_228687\dir_kilo_987907\dir_cache_820752\xbpt_yankee_output_556619.ini
+
+  testintegrity/dir_log_989773/dir_gamma_610434/dir_romeo_230799/xbpt_hardlink_mike_245933.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_report_583335\dir_kilo_863699\xbpt_record_cache_677917.dat
+
+  testintegrity/dir_log_989773/dir_gamma_610434/xbpt_symlink_alpha_458179.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\dir_lima_228687\dir_india_641930\xbpt_backup_report_993563.json
+    Display:   N:\testintegrity\dir_draft_196876\dir_lima_228687\dir_india_641930\xbpt_backup_report_993563.json
+    Relative:  False
+
+  testintegrity/dir_log_989773/xbpt_symlink_audit_510013.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_foxtrot_302916\xbpt_november_trace_141137.log
+    Display:   N:\testintegrity\dir_foxtrot_302916\xbpt_november_trace_141137.log
+    Relative:  False
+
+  testintegrity/dir_quebec_504972/xbpt_hardlink_config_417118.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_victor_india_410451.bak
+
+  testintegrity/dir_quebec_504972/xbpt_hardlink_whiskey_944822.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_victor_india_410451.bak
+
+  testintegrity/dir_quebec_504972/xbpt_hardlink_yankee_352946.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_uniform_914766\xbpt_hardlink_cache_448049.lnk
+
+  testintegrity/dir_quebec_504972/xbpt_symlink_echo_657944.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\xbpt_gamma_data_633866.json
+    Display:   N:\testintegrity\xbpt_gamma_data_633866.json
+    Relative:  False
+
+  testintegrity/dir_quebec_504972/xbpt_symlink_quebec_955650.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_backup_645744\xbpt_hardlink_beta_222943.txt
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/dir_november_114124/xbpt_hardlink_oscar_301628.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_victor_india_410451.bak
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/dir_november_114124/xbpt_symlink_delta_805114.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_gamma_333765\dir_uniform_914766\dir_whiskey_655661\xbpt_data_romeo_992013.json
+    Display:   N:\testintegrity\dir_gamma_333765\dir_uniform_914766\dir_whiskey_655661\xbpt_data_romeo_992013.json
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/dir_november_114124/xbpt_symlink_india_552911.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\dir_lima_228687\dir_kilo_987907\xbpt_hardlink_trace_449625.lnk
+    Display:   N:\testintegrity\dir_draft_196876\dir_lima_228687\dir_kilo_987907\xbpt_hardlink_trace_449625.lnk
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/dir_november_114124/xbpt_sync_data_279000.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_index_885031\xbpt_symlink_uniform_241989.lnk
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/dir_oscar_534371/xbpt_hardlink_tango_319854.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_symlink_echo_566939.lnk
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/dir_oscar_534371/xbpt_symlink_echo_113416.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_foxtrot_302916\dir_beta_758689\dir_backup_240201\xbpt_archive_beta_282319.lnk
+    Display:   N:\testintegrity\dir_foxtrot_302916\dir_beta_758689\dir_backup_240201\xbpt_archive_beta_282319.lnk
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/dir_tango_606500/dir_temp_180881/dir_oscar_738913/xbpt_audit_log_591381.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_report_583335\dir_kilo_863699\xbpt_record_cache_677917.dat
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/dir_tango_606500/dir_temp_180881/dir_oscar_738913/xbpt_hardlink_data_287531.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\xbpt_uniform_kilo_835445.log
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/dir_tango_606500/dir_temp_180881/dir_oscar_738913/xbpt_symlink_log_990746.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_report_583335\xbpt_symlink_echo_957266.lnk
+    Display:   N:\testintegrity\dir_report_583335\xbpt_symlink_echo_957266.lnk
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/dir_tango_606500/dir_temp_180881/xbpt_symlink_record_461797.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_november_274328\dir_kilo_987907\dir_india_860629\xbpt_symlink_mike_445004.lnk
+    Display:   N:\testintegrity\dir_november_274328\dir_kilo_987907\dir_india_860629\xbpt_symlink_mike_445004.lnk
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/dir_tango_606500/dir_temp_180881/xbpt_symlink_record_638878.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\xbpt_uniform_kilo_835445.log
+    Display:   N:\testintegrity\xbpt_uniform_kilo_835445.log
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/dir_tango_606500/dir_temp_180881/xbpt_symlink_yankee_515782.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_backup_645744\dir_kilo_987907\xbpt_hardlink_kilo_340963.cfg
+    Display:   N:\testintegrity\dir_backup_645744\dir_kilo_987907\xbpt_hardlink_kilo_340963.cfg
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/dir_tango_606500/xbpt_record_kilo_776048.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\xbpt_hardlink_kilo_269719.lnk
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/dir_tango_606500/xbpt_symlink_archive_573090.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\dir_lima_228687\dir_kilo_987907\xbpt_hardlink_archive_372677.json
+    Display:   N:\testintegrity\dir_draft_196876\dir_lima_228687\dir_kilo_987907\xbpt_hardlink_archive_372677.json
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/dir_tango_606500/xbpt_symlink_delta_954626.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_foxtrot_302916\dir_uniform_490900\dir_tango_606500\dir_temp_180881\dir_oscar_738913\xbpt_hardlink_cache_151636.ini
+    Display:   N:\testintegrity\dir_foxtrot_302916\dir_uniform_490900\dir_tango_606500\dir_temp_180881\dir_oscar_738913\xbpt_hardlink_cache_151636.ini
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/dir_tango_606500/xbpt_symlink_report_133084.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_quebec_504972\dir_beta_248924\xbpt_symlink_record_114151.lnk
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/dir_tango_606500/xbpt_symlink_uniform_364841.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\dir_lima_228687\xbpt_tango_lima_130282.dat
+    Display:   N:\testintegrity\dir_draft_196876\dir_lima_228687\xbpt_tango_lima_130282.dat
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/dir_tango_606500/xbpt_victor_report_509536.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_romeo_329630\xbpt_hardlink_index_906427.json
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/dir_yankee_687993/xbpt_hardlink_output_846987.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_romeo_329630\dir_kilo_987907\xbpt_hardlink_log_676623.md
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/dir_yankee_687993/xbpt_symlink_hotel_223418.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_foxtrot_302916\dir_beta_758689\dir_backup_240201\xbpt_yankee_temp_658090.lnk
+    Display:   N:\testintegrity\dir_foxtrot_302916\dir_beta_758689\dir_backup_240201\xbpt_yankee_temp_658090.lnk
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_echo_oscar_993012.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\xbpt_sync_delta_680809.log
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_hardlink_hotel_108536.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_report_583335\dir_kilo_863699\xbpt_record_cache_677917.dat
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_hardlink_hotel_245682.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\xbpt_uniform_zulu_842085.bak
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_hardlink_tango_286016.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_draft_196876\dir_data_379372\dir_config_156929\dir_oscar_738913\xbpt_audit_log_591381.lnk
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_hardlink_whiskey_259953.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\xbpt_hardlink_yankee_518134.dat
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_kilo_gamma_147821.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_gamma_333765\xbpt_hardlink_kilo_269719.lnk
+    Display:   N:\testintegrity\dir_gamma_333765\xbpt_hardlink_kilo_269719.lnk
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_symlink_archive_273241.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_gamma_333765\xbpt_symlink_delta_376647.lnk
+    Display:   N:\testintegrity\dir_gamma_333765\xbpt_symlink_delta_376647.lnk
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_symlink_audit_983518.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\xbpt_hardlink_quebec_884679.bin
+    Display:   N:\testintegrity\xbpt_hardlink_quebec_884679.bin
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_symlink_echo_566939.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\xbpt_hardlink_yankee_518134.dat
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_symlink_log_529653.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_tango_306249\xbpt_temp_report_616624.tmp
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_symlink_output_504486.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\xbpt_india_yankee_623909.dat
+    Display:   N:\testintegrity\xbpt_india_yankee_623909.dat
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_symlink_report_251184.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_foxtrot_302916\dir_uniform_914766\xbpt_symlink_quebec_602997.lnk
+    Display:   N:\testintegrity\dir_foxtrot_302916\dir_uniform_914766\xbpt_symlink_quebec_602997.lnk
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_trace_sync_836061.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\xbpt_index_victor_598659.bak
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/dir_cache_422839/xbpt_hardlink_oscar_665622.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\xbpt_uniform_kilo_835445.log
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/dir_cache_422839/xbpt_symlink_beta_760193.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_gamma_333765\dir_echo_335275\xbpt_hardlink_whiskey_163996.lnk
+    Display:   N:\testintegrity\dir_gamma_333765\dir_echo_335275\xbpt_hardlink_whiskey_163996.lnk
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/dir_cache_422839/xbpt_symlink_data_948284.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_symlink_echo_566939.lnk
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/dir_cache_422839/xbpt_symlink_papa_152777.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_report_583335\dir_kilo_863699\xbpt_hardlink_gamma_853279.lnk
+    Display:   N:\testintegrity\dir_report_583335\dir_kilo_863699\xbpt_hardlink_gamma_853279.lnk
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/dir_cache_422839/xbpt_symlink_yankee_461939.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_uniform_914766\dir_lima_364837\xbpt_hardlink_beta_501725.dat
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/dir_cache_422839/xbpt_whiskey_victor_456937.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_romeo_329630\xbpt_hardlink_index_906427.json
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/xbpt_hardlink_archive_775977.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_report_583335\dir_kilo_863699\xbpt_record_cache_677917.dat
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/xbpt_symlink_archive_596028.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_foxtrot_302916\xbpt_november_report_153874.txt
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/xbpt_symlink_audit_343822.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\dir_alpha_208192\dir_tango_606500\xbpt_symlink_report_133084.lnk
+    Display:   N:\testintegrity\dir_draft_196876\dir_alpha_208192\dir_tango_606500\xbpt_symlink_report_133084.lnk
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/xbpt_symlink_gamma_144553.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_gamma_333765\xbpt_india_sierra_627062.bak
+    Display:   N:\testintegrity\dir_gamma_333765\xbpt_india_sierra_627062.bak
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/xbpt_symlink_sierra_519320.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_index_885031\xbpt_config_sierra_925103.ini
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/dir_cache_820752/xbpt_echo_lima_608013.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\xbpt_gamma_romeo_253136.bak
+    Display:   N:\testintegrity\dir_draft_196876\xbpt_gamma_romeo_253136.bak
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/dir_cache_820752/xbpt_symlink_kilo_800244.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_gamma_404999\dir_record_907427\dir_hotel_928595\dir_kilo_987907\xbpt_config_sierra_576269.md
+    Display:   N:\testintegrity\dir_gamma_404999\dir_record_907427\dir_hotel_928595\dir_kilo_987907\xbpt_config_sierra_576269.md
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/dir_cache_820752/xbpt_symlink_record_114151.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_quebec_504972\xbpt_hardlink_whiskey_944822.lnk
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/dir_cache_820752/xbpt_symlink_report_958160.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_draft_196876\dir_data_379372\dir_config_156929\dir_oscar_738913\xbpt_audit_log_591381.lnk
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/dir_cache_820752/xbpt_symlink_victor_900252.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\dir_alpha_542871\dir_record_907427\xbpt_hardlink_yankee_131550.lnk
+    Display:   N:\testintegrity\dir_draft_196876\dir_alpha_542871\dir_record_907427\xbpt_hardlink_yankee_131550.lnk
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_hardlink_mike_291955.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\xbpt_hardlink_kilo_269719.lnk
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_hardlink_november_234157.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\xbpt_hardlink_yankee_518134.dat
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_hardlink_trace_449625.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\xbpt_hardlink_kilo_269719.lnk
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_sierra_papa_493652.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\xbpt_india_sierra_627062.bak
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_symlink_audit_699430.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_report_583335\dir_kilo_863699\xbpt_record_cache_677917.dat
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_symlink_draft_738221.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_november_274328\xbpt_hardlink_november_153518.lnk
+    Display:   N:\testintegrity\dir_november_274328\xbpt_hardlink_november_153518.lnk
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_symlink_romeo_261655.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_foxtrot_302916\dir_beta_758689\xbpt_symlink_gamma_997513.lnk
+    Display:   N:\testintegrity\dir_foxtrot_302916\dir_beta_758689\xbpt_symlink_gamma_997513.lnk
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_symlink_romeo_618064.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\xbpt_hardlink_yankee_518134.dat
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_symlink_tango_845857.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_index_885031\xbpt_symlink_uniform_241989.lnk
+    Display:   N:\testintegrity\dir_index_885031\xbpt_symlink_uniform_241989.lnk
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_symlink_trace_866671.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_tango_lima_804385.json
+    Display:   N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_tango_lima_804385.json
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_hardlink_hotel_299110.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\xbpt_hardlink_yankee_518134.dat
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_hardlink_india_408587.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_audit_india_294476.md
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_hardlink_november_153518.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_tango_306249\xbpt_temp_report_616624.tmp
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_symlink_config_585821.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_gamma_333765\dir_uniform_914766\xbpt_temp_echo_636607.bak
+    Display:   N:\testintegrity\dir_gamma_333765\dir_uniform_914766\xbpt_temp_echo_636607.bak
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_symlink_gamma_837222.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_whiskey_kilo_696933.md
+    Display:   N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_whiskey_kilo_696933.md
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_symlink_hotel_226146.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_backup_645744\xbpt_symlink_sync_229547.lnk
+    Display:   N:\testintegrity\dir_backup_645744\xbpt_symlink_sync_229547.lnk
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_symlink_kilo_719573.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_romeo_329630\dir_kilo_987907\xbpt_hardlink_log_676623.md
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_symlink_report_408917.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\dir_data_379372\xbpt_beta_quebec_468555.bak
+    Display:   N:\testintegrity\dir_draft_196876\dir_data_379372\xbpt_beta_quebec_468555.bak
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_symlink_sync_229547.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_backup_645744\dir_kilo_987907\xbpt_sierra_papa_493652.lnk
+    Display:   N:\testintegrity\dir_backup_645744\dir_kilo_987907\xbpt_sierra_papa_493652.lnk
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/xbpt_beta_index_476236.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\xbpt_index_victor_598659.bak
+
+  testintegrity/dir_romeo_348517/xbpt_hardlink_backup_932249.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\xbpt_uniform_quebec_364249.cfg
+
+  testintegrity/dir_romeo_348517/xbpt_quebec_config_670685.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_output_819015\xbpt_delta_hotel_266388.json
+
+  testintegrity/dir_romeo_348517/xbpt_symlink_india_621928.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\xbpt_hardlink_kilo_269719.lnk
+
+  testintegrity/dir_romeo_348517/xbpt_symlink_log_820108.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_backup_645744\dir_kilo_987907\xbpt_trace_audit_194295.json
+    Display:   N:\testintegrity\dir_backup_645744\dir_kilo_987907\xbpt_trace_audit_194295.json
+    Relative:  False
+
+  testintegrity/dir_romeo_348517/xbpt_symlink_record_315928.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_uniform_914766\xbpt_hardlink_whiskey_163996.lnk
+
+  testintegrity/dir_romeo_348517/xbpt_symlink_romeo_996165.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_november_274328\xbpt_symlink_gamma_837222.lnk
+
+  testintegrity/dir_tango_306249/xbpt_hardlink_config_304268.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_report_583335\dir_kilo_863699\xbpt_record_cache_677917.dat
+
+  testintegrity/dir_tango_306249/xbpt_symlink_audit_901343.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_gamma_404999\dir_record_907427\dir_hotel_928595\dir_india_641930\dir_cache_422839\xbpt_lima_delta_391972.ini
+    Display:   N:\testintegrity\dir_gamma_404999\dir_record_907427\dir_hotel_928595\dir_india_641930\dir_cache_422839\xbpt_lima_delta_391972.ini
+    Relative:  False
+
+  testintegrity/dir_tango_306249/xbpt_symlink_beta_724153.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\xbpt_uniform_quebec_364249.cfg
+
+  testintegrity/dir_tango_306249/xbpt_symlink_hotel_430990.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\xbpt_delta_hotel_266388.json
+    Display:   N:\testintegrity\dir_draft_196876\xbpt_delta_hotel_266388.json
+    Relative:  False
+
+  testintegrity/dir_tango_306249/xbpt_symlink_mike_445436.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_november_274328\dir_kilo_987907\xbpt_symlink_draft_738221.lnk
+    Display:   N:\testintegrity\dir_november_274328\dir_kilo_987907\xbpt_symlink_draft_738221.lnk
+    Relative:  False
+
+  testintegrity/dir_tango_306249/xbpt_symlink_victor_170478.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_victor_india_410451.bak
+
+  testintegrity/dir_tango_306249/xbpt_symlink_whiskey_434761.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_romeo_329630\xbpt_archive_zulu_999745.tmp
+    Display:   N:\testintegrity\dir_romeo_329630\xbpt_archive_zulu_999745.tmp
+    Relative:  False
+
+  testintegrity/dir_tango_306249/xbpt_tango_whiskey_542572.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_gamma_333765\xbpt_hardlink_kilo_269719.lnk
+
+  testintegrity/xbpt_data_romeo_144525.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_output_819015\xbpt_delta_hotel_266388.json
+
+  testintegrity/xbpt_hardlink_beta_861174.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testintegrity\dir_index_885031\xbpt_symlink_uniform_241989.lnk
+
+  testintegrity/xbpt_symlink_audit_371491.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\xbpt_symlink_log_820108.lnk
+    Display:   N:\testintegrity\dir_draft_196876\xbpt_symlink_log_820108.lnk
+    Relative:  False
+
+  testintegrity/xbpt_symlink_config_639262.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\dir_data_379372\xbpt_mike_gamma_283220.cfg
+    Display:   N:\testintegrity\dir_draft_196876\dir_data_379372\xbpt_mike_gamma_283220.cfg
+    Relative:  False
+
+  testintegrity/xbpt_symlink_hotel_610754.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_draft_196876\xbpt_hardlink_india_193722.bak
+    Display:   N:\testintegrity\dir_draft_196876\xbpt_hardlink_india_193722.bak
+    Relative:  False
+
+  testintegrity/xbpt_symlink_quebec_178277.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_foxtrot_lima_500310.cfg
+    Display:   N:\testintegrity\dir_gamma_333765\dir_zulu_845500\xbpt_foxtrot_lima_500310.cfg
+    Relative:  False
+
+  testintegrity/xbpt_symlink_victor_768826.lnk
+    Type:      FILE
+    Attrs:     0x8420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testintegrity\dir_gamma_404999\xbpt_symlink_oscar_222464.lnk
+    Display:   N:\testintegrity\dir_gamma_404999\xbpt_symlink_oscar_222464.lnk
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_data_161769/xbpt_hardlink_oscar_608381.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_audit_640029\xbpt_hardlink_tango_845190.ini
+
+  testspecials/dir_echo_260113/dir_data_161769/xbpt_index_audit_802623.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_lima_971506\dir_temp_947981\dir_sync_673137\xbpt_symlink_papa_769580.lnk
+
+  testspecials/dir_echo_260113/dir_data_161769/xbpt_index_kilo_420810.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_temp_947981\dir_sync_673137\xbpt_hardlink_alpha_541257.log
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_temp_947981\dir_sync_673137\xbpt_hardlink_alpha_541257.log
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_data_161769/xbpt_symlink_audit_845545.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_temp_947981\dir_papa_141573\xbpt_hardlink_archive_434411.dat
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_temp_947981\dir_papa_141573\xbpt_hardlink_archive_434411.dat
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_data_161769/xbpt_symlink_oscar_733614.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\xbpt_hardlink_romeo_125439.log
+
+  testspecials/dir_echo_260113/dir_data_161769/xbpt_symlink_sierra_101439.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\xbpt_symlink_whiskey_422331.lnk
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\xbpt_symlink_whiskey_422331.lnk
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_data_161769/xbpt_symlink_trace_487746.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_sync_469814\dir_uniform_471095\xbpt_symlink_romeo_640701.lnk
+    Display:   N:\testspecials\dir_sync_469814\dir_uniform_471095\xbpt_symlink_romeo_640701.lnk
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_data_161769/xbpt_symlink_zulu_969869.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_lima_971506\dir_record_370580\xbpt_hardlink_output_491036.md
+    Display:   N:\testspecials\dir_lima_971506\dir_record_370580\xbpt_hardlink_output_491036.md
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_data_161769/xbpt_zulu_config_772524.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_audit_640029\dir_audit_182848\xbpt_foxtrot_draft_521951.md
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/dir_draft_894936/xbpt_hardlink_uniform_216653.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\dir_config_949022\xbpt_gamma_oscar_773469.json
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/dir_draft_894936/xbpt_symlink_audit_767711.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_sierra_498195\xbpt_november_oscar_753865.bak
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_sierra_498195\xbpt_november_oscar_753865.bak
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/dir_draft_894936/xbpt_symlink_data_580569.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_alpha_948808\dir_record_370580\xbpt_data_config_998556.log
+    Display:   N:\testspecials\dir_alpha_948808\dir_record_370580\xbpt_data_config_998556.log
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/dir_draft_894936/xbpt_symlink_foxtrot_819195.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_lima_971506\dir_temp_947981\dir_papa_141573\dir_temp_742939\dir_oscar_946138\xbpt_symlink_kilo_917079.lnk
+    Display:   N:\testspecials\dir_lima_971506\dir_temp_947981\dir_papa_141573\dir_temp_742939\dir_oscar_946138\xbpt_symlink_kilo_917079.lnk
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/dir_draft_894936/xbpt_symlink_victor_953584.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\xbpt_oscar_zulu_627251.tmp
+    Display:   N:\testspecials\xbpt_oscar_zulu_627251.tmp
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_hardlink_sierra_538587.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_mike_927669\xbpt_symlink_hotel_747128.lnk
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_hardlink_tango_782497.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\xbpt_hardlink_romeo_125439.log
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_index_quebec_823563.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_foxtrot_333620\dir_audit_182848\xbpt_symlink_alpha_712574.lnk
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_symlink_beta_482392.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_audit_640029\xbpt_symlink_romeo_655979.lnk
+    Display:   N:\testspecials\dir_audit_640029\xbpt_symlink_romeo_655979.lnk
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_symlink_cache_264065.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\xbpt_symlink_backup_536569.lnk
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\xbpt_symlink_backup_536569.lnk
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_symlink_config_406534.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_temp_947981\xbpt_trace_foxtrot_950877.dat
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_temp_947981\xbpt_trace_foxtrot_950877.dat
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_symlink_config_546138.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\xbpt_symlink_audit_229662.lnk
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_symlink_kilo_195702.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_audit_640029\xbpt_november_oscar_193407.log
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_symlink_kilo_273575.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_temp_947981\dir_sierra_120452\xbpt_kilo_oscar_153529.lnk
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_temp_947981\dir_sierra_120452\xbpt_kilo_oscar_153529.lnk
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_symlink_log_172526.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_echo_260113\dir_november_183663\dir_kilo_904427\xbpt_draft_zulu_409849.ini
+    Display:   N:\testspecials\dir_echo_260113\dir_november_183663\dir_kilo_904427\xbpt_draft_zulu_409849.ini
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_symlink_output_868068.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_record_224564\dir_kilo_704584\dir_temp_947981\dir_sync_673137\xbpt_config_zulu_703042.bin
+    Display:   N:\testspecials\dir_record_224564\dir_kilo_704584\dir_temp_947981\dir_sync_673137\xbpt_config_zulu_703042.bin
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_symlink_papa_156542.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\xbpt_victor_mike_621440.xml
+    Display:   N:\testspecials\xbpt_victor_mike_621440.xml
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_symlink_record_779404.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\xbpt_symlink_uniform_191290.lnk
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_symlink_romeo_103509.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\xbpt_archive_record_237501.xml
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_symlink_sync_464280.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_archive_684726\dir_november_479233\dir_echo_253572\xbpt_oscar_log_763652.csv
+    Display:   N:\testspecials\dir_archive_684726\dir_november_479233\dir_echo_253572\xbpt_oscar_log_763652.csv
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_symlink_uniform_328763.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_lima_956636\xbpt_symlink_whiskey_836652.lnk
+    Display:   N:\testspecials\dir_lima_956636\xbpt_symlink_whiskey_836652.lnk
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/dir_delta_253532/xbpt_cache_tango_793769.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\xbpt_victor_mike_621440.xml
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/dir_delta_253532/xbpt_hardlink_sierra_560346.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\xbpt_hardlink_report_254117.bin
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/dir_delta_253532/xbpt_symlink_log_194137.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_record_370580\xbpt_symlink_sync_121160.lnk
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_record_370580\xbpt_symlink_sync_121160.lnk
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/dir_delta_253532/xbpt_symlink_romeo_710079.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\xbpt_oscar_zulu_627251.tmp
+    Display:   N:\testspecials\xbpt_oscar_zulu_627251.tmp
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/dir_delta_253532/xbpt_symlink_sierra_403306.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_record_370580\dir_papa_234045\xbpt_symlink_log_295235.lnk
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/dir_delta_253532/xbpt_symlink_sierra_709734.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_temp_947981\dir_mike_981731\xbpt_echo_beta_386853.csv
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_temp_947981\dir_mike_981731\xbpt_echo_beta_386853.csv
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/xbpt_hardlink_backup_941996.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_record_370580\dir_papa_234045\xbpt_symlink_log_295235.lnk
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/xbpt_hardlink_india_124696.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_lima_971506\dir_record_370580\xbpt_hardlink_delta_359679.lnk
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/xbpt_hardlink_lima_691126.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\dir_config_949022\xbpt_gamma_oscar_773469.json
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/xbpt_hardlink_quebec_294531.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_echo_260113\dir_november_183663\dir_kilo_904427\dir_draft_894936\xbpt_symlink_audit_767711.lnk
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/xbpt_hardlink_yankee_895795.lnk
+    Type:      FILE
+    Attrs:     0x400
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\dir_config_949022\xbpt_gamma_oscar_773469.json
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/xbpt_symlink_alpha_103893.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_lima_956636\xbpt_sierra_mike_629940.md
+    Display:   N:\testspecials\dir_lima_956636\xbpt_sierra_mike_629940.md
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/xbpt_symlink_alpha_712574.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\xbpt_echo_audit_435989.cfg
+    Display:   N:\testspecials\xbpt_echo_audit_435989.cfg
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/xbpt_symlink_audit_438573.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_beta_156345\dir_draft_894936\xbpt_hardlink_draft_529909.cfg
+    Display:   N:\testspecials\dir_beta_156345\dir_draft_894936\xbpt_hardlink_draft_529909.cfg
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/xbpt_symlink_november_194298.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_audit_890453\xbpt_symlink_trace_352938.lnk
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_audit_890453\xbpt_symlink_trace_352938.lnk
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/xbpt_symlink_report_368735.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_audit_182848\xbpt_symlink_alpha_712574.lnk
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_audit_182848\xbpt_symlink_alpha_712574.lnk
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/xbpt_symlink_report_950976.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_lima_971506\dir_temp_947981\dir_papa_141573\dir_temp_742939\dir_oscar_946138\xbpt_mike_backup_748946.lnk
+    Display:   N:\testspecials\dir_lima_971506\dir_temp_947981\dir_papa_141573\dir_temp_742939\dir_oscar_946138\xbpt_mike_backup_748946.lnk
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/xbpt_symlink_mike_484005.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\xbpt_hardlink_romeo_196672.cfg
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\xbpt_hardlink_romeo_196672.cfg
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/xbpt_symlink_report_257641.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_echo_260113\dir_november_183663\dir_yankee_438871\dir_uniform_194637\xbpt_hardlink_backup_226307.bak
+    Display:   N:\testspecials\dir_echo_260113\dir_november_183663\dir_yankee_438871\dir_uniform_194637\xbpt_hardlink_backup_226307.bak
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_november_183663/xbpt_data_lima_758791.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_lima_971506\dir_record_370580\xbpt_hardlink_delta_359679.lnk
+
+  testspecials/dir_echo_260113/dir_november_183663/xbpt_hardlink_alpha_464736.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\xbpt_hardlink_cache_606636.cfg
+
+  testspecials/dir_echo_260113/dir_november_183663/xbpt_symlink_beta_192083.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_romeo_413583\dir_kilo_704584\dir_audit_890453\xbpt_symlink_trace_352938.lnk
+    Display:   N:\testspecials\dir_romeo_413583\dir_kilo_704584\dir_audit_890453\xbpt_symlink_trace_352938.lnk
+    Relative:  False
+
+  testspecials/dir_echo_260113/dir_november_183663/xbpt_symlink_hotel_835708.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_echo_260113\dir_november_183663\dir_kilo_904427\dir_draft_894936\xbpt_symlink_audit_767711.lnk
+
+  testspecials/dir_echo_260113/dir_november_183663/xbpt_symlink_trace_248534.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_audit_570908\xbpt_hardlink_oscar_427072.lnk
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_audit_570908\xbpt_hardlink_oscar_427072.lnk
+    Relative:  False
+
+  testspecials/dir_echo_260113/xbpt_data_backup_840746.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_mike_927669\xbpt_symlink_hotel_747128.lnk
+
+  testspecials/dir_echo_260113/xbpt_hardlink_index_782968.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_audit_640029\dir_audit_182848\xbpt_hardlink_archive_898207.txt
+
+  testspecials/dir_echo_260113/xbpt_hardlink_india_723262.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\xbpt_backup_backup_285884.cfg
+
+  testspecials/dir_echo_260113/xbpt_hardlink_whiskey_488330.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_foxtrot_333620\dir_audit_182848\xbpt_symlink_alpha_712574.lnk
+
+  testspecials/dir_echo_260113/xbpt_hardlink_whiskey_772507.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\dir_november_479233\xbpt_symlink_lima_661552.lnk
+
+  testspecials/dir_echo_260113/xbpt_symlink_alpha_523983.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_lima_971506\dir_record_370580\xbpt_hardlink_delta_359679.lnk
+    Display:   N:\testspecials\dir_lima_971506\dir_record_370580\xbpt_hardlink_delta_359679.lnk
+    Relative:  False
+
+  testspecials/dir_echo_260113/xbpt_symlink_gamma_624637.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\xbpt_victor_mike_621440.xml
+
+  testspecials/dir_echo_260113/xbpt_symlink_india_127143.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_echo_260113\dir_november_183663\dir_kilo_904427\xbpt_symlink_sync_464280.lnk
+    Display:   N:\testspecials\dir_echo_260113\dir_november_183663\dir_kilo_904427\xbpt_symlink_sync_464280.lnk
+    Relative:  False
+
+  testspecials/dir_echo_260113/xbpt_symlink_log_832496.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_mike_420327\xbpt_hardlink_tango_580634.log
+    Display:   N:\testspecials\dir_mike_420327\xbpt_hardlink_tango_580634.log
+    Relative:  False
+
+  testspecials/dir_echo_260113/xbpt_symlink_output_917945.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_audit_640029\dir_audit_182848\xbpt_alpha_data_475819.csv
+    Display:   N:\testspecials\dir_audit_640029\dir_audit_182848\xbpt_alpha_data_475819.csv
+    Relative:  False
+
+  testspecials/dir_echo_260113/xbpt_symlink_quebec_908754.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_record_224564\dir_kilo_704584\dir_index_989425\xbpt_papa_gamma_940756.xml
+    Display:   N:\testspecials\dir_record_224564\dir_kilo_704584\dir_index_989425\xbpt_papa_gamma_940756.xml
+    Relative:  False
+
+  testspecials/dir_echo_260113/xbpt_symlink_romeo_364451.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_romeo_413583\dir_kilo_704584\dir_record_370580\xbpt_symlink_sync_121160.lnk
+    Display:   N:\testspecials\dir_romeo_413583\dir_kilo_704584\dir_record_370580\xbpt_symlink_sync_121160.lnk
+    Relative:  False
+
+  testspecials/dir_mike_420327/dir_backup_585572/xbpt_symlink_output_811700.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_echo_260113\dir_november_183663\dir_yankee_438871\dir_uniform_194637\xbpt_hardlink_archive_898207.txt
+    Display:   N:\testspecials\dir_echo_260113\dir_november_183663\dir_yankee_438871\dir_uniform_194637\xbpt_hardlink_archive_898207.txt
+    Relative:  False
+
+  testspecials/dir_mike_420327/dir_backup_585572/xbpt_symlink_report_175554.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\xbpt_symlink_alpha_368046.lnk
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\xbpt_symlink_alpha_368046.lnk
+    Relative:  False
+
+  testspecials/dir_mike_420327/dir_backup_585572/xbpt_symlink_sierra_429609.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_foxtrot_416899\dir_papa_331610\xbpt_beta_sync_210406.log
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_foxtrot_416899\dir_papa_331610\xbpt_beta_sync_210406.log
+    Relative:  False
+
+  testspecials/dir_mike_420327/dir_sierra_646867/xbpt_hardlink_alpha_535298.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_lima_971506\dir_temp_947981\dir_sync_673137\xbpt_symlink_romeo_153764.lnk
+
+  testspecials/dir_mike_420327/dir_sierra_646867/xbpt_symlink_log_463588.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_foxtrot_416899\xbpt_gamma_india_998655.txt
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_foxtrot_416899\xbpt_gamma_india_998655.txt
+    Relative:  False
+
+  testspecials/dir_mike_420327/dir_sierra_646867/xbpt_symlink_tango_611211.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_romeo_413583\dir_kilo_704584\dir_audit_890453\dir_report_815374\xbpt_hardlink_delta_938488.lnk
+    Display:   N:\testspecials\dir_romeo_413583\dir_kilo_704584\dir_audit_890453\dir_report_815374\xbpt_hardlink_delta_938488.lnk
+    Relative:  False
+
+  testspecials/dir_mike_420327/xbpt_symlink_data_899702.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_romeo_413583\dir_kilo_704584\dir_audit_890453\dir_report_815374\dir_config_105863\dir_victor_557108\xbpt_audit_beta_288370.bak
+    Display:   N:\testspecials\dir_romeo_413583\dir_kilo_704584\dir_audit_890453\dir_report_815374\dir_config_105863\dir_victor_557108\xbpt_audit_beta_288370.bak
+    Relative:  False
+
+  testspecials/dir_mike_420327/xbpt_symlink_hotel_747128.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_lima_971506\xbpt_hotel_echo_893421.bak
+    Display:   N:\testspecials\dir_lima_971506\xbpt_hotel_echo_893421.bak
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_audit_570908/dir_data_224525/xbpt_symlink_data_222179.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\xbpt_symlink_report_973327.lnk
+    Display:   N:\testspecials\xbpt_symlink_report_973327.lnk
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_audit_570908/dir_data_224525/xbpt_symlink_foxtrot_551291.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_romeo_413583\dir_kilo_704584\xbpt_delta_alpha_671390.log
+    Display:   N:\testspecials\dir_romeo_413583\dir_kilo_704584\xbpt_delta_alpha_671390.log
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_audit_570908/dir_data_224525/xbpt_symlink_sierra_549968.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_record_224564\dir_kilo_704584\dir_report_123351\xbpt_sync_zulu_909804.cfg
+    Display:   N:\testspecials\dir_record_224564\dir_kilo_704584\dir_report_123351\xbpt_sync_zulu_909804.cfg
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_audit_570908/dir_quebec_863524/xbpt_hardlink_zulu_150616.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_alpha_948808\xbpt_symlink_kilo_516699.lnk
+
+  testspecials/dir_romeo_413583/dir_audit_570908/dir_quebec_863524/xbpt_symlink_draft_980445.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_record_370580\dir_november_850849\xbpt_hardlink_cache_542871.txt
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_record_370580\dir_november_850849\xbpt_hardlink_cache_542871.txt
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_audit_570908/dir_quebec_863524/xbpt_symlink_kilo_843440.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_echo_260113\dir_november_183663\dir_kilo_904427\xbpt_symlink_record_779404.lnk
+    Display:   N:\testspecials\dir_echo_260113\dir_november_183663\dir_kilo_904427\xbpt_symlink_record_779404.lnk
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_audit_570908/xbpt_hardlink_oscar_427072.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_mike_927669\xbpt_symlink_hotel_747128.lnk
+
+  testspecials/dir_romeo_413583/dir_audit_570908/xbpt_symlink_archive_929971.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_report_123351\xbpt_hardlink_foxtrot_760624.lnk
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_report_123351\xbpt_hardlink_foxtrot_760624.lnk
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_audit_570908/xbpt_symlink_victor_140323.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_temp_947981\dir_papa_141573\dir_temp_742939\dir_gamma_421188\dir_uniform_641683\dir_echo_253572\xbpt_hardlink_kilo_305140.xml
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_temp_947981\dir_papa_141573\dir_temp_742939\dir_gamma_421188\dir_uniform_641683\dir_echo_253572\xbpt_hardlink_kilo_305140.xml
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_audit_570908/xbpt_symlink_zulu_520629.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_echo_260113\dir_november_183663\dir_kilo_904427\xbpt_symlink_sync_464280.lnk
+    Display:   N:\testspecials\dir_echo_260113\dir_november_183663\dir_kilo_904427\xbpt_symlink_sync_464280.lnk
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_cache_513598/dir_mike_138725/xbpt_symlink_zulu_544994.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_report_123351\xbpt_symlink_tango_964419.lnk
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_report_123351\xbpt_symlink_tango_964419.lnk
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_cache_513598/xbpt_symlink_kilo_550557.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_audit_182848\xbpt_symlink_alpha_712574.lnk
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_audit_182848\xbpt_symlink_alpha_712574.lnk
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_cache_513598/xbpt_symlink_output_551694.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_uniform_240945\xbpt_symlink_tango_904910.lnk
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_uniform_240945\xbpt_symlink_tango_904910.lnk
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_cache_513598/xbpt_symlink_quebec_383756.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_lima_971506\dir_temp_947981\dir_papa_141573\dir_temp_742939\dir_zulu_992329\xbpt_hardlink_whiskey_429484.dat
+    Display:   N:\testspecials\dir_lima_971506\dir_temp_947981\dir_papa_141573\dir_temp_742939\dir_zulu_992329\xbpt_hardlink_whiskey_429484.dat
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_cache_513598/xbpt_symlink_record_501091.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\xbpt_hardlink_romeo_125439.log
+    Display:   N:\testspecials\xbpt_hardlink_romeo_125439.log
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_cache_513598/xbpt_symlink_romeo_640701.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_record_370580\xbpt_hardlink_output_491036.md
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_record_370580\xbpt_hardlink_output_491036.md
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_cache_513598/xbpt_symlink_tango_897488.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_echo_260113\dir_data_161769\xbpt_symlink_oscar_733614.lnk
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_cache_513598/xbpt_whiskey_zulu_566078.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\dir_november_479233\dir_echo_253572\xbpt_symlink_uniform_120393.lnk
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/dir_config_105863/dir_backup_805530/xbpt_symlink_config_751621.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_lima_956636\xbpt_hardlink_archive_353087.xml
+    Display:   N:\testspecials\dir_lima_956636\xbpt_hardlink_archive_353087.xml
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/dir_config_105863/xbpt_symlink_cache_297230.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_echo_260113\dir_november_183663\dir_kilo_904427\xbpt_hardlink_sync_621989.txt
+    Display:   N:\testspecials\dir_echo_260113\dir_november_183663\dir_kilo_904427\xbpt_hardlink_sync_621989.txt
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/dir_config_105863/xbpt_symlink_config_599584.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_audit_182848\xbpt_symlink_report_368735.lnk
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_audit_182848\xbpt_symlink_report_368735.lnk
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/dir_papa_331610/xbpt_hardlink_beta_853034.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_echo_260113\dir_data_161769\xbpt_symlink_oscar_733614.lnk
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/dir_papa_331610/xbpt_symlink_audit_581274.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_lima_971506\xbpt_symlink_backup_536569.lnk
+    Display:   N:\testspecials\dir_lima_971506\xbpt_symlink_backup_536569.lnk
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_hardlink_delta_938488.lnk
+    Type:      FILE
+    Attrs:     0x400
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\dir_config_949022\xbpt_gamma_oscar_773469.json
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_symlink_november_206311.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_alpha_948808\xbpt_hardlink_romeo_974385.lnk
+    Display:   N:\testspecials\dir_alpha_948808\xbpt_hardlink_romeo_974385.lnk
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_symlink_sierra_641156.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_temp_947981\dir_papa_141573\dir_temp_742939\xbpt_audit_sierra_615632.lnk
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_temp_947981\dir_papa_141573\dir_temp_742939\xbpt_audit_sierra_615632.lnk
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_symlink_trace_129311.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\xbpt_romeo_november_390172.xml
+    Display:   N:\testspecials\xbpt_romeo_november_390172.xml
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_symlink_uniform_846496.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_sierra_498195\xbpt_whiskey_victor_944587.cfg
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_sierra_498195\xbpt_whiskey_victor_944587.cfg
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_symlink_victor_694702.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_record_370580\xbpt_hardlink_mike_468165.csv
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_record_370580\xbpt_hardlink_mike_468165.csv
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_symlink_whiskey_836652.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_audit_640029\xbpt_hardlink_backup_642335.log
+    Display:   N:\testspecials\dir_audit_640029\xbpt_hardlink_backup_642335.log
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_symlink_zulu_529246.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_lima_971506\dir_temp_947981\dir_papa_141573\dir_temp_742939\xbpt_quebec_index_959677.ini
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_whiskey_117133/xbpt_hardlink_data_942710.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\xbpt_index_beta_458108.bin
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_whiskey_117133/xbpt_symlink_audit_917511.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_temp_947981\dir_papa_141573\dir_temp_742939\dir_zulu_992329\xbpt_hardlink_whiskey_429484.dat
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/xbpt_hardlink_hotel_123880.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_lima_956636\xbpt_index_kilo_795802.md
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/xbpt_hardlink_victor_283224.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\xbpt_symlink_audit_229662.lnk
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/xbpt_symlink_record_206894.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_echo_260113\dir_november_183663\dir_kilo_904427\xbpt_hardlink_tango_782497.lnk
+    Display:   N:\testspecials\dir_echo_260113\dir_november_183663\dir_kilo_904427\xbpt_hardlink_tango_782497.lnk
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/xbpt_symlink_trace_352938.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_temp_947981\dir_papa_141573\xbpt_hotel_backup_235558.xml
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_temp_947981\dir_papa_141573\xbpt_hotel_backup_235558.xml
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_index_989425/xbpt_hardlink_whiskey_941698.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\xbpt_symlink_uniform_920282.lnk
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_index_989425/xbpt_symlink_mike_637141.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_romeo_413583\dir_kilo_704584\dir_temp_947981\dir_sync_673137\xbpt_symlink_papa_769580.lnk
+    Display:   N:\testspecials\dir_romeo_413583\dir_kilo_704584\dir_temp_947981\dir_sync_673137\xbpt_symlink_papa_769580.lnk
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_record_370580/dir_november_850849/xbpt_symlink_draft_313132.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_lima_971506\dir_temp_947981\dir_sierra_120452\xbpt_hardlink_beta_122688.bin
+    Display:   N:\testspecials\dir_lima_971506\dir_temp_947981\dir_sierra_120452\xbpt_hardlink_beta_122688.bin
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_record_370580/dir_november_850849/xbpt_symlink_zulu_947795.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_lima_956636\xbpt_index_kilo_795802.md
+    Display:   N:\testspecials\dir_lima_956636\xbpt_index_kilo_795802.md
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_record_370580/dir_papa_234045/xbpt_symlink_log_295235.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_lima_971506\dir_temp_947981\dir_mike_981731\xbpt_papa_config_471300.cfg
+    Display:   N:\testspecials\dir_lima_971506\dir_temp_947981\dir_mike_981731\xbpt_papa_config_471300.cfg
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_record_370580/xbpt_hardlink_delta_359679.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\xbpt_victor_mike_621440.xml
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_record_370580/xbpt_symlink_echo_361962.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_echo_260113\dir_november_183663\dir_record_577164\xbpt_tango_hotel_747257.cfg
+    Display:   N:\testspecials\dir_echo_260113\dir_november_183663\dir_record_577164\xbpt_tango_hotel_747257.cfg
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_record_370580/xbpt_symlink_gamma_700031.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_foxtrot_416899\xbpt_hardlink_data_733507.log
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_foxtrot_416899\xbpt_hardlink_data_733507.log
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_record_370580/xbpt_symlink_log_495479.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_mike_927669\xbpt_hardlink_romeo_520215.json
+    Display:   N:\testspecials\dir_mike_927669\xbpt_hardlink_romeo_520215.json
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_record_370580/xbpt_symlink_sync_121160.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\xbpt_hardlink_log_697310.log
+    Display:   N:\testspecials\xbpt_hardlink_log_697310.log
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_record_370580/xbpt_symlink_sync_706535.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_audit_640029\dir_audit_182848\xbpt_hardlink_archive_898207.txt
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_record_370580/xbpt_symlink_trace_964692.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_alpha_948808\xbpt_symlink_kilo_516699.lnk
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_record_370580/xbpt_symlink_victor_617552.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_temp_947981\dir_papa_141573\dir_temp_742939\dir_gamma_421188\dir_uniform_641683\dir_echo_253572\xbpt_oscar_log_763652.csv
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_temp_947981\dir_papa_141573\dir_temp_742939\dir_gamma_421188\dir_uniform_641683\dir_echo_253572\xbpt_oscar_log_763652.csv
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_record_370580/xbpt_symlink_whiskey_626552.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_lima_971506\dir_temp_947981\dir_sync_673137\xbpt_symlink_papa_769580.lnk
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_report_123351/dir_oscar_170028/xbpt_symlink_draft_732119.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_lima_971506\dir_temp_947981\dir_sync_673137\xbpt_symlink_romeo_153764.lnk
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_report_123351/xbpt_hardlink_foxtrot_760624.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\dir_november_479233\xbpt_echo_india_632713.json
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_report_123351/xbpt_hardlink_trace_562457.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\dir_november_479233\dir_echo_253572\xbpt_symlink_uniform_120393.lnk
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_report_123351/xbpt_symlink_config_769065.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\xbpt_backup_backup_285884.cfg
+    Display:   N:\testspecials\xbpt_backup_backup_285884.cfg
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_report_123351/xbpt_symlink_kilo_456028.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_echo_260113\dir_november_183663\dir_yankee_438871\dir_uniform_194637\xbpt_hardlink_yankee_895795.lnk
+    Display:   N:\testspecials\dir_echo_260113\dir_november_183663\dir_yankee_438871\dir_uniform_194637\xbpt_hardlink_yankee_895795.lnk
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_report_123351/xbpt_symlink_record_856758.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_beta_156345\xbpt_tango_hotel_747257.cfg
+    Display:   N:\testspecials\dir_beta_156345\xbpt_tango_hotel_747257.cfg
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_report_123351/xbpt_symlink_tango_915252.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_audit_640029\dir_uniform_240945\xbpt_delta_papa_351225.lnk
+    Display:   N:\testspecials\dir_audit_640029\dir_uniform_240945\xbpt_delta_papa_351225.lnk
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_report_123351/xbpt_symlink_tango_964419.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_zulu_659199\xbpt_symlink_november_331752.lnk
+    Display:   N:\testspecials\dir_zulu_659199\xbpt_symlink_november_331752.lnk
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_mike_981731/xbpt_hardlink_romeo_765214.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\dir_config_949022\xbpt_symlink_kilo_195702.lnk
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_mike_981731/xbpt_symlink_foxtrot_666033.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_lima_956636\xbpt_index_kilo_795802.md
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_mike_981731/xbpt_symlink_papa_171271.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\xbpt_index_temp_559712.cfg
+    Display:   N:\testspecials\xbpt_index_temp_559712.cfg
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_mike_981731/xbpt_symlink_record_104230.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_beta_156345\xbpt_hardlink_kilo_974260.md
+    Display:   N:\testspecials\dir_beta_156345\xbpt_hardlink_kilo_974260.md
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_mike_981731/xbpt_symlink_sierra_276165.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_audit_640029\xbpt_hardlink_tango_845190.ini
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_mike_981731/xbpt_symlink_uniform_428106.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_zulu_659199\xbpt_hardlink_backup_371800.dat
+    Display:   N:\testspecials\dir_zulu_659199\xbpt_hardlink_backup_371800.dat
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_mike_981731/xbpt_symlink_zulu_569849.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_lima_971506\dir_temp_947981\dir_sync_673137\xbpt_romeo_audit_523486.lnk
+    Display:   N:\testspecials\dir_lima_971506\dir_temp_947981\dir_sync_673137\xbpt_romeo_audit_523486.lnk
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_cache_983199/xbpt_archive_delta_243160.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_audit_640029\xbpt_november_oscar_193407.log
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_cache_983199/xbpt_hardlink_tango_262790.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_alpha_948808\xbpt_hardlink_log_326970.lnk
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_cache_983199/xbpt_symlink_echo_341188.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\xbpt_backup_backup_285884.cfg
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_gamma_421188/dir_uniform_641683/dir_echo_253572/xbpt_symlink_uniform_120393.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_papa_986752\dir_temp_947981\xbpt_yankee_hotel_977615.json
+    Display:   N:\testspecials\dir_papa_986752\dir_temp_947981\xbpt_yankee_hotel_977615.json
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_gamma_421188/dir_uniform_641683/xbpt_hardlink_log_117322.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_audit_640029\xbpt_quebec_victor_195703.tmp
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_gamma_421188/dir_uniform_641683/xbpt_hardlink_mike_218738.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\xbpt_archive_record_237501.xml
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_gamma_421188/dir_uniform_641683/xbpt_symlink_lima_661552.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\xbpt_index_beta_458108.bin
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_gamma_421188/dir_uniform_641683/xbpt_symlink_mike_217041.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\xbpt_hardlink_cache_606636.cfg
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_gamma_421188/dir_uniform_641683/xbpt_symlink_whiskey_800920.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\dir_november_479233\xbpt_echo_india_632713.json
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_gamma_421188/dir_uniform_641683/xbpt_victor_quebec_674393.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_zulu_659199\xbpt_symlink_beta_482392.lnk
+    Display:   N:\testspecials\dir_zulu_659199\xbpt_symlink_beta_482392.lnk
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_gamma_421188/xbpt_symlink_config_477397.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\xbpt_oscar_zulu_627251.tmp
+    Display:   N:\testspecials\xbpt_oscar_zulu_627251.tmp
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_oscar_946138/dir_gamma_942515/xbpt_hardlink_india_341668.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_audit_640029\xbpt_quebec_victor_195703.tmp
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_oscar_946138/dir_gamma_942515/xbpt_hardlink_kilo_480110.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\dir_config_949022\xbpt_gamma_oscar_773469.json
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_oscar_946138/dir_gamma_942515/xbpt_hardlink_yankee_397939.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_alpha_948808\dir_temp_947981\dir_beta_436302\xbpt_symlink_uniform_428106.lnk
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_oscar_946138/dir_gamma_942515/xbpt_symlink_hotel_221042.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\dir_config_949022\xbpt_symlink_kilo_195702.lnk
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_oscar_946138/xbpt_symlink_archive_938076.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\dir_gamma_421188\dir_uniform_641683\dir_echo_253572\xbpt_hardlink_mike_998837.log
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_oscar_946138/xbpt_symlink_kilo_917079.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_archive_684726\xbpt_quebec_index_959677.ini
+    Display:   N:\testspecials\dir_archive_684726\xbpt_quebec_index_959677.ini
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_zulu_992329/xbpt_symlink_victor_897277.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_alpha_948808\dir_report_123351\xbpt_hardlink_alpha_225373.cfg
+    Display:   N:\testspecials\dir_alpha_948808\dir_report_123351\xbpt_hardlink_alpha_225373.cfg
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/xbpt_symlink_november_553756.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_alpha_948808\dir_temp_947981\dir_beta_436302\xbpt_symlink_uniform_428106.lnk
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/xbpt_symlink_uniform_952278.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_audit_640029\xbpt_archive_tango_907454.txt
+    Display:   N:\testspecials\dir_audit_640029\xbpt_archive_tango_907454.txt
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/xbpt_sync_beta_671514.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\xbpt_index_temp_559712.cfg
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/xbpt_hardlink_oscar_778425.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\dir_november_479233\xbpt_symlink_lima_661552.lnk
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/xbpt_symlink_mike_235224.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_alpha_948808\xbpt_hardlink_log_326970.lnk
+    Display:   N:\testspecials\dir_alpha_948808\xbpt_hardlink_log_326970.lnk
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_sierra_120452/xbpt_kilo_oscar_153529.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_audit_640029\xbpt_november_oscar_193407.log
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_sierra_120452/xbpt_symlink_cache_974131.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\dir_november_479233\xbpt_symlink_whiskey_800920.lnk
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_sierra_120452/xbpt_symlink_delta_888438.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\xbpt_hardlink_tango_460823.xml
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_sierra_120452/xbpt_symlink_index_239844.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_lima_956636\xbpt_record_lima_304830.dat
+    Display:   N:\testspecials\dir_lima_956636\xbpt_record_lima_304830.dat
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_sync_673137/xbpt_archive_alpha_419594.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_beta_156345\xbpt_symlink_romeo_936648.lnk
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_sync_673137/xbpt_symlink_papa_769580.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_alpha_948808\dir_temp_947981\xbpt_yankee_hotel_977615.json
+    Display:   N:\testspecials\dir_alpha_948808\dir_temp_947981\xbpt_yankee_hotel_977615.json
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_sync_673137/xbpt_symlink_record_285383.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_alpha_948808\dir_temp_947981\dir_papa_141573\dir_temp_742939\dir_oscar_946138\dir_gamma_942515\xbpt_hardlink_india_341668.lnk
+    Display:   N:\testspecials\dir_alpha_948808\dir_temp_947981\dir_papa_141573\dir_temp_742939\dir_oscar_946138\dir_gamma_942515\xbpt_hardlink_india_341668.lnk
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_sync_673137/xbpt_symlink_romeo_153764.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_beta_156345\xbpt_symlink_november_331752.lnk
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_sync_673137/xbpt_symlink_sierra_281294.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_alpha_948808\xbpt_gamma_data_115091.json
+    Display:   N:\testspecials\dir_alpha_948808\xbpt_gamma_data_115091.json
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_sync_673137/xbpt_symlink_yankee_437857.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_mike_927669\dir_romeo_702955\xbpt_symlink_record_501091.lnk
+    Display:   N:\testspecials\dir_mike_927669\dir_romeo_702955\xbpt_symlink_record_501091.lnk
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/xbpt_hardlink_backup_461389.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\dir_november_479233\xbpt_symlink_lima_661552.lnk
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/xbpt_hardlink_gamma_267481.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\xbpt_index_beta_458108.bin
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/xbpt_papa_index_753175.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_audit_640029\xbpt_quebec_victor_195703.tmp
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/xbpt_symlink_alpha_285257.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_audit_640029\dir_uniform_240945\xbpt_symlink_zulu_108286.lnk
+    Display:   N:\testspecials\dir_audit_640029\dir_uniform_240945\xbpt_symlink_zulu_108286.lnk
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/xbpt_symlink_cache_188086.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_audit_640029\xbpt_hardlink_backup_642335.log
+    Display:   N:\testspecials\dir_audit_640029\xbpt_hardlink_backup_642335.log
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/xbpt_symlink_draft_445858.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_audit_182848\dir_delta_253532\xbpt_hardlink_index_847909.txt
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_audit_182848\dir_delta_253532\xbpt_hardlink_index_847909.txt
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/xbpt_symlink_echo_644883.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_audit_640029\dir_audit_182848\xbpt_foxtrot_draft_521951.md
+    Display:   N:\testspecials\dir_audit_640029\dir_audit_182848\xbpt_foxtrot_draft_521951.md
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/xbpt_symlink_foxtrot_159862.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\xbpt_hardlink_log_697310.log
+    Display:   N:\testspecials\xbpt_hardlink_log_697310.log
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/xbpt_symlink_output_941336.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_audit_640029\dir_audit_182848\xbpt_romeo_backup_498646.log
+    Display:   N:\testspecials\dir_audit_640029\dir_audit_182848\xbpt_romeo_backup_498646.log
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_hardlink_draft_262681.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\dir_november_479233\xbpt_symlink_whiskey_800920.lnk
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_hardlink_romeo_974385.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\dir_config_949022\xbpt_gamma_oscar_773469.json
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_symlink_alpha_368046.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_record_370580\dir_november_850849\xbpt_oscar_temp_699653.ini
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_record_370580\dir_november_850849\xbpt_oscar_temp_699653.ini
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_symlink_backup_536569.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\xbpt_backup_backup_285884.cfg
+    Display:   N:\testspecials\xbpt_backup_backup_285884.cfg
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_symlink_beta_320362.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\xbpt_romeo_november_390172.xml
+    Display:   N:\testspecials\xbpt_romeo_november_390172.xml
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_symlink_hotel_838293.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_romeo_413583\dir_audit_570908\dir_data_224525\xbpt_audit_whiskey_287186.log
+    Display:   N:\testspecials\dir_romeo_413583\dir_audit_570908\dir_data_224525\xbpt_audit_whiskey_287186.log
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_symlink_kilo_516699.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_archive_684726\xbpt_hardlink_cache_606636.cfg
+    Display:   N:\testspecials\dir_archive_684726\xbpt_hardlink_cache_606636.cfg
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_symlink_output_836054.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_romeo_413583\dir_kilo_704584\xbpt_symlink_beta_320362.lnk
+    Display:   N:\testspecials\dir_romeo_413583\dir_kilo_704584\xbpt_symlink_beta_320362.lnk
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_symlink_record_262426.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\dir_november_479233\xbpt_symlink_lima_661552.lnk
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_symlink_temp_803950.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_alpha_948808\xbpt_hardlink_log_326970.lnk
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_symlink_whiskey_422331.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_papa_986752\dir_temp_947981\dir_record_735556\xbpt_output_backup_280641.txt
+    Display:   N:\testspecials\dir_papa_986752\dir_temp_947981\dir_record_735556\xbpt_output_backup_280641.txt
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_symlink_zulu_785869.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\xbpt_hardlink_report_254117.bin
+
+  testspecials/dir_romeo_413583/dir_sync_209686/xbpt_delta_papa_351225.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_alpha_948808\dir_temp_947981\dir_papa_141573\dir_temp_742939\dir_gamma_421188\dir_uniform_641683\xbpt_hardlink_index_250732.log
+
+  testspecials/dir_romeo_413583/dir_sync_209686/xbpt_hardlink_archive_968661.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_audit_640029\xbpt_symlink_romeo_655979.lnk
+
+  testspecials/dir_romeo_413583/dir_sync_209686/xbpt_hardlink_delta_599121.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\dir_config_949022\xbpt_gamma_oscar_773469.json
+
+  testspecials/dir_romeo_413583/dir_sync_209686/xbpt_hardlink_papa_554391.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_beta_156345\xbpt_symlink_november_331752.lnk
+
+  testspecials/dir_romeo_413583/dir_sync_209686/xbpt_hardlink_romeo_921263.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_lima_971506\dir_temp_947981\dir_papa_141573\dir_temp_742939\xbpt_quebec_index_959677.ini
+
+  testspecials/dir_romeo_413583/dir_sync_209686/xbpt_symlink_cache_469989.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_romeo_413583\dir_sync_209686\xbpt_symlink_cache_472861.lnk
+    Display:   N:\testspecials\dir_romeo_413583\dir_sync_209686\xbpt_symlink_cache_472861.lnk
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_sync_209686/xbpt_symlink_cache_472861.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_temp_947981\dir_mike_981731\xbpt_backup_draft_219617.md
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_temp_947981\dir_mike_981731\xbpt_backup_draft_219617.md
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_sync_209686/xbpt_symlink_delta_507251.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_romeo_413583\dir_oscar_261999\dir_whiskey_476957\xbpt_mike_oscar_822610.cfg
+    Display:   N:\testspecials\dir_romeo_413583\dir_oscar_261999\dir_whiskey_476957\xbpt_mike_oscar_822610.cfg
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_sync_209686/xbpt_symlink_mike_735170.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\xbpt_symlink_uniform_920282.lnk
+
+  testspecials/dir_romeo_413583/dir_sync_209686/xbpt_symlink_quebec_866630.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_temp_947981\dir_papa_141573\dir_temp_742939\dir_oscar_946138\dir_gamma_942515\xbpt_hardlink_draft_890844.cfg
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_temp_947981\dir_papa_141573\dir_temp_742939\dir_oscar_946138\dir_gamma_942515\xbpt_hardlink_draft_890844.cfg
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_sync_209686/xbpt_symlink_tango_904910.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\xbpt_index_temp_559712.cfg
+    Display:   N:\testspecials\xbpt_index_temp_559712.cfg
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_sync_209686/xbpt_symlink_yankee_510780.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_romeo_413583\dir_kilo_704584\dir_index_989425\xbpt_echo_yankee_322941.dat
+    Display:   N:\testspecials\dir_romeo_413583\dir_kilo_704584\dir_index_989425\xbpt_echo_yankee_322941.dat
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_sync_209686/xbpt_symlink_zulu_108286.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_beta_156345\xbpt_draft_delta_690575.dat
+    Display:   N:\testspecials\dir_beta_156345\xbpt_draft_delta_690575.dat
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_tango_685681/xbpt_symlink_echo_390096.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_romeo_413583\dir_sync_209686\xbpt_symlink_tango_904910.lnk
+    Display:   N:\testspecials\dir_romeo_413583\dir_sync_209686\xbpt_symlink_tango_904910.lnk
+    Relative:  False
+
+  testspecials/dir_romeo_413583/dir_uniform_134923/xbpt_symlink_report_936926.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_echo_260113\dir_november_183663\dir_record_577164\xbpt_yankee_record_478613.cfg
+    Display:   N:\testspecials\dir_echo_260113\dir_november_183663\dir_record_577164\xbpt_yankee_record_478613.cfg
+    Relative:  False
+
+  testspecials/dir_romeo_413583/xbpt_hardlink_beta_369805.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\dir_gamma_421188\dir_uniform_641683\dir_echo_253572\xbpt_hardlink_mike_998837.log
+
+  testspecials/dir_romeo_413583/xbpt_hardlink_india_170138.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_foxtrot_333620\dir_kilo_704584\dir_temp_947981\dir_papa_141573\dir_temp_742939\dir_zulu_992329\xbpt_hardlink_whiskey_429484.dat
+
+  testspecials/dir_romeo_413583/xbpt_symlink_delta_390131.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_alpha_948808\dir_temp_947981\dir_papa_141573\dir_temp_742939\dir_gamma_421188\dir_uniform_641683\xbpt_hardlink_log_899492.cfg
+    Display:   N:\testspecials\dir_alpha_948808\dir_temp_947981\dir_papa_141573\dir_temp_742939\dir_gamma_421188\dir_uniform_641683\xbpt_hardlink_log_899492.cfg
+    Relative:  False
+
+  testspecials/dir_romeo_413583/xbpt_symlink_romeo_655979.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_audit_640029\xbpt_symlink_sierra_208965.lnk
+    Display:   N:\testspecials\dir_audit_640029\xbpt_symlink_sierra_208965.lnk
+    Relative:  False
+
+  testspecials/dir_romeo_413583/xbpt_symlink_sierra_208965.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_archive_684726\dir_config_949022\dir_victor_453966\xbpt_delta_alpha_671390.log
+    Display:   N:\testspecials\dir_archive_684726\dir_config_949022\dir_victor_453966\xbpt_delta_alpha_671390.log
+    Relative:  False
+
+  testspecials/xbpt_hardlink_index_242723.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\xbpt_hardlink_tango_460823.xml
+
+  testspecials/xbpt_hardlink_lima_786133.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_audit_640029\xbpt_november_oscar_193407.log
+
+  testspecials/xbpt_hardlink_papa_264681.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_audit_640029\xbpt_quebec_victor_195703.tmp
+
+  testspecials/xbpt_hardlink_zulu_840476.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\xbpt_symlink_uniform_191290.lnk
+
+  testspecials/xbpt_symlink_archive_691137.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_echo_260113\dir_data_161769\xbpt_zulu_zulu_466281.ini
+    Display:   N:\testspecials\dir_echo_260113\dir_data_161769\xbpt_zulu_zulu_466281.ini
+    Relative:  False
+
+  testspecials/xbpt_symlink_audit_229662.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_audit_640029\xbpt_symlink_romeo_655979.lnk
+
+  testspecials/xbpt_symlink_backup_532113.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_audit_640029\dir_uniform_240945\xbpt_symlink_tango_904910.lnk
+    Display:   N:\testspecials\dir_audit_640029\dir_uniform_240945\xbpt_symlink_tango_904910.lnk
+    Relative:  False
+
+  testspecials/xbpt_symlink_index_967293.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    N:\testspecials\dir_archive_684726\dir_config_949022\xbpt_gamma_oscar_773469.json
+
+  testspecials/xbpt_symlink_log_401657.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_333620\dir_audit_182848\dir_delta_253532\xbpt_symlink_sierra_403306.lnk
+    Display:   N:\testspecials\dir_foxtrot_333620\dir_audit_182848\dir_delta_253532\xbpt_symlink_sierra_403306.lnk
+    Relative:  False
+
+  testspecials/xbpt_symlink_report_973327.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_archive_684726\dir_gamma_421188\dir_uniform_641683\xbpt_beta_sierra_717306.cfg
+    Display:   N:\testspecials\dir_archive_684726\dir_gamma_421188\dir_uniform_641683\xbpt_beta_sierra_717306.cfg
+    Relative:  False
+
+  testspecials/xbpt_symlink_sync_470993.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_lima_956636\xbpt_index_kilo_795802.md
+    Display:   N:\testspecials\dir_lima_956636\xbpt_index_kilo_795802.md
+    Relative:  False
+
+  testspecials/xbpt_symlink_uniform_920282.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\xbpt_oscar_zulu_627251.tmp
+    Display:   N:\testspecials\xbpt_oscar_zulu_627251.tmp
+    Relative:  False
+
+  testspecials/xbpt_symlink_victor_132207.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\N:\testspecials\dir_foxtrot_747157\xbpt_symlink_kilo_516699.lnk
+    Display:   N:\testspecials\dir_foxtrot_747157\xbpt_symlink_kilo_516699.lnk
+    Relative:  False
+
+
+  Reparse Index (OID 0x540): 330 indexed entries
+    IO_REPARSE_TAG_SYMLINK: 330

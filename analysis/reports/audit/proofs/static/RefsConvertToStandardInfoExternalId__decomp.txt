@@ -1,0 +1,20 @@
+
+// === RefsConvertToStandardInfoExternalId @ 1400e6674 ===
+
+/* WARNING: Function: __security_check_cookie replaced with injection: security_check_cookie */
+/* void __cdecl RefsConvertToStandardInfoExternalId(struct _IRP_CONTEXT * __ptr64,struct _FCB *
+ __ptr64) */
+
+void __cdecl RefsConvertToStandardInfoExternalId(_IRP_CONTEXT *param_1,_FCB *param_2)
+
+{
+ longlong lVar1;
+ undefined8 uVar2;
+ undefined1 auStackY_58 [32];
+ _SmsPinContext *in_stack_ffffffffffffffd0;
+ undefined8 local_28;
+ undefined8 local_20;
+ undefined8 uStack_18;
+ ulonglong local_10;
+ 
+ local_10 = __security_cookie ^ (ulonglong)auStackY_58;

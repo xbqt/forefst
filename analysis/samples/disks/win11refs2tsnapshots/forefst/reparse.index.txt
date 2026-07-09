@@ -1,0 +1,17 @@
+# forefst win11refs2tsnapshots.raw reparse --index
+# ----------------------------------------------------------------------------
+==============================================================================
+ReFS Reparse Point Index (OID 0x540)
+==============================================================================
+  Image:        analysis/rawdisk/disks/step3/win11refs2tsnapshots.raw
+  ReFS version: 3.14
+
+  Total entries: 3  (rows in the OID 0x540 reparse index table)
+  Note: the driver inserts ONE index row per reparse-bearing OBJECT, when its reparse
+        attribute is first created; extra hard-linked NAMES of that object add no row.
+        The `reparse` command instead counts every REPARSE_POINT-flagged NAME, so its
+        count is >= this row count (they measure different things and need not match).
+
+  Tag            Name                                Count
+  ------------------------------------------------------------
+  0xa000000c     IO_REPARSE_TAG_SYMLINK              3

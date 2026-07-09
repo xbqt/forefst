@@ -1,0 +1,38 @@
+<svg class="diagram" viewBox="0 0 760 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ReFS bootstrap chain: VBR to Superblock to Checkpoint to root tables">
+  <defs>
+    <marker id="bc-arrow" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+      <path class="dg-arrowhead" d="M0,0 L7,3 L0,6 Z"/>
+    </marker>
+  </defs>
+
+  <!-- VBR -->
+  <rect class="dg-box-accent" x="10" y="52" width="160" height="64" rx="9"/>
+  <text class="dg-title" x="90" y="80" text-anchor="middle" font-size="15" font-weight="700">VBR</text>
+  <text class="dg-muted" x="90" y="100" text-anchor="middle" font-size="11">FSRS · version · cluster size</text>
+  <text class="dg-muted" x="90" y="140" text-anchor="middle" font-size="10.5">boot sector, cluster 0</text>
+
+  <line class="dg-line" x1="170" y1="84" x2="194" y2="84" marker-end="url(#bc-arrow)"/>
+
+  <!-- SUPB -->
+  <rect class="dg-box" x="200" y="52" width="160" height="64" rx="9"/>
+  <text class="dg-title" x="280" y="80" text-anchor="middle" font-size="15" font-weight="700">SUPB</text>
+  <text class="dg-muted" x="280" y="100" text-anchor="middle" font-size="11">Volume GUID</text>
+  <text class="dg-muted" x="280" y="140" text-anchor="middle" font-size="10.5">→ checkpoint LCNs</text>
+
+  <line class="dg-line" x1="360" y1="84" x2="384" y2="84" marker-end="url(#bc-arrow)"/>
+
+  <!-- CHKP -->
+  <rect class="dg-box" x="390" y="52" width="160" height="64" rx="9"/>
+  <text class="dg-title" x="470" y="80" text-anchor="middle" font-size="15" font-weight="700">CHKP</text>
+  <text class="dg-muted" x="470" y="100" text-anchor="middle" font-size="11">highest virtual clock</text>
+  <text class="dg-muted" x="470" y="140" text-anchor="middle" font-size="10.5">13 root pointers</text>
+
+  <line class="dg-line" x1="550" y1="84" x2="574" y2="84" marker-end="url(#bc-arrow)"/>
+
+  <!-- Root tables -->
+  <rect class="dg-box-accent" x="580" y="40" width="170" height="88" rx="9"/>
+  <text class="dg-title" x="665" y="66" text-anchor="middle" font-size="15" font-weight="700">Root tables</text>
+  <text class="dg-muted" x="665" y="86" text-anchor="middle" font-size="10.5">Object · Container · Schema</text>
+  <text class="dg-muted" x="665" y="101" text-anchor="middle" font-size="10.5">Allocator · Parent-Child …</text>
+  <text class="dg-muted" x="665" y="116" text-anchor="middle" font-size="10.5">the B+-tree forest</text>
+</svg>

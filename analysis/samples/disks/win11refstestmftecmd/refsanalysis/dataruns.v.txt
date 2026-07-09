@@ -1,0 +1,1859 @@
+==============================================================================
+ReFS File Data Extent Analysis
+==============================================================================
+  Image:        win11refstestmftecmd.raw
+  ReFS version: 3.14
+  Cluster size: 0x1000 (4096 bytes)
+  Containers:   63
+  Start OID:    0x600
+
+  Summary:
+    Total files analyzed:   592
+    Resident (inline):      440
+    Non-resident (extents): 152
+    With decoded extents:   149
+
+==============================================================================
+File Data Locations
+==============================================================================
+  RESIDENT  $RECYCLE.BIN/S-1-5-21-3829591975-2821165226-2477612932-1001/desktop.ini
+            size=129 (data inline in directory entry)
+  RESIDENT  System Volume Information/FVE2.{8252fd17-a486-4ad4-b1ca-f4fe64d23218}
+            size=0 (data inline in directory entry)
+  RESIDENT  System Volume Information/IndexerVolumeGuid
+            size=76 (data inline in directory entry)
+  RESIDENT  System Volume Information/MountPointManagerRemoteDatabase
+            size=0 (data inline in directory entry)
+  RESIDENT  System Volume Information/WPSettings.dat
+            size=12 (data inline in directory entry)
+  EXTENT    test/xbpt_archive_romeo_596174.txt
+            size=186635, attrs=ARCHIVE, extents=5, clusters=46
+            created=2026-05-23 07:34:00
+            run: fvcn=0 VLCN=0x531d6 PLCN=0x1b1d6 clusters=1 disk=0x1c1d6000
+            run: fvcn=1 VLCN=0x51853 PLCN=0x19853 clusters=34 disk=0x1a853000
+            run: fvcn=35 VLCN=0x51875 PLCN=0x19875 clusters=1 disk=0x1a875000
+            run: fvcn=37 VLCN=0x51c8e PLCN=0x19c8e clusters=9 disk=0x1ac8e000
+            run: fvcn=36 VLCN=0x51c8d PLCN=0x19c8d clusters=1 disk=0x1ac8d000
+            (extents in remote OID 0x74d)
+  EXTENT    test/xbpt_config_hotel_558589.txt
+            size=192688, attrs=ARCHIVE, extents=8, clusters=35
+            created=2026-05-23 07:34:00
+            run: fvcn=0 VLCN=0x501f2 PLCN=0x181f2 clusters=1 disk=0x191f2000
+            run: fvcn=1 VLCN=0x501f3 PLCN=0x181f3 clusters=10 disk=0x191f3000
+            run: fvcn=11 VLCN=0x501fd PLCN=0x181fd clusters=1 disk=0x191fd000
+            run: fvcn=12 VLCN=0x50be5 PLCN=0x18be5 clusters=14 disk=0x19be5000
+            run: fvcn=26 VLCN=0x524e2 PLCN=0x1a4e2 clusters=1 disk=0x1b4e2000
+            run: fvcn=27 VLCN=0x512f9 PLCN=0x192f9 clusters=2 disk=0x1a2f9000
+            run: fvcn=30 VLCN=0x51cb7 PLCN=0x19cb7 clusters=5 disk=0x1acb7000
+            run: fvcn=29 VLCN=0x512fb PLCN=0x192fb clusters=1 disk=0x1a2fb000
+  EXTENT    test/xbpt_india_temp_831504.csv
+            size=475328, attrs=ARCHIVE, extents=2, clusters=19
+            created=2024-04-02 07:16:32
+            run: fvcn=0 VLCN=0x5320c PLCN=0x1b20c clusters=1 disk=0x1c20c000
+            run: fvcn=1 VLCN=0x5320d PLCN=0x1b20d clusters=18 disk=0x1c20d000
+  EXTENT    test/xbpt_log_november_496320.csv
+            size=552331, attrs=ARCHIVE, extents=6, clusters=135
+            created=2026-05-23 07:34:03
+            run: fvcn=0 VLCN=0x524e1 PLCN=0x1a4e1 clusters=1 disk=0x1b4e1000
+            run: fvcn=1 VLCN=0x51877 PLCN=0x19877 clusters=110 disk=0x1a877000
+            run: fvcn=111 VLCN=0x181d7 PLCN=0x1c1d7 clusters=1 disk=0x1d1d7000
+            run: fvcn=112 VLCN=0x52906 PLCN=0x1a906 clusters=12 disk=0x1b906000
+            run: fvcn=124 VLCN=0x52912 PLCN=0x1a912 clusters=1 disk=0x1b912000
+            run: fvcn=125 VLCN=0x539d3 PLCN=0x1b9d3 clusters=10 disk=0x1c9d3000
+            (extents in remote OID 0x74d)
+  EXTENT    test/xbpt_sierra_sync_956584.ini
+            size=19465, attrs=ARCHIVE, extents=2, clusters=5
+            created=2026-05-23 07:34:00
+            run: fvcn=0 VLCN=0x19b05 PLCN=0x1db05 clusters=1 disk=0x1eb05000
+            run: fvcn=1 VLCN=0x19b06 PLCN=0x1db06 clusters=4 disk=0x1eb06000
+            (extents in remote OID 0x74c)
+  EXTENT    test/xbpt_tango_foxtrot_898933.txt
+            size=207263, attrs=ARCHIVE, extents=8, clusters=35
+            created=2026-05-23 07:34:02
+            run: fvcn=0 VLCN=0x501f2 PLCN=0x181f2 clusters=1 disk=0x191f2000
+            run: fvcn=1 VLCN=0x501f3 PLCN=0x181f3 clusters=10 disk=0x191f3000
+            run: fvcn=11 VLCN=0x501fd PLCN=0x181fd clusters=1 disk=0x191fd000
+            run: fvcn=12 VLCN=0x50be5 PLCN=0x18be5 clusters=14 disk=0x19be5000
+            run: fvcn=26 VLCN=0x524e2 PLCN=0x1a4e2 clusters=1 disk=0x1b4e2000
+            run: fvcn=27 VLCN=0x512f9 PLCN=0x192f9 clusters=2 disk=0x1a2f9000
+            run: fvcn=30 VLCN=0x51cb7 PLCN=0x19cb7 clusters=5 disk=0x1acb7000
+            run: fvcn=29 VLCN=0x512fb PLCN=0x192fb clusters=1 disk=0x1a2fb000
+  RESIDENT  test/xbpt_beta_sierra_570651.json
+            size=71395 (data inline in directory entry)
+  RESIDENT  test/xbpt_config_log_714507.md
+            size=440919 (data inline in directory entry)
+  RESIDENT  test/xbpt_config_log_982725.bin
+            size=159126 (data inline in directory entry)
+  RESIDENT  test/xbpt_draft_tango_958869.bin
+            size=59633 (data inline in directory entry)
+  RESIDENT  test/xbpt_foxtrot_config_966558.log
+            size=298452 (data inline in directory entry)
+  RESIDENT  test/xbpt_gamma_temp_372257.bak
+            size=430306 (data inline in directory entry)
+  RESIDENT  test/xbpt_index_india_423224.csv
+            size=376745 (data inline in directory entry)
+  RESIDENT  test/xbpt_india_papa_801739.json
+            size=305819 (data inline in directory entry)
+  RESIDENT  test/xbpt_india_trace_307426.json
+            size=214075 (data inline in directory entry)
+  RESIDENT  test/xbpt_large_99mb_report_414178.tmp
+            size=103809024 (data inline in directory entry)
+  RESIDENT  test/xbpt_marked_eveliselaurence_670394.txt
+            size=173 (data inline in directory entry)
+  RESIDENT  test/xbpt_symlink_hotel_632659.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  test/xbpt_symlink_output_831744.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  test/xbpt_sync_zulu_911953.ini
+            size=349388 (data inline in directory entry)
+  RESIDENT  test/xbpt_tango_archive_828215.dat
+            size=116243 (data inline in directory entry)
+  RESIDENT  test/xbpt_uniform_victor_168724.txt
+            size=186635 (data inline in directory entry)
+  RESIDENT  test/xbpt_victor_lima_251467.cfg
+            size=578777 (data inline in directory entry)
+  RESIDENT  test/xbpt_yankee_audit_433793.xml
+            size=380116 (data inline in directory entry)
+  RESIDENT  test/xbpt_zulu_hotel_479124.bin
+            size=454363 (data inline in directory entry)
+  EXTENT    test/elvis_dir_index_149423/xbpt_beta_archive_985685.tmp
+            size=310564, attrs=ARCHIVE, extents=2, clusters=76
+            created=2023-11-27 07:16:30
+            run: fvcn=1 VLCN=0x52a9a PLCN=0x1aa9a clusters=75 disk=0x1ba9a000
+            run: fvcn=0 VLCN=0x1951d PLCN=0x1d51d clusters=1 disk=0x1e51d000
+            (extents in remote OID 0x741)
+  EXTENT    test/elvis_dir_index_149423/xbpt_draft_record_749595.cfg
+            size=239973, attrs=ARCHIVE, extents=2, clusters=59
+            created=2026-05-23 07:34:01
+            run: fvcn=0 VLCN=0x5219e PLCN=0x1a19e clusters=1 disk=0x1b19e000
+            run: fvcn=1 VLCN=0x5219f PLCN=0x1a19f clusters=58 disk=0x1b19f000
+            (extents in remote OID 0x74d)
+  EXTENT    test/elvis_dir_index_149423/xbpt_victor_gamma_564302.csv
+            size=306493, attrs=ARCHIVE, extents=2, clusters=75
+            created=2026-05-23 07:34:02
+            run: fvcn=0 VLCN=0x52e28 PLCN=0x1ae28 clusters=1 disk=0x1be28000
+            run: fvcn=1 VLCN=0x50cce PLCN=0x18cce clusters=74 disk=0x19cce000
+            (extents in remote OID 0x743)
+  EXTENT    test/elvis_dir_index_149423/xbpt_zulu_kilo_319858.csv
+            size=457030, attrs=ARCHIVE, extents=2, clusters=112
+            created=2022-05-20 07:16:16
+            run: fvcn=0 VLCN=0x524e1 PLCN=0x1a4e1 clusters=1 disk=0x1b4e1000
+            run: fvcn=1 VLCN=0x51877 PLCN=0x19877 clusters=111 disk=0x1a877000
+            (extents in remote OID 0x74e)
+  RESIDENT  test/elvis_dir_index_149423/xbpt_config_sync_830891.tmp
+            size=407328 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_index_149423/xbpt_draft_india_626576.tmp
+            size=308061 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_index_149423/xbpt_kilo_draft_550251.bin
+            size=505381 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_index_149423/xbpt_papa_papa_899322.md
+            size=297647 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_index_149423/xbpt_quebec_kilo_982841.tmp
+            size=312142 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_index_149423/xbpt_sync_output_795963.bin
+            size=376478 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_index_149423/xbpt_yankee_draft_816830.dat
+            size=261891 (data inline in directory entry)
+  EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_hotel_victor_678038.txt
+            size=453197, attrs=ARCHIVE, extents=2, clusters=111
+            created=2026-05-23 07:34:05
+            run: fvcn=0 VLCN=0x1b7e1 PLCN=0x1f7e1 clusters=1 disk=0x207e1000
+            run: fvcn=1 VLCN=0x19444 PLCN=0x1d444 clusters=110 disk=0x1e444000
+            (extents in remote OID 0x744)
+  EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_whiskey_delta_922359.tmp
+            size=339532, attrs=ARCHIVE, extents=4, clusters=83
+            created=2024-11-23 07:17:31
+            run: fvcn=0 VLCN=0x19515 PLCN=0x1d515 clusters=1 disk=0x1e515000
+            run: fvcn=1 VLCN=0x529e9 PLCN=0x1a9e9 clusters=75 disk=0x1b9e9000
+            run: fvcn=77 VLCN=0x52ae5 PLCN=0x1aae5 clusters=6 disk=0x1bae5000
+            run: fvcn=76 VLCN=0x52a34 PLCN=0x1aa34 clusters=1 disk=0x1ba34000
+            (extents in remote OID 0x755)
+  RESIDENT  test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_hotel_mike_996142.cfg
+            size=36549 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_large_5mb_romeo_293003.dat
+            size=5242880 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_temp_uniform_753565.cfg
+            size=387932 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_zulu_echo_160107.cfg
+            size=71744 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_zulu_papa_839258.bin
+            size=166783 (data inline in directory entry)
+  EXTENT    test/elvis_dir_india_800575/xbpt_foxtrot_zulu_156856.csv
+            size=130777, attrs=ARCHIVE, extents=2, clusters=32
+            created=2026-05-23 07:34:02
+            run: fvcn=1 VLCN=0x5310c PLCN=0x1b10c clusters=31 disk=0x1c10c000
+            run: fvcn=0 VLCN=0x19525 PLCN=0x1d525 clusters=1 disk=0x1e525000
+            (extents in remote OID 0x74c)
+  EXTENT    test/elvis_dir_india_800575/xbpt_uniform_lima_155750.md
+            size=145250, attrs=ARCHIVE, extents=2, clusters=36
+            created=2026-05-23 07:34:00
+            run: fvcn=1 VLCN=0x5203a PLCN=0x1a03a clusters=35 disk=0x1b03a000
+            run: fvcn=0 VLCN=0x53a3a PLCN=0x1ba3a clusters=1 disk=0x1ca3a000
+            (extents in remote OID 0x73f)
+  RESIDENT  test/elvis_dir_india_800575/xbpt_beta_archive_202282.json
+            size=480555 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_india_800575/xbpt_cache_index_408825.bin
+            size=59633 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_india_800575/xbpt_cache_lima_454391.txt
+            size=388287 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_india_800575/xbpt_delta_lima_807650.tmp
+            size=271776 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_india_800575/xbpt_kilo_config_292054.json
+            size=453499 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_india_800575/xbpt_large_2mb_report_507726.txt
+            size=2097152 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_india_800575/xbpt_log_beta_973172.txt
+            size=171788 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_india_800575/xbpt_oscar_backup_284025.json
+            size=467882 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_india_800575/xbpt_output_config_975939.bak
+            size=92647 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_india_800575/xbpt_output_victor_198806.ini
+            size=412745 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_india_800575/xbpt_report_temp_854937.tmp
+            size=407328 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_india_800575/xbpt_sierra_beta_228555.dat
+            size=340231 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_india_800575/xbpt_sierra_data_271533.bin
+            size=507751 (data inline in directory entry)
+  EXTENT    test/elvis_dir_papa_805353/xbpt_temp_log_141240.cfg
+            size=185084, attrs=ARCHIVE, extents=2, clusters=46
+            created=2026-05-23 07:34:03
+            run: fvcn=0 VLCN=0x53de1 PLCN=0x1bde1 clusters=1 disk=0x1cde1000
+            run: fvcn=1 VLCN=0x53de2 PLCN=0x1bde2 clusters=45 disk=0x1cde2000
+            (extents in remote OID 0x74d)
+  RESIDENT  test/elvis_dir_papa_805353/xbpt_audit_index_229436.csv
+            size=307397 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_papa_805353/xbpt_mike_oscar_154118.csv
+            size=179320 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_papa_805353/xbpt_november_hotel_509136.md
+            size=219663 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_papa_805353/xbpt_november_record_124675.bak
+            size=151966 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_papa_805353/xbpt_november_sierra_312346.xml
+            size=50327 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_papa_805353/xbpt_oscar_archive_362034.json
+            size=191641 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_papa_805353/xbpt_papa_victor_656146.log
+            size=214551 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_papa_805353/xbpt_temp_data_294711.md
+            size=187614 (data inline in directory entry)
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_backup_mike_407434.log
+            size=140609, attrs=ARCHIVE, extents=8, clusters=35
+            created=2021-05-18 07:16:04
+            run: fvcn=0 VLCN=0x501f2 PLCN=0x181f2 clusters=1 disk=0x191f2000
+            run: fvcn=1 VLCN=0x501f3 PLCN=0x181f3 clusters=10 disk=0x191f3000
+            run: fvcn=11 VLCN=0x501fd PLCN=0x181fd clusters=1 disk=0x191fd000
+            run: fvcn=12 VLCN=0x50be5 PLCN=0x18be5 clusters=14 disk=0x19be5000
+            run: fvcn=26 VLCN=0x524e2 PLCN=0x1a4e2 clusters=1 disk=0x1b4e2000
+            run: fvcn=27 VLCN=0x512f9 PLCN=0x192f9 clusters=2 disk=0x1a2f9000
+            run: fvcn=30 VLCN=0x51cb7 PLCN=0x19cb7 clusters=5 disk=0x1acb7000
+            run: fvcn=29 VLCN=0x512fb PLCN=0x192fb clusters=1 disk=0x1a2fb000
+            (extents in remote OID 0x73f)
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_hardlink_echo_387599.ini
+            size=237968, attrs=ARCHIVE, extents=2, clusters=59
+            created=2025-02-09 07:17:09
+            run: fvcn=0 VLCN=0x198c4 PLCN=0x1d8c4 clusters=1 disk=0x1e8c4000
+            run: fvcn=1 VLCN=0x198c5 PLCN=0x1d8c5 clusters=58 disk=0x1e8c5000
+            (extents in remote OID 0x74c)
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_hotel_kilo_705007.cfg
+            size=239973, attrs=ARCHIVE, extents=2, clusters=59
+            created=2026-05-23 07:34:03
+            run: fvcn=0 VLCN=0x5219e PLCN=0x1a19e clusters=1 disk=0x1b19e000
+            run: fvcn=1 VLCN=0x5219f PLCN=0x1a19f clusters=58 disk=0x1b19f000
+            (extents in remote OID 0x74e)
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_index_index_579494.cfg
+            size=113106, attrs=ARCHIVE, extents=2, clusters=28
+            created=2026-05-23 07:34:04
+            run: fvcn=1 VLCN=0x18a15 PLCN=0x1ca15 clusters=27 disk=0x1da15000
+            run: fvcn=0 VLCN=0x1b7c4 PLCN=0x1f7c4 clusters=1 disk=0x207c4000
+            (extents in remote OID 0x76c)
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_log_output_579275.dat
+            size=123468, attrs=ARCHIVE, extents=5, clusters=46
+            created=2026-05-23 07:34:00
+            run: fvcn=0 VLCN=0x531d6 PLCN=0x1b1d6 clusters=1 disk=0x1c1d6000
+            run: fvcn=1 VLCN=0x51853 PLCN=0x19853 clusters=34 disk=0x1a853000
+            run: fvcn=35 VLCN=0x51875 PLCN=0x19875 clusters=1 disk=0x1a875000
+            run: fvcn=37 VLCN=0x51c8e PLCN=0x19c8e clusters=9 disk=0x1ac8e000
+            run: fvcn=36 VLCN=0x51c8d PLCN=0x19c8d clusters=1 disk=0x1ac8d000
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_quebec_papa_978800.txt
+            size=30711, attrs=ARCHIVE, extents=2, clusters=8
+            created=2026-05-23 07:34:05
+            run: fvcn=0 VLCN=0x1998a PLCN=0x1d98a clusters=1 disk=0x1e98a000
+            run: fvcn=1 VLCN=0x1998b PLCN=0x1d98b clusters=7 disk=0x1e98b000
+            (extents in remote OID 0x73f)
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_sierra_echo_921063.xml
+            size=546650, attrs=ARCHIVE, extents=4, clusters=134
+            created=2025-04-02 07:16:24
+            run: fvcn=0 VLCN=0x53a42 PLCN=0x1ba42 clusters=1 disk=0x1ca42000
+            run: fvcn=1 VLCN=0x51fbe PLCN=0x19fbe clusters=123 disk=0x1afbe000
+            run: fvcn=125 VLCN=0x528ab PLCN=0x1a8ab clusters=9 disk=0x1b8ab000
+            run: fvcn=124 VLCN=0x52039 PLCN=0x1a039 clusters=1 disk=0x1b039000
+            (extents in remote OID 0x752)
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_tango_echo_291736.csv
+            size=219586, attrs=ARCHIVE, extents=6, clusters=54
+            created=2025-04-01 07:16:26
+            run: fvcn=0 VLCN=0x5148b PLCN=0x1948b clusters=1 disk=0x1a48b000
+            run: fvcn=1 VLCN=0x5148c PLCN=0x1948c clusters=29 disk=0x1a48c000
+            run: fvcn=30 VLCN=0x514a9 PLCN=0x194a9 clusters=1 disk=0x1a4a9000
+            run: fvcn=31 VLCN=0x5192c PLCN=0x1992c clusters=13 disk=0x1a92c000
+            run: fvcn=45 VLCN=0x18d95 PLCN=0x1cd95 clusters=9 disk=0x1dd95000
+            run: fvcn=44 VLCN=0x1b7cd PLCN=0x1f7cd clusters=1 disk=0x207cd000
+            (extents in remote OID 0x74e)
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_victor_tango_152379.bin
+            size=505381, attrs=ARCHIVE, extents=5, clusters=46
+            created=2026-05-23 07:34:01
+            run: fvcn=0 VLCN=0x531d6 PLCN=0x1b1d6 clusters=1 disk=0x1c1d6000
+            run: fvcn=1 VLCN=0x51853 PLCN=0x19853 clusters=34 disk=0x1a853000
+            run: fvcn=35 VLCN=0x51875 PLCN=0x19875 clusters=1 disk=0x1a875000
+            run: fvcn=37 VLCN=0x51c8e PLCN=0x19c8e clusters=9 disk=0x1ac8e000
+            run: fvcn=36 VLCN=0x51c8d PLCN=0x19c8d clusters=1 disk=0x1ac8d000
+  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_alpha_cache_742120.dat
+            size=401806 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_archive_trace_798923.cfg
+            size=474347 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_audit_sync_528794.xml
+            size=283618 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_beta_echo_977425.bin
+            size=60673 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_config_log_890790.bak
+            size=216460 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_delta_echo_268401.csv
+            size=516104 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_delta_report_275249.dat
+            size=173269 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_kilo_output_350111.log
+            size=333522 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_lima_temp_514782.csv
+            size=552331 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_lima_victor_941030.cfg
+            size=516237 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_oscar_archive_384713.txt
+            size=163402 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_oscar_foxtrot_635028.xml
+            size=392164 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_papa_index_238422.csv
+            size=188129 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_temp_sierra_130629.tmp
+            size=407328 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_trace_gamma_651618.dat
+            size=462545 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_yankee_victor_114004.ini
+            size=142209 (data inline in directory entry)
+  EXTENT    test/elvis_dir_record_449015/xbpt_log_india_171227.csv
+            size=189614, attrs=ARCHIVE, extents=2, clusters=47
+            created=2026-05-23 07:33:59
+            run: fvcn=0 VLCN=0x181e9 PLCN=0x1c1e9 clusters=1 disk=0x1d1e9000
+            run: fvcn=1 VLCN=0x181ea PLCN=0x1c1ea clusters=46 disk=0x1d1ea000
+            (extents in remote OID 0x74a)
+  RESIDENT  test/elvis_dir_record_449015/xbpt_alpha_echo_381900.ini
+            size=192974 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/xbpt_archive_audit_104959.tmp
+            size=306574 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/xbpt_backup_delta_809262.csv
+            size=512155 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/xbpt_beta_mike_393018.xml
+            size=204365 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/xbpt_config_uniform_831195.csv
+            size=493766 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/xbpt_delta_log_356379.tmp
+            size=427688 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/xbpt_foxtrot_lima_318386.tmp
+            size=312142 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/xbpt_gamma_archive_952302.cfg
+            size=141514 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/xbpt_india_delta_132534.bak
+            size=450070 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/xbpt_kilo_papa_445436.xml
+            size=30619 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/xbpt_large_14mb_foxtrot_773062.bak
+            size=14680064 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/xbpt_mike_trace_772216.dat
+            size=81506 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/xbpt_november_quebec_231876.bak
+            size=245528 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/xbpt_oscar_victor_509674.md
+            size=266358 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/xbpt_output_papa_412411.log
+            size=416811 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/xbpt_sierra_kilo_206137.json
+            size=403765 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/xbpt_sierra_victor_685719.xml
+            size=451460 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/xbpt_uniform_record_153192.json
+            size=269818 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/xbpt_whiskey_sync_681180.xml
+            size=117140 (data inline in directory entry)
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_index_draft_129088.bin
+            size=159126, attrs=ARCHIVE, extents=2, clusters=39
+            created=2026-05-23 07:34:02
+            run: fvcn=0 VLCN=0x52d35 PLCN=0x1ad35 clusters=1 disk=0x1bd35000
+            run: fvcn=1 VLCN=0x52b80 PLCN=0x1ab80 clusters=38 disk=0x1bb80000
+            (extents in remote OID 0x74c)
+  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_alpha_delta_877195.json
+            size=355665 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_kilo_quebec_845728.bak
+            size=163770 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_tango_record_232127.csv
+            size=296805 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_temp_index_659152.xml
+            size=317120 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_uniform_mike_713257.xml
+            size=217733 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_yankee_report_288078.log
+            size=2590 (data inline in directory entry)
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_draft_draft_797325.txt
+            size=396015, attrs=ARCHIVE, extents=2, clusters=97
+            created=2026-05-23 07:34:02
+            run: fvcn=0 VLCN=0x53967 PLCN=0x1b967 clusters=1 disk=0x1c967000
+            run: fvcn=1 VLCN=0x53968 PLCN=0x1b968 clusters=96 disk=0x1c968000
+            (extents in remote OID 0x73f)
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_foxtrot_cache_816969.xml
+            size=378484, attrs=ARCHIVE, extents=2, clusters=93
+            created=2026-05-23 07:34:04
+            run: fvcn=0 VLCN=0x1936f PLCN=0x1d36f clusters=1 disk=0x1e36f000
+            run: fvcn=1 VLCN=0x19370 PLCN=0x1d370 clusters=92 disk=0x1e370000
+            (extents in remote OID 0x74d)
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_victor_sync_949138.bak
+            size=144033, attrs=ARCHIVE, extents=2, clusters=36
+            created=2026-05-23 07:33:58
+            run: fvcn=0 VLCN=0x1922f PLCN=0x1d22f clusters=1 disk=0x1e22f000
+            run: fvcn=1 VLCN=0x19230 PLCN=0x1d230 clusters=35 disk=0x1e230000
+            (extents in remote OID 0x745)
+  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_backup_sierra_949923.ini
+            size=192974 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_delta_log_234524.log
+            size=57215 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_hotel_yankee_781098.log
+            size=339395 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_kilo_sync_474043.csv
+            size=479405 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_lima_config_611703.json
+            size=297107 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_log_mike_997799.bin
+            size=302125 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_output_temp_864816.txt
+            size=444510 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_record_cache_584285.json
+            size=522962 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_sierra_record_710410.bin
+            size=376478 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_temp_foxtrot_475776.md
+            size=288237 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_trace_report_848037.cfg
+            size=431764 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_zulu_hotel_356824.dat
+            size=73763 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_zulu_sync_665668.bin
+            size=194037 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_record_449015/elvis_dir_tango_434284/xbpt_data_config_437965.csv
+            size=82819 (data inline in directory entry)
+  EXTENT    test/elvis_dir_victor_783323/xbpt_report_quebec_867569.md
+            size=540829, attrs=ARCHIVE, extents=4, clusters=133
+            created=2025-05-12 07:17:04
+            run: fvcn=0 VLCN=0x52259 PLCN=0x1a259 clusters=1 disk=0x1b259000
+            run: fvcn=1 VLCN=0x5225a PLCN=0x1a25a clusters=121 disk=0x1b25a000
+            run: fvcn=123 VLCN=0x19ad8 PLCN=0x1dad8 clusters=10 disk=0x1ead8000
+            run: fvcn=122 VLCN=0x522d3 PLCN=0x1a2d3 clusters=1 disk=0x1b2d3000
+            (extents in remote OID 0x745)
+  EXTENT    test/elvis_dir_victor_783323/xbpt_trace_cache_289808.json
+            size=40965, attrs=ARCHIVE, extents=2, clusters=11
+            created=2026-05-23 07:34:03
+            run: fvcn=1 VLCN=0x1828a PLCN=0x1c28a clusters=10 disk=0x1d28a000
+            run: fvcn=0 VLCN=0x1b7b1 PLCN=0x1f7b1 clusters=1 disk=0x207b1000
+            (extents in remote OID 0x768)
+  RESIDENT  test/elvis_dir_victor_783323/xbpt_audit_november_550810.ini
+            size=417862 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_victor_783323/xbpt_cache_alpha_953426.ini
+            size=68356 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_victor_783323/xbpt_cache_quebec_319176.xml
+            size=7493 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_victor_783323/xbpt_data_romeo_946788.bin
+            size=406857 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_victor_783323/xbpt_delta_echo_626074.json
+            size=273437 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_victor_783323/xbpt_draft_november_935526.json
+            size=151318 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_victor_783323/xbpt_hotel_yankee_684408.cfg
+            size=239973 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_victor_783323/xbpt_india_quebec_883273.bak
+            size=495518 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_victor_783323/xbpt_large_149mb_alpha_610845.dat
+            size=156237824 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_victor_783323/xbpt_november_quebec_999278.md
+            size=495412 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_victor_783323/xbpt_oscar_delta_192166.ini
+            size=237378 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_victor_783323/xbpt_quebec_echo_201709.md
+            size=251331 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_victor_783323/xbpt_record_mike_276675.tmp
+            size=267437 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_victor_783323/xbpt_romeo_quebec_189040.ini
+            size=8369 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_victor_783323/xbpt_romeo_yankee_383561.cfg
+            size=474347 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_victor_783323/xbpt_sierra_echo_709659.md
+            size=278186 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_victor_783323/xbpt_sierra_gamma_615567.ini
+            size=492715 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_victor_783323/xbpt_trace_config_794136.tmp
+            size=234937 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_victor_783323/xbpt_trace_hotel_502150.xml
+            size=277218 (data inline in directory entry)
+  RESIDENT  test/elvis_dir_victor_783323/xbpt_yankee_output_781405.csv
+            size=414030 (data inline in directory entry)
+  EXTENT    test2/xbpt_archive_romeo_596174.txt
+            size=186635, attrs=ARCHIVE, extents=5, clusters=46
+            created=2026-05-23 07:38:46
+            run: fvcn=0 VLCN=0xa0752 PLCN=0x44752 clusters=1 disk=0x45752000
+            run: fvcn=1 VLCN=0x9adcf PLCN=0x42dcf clusters=34 disk=0x43dcf000
+            run: fvcn=35 VLCN=0x9adf1 PLCN=0x42df1 clusters=1 disk=0x43df1000
+            run: fvcn=36 VLCN=0x9b209 PLCN=0x43209 clusters=1 disk=0x44209000
+            run: fvcn=37 VLCN=0x9b20a PLCN=0x4320a clusters=9 disk=0x4420a000
+            (extents in remote OID 0x787)
+  EXTENT    test2/xbpt_config_hotel_558589.txt
+            size=192688, attrs=ARCHIVE, extents=8, clusters=35
+            created=2026-05-23 07:38:46
+            run: fvcn=0 VLCN=0x9976e PLCN=0x4176e clusters=1 disk=0x4276e000
+            run: fvcn=1 VLCN=0x9976f PLCN=0x4176f clusters=10 disk=0x4276f000
+            run: fvcn=11 VLCN=0x99779 PLCN=0x41779 clusters=1 disk=0x42779000
+            run: fvcn=12 VLCN=0x9a161 PLCN=0x42161 clusters=14 disk=0x43161000
+            run: fvcn=26 VLCN=0x9ba5e PLCN=0x43a5e clusters=1 disk=0x44a5e000
+            run: fvcn=27 VLCN=0x9a875 PLCN=0x42875 clusters=2 disk=0x43875000
+            run: fvcn=30 VLCN=0x9b233 PLCN=0x43233 clusters=5 disk=0x44233000
+            run: fvcn=29 VLCN=0x9a877 PLCN=0x42877 clusters=1 disk=0x43877000
+  EXTENT    test2/xbpt_india_temp_831504.csv
+            size=475328, attrs=ARCHIVE, extents=2, clusters=19
+            created=2024-04-02 07:16:32
+            run: fvcn=0 VLCN=0xa0788 PLCN=0x44788 clusters=1 disk=0x45788000
+            run: fvcn=1 VLCN=0xa0789 PLCN=0x44789 clusters=18 disk=0x45789000
+  EXTENT    test2/xbpt_log_november_496320.csv
+            size=552331, attrs=ARCHIVE, extents=6, clusters=135
+            created=2026-05-23 07:38:50
+            run: fvcn=0 VLCN=0x9ba5d PLCN=0x43a5d clusters=1 disk=0x44a5d000
+            run: fvcn=1 VLCN=0x9adf3 PLCN=0x42df3 clusters=110 disk=0x43df3000
+            run: fvcn=111 VLCN=0xa1752 PLCN=0x45752 clusters=1 disk=0x46752000
+            run: fvcn=112 VLCN=0x9be82 PLCN=0x43e82 clusters=12 disk=0x44e82000
+            run: fvcn=124 VLCN=0x9be8e PLCN=0x43e8e clusters=1 disk=0x44e8e000
+            run: fvcn=125 VLCN=0xa0f6d PLCN=0x44f6d clusters=10 disk=0x45f6d000
+            (extents in remote OID 0x787)
+  EXTENT    test2/xbpt_sierra_sync_956584.ini
+            size=19465, attrs=ARCHIVE, extents=2, clusters=5
+            created=2026-05-23 07:38:47
+            run: fvcn=0 VLCN=0xa307d PLCN=0x4707d clusters=1 disk=0x4807d000
+            run: fvcn=1 VLCN=0xa307e PLCN=0x4707e clusters=4 disk=0x4807e000
+            (extents in remote OID 0x786)
+  EXTENT    test2/xbpt_tango_foxtrot_898933.txt
+            size=207263, attrs=ARCHIVE, extents=8, clusters=35
+            created=2026-05-23 07:38:48
+            run: fvcn=0 VLCN=0x9976e PLCN=0x4176e clusters=1 disk=0x4276e000
+            run: fvcn=1 VLCN=0x9976f PLCN=0x4176f clusters=10 disk=0x4276f000
+            run: fvcn=11 VLCN=0x99779 PLCN=0x41779 clusters=1 disk=0x42779000
+            run: fvcn=12 VLCN=0x9a161 PLCN=0x42161 clusters=14 disk=0x43161000
+            run: fvcn=26 VLCN=0x9ba5e PLCN=0x43a5e clusters=1 disk=0x44a5e000
+            run: fvcn=27 VLCN=0x9a875 PLCN=0x42875 clusters=2 disk=0x43875000
+            run: fvcn=30 VLCN=0x9b233 PLCN=0x43233 clusters=5 disk=0x44233000
+            run: fvcn=29 VLCN=0x9a877 PLCN=0x42877 clusters=1 disk=0x43877000
+  RESIDENT  test2/xbpt_beta_sierra_570651.json
+            size=71395 (data inline in directory entry)
+  RESIDENT  test2/xbpt_config_log_714507.md
+            size=440919 (data inline in directory entry)
+  RESIDENT  test2/xbpt_config_log_982725.bin
+            size=159126 (data inline in directory entry)
+  RESIDENT  test2/xbpt_draft_tango_958869.bin
+            size=59633 (data inline in directory entry)
+  RESIDENT  test2/xbpt_foxtrot_config_966558.log
+            size=298452 (data inline in directory entry)
+  RESIDENT  test2/xbpt_gamma_temp_372257.bak
+            size=430306 (data inline in directory entry)
+  RESIDENT  test2/xbpt_index_india_423224.csv
+            size=376745 (data inline in directory entry)
+  RESIDENT  test2/xbpt_india_papa_801739.json
+            size=305819 (data inline in directory entry)
+  RESIDENT  test2/xbpt_india_trace_307426.json
+            size=214075 (data inline in directory entry)
+  RESIDENT  test2/xbpt_large_99mb_report_414178.tmp
+            size=103809024 (data inline in directory entry)
+  RESIDENT  test2/xbpt_marked_eveliselaurence_670394.txt
+            size=174 (data inline in directory entry)
+  RESIDENT  test2/xbpt_symlink_hotel_632659.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  test2/xbpt_symlink_output_831744.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  test2/xbpt_sync_zulu_911953.ini
+            size=349388 (data inline in directory entry)
+  RESIDENT  test2/xbpt_tango_archive_828215.dat
+            size=116243 (data inline in directory entry)
+  RESIDENT  test2/xbpt_uniform_victor_168724.txt
+            size=186635 (data inline in directory entry)
+  RESIDENT  test2/xbpt_victor_lima_251467.cfg
+            size=578777 (data inline in directory entry)
+  RESIDENT  test2/xbpt_yankee_audit_433793.xml
+            size=380116 (data inline in directory entry)
+  RESIDENT  test2/xbpt_zulu_hotel_479124.bin
+            size=454363 (data inline in directory entry)
+  EXTENT    test2/elvis_dir_index_149423/xbpt_beta_archive_985685.tmp
+            size=310564, attrs=ARCHIVE, extents=2, clusters=76
+            created=2023-11-27 07:16:30
+            run: fvcn=1 VLCN=0xa0016 PLCN=0x44016 clusters=75 disk=0x45016000
+            run: fvcn=0 VLCN=0xa2323 PLCN=0x46323 clusters=1 disk=0x47323000
+            (extents in remote OID 0x77b)
+  EXTENT    test2/elvis_dir_index_149423/xbpt_draft_record_749595.cfg
+            size=239973, attrs=ARCHIVE, extents=2, clusters=59
+            created=2026-05-23 07:38:47
+            run: fvcn=0 VLCN=0x9b71a PLCN=0x4371a clusters=1 disk=0x4471a000
+            run: fvcn=1 VLCN=0x9b71b PLCN=0x4371b clusters=58 disk=0x4471b000
+            (extents in remote OID 0x787)
+  EXTENT    test2/elvis_dir_index_149423/xbpt_victor_gamma_564302.csv
+            size=306493, attrs=ARCHIVE, extents=2, clusters=75
+            created=2026-05-23 07:38:48
+            run: fvcn=0 VLCN=0xa03a4 PLCN=0x443a4 clusters=1 disk=0x453a4000
+            run: fvcn=1 VLCN=0x9a24a PLCN=0x4224a clusters=74 disk=0x4324a000
+            (extents in remote OID 0x77d)
+  EXTENT    test2/elvis_dir_index_149423/xbpt_zulu_kilo_319858.csv
+            size=457030, attrs=ARCHIVE, extents=2, clusters=112
+            created=2022-05-20 07:16:16
+            run: fvcn=0 VLCN=0x9ba5d PLCN=0x43a5d clusters=1 disk=0x44a5d000
+            run: fvcn=1 VLCN=0x9adf3 PLCN=0x42df3 clusters=111 disk=0x43df3000
+            (extents in remote OID 0x788)
+  RESIDENT  test2/elvis_dir_index_149423/xbpt_config_sync_830891.tmp
+            size=407328 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_index_149423/xbpt_draft_india_626576.tmp
+            size=308061 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_index_149423/xbpt_kilo_draft_550251.bin
+            size=505381 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_index_149423/xbpt_papa_papa_899322.md
+            size=297647 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_index_149423/xbpt_quebec_kilo_982841.tmp
+            size=312142 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_index_149423/xbpt_sync_output_795963.bin
+            size=376478 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_index_149423/xbpt_yankee_draft_816830.dat
+            size=261891 (data inline in directory entry)
+  EXTENT    test2/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_hotel_victor_678038.txt
+            size=453197, attrs=ARCHIVE, extents=2, clusters=111
+            created=2026-05-23 07:38:51
+            run: fvcn=1 VLCN=0xa29dd PLCN=0x469dd clusters=110 disk=0x479dd000
+            run: fvcn=0 VLCN=0xa8d5e PLCN=0x48d5e clusters=1 disk=0x49d5e000
+            (extents in remote OID 0x77e)
+  EXTENT    test2/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_whiskey_delta_922359.tmp
+            size=339532, attrs=ARCHIVE, extents=4, clusters=83
+            created=2024-11-23 07:17:31
+            run: fvcn=0 VLCN=0xa2319 PLCN=0x46319 clusters=1 disk=0x47319000
+            run: fvcn=1 VLCN=0x9bf65 PLCN=0x43f65 clusters=75 disk=0x44f65000
+            run: fvcn=77 VLCN=0xa0061 PLCN=0x44061 clusters=6 disk=0x45061000
+            run: fvcn=76 VLCN=0x9bfb0 PLCN=0x43fb0 clusters=1 disk=0x44fb0000
+            (extents in remote OID 0x78f)
+  RESIDENT  test2/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_hotel_mike_996142.cfg
+            size=36549 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_large_5mb_romeo_293003.dat
+            size=5242880 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_temp_uniform_753565.cfg
+            size=387932 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_zulu_echo_160107.cfg
+            size=71744 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_zulu_papa_839258.bin
+            size=166783 (data inline in directory entry)
+  EXTENT    test2/elvis_dir_india_800575/xbpt_foxtrot_zulu_156856.csv
+            size=130777, attrs=ARCHIVE, extents=2, clusters=32
+            created=2026-05-23 07:38:48
+            run: fvcn=1 VLCN=0xa0688 PLCN=0x44688 clusters=31 disk=0x45688000
+            run: fvcn=0 VLCN=0xa232b PLCN=0x4632b clusters=1 disk=0x4732b000
+            (extents in remote OID 0x786)
+  EXTENT    test2/elvis_dir_india_800575/xbpt_uniform_lima_155750.md
+            size=145250, attrs=ARCHIVE, extents=2, clusters=36
+            created=2026-05-23 07:38:47
+            run: fvcn=0 VLCN=0xa0d58 PLCN=0x44d58 clusters=1 disk=0x45d58000
+            run: fvcn=1 VLCN=0x9b5b6 PLCN=0x435b6 clusters=35 disk=0x445b6000
+            (extents in remote OID 0x779)
+  RESIDENT  test2/elvis_dir_india_800575/xbpt_beta_archive_202282.json
+            size=480555 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_india_800575/xbpt_cache_index_408825.bin
+            size=59633 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_india_800575/xbpt_cache_lima_454391.txt
+            size=388287 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_india_800575/xbpt_delta_lima_807650.tmp
+            size=271776 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_india_800575/xbpt_kilo_config_292054.json
+            size=453499 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_india_800575/xbpt_large_2mb_report_507726.txt
+            size=2097152 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_india_800575/xbpt_log_beta_973172.txt
+            size=171788 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_india_800575/xbpt_oscar_backup_284025.json
+            size=467882 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_india_800575/xbpt_output_config_975939.bak
+            size=92647 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_india_800575/xbpt_output_victor_198806.ini
+            size=412745 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_india_800575/xbpt_report_temp_854937.tmp
+            size=407328 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_india_800575/xbpt_sierra_beta_228555.dat
+            size=340231 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_india_800575/xbpt_sierra_data_271533.bin
+            size=507751 (data inline in directory entry)
+  EXTENT    test2/elvis_dir_papa_805353/xbpt_temp_log_141240.cfg
+            size=185084, attrs=ARCHIVE, extents=2, clusters=46
+            created=2026-05-23 07:38:49
+            run: fvcn=0 VLCN=0xa135c PLCN=0x4535c clusters=1 disk=0x4635c000
+            run: fvcn=1 VLCN=0xa135d PLCN=0x4535d clusters=45 disk=0x4635d000
+            (extents in remote OID 0x787)
+  RESIDENT  test2/elvis_dir_papa_805353/xbpt_audit_index_229436.csv
+            size=307397 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_papa_805353/xbpt_mike_oscar_154118.csv
+            size=179320 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_papa_805353/xbpt_november_hotel_509136.md
+            size=219663 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_papa_805353/xbpt_november_record_124675.bak
+            size=151966 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_papa_805353/xbpt_november_sierra_312346.xml
+            size=50327 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_papa_805353/xbpt_oscar_archive_362034.json
+            size=191641 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_papa_805353/xbpt_papa_victor_656146.log
+            size=214551 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_papa_805353/xbpt_temp_data_294711.md
+            size=187614 (data inline in directory entry)
+  EXTENT    test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_backup_mike_407434.log
+            size=140609, attrs=ARCHIVE, extents=8, clusters=35
+            created=2021-05-18 07:16:04
+            run: fvcn=0 VLCN=0x9976e PLCN=0x4176e clusters=1 disk=0x4276e000
+            run: fvcn=1 VLCN=0x9976f PLCN=0x4176f clusters=10 disk=0x4276f000
+            run: fvcn=11 VLCN=0x99779 PLCN=0x41779 clusters=1 disk=0x42779000
+            run: fvcn=12 VLCN=0x9a161 PLCN=0x42161 clusters=14 disk=0x43161000
+            run: fvcn=26 VLCN=0x9ba5e PLCN=0x43a5e clusters=1 disk=0x44a5e000
+            run: fvcn=27 VLCN=0x9a875 PLCN=0x42875 clusters=2 disk=0x43875000
+            run: fvcn=30 VLCN=0x9b233 PLCN=0x43233 clusters=5 disk=0x44233000
+            run: fvcn=29 VLCN=0x9a877 PLCN=0x42877 clusters=1 disk=0x43877000
+            (extents in remote OID 0x779)
+  EXTENT    test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_hardlink_echo_387599.ini
+            size=237968, attrs=ARCHIVE, extents=2, clusters=59
+            created=2025-02-09 07:17:09
+            run: fvcn=0 VLCN=0xa2e3c PLCN=0x46e3c clusters=1 disk=0x47e3c000
+            run: fvcn=1 VLCN=0xa2e3d PLCN=0x46e3d clusters=58 disk=0x47e3d000
+            (extents in remote OID 0x786)
+  EXTENT    test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_hotel_kilo_705007.cfg
+            size=239973, attrs=ARCHIVE, extents=2, clusters=59
+            created=2026-05-23 07:38:49
+            run: fvcn=0 VLCN=0x9b71a PLCN=0x4371a clusters=1 disk=0x4471a000
+            run: fvcn=1 VLCN=0x9b71b PLCN=0x4371b clusters=58 disk=0x4471b000
+            (extents in remote OID 0x788)
+  EXTENT    test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_index_index_579494.cfg
+            size=113106, attrs=ARCHIVE, extents=2, clusters=28
+            created=2026-05-23 07:38:51
+            run: fvcn=0 VLCN=0xa8d3e PLCN=0x48d3e clusters=1 disk=0x49d3e000
+            run: fvcn=1 VLCN=0xa1f90 PLCN=0x45f90 clusters=27 disk=0x46f90000
+            (extents in remote OID 0x7a6)
+  EXTENT    test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_log_output_579275.dat
+            size=123468, attrs=ARCHIVE, extents=5, clusters=46
+            created=2026-05-23 07:38:46
+            run: fvcn=0 VLCN=0xa0752 PLCN=0x44752 clusters=1 disk=0x45752000
+            run: fvcn=1 VLCN=0x9adcf PLCN=0x42dcf clusters=34 disk=0x43dcf000
+            run: fvcn=35 VLCN=0x9adf1 PLCN=0x42df1 clusters=1 disk=0x43df1000
+            run: fvcn=36 VLCN=0x9b209 PLCN=0x43209 clusters=1 disk=0x44209000
+            run: fvcn=37 VLCN=0x9b20a PLCN=0x4320a clusters=9 disk=0x4420a000
+  EXTENT    test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_quebec_papa_978800.txt
+            size=30711, attrs=ARCHIVE, extents=2, clusters=8
+            created=2026-05-23 07:38:51
+            run: fvcn=0 VLCN=0xa2f02 PLCN=0x46f02 clusters=1 disk=0x47f02000
+            run: fvcn=1 VLCN=0xa2f03 PLCN=0x46f03 clusters=7 disk=0x47f03000
+            (extents in remote OID 0x779)
+  EXTENT    test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_sierra_echo_921063.xml
+            size=546650, attrs=ARCHIVE, extents=4, clusters=134
+            created=2025-04-02 07:16:24
+            run: fvcn=0 VLCN=0xa0d5f PLCN=0x44d5f clusters=1 disk=0x45d5f000
+            run: fvcn=1 VLCN=0x9b53a PLCN=0x4353a clusters=123 disk=0x4453a000
+            run: fvcn=125 VLCN=0x9be27 PLCN=0x43e27 clusters=9 disk=0x44e27000
+            run: fvcn=124 VLCN=0x9b5b5 PLCN=0x435b5 clusters=1 disk=0x445b5000
+            (extents in remote OID 0x78c)
+  EXTENT    test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_tango_echo_291736.csv
+            size=219586, attrs=ARCHIVE, extents=6, clusters=54
+            created=2025-04-01 07:16:26
+            run: fvcn=0 VLCN=0x9aa07 PLCN=0x42a07 clusters=1 disk=0x43a07000
+            run: fvcn=1 VLCN=0x9aa08 PLCN=0x42a08 clusters=29 disk=0x43a08000
+            run: fvcn=30 VLCN=0x9aa25 PLCN=0x42a25 clusters=1 disk=0x43a25000
+            run: fvcn=31 VLCN=0x9aea8 PLCN=0x42ea8 clusters=13 disk=0x43ea8000
+            run: fvcn=45 VLCN=0xa2310 PLCN=0x46310 clusters=9 disk=0x47310000
+            run: fvcn=44 VLCN=0xa8d46 PLCN=0x48d46 clusters=1 disk=0x49d46000
+            (extents in remote OID 0x788)
+  EXTENT    test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_victor_tango_152379.bin
+            size=505381, attrs=ARCHIVE, extents=5, clusters=46
+            created=2026-05-23 07:38:48
+            run: fvcn=0 VLCN=0xa0752 PLCN=0x44752 clusters=1 disk=0x45752000
+            run: fvcn=1 VLCN=0x9adcf PLCN=0x42dcf clusters=34 disk=0x43dcf000
+            run: fvcn=35 VLCN=0x9adf1 PLCN=0x42df1 clusters=1 disk=0x43df1000
+            run: fvcn=36 VLCN=0x9b209 PLCN=0x43209 clusters=1 disk=0x44209000
+            run: fvcn=37 VLCN=0x9b20a PLCN=0x4320a clusters=9 disk=0x4420a000
+  RESIDENT  test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_alpha_cache_742120.dat
+            size=401806 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_archive_trace_798923.cfg
+            size=474347 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_audit_sync_528794.xml
+            size=283618 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_beta_echo_977425.bin
+            size=60673 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_config_log_890790.bak
+            size=216460 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_delta_echo_268401.csv
+            size=516104 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_delta_report_275249.dat
+            size=173269 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_kilo_output_350111.log
+            size=333522 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_lima_temp_514782.csv
+            size=552331 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_lima_victor_941030.cfg
+            size=516237 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_oscar_archive_384713.txt
+            size=163402 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_oscar_foxtrot_635028.xml
+            size=392164 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_papa_index_238422.csv
+            size=188129 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_temp_sierra_130629.tmp
+            size=407328 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_trace_gamma_651618.dat
+            size=462545 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_yankee_victor_114004.ini
+            size=142209 (data inline in directory entry)
+  EXTENT    test2/elvis_dir_record_449015/xbpt_log_india_171227.csv
+            size=189614, attrs=ARCHIVE, extents=2, clusters=47
+            created=2026-05-23 07:38:45
+            run: fvcn=0 VLCN=0xa1764 PLCN=0x45764 clusters=1 disk=0x46764000
+            run: fvcn=1 VLCN=0xa1765 PLCN=0x45765 clusters=46 disk=0x46765000
+            (extents in remote OID 0x784)
+  RESIDENT  test2/elvis_dir_record_449015/xbpt_alpha_echo_381900.ini
+            size=192974 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/xbpt_archive_audit_104959.tmp
+            size=306574 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/xbpt_backup_delta_809262.csv
+            size=512155 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/xbpt_beta_mike_393018.xml
+            size=204365 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/xbpt_config_uniform_831195.csv
+            size=493766 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/xbpt_delta_log_356379.tmp
+            size=427688 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/xbpt_foxtrot_lima_318386.tmp
+            size=312142 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/xbpt_gamma_archive_952302.cfg
+            size=141514 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/xbpt_india_delta_132534.bak
+            size=450070 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/xbpt_kilo_papa_445436.xml
+            size=30619 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/xbpt_large_14mb_foxtrot_773062.bak
+            size=14680064 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/xbpt_mike_trace_772216.dat
+            size=81506 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/xbpt_november_quebec_231876.bak
+            size=245528 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/xbpt_oscar_victor_509674.md
+            size=266358 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/xbpt_output_papa_412411.log
+            size=416811 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/xbpt_sierra_kilo_206137.json
+            size=403765 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/xbpt_sierra_victor_685719.xml
+            size=451460 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/xbpt_uniform_record_153192.json
+            size=269818 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/xbpt_whiskey_sync_681180.xml
+            size=117140 (data inline in directory entry)
+  EXTENT    test2/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_index_draft_129088.bin
+            size=159126, attrs=ARCHIVE, extents=2, clusters=39
+            created=2026-05-23 07:38:48
+            run: fvcn=0 VLCN=0xa02b1 PLCN=0x442b1 clusters=1 disk=0x452b1000
+            run: fvcn=1 VLCN=0xa00fc PLCN=0x440fc clusters=38 disk=0x450fc000
+            (extents in remote OID 0x786)
+  RESIDENT  test2/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_alpha_delta_877195.json
+            size=355665 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_kilo_quebec_845728.bak
+            size=163770 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_tango_record_232127.csv
+            size=296805 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_temp_index_659152.xml
+            size=317120 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_uniform_mike_713257.xml
+            size=217733 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_yankee_report_288078.log
+            size=2590 (data inline in directory entry)
+  EXTENT    test2/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_draft_draft_797325.txt
+            size=396015, attrs=ARCHIVE, extents=2, clusters=97
+            created=2026-05-23 07:38:48
+            run: fvcn=0 VLCN=0xa0f01 PLCN=0x44f01 clusters=1 disk=0x45f01000
+            run: fvcn=1 VLCN=0xa0f02 PLCN=0x44f02 clusters=96 disk=0x45f02000
+            (extents in remote OID 0x779)
+  EXTENT    test2/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_foxtrot_cache_816969.xml
+            size=378484, attrs=ARCHIVE, extents=2, clusters=93
+            created=2026-05-23 07:38:51
+            run: fvcn=0 VLCN=0xa2908 PLCN=0x46908 clusters=1 disk=0x47908000
+            run: fvcn=1 VLCN=0xa2909 PLCN=0x46909 clusters=92 disk=0x47909000
+            (extents in remote OID 0x787)
+  EXTENT    test2/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_victor_sync_949138.bak
+            size=144033, attrs=ARCHIVE, extents=2, clusters=36
+            created=2026-05-23 07:38:45
+            run: fvcn=0 VLCN=0xa27c8 PLCN=0x467c8 clusters=1 disk=0x477c8000
+            run: fvcn=1 VLCN=0xa27c9 PLCN=0x467c9 clusters=35 disk=0x477c9000
+            (extents in remote OID 0x77f)
+  RESIDENT  test2/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_backup_sierra_949923.ini
+            size=192974 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_delta_log_234524.log
+            size=57215 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_hotel_yankee_781098.log
+            size=339395 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_kilo_sync_474043.csv
+            size=479405 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_lima_config_611703.json
+            size=297107 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_log_mike_997799.bin
+            size=302125 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_output_temp_864816.txt
+            size=444510 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_record_cache_584285.json
+            size=522962 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_sierra_record_710410.bin
+            size=376478 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_temp_foxtrot_475776.md
+            size=288237 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_trace_report_848037.cfg
+            size=431764 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_zulu_hotel_356824.dat
+            size=73763 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_zulu_sync_665668.bin
+            size=194037 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_record_449015/elvis_dir_tango_434284/xbpt_data_config_437965.csv
+            size=82819 (data inline in directory entry)
+  EXTENT    test2/elvis_dir_victor_783323/xbpt_report_quebec_867569.md
+            size=540829, attrs=ARCHIVE, extents=4, clusters=133
+            created=2025-05-12 07:17:04
+            run: fvcn=0 VLCN=0x9b7d5 PLCN=0x437d5 clusters=1 disk=0x447d5000
+            run: fvcn=1 VLCN=0x9b7d6 PLCN=0x437d6 clusters=121 disk=0x447d6000
+            run: fvcn=123 VLCN=0xa3050 PLCN=0x47050 clusters=10 disk=0x48050000
+            run: fvcn=122 VLCN=0x9b84f PLCN=0x4384f clusters=1 disk=0x4484f000
+            (extents in remote OID 0x77f)
+  EXTENT    test2/elvis_dir_victor_783323/xbpt_trace_cache_289808.json
+            size=40965, attrs=ARCHIVE, extents=2, clusters=11
+            created=2026-05-23 07:38:50
+            run: fvcn=0 VLCN=0xa8d2a PLCN=0x48d2a clusters=1 disk=0x49d2a000
+            run: fvcn=1 VLCN=0xa1805 PLCN=0x45805 clusters=10 disk=0x46805000
+            (extents in remote OID 0x7a2)
+  RESIDENT  test2/elvis_dir_victor_783323/xbpt_audit_november_550810.ini
+            size=417862 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_victor_783323/xbpt_cache_alpha_953426.ini
+            size=68356 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_victor_783323/xbpt_cache_quebec_319176.xml
+            size=7493 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_victor_783323/xbpt_data_romeo_946788.bin
+            size=406857 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_victor_783323/xbpt_delta_echo_626074.json
+            size=273437 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_victor_783323/xbpt_draft_november_935526.json
+            size=151318 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_victor_783323/xbpt_hotel_yankee_684408.cfg
+            size=239973 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_victor_783323/xbpt_india_quebec_883273.bak
+            size=495518 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_victor_783323/xbpt_large_149mb_alpha_610845.dat
+            size=156237824 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_victor_783323/xbpt_november_quebec_999278.md
+            size=495412 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_victor_783323/xbpt_oscar_delta_192166.ini
+            size=237378 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_victor_783323/xbpt_quebec_echo_201709.md
+            size=251331 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_victor_783323/xbpt_record_mike_276675.tmp
+            size=267437 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_victor_783323/xbpt_romeo_quebec_189040.ini
+            size=8369 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_victor_783323/xbpt_romeo_yankee_383561.cfg
+            size=474347 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_victor_783323/xbpt_sierra_echo_709659.md
+            size=278186 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_victor_783323/xbpt_sierra_gamma_615567.ini
+            size=492715 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_victor_783323/xbpt_trace_config_794136.tmp
+            size=234937 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_victor_783323/xbpt_trace_hotel_502150.xml
+            size=277218 (data inline in directory entry)
+  RESIDENT  test2/elvis_dir_victor_783323/xbpt_yankee_output_781405.csv
+            size=414030 (data inline in directory entry)
+  EXTENT    testintegrity/xbpt_archive_report_116041.dat
+            size=514719, attrs=ARCHIVE, extents=2, clusters=126
+            created=2026-05-23 07:53:47
+            run: fvcn=1 VLCN=0xa93ee PLCN=0x493ee clusters=125 disk=0x4a3ee000
+            run: fvcn=0 VLCN=0xa93ed PLCN=0x493ed clusters=1 disk=0x4a3ed000
+  EXTENT    testintegrity/xbpt_cache_draft_476266.md
+            size=144095, attrs=ARCHIVE, extents=2, clusters=35
+            created=2026-05-23 07:53:47
+            run: fvcn=0 VLCN=0xa99c3 PLCN=0x499c3 clusters=1 disk=0x4a9c3000
+            run: fvcn=1 VLCN=0xa99c4 PLCN=0x499c4 clusters=34 disk=0x4a9c4000
+  EXTENT    testintegrity/xbpt_foxtrot_kilo_188200.bin
+            size=139725, attrs=ARCHIVE, extents=2, clusters=35
+            created=2021-07-21 07:48:20
+            run: fvcn=0 VLCN=0xa99c3 PLCN=0x499c3 clusters=1 disk=0x4a9c3000
+            run: fvcn=1 VLCN=0xa99c4 PLCN=0x499c4 clusters=34 disk=0x4a9c4000
+  EXTENT    testintegrity/xbpt_gamma_data_633866.json
+            size=254576, attrs=0x8000, extents=2, clusters=63
+            created=2026-04-18 07:48:17
+            run: fvcn=0 VLCN=0xa98d0 PLCN=0x498d0 clusters=1 disk=0x4a8d0000
+            run: fvcn=1 VLCN=0xa98d1 PLCN=0x498d1 clusters=62 disk=0x4a8d1000
+  EXTENT    testintegrity/xbpt_hardlink_backup_104228.log
+            size=451851, attrs=ARCHIVE, extents=3, clusters=111
+            created=2021-12-28 07:49:15
+            run: fvcn=0 VLCN=0x9bd1d PLCN=0x43d1d clusters=1 disk=0x44d1d000
+            run: fvcn=1 VLCN=0x9bd1e PLCN=0x43d1e clusters=109 disk=0x44d1e000
+            run: fvcn=110 VLCN=0x99858 PLCN=0x41858 clusters=1 disk=0x42858000
+  EXTENT    testintegrity/xbpt_hardlink_draft_751357.json
+            size=39595, attrs=ARCHIVE, extents=2, clusters=10
+            created=2026-05-23 07:53:47
+            run: fvcn=1 VLCN=0xa96e3 PLCN=0x496e3 clusters=9 disk=0x4a6e3000
+            run: fvcn=0 VLCN=0xa96e2 PLCN=0x496e2 clusters=1 disk=0x4a6e2000
+            (extents in remote OID 0x81d)
+  EXTENT    testintegrity/xbpt_hardlink_foxtrot_793591.json
+            size=510161, attrs=ARCHIVE, extents=2, clusters=125
+            created=2026-05-23 07:53:47
+            run: fvcn=1 VLCN=0xa95b7 PLCN=0x495b7 clusters=124 disk=0x4a5b7000
+            run: fvcn=0 VLCN=0xa95b6 PLCN=0x495b6 clusters=1 disk=0x4a5b6000
+            (extents in remote OID 0x81c)
+  EXTENT    testintegrity/xbpt_hardlink_quebec_884679.bin
+            size=139725, attrs=ARCHIVE, extents=2, clusters=35
+            created=2021-07-21 07:48:20
+            run: fvcn=0 VLCN=0xa99c3 PLCN=0x499c3 clusters=1 disk=0x4a9c3000
+            run: fvcn=1 VLCN=0xa99c4 PLCN=0x499c4 clusters=34 disk=0x4a9c4000
+  EXTENT    testintegrity/xbpt_india_lima_261899.json
+            size=254576, attrs=ARCHIVE, extents=2, clusters=63
+            created=2024-02-04 07:47:54
+            run: fvcn=0 VLCN=0xa98d0 PLCN=0x498d0 clusters=1 disk=0x4a8d0000
+            run: fvcn=1 VLCN=0xa98d1 PLCN=0x498d1 clusters=62 disk=0x4a8d1000
+  EXTENT    testintegrity/xbpt_india_yankee_623909.dat
+            size=252652, attrs=ARCHIVE, extents=4, clusters=62
+            created=2023-01-05 07:48:06
+            run: fvcn=0 VLCN=0x9b663 PLCN=0x43663 clusters=1 disk=0x44663000
+            run: fvcn=1 VLCN=0x9b664 PLCN=0x43664 clusters=49 disk=0x44664000
+            run: fvcn=51 VLCN=0xa9a75 PLCN=0x49a75 clusters=11 disk=0x4aa75000
+            run: fvcn=50 VLCN=0x9b695 PLCN=0x43695 clusters=1 disk=0x44695000
+  EXTENT    testintegrity/xbpt_output_sierra_946792.txt
+            size=358779, attrs=ARCHIVE, extents=2, clusters=88
+            created=2026-05-23 07:53:48
+            run: fvcn=1 VLCN=0xa96fd PLCN=0x496fd clusters=87 disk=0x4a6fd000
+            run: fvcn=0 VLCN=0xa96fc PLCN=0x496fc clusters=1 disk=0x4a6fc000
+  EXTENT    testintegrity/xbpt_uniform_kilo_835445.log
+            size=451851, attrs=ARCHIVE, extents=3, clusters=111
+            created=2021-12-28 07:49:15
+            run: fvcn=0 VLCN=0x9bd1d PLCN=0x43d1d clusters=1 disk=0x44d1d000
+            run: fvcn=1 VLCN=0x9bd1e PLCN=0x43d1e clusters=109 disk=0x44d1e000
+            run: fvcn=110 VLCN=0x99858 PLCN=0x41858 clusters=1 disk=0x42858000
+  RESIDENT  testintegrity/dotnet-sdk-9.0.314-win-x64.exe
+            size=226832288 (data inline in directory entry)
+  RESIDENT  testintegrity/xbpt_hotel_record_380235.bak
+            size=11694 (data inline in directory entry)
+  RESIDENT  testintegrity/xbpt_index_victor_598659.bak
+            size=591516 (data inline in directory entry)
+  RESIDENT  testintegrity/xbpt_india_record_576445.dat
+            size=312340 (data inline in directory entry)
+  RESIDENT  testintegrity/xbpt_mike_india_351395.cfg
+            size=491297 (data inline in directory entry)
+  RESIDENT  testintegrity/xbpt_report_uniform_305239.json
+            size=254576 (data inline in directory entry)
+  RESIDENT  testintegrity/xbpt_symlink_audit_371491.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/xbpt_symlink_config_639262.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/xbpt_symlink_hotel_610754.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/xbpt_symlink_quebec_178277.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/xbpt_symlink_victor_768826.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/xbpt_sync_delta_680809.log
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/xbpt_uniform_tango_116837.lnk
+            size=114260 (data inline in directory entry)
+  EXTENT    testintegrity/dir_backup_983023/xbpt_hardlink_kilo_443878.xml
+            size=434031, attrs=ARCHIVE, extents=2, clusters=106
+            created=2026-05-23 07:53:48
+            run: fvcn=1 VLCN=0xa97d2 PLCN=0x497d2 clusters=105 disk=0x4a7d2000
+            run: fvcn=0 VLCN=0xa97d1 PLCN=0x497d1 clusters=1 disk=0x4a7d1000
+            (extents in remote OID 0x820)
+  RESIDENT  testintegrity/dir_backup_983023/xbpt_data_archive_297721.txt
+            size=103351 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_backup_983023/xbpt_delta_log_450357.tmp
+            size=259346 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_backup_983023/xbpt_symlink_kilo_905448.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_backup_983023/xbpt_uniform_quebec_392788.csv
+            size=20934 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_backup_983023/dir_lima_860689/xbpt_symlink_alpha_720119.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_backup_983023/dir_lima_860689/xbpt_symlink_index_953360.lnk
+            size=0 (data inline in directory entry)
+  EXTENT    testintegrity/dir_gamma_404999/xbpt_hardlink_quebec_716156.xml
+            size=128, attrs=ARCHIVE, extents=1, clusters=1
+            created=2026-05-23 07:53:52
+            run: fvcn=0 VLCN=0xab06c PLCN=0x4b06c clusters=1 disk=0x4c06c000
+            (extents in remote OID 0x830)
+  EXTENT    testintegrity/dir_gamma_404999/xbpt_hardlink_sync_407160.log
+            size=27754, attrs=ARCHIVE, extents=2, clusters=7
+            created=2026-05-23 07:53:53
+            run: fvcn=1 VLCN=0xab676 PLCN=0x4b676 clusters=6 disk=0x4c676000
+            run: fvcn=0 VLCN=0xab675 PLCN=0x4b675 clusters=1 disk=0x4c675000
+            (extents in remote OID 0x81c)
+  RESIDENT  testintegrity/dir_gamma_404999/xbpt_quebec_alpha_748446.txt
+            size=482099 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_gamma_404999/xbpt_symlink_archive_115861.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_gamma_404999/xbpt_symlink_beta_951455.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_gamma_404999/xbpt_symlink_delta_831152.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_gamma_404999/xbpt_symlink_oscar_222464.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_gamma_404999/xbpt_symlink_temp_742877.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_gamma_404999/xbpt_symlink_victor_142196.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_gamma_404999/xbpt_symlink_yankee_547491.lnk
+            size=0 (data inline in directory entry)
+  EXTENT    testintegrity/dir_gamma_404999/dir_mike_845145/xbpt_hardlink_lima_581837.xml
+            size=247899, attrs=ARCHIVE, extents=2, clusters=61
+            created=2026-05-23 07:53:50
+            run: fvcn=1 VLCN=0xaa503 PLCN=0x4a503 clusters=60 disk=0x4b503000
+            run: fvcn=0 VLCN=0xaa502 PLCN=0x4a502 clusters=1 disk=0x4b502000
+            (extents in remote OID 0x831)
+  RESIDENT  testintegrity/dir_gamma_404999/dir_mike_845145/xbpt_zulu_lima_657228.txt
+            size=358779 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_gamma_404999/dir_whiskey_550421/xbpt_large_77mb_uniform_623142.tmp
+            size=80740352 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_gamma_404999/dir_whiskey_550421/xbpt_mike_backup_943335.cfg
+            size=8681 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_gamma_404999/dir_whiskey_550421/xbpt_symlink_kilo_525120.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_gamma_404999/dir_whiskey_550421/xbpt_symlink_oscar_948643.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_gamma_404999/dir_whiskey_550421/xbpt_sync_index_513821.bin
+            size=451180 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_gamma_404999/dir_whiskey_550421/xbpt_yankee_victor_249801.ini
+            size=280259 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_gamma_404999/dir_whiskey_550421/xbpt_zulu_archive_509329.ini
+            size=263922 (data inline in directory entry)
+  EXTENT    testintegrity/dir_gamma_404999/dir_yankee_757223/xbpt_hardlink_oscar_345063.json
+            size=510161, attrs=ARCHIVE, extents=2, clusters=125
+            created=2026-05-23 07:53:47
+            run: fvcn=1 VLCN=0xa95b7 PLCN=0x495b7 clusters=124 disk=0x4a5b7000
+            run: fvcn=0 VLCN=0xa95b6 PLCN=0x495b6 clusters=1 disk=0x4a5b6000
+            (extents in remote OID 0x81c)
+  RESIDENT  testintegrity/dir_lima_374925/xbpt_trace_sync_280538.cfg
+            size=510557 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_lima_374925/dir_mike_895211/xbpt_trace_foxtrot_828686.bin
+            size=129103 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_log_989773/xbpt_archive_uniform_576352.log
+            size=372762 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_log_989773/xbpt_symlink_audit_510013.lnk
+            size=0 (data inline in directory entry)
+  EXTENT    testintegrity/dir_log_989773/dir_beta_399822/xbpt_hardlink_whiskey_338079.json
+            size=126243, attrs=ARCHIVE, extents=2, clusters=31
+            created=2026-05-23 07:53:51
+            run: fvcn=0 VLCN=0xaac65 PLCN=0x4ac65 clusters=1 disk=0x4bc65000
+            run: fvcn=1 VLCN=0xaac66 PLCN=0x4ac66 clusters=30 disk=0x4bc66000
+            (extents in remote OID 0x846)
+  RESIDENT  testintegrity/dir_log_989773/dir_beta_399822/xbpt_kilo_sierra_537692.cfg
+            size=259067 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_log_989773/dir_beta_399822/xbpt_oscar_oscar_602596.txt
+            size=375297 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_log_989773/dir_beta_399822/xbpt_symlink_data_316263.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_log_989773/dir_beta_399822/xbpt_symlink_foxtrot_984643.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_log_989773/dir_beta_399822/xbpt_zulu_romeo_449313.tmp
+            size=362732 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_log_989773/dir_gamma_610434/xbpt_delta_data_953675.md
+            size=13563 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_log_989773/dir_gamma_610434/xbpt_symlink_alpha_458179.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_log_989773/dir_gamma_610434/xbpt_uniform_zulu_412193.md
+            size=515538 (data inline in directory entry)
+  EXTENT    testintegrity/dir_quebec_504972/xbpt_hardlink_quebec_388490.lnk
+            size=139725, attrs=ARCHIVE, extents=2, clusters=35
+            created=2026-05-23 07:53:50
+            run: fvcn=0 VLCN=0xa99c3 PLCN=0x499c3 clusters=1 disk=0x4a9c3000
+            run: fvcn=1 VLCN=0xa99c4 PLCN=0x499c4 clusters=34 disk=0x4a9c4000
+            (extents in remote OID 0x843)
+  EXTENT    testintegrity/dir_quebec_504972/xbpt_india_uniform_558536.cfg
+            size=128, attrs=ARCHIVE, extents=1, clusters=1
+            created=2026-05-23 07:53:52
+            run: fvcn=0 VLCN=0xab315 PLCN=0x4b315 clusters=1 disk=0x4c315000
+            (extents in remote OID 0x840)
+  EXTENT    testintegrity/dir_quebec_504972/xbpt_log_gamma_299767.xml
+            size=247899, attrs=ARCHIVE, extents=2, clusters=61
+            created=2026-05-23 07:53:50
+            run: fvcn=1 VLCN=0xaa503 PLCN=0x4a503 clusters=60 disk=0x4b503000
+            run: fvcn=0 VLCN=0xaa502 PLCN=0x4a502 clusters=1 disk=0x4b502000
+  RESIDENT  testintegrity/dir_quebec_504972/xbpt_delta_backup_152252.bak
+            size=128 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_quebec_504972/xbpt_lima_sync_929607.json
+            size=230377 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_quebec_504972/xbpt_lima_sync_972006.json
+            size=159460 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_quebec_504972/xbpt_symlink_echo_657944.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_quebec_504972/xbpt_trace_delta_746981.csv
+            size=56185 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_quebec_504972/xbpt_uniform_config_256210.ini
+            size=73332 (data inline in directory entry)
+  EXTENT    testintegrity/dir_romeo_348517/xbpt_gamma_romeo_253136.bak
+            size=139550, attrs=ARCHIVE, extents=4, clusters=35
+            created=2026-05-23 07:53:47
+            run: fvcn=0 VLCN=0xa9324 PLCN=0x49324 clusters=1 disk=0x4a324000
+            run: fvcn=1 VLCN=0xa9325 PLCN=0x49325 clusters=31 disk=0x4a325000
+            run: fvcn=33 VLCN=0xaab92 PLCN=0x4ab92 clusters=2 disk=0x4bb92000
+            run: fvcn=32 VLCN=0xa9344 PLCN=0x49344 clusters=1 disk=0x4a344000
+  EXTENT    testintegrity/dir_romeo_348517/xbpt_hardlink_india_193722.bak
+            size=150451, attrs=ARCHIVE, extents=2, clusters=37
+            created=2022-01-16 07:49:30
+            run: fvcn=1 VLCN=0xa9eb6 PLCN=0x49eb6 clusters=36 disk=0x4aeb6000
+            run: fvcn=0 VLCN=0xa9eb5 PLCN=0x49eb5 clusters=1 disk=0x4aeb5000
+            (extents in remote OID 0x819)
+  EXTENT    testintegrity/dir_romeo_348517/xbpt_lima_romeo_166139.log
+            size=128, attrs=ARCHIVE, extents=1, clusters=1
+            created=2026-05-23 07:53:52
+            run: fvcn=0 VLCN=0xab06b PLCN=0x4b06b clusters=1 disk=0x4c06b000
+  EXTENT    testintegrity/dir_romeo_348517/xbpt_temp_romeo_257411.json
+            size=84213, attrs=ARCHIVE, extents=2, clusters=21
+            created=2026-05-23 07:53:49
+            run: fvcn=1 VLCN=0xaa171 PLCN=0x4a171 clusters=20 disk=0x4b171000
+            run: fvcn=0 VLCN=0xaa170 PLCN=0x4a170 clusters=1 disk=0x4b170000
+  RESIDENT  testintegrity/dir_romeo_348517/xbpt_delta_hotel_266388.json
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_romeo_348517/xbpt_large_99mb_oscar_546061.log
+            size=103809024 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_romeo_348517/xbpt_oscar_echo_988315.json
+            size=335171 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_romeo_348517/xbpt_quebec_data_511220.dat
+            size=498759 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_romeo_348517/xbpt_report_uniform_552965.xml
+            size=217221 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_romeo_348517/xbpt_symlink_log_820108.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_romeo_348517/xbpt_tango_record_968896.md
+            size=144790 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_romeo_348517/xbpt_zulu_index_720705.lnk
+            size=451851 (data inline in directory entry)
+  EXTENT    testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_audit_india_294476.md
+            size=144095, attrs=ARCHIVE, extents=2, clusters=36
+            created=2026-05-23 07:53:47
+            run: fvcn=0 VLCN=0x9a5c1 PLCN=0x425c1 clusters=1 disk=0x435c1000
+            run: fvcn=1 VLCN=0x9a5c2 PLCN=0x425c2 clusters=35 disk=0x435c2000
+  EXTENT    testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_cache_echo_527264.ini
+            size=186095, attrs=ARCHIVE, extents=2, clusters=7
+            created=2026-05-23 07:53:48
+            run: fvcn=1 VLCN=0x9b371 PLCN=0x43371 clusters=6 disk=0x44371000
+            run: fvcn=0 VLCN=0x9b370 PLCN=0x43370 clusters=1 disk=0x44370000
+  EXTENT    testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_delta_mike_801553.tmp
+            size=26174, attrs=ARCHIVE, extents=2, clusters=7
+            created=2026-05-23 07:53:47
+            run: fvcn=1 VLCN=0x9b371 PLCN=0x43371 clusters=6 disk=0x44371000
+            run: fvcn=0 VLCN=0x9b370 PLCN=0x43370 clusters=1 disk=0x44370000
+  EXTENT    testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_hardlink_audit_143059.ini
+            size=21292, attrs=ARCHIVE, extents=2, clusters=95
+            created=2026-05-23 07:53:47
+            run: fvcn=1 VLCN=0xab736 PLCN=0x4b736 clusters=94 disk=0x4c736000
+            run: fvcn=0 VLCN=0xab735 PLCN=0x4b735 clusters=1 disk=0x4c735000
+  EXTENT    testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_record_index_333773.cfg
+            size=336544, attrs=ARCHIVE, extents=2, clusters=95
+            created=2023-02-26 07:47:56
+            run: fvcn=1 VLCN=0xab736 PLCN=0x4b736 clusters=94 disk=0x4c736000
+            run: fvcn=0 VLCN=0xab735 PLCN=0x4b735 clusters=1 disk=0x4c735000
+  EXTENT    testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_whiskey_kilo_696933.md
+            size=144095, attrs=ARCHIVE, extents=2, clusters=36
+            created=2024-03-14 07:48:36
+            run: fvcn=0 VLCN=0x9a5c1 PLCN=0x425c1 clusters=1 disk=0x435c1000
+            run: fvcn=1 VLCN=0x9a5c2 PLCN=0x425c2 clusters=35 disk=0x435c2000
+  RESIDENT  testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_draft_foxtrot_381961.bak
+            size=7272 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_foxtrot_lima_500310.cfg
+            size=392610 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_kilo_gamma_147821.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_lima_cache_703977.json
+            size=415584 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_quebec_quebec_839616.log
+            size=39182 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_symlink_archive_273241.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_symlink_audit_983518.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_symlink_output_504486.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_symlink_report_251184.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_tango_lima_804385.json
+            size=345248 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_uniform_archive_994216.csv
+            size=345460 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_victor_india_410451.bak
+            size=128 (data inline in directory entry)
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_hardlink_beta_222943.txt
+            size=339070, attrs=ARCHIVE, extents=4, clusters=95
+            created=2024-07-02 07:49:01
+            run: fvcn=0 VLCN=0xa9eda PLCN=0x49eda clusters=1 disk=0x4aeda000
+            run: fvcn=1 VLCN=0xa9edb PLCN=0x49edb clusters=81 disk=0x4aedb000
+            run: fvcn=83 VLCN=0xaafed PLCN=0x4afed clusters=12 disk=0x4bfed000
+            run: fvcn=82 VLCN=0xa9f2c PLCN=0x49f2c clusters=1 disk=0x4af2c000
+            (extents in remote OID 0x81f)
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_hardlink_index_906427.json
+            size=254576, attrs=ARCHIVE, extents=2, clusters=63
+            created=2026-04-18 07:48:17
+            run: fvcn=0 VLCN=0xa98d0 PLCN=0x498d0 clusters=1 disk=0x4a8d0000
+            run: fvcn=1 VLCN=0xa98d1 PLCN=0x498d1 clusters=62 disk=0x4a8d1000
+            (extents in remote OID 0x818)
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_hardlink_quebec_103258.csv
+            size=128, attrs=ARCHIVE, extents=1, clusters=1
+            created=2025-05-28 07:50:04
+            run: fvcn=0 VLCN=0xab4c4 PLCN=0x4b4c4 clusters=1 disk=0x4c4c4000
+            (extents in remote OID 0x819)
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_lima_draft_563667.bin
+            size=128, attrs=ARCHIVE, extents=1, clusters=1
+            created=2026-05-23 07:53:49
+            run: fvcn=0 VLCN=0xa9f2d PLCN=0x49f2d clusters=1 disk=0x4af2d000
+            (extents in remote OID 0x81c)
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_tango_lima_130282.dat
+            size=252652, attrs=0x8000, extents=4, clusters=62
+            created=2023-01-05 07:48:06
+            run: fvcn=0 VLCN=0x9b663 PLCN=0x43663 clusters=1 disk=0x44663000
+            run: fvcn=1 VLCN=0x9b664 PLCN=0x43664 clusters=49 disk=0x44664000
+            run: fvcn=51 VLCN=0xa9a75 PLCN=0x49a75 clusters=11 disk=0x4aa75000
+            run: fvcn=50 VLCN=0x9b695 PLCN=0x43695 clusters=1 disk=0x44695000
+            (extents in remote OID 0x818)
+  RESIDENT  testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_cache_archive_833633.cfg
+            size=307615 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_symlink_config_585821.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_symlink_gamma_837222.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_symlink_hotel_226146.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_symlink_report_408917.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_symlink_sync_229547.lnk
+            size=0 (data inline in directory entry)
+  EXTENT    testintegrity/dir_tango_306249/xbpt_hardlink_backup_571101.md
+            size=43263, attrs=ARCHIVE, extents=2, clusters=78
+            created=2026-05-23 07:53:49
+            run: fvcn=1 VLCN=0xaa22c PLCN=0x4a22c clusters=77 disk=0x4b22c000
+            run: fvcn=0 VLCN=0xaa22b PLCN=0x4a22b clusters=1 disk=0x4b22b000
+            (extents in remote OID 0x81f)
+  EXTENT    testintegrity/dir_tango_306249/xbpt_hardlink_backup_574189.cfg
+            size=21290, attrs=ARCHIVE, extents=2, clusters=6
+            created=2026-05-23 07:53:48
+            run: fvcn=0 VLCN=0xa9bec PLCN=0x49bec clusters=1 disk=0x4abec000
+            run: fvcn=1 VLCN=0xa9bed PLCN=0x49bed clusters=5 disk=0x4abed000
+            (extents in remote OID 0x81e)
+  EXTENT    testintegrity/dir_tango_306249/xbpt_hardlink_whiskey_641860.dat
+            size=252652, attrs=ARCHIVE, extents=4, clusters=62
+            created=2023-01-05 07:48:06
+            run: fvcn=0 VLCN=0x9b663 PLCN=0x43663 clusters=1 disk=0x44663000
+            run: fvcn=1 VLCN=0x9b664 PLCN=0x43664 clusters=49 disk=0x44664000
+            run: fvcn=51 VLCN=0xa9a75 PLCN=0x49a75 clusters=11 disk=0x4aa75000
+            run: fvcn=50 VLCN=0x9b695 PLCN=0x43695 clusters=1 disk=0x44695000
+            (extents in remote OID 0x818)
+  RESIDENT  testintegrity/dir_tango_306249/xbpt_delta_log_857078.csv
+            size=60330 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_tango_306249/xbpt_log_archive_280792.bak
+            size=128 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_tango_306249/xbpt_quebec_audit_816796.ini
+            size=452779 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_tango_306249/xbpt_symlink_audit_901343.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_tango_306249/xbpt_symlink_hotel_430990.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_tango_306249/xbpt_symlink_mike_445436.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_tango_306249/xbpt_symlink_whiskey_434761.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_tango_306249/xbpt_temp_report_616624.tmp
+            size=345692 (data inline in directory entry)
+  RESIDENT  testintegrity/dir_tango_306249/xbpt_uniform_quebec_717296.bin
+            size=128 (data inline in directory entry)
+  EXTENT    testspecials/xbpt_archive_record_237501.xml
+            size=333820, attrs=ARCHIVE, extents=6, clusters=84
+            created=2024-12-22 07:39:57
+            run: fvcn=0 VLCN=0xa0a09 PLCN=0x44a09 clusters=1 disk=0x45a09000
+            run: fvcn=1 VLCN=0xa0cfa PLCN=0x44cfa clusters=76 disk=0x45cfa000
+            run: fvcn=77 VLCN=0xa0d46 PLCN=0x44d46 clusters=1 disk=0x45d46000
+            run: fvcn=78 VLCN=0x9b6a6 PLCN=0x436a6 clusters=3 disk=0x446a6000
+            run: fvcn=82 VLCN=0x9b2d9 PLCN=0x432d9 clusters=2 disk=0x442d9000
+            run: fvcn=81 VLCN=0x9b6a9 PLCN=0x436a9 clusters=1 disk=0x446a9000
+  EXTENT    testspecials/xbpt_backup_backup_285884.cfg
+            size=497479, attrs=ARCHIVE, extents=2, clusters=122
+            created=2026-05-23 07:44:16
+            run: fvcn=0 VLCN=0x9a8f1 PLCN=0x428f1 clusters=1 disk=0x438f1000
+            run: fvcn=1 VLCN=0x9a878 PLCN=0x42878 clusters=121 disk=0x43878000
+  EXTENT    testspecials/xbpt_hardlink_archive_469036.xml
+            size=343467, attrs=ARCHIVE, extents=6, clusters=84
+            created=2024-12-22 07:39:57
+            run: fvcn=0 VLCN=0xa0a09 PLCN=0x44a09 clusters=1 disk=0x45a09000
+            run: fvcn=1 VLCN=0xa0cfa PLCN=0x44cfa clusters=76 disk=0x45cfa000
+            run: fvcn=77 VLCN=0xa0d46 PLCN=0x44d46 clusters=1 disk=0x45d46000
+            run: fvcn=78 VLCN=0x9b6a6 PLCN=0x436a6 clusters=3 disk=0x446a6000
+            run: fvcn=82 VLCN=0x9b2d9 PLCN=0x432d9 clusters=2 disk=0x442d9000
+            run: fvcn=81 VLCN=0x9b6a9 PLCN=0x436a9 clusters=1 disk=0x446a9000
+  EXTENT    testspecials/xbpt_hardlink_log_697310.log
+            size=207836, attrs=ARCHIVE, extents=2, clusters=51
+            created=2026-05-23 07:44:16
+            run: fvcn=0 VLCN=0xa18db PLCN=0x458db clusters=1 disk=0x468db000
+            run: fvcn=1 VLCN=0xa18dc PLCN=0x458dc clusters=50 disk=0x468dc000
+  EXTENT    testspecials/xbpt_hardlink_romeo_125439.log
+            size=315729, attrs=ARCHIVE, extents=2, clusters=51
+            created=2026-05-23 07:44:16
+            run: fvcn=0 VLCN=0xa18db PLCN=0x458db clusters=1 disk=0x468db000
+            run: fvcn=1 VLCN=0xa18dc PLCN=0x458dc clusters=50 disk=0x468dc000
+  EXTENT    testspecials/xbpt_hardlink_tango_460823.xml
+            size=448148, attrs=ARCHIVE, extents=6, clusters=112
+            created=2022-07-05 07:39:53
+            run: fvcn=0 VLCN=0x9bdc3 PLCN=0x43dc3 clusters=1 disk=0x44dc3000
+            run: fvcn=1 VLCN=0x9bdc4 PLCN=0x43dc4 clusters=98 disk=0x44dc4000
+            run: fvcn=99 VLCN=0x9be26 PLCN=0x43e26 clusters=1 disk=0x44e26000
+            run: fvcn=100 VLCN=0xa0890 PLCN=0x44890 clusters=9 disk=0x45890000
+            run: fvcn=110 VLCN=0x9a55d PLCN=0x4255d clusters=2 disk=0x4355d000
+            run: fvcn=109 VLCN=0xa92c0 PLCN=0x492c0 clusters=1 disk=0x4a2c0000
+  NOEXTENT  testspecials/xbpt_mike_mike_872519.cfg
+            size=128 (extents not decoded — may be in remote OID 0x7bc)
+  EXTENT    testspecials/xbpt_november_archive_100866.cfg
+            size=345969, attrs=ARCHIVE, extents=2, clusters=85
+            created=2026-05-23 07:44:15
+            run: fvcn=1 VLCN=0xa06f8 PLCN=0x446f8 clusters=84 disk=0x456f8000
+            run: fvcn=0 VLCN=0xa0e4f PLCN=0x44e4f clusters=1 disk=0x45e4f000
+  EXTENT    testspecials/xbpt_november_yankee_740549.bin
+            size=206608, attrs=ARCHIVE, extents=2, clusters=51
+            created=2026-05-23 07:44:21
+            run: fvcn=1 VLCN=0x9b18b PLCN=0x4318b clusters=50 disk=0x4418b000
+            run: fvcn=0 VLCN=0xa92bf PLCN=0x492bf clusters=1 disk=0x4a2bf000
+  EXTENT    testspecials/xbpt_output_temp_160123.log
+            size=207836, attrs=ARCHIVE, extents=2, clusters=51
+            created=2026-05-23 07:44:16
+            run: fvcn=0 VLCN=0xa18db PLCN=0x458db clusters=1 disk=0x468db000
+            run: fvcn=1 VLCN=0xa18dc PLCN=0x458dc clusters=50 disk=0x468dc000
+  EXTENT    testspecials/xbpt_record_beta_701778.txt
+            size=355192, attrs=ARCHIVE, extents=2, clusters=85
+            created=2026-05-23 07:44:16
+            run: fvcn=1 VLCN=0xa06f8 PLCN=0x446f8 clusters=84 disk=0x456f8000
+            run: fvcn=0 VLCN=0xa0e4f PLCN=0x44e4f clusters=1 disk=0x45e4f000
+  EXTENT    testspecials/xbpt_romeo_november_390172.xml
+            size=104425, attrs=ARCHIVE, extents=2, clusters=26
+            created=2026-05-23 07:44:16
+            run: fvcn=0 VLCN=0x9b94c PLCN=0x4394c clusters=1 disk=0x4494c000
+            run: fvcn=1 VLCN=0x9b94d PLCN=0x4394d clusters=25 disk=0x4494d000
+  EXTENT    testspecials/xbpt_uniform_beta_276130.dat
+            size=12975, attrs=ARCHIVE, extents=2, clusters=4
+            created=2021-11-15 07:39:56
+            run: fvcn=1 VLCN=0x9a4d6 PLCN=0x424d6 clusters=3 disk=0x434d6000
+            run: fvcn=0 VLCN=0x9a55c PLCN=0x4255c clusters=1 disk=0x4355c000
+  EXTENT    testspecials/xbpt_whiskey_kilo_607127.bin
+            size=166910, attrs=ARCHIVE, extents=2, clusters=41
+            created=2026-05-23 07:44:18
+            run: fvcn=1 VLCN=0xa0ba6 PLCN=0x44ba6 clusters=40 disk=0x45ba6000
+            run: fvcn=0 VLCN=0xa0989 PLCN=0x44989 clusters=1 disk=0x45989000
+  RESIDENT  testspecials/xbpt_draft_quebec_153387.txt
+            size=80353 (data inline in directory entry)
+  RESIDENT  testspecials/xbpt_echo_audit_435989.cfg
+            size=497479 (data inline in directory entry)
+  RESIDENT  testspecials/xbpt_index_beta_458108.bin
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/xbpt_index_temp_559712.cfg
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/xbpt_lima_temp_390480.md
+            size=134326 (data inline in directory entry)
+  RESIDENT  testspecials/xbpt_oscar_whiskey_503440.md
+            size=319 (data inline in directory entry)
+  RESIDENT  testspecials/xbpt_oscar_zulu_627251.tmp
+            size=322941 (data inline in directory entry)
+  RESIDENT  testspecials/xbpt_symlink_archive_691137.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/xbpt_symlink_backup_532113.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/xbpt_symlink_log_401657.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/xbpt_symlink_report_973327.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/xbpt_symlink_sync_470993.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/xbpt_symlink_uniform_920282.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/xbpt_symlink_victor_132207.lnk
+            size=0 (data inline in directory entry)
+  EXTENT    testspecials/dir_echo_260113/xbpt_config_whiskey_118230.xml
+            size=448148, attrs=ARCHIVE, extents=4, clusters=110
+            created=2026-05-23 07:44:19
+            run: fvcn=0 VLCN=0x9bdc3 PLCN=0x43dc3 clusters=1 disk=0x44dc3000
+            run: fvcn=1 VLCN=0x9bdc4 PLCN=0x43dc4 clusters=98 disk=0x44dc4000
+            run: fvcn=99 VLCN=0x9be26 PLCN=0x43e26 clusters=1 disk=0x44e26000
+            run: fvcn=100 VLCN=0xa0890 PLCN=0x44890 clusters=10 disk=0x45890000
+  EXTENT    testspecials/dir_echo_260113/xbpt_hardlink_cache_777767.cfg
+            size=267822, attrs=ARCHIVE, extents=2, clusters=66
+            created=2026-05-23 07:44:18
+            run: fvcn=0 VLCN=0x9a160 PLCN=0x42160 clusters=1 disk=0x43160000
+            run: fvcn=1 VLCN=0x9bef7 PLCN=0x43ef7 clusters=65 disk=0x44ef7000
+            (extents in remote OID 0x7c0)
+  RESIDENT  testspecials/dir_echo_260113/xbpt_archive_sync_758083.txt
+            size=100948 (data inline in directory entry)
+  RESIDENT  testspecials/dir_echo_260113/xbpt_backup_cache_585654.tmp
+            size=445779 (data inline in directory entry)
+  RESIDENT  testspecials/dir_echo_260113/xbpt_cache_romeo_952485.cfg
+            size=126130 (data inline in directory entry)
+  RESIDENT  testspecials/dir_echo_260113/xbpt_india_oscar_568164.tmp
+            size=161893 (data inline in directory entry)
+  RESIDENT  testspecials/dir_echo_260113/xbpt_lima_audit_873256.log
+            size=401614 (data inline in directory entry)
+  RESIDENT  testspecials/dir_echo_260113/xbpt_lima_echo_432966.xml
+            size=447330 (data inline in directory entry)
+  RESIDENT  testspecials/dir_echo_260113/xbpt_log_quebec_868926.log
+            size=207836 (data inline in directory entry)
+  RESIDENT  testspecials/dir_echo_260113/xbpt_log_record_641814.xml
+            size=145714 (data inline in directory entry)
+  RESIDENT  testspecials/dir_echo_260113/xbpt_record_tango_546969.txt
+            size=99482 (data inline in directory entry)
+  RESIDENT  testspecials/dir_echo_260113/xbpt_symlink_alpha_523983.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_echo_260113/xbpt_symlink_india_127143.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_echo_260113/xbpt_symlink_log_832496.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_echo_260113/xbpt_symlink_output_917945.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_echo_260113/xbpt_symlink_quebec_908754.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_echo_260113/xbpt_symlink_romeo_364451.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_echo_260113/dir_data_161769/xbpt_index_kilo_420810.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_echo_260113/dir_data_161769/xbpt_index_temp_611470.cfg
+            size=468730 (data inline in directory entry)
+  RESIDENT  testspecials/dir_echo_260113/dir_data_161769/xbpt_record_sync_360814.json
+            size=523174 (data inline in directory entry)
+  RESIDENT  testspecials/dir_echo_260113/dir_data_161769/xbpt_symlink_audit_845545.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_echo_260113/dir_data_161769/xbpt_symlink_sierra_101439.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_echo_260113/dir_data_161769/xbpt_symlink_trace_487746.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_echo_260113/dir_data_161769/xbpt_symlink_zulu_969869.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_echo_260113/dir_data_161769/xbpt_zulu_zulu_466281.ini
+            size=311301 (data inline in directory entry)
+  EXTENT    testspecials/dir_echo_260113/dir_november_183663/xbpt_hardlink_delta_194525.bin
+            size=332143, attrs=ARCHIVE, extents=2, clusters=82
+            created=2026-05-23 07:44:18
+            run: fvcn=1 VLCN=0xa1cb7 PLCN=0x45cb7 clusters=81 disk=0x46cb7000
+            run: fvcn=0 VLCN=0xa05d7 PLCN=0x445d7 clusters=1 disk=0x455d7000
+            (extents in remote OID 0x7bc)
+  EXTENT    testspecials/dir_echo_260113/dir_november_183663/xbpt_hardlink_output_410019.bin
+            size=345593, attrs=ARCHIVE, extents=2, clusters=85
+            created=2026-05-23 07:44:19
+            run: fvcn=1 VLCN=0x99c2c PLCN=0x41c2c clusters=84 disk=0x42c2c000
+            run: fvcn=0 VLCN=0x9b2db PLCN=0x432db clusters=1 disk=0x442db000
+            (extents in remote OID 0x7bf)
+  NOEXTENT  testspecials/dir_echo_260113/dir_november_183663/xbpt_november_foxtrot_605893.md
+            size=128 (extents not decoded — may be in remote OID 0x7ec)
+  RESIDENT  testspecials/dir_echo_260113/dir_november_183663/xbpt_delta_config_974533.bak
+            size=385743 (data inline in directory entry)
+  RESIDENT  testspecials/dir_echo_260113/dir_november_183663/xbpt_symlink_beta_192083.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_echo_260113/dir_november_183663/xbpt_symlink_trace_248534.lnk
+            size=0 (data inline in directory entry)
+  EXTENT    testspecials/dir_mike_420327/xbpt_echo_archive_728530.md
+            size=388977, attrs=ARCHIVE, extents=2, clusters=95
+            created=2026-05-23 07:44:21
+            run: fvcn=1 VLCN=0x99d2a PLCN=0x41d2a clusters=94 disk=0x42d2a000
+            run: fvcn=0 VLCN=0xa92c1 PLCN=0x492c1 clusters=1 disk=0x4a2c1000
+  EXTENT    testspecials/dir_mike_420327/xbpt_hardlink_draft_104643.dat
+            size=12975, attrs=ARCHIVE, extents=2, clusters=4
+            created=2021-11-15 07:39:56
+            run: fvcn=1 VLCN=0x9a4d6 PLCN=0x424d6 clusters=3 disk=0x434d6000
+            run: fvcn=0 VLCN=0x9a55c PLCN=0x4255c clusters=1 disk=0x4355c000
+            (extents in remote OID 0x7b3)
+  EXTENT    testspecials/dir_mike_420327/xbpt_hardlink_report_296579.bin
+            size=166910, attrs=ARCHIVE, extents=2, clusters=41
+            created=2026-05-23 07:44:18
+            run: fvcn=1 VLCN=0xa0ba6 PLCN=0x44ba6 clusters=40 disk=0x45ba6000
+            run: fvcn=0 VLCN=0xa0989 PLCN=0x44989 clusters=1 disk=0x45989000
+            (extents in remote OID 0x7b3)
+  EXTENT    testspecials/dir_mike_420327/xbpt_hardlink_romeo_520215.json
+            size=260224, attrs=ARCHIVE, extents=2, clusters=64
+            created=2021-12-11 07:40:20
+            run: fvcn=1 VLCN=0x9a16f PLCN=0x4216f clusters=63 disk=0x4316f000
+            run: fvcn=0 VLCN=0xa230f PLCN=0x4630f clusters=1 disk=0x4730f000
+            (extents in remote OID 0x7c0)
+  EXTENT    testspecials/dir_mike_420327/xbpt_hardlink_tango_580634.log
+            size=315729, attrs=ARCHIVE, extents=2, clusters=78
+            created=2025-10-27 07:42:06
+            run: fvcn=0 VLCN=0x9a3be PLCN=0x423be clusters=1 disk=0x433be000
+            run: fvcn=1 VLCN=0x9a3bf PLCN=0x423bf clusters=77 disk=0x433bf000
+            (extents in remote OID 0x7b7)
+  RESIDENT  testspecials/dir_mike_420327/xbpt_cache_delta_702993.bak
+            size=447644 (data inline in directory entry)
+  RESIDENT  testspecials/dir_mike_420327/xbpt_delta_quebec_902427.bin
+            size=316633 (data inline in directory entry)
+  RESIDENT  testspecials/dir_mike_420327/xbpt_quebec_backup_357108.tmp
+            size=409501 (data inline in directory entry)
+  RESIDENT  testspecials/dir_mike_420327/xbpt_symlink_data_899702.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_mike_420327/xbpt_symlink_hotel_747128.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_mike_420327/dir_backup_585572/xbpt_symlink_output_811700.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_mike_420327/dir_backup_585572/xbpt_symlink_report_175554.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_mike_420327/dir_backup_585572/xbpt_symlink_sierra_429609.lnk
+            size=0 (data inline in directory entry)
+  EXTENT    testspecials/dir_mike_420327/dir_sierra_646867/xbpt_lima_quebec_713613.txt
+            size=234603, attrs=ARCHIVE, extents=2, clusters=58
+            created=2026-05-23 07:44:19
+            run: fvcn=1 VLCN=0x9a0e9 PLCN=0x420e9 clusters=57 disk=0x430e9000
+            run: fvcn=0 VLCN=0x9aa02 PLCN=0x42a02 clusters=1 disk=0x43a02000
+            (extents in remote OID 0x7c0)
+  RESIDENT  testspecials/dir_mike_420327/dir_sierra_646867/xbpt_audit_delta_565315.ini
+            size=286599 (data inline in directory entry)
+  RESIDENT  testspecials/dir_mike_420327/dir_sierra_646867/xbpt_symlink_log_463588.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_mike_420327/dir_sierra_646867/xbpt_symlink_tango_611211.lnk
+            size=0 (data inline in directory entry)
+  EXTENT    testspecials/dir_romeo_413583/xbpt_archive_gamma_782346.txt
+            size=377203, attrs=ARCHIVE, extents=2, clusters=93
+            created=2026-05-23 07:44:16
+            run: fvcn=0 VLCN=0xa0163 PLCN=0x44163 clusters=1 disk=0x45163000
+            run: fvcn=1 VLCN=0xa0164 PLCN=0x44164 clusters=92 disk=0x45164000
+  EXTENT    testspecials/dir_romeo_413583/xbpt_archive_tango_907454.txt
+            size=377203, attrs=ARCHIVE, extents=2, clusters=93
+            created=2026-05-23 07:44:16
+            run: fvcn=0 VLCN=0xa0163 PLCN=0x44163 clusters=1 disk=0x45163000
+            run: fvcn=1 VLCN=0xa0164 PLCN=0x44164 clusters=92 disk=0x45164000
+  EXTENT    testspecials/dir_romeo_413583/xbpt_hardlink_backup_642335.log
+            size=207836, attrs=ARCHIVE, extents=4, clusters=41
+            created=2026-05-23 07:44:16
+            run: fvcn=0 VLCN=0xa0d56 PLCN=0x44d56 clusters=1 disk=0x45d56000
+            run: fvcn=1 VLCN=0x9b479 PLCN=0x43479 clusters=36 disk=0x44479000
+            run: fvcn=38 VLCN=0xa1003 PLCN=0x45003 clusters=3 disk=0x46003000
+            run: fvcn=37 VLCN=0x9b49d PLCN=0x4349d clusters=1 disk=0x4449d000
+  NOEXTENT  testspecials/dir_romeo_413583/xbpt_hardlink_draft_744338.cfg
+            size=128 (extents not decoded — may be in remote OID 0x7bc)
+  EXTENT    testspecials/dir_romeo_413583/xbpt_hardlink_record_480520.txt
+            size=355192, attrs=0x0, extents=2, clusters=42
+            created=2026-05-23 07:44:16
+            run: fvcn=0 VLCN=0x9a849 PLCN=0x42849 clusters=1 disk=0x43849000
+            run: fvcn=1 VLCN=0x9a84a PLCN=0x4284a clusters=41 disk=0x4384a000
+  EXTENT    testspecials/dir_romeo_413583/xbpt_hardlink_tango_845190.ini
+            size=498517, attrs=ARCHIVE, extents=2, clusters=122
+            created=2022-06-08 07:41:16
+            run: fvcn=0 VLCN=0x99fc3 PLCN=0x41fc3 clusters=1 disk=0x42fc3000
+            run: fvcn=1 VLCN=0x99fc4 PLCN=0x41fc4 clusters=121 disk=0x42fc4000
+            (extents in remote OID 0x7b7)
+  EXTENT    testspecials/dir_romeo_413583/xbpt_hardlink_temp_924985.xml
+            size=448148, attrs=ARCHIVE, extents=2, clusters=93
+            created=2022-07-05 07:39:53
+            run: fvcn=0 VLCN=0xa0163 PLCN=0x44163 clusters=1 disk=0x45163000
+            run: fvcn=1 VLCN=0xa0164 PLCN=0x44164 clusters=92 disk=0x45164000
+  EXTENT    testspecials/dir_romeo_413583/xbpt_november_oscar_193407.log
+            size=166393, attrs=ARCHIVE, extents=4, clusters=41
+            created=2026-05-23 07:44:16
+            run: fvcn=0 VLCN=0xa0d56 PLCN=0x44d56 clusters=1 disk=0x45d56000
+            run: fvcn=1 VLCN=0x9b479 PLCN=0x43479 clusters=36 disk=0x44479000
+            run: fvcn=38 VLCN=0xa1003 PLCN=0x45003 clusters=3 disk=0x46003000
+            run: fvcn=37 VLCN=0x9b49d PLCN=0x4349d clusters=1 disk=0x4449d000
+  EXTENT    testspecials/dir_romeo_413583/xbpt_quebec_victor_195703.tmp
+            size=168411, attrs=ARCHIVE, extents=2, clusters=42
+            created=2026-05-23 07:44:16
+            run: fvcn=0 VLCN=0x9a849 PLCN=0x42849 clusters=1 disk=0x43849000
+            run: fvcn=1 VLCN=0x9a84a PLCN=0x4284a clusters=41 disk=0x4384a000
+  RESIDENT  testspecials/dir_romeo_413583/xbpt_backup_echo_890393.tmp
+            size=56564 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/xbpt_log_trace_977459.dat
+            size=363826 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/xbpt_oscar_kilo_205997.json
+            size=28647 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/xbpt_symlink_delta_390131.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/xbpt_symlink_romeo_655979.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/xbpt_symlink_sierra_208965.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/xbpt_trace_draft_961428.txt
+            size=309802 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/xbpt_victor_draft_112961.ini
+            size=7543 (data inline in directory entry)
+  EXTENT    testspecials/dir_romeo_413583/dir_audit_570908/xbpt_hardlink_backup_305417.lnk
+            size=37401, attrs=ARCHIVE, extents=2, clusters=10
+            created=2026-05-23 07:44:21
+            run: fvcn=0 VLCN=0xa219d PLCN=0x4619d clusters=1 disk=0x4719d000
+            run: fvcn=1 VLCN=0x9ab92 PLCN=0x42b92 clusters=9 disk=0x43b92000
+            (extents in remote OID 0x7e7)
+  EXTENT    testspecials/dir_romeo_413583/dir_audit_570908/xbpt_hardlink_delta_399790.cfg
+            size=497479, attrs=0x0, extents=2, clusters=122
+            created=2026-05-23 07:44:16
+            run: fvcn=0 VLCN=0x9a8f1 PLCN=0x428f1 clusters=1 disk=0x438f1000
+            run: fvcn=1 VLCN=0x9a878 PLCN=0x42878 clusters=121 disk=0x43878000
+            (extents in remote OID 0x7b3)
+  RESIDENT  testspecials/dir_romeo_413583/dir_audit_570908/xbpt_foxtrot_sync_868324.tmp
+            size=72996 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_audit_570908/xbpt_november_oscar_753865.bak
+            size=81936 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_audit_570908/xbpt_symlink_archive_929971.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_audit_570908/xbpt_symlink_victor_140323.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_audit_570908/xbpt_symlink_zulu_520629.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_audit_570908/xbpt_temp_output_635532.lnk
+            size=322941 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_audit_570908/xbpt_whiskey_victor_944587.cfg
+            size=457866 (data inline in directory entry)
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_delta_alpha_671390.log
+            size=315729, attrs=ARCHIVE, extents=2, clusters=78
+            created=2025-10-27 07:42:06
+            run: fvcn=0 VLCN=0x9a3be PLCN=0x423be clusters=1 disk=0x433be000
+            run: fvcn=1 VLCN=0x9a3bf PLCN=0x423bf clusters=77 disk=0x433bf000
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_hardlink_foxtrot_415497.bin
+            size=280666, attrs=ARCHIVE, extents=4, clusters=69
+            created=2023-12-31 07:39:56
+            run: fvcn=0 VLCN=0xa0625 PLCN=0x44625 clusters=1 disk=0x45625000
+            run: fvcn=1 VLCN=0xa0fc3 PLCN=0x44fc3 clusters=63 disk=0x45fc3000
+            run: fvcn=65 VLCN=0xa0dd5 PLCN=0x44dd5 clusters=4 disk=0x45dd5000
+            run: fvcn=64 VLCN=0xa1002 PLCN=0x45002 clusters=1 disk=0x46002000
+            (extents in remote OID 0x7b3)
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_hardlink_gamma_915101.cfg
+            size=427387, attrs=ARCHIVE, extents=2, clusters=105
+            created=2026-05-23 07:44:22
+            run: fvcn=1 VLCN=0x998bd PLCN=0x418bd clusters=104 disk=0x428bd000
+            run: fvcn=0 VLCN=0xa92c9 PLCN=0x492c9 clusters=1 disk=0x4a2c9000
+            (extents in remote OID 0x7b5)
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_hardlink_romeo_196672.cfg
+            size=345969, attrs=ARCHIVE, extents=2, clusters=85
+            created=2026-05-23 07:44:15
+            run: fvcn=1 VLCN=0xa06f8 PLCN=0x446f8 clusters=84 disk=0x456f8000
+            run: fvcn=0 VLCN=0xa0e4f PLCN=0x44e4f clusters=1 disk=0x45e4f000
+            (extents in remote OID 0x7b3)
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_hardlink_romeo_515378.txt
+            size=355192, attrs=ARCHIVE, extents=2, clusters=87
+            created=2026-05-23 07:44:18
+            run: fvcn=0 VLCN=0x99d28 PLCN=0x41d28 clusters=1 disk=0x42d28000
+            run: fvcn=1 VLCN=0xa2be2 PLCN=0x46be2 clusters=86 disk=0x47be2000
+            (extents in remote OID 0x7d0)
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_hardlink_trace_683620.txt
+            size=234603, attrs=ARCHIVE, extents=2, clusters=58
+            created=2026-05-23 07:44:19
+            run: fvcn=1 VLCN=0x9a0e9 PLCN=0x420e9 clusters=57 disk=0x430e9000
+            run: fvcn=0 VLCN=0x9aa02 PLCN=0x42a02 clusters=1 disk=0x43a02000
+            (extents in remote OID 0x7c0)
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_hardlink_yankee_232283.json
+            size=145231, attrs=ARCHIVE, extents=2, clusters=36
+            created=2026-05-23 07:44:16
+            run: fvcn=1 VLCN=0x9be39 PLCN=0x43e39 clusters=35 disk=0x44e39000
+            run: fvcn=0 VLCN=0xa0eb2 PLCN=0x44eb2 clusters=1 disk=0x45eb2000
+            (extents in remote OID 0x7b5)
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_hotel_echo_893421.bak
+            size=403328, attrs=ARCHIVE, extents=2, clusters=99
+            created=2026-05-23 07:44:18
+            run: fvcn=0 VLCN=0x9a15f PLCN=0x4215f clusters=1 disk=0x4315f000
+            run: fvcn=1 VLCN=0x9b968 PLCN=0x43968 clusters=98 disk=0x44968000
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_lima_trace_312755.xml
+            size=448148, attrs=ARCHIVE, extents=6, clusters=112
+            created=2022-07-05 07:39:53
+            run: fvcn=0 VLCN=0x9bdc3 PLCN=0x43dc3 clusters=1 disk=0x44dc3000
+            run: fvcn=1 VLCN=0x9bdc4 PLCN=0x43dc4 clusters=98 disk=0x44dc4000
+            run: fvcn=99 VLCN=0x9be26 PLCN=0x43e26 clusters=1 disk=0x44e26000
+            run: fvcn=100 VLCN=0xa0890 PLCN=0x44890 clusters=9 disk=0x45890000
+            run: fvcn=110 VLCN=0x9a55d PLCN=0x4255d clusters=2 disk=0x4355d000
+            run: fvcn=109 VLCN=0xa92c0 PLCN=0x492c0 clusters=1 disk=0x4a2c0000
+            (extents in remote OID 0x7b3)
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_lima_uniform_383213.bak
+            size=164255, attrs=ARCHIVE, extents=2, clusters=41
+            created=2026-05-23 07:44:19
+            run: fvcn=1 VLCN=0x99c80 PLCN=0x41c80 clusters=40 disk=0x42c80000
+            run: fvcn=0 VLCN=0x9b2dc PLCN=0x432dc clusters=1 disk=0x442dc000
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_trace_cache_144002.md
+            size=128, attrs=ARCHIVE, extents=2, clusters=78
+            created=2026-05-23 07:44:18
+            run: fvcn=0 VLCN=0x9a3be PLCN=0x423be clusters=1 disk=0x433be000
+            run: fvcn=1 VLCN=0x9a3bf PLCN=0x423bf clusters=77 disk=0x433bf000
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_zulu_backup_178692.md
+            size=342829, attrs=ARCHIVE, extents=2, clusters=84
+            created=2025-06-11 07:40:00
+            run: fvcn=1 VLCN=0xa0df6 PLCN=0x44df6 clusters=83 disk=0x45df6000
+            run: fvcn=0 VLCN=0x9b377 PLCN=0x43377 clusters=1 disk=0x44377000
+            (extents in remote OID 0x7b3)
+  RESIDENT  testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_alpha_cache_768512.ini
+            size=235868 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_draft_foxtrot_509820.dat
+            size=372958 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_gamma_data_115091.json
+            size=273724 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_report_config_901264.tmp
+            size=128 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_symlink_alpha_368046.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_symlink_backup_536569.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_symlink_beta_320362.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_symlink_hotel_838293.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_symlink_kilo_516699.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_symlink_output_836054.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_symlink_whiskey_422331.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_temp_log_699607.csv
+            size=268859 (data inline in directory entry)
+  EXTENT    testspecials/dir_romeo_413583/dir_sync_209686/xbpt_hardlink_cache_210050.md
+            size=388977, attrs=ARCHIVE, extents=2, clusters=95
+            created=2026-05-23 07:44:21
+            run: fvcn=1 VLCN=0x99d2a PLCN=0x41d2a clusters=94 disk=0x42d2a000
+            run: fvcn=0 VLCN=0xa92c1 PLCN=0x492c1 clusters=1 disk=0x4a2c1000
+            (extents in remote OID 0x7e1)
+  EXTENT    testspecials/dir_romeo_413583/dir_sync_209686/xbpt_hardlink_foxtrot_442208.json
+            size=257732, attrs=ARCHIVE, extents=4, clusters=63
+            created=2026-05-23 07:44:16
+            run: fvcn=0 VLCN=0xa0d49 PLCN=0x44d49 clusters=1 disk=0x45d49000
+            run: fvcn=1 VLCN=0xa14bd PLCN=0x454bd clusters=49 disk=0x464bd000
+            run: fvcn=51 VLCN=0xa0ea6 PLCN=0x44ea6 clusters=12 disk=0x45ea6000
+            run: fvcn=50 VLCN=0xa14ee PLCN=0x454ee clusters=1 disk=0x464ee000
+            (extents in remote OID 0x7bb)
+  RESIDENT  testspecials/dir_romeo_413583/dir_sync_209686/xbpt_audit_india_549466.csv
+            size=123891 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_sync_209686/xbpt_audit_oscar_751790.cfg
+            size=128 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_sync_209686/xbpt_oscar_record_687661.cfg
+            size=128 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_sync_209686/xbpt_symlink_cache_469989.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_sync_209686/xbpt_symlink_cache_472861.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_sync_209686/xbpt_symlink_delta_507251.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_sync_209686/xbpt_symlink_quebec_866630.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_sync_209686/xbpt_symlink_tango_904910.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_sync_209686/xbpt_symlink_yankee_510780.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_sync_209686/xbpt_symlink_zulu_108286.lnk
+            size=0 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_sync_209686/xbpt_trace_alpha_912150.json
+            size=286093 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_tango_685681/xbpt_config_quebec_520599.log
+            size=461964 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_tango_685681/xbpt_output_victor_967108.bak
+            size=210749 (data inline in directory entry)
+  RESIDENT  testspecials/dir_romeo_413583/dir_tango_685681/xbpt_symlink_echo_390096.lnk
+            size=0 (data inline in directory entry)
+  EXTENT    testspecials/dir_romeo_413583/dir_uniform_134923/xbpt_hardlink_quebec_760102.xml
+            size=448148, attrs=ARCHIVE, extents=4, clusters=110
+            created=2026-05-23 07:44:19
+            run: fvcn=0 VLCN=0x9bdc3 PLCN=0x43dc3 clusters=1 disk=0x44dc3000
+            run: fvcn=1 VLCN=0x9bdc4 PLCN=0x43dc4 clusters=98 disk=0x44dc4000
+            run: fvcn=99 VLCN=0x9be26 PLCN=0x43e26 clusters=1 disk=0x44e26000
+            run: fvcn=100 VLCN=0xa0890 PLCN=0x44890 clusters=10 disk=0x45890000
+            (extents in remote OID 0x7c6)
+  RESIDENT  testspecials/dir_romeo_413583/dir_uniform_134923/xbpt_symlink_report_936926.lnk
+            size=0 (data inline in directory entry)

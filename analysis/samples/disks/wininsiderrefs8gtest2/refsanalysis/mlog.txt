@@ -1,0 +1,37 @@
+==============================================================================
+ReFS MLog Analysis — wininsiderrefs8gtest2.raw
+ReFS v3.14 | cluster_size=0x10000 | objects=132
+==============================================================================
+
+==============================================================================
+MLog Control Area
+==============================================================================
+  Control PLCN:      0x2c00
+  Signature:         MLog
+  Format magic:      0xa5440275 (per-volume const, NOT a CRC — E42/#343; differs after a reformat)
+  Version:           1
+  Sector size:       0x1000
+  UUID:              4bce2359-5aeb-4f96-a0c1-25486b5f08cc
+  Sequence:          47
+  Write counter:     2
+  Flags:             0x1
+  Total entries:     0
+  Generation:        2040
+  Data area:         0xc000 - 0x2c000 (131072 clusters)
+  LSN oldest:        0x7f8.1
+  Dispatch table:    v3.14 (44 opcodes)
+
+==============================================================================
+Data Area Summary
+==============================================================================
+  Total pages:       131072
+  zero                 129033  ( 98.4%)
+  MLog                   2039  (  1.6%)
+
+==============================================================================
+Redo Records
+==============================================================================
+  Total records:      4188
+  Transaction starts: 1339
+  Transaction commits: 0
+

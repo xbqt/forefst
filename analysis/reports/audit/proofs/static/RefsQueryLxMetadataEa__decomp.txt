@@ -1,0 +1,57 @@
+
+// === RefsQueryLxMetadataEa @ 14025ae3c ===
+
+/* WARNING: Function: __security_check_cookie replaced with injection: security_check_cookie */
+/* long __cdecl RefsQueryLxMetadataEa(struct _IRP_CONTEXT * __ptr64,struct _FCB * __ptr64,struct
+ _CCB * __ptr64,enum _TYPE_OF_OPEN,struct _FILE_STAT_LX_INFORMATION * __ptr64) */
+
+long __cdecl
+RefsQueryLxMetadataEa
+ (_IRP_CONTEXT *param_1,_FCB *param_2,_CCB *param_3,_TYPE_OF_OPEN param_4,
+ _FILE_STAT_LX_INFORMATION *param_5)
+
+{
+ undefined4 uVar1;
+ _FILE_FULL_EA_INFORMATION *p_Var2;
+ uchar uVar3;
+ char cVar4;
+ ulong uVar5;
+ undefined1 auStackY_2a8 [32];
+ uint local_278;
+ long local_274;
+ undefined8 local_270;
+ undefined8 uStack_268;
+ undefined8 local_260;
+ _FILE_FULL_EA_INFORMATION *local_258;
+ _IRP_CONTEXT *local_250;
+ RefsAttributeManager local_248 [120];
+ undefined2 local_1d0;
+ undefined8 local_50;
+ ulonglong local_48;
+ 
+ local_48 = __security_cookie ^ (ulonglong)auStackY_2a8;
+ local_258 = (_FILE_FULL_EA_INFORMATION *)0x0;
+ local_50 = 0;
+ local_1d0 = 0;
+ local_250 = param_1;
+ RefsAttributeManager::Initialize(local_248);
+ local_260 = 0;
+ local_270 = 0;
+ uStack_268 = 0;
+ local_278 = 0;
+ if ((param_3 == (_CCB *)0x0) || (local_274 = RefsPrepareQueryEa(param_3), -1 < local_274)) {
+ uVar3 = RefsLookupEasOnFile(param_1,param_2,(_EA_INFORMATION *)&local_260,local_248,&local_258);
+ if (uVar3 == '\0') {
+ if (RefsStatusDebugEnabled != '\0') {
+ RefsStatusDebug(-0x3ffffddb,(_IRP_CONTEXT *)0x0,"Ea.c",0x454);
+ }
+ local_274 = -0x3ffffddb;
+ }
+ else {
+ RtlInitString(&local_270,"$LXUID");
+ p_Var2 = local_258;
+ uVar1 = local_260._4_4_;
+ cVar4 = RefsLocateEaByName(local_258,local_260._4_4_,&local_270,&local_278);
+ if ((cVar4 != '\0') && (*(short *)(p_Var2 + (ulonglong)local_278 + 6) == 4)) {
+ *(undefined4 *)(param_5 + 0x4c) =
+ *(undefined4 *)

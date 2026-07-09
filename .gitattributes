@@ -1,0 +1,2 @@
+*.zst filter=lfs diff=lfs merge=lfs -text
+*.raw.zst filter=lfs diff=lfs merge=lfs -text

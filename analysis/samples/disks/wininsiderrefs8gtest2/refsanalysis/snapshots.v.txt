@@ -1,0 +1,70 @@
+==============================================================================
+ReFS Stream Snapshot Analysis
+==============================================================================
+  Image:        wininsiderrefs8gtest2.raw
+  ReFS version: 3.14
+  Cluster size: 0x10000
+  Objects:      132
+
+  Files with snapshots: 0
+  Total snapshots:      0
+  ADS entries (0xB0):   54 on 35 files
+
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  ADS / Named Data Streams (type 0xB0, not snapshots):
+    testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_romeo_gamma_831931.dat:"hidden_7357" (46 bytes, sub_id= ADS)
+    testintegrity/xbpt_tango_archive_828215.dat:"hidden_1514" (46 bytes, sub_id= ADS)
+    testspecials/backup_hotel_570010.cfg:"hidden_9882" (47 bytes, sub_id=d AD)
+    testspecials/dir_config_384571/dir_backup_503994/dir_romeo_941465/dir_mike_372259/draft_quebec_381663.json:"hidden_9722" (47 bytes, sub_id=d AD)
+    testspecials/dir_config_384571/mike_delta_729757.bak:"hidden_1719" (47 bytes, sub_id=d AD)
+    testspecials/dir_config_384571/record_log_195552.md:"hidden_7568" (47 bytes, sub_id=d AD)
+    testspecials/dir_gamma_666805/dir_data_621988/echo_output_850558.lnk:"hidden_9741" (47 bytes, sub_id=d AD)
+    testspecials/dir_gamma_666805/dir_data_621988/echo_output_850558.lnk:"hidden_8233" (47 bytes, sub_id=d AD)
+    testspecials/dir_gamma_666805/dir_data_621988/echo_output_850558.lnk:"hidden_7075" (47 bytes, sub_id=d AD)
+    testspecials/dir_gamma_666805/dir_data_621988/echo_output_850558.lnk:"hidden_5402" (47 bytes, sub_id=d AD)
+    testspecials/dir_gamma_666805/dir_data_621988/echo_output_850558.lnk:"hidden_3626" (47 bytes, sub_id=d AD)
+    testspecials/dir_gamma_666805/dir_data_621988/echo_output_850558.lnk:"hidden_3303" (47 bytes, sub_id=d AD)
+    testspecials/dir_gamma_666805/dir_data_621988/echo_output_850558.lnk:"hidden_2747" (47 bytes, sub_id=d AD)
+    testspecials/dir_gamma_666805/dir_data_621988/echo_output_850558.lnk:"hidden_1817" (47 bytes, sub_id=d AD)
+    testspecials/dir_gamma_666805/dir_temp_510750/sierra_draft_521559.tmp:"hidden_2939" (47 bytes, sub_id=d AD)
+    testspecials/dir_gamma_666805/uniform_trace_241041.tmp:"hidden_9931" (47 bytes, sub_id=d AD)
+    testspecials/dir_gamma_666805/uniform_trace_241041.tmp:"hidden_9767" (47 bytes, sub_id=d AD)
+    testspecials/dir_gamma_666805/uniform_trace_241041.tmp:"hidden_6223" (47 bytes, sub_id=d AD)
+    testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/cache_zulu_982585.lnk:"hidden_8117" (47 bytes, sub_id=d AD)
+    testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/cache_zulu_982585.lnk:"hidden_7926" (47 bytes, sub_id=d AD)
+    testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/india_quebec_345898.tmp:"hidden_9931" (47 bytes, sub_id=d AD)
+    testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/india_quebec_345898.tmp:"hidden_9767" (47 bytes, sub_id=d AD)
+    testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/india_quebec_345898.tmp:"hidden_6223" (47 bytes, sub_id=d AD)
+    testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/report_echo_372097.ini:"hidden_3551" (47 bytes, sub_id=d AD)
+    testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/romeo_delta_145414.tmp:"hidden_5828" (47 bytes, sub_id=d AD)
+    testspecials/dir_oscar_288048/dir_sync_959703/romeo_temp_182346.md:"hidden_2302" (47 bytes, sub_id=d AD)
+    testspecials/dir_record_119518/dir_delta_826049/config_report_394730.ini:"hidden_9602" (47 bytes, sub_id=d AD)
+    testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/output_alpha_291862.bak:"hidden_8243" (47 bytes, sub_id=d AD)
+    testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/temp_archive_630229.cfg:"hidden_9078" (47 bytes, sub_id=d AD)
+    testspecials/dir_record_119518/dir_delta_826049/dir_index_888328/hotel_draft_765897.cfg:"hidden_6230" (47 bytes, sub_id=d AD)
+    testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/audit_zulu_568637.md:"hidden_7265" (47 bytes, sub_id=d AD)
+    testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/cache_uniform_583408.lnk:"hidden_7607" (47 bytes, sub_id=d AD)
+    testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/config_audit_702864.bin:"hidden_4202" (47 bytes, sub_id=d AD)
+    testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/echo_kilo_397175.xml:"hidden_5819" (47 bytes, sub_id=d AD)
+    testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/lima_victor_651923.ini:"hidden_9558" (47 bytes, sub_id=d AD)
+    testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/lima_victor_651923.ini:"hidden_6812" (47 bytes, sub_id=d AD)
+    testspecials/dir_record_119518/dir_delta_826049/november_backup_124237.lnk:"hidden_7607" (47 bytes, sub_id=d AD)
+    testspecials/dir_record_119518/dir_delta_826049/november_backup_124237.lnk:"hidden_5685" (47 bytes, sub_id=d AD)
+    testspecials/dir_record_119518/dir_delta_826049/november_backup_124237.lnk:"hidden_4514" (47 bytes, sub_id=d AD)
+    testspecials/dir_record_119518/dir_mike_657912/output_sierra_516344.cfg:"hidden_5694" (47 bytes, sub_id=d AD)
+    testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/cache_sync_474079.txt:"hidden_8091" (47 bytes, sub_id=d AD)
+    testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/config_whiskey_965635.json:"hidden_4344" (47 bytes, sub_id=d AD)
+    testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_november_945195/papa_trace_470127.dat:"hidden_8019" (47 bytes, sub_id=d AD)
+    testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_record_422737/echo_delta_498773.xml:"hidden_9865" (47 bytes, sub_id=d AD)
+    testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/record_sync_846406.ini:"hidden_7122" (47 bytes, sub_id=d AD)
+    testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/record_sync_846406.ini:"hidden_6177" (47 bytes, sub_id=d AD)
+    testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/record_sync_846406.ini:"hidden_2880" (47 bytes, sub_id=d AD)
+    testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/oscar_zulu_682719.dat:"hidden_3890" (47 bytes, sub_id=d AD)
+    testspecials/dir_record_119518/dir_yankee_902047/oscar_temp_183561.log:"hidden_8300" (47 bytes, sub_id=d AD)
+    testspecials/dir_record_119518/dir_yankee_902047/sync_output_400218.log:"hidden_5220" (47 bytes, sub_id=d AD)
+    testspecials/dir_record_119518/lima_config_497416.csv:"hidden_9457" (47 bytes, sub_id=d AD)
+    testspecials/dir_record_119518/lima_config_497416.csv:"hidden_4690" (47 bytes, sub_id=d AD)
+    testspecials/whiskey_oscar_373774.log:"hidden_5047" (47 bytes, sub_id=d AD)
+    testspecials/whiskey_oscar_373774.log:"hidden_3522" (47 bytes, sub_id=d AD)

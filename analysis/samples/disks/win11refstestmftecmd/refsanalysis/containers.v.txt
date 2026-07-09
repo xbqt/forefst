@@ -1,0 +1,104 @@
+==============================================================================
+ReFS Container & Allocator Analysis
+==============================================================================
+  Image:              win11refstestmftecmd.raw
+  ReFS version:       3.14
+  Cluster size:       0x1000 (4.0 KB)
+  Container size:     0x4000000 (64.0 MB)
+  Clusters/container: 16384
+  Checkpoint VC:      617
+
+------------------------------------------------------------------------------
+Volume Capacity
+------------------------------------------------------------------------------
+  Total volume size:  3.9 GB
+  Total containers:   63 (theoretical from volume size)
+  Container Table:    63 mapped containers
+
+------------------------------------------------------------------------------
+Allocator Tables
+------------------------------------------------------------------------------
+  Medium Allocator          16 rows
+  Container Allocator       2 rows
+  Small Allocator           2 rows
+  Container Index Table     0 rows
+
+------------------------------------------------------------------------------
+Compression Configuration (from Container Table header)
+------------------------------------------------------------------------------
+  Format:      None
+  Level:       0
+  Chunk size:  0 (default)
+
+------------------------------------------------------------------------------
+Container Table Entries
+------------------------------------------------------------------------------
+  Total capacity: 1,032,192 clusters (3.9 GiB)
+  Free cluster tracking: not populated
+  By type: 9 metadata, 5 data, 42 free/unalloc
+
+  ID       Phys LCN       Flags      Row Type
+  -------- -------------- -------- ----- --------------------
+  0x2      0x0            0x1        160 META
+  0x3      0x1c000        0x4001     160 META|ALLOC
+  0x4      0xf8000        0x1        160 META
+  0x5      0x4000         0x4001     160 META|ALLOC
+  0x6      0x8000         0x4001     160 META|ALLOC
+  0x7      0xc000         0x4001     160 META|ALLOC
+  0x8      0x10000        0x4001     160 META|ALLOC
+  0x9      0x14000        0x4001     160 META|ALLOC
+  0xa      0x18000        0x4001     160 META|ALLOC
+  0xb      0x20000        0x4200     160 TIER|ALLOC
+  0xc      0x24000        0x4200     160 TIER|ALLOC
+  0xd      0x28000        0x2040     160 DATA|FREE
+  0xe      0x2c000        0x2440     160 DATA|FREE
+  0xf      0x30000        0x2440     160 DATA|FREE
+  0x10     0x34000        0x2440     160 DATA|FREE
+  0x11     0x38000        0x2440     160 DATA|FREE
+  0x12     0x3c000        0x4000     160 ALLOC
+  0x13     0x40000        0x4000     160 ALLOC
+  0x14     0x44000        0x4000     160 ALLOC
+  0x15     0x48000        0x4000     160 ALLOC
+  0x16     0x4c000        0x4000     160 ALLOC
+  0x17     0x50000        0x4000     160 ALLOC
+  0x18     0x54000        0x4000     160 ALLOC
+  0x19     0x58000        0x4000     160 ALLOC
+  0x1a     0x5c000        0x4000     160 ALLOC
+  0x1b     0x60000        0x0        160 0x0
+  0x1c     0x64000        0x2000     160 FREE
+  0x1d     0x68000        0x2000     160 FREE
+  0x1e     0x6c000        0x2000     160 FREE
+  0x1f     0x70000        0x2000     160 FREE
+  0x20     0x74000        0x2000     160 FREE
+  0x21     0x78000        0x2000     160 FREE
+  0x22     0x7c000        0x2000     160 FREE
+  0x23     0x80000        0x2000     160 FREE
+  0x24     0x84000        0x2000     160 FREE
+  0x25     0x88000        0x2000     160 FREE
+  0x26     0x8c000        0x2000     160 FREE
+  0x27     0x90000        0x2000     160 FREE
+  0x28     0x94000        0x2000     160 FREE
+  0x29     0x98000        0x2000     160 FREE
+  0x2a     0x9c000        0x2000     160 FREE
+  0x2b     0xa0000        0x2000     160 FREE
+  0x2c     0xa4000        0x2000     160 FREE
+  0x2d     0xa8000        0x2000     160 FREE
+  0x2e     0xac000        0x2000     160 FREE
+  0x2f     0xb0000        0x2000     160 FREE
+  0x30     0xb4000        0x2000     160 FREE
+  0x31     0xb8000        0x2000     160 FREE
+  0x32     0xbc000        0x2000     160 FREE
+  0x33     0xc0000        0x2000     160 FREE
+  0x34     0xc4000        0x2000     160 FREE
+  0x35     0xc8000        0x2000     160 FREE
+  0x36     0xcc000        0x2000     160 FREE
+  0x37     0xd0000        0x2000     160 FREE
+  0x38     0xd4000        0x2000     160 FREE
+  0x39     0xd8000        0x2000     160 FREE
+  0x3a     0xdc000        0x2000     160 FREE
+  0x3b     0xe0000        0x2000     160 FREE
+  0x3c     0xe4000        0x2000     160 FREE
+  0x3d     0xe8000        0x2000     160 FREE
+  0x3e     0xec000        0x2000     160 FREE
+  0x3f     0xf0000        0x2000     160 FREE
+  0x40     0xf4000        0x2000     160 FREE

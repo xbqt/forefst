@@ -1,0 +1,19 @@
+
+// === ChooseSuperBlock @ 1400f57b0 ===
+
+/* private: static enum _RTL_GENERIC_COMPARE_RESULTS __cdecl CmsVolume::ChooseSuperBlock(void *
+ __ptr64,void * __ptr64,unsigned long) */
+
+_RTL_GENERIC_COMPARE_RESULTS __cdecl
+CmsVolume::ChooseSuperBlock(void *param_1,void *param_2,ulong param_3)
+
+{
+ if ((param_1 != param_2) && (param_3 != 0)) {
+ if (*(ulonglong *)((longlong)param_2 + 0x68) < *(ulonglong *)((longlong)param_1 + 0x68)) {
+ return 1;
+ }
+ return ~-(uint)(*(ulonglong *)((longlong)param_1 + 0x68) <
+ *(ulonglong *)((longlong)param_2 + 0x68)) & 2;
+ }
+ return 2;
+}

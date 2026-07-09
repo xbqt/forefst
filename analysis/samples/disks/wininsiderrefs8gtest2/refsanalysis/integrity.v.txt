@@ -1,0 +1,194 @@
+==============================================================================
+ReFS Metadata Integrity Report
+==============================================================================
+  Image:           wininsiderrefs8gtest2.raw
+  ReFS version:    3.14
+  Cluster size:    0x10000
+  Checksum type:   SHA-256
+  Checkpoint VC:   161
+  Volume sig:      0xa5440275
+  Container map:   127 entries
+
+------------------------------------------------------------------------------
+Page Statistics
+------------------------------------------------------------------------------
+  Pages checked:           151
+  Valid signatures:        151
+  Invalid signatures:      0
+  Volume sig matches:      151
+  Volume sig mismatches:   0
+  VC within bounds:        151
+  VC exceeds checkpoint:   0
+  Self-address valid:      151
+  Self-address invalid:    0
+  B+-tree inner nodes OK:  2
+  B+-tree leaf nodes OK:   149
+  B+-tree struct errors:   0
+
+------------------------------------------------------------------------------
+Redundancy / Backup Copies
+------------------------------------------------------------------------------
+  Boot sector (primary):   LBA 0 — OK
+  Boot sector (backup):    LBA 16646143 — present, identical to primary, checksum OK
+  Checkpoint [backup ]:   LCN 0x538 — valid, vclock=160
+  Checkpoint [PRIMARY]:   LCN 0x3d15 — valid, vclock=161
+  Superblock copies:       3 (LCN 0x1e, 0x1fbfd, 0x1fbfe)
+
+------------------------------------------------------------------------------
+Verdict: PASS — all metadata pages structurally valid (run --checksums / --fullchecksums to verify CRC64/SHA-256)
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+Page Details
+------------------------------------------------------------------------------
+  LCN 0x2f       MSB+  OK
+  LCN 0x3001     MSB+  OK
+  LCN 0x3004     MSB+  OK
+  LCN 0x27       MSB+  OK
+  LCN 0x250      MSB+  OK
+  LCN 0x209      MSB+  OK
+  LCN 0x3203     MSB+  OK
+  LCN 0xa00      MSB+  OK
+  LCN 0x802      MSB+  OK
+  LCN 0x28       MSB+  OK
+  LCN 0x2c02     MSB+  OK
+  LCN 0x3002     MSB+  OK
+  LCN 0x803      MSB+  OK
+  LCN 0x2c09     MSB+  OK
+  LCN 0x2c0c     MSB+  OK
+  LCN 0x2c0d     MSB+  OK
+  LCN 0x2c0f     MSB+  OK
+  LCN 0x2c08     MSB+  OK
+  LCN 0x2c0a     MSB+  OK
+  LCN 0x2c0b     MSB+  OK
+  LCN 0x2c0e     MSB+  OK
+  LCN 0x2c11     MSB+  OK
+  LCN 0x2c10     MSB+  OK
+  LCN 0x2c12     MSB+  OK
+  LCN 0x2c       MSB+  OK
+  LCN 0x2c13     MSB+  OK
+  LCN 0x201      MSB+  OK
+  LCN 0x2a       MSB+  OK
+  LCN 0x30       MSB+  OK
+  LCN 0x2b       MSB+  OK
+  LCN 0x3b       MSB+  OK
+  LCN 0x217      MSB+  OK
+  LCN 0x34       MSB+  OK
+  LCN 0x2d       MSB+  OK
+  LCN 0x202      MSB+  OK
+  LCN 0x207      MSB+  OK
+  LCN 0x208      MSB+  OK
+  LCN 0x20b      MSB+  OK
+  LCN 0x36       MSB+  OK
+  LCN 0x37       MSB+  OK
+  LCN 0x38       MSB+  OK
+  LCN 0x20c      MSB+  OK
+  LCN 0x39       MSB+  OK
+  LCN 0x20e      MSB+  OK
+  LCN 0x20f      MSB+  OK
+  LCN 0x210      MSB+  OK
+  LCN 0x212      MSB+  OK
+  LCN 0x3e       MSB+  OK
+  LCN 0x40       MSB+  OK
+  LCN 0x41       MSB+  OK
+  LCN 0x216      MSB+  OK
+  LCN 0x29       MSB+  OK
+  LCN 0x206      MSB+  OK
+  LCN 0x42       MSB+  OK
+  LCN 0x44       MSB+  OK
+  LCN 0x218      MSB+  OK
+  LCN 0x46       MSB+  OK
+  LCN 0x21a      MSB+  OK
+  LCN 0x47       MSB+  OK
+  LCN 0x21b      MSB+  OK
+  LCN 0x4c       MSB+  OK
+  LCN 0x203      MSB+  OK
+  LCN 0x21c      MSB+  OK
+  LCN 0x21d      MSB+  OK
+  LCN 0x4e       MSB+  OK
+  LCN 0x21e      MSB+  OK
+  LCN 0x4f       MSB+  OK
+  LCN 0x50       MSB+  OK
+  LCN 0x51       MSB+  OK
+  LCN 0x52       MSB+  OK
+  LCN 0x220      MSB+  OK
+  LCN 0x55       MSB+  OK
+  LCN 0x204      MSB+  OK
+  LCN 0x205      MSB+  OK
+  LCN 0x56       MSB+  OK
+  LCN 0x222      MSB+  OK
+  LCN 0x59       MSB+  OK
+  LCN 0x5a       MSB+  OK
+  LCN 0x223      MSB+  OK
+  LCN 0x225      MSB+  OK
+  LCN 0x5b       MSB+  OK
+  LCN 0x227      MSB+  OK
+  LCN 0x229      MSB+  OK
+  LCN 0x5d       MSB+  OK
+  LCN 0x5e       MSB+  OK
+  LCN 0x5f       MSB+  OK
+  LCN 0x60       MSB+  OK
+  LCN 0x61       MSB+  OK
+  LCN 0x63       MSB+  OK
+  LCN 0x214      MSB+  OK
+  LCN 0x22b      MSB+  OK
+  LCN 0x22c      MSB+  OK
+  LCN 0x22d      MSB+  OK
+  LCN 0x4b       MSB+  OK
+  LCN 0x22e      MSB+  OK
+  LCN 0x64       MSB+  OK
+  LCN 0x65       MSB+  OK
+  LCN 0x230      MSB+  OK
+  LCN 0x232      MSB+  OK
+  LCN 0x54       MSB+  OK
+  LCN 0x233      MSB+  OK
+  LCN 0x66       MSB+  OK
+  LCN 0x68       MSB+  OK
+  LCN 0x234      MSB+  OK
+  LCN 0x69       MSB+  OK
+  LCN 0x6a       MSB+  OK
+  LCN 0x235      MSB+  OK
+  LCN 0x236      MSB+  OK
+  LCN 0x237      MSB+  OK
+  LCN 0x228      MSB+  OK
+  LCN 0x238      MSB+  OK
+  LCN 0x6c       MSB+  OK
+  LCN 0x239      MSB+  OK
+  LCN 0x6d       MSB+  OK
+  LCN 0x23a      MSB+  OK
+  LCN 0x6f       MSB+  OK
+  LCN 0x70       MSB+  OK
+  LCN 0x23b      MSB+  OK
+  LCN 0x23c      MSB+  OK
+  LCN 0x33       MSB+  OK
+  LCN 0x3a       MSB+  OK
+  LCN 0x219      MSB+  OK
+  LCN 0x3c       MSB+  OK
+  LCN 0x3d       MSB+  OK
+  LCN 0x221      MSB+  OK
+  LCN 0x226      MSB+  OK
+  LCN 0x22a      MSB+  OK
+  LCN 0x231      MSB+  OK
+  LCN 0x45       MSB+  OK
+  LCN 0x48       MSB+  OK
+  LCN 0x49       MSB+  OK
+  LCN 0x53       MSB+  OK
+  LCN 0x23d      MSB+  OK
+  LCN 0x58       MSB+  OK
+  LCN 0x5c       MSB+  OK
+  LCN 0x62       MSB+  OK
+  LCN 0x6e       MSB+  OK
+  LCN 0x242      MSB+  OK
+  LCN 0x72       MSB+  OK
+  LCN 0x243      MSB+  OK
+  LCN 0x73       MSB+  OK
+  LCN 0x76       MSB+  OK
+  LCN 0x77       MSB+  OK
+  LCN 0x7b       MSB+  OK
+  LCN 0x248      MSB+  OK
+  LCN 0x7c       MSB+  OK
+  LCN 0x249      MSB+  OK
+  LCN 0x71       MSB+  OK
+  LCN 0x24c      MSB+  OK
+  LCN 0x24d      MSB+  OK
+  LCN 0x24e      MSB+  OK

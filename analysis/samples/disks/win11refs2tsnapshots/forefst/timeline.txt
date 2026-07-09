@@ -1,0 +1,216 @@
+# forefst win11refs2tsnapshots.raw timeline --limit 200
+# ----------------------------------------------------------------------------
+==============================================================================
+ReFS Super-Timeline — win11refs2tsnapshots.raw
+==============================================================================
+  Sources merged: USN=0  MLog=304  $SI-MACB=1216  (joined by OID, sorted by time)
+  NOTE: USN journal inactive on this image — timeline is $SI + MLog only.
+  Caveat: USN and $SI carry exact FILETIMEs. MLog has NO wall-clock time — an MLog row's time is
+          the affected object's embedded $SI birth (approximate; for a RENAME/MOVE it is the object
+          birth, not the op time). MLog times that predate the volume are undated + marked.
+          (4 MLog rows had an impossible pre-volume time → undated.)
+------------------------------------------------------------------------------
+  Timestamp (UTC)          Src    OID         Name/Path                   Event
+  ----------------------------------------------------------------------------
+  2021-05-18 07:16:04 UTC  $SI    —           test/elvis_dir_papa_8053…   Created
+  2021-09-26 07:16:24 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2021-09-29 07:16:41 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2021-10-04 07:16:49 UTC  $SI    —           test/elvis_dir_victor_78…   Created
+  2021-10-04 07:16:49 UTC  $SI    —           test/elvis_dir_victor_78…   Modified
+  2021-10-04 07:16:49 UTC  $SI    —           test/elvis_dir_victor_78…   Accessed
+  2021-10-14 07:17:10 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2021-10-14 07:17:10 UTC  $SI    —           test/elvis_dir_record_44…   Modified
+  2021-10-14 07:17:10 UTC  $SI    —           test/elvis_dir_record_44…   Accessed
+  2021-10-15 07:17:19 UTC  $SI    —           test/xbpt_config_log_982…   Created
+  2021-10-15 07:17:19 UTC  $SI    —           test/xbpt_config_log_982…   Modified
+  2021-10-15 07:17:19 UTC  $SI    —           test/xbpt_config_log_982…   Accessed
+  2021-10-19 07:16:21 UTC  $SI    —           test/elvis_dir_papa_8053…   Modified
+  2021-10-19 07:16:21 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2021-10-19 07:16:21 UTC  $SI    —           test/elvis_dir_record_44…   Modified
+  2021-10-19 07:16:21 UTC  $SI    —           test/elvis_dir_record_44…   Accessed
+  2022-02-07 07:16:33 UTC  $SI    —           test/elvis_dir_index_149…   Modified
+  2022-02-07 07:16:33 UTC  $SI    —           test/elvis_dir_india_800…   Modified
+  2022-02-07 07:16:33 UTC  $SI    —           test/elvis_dir_papa_8053…   Created
+  2022-02-07 07:16:33 UTC  $SI    —           test/elvis_dir_papa_8053…   Modified
+  2022-02-07 07:16:33 UTC  $SI    —           test/elvis_dir_papa_8053…   Accessed
+  2022-02-12 07:16:16 UTC  $SI    —           test/xbpt_yankee_audit_4…   Created
+  2022-02-12 07:16:16 UTC  $SI    —           test/xbpt_yankee_audit_4…   Modified
+  2022-02-12 07:16:16 UTC  $SI    —           test/xbpt_yankee_audit_4…   Accessed
+  2022-02-28 07:17:26 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2022-02-28 07:17:26 UTC  $SI    —           test/elvis_dir_record_44…   Modified
+  2022-02-28 07:17:26 UTC  $SI    —           test/elvis_dir_record_44…   Accessed
+  2022-03-06 07:16:22 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2022-03-06 07:16:22 UTC  $SI    —           test/elvis_dir_record_44…   Modified
+  2022-03-06 07:16:22 UTC  $SI    —           test/elvis_dir_record_44…   Accessed
+  2022-04-19 07:16:47 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2022-04-19 07:16:47 UTC  $SI    —           test/elvis_dir_record_44…   Modified
+  2022-04-19 07:16:47 UTC  $SI    —           test/elvis_dir_record_44…   Accessed
+  2022-05-20 07:16:16 UTC  $SI    —           test/elvis_dir_index_149…   Created
+  2022-05-20 07:16:16 UTC  $SI    —           test/elvis_dir_index_149…   Modified
+  2022-05-20 07:16:16 UTC  $SI    —           test/elvis_dir_index_149…   Accessed
+  2022-05-31 07:17:29 UTC  $SI    —           test/elvis_dir_victor_78…   Created
+  2022-05-31 07:17:29 UTC  $SI    —           test/elvis_dir_victor_78…   Modified
+  2022-05-31 07:17:29 UTC  $SI    —           test/elvis_dir_victor_78…   Accessed
+  2022-06-11 07:16:28 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2022-06-17 07:16:38 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2022-06-17 07:16:38 UTC  $SI    —           test/elvis_dir_record_44…   Modified
+  2022-06-17 07:16:38 UTC  $SI    —           test/elvis_dir_record_44…   Accessed
+  2022-08-02 07:16:28 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2022-12-26 07:16:15 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2022-12-26 07:16:15 UTC  $SI    —           test/elvis_dir_record_44…   Modified
+  2022-12-26 07:16:15 UTC  $SI    —           test/elvis_dir_record_44…   Accessed
+  2023-08-26 07:16:12 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2023-08-26 07:16:12 UTC  $SI    —           test/elvis_dir_record_44…   Modified
+  2023-08-26 07:16:12 UTC  $SI    —           test/elvis_dir_record_44…   Accessed
+  2023-10-15 07:17:00 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2023-10-15 07:17:00 UTC  $SI    —           test/elvis_dir_record_44…   Modified
+  2023-10-15 07:17:00 UTC  $SI    —           test/elvis_dir_record_44…   Accessed
+  2023-11-21 07:17:13 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2023-11-21 07:17:13 UTC  $SI    —           test/elvis_dir_record_44…   Modified
+  2023-11-21 07:17:13 UTC  $SI    —           test/elvis_dir_record_44…   Accessed
+  2023-11-27 07:16:30 UTC  $SI    —           test/elvis_dir_index_149…   Created
+  2023-11-27 07:16:30 UTC  $SI    —           test/elvis_dir_index_149…   Modified
+  2023-11-27 07:16:30 UTC  $SI    —           test/elvis_dir_index_149…   Accessed
+  2024-01-13 07:17:04 UTC  $SI    —           test/elvis_dir_papa_8053…   Created
+  2024-01-13 07:17:04 UTC  $SI    —           test/elvis_dir_papa_8053…   Modified
+  2024-01-13 07:17:04 UTC  $SI    —           test/elvis_dir_papa_8053…   Accessed
+  2024-04-02 07:16:32 UTC  $SI    —           test/xbpt_india_temp_831…   Created
+  2024-04-02 07:16:32 UTC  $SI    —           test/xbpt_india_temp_831…   Modified
+  2024-04-02 07:16:32 UTC  $SI    —           test/xbpt_india_temp_831…   Accessed
+  2024-04-04 07:17:02 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2024-05-06 07:17:31 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2024-05-06 07:17:31 UTC  $SI    —           test/elvis_dir_record_44…   Modified
+  2024-05-06 07:17:31 UTC  $SI    —           test/elvis_dir_record_44…   Accessed
+  2024-06-07 07:17:11 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2024-06-07 07:17:11 UTC  $SI    —           test/elvis_dir_record_44…   Modified
+  2024-06-07 07:17:11 UTC  $SI    —           test/elvis_dir_record_44…   Accessed
+  2024-08-03 07:17:33 UTC  $SI    —           test/elvis_dir_index_149…   Created
+  2024-08-03 07:17:33 UTC  $SI    —           test/elvis_dir_index_149…   Modified
+  2024-08-03 07:17:33 UTC  $SI    —           test/elvis_dir_index_149…   Accessed
+  2024-10-16 07:17:27 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2024-11-23 07:17:31 UTC  $SI    —           test/elvis_dir_index_149…   Created
+  2024-11-23 07:17:31 UTC  $SI    —           test/elvis_dir_index_149…   Modified
+  2024-11-23 07:17:31 UTC  $SI    —           test/elvis_dir_index_149…   Accessed
+  2024-12-12 07:16:57 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2025-02-09 07:17:09 UTC  $SI    —           test/elvis_dir_papa_8053…   Created
+  2025-02-23 07:17:23 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2025-02-23 07:17:23 UTC  $SI    —           test/elvis_dir_record_44…   Modified
+  2025-02-23 07:17:23 UTC  $SI    —           test/elvis_dir_record_44…   Accessed
+  2025-03-31 07:17:11 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2025-03-31 07:17:11 UTC  $SI    —           test/elvis_dir_record_44…   Modified
+  2025-03-31 07:17:11 UTC  $SI    —           test/elvis_dir_record_44…   Accessed
+  2025-04-01 07:16:26 UTC  $SI    —           test/elvis_dir_index_149…   Modified
+  2025-04-01 07:16:26 UTC  $SI    —           test/elvis_dir_papa_8053…   Created
+  2025-04-02 07:16:24 UTC  $SI    —           test/elvis_dir_papa_8053…   Created
+  2025-04-08 07:17:35 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2025-04-08 07:17:35 UTC  $SI    —           test/elvis_dir_record_44…   Modified
+  2025-04-08 07:17:35 UTC  $SI    —           test/elvis_dir_record_44…   Accessed
+  2025-04-19 07:17:09 UTC  $SI    —           test/elvis_dir_victor_78…   Created
+  2025-04-19 07:17:09 UTC  $SI    —           test/elvis_dir_victor_78…   Modified
+  2025-04-19 07:17:09 UTC  $SI    —           test/elvis_dir_victor_78…   Accessed
+  2025-05-12 07:17:04 UTC  $SI    —           test/elvis_dir_victor_78…   Created
+  2025-06-06 07:17:11 UTC  $SI    —           test/xbpt_index_india_42…   Created
+  2025-06-06 07:17:11 UTC  $SI    —           test/xbpt_index_india_42…   Modified
+  2025-06-06 07:17:11 UTC  $SI    —           test/xbpt_index_india_42…   Accessed
+  2025-06-11 07:16:10 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2025-06-11 07:16:10 UTC  $SI    —           test/elvis_dir_record_44…   Modified
+  2025-06-11 07:16:10 UTC  $SI    —           test/elvis_dir_record_44…   Accessed
+  2025-07-16 07:17:35 UTC  $SI    —           test/elvis_dir_papa_8053…   Created
+  2025-07-16 07:17:35 UTC  $SI    —           test/elvis_dir_papa_8053…   Modified
+  2025-07-16 07:17:35 UTC  $SI    —           test/elvis_dir_papa_8053…   Accessed
+  2025-08-11 07:17:32 UTC  $SI    —           test/xbpt_india_papa_801…   Created
+  2025-08-11 07:17:32 UTC  $SI    —           test/xbpt_india_papa_801…   Modified
+  2025-08-11 07:17:32 UTC  $SI    —           test/xbpt_india_papa_801…   Accessed
+  2025-09-04 07:16:57 UTC  $SI    —           test/elvis_dir_victor_78…   Created
+  2025-09-04 07:16:57 UTC  $SI    —           test/elvis_dir_victor_78…   Modified
+  2025-09-04 07:16:57 UTC  $SI    —           test/elvis_dir_victor_78…   Accessed
+  2025-11-05 07:16:31 UTC  $SI    —           test/xbpt_foxtrot_config…   Created
+  2025-12-01 07:17:11 UTC  $SI    —           test/elvis_dir_victor_78…   Created
+  2025-12-01 07:17:11 UTC  $SI    —           test/elvis_dir_victor_78…   Modified
+  2025-12-01 07:17:11 UTC  $SI    —           test/elvis_dir_victor_78…   Accessed
+  2025-12-30 07:17:16 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2025-12-30 07:17:16 UTC  $SI    —           test/elvis_dir_record_44…   Modified
+  2025-12-30 07:17:16 UTC  $SI    —           test/elvis_dir_record_44…   Accessed
+  2026-01-01 07:16:17 UTC  $SI    —           test/elvis_dir_index_149…   Created
+  2026-02-23 07:17:05 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2026-03-01 07:16:07 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2026-03-01 07:16:07 UTC  $SI    —           test/elvis_dir_record_44…   Modified
+  2026-03-01 07:16:07 UTC  $SI    —           test/elvis_dir_record_44…   Accessed
+  2026-05-16 16:50:42 UTC  MLog   —                                       MODIFY
+  2026-05-16 16:50:42 UTC  MLog   —                                       MODIFY
+  2026-05-16 16:50:44 UTC  MLog   0x600       /                           WRITE
+  2026-05-16 16:50:46 UTC  $SI    0x701       System Volume Information   Created
+  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
+  2026-05-16 16:50:46 UTC  $SI    —           System Volume Informatio…   Created
+  2026-05-16 16:50:46 UTC  $SI    —           System Volume Informatio…   Modified
+  2026-05-16 16:50:46 UTC  $SI    —           System Volume Informatio…   Metadata-Changed
+  2026-05-16 16:50:46 UTC  $SI    —           System Volume Informatio…   Accessed
+  2026-05-16 16:50:53 UTC  $SI    —           System Volume Informatio…   Created
+  2026-05-16 16:50:53 UTC  $SI    —           System Volume Informatio…   Modified
+  2026-05-16 16:50:53 UTC  $SI    —           System Volume Informatio…   Metadata-Changed
+  2026-05-16 16:50:53 UTC  $SI    —           System Volume Informatio…   Accessed
+  2026-05-16 16:50:53 UTC  MLog   0x701       /System Volume Informati…   CREATE
+  2026-05-16 16:50:55 UTC  $SI    0x701       System Volume Information   Modified
+  2026-05-16 16:50:55 UTC  $SI    0x701       System Volume Information   Metadata-Changed
+  2026-05-16 16:50:55 UTC  $SI    0x701       System Volume Information   Accessed
+  2026-05-16 16:51:49 UTC  $SI    0x702       test                        Created
+  2026-05-16 16:51:49 UTC  MLog   0x702       /test                       CREATE
+  2026-05-16 16:51:50 UTC  $SI    0x703       test/elvis_dir_record_44…   Created
+  2026-05-16 16:51:50 UTC  MLog   0x703       /test/elvis_dir_record_4…   CREATE
+  2026-05-16 16:51:50 UTC  MLog   0x702       /test                       CREATE
+  2026-05-16 16:51:50 UTC  MLog   0x702       /test                       CREATE
+  2026-05-16 16:51:50 UTC  $SI    0x704       test/elvis_dir_record_44…   Created
+  2026-05-16 16:51:50 UTC  MLog   0x704       /test/elvis_dir_record_4…   CREATE
+  2026-05-16 16:51:50 UTC  MLog   0x702       /test                       CREATE
+  2026-05-16 16:51:50 UTC  MLog   0x703       /test/elvis_dir_record_4…   RENAME
+  2026-05-16 16:51:50 UTC  MLog   0x703       /test/elvis_dir_record_4…   CREATE
+  2026-05-16 16:51:50 UTC  MLog   0x703       /test/elvis_dir_record_4…   CREATE
+  2026-05-16 16:51:50 UTC  MLog   0x703       /test/elvis_dir_record_4…   CREATE
+  2026-05-16 16:51:51 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2026-05-16 16:51:51 UTC  MLog   0x703       /test/elvis_dir_record_4…   CREATE
+  2026-05-16 16:51:51 UTC  $SI    0x706       test/elvis_dir_record_44…   Created
+  2026-05-16 16:51:51 UTC  MLog   0x706       /test/elvis_dir_record_4…   CREATE
+  2026-05-16 16:51:51 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2026-05-16 16:51:51 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2026-05-16 16:51:51 UTC  MLog   0x703       /test/elvis_dir_record_4…   CREATE
+  2026-05-16 16:51:51 UTC  $SI    0x707       test/elvis_dir_record_44…   Created
+  2026-05-16 16:51:51 UTC  $SI    —           test/elvis_dir_record_44…   Modified
+  2026-05-16 16:51:51 UTC  MLog   0x702       /test                       MOVE
+  2026-05-16 16:51:51 UTC  MLog   0x704       /test/elvis_dir_record_4…   CREATE
+  2026-05-16 16:51:51 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2026-05-16 16:51:51 UTC  MLog   0x703       /test/elvis_dir_record_4…   CREATE
+  2026-05-16 16:51:51 UTC  $SI    —           test/elvis_dir_record_44…   Accessed
+  2026-05-16 16:51:51 UTC  MLog   0x704       /test/elvis_dir_record_4…   RENAME
+  2026-05-16 16:51:51 UTC  $SI    0x708       test/elvis_dir_record_44…   Created
+  2026-05-16 16:51:51 UTC  MLog   0x708       /test/elvis_dir_record_4…   CREATE
+  2026-05-16 16:51:51 UTC  MLog   0x709       OID 0x709                   CREATE
+  2026-05-16 16:51:51 UTC  $SI    —           test/xbpt_sync_zulu_9119…   Created
+  2026-05-16 16:51:51 UTC  MLog   0x702       /test                       CREATE
+  2026-05-16 16:51:51 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2026-05-16 16:51:51 UTC  MLog   0x708       /test/elvis_dir_record_4…   CREATE
+  2026-05-16 16:51:51 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2026-05-16 16:51:51 UTC  MLog   0x704       /test/elvis_dir_record_4…   CREATE
+  2026-05-16 16:51:51 UTC  MLog   0x704       /test/elvis_dir_record_4…   CREATE
+  2026-05-16 16:51:51 UTC  MLog   0x702       /test                       CREATE
+  2026-05-16 16:51:51 UTC  MLog   0x707       /test/elvis_dir_record_4…   CREATE
+  2026-05-16 16:51:51 UTC  MLog   0x703       /test/elvis_dir_record_4…   CREATE
+  2026-05-16 16:51:51 UTC  MLog   0x702       /test                       CREATE
+  2026-05-16 16:51:51 UTC  MLog   0x707       /test/elvis_dir_record_4…   CREATE
+  2026-05-16 16:51:51 UTC  MLog   0x70f       /test/elvis_dir_record_4…   MOVE
+  2026-05-16 16:51:51 UTC  $SI    0x70b       test/elvis_dir_record_44…   Created
+  2026-05-16 16:51:51 UTC  MLog   0x70b       /test/elvis_dir_record_4…   CREATE
+  2026-05-16 16:51:51 UTC  MLog   0x70c       OID 0x70c                   CREATE
+  2026-05-16 16:51:51 UTC  MLog   0x702       /test                       CREATE
+  2026-05-16 16:51:51 UTC  MLog   0x702       /test                       CREATE
+  2026-05-16 16:51:51 UTC  MLog   0x707       /test/elvis_dir_record_4…   CREATE
+  2026-05-16 16:51:51 UTC  $SI    —           test/xbpt_victor_lima_25…   Created
+  2026-05-16 16:51:51 UTC  $SI    —           test/elvis_dir_record_44…   Created
+  2026-05-16 16:51:51 UTC  MLog   0x704       /test/elvis_dir_record_4…   CREATE
+  2026-05-16 16:51:51 UTC  MLog   0x707       /test/elvis_dir_record_4…   MOVE
+  2026-05-16 16:51:52 UTC  MLog   0x704       /test/elvis_dir_record_4…   CREATE
+  2026-05-16 16:51:52 UTC  MLog   0x70b       /test/elvis_dir_record_4…   CREATE
+  2026-05-16 16:51:52 UTC  $SI    0x70d       test/elvis_dir_record_44…   Created
+  2026-05-16 16:51:52 UTC  MLog   0x706       /test/elvis_dir_record_4…   CREATE
+  2026-05-16 16:51:52 UTC  $SI    —           test/elvis_dir_record_44…   Modified
+------------------------------------------------------------------------------
+  200 events

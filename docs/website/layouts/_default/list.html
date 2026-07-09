@@ -1,0 +1,25 @@
+{{ define "main" }}
+<article>
+  <h1>{{ .Title }}</h1>
+  {{ .Content }}
+
+  {{ $groups := .Params.groups }}
+  {{ if $groups }}
+    {{ range $g := $groups }}
+      {{ $pp := sort (where $.Pages "Params.group" $g) "Params.sort" }}
+      {{ with $pp }}
+        <h2>{{ $g }}</h2>
+        {{ partial "page-table.html" . }}
+      {{ end }}
+    {{ end }}
+  {{ else }}
+    {{ $regular := sort (where .Pages "Kind" "page") "Params.sort" }}
+    {{ with $regular }}{{ partial "page-table.html" . }}{{ end }}
+    {{ range (where .Pages "Kind" "section").ByWeight }}
+      <h2>{{ .Title }}</h2>
+      {{ .Content }}
+      {{ partial "page-table.html" (sort .Pages "Params.sort") }}
+    {{ end }}
+  {{ end }}
+</article>
+{{ end }}

@@ -1,0 +1,1374 @@
+{
+ "CT_CTBL_002": {
+ "agree": 1.0,
+ "n": 3,
+ "variants": 1,
+ "spec": {
+ "ref_id": "CT_CTBL_002",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "Container translation: Container_ID = VLCN >> CPC_BitCount, where the shift = CPC.bit_length() = 15 for 4 KiB clusters and 11 for 64 KiB clusters (E18-corrected: prior 14/10 omitted the +1).",
+ "axis": "cluster",
+ "probe": [
+ "cpc"
+ ],
+ "applicability": {},
+ "static_fn": "_parse_ct_page",
+ "evidence_quote": "structure_reference.md L286: \"shift = CPC.bit_length() // 15 for 4 KiB clusters, 11 for 64 KiB\" and L246: \"0x18 | 4 | Clusters per container (CPC) | u32 | 16,384 (4 KiB) or 1,024 (64 KiB) | CONFIRMED\"",
+ "explanation": "The asserted shift is not an independent constant: shift = CPC.bit_length(), so it is fully and uniquely determined by CPC. The `cpc` probe tests CPC == 16384 (4K) / 1024 (64K) read from value+0x18, and 16384.bit_length()=15 while 1024.bit_length()=11 exactly reproduce the two asserted shift values per cluster size. A wrong CPC would yield a wrong shift, so this is not a tautology. Axis=cluster because 4K vs 64K give different CPC and thus different shift (15 vs 11). Driver corroboration: GetContainerIdFromRealRange at 0x1400b3e64 shifts by (field_0x50 + 1) = log2(CPC)+1 = CPC.bit_length() (errata E18).",
+ "links": [
+ "E18"
+ ]
+ }
+ },
+ "CT_CTBL_003": {
+ "agree": 1.0,
+ "n": 2,
+ "variants": 1,
+ "spec": {
+ "ref_id": "CT_CTBL_003",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "Container translation: offset-in-container CN = VLCN & (CPC - 1), i.e. the low-order mask equals clusters-per-container minus one (16383 for 4K / 1023 for 64K).",
+ "axis": "cluster",
+ "probe": [
+ "cpc"
+ ],
+ "applicability": {},
+ "static_fn": "_parse_ct_page",
+ "evidence_quote": "structure_reference.md L287: \"mask = CPC - 1\" and L289: \"offset_in_container = vlcn & mask\"; CPC fixed by L246: \"0x18 | 4 | Clusters per container (CPC) | u32 | 16,384 (4 KiB) or 1,024 (64 KiB) | CONFIRMED\"",
+ "explanation": "The asserted mask is mask = CPC - 1, fully determined by CPC. The `cpc` probe verifies CPC == 16384 (4K) / 1024 (64K) at value+0x18; from a verified CPC the mask 0x3FFF (4K) / 0x3FF (64K) follows deterministically. A wrong CPC would give a wrong mask, so the probe specifically tests the asserted value rather than passing regardless. Axis=cluster because the mask differs between 4K (16383) and 64K (1023). Structure_reference L296-298 note bit log2(CPC) is always zero in valid container LCNs, so CPC-1 is the correct mask despite the bit_length-based shift.",
+ "links": [
+ "E18"
+ ]
+ }
+ },
+ "CT_CTBL_RA_006": {
+ "agree": 1.0,
+ "n": 4,
+ "variants": 1,
+ "spec": {
+ "ref_id": "CT_CTBL_RA_006",
+ "cls": "STRUCTURAL",
+ "desc": "Deep CT row structure: CPC universally at value+0x18 (16384/1024); 160-byte row (4K/CRC64) vs 224-byte row (64K or SHA256) with 128-byte extended integrity area; CSC at value[len-16].",
+ "axis": "cluster",
+ "applicability": {},
+ "probe": [
+ "cpc"
+ ],
+ "static_fn": "_parse_ct_page",
+ "explanation": "The single load-bearing on-disk constant in this claim is the CPC field at value+0x18, which the cpc probe verifies (16384/1024); structure_reference states 'CPC always at value+0x18' and forefst _parse_ct_page (forefst.py:338) reads le32(vd, 0x18) for CPC and le64(vd, len(vd)-16) for the physical start. The cpc probe tests the CPC-at-0x18 invariant. The row-size differentiation (160 vs 224) and the 128-byte extended integrity area are layout assertions with no constant value at a fixed offset, so they are split out into needs_probe; a constant probe cannot test 'row length is 160 or 224' nor a per-image variable physical-start value.",
+ "evidence_quote": "**Universal parsing rule:** CPC always at value+0x18; physical start always at value[len-16].",
+ "links": [
+ "#246",
+ "#260"
+ ]
+ }
+ },
+ "FS_VBR_007": {
+ "agree": 1.0,
+ "n": 12,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_VBR_007",
+ "cls": "STRUCTURAL",
+ "desc": "VBR offset 0x20 (u32, 4 bytes) = bytes per sector = 0x200 (512), constant on all images",
+ "axis": "none",
+ "probe": [
+ "vbr_int",
+ 32,
+ 4,
+ 512
+ ],
+ "applicability": {},
+ "static_fn": "parse_vbr",
+ "evidence_quote": "| 0x20 | 4 | Bytes per sector | u32 | 512 (always) | CONFIRMED |",
+ "explanation": "The claim asserts a flat constant: the VBR 'Bytes per sector' field at offset 0x20 (decimal 32), 4 bytes wide, equals 512 = 0x200. structure_reference.md line 22 fixes the offset (0x20), size (u32 / 4 bytes), and value (512 'always'), marked CONFIRMED. The probe vbr_int(off=32, size=4, expected=512) reads exactly that field and asserts exactly that value, so it FAILs if any image deviates and is not a tautology. static_notes corroborate: 'uint32 at 0x20; validated range 0x200-0x1000; stored in VCB+0x114' and 'All images show 0x200'. axis=none because it is an invariant that does not vary by cluster size, version, or checksum.",
+ "links": [
+ "FS_VBR_007"
+ ]
+ }
+ },
+ "FS_CHKP_002": {
+ "agree": 1.0,
+ "n": 14,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_CHKP_002",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "CHKP major ReFS version field at offset 0x54 (u16) is always the constant 3 across every image.",
+ "axis": "corpus",
+ "probe": [
+ "chkp_int",
+ 84,
+ 2,
+ 3
+ ],
+ "applicability": {},
+ "static_fn": "parse_chkp",
+ "evidence_quote": "| 0x54 | 2 | Major version | u16 | Always 3 | CONFIRMED |",
+ "explanation": "structure_reference.md A.4 Checkpoint (CHKP) table line 162 fixes the field: offset 0x54 (decimal 84), size 2 bytes (u16), 'Major version', value 'Always 3', status CONFIRMED. The claim asserts a true CONSTANT (major version = 3 on every image \u2014 the CHKP major must equal the ReFS major, which has only ever been 3 for ReFS 3.4\u20133.14+Insider; minor is what varies, at 0x56). chkp_int reads the newest CHKP page u16 at off=0x54 and tests it == 3, exactly the asserted value, so a wrong major (e.g. 0/2) FAILs \u2014 not a tautology. parse_chkp (forefst.py:288) is the fn that seeks the CHKP page and parses its header fields. raw_notes for FS_CHKP_002 confirm 'always 3 across all images' and 'Major version matches VBR: 3 in all images'.",
+ "links": [
+ "FS_CHKP_003",
+ "FS_VBR_009"
+ ]
+ }
+ },
+ "FS_CHKP_008": {
+ "agree": 1.0,
+ "n": 13,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_CHKP_008",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "CHKP+0x90 (u32) root/pointer count == 13 (13 global root tables)",
+ "axis": "none",
+ "probe": [
+ "chkp_int",
+ 144,
+ 4,
+ 13
+ ],
+ "applicability": {},
+ "static_fn": "parse_chkp",
+ "explanation": "Claim asserts a CONSTANT count of 13 global root tables. structure_reference.md A.4 lists CHKP+0x90 (offset 144 decimal) size 4 (u32) = Root count, 'Always 13'. forefst parse_chkp reads root_count = le32(raw,0x90). chkp_int(0x90,4,13) tests the exact asserted value 13; fails if the count differs, so not a tautology. (CSV labels the offset range 0x90-0x94; that is the same u32 at 0x90.)",
+ "evidence_quote": "| 0x90 | 4 | Root count | u32 | Always 13 | CONFIRMED |",
+ "links": [
+ "#FS_CHKP_008"
+ ]
+ }
+ },
+ "FS_CHKP_RA_012": {
+ "agree": 1.0,
+ "n": 12,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_CHKP_RA_012",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "CHKP+0x8C (u32) max root capacity == 0x20 (32) on all versions/configs",
+ "axis": "corpus",
+ "probe": [
+ "chkp_int",
+ 140,
+ 4,
+ 32
+ ],
+ "applicability": {},
+ "static_fn": "parse_chkp",
+ "explanation": "Claim asserts the CONSTANT 0x20 (32) for max root capacity (MS_CHECKPOINT_MAX_ROOTS) at CHKP+0x8C, distinct from the live root count (13) at 0x90. structure_reference.md A.4 gives CHKP+0x8C (offset 140 decimal) size 4 (u32) = Max root capacity, 'Always 0x20 (32)'. chkp_int(0x8C,4,32) tests the exact asserted constant; fails if not 32, so not a tautology.",
+ "evidence_quote": "| 0x8C | 4 | Max root capacity | u32 | Always 0x20 (32) | CONFIRMED |",
+ "links": [
+ "#FS_CHKP_RA_012"
+ ]
+ }
+ },
+ "FS_CHKP_RA_011": {
+ "agree": 0.7333333333333333,
+ "n": 15,
+ "variants": 4,
+ "spec": {
+ "ref_id": "FS_CHKP_RA_011",
+ "cls": "STRUCTURAL",
+ "desc": "CHKP+0x7C 12-byte reserved field is always zero (Prade 'table refs offset/count/unknown buffer' all zero)",
+ "axis": "corpus",
+ "applicability": {},
+ "probe": [
+ "chkp_int",
+ 124,
+ 8,
+ 0
+ ],
+ "static_fn": "parse_chkp",
+ "evidence_quote": "| 0x7C | 12 | Reserved | bytes | Always zero | CONFIRMED |",
+ "explanation": "structure_reference.md A.4 line 170 fixes CHKP+0x7C as a 12-byte reserved field that is always zero on all images. chkp_int reads at most 8 bytes, so this spec asserts the first 8 reserved bytes (0x7C..0x83) == 0 (non-tautological: any nonzero byte there FAILs). The trailing 4 bytes (0x84..0x87) cannot be covered by the same probe and are flagged in needs_probe so the full 12-byte zero claim is completely audited."
+ }
+ },
+ "FS_VBR_001": {
+ "agree": 0.6923076923076923,
+ "n": 13,
+ "variants": 4,
+ "spec": {
+ "ref_id": "FS_VBR_001",
+ "cls": "STRUCTURAL",
+ "desc": "VBR 0x00-0x02: 3-byte jump instruction is zeros (00 00 00, ReFS not bootable)",
+ "axis": "corpus",
+ "static_fn": "parse_vbr",
+ "probe": [
+ "vbr_int",
+ 0,
+ 2,
+ 0
+ ],
+ "applicability": {},
+ "explanation": "The jump field is 3 zero bytes at 0x00-0x02; the menu has no 3-byte int size, so vbr_int(0,2,0) asserts bytes 0x00-0x01 == 0 (the first two of the three jump bytes), which fails if any non-zero jump opcode is present. Byte 0x02 cannot be covered by a single int probe without overlapping the 'R' of 'ReFS' at 0x03. This is a partial test of the constant; flagged below as well for full 3-byte coverage.",
+ "evidence_quote": "| 0x00 | 3 | Jump instruction | bytes | `00 00 00` (no x86 jump; ReFS not bootable except Insider) | CONFIRMED |"
+ }
+ },
+ "FS_VBR_003": {
+ "agree": 0.46153846153846156,
+ "n": 13,
+ "variants": 6,
+ "spec": {
+ "ref_id": "FS_VBR_003",
+ "cls": "STRUCTURAL",
+ "desc": "VBR 0x10-0x14 holds the ASCII signature 'FSRS'",
+ "axis": "none",
+ "applicability": {},
+ "static_fn": "parse_vbr",
+ "probe": [
+ "vbr_int",
+ 16,
+ 4,
+ 1397904198
+ ],
+ "explanation": "The claim asserts a fixed 4-byte ASCII signature 'FSRS' at VBR+0x10. structure_reference.md A.1 fixes offset 0x10 size 4 = \"FSRS\". As a little-endian u32 the bytes 46 53 52 53 ('F','S','R','S') = 0x53525346 = 1397904198. vbr_int(0x10=16, size=4, expected=1397904198) directly tests the asserted constant; any other 4 bytes FAIL.",
+ "evidence_quote": "| 0x10 | 4 | FSRS identifier | ASCII | `\"FSRS\"` signature | CONFIRMED |",
+ "links": [
+ "FS_VBR_003"
+ ]
+ }
+ },
+ "FS_VBR_004": {
+ "agree": 1.0,
+ "n": 10,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_VBR_004",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "VBR offset 0x14 (u16) is the VBR structure size, constant 0x200 (512).",
+ "axis": "none",
+ "probe": [
+ "vbr_int",
+ 20,
+ 2,
+ 512
+ ],
+ "applicability": {},
+ "static_fn": "parse_vbr",
+ "evidence_quote": "| 0x14 | 2 | VBR size | u16 | 0x0200 (512) | ENRICHED |",
+ "explanation": "Constant. structure_reference.md A.1 fixes offset 0x14, size 2 (u16) == 0x0200 = 512. vbr_int(20,2,512) tests exactly the asserted constant 0x200.",
+ "links": [
+ "#FS_VBR_004"
+ ]
+ }
+ },
+ "FS_VBR_011": {
+ "agree": 0.6,
+ "n": 10,
+ "variants": 2,
+ "spec": {
+ "ref_id": "FS_VBR_011",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "VBR offset 0x40 (u64) bytes-per-container is the invariant constant 0x04000000 (64 MiB).",
+ "axis": "none",
+ "probe": [
+ "vbr_u64",
+ 64,
+ 67108864
+ ],
+ "applicability": {},
+ "static_fn": "parse_vbr",
+ "evidence_quote": "| 0x40 | 8 | Bytes per container | u64 | 0x04000000 (64 MiB, invariant) | CONFIRMED |",
+ "explanation": "Constant invariant. structure_reference.md A.1 fixes offset 0x40, size 8 (u64) == 0x04000000 = 67108864. vbr_u64(64,67108864) tests exactly the asserted 64 MiB container size, regardless of 4K/64K cluster size (it is the same byte value on all images per the 'invariant' note).",
+ "links": [
+ "#FS_VBR_011"
+ ]
+ }
+ },
+ "FS_SUPB_003": {
+ "agree": 1.0,
+ "n": 1,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_SUPB_003",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "Superblock version/recency field (0x68, u64) is constant 1 on all images.",
+ "axis": "none",
+ "probe": [
+ "vbr_int",
+ 104,
+ 8,
+ 1
+ ],
+ "applicability": {},
+ "static_fn": "parse_supb",
+ "evidence_quote": "| 0x68 | 8 | Superblock version | u64 | Always 1 (not the ReFS format version) | CONFIRMED |",
+ "explanation": "Constant. structure_reference.md A.3 fixes SUPB offset 0x68 (u64) == 1 ('Always 1'). The asserted value is a flat constant. NOTE: the probe menu has vbr_int/chkp_int but NO supb_int probe \u2014 vbr_int reads the VBR, not the SUPB at LCN 0x1E, so it CANNOT test this field. There is no menu probe that reads the Superblock. See needs_probe; this spec is provided only to record the verified offset/value.",
+ "links": [
+ "#FS_SUPB_003"
+ ]
+ }
+ },
+ "FS_SUPB_004": {
+ "agree": 1.0,
+ "n": 1,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_SUPB_004",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "Superblock checkpoint-refs offset field (0x70, u32) is typically 0xC0.",
+ "axis": "none",
+ "probe": [
+ "vbr_int",
+ 112,
+ 4,
+ 192
+ ],
+ "applicability": {},
+ "static_fn": "parse_supb",
+ "evidence_quote": "| 0x70 | 4 | Checkpoint refs offset | u32 | Typically 0xC0 | CONFIRMED |",
+ "explanation": "Constant 0xC0 = 192. structure_reference.md A.3 fixes SUPB offset 0x70 (u32) == 0xC0 ('Typically'). NOTE: 'Typically' is weaker than 'Always', and the menu has NO supb_int probe (vbr_int reads the VBR sector, not the SUPB at LCN 0x1E). This field cannot be tested by any menu probe. Recorded in needs_probe.",
+ "links": [
+ "#FS_SUPB_004"
+ ]
+ }
+ },
+ "FS_SUPB_005": {
+ "agree": 1.0,
+ "n": 1,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_SUPB_005",
+ "cls": "STRUCTURAL",
+ "desc": "Superblock checkpoint-refs count field (0x74, u32) is constant 2 (A/B checkpoint scheme).",
+ "axis": "none",
+ "probe": [
+ "vbr_int",
+ 116,
+ 4,
+ 2
+ ],
+ "applicability": {},
+ "static_fn": "parse_supb",
+ "evidence_quote": "| 0x74 | 4 | Checkpoint refs count | u32 | Always 2 | CONFIRMED |",
+ "explanation": "Constant. structure_reference.md A.3 fixes SUPB offset 0x74 (u32) == 2 ('Always 2'). NOTE: no supb_int menu probe exists (vbr_int reads the VBR sector, not SUPB at LCN 0x1E). Cannot be tested by a menu probe; recorded in needs_probe.",
+ "links": [
+ "#FS_SUPB_005"
+ ]
+ }
+ },
+ "GN_PREF_003": {
+ "agree": 1.0,
+ "n": 2,
+ "variants": 1,
+ "spec": {
+ "ref_id": "GN_PREF_003",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "Page reference offset 0x24 (u32) checksum-data length: 4 (CRC32-C) / 8 (CRC64) / 32 (SHA-256).",
+ "axis": "checksum",
+ "probe": [
+ "page_const",
+ 36,
+ 8
+ ],
+ "applicability": {
+ "checksum": "CRC64"
+ },
+ "static_fn": "_parse_ct_page",
+ "evidence_quote": "| 0x24 | 4 | Checksum data length | u32 | 4 (CRC32-C), 8 (CRC64), 32 (SHA-256) | CONFIRMED |",
+ "explanation": "The checksum-data length is a checksum-type-dependent constant, NOT a single flat value. structure_reference.md D.1 fixes page-reference offset 0x24 (u32) == 8 for CRC64. For CRC64 images the value is the constant 8; scope with applicability checksum=CRC64. CAUTION: page_const per the menu reads an 'OT-root MSB+ page u32 at off' (a page header), whereas 0x24 here is inside a Page Reference embedded in a parent page, not at page-header offset 0x24. The menu page_const offset is page-header-relative, so it likely does NOT address a page-reference's +0x24. This mismatch means no menu probe cleanly tests the page-reference checksum length; see needs_probe.",
+ "links": [
+ "#GN_PREF_003"
+ ]
+ }
+ },
+ "FS_CHKP_RA_005": {
+ "agree": 0.5833333333333334,
+ "n": 12,
+ "variants": 3,
+ "spec": {
+ "ref_id": "FS_CHKP_RA_005",
+ "cls": "STRUCTURAL",
+ "desc": "CHKP+0x88 (u32) data area end offset is 0x380 on v3.14 (= 0x110 + 13*0x30)",
+ "axis": "version",
+ "applicability": {
+ "version_min": 3.14
+ },
+ "probe": [
+ "chkp_int",
+ 136,
+ 4,
+ 896
+ ],
+ "static_fn": "parse_chkp",
+ "evidence_quote": "| 0x88 | 4 | Data area end offset | u32 | 0x680 (v3.4), 0x380 (v3.14) | CONFIRMED |",
+ "explanation": "structure_reference.md A.4 line 171 fixes CHKP+0x88 (136 decimal) as a u32 data-area-end constant that is version-dependent: 0x380 (896) on v3.14, 0x680 on v3.4. This spec tests the v3.14 value 0x380 (applicability version_min 3.14); the v3.4 value 0x680 requires a separate spec because chkp_int can assert only one constant. The value is a genuine constant per version (0x110 + 13*0x30 = 0x380), so chkp_int is non-tautological."
+ }
+ },
+ "FS_CHKP_RA_007": {
+ "agree": 0.625,
+ "n": 8,
+ "variants": 3,
+ "spec": {
+ "ref_id": "FS_CHKP_RA_007",
+ "cls": "STRUCTURAL",
+ "desc": "CHKP+0x50 (u32) version echo == packed 0x000E0003 on native/upgraded Win11 v3.14",
+ "axis": "version",
+ "probe": [
+ "chkp_int",
+ 80,
+ 4,
+ 917507
+ ],
+ "applicability": {
+ "version_min": 3.14
+ },
+ "static_fn": "parse_chkp",
+ "evidence_quote": "| 0x50 | 4 | Version echo | u32 | packed minor<<16 | major on native v3.10+; 0 on upgraded/legacy | CONFIRMED |",
+ "explanation": "structure_reference.md A.4 fixes CHKP+0x50 as a 4-byte version echo packed as (minor<<16)|major. For v3.14 this is 0x000E0003 = (14<<16)|3 = 917507, a constant within the v3.14 group. refsanalysis.py reads ver_echo via le16(raw,0x50)/le16(raw,0x52). chkp_int(off=0x50=80, size=4, expected=0x000E0003=917507) tests the exact packed v3.14 value. The Win10/v3.4 value (0x00000000) is the legacy default and is asserted separately \u2014 see needs_probe. NOTE: structure_reference labels 0x50 'native v3.10+', so this Win11-3.14 constant probe applies to v3.14 images; the upgraded-vs-legacy distinction at 0x50 is version-scoped."
+ }
+ },
+ "FS_CHKP_009": {
+ "agree": 0.5,
+ "n": 4,
+ "variants": 2,
+ "spec": {
+ "ref_id": "FS_CHKP_009",
+ "cls": "STRUCTURAL",
+ "desc": "Root #0 (slot 0 of the CHKP root pointer list) is the Object ID Table, table ID 0x02",
+ "axis": "corpus",
+ "probe": [
+ "cite"
+ ],
+ "applicability": {},
+ "static_fn": "parse_chkp",
+ "evidence_quote": "| 0 | Object ID Table | 0x02 | 0xe030 | Virtual | #5 | CONFIRMED |",
+ "explanation": "structure_reference.md Subtable A.4b fixes root index 0 -> table ID 0x02. This is a CONSTANT mapping, but NO menu probe (vbr_int/chkp_int/page_const/cpc/si_*/absent) can read a table ID out of the root-pointer-list: the table ID lives inside the page reference at CHKP+0x94+idx*ref_size, with ref_size being version/checksum-dependent (0x68/0x30/0x48) AND the table ID embedded at a sub-offset within each page-reference structure, not at a flat CHKP byte offset. chkp_int only reads a flat CHKP offset and cannot resolve the indirect-root-list mode (flag 0x200). Mapped to cite as a placeholder; the real test is specified in needs_probe (chkp_root_table_id)."
+ }
+ },
+ "FS_CHKP_010": {
+ "agree": 1.0,
+ "n": 3,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_CHKP_010",
+ "cls": "STRUCTURAL",
+ "desc": "Root #1 (Medium Allocator) has table ID 0x21",
+ "axis": "corpus",
+ "probe": [
+ "cite"
+ ],
+ "applicability": {},
+ "static_fn": "parse_chkp",
+ "evidence_quote": "| 1 | Medium Allocator | 0x21 | 0xe010 | Virtual | \u2014 | CONFIRMED |",
+ "explanation": "structure_reference.md Subtable A.4b fixes root index 1 -> table ID 0x21. No flat-offset menu probe can read a root-pointer-list table ID (version-dependent ref_size + indirect-list mode + embedded sub-offset). Mapped to cite placeholder; real test specified in needs_probe (chkp_root_table_id)."
+ }
+ },
+ "FS_CHKP_011": {
+ "agree": 1.0,
+ "n": 4,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_CHKP_011",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "Root #2 (Container Allocator) has table ID 0x20; uses virtual addressing (invalidates Prade real-addressing claim)",
+ "axis": "corpus",
+ "probe": [
+ "cite"
+ ],
+ "applicability": {},
+ "static_fn": "parse_chkp",
+ "evidence_quote": "| 2 | Container Allocator | 0x20 | 0xe010 | Virtual | \u2014 | CONFIRMED |",
+ "explanation": "structure_reference.md Subtable A.4b fixes root index 2 -> table ID 0x20 with Virtual addressing. No flat-offset menu probe can read a root-pointer-list table ID. The addressing-mode half of the claim (virtual vs Prade's real) is a translation-behavior test, not a constant read. Mapped to cite placeholder; real tests specified in needs_probe (chkp_root_table_id + root2_virtual_addressing)."
+ }
+ },
+ "FS_CHKP_012": {
+ "agree": 1.0,
+ "n": 3,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_CHKP_012",
+ "cls": "STRUCTURAL",
+ "desc": "Root #3 (Schema Table) has table ID 0x01",
+ "axis": "corpus",
+ "probe": [
+ "cite"
+ ],
+ "applicability": {},
+ "static_fn": "parse_chkp",
+ "evidence_quote": "| 3 | Schema Table | 0x01 | 0xe060 | Virtual | #9 | CONFIRMED |",
+ "explanation": "structure_reference.md Subtable A.4b fixes root index 3 -> table ID 0x01. No flat-offset menu probe can read a root-pointer-list table ID. Mapped to cite placeholder; real test specified in needs_probe (chkp_root_table_id)."
+ }
+ },
+ "FS_CHKP_013": {
+ "agree": 1.0,
+ "n": 3,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_CHKP_013",
+ "cls": "STRUCTURAL",
+ "desc": "Root #4 (Parent-Child Table) has table ID 0x03",
+ "axis": "corpus",
+ "probe": [
+ "cite"
+ ],
+ "applicability": {},
+ "static_fn": "parse_chkp",
+ "evidence_quote": "| 4 | Parent-Child Table | 0x03 | 0xe040 | Virtual | \u2014 | CONFIRMED |",
+ "explanation": "structure_reference.md Subtable A.4b fixes root index 4 -> table ID 0x03. No flat-offset menu probe can read a root-pointer-list table ID. Mapped to cite placeholder; real test specified in needs_probe (chkp_root_table_id)."
+ }
+ },
+ "FS_CHKP_014": {
+ "agree": 1.0,
+ "n": 3,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_CHKP_014",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "Root #5 (Object ID Table duplicate) has table ID 0x04",
+ "axis": "corpus",
+ "probe": [
+ "cite"
+ ],
+ "applicability": {},
+ "static_fn": "parse_chkp",
+ "evidence_quote": "| 5 | Object ID Table (duplicate) | 0x04 | 0xe030 | Virtual | \u2014 | CONFIRMED |",
+ "explanation": "structure_reference.md Subtable A.4b fixes root index 5 -> table ID 0x04 (failover duplicate of root #0). No flat-offset menu probe can read a root-pointer-list table ID. Mapped to cite placeholder; real test specified in needs_probe (chkp_root_table_id)."
+ }
+ },
+ "FS_CHKP_015": {
+ "agree": 1.0,
+ "n": 3,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_CHKP_015",
+ "cls": "STRUCTURAL",
+ "desc": "Root #6 (Block Refcount Table) has table ID 0x05",
+ "axis": "corpus",
+ "probe": [
+ "cite"
+ ],
+ "applicability": {},
+ "static_fn": "parse_chkp",
+ "evidence_quote": "| 6 | Block Refcount | 0x05 | 0xe0b0 | Virtual | \u2014 | CONFIRMED |",
+ "explanation": "structure_reference.md Subtable A.4b fixes root index 6 -> table ID 0x05. No flat-offset menu probe can read a root-pointer-list table ID. Mapped to cite placeholder; real test specified in needs_probe (chkp_root_table_id)."
+ }
+ },
+ "FS_CHKP_016": {
+ "agree": 1.0,
+ "n": 3,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_CHKP_016",
+ "cls": "STRUCTURAL",
+ "desc": "Root #7 (Container Table) has table ID 0x0B; uses REAL LCNs (bootstrap exception, VLCN=PLCN)",
+ "axis": "corpus",
+ "probe": [
+ "cite"
+ ],
+ "applicability": {},
+ "static_fn": "parse_chkp",
+ "evidence_quote": "| 7 | Container Table | 0x0B | 0xe0c0 | Real (physical) | #8 | CONFIRMED |",
+ "explanation": "structure_reference.md Subtable A.4b fixes root index 7 -> table ID 0x0B with Real (physical) addressing, also noted in A.4: 'Roots 7, 8, and 12 use real (physical) LCNs as a bootstrap exception, confirmed by ValidateCheckpointRecord array {0xC, 7, 8}'. No flat-offset menu probe can read a root-pointer-list table ID, nor can any menu probe assert VLCN=PLCN. Mapped to cite placeholder; real tests in needs_probe (chkp_root_table_id + root7_real_addressing)."
+ }
+ },
+ "FS_CHKP_017": {
+ "agree": 1.0,
+ "n": 3,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_CHKP_017",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "Root #8 (Container Table duplicate) has table ID 0x0C; uses REAL LCNs (VLCN=PLCN)",
+ "axis": "corpus",
+ "probe": [
+ "cite"
+ ],
+ "applicability": {},
+ "static_fn": "parse_chkp",
+ "evidence_quote": "| 8 | Container Table (duplicate) | 0x0C | 0xe0c0 | Real (physical) | \u2014 | CONFIRMED |",
+ "explanation": "structure_reference.md Subtable A.4b fixes root index 8 -> table ID 0x0C with Real (physical) addressing (failover duplicate of root #7). No flat-offset menu probe can read a root-pointer-list table ID or assert VLCN=PLCN. Mapped to cite placeholder; real tests in needs_probe (chkp_root_table_id + root8_real_addressing)."
+ }
+ },
+ "FS_CHKP_018": {
+ "agree": 1.0,
+ "n": 3,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_CHKP_018",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "Root #9 (Schema Table duplicate) has table ID 0x06; uses virtual addressing",
+ "axis": "corpus",
+ "probe": [
+ "cite"
+ ],
+ "applicability": {},
+ "static_fn": "parse_chkp",
+ "evidence_quote": "| 9 | Schema Table (duplicate) | 0x06 | 0xe060 | Virtual | \u2014 | CONFIRMED |",
+ "explanation": "structure_reference.md Subtable A.4b fixes root index 9 -> table ID 0x06 with Virtual addressing. No flat-offset menu probe can read a root-pointer-list table ID. Mapped to cite placeholder; real test specified in needs_probe (chkp_root_table_id)."
+ }
+ },
+ "FS_CHKP_019": {
+ "agree": 1.0,
+ "n": 3,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_CHKP_019",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "Root #10 (Container Index Table) has table ID 0x0E",
+ "axis": "corpus",
+ "probe": [
+ "cite"
+ ],
+ "applicability": {},
+ "static_fn": "parse_chkp",
+ "evidence_quote": "| 10 | Container Index | 0x0E | 0xe100 | Virtual | \u2014 | CONFIRMED |",
+ "explanation": "structure_reference.md Subtable A.4b fixes root index 10 -> table ID 0x0E. No flat-offset menu probe can read a root-pointer-list table ID. Mapped to cite placeholder; real test specified in needs_probe (chkp_root_table_id)."
+ }
+ },
+ "FS_CHKP_020": {
+ "agree": 1.0,
+ "n": 3,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_CHKP_020",
+ "cls": "STRUCTURAL",
+ "desc": "Root #11 (Integrity State Table) has table ID 0x0F; present regardless of integrity setting",
+ "axis": "corpus",
+ "probe": [
+ "cite"
+ ],
+ "applicability": {},
+ "static_fn": "parse_chkp",
+ "evidence_quote": "| 11 | Integrity State | 0x0F | 0xe080 | Virtual | \u2014 | CONFIRMED |",
+ "explanation": "structure_reference.md Subtable A.4b fixes root index 11 -> table ID 0x0F. No flat-offset menu probe can read a root-pointer-list table ID. Mapped to cite placeholder; real test specified in needs_probe (chkp_root_table_id)."
+ }
+ },
+ "FS_CHKP_021": {
+ "agree": 1.0,
+ "n": 3,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_CHKP_021",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "Root #12 (Small Allocator Table) has table ID 0x22; uses REAL LCNs (bootstrap fallback, VLCN=PLCN)",
+ "axis": "corpus",
+ "probe": [
+ "cite"
+ ],
+ "applicability": {},
+ "static_fn": "parse_chkp",
+ "evidence_quote": "| 12 | Small Allocator | 0x22 | 0xe010 | Real (physical) | \u2014 | CONFIRMED |",
+ "explanation": "structure_reference.md Subtable A.4b fixes root index 12 -> table ID 0x22 with Real (physical) addressing; A.4 notes roots 7/8/12 use real LCNs as bootstrap exception. No flat-offset menu probe can read a root-pointer-list table ID or assert VLCN=PLCN. Mapped to cite placeholder; real tests in needs_probe (chkp_root_table_id + root12_real_addressing)."
+ }
+ },
+ "FS_CHKP_RA_002": {
+ "agree": 0.5454545454545454,
+ "n": 11,
+ "variants": 4,
+ "spec": {
+ "ref_id": "FS_CHKP_RA_002",
+ "cls": "STRUCTURAL",
+ "desc": "CHKP+0x5C (u32) page reference size is 0x30 on v3.14 CRC64 volumes",
+ "axis": "checksum",
+ "applicability": {
+ "version_min": 3.14,
+ "checksum": "CRC64"
+ },
+ "probe": [
+ "chkp_int",
+ 92,
+ 4,
+ 48
+ ],
+ "static_fn": "parse_chkp",
+ "evidence_quote": "| 0x5C | 4 | Page reference size | u32 | 0x68 (v3.4), 0x30 (CRC64), 0x48 (SHA-256) | CONFIRMED |",
+ "explanation": "structure_reference.md A.4 line 165 fixes CHKP+0x5C (92 decimal) as a u32 page-reference-size constant determined by version+checksum: 0x30 (48) for v3.14 CRC64, 0x68 for v3.4, 0x48 for SHA-256. forefst.parse_chkp reads desc_len = le32(raw, 0x5c) and uses it to stride the root pointer records. This spec asserts the CRC64 value 0x30 (applicability version_min 3.14, checksum CRC64); the 0x68 and 0x48 variants need separate specs. chkp_int is non-tautological: a wrong stride value FAILs."
+ }
+ },
+ "FS_CHKP_005": {
+ "agree": 1.0,
+ "n": 2,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_CHKP_005",
+ "cls": "STRUCTURAL",
+ "desc": "CHKP+0x60 (u64) virtual clock body copy \u2014 per-image VARIABLE, mirrors header +0x10 and is monotonic",
+ "axis": "corpus",
+ "applicability": {},
+ "probe": [
+ "cite"
+ ],
+ "static_fn": "parse_chkp",
+ "evidence_quote": "| 0x60 | 8 | Virtual clock (body copy) | u64 | Matches header at 0x10 | CONFIRMED |",
+ "explanation": "structure_reference.md A.4 line 166 confirms CHKP+0x60 is a u64 virtual clock body copy that 'Matches header at 0x10' and increases monotonically (selection picks highest clock). There is NO single constant to assert \u2014 the value differs per image and grows over time \u2014 so no constant chkp_int probe applies (that would be a false FAIL/tautology). The real on-disk obligation is a consistency check (body 0x60 == header 0x10) and monotonic ordering; the menu has no such probe. Placed in needs_probe. (probe field set to cite as a placeholder; the binding claim is in needs_probe.)"
+ }
+ },
+ "FS_CHKP_006": {
+ "agree": 1.0,
+ "n": 2,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_CHKP_006",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "CHKP+0x68 (u64) allocator clock \u2014 per-image VARIABLE, always <= virtual clock",
+ "axis": "corpus",
+ "applicability": {},
+ "probe": [
+ "cite"
+ ],
+ "static_fn": "parse_chkp",
+ "evidence_quote": "| 0x68 | 8 | Allocator clock | u64 | <= virtual clock | CONFIRMED |",
+ "explanation": "structure_reference.md A.4 line 167 fixes CHKP+0x68 as a u64 allocator clock whose only invariant is 'allocator clock <= virtual clock' (CSV: ranges 23..7200+, typically vclock-3..vclock-5). The value is per-image VARIABLE with no constant to assert, so no constant chkp_int probe is valid. The genuine test is the relation allocator_clock(0x68) <= virtual_clock(0x60), which the menu cannot express. Placed in needs_probe."
+ }
+ },
+ "FS_CHKP_007": {
+ "agree": 0.6666666666666666,
+ "n": 3,
+ "variants": 2,
+ "spec": {
+ "ref_id": "FS_CHKP_007",
+ "cls": "STRUCTURAL",
+ "desc": "CHKP+0x70 (u64) oldest log record ref \u2014 VARIABLE compound (low32=log offset, high32=segment); identical in both CHKP copies",
+ "axis": "corpus",
+ "applicability": {},
+ "probe": [
+ "cite"
+ ],
+ "static_fn": "parse_chkp",
+ "evidence_quote": "| 0x70 | 8 | Oldest log record ref | u64 | Low 32 bits = log offset, high 32 bits = segment | CONFIRMED |",
+ "explanation": "structure_reference.md A.4 line 168 fixes CHKP+0x70 as a u64 compound oldest-log-record reference (low32=log area byte offset, high32=segment number; CSV values 0x39..0x138C8). It is per-image VARIABLE with no constant, so no constant chkp_int probe is valid. The real obligations are structural decomposition plausibility plus cross-copy equality (both CHKP copies identical at 0x70), neither expressible by the menu. Placed in needs_probe."
+ }
+ },
+ "FS_CHKP_003": {
+ "agree": 1.0,
+ "n": 2,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_CHKP_003",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "CHKP+0x56 (u16) minor ReFS version \u2014 VARIABLE per image (4 on Win10, 14 on Win11) and must equal the image's VBR minor version",
+ "axis": "version",
+ "applicability": {},
+ "probe": [
+ "cite"
+ ],
+ "static_fn": "parse_chkp",
+ "evidence_quote": "| 0x56 | 2 | Minor version | u16 | 4, 7, 9, 10, or 14 | CONFIRMED |",
+ "explanation": "structure_reference.md A.4 line 163 lists CHKP+0x56 minor version as one of {4,7,9,10,14} \u2014 there is NO single corpus-wide constant; it varies per image and the claim is that it MATCHES the image's VBR minor (CSV: 'Minor version matches VBR'). A constant chkp_int would FAIL on whichever versions are not the chosen constant, so it is invalid. The correct probe is per-image equality vs VBR minor (forefst reads h[0x56:0x58]); the menu lacks it. Placed in needs_probe."
+ }
+ },
+ "FS_CHKP_004": {
+ "agree": 0.6666666666666666,
+ "n": 3,
+ "variants": 2,
+ "spec": {
+ "ref_id": "FS_CHKP_004",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "CHKP+0x58 (u32) table-descriptor-end / self-descriptor offset \u2014 VARIABLE per version (0xD0 v3.4-3.10, 0xE0 v3.14, 0xE8 Insider)",
+ "axis": "version",
+ "applicability": {},
+ "probe": [
+ "cite"
+ ],
+ "static_fn": "parse_chkp",
+ "evidence_quote": "| 0x58 | 4 | Table descriptor end | u32 | 0xD0 (v3.4\u2013v3.10), 0xE0 (v3.14), 0xE8 (Insider) | CONFIRMED |",
+ "explanation": "structure_reference.md A.4 line 164 fixes CHKP+0x58 as a u32 table-descriptor-end that is version-dependent (0xD0/0xE0/0xE8) \u2014 not a corpus constant. (The CSV row also muddles 0x58 vs 0x5C, an additional reason not to hard-code a single constant.) A constant chkp_int would falsely FAIL on the non-matching versions. The correct test is per-version equality keyed to the image's ReFS version; the menu has no such probe. Placed in needs_probe."
+ }
+ },
+ "FS_CHKP_RA_001": {
+ "agree": 0.5,
+ "n": 4,
+ "variants": 3,
+ "spec": {
+ "ref_id": "FS_CHKP_RA_001",
+ "cls": "STRUCTURAL",
+ "desc": "CHKP+0x78 (u32) flags full decomposition: bit 0x002 always set; composite values 0x002/0x602/0x682/0x7b2 by config",
+ "axis": "version",
+ "applicability": {},
+ "probe": [
+ "cite"
+ ],
+ "static_fn": "parse_chkp",
+ "evidence_quote": "| 0x78 | 4 | CHKP flags | u32 | See Subtable A.4a | CONFIRMED | ; Observed composite values: 0x002 (v3.4/v3.7/v3.9), 0x082 (v3.10), 0x682 (v3.14 native), 0x602 (v3.14 upgraded), 0x07b2 (v3.14 dedup), 0x2682 (Insider).",
+ "explanation": "structure_reference.md A.4 line 169 + Subtable A.4a (lines 180-187) describe CHKP+0x78 as a u32 BITMASK with multiple observed composite values that vary by config (0x002/0x082/0x602/0x682/0x7b2/0x2682). The only flat invariant is bit 0x002 ALWAYS set, but chkp_int tests equality, not (val & 0x002)==0x002, so it cannot express the bitmask claim without falsely FAILing on the many composite values. forefst reads flags = le32(raw,0x78). The correct probe is a bitmask/enum-membership test; the menu lacks it. Placed in needs_probe."
+ }
+ },
+ "FS_CHKP_RA_013": {
+ "agree": 1.0,
+ "n": 2,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_CHKP_RA_013",
+ "cls": "STRUCTURAL",
+ "desc": "Three volume states via CHKP+0x78 flags: original v3.4 (0x002), upgraded (0x602), native v3.14 (0x682); missing bit 0x080 distinguishes upgraded from native",
+ "axis": "version",
+ "applicability": {},
+ "probe": [
+ "cite"
+ ],
+ "static_fn": "parse_chkp",
+ "evidence_quote": "Observed composite values: 0x002 (v3.4/v3.7/v3.9), 0x082 (v3.10), 0x682 (v3.14 native), 0x602 (v3.14 upgraded) ... | 7 | 0x0080 | Native format marker (not set on upgraded volumes) | v3.10 |",
+ "explanation": "structure_reference.md A.4a lines 181/187 establish the three forensic states by CHKP+0x78 flags (0x002 / 0x602 / 0x682) with native bit 0x080 distinguishing native v3.14 from upgraded. Per-image the flag equals ONE of three values (or 0x7b2 for dedup), so there is no single corpus constant for chkp_int, and the load-bearing test is enum-membership plus the 0x080 bit-clear discriminator. The menu has no enum/bitmask probe. Placed in needs_probe."
+ }
+ },
+ "FS_CHKP_RA_003": {
+ "agree": 0.6666666666666666,
+ "n": 3,
+ "variants": 2,
+ "spec": {
+ "ref_id": "FS_CHKP_RA_003",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "3.4->3.14 upgrade transition: CHKP+0x78 flags change 0x002->0x602, CHKP+0x5C ref_size 0x68->0x30, tables relocated",
+ "axis": "version",
+ "applicability": {
+ "version_min": 3.14
+ },
+ "probe": [
+ "cite"
+ ],
+ "static_fn": "parse_chkp",
+ "evidence_quote": "| H.3 CHKP Flag Evolution ... | CHKP flags | 0x002 | 0x602 | NEW | ; | Compact page reference | CHKP+0x5C: 0x68 to 0x30 | ENRICHED |",
+ "explanation": "structure_reference.md H.3 (lines 1564/1627) documents the UPGRADE delta (flags 0x002->0x602, ref_size 0x68->0x30). This is a BEHAVIORAL before/after transition claim, not a single on-disk constant: proving it requires comparing the same volume pre- and post-upgrade (a paired-image probe). No single-image menu probe can assert a 'change'. Placed in needs_probe."
+ }
+ },
+ "FS_VBR_012": {
+ "agree": 0.6,
+ "n": 5,
+ "variants": 3,
+ "spec": {
+ "ref_id": "FS_VBR_012",
+ "cls": "STRUCTURAL",
+ "desc": "VBR 0x2A=checksum-algo selector, 0x2C-0x2F=volume flags, 0x30-0x37=reserved zero. Only the reserved-zero part (0x30-0x37) is a constant; the selector and flags are variable.",
+ "axis": "none",
+ "probe": [
+ "vbr_int",
+ 48,
+ 8,
+ 0
+ ],
+ "explanation": "This compound claim's only flat-constant component is the reserved field at VBR 0x30 (8 bytes), which structure_reference.md A.1 fixes as 'All zeros'. vbr_int at off=0x30(=48), size=8, expected=0 tests exactly that asserted constant (non-zero would FAIL), so it is not a tautology. The other two components (0x2A selector and 0x2C volume flags) are VARIABLE per image/version and have no single constant to assert (see needs_probe), so only the reserved-zero piece is mapped to a constant probe here.",
+ "evidence_quote": "| 0x30 | 8 | Reserved | bytes | All zeros | CONFIRMED |",
+ "static_fn": "parse_vbr",
+ "applicability": {},
+ "links": [
+ "#FS_VBR_012"
+ ]
+ }
+ },
+ "FS_VBR_006": {
+ "agree": 0.5,
+ "n": 2,
+ "variants": 2,
+ "spec": {
+ "ref_id": "FS_VBR_006",
+ "cls": "STRUCTURAL",
+ "desc": "VBR 0x18-0x20 total sector count (volume size in 512-byte sectors) \u2014 a VARIABLE field, no constant.",
+ "axis": "corpus",
+ "probe": [
+ "vbr_int",
+ 24,
+ 8,
+ 0
+ ],
+ "applicability": {},
+ "static_fn": "parse_vbr",
+ "explanation": "structure_reference.md A.1 line 21 fixes offset 0x18 size 8 = 'Volume size in 512-byte sectors'. This is per-image VARIABLE (differs with every volume size); there is NO constant to assert. The vbr_int probe shown is a placeholder offset/size only \u2014 asserting any constant here would be a false test. The real check is a plausibility/consistency guard (nonzero, and sector_count*bytes_per_sector consistent with image size). See needs_probe.",
+ "evidence_quote": "| 0x18 | 8 | Total sector count | u64 | Volume size in 512-byte sectors | CONFIRMED |"
+ }
+ },
+ "FS_VBR_008": {
+ "agree": 1.0,
+ "n": 2,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_VBR_008",
+ "cls": "STRUCTURAL",
+ "desc": "VBR 0x24-0x28 sectors per cluster u32 == 8 (4K clusters) or 128 (64K clusters).",
+ "axis": "cluster",
+ "probe": [
+ "vbr_int",
+ 36,
+ 4,
+ 8
+ ],
+ "applicability": {
+ "cluster": 4096
+ },
+ "static_fn": "parse_vbr",
+ "explanation": "structure_reference.md A.1 line 23 fixes offset 0x24 size 4 (u32) = '8 (4 KiB clusters) or 128 (64 KiB clusters)'. The value is NOT a flat constant \u2014 it is cluster-axis dependent (8 vs 128). I scope this spec to 4K images (applicability cluster=4096, expected 8); a SECOND spec is required for 64K (expected 128). vbr_int(0x24=36, size 4, expected 8) tests the asserted 4K value exactly. For 64K, author vbr_int(36,4,128) with applicability cluster=65536.",
+ "evidence_quote": "| 0x24 | 4 | Sectors per cluster | u32 | 8 (4 KiB clusters) or 128 (64 KiB clusters) | ENRICHED |"
+ }
+ },
+ "FS_VBR_009": {
+ "agree": 0.5,
+ "n": 2,
+ "variants": 2,
+ "spec": {
+ "ref_id": "FS_VBR_009",
+ "cls": "STRUCTURAL",
+ "desc": "VBR 0x28-0x2A version (major.minor packed u16) \u2014 VARIABLE per image (0x0304..0x030E), no flat constant.",
+ "axis": "version",
+ "probe": [
+ "vbr_int",
+ 40,
+ 2,
+ 772
+ ],
+ "applicability": {},
+ "static_fn": "parse_vbr",
+ "explanation": "structure_reference.md A.1 line 24 + Subtable A.1a fix offset 0x28 size 2 = packed version, but the value DIFFERS per image: 0x0304(3.4)/0x0307/0x0309/0x030A/0x030E. There is NO single constant \u2014 asserting one (e.g. 772=0x0304) would FAIL every non-3.4 image (false FAIL). This must be a per-image comparison against the image's known version, NOT a flat probe. The vbr_int shown is a placeholder; see needs_probe for the per-version shape.",
+ "evidence_quote": "| 0x28 | 2 | Version (major.minor) | u16 | See Subtable A.1a | CONFIRMED |"
+ }
+ },
+ "FS_VBR_010": {
+ "agree": 0.5,
+ "n": 2,
+ "variants": 2,
+ "spec": {
+ "ref_id": "FS_VBR_010",
+ "cls": "STRUCTURAL",
+ "desc": "VBR 0x38-0x40 volume serial number u64 \u2014 VARIABLE, unique per volume, no constant.",
+ "axis": "corpus",
+ "probe": [
+ "vbr_int",
+ 56,
+ 8,
+ 0
+ ],
+ "applicability": {},
+ "static_fn": "parse_vbr",
+ "explanation": "structure_reference.md A.1 line 28 fixes offset 0x38 size 8 = 'Volume serial number, Unique per volume'. This is VARIABLE per image; there is no constant to assert. Asserting any value is a false test. The meaningful check is plausibility (nonzero) plus the cross-structure consistency claim (preserved across upgrade) \u2014 see needs_probe. The vbr_int shown is offset/size placeholder only.",
+ "evidence_quote": "| 0x38 | 8 | Volume serial number | u64 | Unique per volume | CONFIRMED |"
+ }
+ },
+ "GN_PAGE_RA_001": {
+ "agree": 1.0,
+ "n": 1,
+ "variants": 1,
+ "spec": {
+ "ref_id": "GN_PAGE_RA_001",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "Page header LCN tuple 0x20-0x38: SUPB/CHKP use only slot0; LCN slots 1-3 (0x28/0x30/0x38) are zero on SUPB and CHKP.",
+ "axis": "none",
+ "probe": [
+ "page_const",
+ 40,
+ 0
+ ],
+ "applicability": {},
+ "static_fn": "parse_supb",
+ "explanation": "structure_reference.md A.2 lines 107-109 mark LCN slots 1/2/3 at +0x28/+0x30/+0x38 as 'MSB+ only', and A.2 plus this claim state they are zero on SUPB/CHKP. The asserted constant (zero) is real, but the page_const probe per the menu reads the OT-ROOT (MSB+) page \u2014 on an MSB+ page slots 1-3 are NON-zero (self+1..self+3), so page_const at 0x28 would NOT be zero. The claim is specifically about SUPB/CHKP pages, not MSB+. The menu has no probe that reads a SUPB/CHKP page slot; page_const targets the OT-root. Therefore this claim cannot be tested by page_const without a false FAIL. See needs_probe for a SUPB/CHKP-slot probe shape. The probe value shown is a placeholder.",
+ "evidence_quote": "| 0x28 | 8 | LCN slot 1 | u64 | MSB+ only: second cluster (self+1) | CONFIRMED |"
+ }
+ },
+ "FS_SUPB_001": {
+ "agree": 1.0,
+ "n": 1,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_SUPB_001",
+ "cls": "STRUCTURAL",
+ "desc": "Superblock located at cluster 30 (LCN 0x1E).",
+ "axis": "none",
+ "probe": [
+ "cite"
+ ],
+ "applicability": {},
+ "static_fn": "parse_supb",
+ "explanation": "structure_reference.md A.3 line 117 states SUPB is 'Always at cluster 30 (LCN 0x1E)'. This is a LOCATION claim, not an in-page byte field \u2014 none of the byte-offset probes (vbr_int/chkp_int/page_const) test where a page is found. The natural test is: the page at LCN 0x1E carries signature 'SUPB'. The menu has no 'page-at-LCN has signature' probe; the closest by intent is verifying the SUPB signature, but no probe reads an arbitrary LCN. See needs_probe for the SUPB-location/signature probe shape. cite is used as the menu's only non-byte-offset option but a real on-disk probe is required.",
+ "evidence_quote": "Always at cluster 30 (LCN 0x1E). Single cluster. Two backup copies near partition end (~total\\_clusters - 14,339 and -14,338)."
+ }
+ },
+ "FS_OTBL_SA_004": {
+ "agree": 1.0,
+ "n": 2,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_OTBL_SA_004",
+ "cls": "STRUCTURAL",
+ "desc": "MsSetMinimumNewObjectId hardcodes 0x700 as the system/user OID boundary; user OIDs start at 0x701.",
+ "axis": "none",
+ "probe": [
+ "cite"
+ ],
+ "applicability": {},
+ "static_fn": "build_object_map",
+ "evidence_quote": "G.10 Key Functions: | MsSetMinimumNewObjectId | Hardcodes 0x700 as boundary; user OIDs start at 0x701 | CONFIRMED | (line 1481); also F.4: \"User OIDs start at 0x701 (hardcoded via `MsSetMinimumNewObjectId`).\" (line 1314)",
+ "explanation": "This is an E2 static-decompilation claim about a driver constant (0x700 boundary baked into MsSetMinimumNewObjectId), not a fixed value at a fixed on-disk offset. The probe menu has no Object-Table-row or driver-constant probe; the only fields it can read on disk are VBR/CHKP/page-header/$SI bytes. Proof is therefore the cited decomp source (G.10 / F.4 confirm 0x700). The on-disk corollary (every user OID >= 0x701) is a per-image variable distribution, not a constant the menu can assert, so cite is the correct mapping for the static assertion itself.",
+ "links": [
+ "#1481",
+ "#1314"
+ ]
+ }
+ },
+ "FS_OTBL_SA_006": {
+ "agree": 1.0,
+ "n": 2,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_OTBL_SA_006",
+ "cls": "STRUCTURAL",
+ "desc": "MsInitializeWellKnownObjectId builds a 128-bit SmsBigIdentifier from a 64-bit well-known OID, setting the upper 8 bytes to 0.",
+ "axis": "none",
+ "probe": [
+ "cite"
+ ],
+ "applicability": {},
+ "static_fn": null,
+ "evidence_quote": "Subtable C.13a \u2014 128-bit File ID Structure: | Upper 8 bytes | u64 | B+-tree table OID (directory's Object Table OID) | NEW | / | Lower 8 bytes | u64 | Sequential entry index ... | NEW | (lines 1024-1025). Object Table Key \u2014 8 bytes: | 0x00 | 8 | Object ID (OID) | u64 | (line 363).",
+ "explanation": "E2 static-decompilation claim about a 12-byte helper's behavior (zeroing the high half of a 128-bit identifier). The Object Table key itself is a single u64 OID at key+0x00 (line 363), not a fixed-offset constant; the 128-bit File-ID upper/lower split (C.13a) is a structural layout, not a flat constant the menu can assert. No menu probe reads File-ID 128-bit composition. Proof is the cited decomp + C.13a layout.",
+ "links": [
+ "#1024",
+ "#363"
+ ]
+ }
+ },
+ "FS_OTBL_SA_007": {
+ "agree": 1.0,
+ "n": 3,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_OTBL_SA_007",
+ "cls": "STRUCTURAL",
+ "desc": "MsGetObjectRecordPayload (46-byte helper) returns the LcnWithChecksum pointer from an Object Table row's value buffer at a header-derived offset.",
+ "axis": "none",
+ "probe": [
+ "cite"
+ ],
+ "applicability": {},
+ "static_fn": "build_object_map",
+ "evidence_quote": "B.3 Object Table Value \u2014 Compact Format: | 0x08 | 16 | Record header | format=2, key_offset=0x18, value_offset=0x30 | ENRICHED | and | 0x20 | 32 | 4 x u64 LCN slots | Page references for object's own B+-tree root | ENRICHED | (lines 370, 373).",
+ "explanation": "Pure E2 static-decompilation claim describing a driver helper that extracts the page-reference pointer from a row value at an offset derived from the row header. There is no fixed constant value to assert at a fixed VBR/CHKP/page offset; the payload location (value+0x20 LCN slots, reached via record header at +0x08) is structural, and build_object_map already reads value+0x20 confirming the layout. No menu probe targets OT row payload extraction, so proof = cited decomp + B.3 layout.",
+ "links": [
+ "#370",
+ "#373"
+ ]
+ }
+ },
+ "FS_VINF_001": {
+ "agree": 1.0,
+ "n": 1,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_VINF_001",
+ "cls": "STRUCTURAL",
+ "desc": "Volume label stored in OID 0x500 B+tree under key type 0x0510 (UTF-16LE)",
+ "axis": "corpus",
+ "static_fn": "build_object_map",
+ "probe": [
+ "cite"
+ ],
+ "applicability": {},
+ "explanation": "This is a B+tree key-type/layout claim inside OID 0x500 (Volume Information), not a fixed offset in VBR/CHKP/OT-root-page-header. The menu has no probe that walks the OID 0x500 B+tree and reads key type 0x0510, so there is no constant-offset probe; the on-disk fact (key 0x0510 = volume label) is documented in the reference. cite is the only honest mapping (no menu probe fits); the proof is the cited reference line. A real disk test would need a vinf_keytype probe (see needs_probe).",
+ "evidence_quote": "| 0x0510 | Variable | Volume label (UTF-16LE, null-terminated) | CONFIRMED |"
+ }
+ },
+ "FS_VBR_SA_013": {
+ "agree": 0.8333333333333334,
+ "n": 6,
+ "variants": 2,
+ "spec": {
+ "ref_id": "FS_VBR_SA_013",
+ "cls": "STRUCTURAL",
+ "desc": "RefsIsBootSectorOurs validates the 'ReFS' signature at VBR+0x03 (on-disk corollary: 'ReFS' present at 0x03)",
+ "axis": "none",
+ "probe": [
+ "vbr_int",
+ 3,
+ 4,
+ 1397122386
+ ],
+ "applicability": {},
+ "static_fn": "parse_vbr",
+ "explanation": "The static claim is about RefsIsBootSectorOurs checking 'ReFS' at +0x03. Its on-disk, corpus-testable corollary is that bytes at 0x03 spell 'ReFS' (52 65 46 53 = 0x53466552 = 1397122386). Testing the first 4 bytes of the 8-byte file-system-name field proves the validated signature is present on disk; a non-ReFS/FVE volume (e.g. '-FVE') fails.",
+ "evidence_quote": "| 0x03 | 8 | File system name | ASCII | `\"ReFS\\0\\0\\0\\0\"` | CONFIRMED |"
+ }
+ },
+ "FS_DEL_RA_001": {
+ "agree": 1.0,
+ "n": 2,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_DEL_RA_001",
+ "cls": "STRUCTURAL",
+ "desc": "ReFS deletion flow: RefsDeleteFile -> MsDeleteRow -> MsReparentFileToTrash -> CmsTrashTable::AddFileTable -> TrashCleanerWorkItemMethod -> DeleteFileTable",
+ "axis": "version",
+ "probe": [
+ "cite"
+ ],
+ "applicability": {},
+ "static_fn": null,
+ "explanation": "This is a behavioral/control-flow claim derived from the Insider refs.sys decompilation (the named functions). It is not a fixed on-disk field; on all 66 test images the trash tables were empty, so there is no positive on-disk obligation to probe. Proof is the cited decompiled call chain. The reference documents the Trash Table object (OID 0xD) that the flow uses.",
+ "evidence_quote": "| 0xD | Trash Table | 0xe0d0 | Deferred deletion queue | CONFIRMED |"
+ }
+ },
+ "FS_VBR_RA_004": {
+ "agree": 0.5,
+ "n": 2,
+ "variants": 2,
+ "spec": {
+ "ref_id": "FS_VBR_RA_004",
+ "cls": "STRUCTURAL",
+ "desc": "VBR+0x03 is the 8-byte FS-name slot holding the ASCII signature \"ReFS\\0\\0\\0\\0\" on normal volumes; BitLocker substitutes the '-FVE-FS-' marker here when the volume is encrypted.",
+ "axis": "corpus",
+ "probe": [
+ "vbr_int",
+ 3,
+ 4,
+ 1397113682
+ ],
+ "applicability": {},
+ "static_fn": "parse_vbr",
+ "evidence_quote": "| 0x03 | 8 | File system name | ASCII | `\"ReFS\\0\\0\\0\\0\"` | CONFIRMED |",
+ "explanation": "The claim asserts that VBR+0x03 is the FS-name slot whose normal content (\"ReFS\") is replaced by the FVE marker only when BitLocker-encrypted. structure_reference.md line 16 fixes offset 0x03 = ASCII \"ReFS\\0\\0\\0\\0\" (CONFIRMED), and RefsIsBootSectorOurs / parse_vbr both read \"ReFS\" at +0x03 (bs[3:7]==b\"ReFS\"). vbr_int(0x03,4,\"ReFS\") tests the first 4 ASCII bytes 'R'(0x52)'e'(0x65)'F'(0x46)'S'(0x53), little-endian u32 = 0x53466552 = 1397113682. PASS on every non-encrypted image proves the field is the ReFS-signature slot the FVE marker is said to replace. The win11refs4gbitlocked image is the single scoped exception where bytes at 0x03 are '-FVE' (0x4556462d) instead \u2014 that conditional FVE-presence half is recorded separately in needs_probe (no menu probe tests a presence-vs-replacement on one image).",
+ "links": [
+ "#232"
+ ]
+ }
+ },
+ "FS_VBR_RA_005": {
+ "agree": 1.0,
+ "n": 1,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_VBR_RA_005",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "refsutil fixboot zeroes VBR fields 0x2A-0x57, preserving only geometry",
+ "axis": "none",
+ "probe": [
+ "cite"
+ ],
+ "applicability": {},
+ "static_fn": null,
+ "links": [],
+ "evidence_quote": "**Warning:** `refsutil fixboot` is destructive: it zeroes the container size, volume serial, checksum algorithm selector, Extended GUID, and volume flags fields.",
+ "explanation": "BEHAVIORAL claim about refsutil.exe (a tool action), explicitly 'not in refs.sys driver' (raw_notes). It is not an on-disk invariant of normal ReFS volumes \u2014 it only holds on a post-fixboot artifact image. No structural disk probe applies; the proof is the documented fixboot test + reference line 90. cite is the correct mapping (no on-disk obligation across the corpus)."
+ }
+ },
+ "FS_VBR_RA_007": {
+ "agree": 1.0,
+ "n": 1,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_VBR_RA_007",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "refsutil fixboot resets checksum selector 0x2A from 0x02 to 0x00, mismatching CRC64 metadata",
+ "axis": "none",
+ "probe": [
+ "cite"
+ ],
+ "applicability": {},
+ "static_fn": null,
+ "links": [],
+ "evidence_quote": "| 0x2A | 2 | Checksum algorithm selector | u16 | See Subtable A.1b | ENRICHED |",
+ "explanation": "BEHAVIORAL claim about refsutil fixboot mutating VBR 0x2A (2->0); 'not in refs.sys driver' (raw_notes). It is a before/after tool behavior on one artifact image, not a corpus on-disk invariant. No structural probe over the image corpus can test a tool transition; cite (documented fixboot test) is the correct mapping. Offset 0x2A confirmed by reference Subtable A.1b."
+ }
+ },
+ "FS_VBR_RA_009": {
+ "agree": 1.0,
+ "n": 1,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_VBR_RA_009",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "Version evolution narrative: 3.7/3.9 == 3.4 structurally; 3.10 is the transition; CHKP flag 0x2000 is insider-only",
+ "axis": "version",
+ "probe": [
+ "cite"
+ ],
+ "applicability": {},
+ "static_fn": null,
+ "links": [],
+ "evidence_quote": "Observed composite values: 0x002 (v3.4/v3.7/v3.9), 0x082 (v3.10), 0x682 (v3.14 native), 0x602 (v3.14 upgraded), 0x07b2 (v3.14 dedup), 0x2682 (Insider).",
+ "explanation": "This is a multi-part cross-version SUMMARY claim (several independent sub-assertions about 3.7/3.9/3.10/3.14/Insider) spanning many fields, not a single offset/value. No single menu probe can express the whole narrative; the CHKP 0x2000=Insider sub-part is corroborated by the composite CHKP-flags reference line. Mapped to cite as a literature/summary; its testable atoms belong to other per-field specs."
+ }
+ },
+ "CT_CTBL_007": {
+ "agree": 1.0,
+ "n": 1,
+ "variants": 1,
+ "spec": {
+ "ref_id": "CT_CTBL_007",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "In 224-byte Container Table rows the physical start LCN is at value offset 0xD0 (= row[len-16])",
+ "axis": "checksum",
+ "probe": [
+ "cpc"
+ ],
+ "applicability": {},
+ "static_fn": "_parse_ct_page",
+ "links": [],
+ "evidence_quote": "#### Value \u2014 224-byte row (64 KiB clusters or SHA-256) ... Physical start at offset 0xD0. **Universal parsing rule:** CPC always at value+0x18; physical start always at value[len-16].",
+ "explanation": "The asserted field (physical start LCN at 0xD0) is a VARIABLE value differing per container/image; there is no constant to assert, and no menu probe tests 'a field exists at offset 0xD0'. cpc only checks clusters-per-container, not the 0xD0 placement, so it does NOT prove this claim. Placed in needs_probe with a layout/consistency shape (physical_start = container_map start, plausible LCN within volume). Probe array here is a placeholder."
+ }
+ },
+ "FS_OTBL_RA_007": {
+ "agree": 1.0,
+ "n": 1,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_OTBL_RA_007",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "OID chronology: generation counter at Object Table value offset 0x18 = checkpoint virtual clock at create/update",
+ "axis": "none",
+ "probe": [
+ "cite"
+ ],
+ "applicability": {},
+ "static_fn": "build_object_map",
+ "links": [],
+ "evidence_quote": "| 0x18 | 4 | Generation counter | u32 | Checkpoint virtual clock at creation/last modification | ENRICHED |",
+ "explanation": "Mostly a SUMMARY/analysis claim (OID density 76.6%, 128-bit File ID composition, 'stronger chronology than NTFS'). The one offset atom (generation counter at value+0x18) is a VARIABLE clock value per object, with no constant to assert; no menu probe tests this composition. Mapped to cite (analysis report ra_step4_20). The 0x18 offset itself is confirmed by reference line 371."
+ }
+ },
+ "FS_SUPB_007": {
+ "agree": 1.0,
+ "n": 1,
+ "variants": 1,
+ "spec": {
+ "ref_id": "FS_SUPB_007",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "Two SUPB backup copies near partition end (~total_clusters-14339 and -14338)",
+ "axis": "none",
+ "probe": [
+ "page_const",
+ 0,
+ 1396985683
+ ],
+ "applicability": {},
+ "static_fn": "parse_supb",
+ "links": [],
+ "evidence_quote": "There are **3 copies**: primary at **LCN 0x1E** plus two backups at **VolSize\u22122** and **VolSize\u22123** (computed from volume size, `CmsVolume::ReadSuperBlock` @211169).",
+ "explanation": "The asserted backup LCNs are VARIABLE (a function of volume size, and the reference now states VolSize-2/VolSize-3 rather than the older -14339/-14338 fixed numbers \u2014 an apparent discrepancy to resolve). No menu probe reads SUPB at a computed end-of-volume LCN; page_const reads the OT-root page, not the backup SUPBs, so it does NOT prove this claim. Placed in needs_probe (locate backups at the volume-size-derived LCNs and verify 'SUPB' signature + matching GUID/chkp refs). Probe array here is a placeholder."
+ }
+ },
+ "GN_PAGE_007": {
+ "agree": 0.5,
+ "n": 6,
+ "variants": 4,
+ "spec": {
+ "ref_id": "GN_PAGE_007",
+ "cls": "STRUCTURAL",
+ "desc": "Page header field 0x40-0x50 is the table identifier (high+low); on the Object Table root page the table-id low at +0x48 equals 0x02.",
+ "axis": "none",
+ "probe": [
+ "page_const",
+ 72,
+ 2
+ ],
+ "applicability": {},
+ "static_fn": "build_object_map",
+ "evidence_quote": "| 0x48 | 8 | Table identifier (low) | u64 | MSB+ only | CONFIRMED |",
+ "explanation": "GN_PAGE_007 asserts 0x40-0x50 holds the page's table identifier. The reference splits it: 0x40 = 'Table OID (high) + Schema (low)', 0x48 = 'Table identifier (low)'. Root #0 is the Object Table (Table ID 0x02 per Subtable A.4b line 201: '| 0 | Object ID Table | 0x02 | 0xe030 ...'). page_const(0x48,2) reads le32 at +0x48 on the OT root MSB+ page and tests it equals 0x02; it FAILs if the field is not the table identifier or not 0x02, proving the table-identifier field location/value. Constant is image-independent because root[0] is always the Object Table (ID 0x02).",
+ "links": [
+ "#GN_PAGE_007"
+ ]
+ }
+ },
+ "MD_DATA_RA_007": {
+ "agree": 1.0,
+ "n": 1,
+ "variants": 1,
+ "spec": {
+ "ref_id": "MD_DATA_RA_007",
+ "cls": "PURE-RD-LAYOUT",
+ "desc": "Integrity-stream extents use variable-stride entries: 32B checksum-page entries (flags 0x1c00d0) vs 24B data-run entries (flags 0x180040)",
+ "axis": "none",
+ "probe": [
+ "cite"
+ ],
+ "applicability": {},
+ "static_fn": null,
+ "links": [],
+ "evidence_quote": "On-disk layout observation; not directly verifiable from driver code",
+ "explanation": "Detailed data-run layout claim (entry strides and flag values 0x1c00d0 / 0x180040). The structure_reference.md VBR/SUPB/CHKP/page/page-ref/CT/OT sections I am authoring against do not fix these integrity-extent flag constants, so I cannot verify an offset/value here without guessing. No VBR/CHKP/page menu probe covers data-run flags. Mapped to cite (validated in refs_dataruns.py against the setintegritystreams images); a dedicated extent-flag probe is flagged in needs_probe."
+ }
+ },
+ "MD_SI_RA_007": {
+ "agree": 1.0,
+ "n": 1,
+ "variants": 1,
+ "spec": {
+ "ref_id": "MD_SI_RA_007",
+ "cls": "STRUCTURAL",
+ "desc": "$SI ExternalFileId_2/3 (0x60/0x68) populated only for cross-volume ops; zero on all native v3.7+",
+ "axis": "version",
+ "probe": [
+ "si_zero",
+ 96,
+ 8
+ ],
+ "applicability": {
+ "version_min": 3.7
+ },
+ "static_fn": null,
+ "links": [
+ "E2+RD"
+ ],
+ "evidence_quote": "| 0x60 | 8 | ExternalFileId\\_2 | u64 | Cross-volume origin ID. Zero on all native v3.7+ images; non-zero only on upgraded v3.4\u2192v3.14 volumes (carryover from v3.4 format). | CORRECTED |",
+ "explanation": "On NATIVE v3.7+ volumes ExternalFileId_2 at $SI+0x60 is zero on every user object (reference Win11 extension line). Scoped to native v3.7+, si_zero(0x60,8) is exactly the right ABSENCE probe and is non-tautological (a non-zero would FAIL). CAVEAT: it must NOT be applied to upgraded v3.4->v3.14 or to v3.4 images (where the field is legitimately non-zero) \u2014 those need a scoped_exception; the harness 'native' grouping must exclude upgraded images. Flagged in needs_probe for the upgraded-image carve-out and for ExtFid_3 at 0x68."
+ }
+ },
+ "GN_PAGE_001": {
+ "agree": 0.625,
+ "n": 8,
+ "variants": 4,
+ "spec": {
+ "ref_id": "GN_PAGE_001",
+ "cls": "STRUCTURAL",
+ "desc": "Page header offset 0x00 is the 4-byte ASCII page signature (SUPB/CHKP/MSB+); on a B+-tree root page it reads 'MSB+'.",
+ "axis": "none",
+ "probe": [
+ "page_const",
+ 0,
+ 725766989
+ ],
+ "applicability": {},
+ "static_fn": "build_object_map",
+ "evidence_quote": "| 0x00 | 4 | Signature | ASCII | `\"SUPB\"`, `\"CHKP\"`, or `\"MSB+\"` | CONFIRMED |",
+ "explanation": "GN_PAGE_001 asserts the page-header signature lives at +0x00 and is a 4-byte ASCII tag. The page_const probe targets the Object Table root, which is a B+-tree (MSB+) page, so its signature dword must equal 'MSB+' = little-endian u32 0x2B42534D = 725766989 (bytes M,S,B,+). page_const(0,725766989) reads le32 at +0x00 and tests equality; it FAILs on any page whose first dword is not 'MSB+', proving the signature field's offset and value. (The probe also internally guards on pg[:4]==b'MSB+', but here we assert the value explicitly so it is not a tautology.)",
+ "links": [
+ "#GN_PAGE_001"
+ ]
+ }
+ },
+ "GN_PAGE_RA_002": {
+ "agree": 0.75,
+ "n": 4,
+ "variants": 2,
+ "spec": {
+ "ref_id": "GN_PAGE_RA_002",
+ "cls": "STRUCTURAL",
+ "desc": "Page header Table OID at +0x48 stores the owning table's OID; on the Object Table root page it equals 0x02.",
+ "axis": "none",
+ "probe": [
+ "page_const",
+ 72,
+ 2
+ ],
+ "applicability": {},
+ "static_fn": "build_object_map",
+ "evidence_quote": "| 0x48 | 8 | Table identifier (low) | u64 | MSB+ only | CONFIRMED |",
+ "explanation": "GN_PAGE_RA_002 asserts the MSB+ page header at +0x48 carries the owning table's OID (e.g. 0x02 = Object ID Table). The probe reads the Object Table root (root[0]), whose owning table is the Object ID Table = Table ID 0x02 (Subtable A.4b line 201). page_const(0x48,2) reads le32 at +0x48 and tests equality with 0x02, FAILing if the page-header owning-table-OID field is absent or not 0x02 \u2014 proving the claim on a real on-disk root page. Image-independent: root[0] is always the Object Table.",
+ "links": [
+ "#GN_PAGE_RA_002",
+ "#GN_PAGE_007"
+ ]
+ }
+ },
+ "GN_PREF_002": {
+ "agree": 1.0,
+ "n": 1,
+ "variants": 1,
+ "spec": {
+ "ref_id": "GN_PREF_002",
+ "cls": "STRUCTURAL",
+ "desc": "Page reference offset 0x22 holds a 1-byte checksum-type code (0x02 = CRC64-ECMA on standard CRC64 metadata).",
+ "axis": "checksum",
+ "probe": [
+ "page_const",
+ 34,
+ 2
+ ],
+ "applicability": {
+ "checksum": "CRC64"
+ },
+ "static_fn": "_parse_ct_page",
+ "evidence_quote": "| 0x22 | 1 | Checksum type | u8 | See Subtable D.1a | CONFIRMED |",
+ "explanation": "Claim: page-reference +0x22-0x23 is the checksum type (1=CRC32-C, 2=CRC64-ECMA). structure_reference.md D.1 fixes a 1-byte 'Checksum type' at 0x22, and Subtable D.1a enumerates 0x00=None, 0x01=CRC32-C, 0x02=CRC64-ECMA. On a CRC64 volume the page references in the OT-root page header region carry type 0x02. page_const(0x22, 2) tests this exact enum value at the exact offset; a SHA-256 or None volume would not be 0x02, so applicability is scoped to checksum=CRC64. This is a non-tautological enum test. NOTE: page_const reads the page-HEADER at the OT-root page, whereas this field lives in a PAGE-REFERENCE struct (child pointer / CHKP root pointer). If the harness's page_const offset base is the page header rather than a page-reference, this probe is mis-targeted \u2014 see needs_probe entry for the precise page-reference-scoped shape.",
+ "links": [
+ "#GN_PREF_002",
+ "E-checksum-selector"
+ ]
+ }
+ }
+}

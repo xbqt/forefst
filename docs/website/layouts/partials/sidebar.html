@@ -1,0 +1,38 @@
+{{- $cur := .RelPermalink -}}
+{{- $sec := "" -}}
+{{- with .Section -}}{{- $sec = site.GetPage (printf "/%s" .) -}}{{- end -}}
+{{- if $sec -}}
+<aside class="sidebar">
+  <input type="checkbox" id="sb-toggle" class="sb-toggle">
+  <div class="sec-title"><a href="{{ $sec.RelPermalink }}">{{ $sec.Title }}</a><label for="sb-toggle" class="sb-handle" aria-label="Toggle section contents">▾</label></div>
+  <div class="sb-body">
+  {{- $groups := $sec.Params.groups -}}
+  {{- if $groups -}}
+    {{- range $g := $groups -}}
+      {{- $pp := sort (where $sec.Pages "Params.group" $g) "Params.sort" -}}
+      {{- with $pp -}}
+        <div class="grp"><div class="sec-title">{{ $g }}</div>
+        <ul>
+          {{- range . -}}<li><a href="{{ .RelPermalink }}"{{ if eq $cur .RelPermalink }} class="active"{{ end }}>{{ .Title }}</a></li>{{- end -}}
+        </ul></div>
+      {{- end -}}
+    {{- end -}}
+  {{- else -}}
+    <ul>
+      {{- range sort (where $sec.Pages "Kind" "page") "Params.sort" -}}
+        <li><a href="{{ .RelPermalink }}"{{ if eq $cur .RelPermalink }} class="active"{{ end }}>{{ .Title }}</a></li>
+      {{- end -}}
+    </ul>
+    {{- range (where $sec.Pages "Kind" "section").ByWeight -}}
+      <div class="grp"><div class="sec-title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></div>
+      <ul>
+        {{- range sort .Pages "Params.sort" -}}<li><a href="{{ .RelPermalink }}"{{ if eq $cur .RelPermalink }} class="active"{{ end }}>{{ .Title }}</a></li>{{- end -}}
+      </ul></div>
+    {{- end -}}
+  {{- end -}}
+  </div>
+</aside>
+{{- else -}}
+{{/* Home page: no left section list (the sections are already in the top nav + the "Browse the reference" cards). Empty placeholder keeps the grid valid; .layout-home collapses to full width. */}}
+<div></div>
+{{- end -}}

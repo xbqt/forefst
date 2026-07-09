@@ -1,0 +1,497 @@
+========================================================================
+  TOOL-VERIFIED CLAIMS REPORT
+  Date: 2026-07-05 10:26:56
+========================================================================
+
+SUMMARY
+------------------------------------------------------------------------
+  P1-Bootstrap                   285 PASS    0 FAIL    0 WARN    0 SKIP
+  P2-Schema                       93 PASS    0 FAIL    0 WARN    0 SKIP
+  P3-BTree                        18 PASS    0 FAIL    0 WARN    0 SKIP
+  P4-DirEntries                   32 PASS    0 FAIL    0 WARN    0 SKIP
+  P5-MLog                          0 PASS    0 FAIL    0 WARN    1 SKIP
+  P6-BlockRefcount                 9 PASS    0 FAIL    0 WARN    0 SKIP
+  P7-Containers                   15 PASS    0 FAIL    0 WARN    0 SKIP
+------------------------------------------------------------------------
+  TOTAL                          452 PASS    0 FAIL    0 WARN    1 SKIP
+
+DETAILED RESULTS
+------------------------------------------------------------------------
+
+## P1-Bootstrap
+
+[PASS] #1 win10refsmini boot exit=0 | expected=0 actual=0
+[PASS] #1 FSRS signature | expected=FSRS present actual=True
+[PASS] #2 win11refsmini boot exit=0 | expected=0 actual=0
+[PASS] #2 FSRS signature | expected=FSRS present actual=True
+[PASS] #3 win11refs5g64k boot exit=0 | expected=0 actual=0
+[PASS] #3 FSRS signature | expected=FSRS present actual=True
+[PASS] #4 win11refs2g_sha256 boot exit=0 | expected=0 actual=0
+[PASS] #4 FSRS signature | expected=FSRS present actual=True
+[PASS] #5 win10to11_upgraded boot exit=0 | expected=0 actual=0
+[PASS] #5 FSRS signature | expected=FSRS present actual=True
+[PASS] #6 wininsiderrefs2t boot exit=0 | expected=0 actual=0
+[PASS] #6 FSRS signature | expected=FSRS present actual=True
+[PASS] #7 win1121h2test boot exit=0 | expected=0 actual=0
+[PASS] #7 FSRS signature | expected=FSRS present actual=True
+[PASS] #8 win1122h2test boot exit=0 | expected=0 actual=0
+[PASS] #8 FSRS signature | expected=FSRS present actual=True
+[PASS] #9 win1123h2test boot exit=0 | expected=0 actual=0
+[PASS] #9 FSRS signature | expected=FSRS present actual=True
+[PASS] #10 win11refs8gdedup boot exit=0 | expected=0 actual=0
+[PASS] #10 FSRS signature | expected=FSRS present actual=True
+[PASS] #11 win11refs4gattributes boot exit=0 | expected=0 actual=0
+[PASS] #11 FSRS signature | expected=FSRS present actual=True
+[PASS] #12 win11refslasttests boot exit=0 | expected=0 actual=0
+[PASS] #12 FSRS signature | expected=FSRS present actual=True
+[PASS] #13 win11refstestmftecmd boot exit=0 | expected=0 actual=0
+[PASS] #13 FSRS signature | expected=FSRS present actual=True
+[PASS] #14 win11refs8g_zstd boot exit=0 | expected=0 actual=0
+[PASS] #14 FSRS signature | expected=FSRS present actual=True
+[PASS] #15 win11refs2tintegrity boot exit=0 | expected=0 actual=0
+[PASS] #15 FSRS signature | expected=FSRS present actual=True
+[PASS] #16 win11refs2t64ksha256 boot exit=0 | expected=0 actual=0
+[PASS] #16 FSRS signature | expected=FSRS present actual=True
+[PASS] #17 win11refs2g_integrity1 boot exit=0 | expected=0 actual=0
+[PASS] #17 FSRS signature | expected=FSRS present actual=True
+[PASS] #19 win11refs2tsnapshots boot exit=0 | expected=0 actual=0
+[PASS] #19 FSRS signature | expected=FSRS present actual=True
+[PASS] #20 win11refs2tspecials boot exit=0 | expected=0 actual=0
+[PASS] #20 FSRS signature | expected=FSRS present actual=True
+[PASS] #18 BitLocker boot rejected | expected=nonzero actual=1 | stderr: refsanalysis: error: no ReFS or GPT signature found (use --partition-start for r
+[PASS] #1 checksum=None | expected=0x0000 actual=0x0000
+[PASS] #5 checksum=None | expected=0x0000 actual=0x0000
+[PASS] #7 checksum=None | expected=0x0000 actual=0x0000
+[PASS] #8 checksum=None | expected=0x0000 actual=0x0000
+[PASS] #2 checksum=CRC64 | expected=0x0002 actual=0x0002
+[PASS] #3 checksum=CRC64 | expected=0x0002 actual=0x0002
+[PASS] #6 checksum=CRC64 | expected=0x0002 actual=0x0002
+[PASS] #9 checksum=CRC64 | expected=0x0002 actual=0x0002
+[PASS] #10 checksum=CRC64 | expected=0x0002 actual=0x0002
+[PASS] #11 checksum=CRC64 | expected=0x0002 actual=0x0002
+[PASS] #12 checksum=CRC64 | expected=0x0002 actual=0x0002
+[PASS] #13 checksum=CRC64 | expected=0x0002 actual=0x0002
+[PASS] #14 checksum=CRC64 | expected=0x0002 actual=0x0002
+[PASS] #15 checksum=CRC64 | expected=0x0002 actual=0x0002
+[PASS] #17 checksum=CRC64 | expected=0x0002 actual=0x0002
+[PASS] #19 checksum=CRC64 | expected=0x0002 actual=0x0002
+[PASS] #20 checksum=CRC64 | expected=0x0002 actual=0x0002
+[PASS] #4 checksum=SHA256 | expected=0x0004 actual=0x0004
+[PASS] #16 checksum=SHA256 | expected=0x0004 actual=0x0004
+[PASS] #1 v3.4 volume flags=0x00000006 | expected=0x00000006 actual=0x00000006
+[PASS] #2 v3.14 volume flags=0x00000066 | expected=0x00000066 actual=0x00000066
+[PASS] #3 v3.14 volume flags=0x00000066 | expected=0x00000066 actual=0x00000066
+[PASS] #4 v3.14 volume flags=0x00000066 | expected=0x00000066 actual=0x00000066
+[PASS] #6 v3.14 volume flags=0x00000066 | expected=0x00000066 actual=0x00000066
+[PASS] #1 format GUID not set | expected=(not set) actual=True
+[PASS] #5 format GUID not set | expected=(not set) actual=True
+[PASS] #7 format GUID not set | expected=(not set) actual=True
+[PASS] #8 format GUID not set | expected=(not set) actual=True
+[PASS] #2 format GUID populated | expected=populated actual=True
+[PASS] #3 format GUID populated | expected=populated actual=True
+[PASS] #4 format GUID populated | expected=populated actual=True
+[PASS] #6 format GUID populated | expected=populated actual=True
+[PASS] #9 format GUID populated | expected=populated actual=True
+[PASS] #1 cluster=4K | expected=4.0 KiB actual=True
+[PASS] #2 cluster=4K | expected=4.0 KiB actual=True
+[PASS] #4 cluster=4K | expected=4.0 KiB actual=True
+[PASS] #5 cluster=4K | expected=4.0 KiB actual=True
+[PASS] #3 cluster=64K | expected=64.0 KiB actual=True
+[PASS] #16 cluster=64K | expected=64.0 KiB actual=True
+[PASS] #1 container=64MiB | expected=64.0 MiB actual=True
+[PASS] #2 container=64MiB | expected=64.0 MiB actual=True
+[PASS] #3 container=64MiB | expected=64.0 MiB actual=True
+[PASS] #4 container=64MiB | expected=64.0 MiB actual=True
+[PASS] #5 container=64MiB | expected=64.0 MiB actual=True
+[PASS] #1 SUPB readable | expected=SUPB signature actual=True
+[PASS] #2 SUPB readable | expected=SUPB signature actual=True
+[PASS] #3 SUPB readable | expected=SUPB signature actual=True
+[PASS] #4 SUPB readable | expected=SUPB signature actual=True
+[PASS] #5 SUPB readable | expected=SUPB signature actual=True
+[PASS] #1 root count=13 | expected=13 actual=13
+[PASS] #1 root[0]='Object ID Table' | expected=Object ID Table actual=Object ID Table
+[PASS] #1 root[0] virtual (translated) | expected=note=translated actual=translated
+[PASS] #1 root[1]='Medium Allocator' | expected=Medium Allocator actual=Medium Allocator Table
+[PASS] #1 root[1] virtual (translated) | expected=note=translated actual=translated
+[PASS] #1 root[2]='Container Allocator' | expected=Container Allocator actual=Container Allocator Table
+[PASS] #1 root[2] virtual (translated) | expected=note=translated actual=translated
+[PASS] #1 root[3]='Schema Table' | expected=Schema Table actual=Schema Table
+[PASS] #1 root[3] virtual (translated) | expected=note=translated actual=translated
+[PASS] #1 root[4]='Parent-Child' | expected=Parent-Child actual=Parent-Child Table
+[PASS] #1 root[4] virtual (translated) | expected=note=translated actual=translated
+[PASS] #1 root[5]='Object ID Table dup' | expected=Object ID Table dup actual=Object ID Table dup
+[PASS] #1 root[5] virtual (translated) | expected=note=translated actual=translated
+[PASS] #1 root[6]='Block RefCount' | expected=Block RefCount actual=Block RefCount Table
+[PASS] #1 root[6] virtual (translated) | expected=note=translated actual=translated
+[PASS] #1 root[7]='Container Table' | expected=Container Table actual=Container Table
+[PASS] #1 root[7] physical (real) | expected=rootLCN==physLCN, note=real actual=rootLCN=4168 physLCN=4168 note=real
+[PASS] #1 root[8]='Container Table dup' | expected=Container Table dup actual=Container Table dup
+[PASS] #1 root[8] physical (real) | expected=rootLCN==physLCN, note=real actual=rootLCN=4170 physLCN=4170 note=real
+[PASS] #1 root[9]='Schema Table dup' | expected=Schema Table dup actual=Schema Table dup
+[PASS] #1 root[9] virtual (translated) | expected=note=translated actual=translated
+[PASS] #1 root[10]='Container Index' | expected=Container Index actual=Container Index Table
+[PASS] #1 root[10] virtual (translated) | expected=note=translated actual=translated
+[PASS] #1 root[11]='Integrity State' | expected=Integrity State actual=Integrity State Table
+[PASS] #1 root[11] virtual (translated) | expected=note=translated actual=translated
+[PASS] #1 root[12]='Small Allocator' | expected=Small Allocator actual=Small Allocator Table
+[PASS] #1 root[12] physical (real) | expected=rootLCN==physLCN, note=real actual=rootLCN=416c physLCN=416c note=real
+[PASS] #2 root count=13 | expected=13 actual=13
+[PASS] #2 root[0]='Object ID Table' | expected=Object ID Table actual=Object ID Table
+[PASS] #2 root[0] virtual (translated) | expected=note=translated actual=translated
+[PASS] #2 root[1]='Medium Allocator' | expected=Medium Allocator actual=Medium Allocator Table
+[PASS] #2 root[1] virtual (translated) | expected=note=translated actual=translated
+[PASS] #2 root[2]='Container Allocator' | expected=Container Allocator actual=Container Allocator Table
+[PASS] #2 root[2] virtual (translated) | expected=note=translated actual=translated
+[PASS] #2 root[3]='Schema Table' | expected=Schema Table actual=Schema Table
+[PASS] #2 root[3] virtual (translated) | expected=note=translated actual=translated
+[PASS] #2 root[4]='Parent-Child' | expected=Parent-Child actual=Parent-Child Table
+[PASS] #2 root[4] virtual (translated) | expected=note=translated actual=translated
+[PASS] #2 root[5]='Object ID Table dup' | expected=Object ID Table dup actual=Object ID Table dup
+[PASS] #2 root[5] virtual (translated) | expected=note=translated actual=translated
+[PASS] #2 root[6]='Block RefCount' | expected=Block RefCount actual=Block RefCount Table
+[PASS] #2 root[6] virtual (translated) | expected=note=translated actual=translated
+[PASS] #2 root[7]='Container Table' | expected=Container Table actual=Container Table
+[PASS] #2 root[7] physical (real) | expected=rootLCN==physLCN, note=real actual=rootLCN=4800 physLCN=4800 note=real
+[PASS] #2 root[8]='Container Table dup' | expected=Container Table dup actual=Container Table dup
+[PASS] #2 root[8] physical (real) | expected=rootLCN==physLCN, note=real actual=rootLCN=7c00 physLCN=7c00 note=real
+[PASS] #2 root[9]='Schema Table dup' | expected=Schema Table dup actual=Schema Table dup
+[PASS] #2 root[9] virtual (translated) | expected=note=translated actual=translated
+[PASS] #2 root[10]='Container Index' | expected=Container Index actual=Container Index Table
+[PASS] #2 root[10] virtual (translated) | expected=note=translated actual=translated
+[PASS] #2 root[11]='Integrity State' | expected=Integrity State actual=Integrity State Table
+[PASS] #2 root[11] virtual (translated) | expected=note=translated actual=translated
+[PASS] #2 root[12]='Small Allocator' | expected=Small Allocator actual=Small Allocator Table
+[PASS] #2 root[12] physical (real) | expected=rootLCN==physLCN, note=real actual=rootLCN=6200 physLCN=6200 note=real
+[PASS] #3 root count=13 | expected=13 actual=13
+[PASS] #3 root[0]='Object ID Table' | expected=Object ID Table actual=Object ID Table
+[PASS] #3 root[0] virtual (translated) | expected=note=translated actual=translated
+[PASS] #3 root[1]='Medium Allocator' | expected=Medium Allocator actual=Medium Allocator Table
+[PASS] #3 root[1] virtual (translated) | expected=note=translated actual=translated
+[PASS] #3 root[2]='Container Allocator' | expected=Container Allocator actual=Container Allocator Table
+[PASS] #3 root[2] virtual (translated) | expected=note=translated actual=translated
+[PASS] #3 root[3]='Schema Table' | expected=Schema Table actual=Schema Table
+[PASS] #3 root[3] virtual (translated) | expected=note=translated actual=translated
+[PASS] #3 root[4]='Parent-Child' | expected=Parent-Child actual=Parent-Child Table
+[PASS] #3 root[4] virtual (translated) | expected=note=translated actual=translated
+[PASS] #3 root[5]='Object ID Table dup' | expected=Object ID Table dup actual=Object ID Table dup
+[PASS] #3 root[5] virtual (translated) | expected=note=translated actual=translated
+[PASS] #3 root[6]='Block RefCount' | expected=Block RefCount actual=Block RefCount Table
+[PASS] #3 root[6] virtual (translated) | expected=note=translated actual=translated
+[PASS] #3 root[7]='Container Table' | expected=Container Table actual=Container Table
+[PASS] #3 root[7] physical (real) | expected=rootLCN==physLCN, note=real actual=rootLCN=403 physLCN=403 note=real
+[PASS] #3 root[8]='Container Table dup' | expected=Container Table dup actual=Container Table dup
+[PASS] #3 root[8] physical (real) | expected=rootLCN==physLCN, note=real actual=rootLCN=600 physLCN=600 note=real
+[PASS] #3 root[9]='Schema Table dup' | expected=Schema Table dup actual=Schema Table dup
+[PASS] #3 root[9] virtual (translated) | expected=note=translated actual=translated
+[PASS] #3 root[10]='Container Index' | expected=Container Index actual=Container Index Table
+[PASS] #3 root[10] virtual (translated) | expected=note=translated actual=translated
+[PASS] #3 root[11]='Integrity State' | expected=Integrity State actual=Integrity State Table
+[PASS] #3 root[11] virtual (translated) | expected=note=translated actual=translated
+[PASS] #3 root[12]='Small Allocator' | expected=Small Allocator actual=Small Allocator Table
+[PASS] #3 root[12] physical (real) | expected=rootLCN==physLCN, note=real actual=rootLCN=601 physLCN=601 note=real
+[PASS] #4 root count=13 | expected=13 actual=13
+[PASS] #4 root[0]='Object ID Table' | expected=Object ID Table actual=Object ID Table
+[PASS] #4 root[0] virtual (translated) | expected=note=translated actual=translated
+[PASS] #4 root[1]='Medium Allocator' | expected=Medium Allocator actual=Medium Allocator Table
+[PASS] #4 root[1] virtual (translated) | expected=note=translated actual=translated
+[PASS] #4 root[2]='Container Allocator' | expected=Container Allocator actual=Container Allocator Table
+[PASS] #4 root[2] virtual (translated) | expected=note=translated actual=translated
+[PASS] #4 root[3]='Schema Table' | expected=Schema Table actual=Schema Table
+[PASS] #4 root[3] virtual (translated) | expected=note=translated actual=translated
+[PASS] #4 root[4]='Parent-Child' | expected=Parent-Child actual=Parent-Child Table
+[PASS] #4 root[4] virtual (translated) | expected=note=translated actual=translated
+[PASS] #4 root[5]='Object ID Table dup' | expected=Object ID Table dup actual=Object ID Table dup
+[PASS] #4 root[5] virtual (translated) | expected=note=translated actual=translated
+[PASS] #4 root[6]='Block RefCount' | expected=Block RefCount actual=Block RefCount Table
+[PASS] #4 root[6] virtual (translated) | expected=note=translated actual=translated
+[PASS] #4 root[7]='Container Table' | expected=Container Table actual=Container Table
+[PASS] #4 root[7] physical (real) | expected=rootLCN==physLCN, note=real actual=rootLCN=24 physLCN=24 note=real
+[PASS] #4 root[8]='Container Table dup' | expected=Container Table dup actual=Container Table dup
+[PASS] #4 root[8] physical (real) | expected=rootLCN==physLCN, note=real actual=rootLCN=28 physLCN=28 note=real
+[PASS] #4 root[9]='Schema Table dup' | expected=Schema Table dup actual=Schema Table dup
+[PASS] #4 root[9] virtual (translated) | expected=note=translated actual=translated
+[PASS] #4 root[10]='Container Index' | expected=Container Index actual=Container Index Table
+[PASS] #4 root[10] virtual (translated) | expected=note=translated actual=translated
+[PASS] #4 root[11]='Integrity State' | expected=Integrity State actual=Integrity State Table
+[PASS] #4 root[11] virtual (translated) | expected=note=translated actual=translated
+[PASS] #4 root[12]='Small Allocator' | expected=Small Allocator actual=Small Allocator Table
+[PASS] #4 root[12] physical (real) | expected=rootLCN==physLCN, note=real actual=rootLCN=2c physLCN=2c note=real
+[PASS] #5 root count=13 | expected=13 actual=13
+[PASS] #5 root[0]='Object ID Table' | expected=Object ID Table actual=Object ID Table
+[PASS] #5 root[0] virtual (translated) | expected=note=translated actual=translated
+[PASS] #5 root[1]='Medium Allocator' | expected=Medium Allocator actual=Medium Allocator Table
+[PASS] #5 root[1] virtual (translated) | expected=note=translated actual=translated
+[PASS] #5 root[2]='Container Allocator' | expected=Container Allocator actual=Container Allocator Table
+[PASS] #5 root[2] virtual (translated) | expected=note=translated actual=translated
+[PASS] #5 root[3]='Schema Table' | expected=Schema Table actual=Schema Table
+[PASS] #5 root[3] virtual (translated) | expected=note=translated actual=translated
+[PASS] #5 root[4]='Parent-Child' | expected=Parent-Child actual=Parent-Child Table
+[PASS] #5 root[4] virtual (translated) | expected=note=translated actual=translated
+[PASS] #5 root[5]='Object ID Table dup' | expected=Object ID Table dup actual=Object ID Table dup
+[PASS] #5 root[5] virtual (translated) | expected=note=translated actual=translated
+[PASS] #5 root[6]='Block RefCount' | expected=Block RefCount actual=Block RefCount Table
+[PASS] #5 root[6] virtual (translated) | expected=note=translated actual=translated
+[PASS] #5 root[7]='Container Table' | expected=Container Table actual=Container Table
+[PASS] #5 root[7] physical (real) | expected=rootLCN==physLCN, note=real actual=rootLCN=24 physLCN=24 note=real
+[PASS] #5 root[8]='Container Table dup' | expected=Container Table dup actual=Container Table dup
+[PASS] #5 root[8] physical (real) | expected=rootLCN==physLCN, note=real actual=rootLCN=28 physLCN=28 note=real
+[PASS] #5 root[9]='Schema Table dup' | expected=Schema Table dup actual=Schema Table dup
+[PASS] #5 root[9] virtual (translated) | expected=note=translated actual=translated
+[PASS] #5 root[10]='Container Index' | expected=Container Index actual=Container Index Table
+[PASS] #5 root[10] virtual (translated) | expected=note=translated actual=translated
+[PASS] #5 root[11]='Integrity State' | expected=Integrity State actual=Integrity State Table
+[PASS] #5 root[11] virtual (translated) | expected=note=translated actual=translated
+[PASS] #5 root[12]='Small Allocator' | expected=Small Allocator actual=Small Allocator Table
+[PASS] #5 root[12] physical (real) | expected=rootLCN==physLCN, note=real actual=rootLCN=2c physLCN=2c note=real
+[PASS] #6 root count=13 | expected=13 actual=13
+[PASS] #6 root[0]='Object ID Table' | expected=Object ID Table actual=Object ID Table
+[PASS] #6 root[0] virtual (translated) | expected=note=translated actual=translated
+[PASS] #6 root[1]='Medium Allocator' | expected=Medium Allocator actual=Medium Allocator Table
+[PASS] #6 root[1] virtual (translated) | expected=note=translated actual=translated
+[PASS] #6 root[2]='Container Allocator' | expected=Container Allocator actual=Container Allocator Table
+[PASS] #6 root[2] virtual (translated) | expected=note=translated actual=translated
+[PASS] #6 root[3]='Schema Table' | expected=Schema Table actual=Schema Table
+[PASS] #6 root[3] virtual (translated) | expected=note=translated actual=translated
+[PASS] #6 root[4]='Parent-Child' | expected=Parent-Child actual=Parent-Child Table
+[PASS] #6 root[4] virtual (translated) | expected=note=translated actual=translated
+[PASS] #6 root[5]='Object ID Table dup' | expected=Object ID Table dup actual=Object ID Table dup
+[PASS] #6 root[5] virtual (translated) | expected=note=translated actual=translated
+[PASS] #6 root[6]='Block RefCount' | expected=Block RefCount actual=Block RefCount Table
+[PASS] #6 root[6] virtual (translated) | expected=note=translated actual=translated
+[PASS] #6 root[7]='Container Table' | expected=Container Table actual=Container Table
+[PASS] #6 root[7] physical (real) | expected=rootLCN==physLCN, note=real actual=rootLCN=6c00 physLCN=6c00 note=real
+[PASS] #6 root[8]='Container Table dup' | expected=Container Table dup actual=Container Table dup
+[PASS] #6 root[8] physical (real) | expected=rootLCN==physLCN, note=real actual=rootLCN=6c08 physLCN=6c08 note=real
+[PASS] #6 root[9]='Schema Table dup' | expected=Schema Table dup actual=Schema Table dup
+[PASS] #6 root[9] virtual (translated) | expected=note=translated actual=translated
+[PASS] #6 root[10]='Container Index' | expected=Container Index actual=Container Index Table
+[PASS] #6 root[10] virtual (translated) | expected=note=translated actual=translated
+[PASS] #6 root[11]='Integrity State' | expected=Integrity State actual=Integrity State Table
+[PASS] #6 root[11] virtual (translated) | expected=note=translated actual=translated
+[PASS] #6 root[12]='Small Allocator' | expected=Small Allocator actual=Small Allocator Table
+[PASS] #6 root[12] physical (real) | expected=rootLCN==physLCN, note=real actual=rootLCN=7204 physLCN=7204 note=real
+[PASS] #16 root count=13 | expected=13 actual=13
+[PASS] #16 root[0]='Object ID Table' | expected=Object ID Table actual=Object ID Table
+[PASS] #16 root[0] virtual (translated) | expected=note=translated actual=translated
+[PASS] #16 root[1]='Medium Allocator' | expected=Medium Allocator actual=Medium Allocator Table
+[PASS] #16 root[1] virtual (translated) | expected=note=translated actual=translated
+[PASS] #16 root[2]='Container Allocator' | expected=Container Allocator actual=Container Allocator Table
+[PASS] #16 root[2] virtual (translated) | expected=note=translated actual=translated
+[PASS] #16 root[3]='Schema Table' | expected=Schema Table actual=Schema Table
+[PASS] #16 root[3] virtual (translated) | expected=note=translated actual=translated
+[PASS] #16 root[4]='Parent-Child' | expected=Parent-Child actual=Parent-Child Table
+[PASS] #16 root[4] virtual (translated) | expected=note=translated actual=translated
+[PASS] #16 root[5]='Object ID Table dup' | expected=Object ID Table dup actual=Object ID Table dup
+[PASS] #16 root[5] virtual (translated) | expected=note=translated actual=translated
+[PASS] #16 root[6]='Block RefCount' | expected=Block RefCount actual=Block RefCount Table
+[PASS] #16 root[6] virtual (translated) | expected=note=translated actual=translated
+[PASS] #16 root[7]='Container Table' | expected=Container Table actual=Container Table
+[PASS] #16 root[7] physical (real) | expected=rootLCN==physLCN, note=real actual=rootLCN=400 physLCN=400 note=real
+[PASS] #16 root[8]='Container Table dup' | expected=Container Table dup actual=Container Table dup
+[PASS] #16 root[8] physical (real) | expected=rootLCN==physLCN, note=real actual=rootLCN=406 physLCN=406 note=real
+[PASS] #16 root[9]='Schema Table dup' | expected=Schema Table dup actual=Schema Table dup
+[PASS] #16 root[9] virtual (translated) | expected=note=translated actual=translated
+[PASS] #16 root[10]='Container Index' | expected=Container Index actual=Container Index Table
+[PASS] #16 root[10] virtual (translated) | expected=note=translated actual=translated
+[PASS] #16 root[11]='Integrity State' | expected=Integrity State actual=Integrity State Table
+[PASS] #16 root[11] virtual (translated) | expected=note=translated actual=translated
+[PASS] #16 root[12]='Small Allocator' | expected=Small Allocator actual=Small Allocator Table
+[PASS] #16 root[12] physical (real) | expected=rootLCN==physLCN, note=real actual=rootLCN=600 physLCN=600 note=real
+[PASS] #1 CHKP flags=0x00000002 | expected=0x00000002 actual=0x00000002
+[PASS] #5 CHKP flags=0x00000602 | expected=0x00000602 actual=0x00000602
+[PASS] #2 CHKP flags=0x00000682 | expected=0x00000682 actual=0x00000682
+[PASS] #5 upgraded VBR checksum still None | expected=0x0000 (None) actual=found
+[PASS] #5 upgraded VBR flags still 0x06 | expected=0x00000006 actual=found
+[PASS] #5 upgraded format GUID still not set | expected=(not set) actual=found
+[PASS] #5 upgraded CHKP version=3.14 | expected=3.14 actual=True
+[PASS] #5 version echo not set | expected=not set (upgraded) actual=found
+
+## P2-Schema
+
+[PASS] v3.4 system schemas=15 | expected=15 actual=15
+[PASS] v3.4 attribute schemas=12 | expected=12 actual=12
+[PASS] v3.4 total schemas=27 | expected=27 actual=27
+[PASS] v3.7 system schemas=15 | expected=15 actual=15
+[PASS] v3.7 attribute schemas=15 | expected=15 actual=15
+[PASS] v3.7 total schemas=30 | expected=30 actual=30
+[PASS] v3.9 system schemas=16 | expected=16 actual=16
+[PASS] v3.9 attribute schemas=15 | expected=15 actual=15
+[PASS] v3.9 total schemas=31 | expected=31 actual=31
+[PASS] v3.10 system schemas=15 | expected=15 actual=15
+[PASS] v3.10 attribute schemas=15 | expected=15 actual=15
+[PASS] v3.10 total schemas=30 | expected=30 actual=30
+[PASS] v3.14 system schemas=13 | expected=13 actual=13
+[PASS] v3.14 attribute schemas=16 | expected=16 actual=16
+[PASS] v3.14 total schemas=29 | expected=29 actual=29
+[PASS] Insider system schemas=14 | expected=14 actual=14
+[PASS] Insider attribute schemas=16 | expected=16 actual=16
+[PASS] Insider total schemas=30 | expected=30 actual=30
+[PASS] 0xe050 present in #1 | expected=present actual=True
+[PASS] 0xe050 present in #7 | expected=present actual=True
+[PASS] 0xe050 present in #8 | expected=present actual=True
+[PASS] 0xe050 absent from #9 | expected=absent actual=absent
+[PASS] 0xe050 absent from #2 | expected=absent actual=absent
+[PASS] 0xe070 present in #1 | expected=present actual=True
+[PASS] 0xe070 present in #7 | expected=present actual=True
+[PASS] 0xe070 present in #8 | expected=present actual=True
+[PASS] 0xe070 present in #9 | expected=present actual=True
+[PASS] 0xe070 absent from #2 | expected=absent actual=absent
+[PASS] 0xe0e0 present in #1 | expected=present actual=True
+[PASS] 0xe0e0 present in #7 | expected=present actual=True
+[PASS] 0xe0e0 present in #8 | expected=present actual=True
+[PASS] 0xe0e0 present in #9 | expected=present actual=True
+[PASS] 0xe0e0 absent from #2 | expected=absent actual=absent
+[PASS] 0xe0f0 present in #1 | expected=present actual=True
+[PASS] 0xe0f0 present in #7 | expected=present actual=True
+[PASS] 0xe0f0 present in #8 | expected=present actual=True
+[PASS] 0xe0f0 absent from #9 | expected=absent actual=absent
+[PASS] 0xe0f0 absent from #2 | expected=absent actual=absent
+[PASS] 0xe120 present in #8 | expected=present actual=True
+[PASS] 0xe120 present in #9 | expected=present actual=True
+[PASS] 0xe120 present in #2 | expected=present actual=True
+[PASS] 0xe120 absent from #1 | expected=absent actual=absent
+[PASS] 0xe120 absent from #7 | expected=absent actual=absent
+[PASS] 0xe130 present in #9 | expected=present actual=True
+[PASS] 0xe130 present in #2 | expected=present actual=True
+[PASS] 0xe130 absent from #1 | expected=absent actual=absent
+[PASS] 0xe130 absent from #7 | expected=absent actual=absent
+[PASS] 0xe130 absent from #8 | expected=absent actual=absent
+[PASS] 0xe140 present in #6 | expected=present actual=True
+[PASS] 0xe140 absent from #1 | expected=absent actual=absent
+[PASS] 0xe140 absent from #2 | expected=absent actual=absent
+[PASS] 0xe140 absent from #7 | expected=absent actual=absent
+[PASS] 0xe140 absent from #8 | expected=absent actual=absent
+[PASS] 0xe140 absent from #9 | expected=absent actual=absent
+[PASS] 0x1b0 present in #7 | expected=present actual=True
+[PASS] 0x1b0 present in #8 | expected=present actual=True
+[PASS] 0x1b0 present in #9 | expected=present actual=True
+[PASS] 0x1b0 present in #2 | expected=present actual=True
+[PASS] 0x1b0 absent from #1 | expected=absent actual=absent
+[PASS] 0x1c0 present in #7 | expected=present actual=True
+[PASS] 0x1c0 present in #8 | expected=present actual=True
+[PASS] 0x1c0 present in #9 | expected=present actual=True
+[PASS] 0x1c0 present in #2 | expected=present actual=True
+[PASS] 0x1c0 absent from #1 | expected=absent actual=absent
+[PASS] 0x1d0 present in #7 | expected=present actual=True
+[PASS] 0x1d0 present in #8 | expected=present actual=True
+[PASS] 0x1d0 present in #9 | expected=present actual=True
+[PASS] 0x1d0 present in #2 | expected=present actual=True
+[PASS] 0x1d0 absent from #1 | expected=absent actual=absent
+[PASS] 0x1e0 present in #2 | expected=present actual=True
+[PASS] 0x1e0 absent from #1 | expected=absent actual=absent
+[PASS] 0x1e0 absent from #7 | expected=absent actual=absent
+[PASS] 0x1e0 absent from #8 | expected=absent actual=absent
+[PASS] 0x1e0 absent from #9 | expected=absent actual=absent
+[PASS] 0x1f0 present in #2 | expected=present actual=True
+[PASS] 0x1f0 absent from #1 | expected=absent actual=absent
+[PASS] 0x1f0 absent from #7 | expected=absent actual=absent
+[PASS] 0x1f0 absent from #8 | expected=absent actual=absent
+[PASS] 0x1f0 absent from #9 | expected=absent actual=absent
+[PASS] #2 0x160 = Reparse Index | expected=Reparse Index actual=found
+[PASS] #7 0x160 = Reparse Index | expected=Reparse Index actual=found
+[PASS] #9 0x160 = Reparse Index | expected=Reparse Index actual=found
+[PASS] #7 0x1b0 = Snapshot | expected=$SNAPSHOT actual=found
+[PASS] #2 0x1b0 = Snapshot | expected=$SNAPSHOT actual=found
+[PASS] #10 schema counts match v3.14 baseline | expected=(13, 16) actual=(13, 16)
+[PASS] #11 schema counts match v3.14 baseline | expected=(13, 16) actual=(13, 16)
+[PASS] #12 schema counts match v3.14 baseline | expected=(13, 16) actual=(13, 16)
+[PASS] #13 schema counts match v3.14 baseline | expected=(13, 16) actual=(13, 16)
+[PASS] #14 schema counts match v3.14 baseline | expected=(13, 16) actual=(13, 16)
+[PASS] #15 schema counts match v3.14 baseline | expected=(13, 16) actual=(13, 16)
+[PASS] #17 schema counts match v3.14 baseline | expected=(13, 16) actual=(13, 16)
+[PASS] #19 schema counts match v3.14 baseline | expected=(13, 16) actual=(13, 16)
+[PASS] #20 schema counts match v3.14 baseline | expected=(13, 16) actual=(13, 16)
+
+## P3-BTree
+
+[PASS] #1 ref_size=0x68 (v3.4 CRC32-C) | expected=0x68 actual=0x68
+[PASS] #2 ref_size=0x30 (v3.14 CRC64) | expected=0x30 actual=0x30
+[PASS] #3 ref_size=0x30 (v3.14 64K CRC64) | expected=0x30 actual=0x30
+[PASS] #4 ref_size=0x48 (SHA-256) | expected=0x48 actual=0x48
+[PASS] #9 ref_size=0x30 (v3.10 CRC64) | expected=0x30 actual=0x30
+[PASS] #16 ref_size=0x48 (64K + SHA-256) | expected=0x48 actual=0x48
+[PASS] #1 CPC=16384 (4K clusters) | expected=16384 actual=16384
+[PASS] #2 CPC=16384 (4K clusters) | expected=16384 actual=16384
+[PASS] #4 CPC=16384 (4K clusters) | expected=16384 actual=16384
+[PASS] #3 CPC=1024 (64K clusters) | expected=1024 actual=1024
+[PASS] #16 CPC=1024 (64K clusters) | expected=1024 actual=1024
+[PASS] CPC=16384 bit_length()=15 | expected=15 actual=15
+[PASS] CPC=1024 bit_length()=11 | expected=11 actual=11
+[PASS] #1 all 13 roots have MSB+ | expected=>=13 actual=13
+[PASS] #2 all 13 roots have MSB+ | expected=>=13 actual=13
+[PASS] #3 all 13 roots have MSB+ | expected=>=13 actual=13
+[PASS] #16 all 13 roots have MSB+ | expected=>=13 actual=13
+[PASS] #16 64K+SHA256: CPC=1024 AND ref=0x48 | expected=CPC=1024 ref=0x48 actual=CPC=1024 ref=0x48
+
+## P4-DirEntries
+
+[PASS] #1 CSV has all 38 columns | expected=all present actual=all present
+[PASS] #2 CSV has all 38 columns | expected=all present actual=all present
+[PASS] #3 CSV has all 38 columns | expected=all present actual=all present
+[PASS] #4 CSV has all 38 columns | expected=all present actual=all present
+[PASS] #5 CSV has all 38 columns | expected=all present actual=all present
+[PASS] #6 CSV has all 38 columns | expected=all present actual=all present
+[PASS] #7 CSV has all 38 columns | expected=all present actual=all present
+[PASS] #8 CSV has all 38 columns | expected=all present actual=all present
+[PASS] #9 CSV has all 38 columns | expected=all present actual=all present
+[PASS] #10 CSV has all 38 columns | expected=all present actual=all present
+[PASS] #11 CSV has all 38 columns | expected=all present actual=all present
+[PASS] #12 CSV has all 38 columns | expected=all present actual=all present
+[PASS] #13 CSV has all 38 columns | expected=all present actual=all present
+[PASS] #14 CSV has all 38 columns | expected=all present actual=all present
+[PASS] #15 CSV has all 38 columns | expected=all present actual=all present
+[PASS] #16 CSV has all 38 columns | expected=all present actual=all present
+[PASS] #17 CSV has all 38 columns | expected=all present actual=all present
+[PASS] #19 CSV has all 38 columns | expected=all present actual=all present
+[PASS] #20 CSV has all 38 columns | expected=all present actual=all present
+[PASS] #18 BitLocker forefst rejected | expected=nonzero actual=1
+[PASS] #1 RefsVersion=3.4 | expected=3.4 actual=3.4
+[PASS] #2 RefsVersion=3.14 | expected=3.14 actual=3.14
+[PASS] #7 RefsVersion=3.7 | expected=3.7 actual=3.7
+[PASS] #8 RefsVersion=3.9 | expected=3.9 actual=3.9
+[PASS] #9 RefsVersion=3.10 | expected=3.10 actual=3.10
+[PASS] #2 min user OID >= 0x701 | expected=>=0x701 actual=0x701
+[PASS] #12 min user OID >= 0x701 | expected=>=0x701 actual=0x701
+[PASS] #2 has resident files | expected=True actual=True
+[PASS] #12 has resident files | expected=True actual=True
+[PASS] #2 timestamps have 7-digit precision | expected=>0 matches actual=80
+[PASS] #2 has Directory_Internal flag | expected=True actual=True
+[PASS] #12 has Directory_Internal flag | expected=True actual=True
+
+## P5-MLog
+
+[SKIP] MLog not re-run in this snapshot | expected=N/A actual=N/A | Rewrite complete (errata E10 resolved): refs_logfile.py superseded by the shipped 'mlog' command in refsanalysis.py. Tests pending re-run.
+
+## P6-BlockRefcount
+
+[PASS] #1 root[6] = Block RefCount | expected=present actual=True
+[PASS] #2 root[6] = Block RefCount | expected=present actual=True
+[PASS] #3 root[6] = Block RefCount | expected=present actual=True
+[PASS] #6 root[6] = Block RefCount | expected=present actual=True
+[PASS] #10 root[6] = Block RefCount | expected=present actual=True
+[PASS] #16 root[6] = Block RefCount | expected=present actual=True
+[PASS] #1 schema 0xe0b0 present | expected=present actual=True
+[PASS] #2 schema 0xe0b0 present | expected=present actual=True
+[PASS] #6 schema 0xe0b0 present | expected=present actual=True
+
+## P7-Containers
+
+[PASS] #1 root[7] physLCN == rootLCN | expected=equal actual=root=4168 phys=4168
+[PASS] #1 root[8] physLCN == rootLCN | expected=equal actual=root=4170 phys=4170
+[PASS] #1 root[12] physLCN == rootLCN | expected=equal actual=root=416c phys=416c
+[PASS] #2 root[7] physLCN == rootLCN | expected=equal actual=root=4800 phys=4800
+[PASS] #2 root[8] physLCN == rootLCN | expected=equal actual=root=7c00 phys=7c00
+[PASS] #2 root[12] physLCN == rootLCN | expected=equal actual=root=6200 phys=6200
+[PASS] #3 root[7] physLCN == rootLCN | expected=equal actual=root=403 phys=403
+[PASS] #3 root[8] physLCN == rootLCN | expected=equal actual=root=600 phys=600
+[PASS] #3 root[12] physLCN == rootLCN | expected=equal actual=root=601 phys=601
+[PASS] #16 root[7] physLCN == rootLCN | expected=equal actual=root=400 phys=400
+[PASS] #16 root[8] physLCN == rootLCN | expected=equal actual=root=406 phys=406
+[PASS] #16 root[12] physLCN == rootLCN | expected=equal actual=root=600 phys=600
+[PASS] #2 container count ~31 (2 GiB) | expected=~31 actual=31
+[PASS] #3 CPC=1024 in containers (64K) | expected=1024 actual=1024
+[PASS] #16 CPC=1024 in containers (64K) | expected=1024 actual=1024
+
+========================================================================
+  RESULT: ALL CLAIMS VERIFIED
+========================================================================

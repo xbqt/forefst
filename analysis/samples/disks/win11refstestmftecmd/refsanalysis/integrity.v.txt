@@ -1,0 +1,243 @@
+==============================================================================
+ReFS Metadata Integrity Report
+==============================================================================
+  Image:           win11refstestmftecmd.raw
+  ReFS version:    3.14
+  Cluster size:    0x1000
+  Checksum type:   CRC64
+  Checkpoint VC:   617
+  Volume sig:      0xaa49cc5f
+  Container map:   63 entries
+
+------------------------------------------------------------------------------
+Page Statistics
+------------------------------------------------------------------------------
+  Pages checked:           378
+  Valid signatures:        378
+  Invalid signatures:      0
+  Volume sig matches:      378
+  Volume sig mismatches:   0
+  VC within bounds:        378
+  VC exceeds checkpoint:   0
+  Self-address valid:      378
+  Self-address invalid:    0
+  B+-tree inner nodes OK:  46
+  B+-tree leaf nodes OK:   332
+  B+-tree struct errors:   0
+
+------------------------------------------------------------------------------
+Redundancy / Backup Copies
+------------------------------------------------------------------------------
+  Boot sector (primary):   LBA 0 — OK
+  Boot sector (backup):    LBA 8257535 — present, identical to primary, checksum OK
+  Checkpoint [backup ]:   LCN 0x2874 — valid, vclock=616
+  Checkpoint [PRIMARY]:   LCN 0x1e3f4 — valid, vclock=617
+  Superblock copies:       3 (LCN 0x1e, 0xfbffd, 0xfbffe)
+
+------------------------------------------------------------------------------
+Verdict: PASS — all metadata pages structurally valid (run --checksums / --fullchecksums to verify CRC64/SHA-256)
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+Page Details
+------------------------------------------------------------------------------
+  LCN 0x3c04     MSB+  OK
+  LCN 0x804      MSB+  OK
+  LCN 0x1424     MSB+  OK
+  LCN 0x3604     MSB+  OK
+  LCN 0x22a00    MSB+  OK
+  LCN 0x23600    MSB+  OK
+  LCN 0x21e00    MSB+  OK
+  LCN 0x20204    MSB+  OK
+  LCN 0x18014    MSB+  OK
+  LCN 0x3408     MSB+  OK
+  LCN 0x3200     MSB+  OK
+  LCN 0x408      MSB+  OK
+  LCN 0xc14      MSB+  OK
+  LCN 0x2408     MSB+  OK
+  LCN 0x21a00    MSB+  OK
+  LCN 0x22200    MSB+  OK
+  LCN 0x23604    MSB+  OK
+  LCN 0x20e04    MSB+  OK
+  LCN 0x22400    MSB+  OK
+  LCN 0x21000    MSB+  OK
+  LCN 0x22204    MSB+  OK
+  LCN 0x21004    MSB+  OK
+  LCN 0x20a04    MSB+  OK
+  LCN 0x24       MSB+  OK
+  LCN 0x28       MSB+  OK
+  LCN 0x18018    MSB+  OK
+  LCN 0x18004    MSB+  OK
+  LCN 0x20008    MSB+  OK
+  LCN 0x2c       MSB+  OK
+  LCN 0x18020    MSB+  OK
+  LCN 0x1802c    MSB+  OK
+  LCN 0x18030    MSB+  OK
+  LCN 0x18038    MSB+  OK
+  LCN 0x18040    MSB+  OK
+  LCN 0x18048    MSB+  OK
+  LCN 0x18050    MSB+  OK
+  LCN 0x18058    MSB+  OK
+  LCN 0x18060    MSB+  OK
+  LCN 0x18068    MSB+  OK
+  LCN 0x18070    MSB+  OK
+  LCN 0x1801c    MSB+  OK
+  LCN 0x18024    MSB+  OK
+  LCN 0x18028    MSB+  OK
+  LCN 0x18034    MSB+  OK
+  LCN 0x1803c    MSB+  OK
+  LCN 0x18044    MSB+  OK
+  LCN 0x1804c    MSB+  OK
+  LCN 0x18054    MSB+  OK
+  LCN 0x1805c    MSB+  OK
+  LCN 0x18064    MSB+  OK
+  LCN 0x1806c    MSB+  OK
+  LCN 0x18078    MSB+  OK
+  LCN 0x18074    MSB+  OK
+  LCN 0x1807c    MSB+  OK
+  LCN 0x2c04     MSB+  OK
+  LCN 0x2e28     MSB+  OK
+  LCN 0x2e38     MSB+  OK
+  LCN 0x3600     MSB+  OK
+  LCN 0x2200     MSB+  OK
+  LCN 0x2a2c     MSB+  OK
+  LCN 0xe34      MSB+  OK
+  LCN 0x360c     MSB+  OK
+  LCN 0x200      MSB+  OK
+  LCN 0x2404     MSB+  OK
+  LCN 0x2a00     MSB+  OK
+  LCN 0x2800     MSB+  OK
+  LCN 0x2600     MSB+  OK
+  LCN 0x2604     MSB+  OK
+  LCN 0x3c34     MSB+  OK
+  LCN 0x3224     MSB+  OK
+  LCN 0x1c1c     MSB+  OK
+  LCN 0x141c     MSB+  OK
+  LCN 0x1a0c     MSB+  OK
+  LCN 0x3c2c     MSB+  OK
+  LCN 0x818      MSB+  OK
+  LCN 0x1004     MSB+  OK
+  LCN 0x2c1c     MSB+  OK
+  LCN 0x2c20     MSB+  OK
+  LCN 0x2224     MSB+  OK
+  LCN 0x2828     MSB+  OK
+  LCN 0x3818     MSB+  OK
+  LCN 0x4c       MSB+  OK
+  LCN 0x3430     MSB+  OK
+  LCN 0xa18      MSB+  OK
+  LCN 0x1c14     MSB+  OK
+  LCN 0x1c18     MSB+  OK
+  LCN 0x2610     MSB+  OK
+  LCN 0x210      MSB+  OK
+  LCN 0x3618     MSB+  OK
+  LCN 0x2430     MSB+  OK
+  LCN 0x418      MSB+  OK
+  LCN 0x2e10     MSB+  OK
+  LCN 0x2434     MSB+  OK
+  LCN 0x1828     MSB+  OK
+  LCN 0x814      MSB+  OK
+  LCN 0x3614     MSB+  OK
+  LCN 0x2e20     MSB+  OK
+  LCN 0x1414     MSB+  OK
+  LCN 0x3c28     MSB+  OK
+  LCN 0x2e14     MSB+  OK
+  LCN 0x2424     MSB+  OK
+  LCN 0xe0c      MSB+  OK
+  LCN 0x2220     MSB+  OK
+  LCN 0x3220     MSB+  OK
+  LCN 0x1610     MSB+  OK
+  LCN 0x342c     MSB+  OK
+  LCN 0x343c     MSB+  OK
+  LCN 0x243c     MSB+  OK
+  LCN 0x20c      MSB+  OK
+  LCN 0x361c     MSB+  OK
+  LCN 0x381c     MSB+  OK
+  LCN 0x48       MSB+  OK
+  LCN 0x204      MSB+  OK
+  LCN 0x2438     MSB+  OK
+  LCN 0x208      MSB+  OK
+  LCN 0x3218     MSB+  OK
+  LCN 0x2218     MSB+  OK
+  LCN 0x3a20     MSB+  OK
+  LCN 0x58       MSB+  OK
+  LCN 0x2814     MSB+  OK
+  LCN 0x180c     MSB+  OK
+  LCN 0x2c18     MSB+  OK
+  LCN 0x140c     MSB+  OK
+  LCN 0x1e10     MSB+  OK
+  LCN 0x218      MSB+  OK
+  LCN 0x3620     MSB+  OK
+  LCN 0x1600     MSB+  OK
+  LCN 0x404      MSB+  OK
+  LCN 0x1410     MSB+  OK
+  LCN 0x1220     MSB+  OK
+  LCN 0x40c      MSB+  OK
+  LCN 0x1804     MSB+  OK
+  LCN 0xa14      MSB+  OK
+  LCN 0x81c      MSB+  OK
+  LCN 0x810      MSB+  OK
+  LCN 0x2a24     MSB+  OK
+  LCN 0x1e20     MSB+  OK
+  LCN 0x3020     MSB+  OK
+  LCN 0x3a24     MSB+  OK
+  LCN 0x3c18     MSB+  OK
+  LCN 0x3e1c     MSB+  OK
+  LCN 0x1c10     MSB+  OK
+  LCN 0x1c08     MSB+  OK
+  LCN 0x1a1c     MSB+  OK
+  LCN 0xa10      MSB+  OK
+  LCN 0x2418     MSB+  OK
+  LCN 0x2a18     MSB+  OK
+  LCN 0x3e10     MSB+  OK
+  LCN 0xa08      MSB+  OK
+  LCN 0x322c     MSB+  OK
+  LCN 0xc0c      MSB+  OK
+  LCN 0x1224     MSB+  OK
+  LCN 0x3628     MSB+  OK
+  LCN 0x1a18     MSB+  OK
+  LCN 0x1c20     MSB+  OK
+  LCN 0x1618     MSB+  OK
+  LCN 0x3404     MSB+  OK
+  LCN 0x2c14     MSB+  OK
+  LCN 0x241c     MSB+  OK
+  LCN 0x54       MSB+  OK
+  LCN 0x2014     MSB+  OK
+  LCN 0x2e24     MSB+  OK
+  LCN 0x3e24     MSB+  OK
+  LCN 0x3e28     MSB+  OK
+  LCN 0x3624     MSB+  OK
+  LCN 0x3a50     MSB+  OK
+  LCN 0x2018     MSB+  OK
+  LCN 0x161c     MSB+  OK
+  LCN 0xa20      MSB+  OK
+  LCN 0x3e44     MSB+  OK
+  LCN 0x2a30     MSB+  OK
+  LCN 0x3428     MSB+  OK
+  LCN 0x2640     MSB+  OK
+  LCN 0x2230     MSB+  OK
+  LCN 0x2c34     MSB+  OK
+  LCN 0x83c      MSB+  OK
+  LCN 0x1444     MSB+  OK
+  LCN 0x2e2c     MSB+  OK
+  LCN 0x64       MSB+  OK
+  LCN 0x614      MSB+  OK
+  LCN 0x2838     MSB+  OK
+  LCN 0xa30      MSB+  OK
+  LCN 0xe2c      MSB+  OK
+  LCN 0x3a48     MSB+  OK
+  LCN 0x214      MSB+  OK
+  LCN 0x2010     MSB+  OK
+  LCN 0x2c40     MSB+  OK
+  LCN 0x3828     MSB+  OK
+  LCN 0x3420     MSB+  OK
+  LCN 0x100c     MSB+  OK
+  LCN 0xa28      MSB+  OK
+  LCN 0x320c     MSB+  OK
+  LCN 0x1c3c     MSB+  OK
+  LCN 0x3a38     MSB+  OK
+  LCN 0x61c      MSB+  OK
+  LCN 0x220c     MSB+  OK
+  LCN 0x2e1c     MSB+  OK
+  LCN 0xc2c      MSB+  OK
+  LCN 0x2c48     MSB+  OK
+  LCN 0x1028     MSB+  OK

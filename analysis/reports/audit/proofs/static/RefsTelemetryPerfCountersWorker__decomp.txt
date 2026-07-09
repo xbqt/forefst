@@ -1,0 +1,22 @@
+
+// === RefsTelemetryPerfCountersWorker @ 140088020 ===
+
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+/* void __cdecl RefsTelemetryPerfCountersWorker(struct _IRP_CONTEXT * __ptr64,void * __ptr64) */
+
+void __cdecl RefsTelemetryPerfCountersWorker(_IRP_CONTEXT *param_1,void *param_2)
+
+{
+ int *piVar1;
+ _VCB *p_Var2;
+ longlong lVar3;
+ longlong lVar4;
+ 
+ p_Var2 = *(_VCB **)(param_1 + 0x40);
+ RefsAcquireSharedVcb(param_1,p_Var2,'\0');
+ if ((*(longlong *)(p_Var2 + 0x70) == 0) || ((*(uint *)(p_Var2 + 0x18) & 0x8000823) != 1))
+ goto LAB_140088057;
+ MsAggregatedPerfCounterTelemetry();
+ lVar3 = _DAT_fffff78000000014;
+ if (0 < *(longlong *)(p_Var2 + 0x1ac0)) {
+ if (*(longlong *)(p_Var2 + 0x1ac0) < _DAT_fffff78000000014 - *(longlong *)(p_Var2 + 0x1ac8)) {

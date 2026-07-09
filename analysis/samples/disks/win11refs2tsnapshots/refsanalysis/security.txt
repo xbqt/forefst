@@ -1,0 +1,85 @@
+==============================================================================
+ReFS Security Descriptors
+==============================================================================
+  Image:        win11refs2tsnapshots.raw
+  ReFS version: 3.14
+
+  Total security descriptors: 7
+
+  [0] SecurityId: 0x10a9f9562, hash=0xa9f9562, gen=1 [hash OK]
+    Revision: 1, Size: 76 bytes
+    Control:  0x8004 (SE_DACL_PRESENT, SE_SELF_RELATIVE)
+    Owner:    BUILTIN\Administrators (S-1-5-32-544)
+    Group:    SYSTEM (S-1-5-18)
+    DACL (1 ACEs):
+      ACCESS_ALLOWED: SYSTEM (S-1-5-18) -> FULL_CONTROL
+
+  [1] SecurityId: 0x10aa39b62, hash=0xaa39b62, gen=1 [hash OK]
+    Revision: 1, Size: 76 bytes
+    Control:  0x9004 (SE_DACL_PRESENT, SE_DACL_PROTECTED, SE_SELF_RELATIVE)
+    Owner:    BUILTIN\Administrators (S-1-5-32-544)
+    Group:    SYSTEM (S-1-5-18)
+    DACL (1 ACEs):
+      ACCESS_ALLOWED: SYSTEM (S-1-5-18) -> FULL_CONTROL
+
+  [2] SecurityId: 0x120005b20, hash=0x20005b20, gen=1 [hash OK]
+    Revision: 1, Size: 224 bytes
+    Control:  0x8004 (SE_DACL_PRESENT, SE_SELF_RELATIVE)
+    Owner:    BUILTIN\Administrators (S-1-5-32-544)
+    Group:    Domain User (S-1-5-21-3829591975-2821165226-2477612932-513)
+    DACL (7 ACEs):
+      ACCESS_ALLOWED: BUILTIN\Administrators (S-1-5-32-544) -> FULL_CONTROL
+      ACCESS_ALLOWED: SYSTEM (S-1-5-18) -> FULL_CONTROL
+      ACCESS_ALLOWED: SYSTEM (S-1-5-18) -> GENERIC_ALL
+      ACCESS_ALLOWED: Authenticated Users (S-1-5-11) -> MODIFY
+      ACCESS_ALLOWED: Authenticated Users (S-1-5-11) -> DELETE|GENERIC_EXECUTE|GENERIC_WRITE|GENERIC_READ
+      ACCESS_ALLOWED: BUILTIN\Users (S-1-5-32-545) -> READ_EXECUTE
+      ACCESS_ALLOWED: BUILTIN\Users (S-1-5-32-545) -> GENERIC_EXECUTE|GENERIC_READ
+
+  [3] SecurityId: 0x120902505, hash=0x20902505, gen=1 [hash OK]
+    Revision: 1, Size: 100 bytes
+    Control:  0x8004 (SE_DACL_PRESENT, SE_SELF_RELATIVE)
+    Owner:    BUILTIN\Administrators (S-1-5-32-544)
+    Group:    SYSTEM (S-1-5-18)
+    DACL (2 ACEs):
+      ACCESS_ALLOWED: SYSTEM (S-1-5-18) -> FULL_CONTROL
+      ACCESS_ALLOWED: BUILTIN\Administrators (S-1-5-32-544) -> FULL_CONTROL
+
+  [4] SecurityId: 0x123d306f5, hash=0x23d306f5, gen=1 [hash OK]
+    Revision: 1, Size: 72 bytes
+    Control:  0x8004 (SE_DACL_PRESENT, SE_SELF_RELATIVE)
+    Owner:    SYSTEM (S-1-5-18)
+    Group:    SYSTEM (S-1-5-18)
+    DACL (1 ACEs):
+      ACCESS_ALLOWED: SYSTEM (S-1-5-18) -> FULL_CONTROL
+
+  [5] SecurityId: 0x1348ee884, hash=0x348ee884, gen=1 [hash OK]
+    Revision: 1, Size: 160 bytes
+    Control:  0x8004 (SE_DACL_PRESENT, SE_SELF_RELATIVE)
+    Owner:    BUILTIN\Administrators (S-1-5-32-544)
+    Group:    Domain User (S-1-5-21-3829591975-2821165226-2477612932-513)
+    DACL (4 ACEs):
+      ACCESS_ALLOWED: BUILTIN\Administrators (S-1-5-32-544) -> FULL_CONTROL
+      ACCESS_ALLOWED: SYSTEM (S-1-5-18) -> FULL_CONTROL
+      ACCESS_ALLOWED: Authenticated Users (S-1-5-11) -> MODIFY
+      ACCESS_ALLOWED: BUILTIN\Users (S-1-5-32-545) -> READ_EXECUTE
+
+  [6] SecurityId: 0x1487e2d1b, hash=0x487e2d1b, gen=1 [hash OK]
+    Revision: 1, Size: 208 bytes
+    Control:  0x8004 (SE_DACL_PRESENT, SE_SELF_RELATIVE)
+    Owner:    BUILTIN\Administrators (S-1-5-32-544)
+    Group:    SYSTEM (S-1-5-18)
+    DACL (7 ACEs):
+      ACCESS_ALLOWED: BUILTIN\Administrators (S-1-5-32-544) -> FULL_CONTROL
+      ACCESS_ALLOWED: SYSTEM (S-1-5-18) -> FULL_CONTROL
+      ACCESS_ALLOWED: SYSTEM (S-1-5-18) -> GENERIC_ALL
+      ACCESS_ALLOWED: Authenticated Users (S-1-5-11) -> MODIFY
+      ACCESS_ALLOWED: Authenticated Users (S-1-5-11) -> DELETE|GENERIC_EXECUTE|GENERIC_WRITE|GENERIC_READ
+      ACCESS_ALLOWED: BUILTIN\Users (S-1-5-32-545) -> READ_EXECUTE
+      ACCESS_ALLOWED: BUILTIN\Users (S-1-5-32-545) -> GENERIC_EXECUTE|GENERIC_READ
+
+  Summary:
+    Total SDs:        7
+    Unique owners:    2
+      SYSTEM (S-1-5-18)
+      BUILTIN\Administrators (S-1-5-32-544)

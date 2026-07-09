@@ -1,0 +1,162 @@
+
+==============================================================================
+Image: win11refs2tsnapshots.raw  (ReFS 3.14, 47 objects)
+==============================================================================
+  OID 0x30: PRESENT at VLCN 0x11604 / PLCN 0x1604
+  Total rows: 18
+  Sessions: 4
+
+  Session: 2026-05-16 17:00:44 UTC
+    Sub-IDs: 0x0, 0x1, 0x5, 0x19c4, 0x19c5, 0x19c6, 0x19c7
+
+  Session: 2026-05-16 17:20:44 UTC
+    Sub-IDs: 0x0, 0x1, 0x19c5
+
+  Session: 2026-05-16 17:30:44 UTC
+    Sub-IDs: 0x0, 0x1, 0x19c7
+
+  Session: 2026-05-16 17:37:57 UTC
+    Sub-IDs: 0x0, 0x1, 0x19c5, 0x19c6, 0x19c7
+
+  ──────────────────────────────────────────────────────────────────────────
+  Detailed rows:
+
+    Sub-ID 0x0 (Session summary) — 80 bytes (standard)
+      field[0]:        11194 (0x2bba)
+      field[1]:         1053 (0x41d)
+      field[2]:            2 (0x2)
+      field[3]:         5597 (0x15dd)
+      field[4]:         3133 (0xc3d)
+      field[5]:         3381 (0xd35)
+      field[6]:         7813 (0x1e85)
+      field[7]:            0 (0x0)
+
+    Sub-ID 0x1 (IO counters (detailed)) — 80 bytes (standard)
+      field[0]:         4837 (0x12e5)
+      field[1]:          610 (0x262)
+      field[2]:            3 (0x3)
+      field[3]:         1612 (0x64c)
+      field[4]:         2645 (0xa55)
+      field[5]:            8 (0x8)
+      field[6]:         4666 (0x123a)
+      field[7]:            0 (0x0)
+
+    Sub-ID 0x5 (Category A) — 44 bytes (standard)
+      field[0]:            8 (0x8)
+      field[1]:            2 (0x2)
+      field[2]:          296 (0x128)
+      trailing_u32: 1082130432 (0x40800000)
+
+    Sub-ID 0x19c4 (Unknown (0x19c4)) — 44 bytes (standard)
+      field[0]:         7813 (0x1e85)
+      field[1]:          743 (0x2e7)
+      field[2]:          296 (0x128)
+      trailing_u32: 4294967295 (0xffffffff)
+
+    Sub-ID 0x19c5 (Unknown (0x19c5)) — 44 bytes (standard)
+      field[0]:         4666 (0x123a)
+      field[1]:          445 (0x1bd)
+      field[2]:          296 (0x128)
+      trailing_u32: 2147483647 (0x7fffffff)
+
+    Sub-ID 0x19c6 (Unknown (0x19c6)) — 44 bytes (standard)
+      field[0]:         3381 (0xd35)
+      field[1]:          310 (0x136)
+      field[2]:          296 (0x128)
+      trailing_u32: 135561215 (0x8147fff)
+
+    Sub-ID 0x19c7 (Unknown (0x19c7)) — 44 bytes (standard)
+      field[0]:          163 (0xa3)
+      field[1]:          163 (0xa3)
+      field[2]:          296 (0x128)
+      trailing_u32: 134234109 (0x8003ffd)
+
+    Sub-ID 0x0 (Session summary) — 80 bytes (standard)
+      field[0]:            0 (0x0)
+      field[1]:            0 (0x0)
+      field[2]:            0 (0x0)
+      field[3]:            0 (0x0)
+      field[4]:            0 (0x0)
+      field[5]:            0 (0x0)
+      field[6]:            0 (0x0)
+      field[7]:            0 (0x0)
+
+    Sub-ID 0x1 (IO counters (detailed)) — 80 bytes (standard)
+      field[0]:            5 (0x5)
+      field[1]:            5 (0x5)
+      field[2]:            1 (0x1)
+      field[3]:            5 (0x5)
+      field[4]:            0 (0x0)
+      field[5]:            5 (0x5)
+      field[6]:            5 (0x5)
+      field[7]:            0 (0x0)
+
+    Sub-ID 0x19c5 (Unknown (0x19c5)) — 44 bytes (standard)
+      field[0]:            5 (0x5)
+      field[1]:            5 (0x5)
+      field[2]:          296 (0x128)
+      trailing_u32: 34144256 (0x2090000)
+
+    Sub-ID 0x0 (Session summary) — 80 bytes (standard)
+      field[0]:            0 (0x0)
+      field[1]:            0 (0x0)
+      field[2]:            0 (0x0)
+      field[3]:            0 (0x0)
+      field[4]:            0 (0x0)
+      field[5]:            0 (0x0)
+      field[6]:            0 (0x0)
+      field[7]:            0 (0x0)
+
+    Sub-ID 0x1 (IO counters (detailed)) — 80 bytes (standard)
+      field[0]:            2 (0x2)
+      field[1]:            2 (0x2)
+      field[2]:            1 (0x1)
+      field[3]:            2 (0x2)
+      field[4]:            0 (0x0)
+      field[5]:            2 (0x2)
+      field[6]:            2 (0x2)
+      field[7]:            0 (0x0)
+
+    Sub-ID 0x19c7 (Unknown (0x19c7)) — 44 bytes (standard)
+      field[0]:            2 (0x2)
+      field[1]:            2 (0x2)
+      field[2]:          296 (0x128)
+      trailing_u32: 1 (0x1)
+
+    Sub-ID 0x0 (Session summary) — 80 bytes (standard)
+      field[0]:           18 (0x12)
+      field[1]:            3 (0x3)
+      field[2]:            1 (0x1)
+      field[3]:           18 (0x12)
+      field[4]:            0 (0x0)
+      field[5]:           18 (0x12)
+      field[6]:           18 (0x12)
+      field[7]:            0 (0x0)
+
+    Sub-ID 0x1 (IO counters (detailed)) — 80 bytes (standard)
+      field[0]:         1675 (0x68b)
+      field[1]:           20 (0x14)
+      field[2]:            2 (0x2)
+      field[3]:          837 (0x345)
+      field[4]:         1179 (0x49b)
+      field[5]:            4 (0x4)
+      field[6]:         1671 (0x687)
+      field[7]:            0 (0x0)
+
+    Sub-ID 0x19c5 (Unknown (0x19c5)) — 44 bytes (standard)
+      field[0]:         1671 (0x687)
+      field[1]:           16 (0x10)
+      field[2]:          296 (0x128)
+      trailing_u32: 269246555 (0x100c605b)
+
+    Sub-ID 0x19c6 (Unknown (0x19c6)) — 44 bytes (standard)
+      field[0]:           18 (0x12)
+      field[1]:            3 (0x3)
+      field[2]:          296 (0x128)
+      trailing_u32: 134217730 (0x8000002)
+
+    Sub-ID 0x19c7 (Unknown (0x19c7)) — 44 bytes (standard)
+      field[0]:            4 (0x4)
+      field[1]:            4 (0x4)
+      field[2]:          296 (0x128)
+      trailing_u32: 1 (0x1)

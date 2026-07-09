@@ -1,0 +1,8 @@
+{{- if and (not .IsHome) (gt (len .TableOfContents) 60) -}}
+<aside class="toc">
+  <div class="toc-title">On this page</div>
+  {{ .TableOfContents }}
+</aside>
+{{- else -}}
+<div></div>
+{{- end -}}

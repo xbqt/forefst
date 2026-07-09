@@ -1,0 +1,20 @@
+
+// === CmsVolumeHeatEngine @ 1401271fc ===
+
+/* public: __cdecl CmsVolumeHeatEngine::CmsVolumeHeatEngine(class CmsVolume * __ptr64) __ptr64 */
+
+CmsVolumeHeatEngine * __thiscall
+CmsVolumeHeatEngine::CmsVolumeHeatEngine(CmsVolumeHeatEngine *this,CmsVolume *param_1)
+
+{
+ uint uVar1;
+ uint uVar2;
+ int iVar3;
+ 
+ *(CmsVolume **)this = param_1;
+ *(undefined8 *)(this + 8) = 0;
+ *(undefined8 *)(this + 0x10) = 0;
+ ExInitializeAutoExpandPushLock(this + 0x18,1);
+ *(undefined8 *)(this + 0x30) = 0;
+ *(undefined8 *)(this + 0x38) = 0;
+ *(undefined8 *)(this + 0x40) = 0;

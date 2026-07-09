@@ -1,0 +1,884 @@
+
+==============================================================================
+  refsanalysis: summary
+==============================================================================
+
+==============================================================================
+ReFS Volume Summary
+==============================================================================
+  Image:              win10refs2g.raw
+  ReFS version:       3.4
+  Volume GUID:        2e519ea6-af7b-4e62-ad10-5193ffe2913a
+  Volume label:       win10refs2g
+  Volume size:        1.9 GB
+  Cluster size:       0x1000 (4.0 KB)
+  Container size:     0x4000000 (64.0 MB)
+  Checksum:           None
+  Compression:        Not configured
+
+------------------------------------------------------------------------------
+Checkpoint
+------------------------------------------------------------------------------
+  Virtual clock:      50
+  Flags:              0x2
+  Containers mapped:  31
+
+------------------------------------------------------------------------------
+File System Content
+------------------------------------------------------------------------------
+  Objects:            45
+  Directories:        33
+  Files:              263 (263 resident)
+  Total file size:    0.0 B
+  Security descs:     8
+  Oldest timestamp:   2021-05-18 07:16:04 UTC
+  Newest timestamp:   2026-05-16 11:09:09 UTC
+
+------------------------------------------------------------------------------
+Global Root Tables
+------------------------------------------------------------------------------
+  Object ID Table                  45 rows
+  Medium Allocator                  7 rows
+  Container Allocator               2 rows
+  Schema Table                     27 rows
+  Parent-Child Table               34 rows
+  Object ID Table dup              45 rows
+  Block RefCount                    0 rows
+  Container Table                  31 rows
+  Container Table dup              31 rows
+  Schema Table dup                 27 rows
+  Container Index                   0 rows
+  Integrity State                   1 rows
+  Small Allocator                   2 rows
+
+==============================================================================
+  refsanalysis: boot
+==============================================================================
+
+
+ReFS Boot Sector at offset 0x1000000
+SHA-256: 2d8ce464e88f4ad3ae7f4f07a72e733f1ac096b952ce3eac019134b100f8cc9c
+
+Field                 Offset  Raw bytes                                        Interpreted          
+--------------------  ------  -----------------------------------------------  ---------------------
+Jump instruction      0x00    00 00 00                                                              
+FS name (ReFS)        0x03    52 65 46 53 00 00 00 00                          ReFS....             
+Reserved              0x0B    00 00 00 00 00                                                        
+FSRS identifier       0x10    46 53 52 53                                      FSRS                 
+VBR size              0x14    00 02                                            512 (0x0200)         
+Checksum              0x16    e0 7d                                            0x7DE0 [OK]          
+Total sector count    0x18    00 00 3e 00 00 00 00 00                          4063232 (1.9 GiB)    
+Bytes per sector      0x20    00 02 00 00                                      512                  
+Sectors per cluster   0x24    08 00 00 00                                      8 (cluster = 4.0 KiB)
+Version               0x28    03 04                                            3.4                  
+Checksum algorithm    0x2A    00 00                                            0x0000 (None)        
+Volume flags          0x2C    06 00 00 00                                      0x00000006           
+Reserved              0x30    00 00 00 00 00 00 00 00                                               
+Volume serial         0x38    5d 94 66 fa d0 66 fa 6e                          0x6EFA66D0FA66945D   
+Bytes per container   0x40    00 00 00 04 00 00 00 00                          64.0 MiB             
+Format instance GUID  0x48    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  (not set)            
+Reserved (trailing)   0x58    424 bytes                                        all zero             
+
+
+==============================================================================
+  refsanalysis: supb
+==============================================================================
+
+
+ReFS Superblock (SUPB) at offset 0x101E000
+SHA-256: 49c8a0fb3d0e1afd5fc8a9ed7641065cc82a5f53c19ab2259f9606f934f8f97f
+
+Field                   Offset  Raw bytes                                            Interpreted                         
+----------------------  ------  ---------------------------------------------------  ------------------------------------
+Signature               0x00    53 55 50 42                                          SUPB                                
+Page header             0x00    53 55 50 42 02 00 00 00 00 00 00 00 8f c3 f3 c9 ...                                      
+Volume GUID             0x50    a6 9e 51 2e 7b af 62 4e ad 10 51 93 ff e2 91 3a      2e519ea6-af7b-4e62-ad10-5193ffe2913a
+GUID XOR (vol sig)         -                                                         0xC9F3C38F                          
+Superblock version      0x68    01 00 00 00 00 00 00 00                              1                                   
+Checkpoint refs offset  0x70    c0 00 00 00                                          SUPB+0xC0                           
+Checkpoint refs count   0x74    02 00 00 00                                          2                                   
+Self-desc offset        0x78    d0 00 00 00                                          SUPB+0xD0                           
+Self-desc length        0x7C    68 00 00 00                                          0x68 (104)                          
+
+  CHKP #1: cluster 0x13F8 -> 0x23F8000  vc=49 ac=41
+  CHKP #2: cluster 0xEE34 -> 0xFE34000  vc=50 ac=42 *
+  (* = active checkpoint)
+
+
+==============================================================================
+  refsanalysis: chkp
+==============================================================================
+
+
+ReFS Checkpoint (CHKP) at offset 0xFE34000
+SHA-256: 31aeaf116153b986e9ae6433c50b82c49ad89ef679c658ea647782492dc07aa4
+
+Field                 Offset  Raw bytes                            Interpreted                   
+--------------------  ------  -----------------------------------  ------------------------------
+Signature             0x00    43 48 4b 50                          CHKP                          
+Page hdr version      0x04    02 00 00 00                          0x2                           
+Volume signature      0x0C    8f c3 f3 c9                          0xC9F3C38F                    
+Virtual clock         0x10    32 00 00 00 00 00 00 00              50                            
+Self-block LCN        0x20    34 ee 00 00 00 00 00 00              0xee34                        
+Version echo          0x50    00 00 00 00                          (not set — upgraded or legacy)
+Version               0x54    03 00 04 00                          3.4                           
+Table desc end        0x58    d0 00 00 00                          0xD0                          
+Ref size (self-desc)  0x5C    68 00 00 00                          0x68 (104 bytes)              
+Virtual clock (body)  0x60    32 00 00 00 00 00 00 00              50                            
+Allocator clock       0x68    2a 00 00 00 00 00 00 00              42                            
+Oldest log ref        0x70    ce 02 00 00 02 00 00 00              offset=0x2CE, segment=2       
+Flags                 0x78    02 00 00 00                          0x00000002                    
+Reserved              0x7C    00 00 00 00 00 00 00 00 00 00 00 00  zero                          
+Data area end         0x88    80 06 00 00                          0x680 (1664 bytes)            
+Max root capacity     0x8C    20 00 00 00                          32                            
+Root count            0x90    0d 00 00 00                          13                            
+Offset list pointer   0x94    38 01 00 00                          (direct root offsets follow)  
+
+  Checkpoint flags (0x2):
+    0x002 = always-set
+
+  Container entries: 31, CPC: 16384
+
+  Idx Table Name                    TID     Root LCN Physical LCN    Sig Note
+  ----------------------------------------------------------------------------
+  0   Object ID Table              0x02      0x100c4         0xc4   MSB+ translated
+  1   Medium Allocator Table       0x21      0x70018       0x8018   MSB+ translated
+  2   Container Allocator Table    0x20      0x7001c       0x801c   MSB+ translated
+  3   Schema Table                 0x01      0x10044         0x44   MSB+ translated
+  4   Parent-Child Table           0x03      0x10250        0x250   MSB+ translated
+  5   Object ID Table dup          0x04      0x100c8         0xc8   MSB+ translated
+  6   Block RefCount Table         0x05      0x7000c       0x800c   MSB+ translated
+  7   Container Table              0x0b       0x4018       0x4018   MSB+ real (bootstrap)
+  8   Container Table dup          0x0c       0x4020       0x4020   MSB+ real (bootstrap)
+  9   Schema Table dup             0x06      0x10048         0x48   MSB+ translated
+  10  Container Index Table        0x0e      0x10034         0x34   MSB+ translated
+  11  Integrity State Table        0x0f      0x70008       0x8008   MSB+ translated
+  12  Small Allocator Table        0x22       0x401c       0x401c   MSB+ real (bootstrap)
+
+
+==============================================================================
+  refsanalysis: schema
+==============================================================================
+
+
+ReFS Schema Table
+
+------------------------------------------------------------------------------
+System table schemas (15 entries)
+------------------------------------------------------------------------------
+  TypeID   Name                             Properties  Level
+  ------------------------------------------------------------
+  0xe010   Allocator Table                       57360  57360
+  0xe030   Object ID Table                           0  57392
+  0xe040   Parent-Child Table                        0  57408
+  0xe050   Object Data Table (legacy)                0  57424
+  0xe060   Schema Table                              0  57440
+  0xe070   Reserved / Placeholder (legacy)           0  57456
+  0xe080   Integrity State Table                     0  57472
+  0xe090   Upcase / Logfile Info Table               0  57488
+  0xe0b0   Block RefCount Table                      0  57520
+  0xe0c0   Container Table                           0  57536
+  0xe0d0   Trash Table                               0  57552
+  0xe0e0   System Directory Entry List (legacy)          1  57568
+  0xe0f0   System File Stream (legacy)               1  57584
+  0xe100   Container Index Table                     0  57600
+  0xe110   Read Cache Metadata                       0  57616
+
+------------------------------------------------------------------------------
+Attribute table schemas (12 entries)
+------------------------------------------------------------------------------
+  TypeID   Name                             Properties  Level
+  ------------------------------------------------------------
+  0x4      Allocator Medium Table (legacy)           0      4
+  0x6      Allocator Large Table (legacy)        57376      6
+  0x110    Directory Entry List                      1    272
+  0x120    File Stream                               1    288
+  0x130    Short Name Entry                          1    304
+  0x140    Long Name Entry                           1    320
+  0x150    Volume Information                        1    336
+  0x160    Reparse Index                             1    352
+  0x170    Reparse Point                             1    368
+  0x180    Standard Information                      1    384
+  0x190    File Name                                 1    400
+  0x1a0    Extended Attributes                       1    416
+
+==============================================================================
+  refsanalysis: objects
+==============================================================================
+
+
+ReFS Object ID Table
+
+Total objects: 45
+
+  OID      Name                             Root LCN
+  --------------------------------------------------
+  0x7      Upcase Table                      0x10050
+  0x8      Upcase Table (dup)                0x1004c
+  0x9      Logfile Information Table         0x100b0
+  0xa      Logfile Information (dup)         0x100ac
+  0xd      Trash Table                       0x100bc
+  0x500    Volume Information                0x100e8
+  0x501    Volume Information (dup)          0x100ec
+  0x520    FS Metadata                       0x100dc
+  0x530    Security Descriptor Stream        0x100f8
+  0x540    Reparse Point Index               0x100f0
+  0x541    Reparse Point Index (dup)         0x100f4
+  0x600    Root Directory                    0x100c0
+  0x701    Directory/File (0x701)            0x1003c
+  0x702    Directory/File (0x702)            0x10304
+  0x703    Directory/File (0x703)            0x10354
+  0x704    Directory/File (0x704)            0x1034c
+  0x706    Directory/File (0x706)            0x10124
+  0x707    Directory/File (0x707)            0x10334
+  0x708    Directory/File (0x708)            0x101d4
+  0x70b    Directory/File (0x70b)            0x10344
+  0x70d    Directory/File (0x70d)            0x102ec
+  0x70f    Directory/File (0x70f)            0x102f4
+  0x710    Directory/File (0x710)            0x10320
+  0x711    Directory/File (0x711)            0x10300
+  0x712    Directory/File (0x712)            0x102f0
+  0x715    Directory/File (0x715)            0x102dc
+  0x717    Directory/File (0x717)            0x1033c
+  0x718    Directory/File (0x718)            0x10038
+  0x719    Directory/File (0x719)            0x10164
+  0x71a    Directory/File (0x71a)            0x10114
+  0x721    Directory/File (0x721)            0x1010c
+  0x722    Directory/File (0x722)            0x101c4
+  0x723    Directory/File (0x723)            0x10330
+  0x724    Directory/File (0x724)            0x1035c
+  0x725    Directory/File (0x725)            0x10314
+  0x72a    Directory/File (0x72a)            0x10100
+  0x72b    Directory/File (0x72b)            0x10338
+  0x72f    Directory/File (0x72f)            0x10364
+  0x730    Directory/File (0x730)            0x1031c
+  0x731    Directory/File (0x731)            0x10214
+  0x734    Directory/File (0x734)            0x102d8
+  0x737    Directory/File (0x737)            0x10348
+  0x739    Directory/File (0x739)            0x1032c
+  0x73a    Directory/File (0x73a)            0x10240
+  0x73b    Directory/File (0x73b)            0x10244
+
+==============================================================================
+  refsanalysis: parentchild
+==============================================================================
+
+
+ReFS Parent-Child Table
+
+------------------------------------------------------------------------------
+Parent-Child Relationships
+------------------------------------------------------------------------------
+  Total entries:      34
+  Unique parents:     18
+  Unique children:    34
+  Unique OIDs:        35
+  Tree roots:         0x600
+
+  Parent         → Child            Parent Name               → Child Name
+  ------------------------------------------------------------------------
+  0x600          → 0x520            Root Directory            → FS Metadata
+  0x600          → 0x701            Root Directory            → Dir/File (0x701)
+  0x600          → 0x702            Root Directory            → Dir/File (0x702)
+  0x702          → 0x70f            Dir/File (0x702)          → Dir/File (0x70f)
+  0x702          → 0x717            Dir/File (0x702)          → Dir/File (0x717)
+  0x702          → 0x722            Dir/File (0x702)          → Dir/File (0x722)
+  0x702          → 0x723            Dir/File (0x702)          → Dir/File (0x723)
+  0x702          → 0x725            Dir/File (0x702)          → Dir/File (0x725)
+  0x703          → 0x708            Dir/File (0x703)          → Dir/File (0x708)
+  0x706          → 0x704            Dir/File (0x706)          → Dir/File (0x704)
+  0x706          → 0x718            Dir/File (0x706)          → Dir/File (0x718)
+  0x706          → 0x71a            Dir/File (0x706)          → Dir/File (0x71a)
+  0x706          → 0x724            Dir/File (0x706)          → Dir/File (0x724)
+  0x707          → 0x703            Dir/File (0x707)          → Dir/File (0x703)
+  0x707          → 0x706            Dir/File (0x707)          → Dir/File (0x706)
+  0x70b          → 0x715            Dir/File (0x70b)          → Dir/File (0x715)
+  0x70f          → 0x721            Dir/File (0x70f)          → Dir/File (0x721)
+  0x70f          → 0x72a            Dir/File (0x70f)          → Dir/File (0x72a)
+  0x70f          → 0x737            Dir/File (0x70f)          → Dir/File (0x737)
+  0x710          → 0x739            Dir/File (0x710)          → Dir/File (0x739)
+  0x711          → 0x70d            Dir/File (0x711)          → Dir/File (0x70d)
+  0x711          → 0x712            Dir/File (0x711)          → Dir/File (0x712)
+  0x711          → 0x719            Dir/File (0x711)          → Dir/File (0x719)
+  0x718          → 0x70b            Dir/File (0x718)          → Dir/File (0x70b)
+  0x721          → 0x707            Dir/File (0x721)          → Dir/File (0x707)
+  0x721          → 0x734            Dir/File (0x721)          → Dir/File (0x734)
+  0x722          → 0x72f            Dir/File (0x722)          → Dir/File (0x72f)
+  0x725          → 0x710            Dir/File (0x725)          → Dir/File (0x710)
+  0x72a          → 0x711            Dir/File (0x72a)          → Dir/File (0x711)
+  0x72a          → 0x73a            Dir/File (0x72a)          → Dir/File (0x73a)
+  0x72f          → 0x730            Dir/File (0x72f)          → Dir/File (0x730)
+  0x730          → 0x731            Dir/File (0x730)          → Dir/File (0x731)
+  0x731          → 0x72b            Dir/File (0x731)          → Dir/File (0x72b)
+  0x737          → 0x73b            Dir/File (0x737)          → Dir/File (0x73b)
+
+==============================================================================
+  refsanalysis: containers
+==============================================================================
+
+==============================================================================
+ReFS Container & Allocator Analysis
+==============================================================================
+  Image:              /workspace/refs/analysis/rawdisk/disks/step2/win10refs2g.raw
+  ReFS version:       3.4
+  Cluster size:       0x1000 (4.0 KB)
+  Container size:     0x4000000 (64.0 MB)
+  Clusters/container: 16384
+  Checkpoint VC:      50
+
+------------------------------------------------------------------------------
+Volume Capacity
+------------------------------------------------------------------------------
+  Total volume size:  1.9 GB
+  Total containers:   31 (theoretical from volume size)
+  Container Table:    31 mapped containers
+
+------------------------------------------------------------------------------
+Allocator Tables
+------------------------------------------------------------------------------
+  Medium Allocator          7 rows
+  Container Allocator       2 rows
+  Small Allocator           2 rows
+  Container Index Table     0 rows
+
+
+==============================================================================
+  refsanalysis: files
+==============================================================================
+
+==============================================================================
+ReFS Directory Tree
+==============================================================================
+  Image:           /workspace/refs/analysis/rawdisk/disks/step2/win10refs2g.raw
+  ReFS version:    3.4
+  Cluster size:    0x1000
+  Objects:         45
+  Start OID:       0x600
+  Start name:      Root Directory
+
+  Total entries:   296 (33 directories, 263 files)
+
+  Type  OID          Path
+  ------------------------------------------------------------
+  DIR   0x701        System Volume Information
+  FILE  (resident)   System Volume Information/IndexerVolumeGuid
+  FILE  (resident)   System Volume Information/MountPointManagerRemoteDatabase
+  FILE  (resident)   System Volume Information/WPSettings.dat
+  DIR   0x702        test
+  DIR   0x722        test/elvis_dir_index_149423
+  DIR   0x72f        test/elvis_dir_index_149423/elvis_dir_victor_121923
+  DIR   0x730        test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324
+  DIR   0x731        test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165
+  DIR   0x72b        test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/elvis_dir_oscar_874075
+  FILE  (resident)   test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/elvis_dir_oscar_874075/xbpt_delta_victor_412034.ini
+  FILE  (resident)   test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/elvis_dir_oscar_874075/xbpt_zulu_mike_340372.cfg
+  FILE  (resident)   test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_audit_echo_178867.tmp
+  FILE  (resident)   test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_log_foxtrot_796125.ini
+  FILE  (resident)   test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_oscar_foxtrot_866936.json
+  FILE  (resident)   test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_output_lima_215617.json
+  FILE  (resident)   test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_papa_archive_660135.txt
+  FILE  (resident)   test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_zulu_india_473528.csv
+  FILE  (resident)   test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_cache_sync_352758.ini
+  FILE  (resident)   test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_cache_temp_298348.bak
+  FILE  (resident)   test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_log_romeo_711888.cfg
+  FILE  (resident)   test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_november_yankee_663510.csv
+  FILE  (resident)   test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_trace_gamma_472483.cfg
+  FILE  (resident)   test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_zulu_audit_805568.ini
+  FILE  (resident)   test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_hotel_mike_996142.cfg
+  FILE  (resident)   test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_hotel_victor_678038.txt
+  FILE  (resident)   test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_large_5mb_romeo_293003.dat
+  FILE  (resident)   test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_temp_uniform_753565.cfg
+  FILE  (resident)   test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_whiskey_delta_922359.tmp
+  FILE  (resident)   test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_zulu_echo_160107.cfg
+  FILE  (resident)   test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_zulu_papa_839258.bin
+  FILE  (resident)   test/elvis_dir_index_149423/xbpt_beta_archive_985685.tmp
+  FILE  (resident)   test/elvis_dir_index_149423/xbpt_config_sync_830891.tmp
+  FILE  (resident)   test/elvis_dir_index_149423/xbpt_draft_india_626576.tmp
+  FILE  (resident)   test/elvis_dir_index_149423/xbpt_draft_record_749595.cfg
+  FILE  (resident)   test/elvis_dir_index_149423/xbpt_kilo_draft_550251.bin
+  FILE  (resident)   test/elvis_dir_index_149423/xbpt_papa_papa_899322.md
+  FILE  (resident)   test/elvis_dir_index_149423/xbpt_quebec_kilo_982841.tmp
+  FILE  (resident)   test/elvis_dir_index_149423/xbpt_sync_output_795963.bin
+  FILE  (resident)   test/elvis_dir_index_149423/xbpt_victor_gamma_564302.csv
+  FILE  (resident)   test/elvis_dir_index_149423/xbpt_yankee_draft_816830.dat
+  FILE  (resident)   test/elvis_dir_index_149423/xbpt_zulu_kilo_319858.csv
+  DIR   0x723        test/elvis_dir_india_800575
+  FILE  (resident)   test/elvis_dir_india_800575/xbpt_beta_archive_202282.json
+  FILE  (resident)   test/elvis_dir_india_800575/xbpt_cache_index_408825.bin
+  FILE  (resident)   test/elvis_dir_india_800575/xbpt_cache_lima_454391.txt
+  FILE  (resident)   test/elvis_dir_india_800575/xbpt_delta_lima_807650.tmp
+  FILE  (resident)   test/elvis_dir_india_800575/xbpt_foxtrot_zulu_156856.csv
+  FILE  (resident)   test/elvis_dir_india_800575/xbpt_kilo_config_292054.json
+  FILE  (resident)   test/elvis_dir_india_800575/xbpt_large_2mb_report_507726.txt
+  FILE  (resident)   test/elvis_dir_india_800575/xbpt_log_beta_973172.txt
+  FILE  (resident)   test/elvis_dir_india_800575/xbpt_oscar_backup_284025.json
+  FILE  (resident)   test/elvis_dir_india_800575/xbpt_output_config_975939.bak
+  FILE  (resident)   test/elvis_dir_india_800575/xbpt_output_victor_198806.ini
+  FILE  (resident)   test/elvis_dir_india_800575/xbpt_report_temp_854937.tmp
+  FILE  (resident)   test/elvis_dir_india_800575/xbpt_sierra_beta_228555.dat
+  FILE  (resident)   test/elvis_dir_india_800575/xbpt_sierra_data_271533.bin
+  FILE  (resident)   test/elvis_dir_india_800575/xbpt_uniform_lima_155750.md
+  DIR   0x725        test/elvis_dir_papa_805353
+  DIR   0x710        test/elvis_dir_papa_805353/elvis_dir_november_478580
+  DIR   0x739        test/elvis_dir_papa_805353/elvis_dir_november_478580/elvis_dir_kilo_751807
+  FILE  (resident)   test/elvis_dir_papa_805353/elvis_dir_november_478580/elvis_dir_kilo_751807/xbpt_delta_zulu_595944.bak
+  FILE  (resident)   test/elvis_dir_papa_805353/elvis_dir_november_478580/elvis_dir_kilo_751807/xbpt_temp_backup_816270.cfg
+  FILE  (resident)   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_alpha_cache_742120.dat
+  FILE  (resident)   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_archive_trace_798923.cfg
+  FILE  (resident)   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_audit_sync_528794.xml
+  FILE  (resident)   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_backup_mike_407434.log
+  FILE  (resident)   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_beta_echo_977425.bin
+  FILE  (resident)   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_config_log_890790.bak
+  FILE  (resident)   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_delta_echo_268401.csv
+  FILE  (resident)   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_delta_report_275249.dat
+  FILE  (resident)   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_hardlink_echo_387599.ini
+  FILE  (resident)   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_hotel_kilo_705007.cfg
+  FILE  (resident)   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_index_index_579494.cfg
+  FILE  (resident)   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_kilo_output_350111.log
+  FILE  (resident)   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_lima_temp_514782.csv
+  FILE  (resident)   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_lima_victor_941030.cfg
+  FILE  (resident)   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_log_output_579275.dat
+  FILE  (resident)   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_oscar_archive_384713.txt
+  FILE  (resident)   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_oscar_foxtrot_635028.xml
+  FILE  (resident)   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_papa_index_238422.csv
+  FILE  (resident)   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_quebec_papa_978800.txt
+  FILE  (resident)   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_sierra_echo_921063.xml
+  FILE  (resident)   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_tango_echo_291736.csv
+  FILE  (resident)   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_temp_sierra_130629.tmp
+  FILE  (resident)   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_trace_gamma_651618.dat
+  FILE  (resident)   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_victor_tango_152379.bin
+  FILE  (resident)   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_yankee_victor_114004.ini
+  FILE  (resident)   test/elvis_dir_papa_805353/xbpt_audit_index_229436.csv
+  FILE  (resident)   test/elvis_dir_papa_805353/xbpt_mike_oscar_154118.csv
+  FILE  (resident)   test/elvis_dir_papa_805353/xbpt_november_hotel_509136.md
+  FILE  (resident)   test/elvis_dir_papa_805353/xbpt_november_record_124675.bak
+  FILE  (resident)   test/elvis_dir_papa_805353/xbpt_november_sierra_312346.xml
+  FILE  (resident)   test/elvis_dir_papa_805353/xbpt_oscar_archive_362034.json
+  FILE  (resident)   test/elvis_dir_papa_805353/xbpt_papa_victor_656146.log
+  FILE  (resident)   test/elvis_dir_papa_805353/xbpt_temp_data_294711.md
+  FILE  (resident)   test/elvis_dir_papa_805353/xbpt_temp_log_141240.cfg
+  DIR   0x70f        test/elvis_dir_record_449015
+  DIR   0x72a        test/elvis_dir_record_449015/elvis_dir_lima_252141
+  DIR   0x711        test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778
+  DIR   0x70d        test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_cache_zulu_259753.dat
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_delta_india_877880.dat
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_delta_temp_981764.tmp
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_mike_quebec_329740.dat
+  DIR   0x719        test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509/xbpt_mike_trace_701071.dat
+  DIR   0x712        test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_audit_config_255291.dat
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_beta_report_756229.csv
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_november_cache_127869.dat
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_zulu_trace_481495.md
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_backup_echo_585708.csv
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_beta_archive_448246.ini
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_draft_oscar_719333.tmp
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_kilo_beta_246643.bin
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_large_7mb_india_845613.txt
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_large_86mb_india_568540.txt
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_log_romeo_319918.txt
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_mike_trace_484217.ini
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_mike_uniform_215836.txt
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_report_india_560484.txt
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_romeo_output_531365.cfg
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_sync_echo_156375.ini
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_temp_mike_134457.bak
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_trace_delta_811163.txt
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_yankee_tango_103961.bin
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_zulu_hotel_433348.log
+  DIR   0x73a        test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_report_664539
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_alpha_delta_877195.json
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_index_draft_129088.bin
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_kilo_quebec_845728.bak
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_tango_record_232127.csv
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_temp_index_659152.xml
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_uniform_mike_713257.xml
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_yankee_report_288078.log
+  DIR   0x721        test/elvis_dir_record_449015/elvis_dir_papa_104235
+  DIR   0x707        test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743
+  DIR   0x706        test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016
+  DIR   0x724        test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_archive_704644
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_archive_704644/xbpt_uniform_oscar_320878.log
+  DIR   0x704        test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_config_archive_855545.dat
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_data_victor_588744.ini
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_delta_sierra_216359.bin
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_hotel_data_899354.bak
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_index_zulu_828859.bak
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_lima_mike_622053.csv
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_papa_audit_649170.md
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_sierra_log_210965.log
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_tango_mike_573093.dat
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_temp_audit_764882.bak
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_uniform_alpha_203203.json
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_whiskey_kilo_275488.json
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_whiskey_romeo_757926.txt
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_yankee_foxtrot_727835.bak
+  DIR   0x71a        test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790/xbpt_delta_delta_676812.xml
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790/xbpt_draft_india_571157.ini
+  DIR   0x718        test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398
+  DIR   0x70b        test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805
+  DIR   0x715        test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083/xbpt_yankee_echo_729349.tmp
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_alpha_delta_830163.ini
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_backup_draft_411674.log
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_delta_cache_147912.bin
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_hardlink_audit_219848.cfg
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_log_backup_939898.json
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_report_audit_396522.txt
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_symlink_gamma_582874.lnk
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/xbpt_india_temp_254875.bak
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_alpha_victor_250409.ini
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_audit_data_566396.txt
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_audit_india_563500.bin
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_audit_log_130131.ini
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_beta_cache_861983.json
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_lima_lima_890070.dat
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_lima_oscar_843603.tmp
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_mike_tango_822153.dat
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_romeo_gamma_831931.dat
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_tango_victor_844323.json
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_temp_output_522138.tmp
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_trace_quebec_127743.bin
+  DIR   0x703        test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462
+  DIR   0x708        test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899/xbpt_config_record_746941.dat
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_index_uniform_409576.json
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_victor_echo_578793.cfg
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_zulu_output_293634.cfg
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_archive_whiskey_718198.csv
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_audit_november_543757.cfg
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_cache_beta_265588.tmp
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_config_beta_555315.bin
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_config_india_582905.json
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_draft_beta_656043.txt
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_gamma_victor_852781.bak
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_hotel_sync_810225.ini
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_index_temp_198731.cfg
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_india_whiskey_159747.csv
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_log_whiskey_169575.dat
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_mike_uniform_966879.xml
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_oscar_report_193920.cfg
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_quebec_audit_121864.cfg
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_record_delta_426347.json
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_record_index_307951.json
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_report_alpha_806856.csv
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_temp_echo_351548.json
+  DIR   0x734        test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_whiskey_835215
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_whiskey_835215/xbpt_alpha_romeo_974930.bin
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_backup_sierra_949923.ini
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_delta_log_234524.log
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_draft_draft_797325.txt
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_foxtrot_cache_816969.xml
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_hotel_yankee_781098.log
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_kilo_sync_474043.csv
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_lima_config_611703.json
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_log_mike_997799.bin
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_output_temp_864816.txt
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_record_cache_584285.json
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_sierra_record_710410.bin
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_temp_foxtrot_475776.md
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_trace_report_848037.cfg
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_victor_sync_949138.bak
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_zulu_hotel_356824.dat
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_zulu_sync_665668.bin
+  DIR   0x737        test/elvis_dir_record_449015/elvis_dir_tango_434284
+  DIR   0x73b        test/elvis_dir_record_449015/elvis_dir_tango_434284/elvis_dir_record_864004
+  FILE  (resident)   test/elvis_dir_record_449015/elvis_dir_tango_434284/xbpt_data_config_437965.csv
+  FILE  (resident)   test/elvis_dir_record_449015/xbpt_alpha_echo_381900.ini
+  FILE  (resident)   test/elvis_dir_record_449015/xbpt_archive_audit_104959.tmp
+  FILE  (resident)   test/elvis_dir_record_449015/xbpt_backup_delta_809262.csv
+  FILE  (resident)   test/elvis_dir_record_449015/xbpt_beta_mike_393018.xml
+  FILE  (resident)   test/elvis_dir_record_449015/xbpt_config_uniform_831195.csv
+  FILE  (resident)   test/elvis_dir_record_449015/xbpt_delta_log_356379.tmp
+  FILE  (resident)   test/elvis_dir_record_449015/xbpt_foxtrot_lima_318386.tmp
+  FILE  (resident)   test/elvis_dir_record_449015/xbpt_gamma_archive_952302.cfg
+  FILE  (resident)   test/elvis_dir_record_449015/xbpt_india_delta_132534.bak
+  FILE  (resident)   test/elvis_dir_record_449015/xbpt_kilo_papa_445436.xml
+  FILE  (resident)   test/elvis_dir_record_449015/xbpt_large_14mb_foxtrot_773062.bak
+  FILE  (resident)   test/elvis_dir_record_449015/xbpt_log_india_171227.csv
+  FILE  (resident)   test/elvis_dir_record_449015/xbpt_mike_trace_772216.dat
+  FILE  (resident)   test/elvis_dir_record_449015/xbpt_november_quebec_231876.bak
+  FILE  (resident)   test/elvis_dir_record_449015/xbpt_oscar_victor_509674.md
+  FILE  (resident)   test/elvis_dir_record_449015/xbpt_output_papa_412411.log
+  FILE  (resident)   test/elvis_dir_record_449015/xbpt_sierra_kilo_206137.json
+  FILE  (resident)   test/elvis_dir_record_449015/xbpt_sierra_victor_685719.xml
+  FILE  (resident)   test/elvis_dir_record_449015/xbpt_uniform_record_153192.json
+  FILE  (resident)   test/elvis_dir_record_449015/xbpt_whiskey_sync_681180.xml
+  DIR   0x717        test/elvis_dir_victor_783323
+  FILE  (resident)   test/elvis_dir_victor_783323/xbpt_audit_november_550810.ini
+  FILE  (resident)   test/elvis_dir_victor_783323/xbpt_cache_alpha_953426.ini
+  FILE  (resident)   test/elvis_dir_victor_783323/xbpt_cache_quebec_319176.xml
+  FILE  (resident)   test/elvis_dir_victor_783323/xbpt_data_romeo_946788.bin
+  FILE  (resident)   test/elvis_dir_victor_783323/xbpt_delta_echo_626074.json
+  FILE  (resident)   test/elvis_dir_victor_783323/xbpt_draft_november_935526.json
+  FILE  (resident)   test/elvis_dir_victor_783323/xbpt_hotel_yankee_684408.cfg
+  FILE  (resident)   test/elvis_dir_victor_783323/xbpt_india_quebec_883273.bak
+  FILE  (resident)   test/elvis_dir_victor_783323/xbpt_large_149mb_alpha_610845.dat
+  FILE  (resident)   test/elvis_dir_victor_783323/xbpt_november_quebec_999278.md
+  FILE  (resident)   test/elvis_dir_victor_783323/xbpt_oscar_delta_192166.ini
+  FILE  (resident)   test/elvis_dir_victor_783323/xbpt_quebec_echo_201709.md
+  FILE  (resident)   test/elvis_dir_victor_783323/xbpt_record_mike_276675.tmp
+  FILE  (resident)   test/elvis_dir_victor_783323/xbpt_report_quebec_867569.md
+  FILE  (resident)   test/elvis_dir_victor_783323/xbpt_romeo_quebec_189040.ini
+  FILE  (resident)   test/elvis_dir_victor_783323/xbpt_romeo_yankee_383561.cfg
+  FILE  (resident)   test/elvis_dir_victor_783323/xbpt_sierra_echo_709659.md
+  FILE  (resident)   test/elvis_dir_victor_783323/xbpt_sierra_gamma_615567.ini
+  FILE  (resident)   test/elvis_dir_victor_783323/xbpt_trace_cache_289808.json
+  FILE  (resident)   test/elvis_dir_victor_783323/xbpt_trace_config_794136.tmp
+  FILE  (resident)   test/elvis_dir_victor_783323/xbpt_trace_hotel_502150.xml
+  FILE  (resident)   test/elvis_dir_victor_783323/xbpt_yankee_output_781405.csv
+  FILE  (resident)   test/xbpt_archive_romeo_596174.txt
+  FILE  (resident)   test/xbpt_beta_sierra_570651.json
+  FILE  (resident)   test/xbpt_config_hotel_558589.txt
+  FILE  (resident)   test/xbpt_config_log_714507.md
+  FILE  (resident)   test/xbpt_config_log_982725.bin
+  FILE  (resident)   test/xbpt_draft_tango_958869.bin
+  FILE  (resident)   test/xbpt_foxtrot_config_966558.log
+  FILE  (resident)   test/xbpt_gamma_temp_372257.bak
+  FILE  (resident)   test/xbpt_index_india_423224.csv
+  FILE  (resident)   test/xbpt_india_papa_801739.json
+  FILE  (resident)   test/xbpt_india_temp_831504.csv
+  FILE  (resident)   test/xbpt_india_trace_307426.json
+  FILE  (resident)   test/xbpt_large_99mb_report_414178.tmp
+  FILE  (resident)   test/xbpt_log_november_496320.csv
+  FILE  (resident)   test/xbpt_marked_eveliselaurence_670394.txt
+  FILE  (resident)   test/xbpt_sierra_sync_956584.ini
+  FILE  (resident)   test/xbpt_symlink_hotel_632659.lnk
+  FILE  (resident)   test/xbpt_symlink_output_831744.lnk
+  FILE  (resident)   test/xbpt_sync_zulu_911953.ini
+  FILE  (resident)   test/xbpt_tango_archive_828215.dat
+  FILE  (resident)   test/xbpt_tango_foxtrot_898933.txt
+  FILE  (resident)   test/xbpt_uniform_victor_168724.txt
+  FILE  (resident)   test/xbpt_victor_lima_251467.cfg
+  FILE  (resident)   test/xbpt_yankee_audit_433793.xml
+  FILE  (resident)   test/xbpt_zulu_hotel_479124.bin
+
+==============================================================================
+  refsanalysis: security
+==============================================================================
+
+==============================================================================
+ReFS Security Descriptors
+==============================================================================
+  Image:        /workspace/refs/analysis/rawdisk/disks/step2/win10refs2g.raw
+  ReFS version: 3.4
+
+  Total security descriptors: 8
+
+  [0] SecurityId: 0x10a9f9562, hash=0xa9f9562, gen=1 [hash OK]
+    Revision: 1, Size: 76 bytes
+    Control:  0x8004 (SE_DACL_PRESENT, SE_SELF_RELATIVE)
+    Owner:    BUILTIN\Administrators (S-1-5-32-544)
+    Group:    SYSTEM (S-1-5-18)
+    DACL (1 ACEs):
+      ACCESS_ALLOWED: SYSTEM (S-1-5-18) -> FULL_CONTROL
+
+  [1] SecurityId: 0x10aa39b62, hash=0xaa39b62, gen=1 [hash OK]
+    Revision: 1, Size: 76 bytes
+    Control:  0x9004 (SE_DACL_PRESENT, SE_DACL_PROTECTED, SE_SELF_RELATIVE)
+    Owner:    BUILTIN\Administrators (S-1-5-32-544)
+    Group:    SYSTEM (S-1-5-18)
+    DACL (1 ACEs):
+      ACCESS_ALLOWED: SYSTEM (S-1-5-18) -> FULL_CONTROL
+
+  [2] SecurityId: 0x120902505, hash=0x20902505, gen=1 [hash OK]
+    Revision: 1, Size: 100 bytes
+    Control:  0x8004 (SE_DACL_PRESENT, SE_SELF_RELATIVE)
+    Owner:    BUILTIN\Administrators (S-1-5-32-544)
+    Group:    SYSTEM (S-1-5-18)
+    DACL (2 ACEs):
+      ACCESS_ALLOWED: SYSTEM (S-1-5-18) -> FULL_CONTROL
+      ACCESS_ALLOWED: BUILTIN\Administrators (S-1-5-32-544) -> FULL_CONTROL
+
+  [3] SecurityId: 0x123d306f5, hash=0x23d306f5, gen=1 [hash OK]
+    Revision: 1, Size: 72 bytes
+    Control:  0x8004 (SE_DACL_PRESENT, SE_SELF_RELATIVE)
+    Owner:    SYSTEM (S-1-5-18)
+    Group:    SYSTEM (S-1-5-18)
+    DACL (1 ACEs):
+      ACCESS_ALLOWED: SYSTEM (S-1-5-18) -> FULL_CONTROL
+
+  [4] SecurityId: 0x123d387b5, hash=0x23d387b5, gen=1 [hash OK]
+    Revision: 1, Size: 72 bytes
+    Control:  0x9004 (SE_DACL_PRESENT, SE_DACL_PROTECTED, SE_SELF_RELATIVE)
+    Owner:    SYSTEM (S-1-5-18)
+    Group:    SYSTEM (S-1-5-18)
+    DACL (1 ACEs):
+      ACCESS_ALLOWED: SYSTEM (S-1-5-18) -> FULL_CONTROL
+
+  [5] SecurityId: 0x1487e2d1b, hash=0x487e2d1b, gen=1 [hash OK]
+    Revision: 1, Size: 208 bytes
+    Control:  0x8004 (SE_DACL_PRESENT, SE_SELF_RELATIVE)
+    Owner:    BUILTIN\Administrators (S-1-5-32-544)
+    Group:    SYSTEM (S-1-5-18)
+    DACL (7 ACEs):
+      ACCESS_ALLOWED: BUILTIN\Administrators (S-1-5-32-544) -> FULL_CONTROL
+      ACCESS_ALLOWED: SYSTEM (S-1-5-18) -> FULL_CONTROL
+      ACCESS_ALLOWED: SYSTEM (S-1-5-18) -> GENERIC_ALL
+      ACCESS_ALLOWED: Authenticated Users (S-1-5-11) -> MODIFY
+      ACCESS_ALLOWED: Authenticated Users (S-1-5-11) -> DELETE|GENERIC_EXECUTE|GENERIC_WRITE|GENERIC_READ
+      ACCESS_ALLOWED: BUILTIN\Users (S-1-5-32-545) -> READ_EXECUTE
+      ACCESS_ALLOWED: BUILTIN\Users (S-1-5-32-545) -> GENERIC_EXECUTE|GENERIC_READ
+
+  [6] SecurityId: 0x17d0d8595, hash=0x7d0d8595, gen=1 [hash OK]
+    Revision: 1, Size: 224 bytes
+    Control:  0x8004 (SE_DACL_PRESENT, SE_SELF_RELATIVE)
+    Owner:    BUILTIN\Administrators (S-1-5-32-544)
+    Group:    Domain User (S-1-5-21-2610644889-478007527-3330737738-513)
+    DACL (7 ACEs):
+      ACCESS_ALLOWED: BUILTIN\Administrators (S-1-5-32-544) -> FULL_CONTROL
+      ACCESS_ALLOWED: SYSTEM (S-1-5-18) -> FULL_CONTROL
+      ACCESS_ALLOWED: SYSTEM (S-1-5-18) -> GENERIC_ALL
+      ACCESS_ALLOWED: Authenticated Users (S-1-5-11) -> MODIFY
+      ACCESS_ALLOWED: Authenticated Users (S-1-5-11) -> DELETE|GENERIC_EXECUTE|GENERIC_WRITE|GENERIC_READ
+      ACCESS_ALLOWED: BUILTIN\Users (S-1-5-32-545) -> READ_EXECUTE
+      ACCESS_ALLOWED: BUILTIN\Users (S-1-5-32-545) -> GENERIC_EXECUTE|GENERIC_READ
+
+  [7] SecurityId: 0x1919c1181, hash=0x919c1181, gen=1 [hash OK]
+    Revision: 1, Size: 160 bytes
+    Control:  0x8004 (SE_DACL_PRESENT, SE_SELF_RELATIVE)
+    Owner:    BUILTIN\Administrators (S-1-5-32-544)
+    Group:    Domain User (S-1-5-21-2610644889-478007527-3330737738-513)
+    DACL (4 ACEs):
+      ACCESS_ALLOWED: BUILTIN\Administrators (S-1-5-32-544) -> FULL_CONTROL
+      ACCESS_ALLOWED: SYSTEM (S-1-5-18) -> FULL_CONTROL
+      ACCESS_ALLOWED: Authenticated Users (S-1-5-11) -> MODIFY
+      ACCESS_ALLOWED: BUILTIN\Users (S-1-5-32-545) -> READ_EXECUTE
+
+  Summary:
+    Total SDs:        8
+    Unique owners:    2
+      SYSTEM (S-1-5-18)
+      BUILTIN\Administrators (S-1-5-32-544)
+
+==============================================================================
+  refsanalysis: reparse
+==============================================================================
+
+==============================================================================
+ReFS Reparse Points
+==============================================================================
+  Image:        /workspace/refs/analysis/rawdisk/disks/step2/win10refs2g.raw
+  ReFS version: 3.4
+
+  Files with REPARSE_POINT flag: 3
+  Files with WSL EAs: 0
+  Total root dir entries: 263
+
+  Showing 3 entries:
+
+  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_symlink_gamma_582874.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   (tag in attrs but data not extracted from resident entry)
+
+  test/xbpt_symlink_hotel_632659.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   (tag in attrs but data not extracted from resident entry)
+
+  test/xbpt_symlink_output_831744.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   (tag in attrs but data not extracted from resident entry)
+
+
+  Reparse Index (OID 0x540): 3 indexed entries
+    IO_REPARSE_TAG_SYMLINK: 3
+
+==============================================================================
+  refsanalysis: integrity
+==============================================================================
+
+==============================================================================
+ReFS Metadata Integrity Report
+==============================================================================
+  Image:           /workspace/refs/analysis/rawdisk/disks/step2/win10refs2g.raw
+  ReFS version:    3.4
+  Cluster size:    0x1000
+  Checksum type:   None
+  Checkpoint VC:   50
+  Volume sig:      0xc9f3c38f
+  Container map:   31 entries
+
+------------------------------------------------------------------------------
+Page Statistics
+------------------------------------------------------------------------------
+  Pages checked:           93
+  Valid signatures:        93
+  Invalid signatures:      0
+  Volume sig matches:      93
+  Volume sig mismatches:   0
+  VC within bounds:        93
+  VC exceeds checkpoint:   0
+  Self-address valid:      93
+  Self-address invalid:    0
+  B+-tree inner nodes OK:  12
+  B+-tree leaf nodes OK:   81
+  B+-tree struct errors:   0
+
+------------------------------------------------------------------------------
+Redundancy / Backup Copies
+------------------------------------------------------------------------------
+  Boot sector (primary):   LBA 0 — OK
+  Boot sector (backup):    LBA 4063231 — present, identical to primary, checksum OK
+  Checkpoint [backup ]:   LCN 0x13f8 — valid, vclock=49
+  Checkpoint [PRIMARY]:   LCN 0xee34 — valid, vclock=50
+  Superblock copies:       3 (LCN 0x1e, 0x7bffd, 0x7bffe)
+
+------------------------------------------------------------------------------
+Verdict: PASS — all metadata pages structurally valid (run --checksums / --fullchecksums to verify CRC64/SHA-256)
+------------------------------------------------------------------------------
+
+==============================================================================
+  refsanalysis: mlog
+==============================================================================
+
+==============================================================================
+ReFS MLog Analysis — win10refs2g.raw
+ReFS v3.4 | cluster_size=0x1000 | objects=45
+==============================================================================
+
+==============================================================================
+MLog Control Area
+==============================================================================
+  Control PLCN:      0x30
+  Signature:         MLog
+  Format magic:      0xc9f3c38f (per-volume const, NOT a CRC — E42/#343; differs after a reformat)
+  Version:           1
+  Sector size:       0x1000
+  UUID:              88d892c7-f908-419b-8de3-97cbfd43efcf
+  Sequence:          45
+  Write counter:     3
+  Flags:             0x1
+  Total entries:     0
+  Generation:        718
+  Data area:         0x10000 - 0x30000 (131072 clusters)
+  LSN oldest:        0x2ce.2
+  Dispatch table:    v3.4 (29 opcodes)
+
+==============================================================================
+Data Area Summary
+==============================================================================
+  Total pages:       131072
+  zero                 130355  ( 99.5%)
+  MLog                    717  (  0.5%)
+
+==============================================================================
+Redo Records
+==============================================================================
+  Total records:      1524
+  Transaction starts: 396
+  Transaction commits: 0
+
+
+==============================================================================
+  refsanalysis: usn
+==============================================================================
+
+No Change Journal found in win10refs2g.raw
+  (OID 0x520 present — journal not activated)

@@ -1,0 +1,113 @@
+# forefst win11refs2tsnapshots.raw dataruns
+# ----------------------------------------------------------------------------
+==============================================================================
+ReFS File Data Extent Analysis
+==============================================================================
+  Image:        analysis/rawdisk/disks/step3/win11refs2tsnapshots.raw
+  ReFS version: 3.14
+  Cluster size: 0x1000 (4096 bytes)
+  Containers:   32767
+  Start OID:    0x600
+
+  Summary:
+    Total files analyzed:   168
+    Resident (inline):      137
+    Non-resident (extents): 31
+    With decoded extents:   31
+
+==============================================================================
+File Data Locations
+==============================================================================
+  EXTENT    test/xbpt_archive_romeo_596174.txt
+            size=186635, attrs=Archive, extents=5, clusters=46
+            created=2026-05-16 16:51:53
+  EXTENT    test/xbpt_config_hotel_558589.txt
+            size=192688, attrs=Archive, extents=8, clusters=35
+            created=2026-05-16 16:51:54
+  EXTENT    test/xbpt_india_temp_831504.csv
+            size=475328, attrs=Archive, extents=2, clusters=19
+            created=2024-04-02 07:16:32
+  EXTENT    test/xbpt_log_november_496320.csv
+            size=552331, attrs=Archive, extents=6, clusters=135
+            created=2026-05-16 16:51:59
+  EXTENT    test/xbpt_sierra_sync_956584.ini
+            size=19465, attrs=Archive, extents=2, clusters=5
+            created=2026-05-16 16:51:54
+  EXTENT    test/xbpt_tango_foxtrot_898933.txt
+            size=207263, attrs=Archive, extents=8, clusters=35
+            created=2026-05-16 16:51:57
+  EXTENT    test/elvis_dir_index_149423/xbpt_beta_archive_985685.tmp
+            size=310564, attrs=Archive, extents=2, clusters=76
+            created=2023-11-27 07:16:30
+  EXTENT    test/elvis_dir_index_149423/xbpt_draft_record_749595.cfg
+            size=239973, attrs=Archive, extents=2, clusters=59
+            created=2026-05-16 16:51:54
+  EXTENT    test/elvis_dir_index_149423/xbpt_victor_gamma_564302.csv
+            size=306493, attrs=Archive, extents=2, clusters=75
+            created=2026-05-16 16:51:56
+  EXTENT    test/elvis_dir_index_149423/xbpt_zulu_kilo_319858.csv
+            size=457030, attrs=Archive, extents=2, clusters=112
+            created=2022-05-20 07:16:16
+  EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_hotel_victor_678038.txt
+            size=453197, attrs=Archive, extents=2, clusters=111
+            created=2026-05-16 16:52:02
+  EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_whiskey_delta_922359.tmp
+            size=339532, attrs=Archive, extents=4, clusters=83
+            created=2024-11-23 07:17:31
+  EXTENT    test/elvis_dir_india_800575/xbpt_foxtrot_zulu_156856.csv
+            size=130777, attrs=Archive, extents=2, clusters=32
+            created=2026-05-16 16:51:57
+  EXTENT    test/elvis_dir_india_800575/xbpt_uniform_lima_155750.md
+            size=145250, attrs=Archive, extents=2, clusters=36
+            created=2026-05-16 16:51:54
+  EXTENT    test/elvis_dir_papa_805353/xbpt_temp_log_141240.cfg
+            size=185084, attrs=Archive, extents=2, clusters=46
+            created=2026-05-16 16:51:58
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_backup_mike_407434.log
+            size=140609, attrs=Archive, extents=8, clusters=35
+            created=2021-05-18 07:16:04
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_hardlink_echo_387599.ini
+            size=237968, attrs=Archive, extents=2, clusters=59
+            created=2025-02-09 07:17:09
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_hotel_kilo_705007.cfg
+            size=239973, attrs=Archive, extents=2, clusters=59
+            created=2026-05-16 16:51:58
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_index_index_579494.cfg
+            size=113106, attrs=Archive, extents=2, clusters=28
+            created=2026-05-16 16:52:00
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_log_output_579275.dat
+            size=123468, attrs=Archive, extents=5, clusters=46
+            created=2026-05-16 16:51:53
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_quebec_papa_978800.txt
+            size=30711, attrs=Archive, extents=2, clusters=8
+            created=2026-05-16 16:52:01
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_sierra_echo_921063.xml
+            size=546650, attrs=Archive, extents=4, clusters=134
+            created=2025-04-02 07:16:24
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_tango_echo_291736.csv
+            size=219586, attrs=Archive, extents=6, clusters=54
+            created=2025-04-01 07:16:26
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_victor_tango_152379.bin
+            size=505381, attrs=Archive, extents=5, clusters=46
+            created=2026-05-16 16:51:56
+  EXTENT    test/elvis_dir_record_449015/xbpt_log_india_171227.csv
+            size=189614, attrs=Archive, extents=2, clusters=47
+            created=2026-05-16 16:51:52
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_index_draft_129088.bin
+            size=159126, attrs=Archive, extents=2, clusters=39
+            created=2026-05-16 16:51:56
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_draft_draft_797325.txt
+            size=396015, attrs=Archive, extents=2, clusters=97
+            created=2026-05-16 16:51:57
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_foxtrot_cache_816969.xml
+            size=378484, attrs=Archive, extents=2, clusters=93
+            created=2026-05-16 16:52:01
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_victor_sync_949138.bak
+            size=144033, attrs=Archive, extents=2, clusters=36
+            created=2026-05-16 16:51:51
+  EXTENT    test/elvis_dir_victor_783323/xbpt_report_quebec_867569.md
+            size=540829, attrs=Archive, extents=4, clusters=133
+            created=2025-05-12 07:17:04
+  EXTENT    test/elvis_dir_victor_783323/xbpt_trace_cache_289808.json
+            size=40965, attrs=Archive, extents=2, clusters=11
+            created=2026-05-16 16:51:59

@@ -1,0 +1,23 @@
+<header class="topbar">
+  <a class="brand" href="{{ "/" | relURL }}">ReFS Reference</a>
+  <button id="nav-toggle" class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="main-nav">☰</button>
+  <nav id="main-nav">
+    {{ $cur := .RelPermalink }}{{ $sec := .Section }}
+    {{ range site.Menus.main }}
+      {{ $active := false }}
+      {{ if .PageRef }}
+        {{ if eq .PageRef "/" }}{{ if $.IsHome }}{{ $active = true }}{{ end }}
+        {{ else if eq (trim .PageRef "/") $sec }}{{ $active = true }}
+        {{ else if hasPrefix $cur (printf "%s/" (trim .PageRef "/") | absURL | replaceRE "https?://[^/]+" "") }}{{ end }}
+      {{ end }}
+      <a href="{{ with .PageRef }}{{ . | relURL }}{{ else }}{{ .URL | relURL }}{{ end }}"{{ if $active }} class="active"{{ end }}>{{ .Name }}</a>
+    {{ end }}
+  </nav>
+  <div class="tools">
+    <div class="search-wrap">
+      <input id="search-input" type="search" placeholder="Search…" autocomplete="off" aria-label="Search">
+      <div id="search-results"></div>
+    </div>
+    <button id="theme-toggle" title="Toggle light/dark" aria-label="Toggle theme">☾</button>
+  </div>
+</header>

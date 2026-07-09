@@ -1,0 +1,129 @@
+
+// === RefsFsdCreate @ 1402d0160 ===
+
+/* WARNING: Function: __security_check_cookie replaced with injection: security_check_cookie */
+/* WARNING: Function: _guard_dispatch_icall replaced with injection: guard_dispatch_icall */
+/* WARNING: Removing unreachable block (ram,0x000140306eca) */
+/* long __cdecl RefsFsdCreate(struct _VOLUME_DEVICE_OBJECT * __ptr64,struct _IRP * __ptr64) */
+
+long __cdecl RefsFsdCreate(_VOLUME_DEVICE_OBJECT *param_1,_IRP *param_2)
+
+{
+ _TOP_LEVEL_CONTEXT *p_Var1;
+ _IRP *p_Var2;
+ byte bVar3;
+ _IRP_CONTEXT *p_Var4;
+ long lVar5;
+ int iVar6;
+ _TOP_LEVEL_CONTEXT *p_Var7;
+ undefined8 uVar8;
+ longlong lVar9;
+ int iVar10;
+ _IRP_CONTEXT *p_Var11;
+ _IRP_CONTEXT *p_Var12;
+ char cVar13;
+ bool bVar14;
+ undefined1 auStackY_208 [32];
+ int local_1b8;
+ uint local_1b0;
+ _IRP_CONTEXT *local_1a8;
+ undefined4 local_1a0;
+ int local_19c;
+ undefined8 local_198;
+ longlong local_190;
+ _TOP_LEVEL_CONTEXT *local_188;
+ undefined8 local_180;
+ _IRP *local_178;
+ _IRP *local_170;
+ _VOLUME_DEVICE_OBJECT *local_168;
+ _TOP_LEVEL_CONTEXT *local_160;
+ undefined8 local_158;
+ undefined8 uStack_150;
+ undefined8 local_148;
+ undefined8 uStack_140;
+ undefined8 local_138;
+ undefined8 uStack_130;
+ undefined8 local_128;
+ _CREATE_CONTEXT local_118 [56];
+ undefined8 *local_e0;
+ _SCB *local_b8;
+ uint local_8c;
+ longlong local_88;
+ longlong local_80;
+ undefined8 local_48;
+ undefined8 uStack_40;
+ ulonglong local_38;
+ 
+ local_38 = __security_cookie ^ (ulonglong)auStackY_208;
+ local_138 = 0;
+ uStack_130 = 0;
+ local_128 = 0;
+ p_Var11 = (_IRP_CONTEXT *)0x0;
+ local_1a8 = (_IRP_CONTEXT *)0x0;
+ local_158 = 0;
+ uStack_150 = 0;
+ local_148 = 0;
+ uStack_140 = 0;
+ local_48 = 0;
+ uStack_40 = 0;
+ local_180 = 0;
+ local_178 = param_2;
+ local_168 = param_1;
+ if (*(short *)(param_1 + 2) == 0x150) {
+ *(undefined4 *)(param_2 + 0x30) = 0;
+ *(undefined8 *)(param_2 + 0x38) = 1;
+ IofCompleteRequest(param_2,1);
+ return 0;
+ }
+ p_Var7 = RefsInitializeTopLevelIrp((_TOP_LEVEL_CONTEXT *)&local_138,'\0','\0');
+ local_160 = p_Var7;
+ IoIsOperationSynchronous(param_2);
+ local_1b8 = RefsInitializeIrpContext(param_2,'\x01','\0',&local_1a8);
+ if (local_1b8 < 0) {
+ if (RefsStatusDebugEnabled == '\0') {
+ RefsExtendedCompleteRequestInternal((_IRP_CONTEXT *)0x0,param_2,local_1b8);
+ return local_1b8;
+ }
+ RefsStatusDebug(local_1b8,(_IRP_CONTEXT *)0x0,"Create.c",0x3d7);
+ lVar5 = FUN_140306eb2();
+ return lVar5;
+ }
+ KeEnterCriticalRegion();
+ local_19c = IoPropagateActivityIdToThread(param_2,&local_48,&local_180);
+ p_Var12 = local_1a8;
+ local_1b0 = 1;
+ local_1a0 = 1;
+ p_Var1 = p_Var7 + 0x10;
+ local_188 = p_Var1;
+ if (*(longlong *)p_Var1 == 0) {
+ *(undefined4 *)(p_Var7 + 4) = 0x5346abba;
+ *(_IRP_CONTEXT **)p_Var1 = local_1a8;
+ *(ulonglong *)(local_1a8 + 8) = *(ulonglong *)(local_1a8 + 8) | 0x100000;
+ IoSetTopLevelIrp(p_Var7);
+ }
+ *(longlong *)(p_Var12 + 0x68) = *(longlong *)p_Var1;
+ if (*(char *)(*(longlong *)(p_Var12 + 0x40) + 0x2900) != '\0') {
+ uVar8 = KeQueryPerformanceCounter(0);
+ *(undefined8 *)(local_1a8 + 0x2b0) = uVar8;
+ *(undefined4 *)(local_1a8 + 0x2b8) = 0x1a;
+ }
+ p_Var12 = local_1a8;
+ KeInitializeEvent(&uStack_150,0,0);
+ do {
+ lVar5 = 0;
+ memset(local_118,0,0xd0);
+ p_Var2 = param_2 + 0xb8;
+ local_80 = *(longlong *)p_Var2;
+ local_170 = p_Var2;
+ if (local_1b8 == -0x3ffffe78) {
+ RefsCheckpointForLogFileFull(p_Var12);
+ }
+ if (p_Var12 != (_IRP_CONTEXT *)0x0) {
+ RefsPreRequestProcessingExtend(p_Var12,lVar5);
+ }
+ local_e0 = &local_158;
+ *(ulonglong *)(p_Var12 + 8) = *(ulonglong *)(p_Var12 + 8) | 0x10002;
+ bVar3 = *(byte *)(*(longlong *)p_Var2 + 2);
+ if ((*(uint *)(p_Var12 + 8) >> 9 & 1) == 0) {
+ local_198 = 0;
+ local_190 = 0;

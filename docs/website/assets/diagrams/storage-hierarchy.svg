@@ -1,0 +1,9 @@
+<svg class="diagram" viewBox="0 0 460 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Storage abstraction hierarchy">
+<rect class="dg-box" x="40" y="20"  width="380" height="36" rx="6"/><text class="dg-text" x="230" y="43" text-anchor="middle" font-size="12">Files &amp; directories</text>
+<rect class="dg-box" x="40" y="66"  width="380" height="36" rx="6"/><text class="dg-text" x="230" y="89" text-anchor="middle" font-size="12">File system (ReFS / NTFS …)</text>
+<rect class="dg-box-accent" x="40" y="112" width="380" height="36" rx="6"/><text class="dg-accent" x="230" y="135" text-anchor="middle" font-size="12">Clusters</text>
+<rect class="dg-box" x="40" y="158" width="380" height="36" rx="6"/><text class="dg-text" x="230" y="181" text-anchor="middle" font-size="12">Volume / partition</text>
+<rect class="dg-box-accent" x="40" y="204" width="380" height="36" rx="6"/><text class="dg-accent" x="230" y="227" text-anchor="middle" font-size="12">Sectors</text>
+<rect class="dg-box" x="40" y="250" width="380" height="36" rx="6"/><text class="dg-text" x="230" y="273" text-anchor="middle" font-size="12">Physical disk</text>
+<text class="dg-muted" x="14" y="40" font-size="14" transform="rotate(90 14 150)">logical → physical</text>
+</svg>

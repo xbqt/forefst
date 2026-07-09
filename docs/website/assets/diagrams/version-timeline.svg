@@ -1,0 +1,36 @@
+<svg class="diagram" viewBox="0 0 760 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ReFS version timeline from 3.4 to 3.14">
+  <!-- axis -->
+  <line class="dg-line" x1="40" y1="92" x2="724" y2="92"/>
+
+  <!-- 3.4 -->
+  <circle class="dg-accent" cx="60" cy="92" r="7"/>
+  <text class="dg-title" x="60" y="56" text-anchor="middle" font-size="15" font-weight="700">3.4</text>
+  <text class="dg-muted" x="60" y="74" text-anchor="middle" font-size="10.5">baseline</text>
+  <text class="dg-muted" x="60" y="120" text-anchor="middle" font-size="10.5">Win10 1803</text>
+
+  <!-- 3.7 -->
+  <circle class="dg-fill-surface dg-box" cx="220" cy="92" r="6"/>
+  <text class="dg-title" x="220" y="56" text-anchor="middle" font-size="15" font-weight="700">3.7</text>
+  <text class="dg-muted" x="220" y="120" text-anchor="middle" font-size="10.5">Win11 21H2</text>
+
+  <!-- 3.9 -->
+  <circle class="dg-fill-surface dg-box" cx="380" cy="92" r="6"/>
+  <text class="dg-title" x="380" y="56" text-anchor="middle" font-size="15" font-weight="700">3.9</text>
+  <text class="dg-muted" x="380" y="120" text-anchor="middle" font-size="10.5">Win11 22H2</text>
+
+  <!-- 3.10 declared -->
+  <circle class="dg-fill-surface dg-box" cx="540" cy="92" r="6"/>
+  <text class="dg-title" x="540" y="56" text-anchor="middle" font-size="15" font-weight="700">3.10</text>
+  <text class="dg-muted" x="540" y="74" text-anchor="middle" font-size="10.5">declared</text>
+  <text class="dg-muted" x="540" y="120" text-anchor="middle" font-size="10.5">Win11 23H2</text>
+
+  <!-- 3.14 activated -->
+  <circle class="dg-accent" cx="700" cy="92" r="7"/>
+  <text class="dg-title" x="700" y="56" text-anchor="middle" font-size="15" font-weight="700">3.14</text>
+  <text class="dg-muted" x="700" y="74" text-anchor="middle" font-size="10.5">activated</text>
+  <text class="dg-muted" x="700" y="120" text-anchor="middle" font-size="10.5">Win11 24H2</text>
+
+  <!-- two-stage transition bracket -->
+  <path class="dg-dash" d="M540 138 L540 148 L700 148 L700 138"/>
+  <text class="dg-accent" x="620" y="163" text-anchor="middle" font-size="10.5">two-stage transition</text>
+</svg>

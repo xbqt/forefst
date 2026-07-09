@@ -1,0 +1,5 @@
+def walk_bplus(f, ps, cs, tr, vlcns, max_depth=5):
+ plcns = [tr.tr(v) for v in vlcns] if tr else vlcns
+ page = b""
+ for p in plcns: f.seek(ps + p * cs); page += f.read(cs)
+ return _walk(page, f, ps, cs, tr, max_depth)

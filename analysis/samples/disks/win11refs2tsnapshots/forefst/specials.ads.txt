@@ -1,0 +1,10 @@
+# forefst win11refs2tsnapshots.raw specials ads
+# ----------------------------------------------------------------------------
+
+── ads  (3) — named data streams ──
+  STREAMS                      HOST FILE
+    hidden_7357                test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_romeo_gamma_831931.dat
+    hidden_1514                test/xbpt_tango_archive_828215.dat
+    adstest                    testsnapshots/testads.txt
+
+  Extract one:  forefst IMG export ads "<file>:<stream>"

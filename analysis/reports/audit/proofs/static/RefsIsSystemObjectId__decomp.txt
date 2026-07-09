@@ -1,0 +1,19 @@
+
+// === RefsIsSystemObjectId @ 140076810 ===
+
+/* unsigned char __cdecl RefsIsSystemObjectId(struct _REFS_FILE_REFERENCE const * __ptr64) */
+
+uchar __cdecl RefsIsSystemObjectId(_REFS_FILE_REFERENCE *param_1)
+
+{
+ if (0x6ff < *(ulonglong *)(param_1 + 8)) {
+ return '\0';
+ }
+ return *(ulonglong *)(param_1 + 8) != 0x600;
+}
+
+
+// === CompareKeys @ 140076840 ===
+
+uint `anonymous_namespace'::CmsRulesUSHORT::CompareKeys
+ (undefined8 param_1,longlong *param_2,longlong param_3)
