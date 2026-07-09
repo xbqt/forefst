@@ -19,7 +19,7 @@ Originally developed for my master's thesis (*"Forensic analysis of the Resilien
 The forensic tool, **forefst**, and the documentation are really important to reach the principle of *forensic soundness* when a ReFS is analyzed which was my main master's thesis goal: provide to analysts an auditable open source tool and enough documentation to understand the filesystem.  
 The analysis tool, **refsanalysis**, and all the laboratory procedures and scripts are important to test the tool and to facilitate future tests and updates. ReFS is a filesystem that is evolving a lot so it is necessary to keep the tools and knowledge accurate and valid.  
 
-Because I'm not a developer and it's 2026, it is vibe coded. But I did a lot (really a lot) of tests, labs, analysis, validation, comparison, etc. So I think that my methodology is solid, and so are my results.
+Because I'm not a developer and it's 2026, it is vibe coded. But I did a lot (really a lot) of tests, labs, analysis, validation, comparison, etc. It is obviously not error-free, but I think that my methodology is solid, and so are my results.
 I hope this will be helpful, and please feel free to give any feedback.
 
 ## Requirements
