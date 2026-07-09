@@ -10,7 +10,7 @@
         {{ else if eq (trim .PageRef "/") $sec }}{{ $active = true }}
         {{ else if hasPrefix $cur (printf "%s/" (trim .PageRef "/") | absURL | replaceRE "https?://[^/]+" "") }}{{ end }}
       {{ end }}
-      <a href="{{ with .PageRef }}{{ . | relURL }}{{ else }}{{ .URL | relURL }}{{ end }}"{{ if $active }} class="active"{{ end }}>{{ .Name }}</a>
+      <a href="{{ with .Page }}{{ .RelPermalink }}{{ else }}{{ .URL | relURL }}{{ end }}"{{ if $active }} class="active"{{ end }}>{{ .Name }}</a>
     {{ end }}
   </nav>
   <div class="tools">
