@@ -11,6 +11,7 @@
 variables:
   BASEURL: "https://xbpt.gitlab.io/forefst/"      # <-- change `xbpt` (and `/forefst/`) if different
   REFS_DOCS: "$CI_PROJECT_DIR/docs"            # build.py reads the .md docs from here
+  GIT_LFS_SKIP_SMUDGE: "1"                     # the site doesn't use the LFS disk images; don't fetch them
 
 pages:
   image: registry.gitlab.com/pages/hugo/hugo_extended:latest
