@@ -24,14 +24,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Push to the GitLab forefst project
+      - name: Build an LFS-free source snapshot for GitLab
         run: |
-          # The repo LFS-tracks large lab disk images (analysis/samples/disks/*.raw.zst) that the
-          # site build does NOT need. checkout@v4 fetches only their pointers, so let the push skip
-          # the (absent) blobs — GitLab gets the pointers, not the multi-GB images.
-          git config lfs.allowincompletepush true
+          # The repo LFS-tracks large lab disk images (analysis/samples/disks/*.raw.zst) the site does
+          # NOT use. GitLab's pre-receive hook rejects any push whose LFS objects are absent, so instead
+          # of mirroring the whole repo we push ONE clean snapshot: drop those images and strip all LFS
+          # tracking, so the pushed commit references no LFS objects at all. (The images stay on GitHub.)
+          rm -rf analysis/samples/disks
+          find . -path ./.git -prune -o -name .gitattributes -print0 | xargs -0 -r sed -i '/filter=lfs/d'
+          git config user.email "mirror@github-actions"
+          git config user.name  "GitHub mirror"
+          git checkout -q --orphan gitlab-deploy
+          git add -A
+          git commit -q -m "Site source snapshot from ${GITHUB_SHA}"
+      - name: Push the snapshot to the GitLab forefst project
+        run: |
           git push --force \
             "https://oauth2:${{ secrets.GITLAB_TOKEN }}@gitlab.com/xbpt/forefst.git" \
-            HEAD:main
+            gitlab-deploy:main
