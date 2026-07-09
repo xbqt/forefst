@@ -17,6 +17,9 @@
     {{- warnf "render-link: unresolved internal link %q in %s" .Destination .Page.File.Path -}}
     <a href="{{ .Destination }}" class="broken-link">{{ $text | safeHTML }}</a>
   {{- end -}}
+{{- else if and (eq $u.Scheme "") (not $u.Host) (strings.HasPrefix $u.Path "/") -}}
+  {{- /* internal absolute path (e.g. /concepts/x/): make it baseURL-aware so it keeps the site's sub-path */ -}}
+  <a href="{{ $u.Path | relURL }}{{ with $u.Fragment }}#{{ . }}{{ end }}"{{ with .Title }} title="{{ . }}"{{ end }}>{{ $text | safeHTML }}</a>
 {{- else -}}
   <a href="{{ .Destination | safeURL }}"{{ if $u.Host }} rel="noopener" target="_blank"{{ end }}{{ with .Title }} title="{{ . }}"{{ end }}>{{ $text | safeHTML }}</a>
 {{- end -}}
