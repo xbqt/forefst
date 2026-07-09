@@ -57,8 +57,8 @@ simply state what was established.
   structural analyser: boot / checkpoint / superblock, the B+-tree tables, security, reparse points,
   the USN journal, the durable log, snapshots, timelines, and more.
 
-Both are pure Python (3.6+ standard library, no dependencies) and read a raw image or volume. See
-**[Tools](/tools/)** for usage on this site, or **[the repository](https://github.com/xbqt/forefst)**
+Both are pure Python (3.6+ standard library, no dependencies) and read a raw image or volume. See the
+**[forefst.py](forefst.md)** and **[refsanalysis.py](refsanalysis.md)** pages for usage on this site, or **[the repository](https://github.com/xbqt/forefst)**
 to download them.
 
 ## Source, full data, and reproducing the analysis
