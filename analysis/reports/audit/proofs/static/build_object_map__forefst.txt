@@ -1,0 +1,12 @@
+def build_object_map(f, ps, cs, tr, ot_vlcns):
+ rows = walk_bplus(f, ps, cs, tr, ot_vlcns)
+ objects = {}
+ for kd, vd in rows:
+ if len(kd) < 16 or len(vd) < 64: continue
+ oid = le64(kd, 8)
+ lcns = [le64(vd, 0x20 + j*8) for j in range(4)]
+ valid = [s for s in lcns if s not in (0, 0xFFFFFFFFFFFFFFFF)]
+ objects[oid] = valid
+ return objects
+
+# ─── Security Descriptor Table ────────────────────────────────────────

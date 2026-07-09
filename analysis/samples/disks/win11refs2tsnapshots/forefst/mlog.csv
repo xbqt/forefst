@@ -1,0 +1,1345 @@
+seq,timestamp,action,path,name,oid,opcodes,record_count,plcn,image
+1,2026-05-16T16:50:42.788Z,MODIFY,,,,UPDATE_ROW,1,32769,win11refs2tsnapshots.raw
+2,2026-05-16T16:50:44.172Z,WRITE,/,,0x600,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW,3,32770,win11refs2tsnapshots.raw
+3,,INSERT,,,,INSERT_ROW SET_PARENT_ID,2,32772,win11refs2tsnapshots.raw
+4,,OP,,,,OPEN_TABLE_FROM,1,32775,win11refs2tsnapshots.raw
+5,2026-05-16T16:50:42.788Z,MODIFY,,,,UPDATE_ROW,1,32776,win11refs2tsnapshots.raw
+6,,MODIFY,,,,UPDATE_ROW,1,32777,win11refs2tsnapshots.raw
+7,2026-05-16T16:50:46.135Z,CREATE,/System Volume Information,System Volume Information,0x701,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,32779,win11refs2tsnapshots.raw
+8,,MODIFY,/System Volume Information,,0x701,FREE,1,32783,win11refs2tsnapshots.raw
+9,,MODIFY,/System Volume Information,,0x701,FREE,1,32786,win11refs2tsnapshots.raw
+10,,MODIFY,/System Volume Information,,0x701,FREE,1,32789,win11refs2tsnapshots.raw
+11,,STREAM_UPD,/System Volume Information,,0x701,UPDATE_STREAM,1,32790,win11refs2tsnapshots.raw
+12,,STREAM_UPD,/System Volume Information,,0x701,UPDATE_STREAM,1,32792,win11refs2tsnapshots.raw
+13,,MODIFY,/System Volume Information,,0x701,FREE,1,32796,win11refs2tsnapshots.raw
+14,,MODIFY,/System Volume Information,,0x701,FREE,1,32799,win11refs2tsnapshots.raw
+15,,MODIFY,/System Volume Information,,0x701,FREE,1,32802,win11refs2tsnapshots.raw
+16,,MODIFY,/System Volume Information,,0x701,FREE,1,32805,win11refs2tsnapshots.raw
+17,,MODIFY,/System Volume Information,,0x701,FREE,1,32808,win11refs2tsnapshots.raw
+18,,MODIFY,/System Volume Information,,0x701,FREE,1,32811,win11refs2tsnapshots.raw
+19,,MODIFY,/System Volume Information,,0x701,FREE,1,32814,win11refs2tsnapshots.raw
+20,,MODIFY,/System Volume Information,,0x701,FREE,1,32817,win11refs2tsnapshots.raw
+21,,MODIFY,/System Volume Information,,0x701,FREE,1,32820,win11refs2tsnapshots.raw
+22,,MODIFY,/System Volume Information,,0x701,FREE,1,32823,win11refs2tsnapshots.raw
+23,,MODIFY,/System Volume Information,,0x701,FREE,1,32826,win11refs2tsnapshots.raw
+24,,MODIFY,/System Volume Information,,0x701,FREE,1,32831,win11refs2tsnapshots.raw
+25,,MODIFY,/System Volume Information,,0x701,FREE,1,32837,win11refs2tsnapshots.raw
+26,,MODIFY,/System Volume Information,,0x701,FREE,1,32840,win11refs2tsnapshots.raw
+27,,MODIFY,/System Volume Information,,0x701,FREE,1,32843,win11refs2tsnapshots.raw
+28,,MODIFY,/System Volume Information,,0x701,FREE,1,32846,win11refs2tsnapshots.raw
+29,,MODIFY,/System Volume Information,,0x701,FREE,1,32849,win11refs2tsnapshots.raw
+30,,MODIFY,/System Volume Information,,0x701,FREE,1,32852,win11refs2tsnapshots.raw
+31,,MODIFY,/System Volume Information,,0x701,FREE,1,32855,win11refs2tsnapshots.raw
+32,,MODIFY,/System Volume Information,,0x701,FREE,1,32858,win11refs2tsnapshots.raw
+33,,MODIFY,/System Volume Information,,0x701,FREE,1,32861,win11refs2tsnapshots.raw
+34,,MODIFY,/System Volume Information,,0x701,FREE,1,32864,win11refs2tsnapshots.raw
+35,,MODIFY,/System Volume Information,,0x701,FREE,1,32867,win11refs2tsnapshots.raw
+36,,MODIFY,/System Volume Information,,0x701,FREE,1,32870,win11refs2tsnapshots.raw
+37,,MODIFY,/System Volume Information,,0x701,FREE,1,32873,win11refs2tsnapshots.raw
+38,,MODIFY,/System Volume Information,,0x701,FREE,1,32876,win11refs2tsnapshots.raw
+39,,MODIFY,/System Volume Information,,0x701,FREE,1,32879,win11refs2tsnapshots.raw
+40,,MODIFY,/System Volume Information,,0x701,FREE,1,32882,win11refs2tsnapshots.raw
+41,,MODIFY,/System Volume Information,,0x701,FREE,1,32885,win11refs2tsnapshots.raw
+42,,MODIFY,/System Volume Information,,0x701,FREE,1,32888,win11refs2tsnapshots.raw
+43,,MODIFY,/System Volume Information,,0x701,FREE,1,32891,win11refs2tsnapshots.raw
+44,,MODIFY,/System Volume Information,,0x701,FREE,1,32894,win11refs2tsnapshots.raw
+45,,MODIFY,/System Volume Information,,0x701,FREE,1,32897,win11refs2tsnapshots.raw
+46,,MODIFY,/System Volume Information,,0x701,FREE,1,32900,win11refs2tsnapshots.raw
+47,,MODIFY,/System Volume Information,,0x701,FREE,1,32903,win11refs2tsnapshots.raw
+48,,MODIFY,/System Volume Information,,0x701,FREE,1,32906,win11refs2tsnapshots.raw
+49,,MODIFY,/System Volume Information,,0x701,FREE,1,32909,win11refs2tsnapshots.raw
+50,,MODIFY,/System Volume Information,,0x701,FREE,1,32912,win11refs2tsnapshots.raw
+51,,MODIFY,/System Volume Information,,0x701,FREE,1,32915,win11refs2tsnapshots.raw
+52,,MODIFY,/System Volume Information,,0x701,FREE,1,32918,win11refs2tsnapshots.raw
+53,,MODIFY,/System Volume Information,,0x701,FREE,1,32921,win11refs2tsnapshots.raw
+54,,MODIFY,/System Volume Information,,0x701,FREE,1,32924,win11refs2tsnapshots.raw
+55,,MODIFY,/System Volume Information,,0x701,FREE,1,32927,win11refs2tsnapshots.raw
+56,,MODIFY,/System Volume Information,,0x701,FREE,1,32930,win11refs2tsnapshots.raw
+57,,MODIFY,/System Volume Information,,0x701,FREE,1,32933,win11refs2tsnapshots.raw
+58,,MODIFY,/System Volume Information,,0x701,FREE,1,32936,win11refs2tsnapshots.raw
+59,,MODIFY,/System Volume Information,,0x701,FREE,1,32939,win11refs2tsnapshots.raw
+60,,MODIFY,/System Volume Information,,0x701,FREE,1,32942,win11refs2tsnapshots.raw
+61,,MODIFY,/System Volume Information,,0x701,FREE,1,32945,win11refs2tsnapshots.raw
+62,,MODIFY,/System Volume Information,,0x701,FREE,1,32948,win11refs2tsnapshots.raw
+63,,MODIFY,/System Volume Information,,0x701,FREE,1,32951,win11refs2tsnapshots.raw
+64,,MODIFY,/System Volume Information,,0x701,FREE,1,32954,win11refs2tsnapshots.raw
+65,,MODIFY,/System Volume Information,,0x701,FREE,1,32957,win11refs2tsnapshots.raw
+66,,MODIFY,/System Volume Information,,0x701,FREE,1,32960,win11refs2tsnapshots.raw
+67,,MODIFY,/System Volume Information,,0x701,FREE,1,32963,win11refs2tsnapshots.raw
+68,,MODIFY,/System Volume Information,,0x701,FREE,1,32966,win11refs2tsnapshots.raw
+69,,MODIFY,/System Volume Information,,0x701,FREE,1,32969,win11refs2tsnapshots.raw
+70,,MODIFY,/System Volume Information,,0x701,FREE,1,32972,win11refs2tsnapshots.raw
+71,,MODIFY,/System Volume Information,,0x701,FREE,1,32975,win11refs2tsnapshots.raw
+72,,MODIFY,/System Volume Information,,0x701,FREE,1,32978,win11refs2tsnapshots.raw
+73,,MODIFY,/System Volume Information,,0x701,FREE,1,32981,win11refs2tsnapshots.raw
+74,,MODIFY,/System Volume Information,,0x701,FREE,1,32984,win11refs2tsnapshots.raw
+75,,MODIFY,/System Volume Information,,0x701,FREE,1,32987,win11refs2tsnapshots.raw
+76,,MODIFY,/System Volume Information,,0x701,FREE,1,32990,win11refs2tsnapshots.raw
+77,,MODIFY,/System Volume Information,,0x701,FREE,1,32993,win11refs2tsnapshots.raw
+78,,MODIFY,/System Volume Information,,0x701,FREE,1,32996,win11refs2tsnapshots.raw
+79,,MODIFY,/System Volume Information,,0x701,FREE,1,32999,win11refs2tsnapshots.raw
+80,,MODIFY,/System Volume Information,,0x701,FREE,1,33002,win11refs2tsnapshots.raw
+81,,MODIFY,/System Volume Information,,0x701,FREE,1,33005,win11refs2tsnapshots.raw
+82,,MODIFY,/System Volume Information,,0x701,FREE,1,33008,win11refs2tsnapshots.raw
+83,,MODIFY,/System Volume Information,,0x701,FREE,1,33011,win11refs2tsnapshots.raw
+84,,MODIFY,/System Volume Information,,0x701,FREE,1,33014,win11refs2tsnapshots.raw
+85,,MODIFY,/System Volume Information,,0x701,FREE,1,33017,win11refs2tsnapshots.raw
+86,,MODIFY,/System Volume Information,,0x701,FREE,1,33020,win11refs2tsnapshots.raw
+87,,MODIFY,/System Volume Information,,0x701,FREE,1,33023,win11refs2tsnapshots.raw
+88,,MODIFY,/System Volume Information,,0x701,FREE,1,33026,win11refs2tsnapshots.raw
+89,,MODIFY,/System Volume Information,,0x701,FREE,1,33029,win11refs2tsnapshots.raw
+90,,MODIFY,/System Volume Information,,0x701,FREE,1,33032,win11refs2tsnapshots.raw
+91,,MODIFY,/System Volume Information,,0x701,FREE,1,33035,win11refs2tsnapshots.raw
+92,,MODIFY,/System Volume Information,,0x701,FREE,1,33038,win11refs2tsnapshots.raw
+93,,MODIFY,/System Volume Information,,0x701,FREE,1,33041,win11refs2tsnapshots.raw
+94,,MODIFY,/System Volume Information,,0x701,FREE,1,33044,win11refs2tsnapshots.raw
+95,,MODIFY,/System Volume Information,,0x701,FREE,1,33047,win11refs2tsnapshots.raw
+96,,MODIFY,/System Volume Information,,0x701,FREE,1,33050,win11refs2tsnapshots.raw
+97,,MODIFY,/System Volume Information,,0x701,FREE,1,33053,win11refs2tsnapshots.raw
+98,,MODIFY,/System Volume Information,,0x701,FREE,1,33056,win11refs2tsnapshots.raw
+99,,MODIFY,/System Volume Information,,0x701,FREE,1,33059,win11refs2tsnapshots.raw
+100,,MODIFY,/System Volume Information,,0x701,FREE,1,33062,win11refs2tsnapshots.raw
+101,,MODIFY,/System Volume Information,,0x701,FREE,1,33065,win11refs2tsnapshots.raw
+102,,MODIFY,/System Volume Information,,0x701,FREE,1,33068,win11refs2tsnapshots.raw
+103,,MODIFY,/System Volume Information,,0x701,FREE,1,33071,win11refs2tsnapshots.raw
+104,,MODIFY,/System Volume Information,,0x701,FREE,1,33074,win11refs2tsnapshots.raw
+105,,MODIFY,/System Volume Information,,0x701,FREE,1,33077,win11refs2tsnapshots.raw
+106,,MODIFY,/System Volume Information,,0x701,FREE,1,33080,win11refs2tsnapshots.raw
+107,,MODIFY,/System Volume Information,,0x701,FREE,1,33083,win11refs2tsnapshots.raw
+108,,MODIFY,/System Volume Information,,0x701,FREE,1,33086,win11refs2tsnapshots.raw
+109,,MODIFY,/System Volume Information,,0x701,FREE,1,33089,win11refs2tsnapshots.raw
+110,,MODIFY,/System Volume Information,,0x701,FREE,1,33092,win11refs2tsnapshots.raw
+111,,MODIFY,/System Volume Information,,0x701,FREE,1,33095,win11refs2tsnapshots.raw
+112,,MODIFY,/System Volume Information,,0x701,FREE,1,33098,win11refs2tsnapshots.raw
+113,,MODIFY,/System Volume Information,,0x701,FREE,1,33101,win11refs2tsnapshots.raw
+114,,MODIFY,/System Volume Information,,0x701,FREE,1,33104,win11refs2tsnapshots.raw
+115,,MODIFY,/System Volume Information,,0x701,FREE,1,33107,win11refs2tsnapshots.raw
+116,,MODIFY,/System Volume Information,,0x701,FREE,1,33110,win11refs2tsnapshots.raw
+117,,MODIFY,/System Volume Information,,0x701,FREE,1,33113,win11refs2tsnapshots.raw
+118,,MODIFY,/System Volume Information,,0x701,FREE,1,33116,win11refs2tsnapshots.raw
+119,,MODIFY,/System Volume Information,,0x701,FREE,1,33119,win11refs2tsnapshots.raw
+120,,MODIFY,/System Volume Information,,0x701,FREE,1,33122,win11refs2tsnapshots.raw
+121,,MODIFY,/System Volume Information,,0x701,FREE,1,33125,win11refs2tsnapshots.raw
+122,,MODIFY,/System Volume Information,,0x701,FREE,1,33128,win11refs2tsnapshots.raw
+123,,MODIFY,/System Volume Information,,0x701,FREE,1,33131,win11refs2tsnapshots.raw
+124,,MODIFY,/System Volume Information,,0x701,FREE,1,33134,win11refs2tsnapshots.raw
+125,,MODIFY,/System Volume Information,,0x701,FREE,1,33137,win11refs2tsnapshots.raw
+126,,MODIFY,/System Volume Information,,0x701,FREE,1,33140,win11refs2tsnapshots.raw
+127,,MODIFY,/System Volume Information,,0x701,FREE,1,33143,win11refs2tsnapshots.raw
+128,,MODIFY,/System Volume Information,,0x701,FREE,1,33146,win11refs2tsnapshots.raw
+129,,MODIFY,/System Volume Information,,0x701,FREE,1,33150,win11refs2tsnapshots.raw
+130,,MODIFY,/System Volume Information,,0x701,FREE,1,33153,win11refs2tsnapshots.raw
+131,,MODIFY,/System Volume Information,,0x701,FREE,1,33156,win11refs2tsnapshots.raw
+132,,MODIFY,/System Volume Information,,0x701,FREE,1,33159,win11refs2tsnapshots.raw
+133,,MODIFY,/System Volume Information,,0x701,FREE,1,33162,win11refs2tsnapshots.raw
+134,,MODIFY,/System Volume Information,,0x701,FREE,1,33165,win11refs2tsnapshots.raw
+135,,MODIFY,/System Volume Information,,0x701,FREE,1,33168,win11refs2tsnapshots.raw
+136,,MODIFY,/System Volume Information,,0x701,FREE,1,33171,win11refs2tsnapshots.raw
+137,,MODIFY,/System Volume Information,,0x701,FREE,1,33174,win11refs2tsnapshots.raw
+138,,MODIFY,/System Volume Information,,0x701,FREE,1,33177,win11refs2tsnapshots.raw
+139,,MODIFY,/System Volume Information,,0x701,FREE,1,33180,win11refs2tsnapshots.raw
+140,,MODIFY,/System Volume Information,,0x701,FREE,1,33183,win11refs2tsnapshots.raw
+141,,MODIFY,/System Volume Information,,0x701,FREE,1,33186,win11refs2tsnapshots.raw
+142,,MODIFY,/System Volume Information,,0x701,FREE,1,33189,win11refs2tsnapshots.raw
+143,,MODIFY,/System Volume Information,,0x701,FREE,1,33192,win11refs2tsnapshots.raw
+144,,MODIFY,/System Volume Information,,0x701,FREE,1,33195,win11refs2tsnapshots.raw
+145,,MODIFY,/System Volume Information,,0x701,FREE,1,33198,win11refs2tsnapshots.raw
+146,,MODIFY,/System Volume Information,,0x701,FREE,1,33201,win11refs2tsnapshots.raw
+147,,MODIFY,/System Volume Information,,0x701,FREE,1,33204,win11refs2tsnapshots.raw
+148,,MODIFY,/System Volume Information,,0x701,FREE,1,33207,win11refs2tsnapshots.raw
+149,,MODIFY,/System Volume Information,,0x701,FREE,1,33210,win11refs2tsnapshots.raw
+150,,MODIFY,/System Volume Information,,0x701,FREE,1,33213,win11refs2tsnapshots.raw
+151,,MODIFY,/System Volume Information,,0x701,FREE,1,33216,win11refs2tsnapshots.raw
+152,,MODIFY,/System Volume Information,,0x701,FREE,1,33219,win11refs2tsnapshots.raw
+153,,MODIFY,/System Volume Information,,0x701,FREE,1,33222,win11refs2tsnapshots.raw
+154,,MODIFY,/System Volume Information,,0x701,FREE,1,33225,win11refs2tsnapshots.raw
+155,,MODIFY,/System Volume Information,,0x701,FREE,1,33228,win11refs2tsnapshots.raw
+156,,MODIFY,/System Volume Information,,0x701,FREE,1,33231,win11refs2tsnapshots.raw
+157,,MODIFY,/System Volume Information,,0x701,FREE,1,33234,win11refs2tsnapshots.raw
+158,,MODIFY,/System Volume Information,,0x701,FREE,1,33237,win11refs2tsnapshots.raw
+159,,MODIFY,/System Volume Information,,0x701,FREE,1,33240,win11refs2tsnapshots.raw
+160,,MODIFY,/System Volume Information,,0x701,FREE,1,33243,win11refs2tsnapshots.raw
+161,,MODIFY,/System Volume Information,,0x701,FREE,1,33246,win11refs2tsnapshots.raw
+162,,MODIFY,/System Volume Information,,0x701,FREE,1,33249,win11refs2tsnapshots.raw
+163,,MODIFY,/System Volume Information,,0x701,FREE,1,33252,win11refs2tsnapshots.raw
+164,,MODIFY,/System Volume Information,,0x701,FREE,1,33255,win11refs2tsnapshots.raw
+165,,MODIFY,/System Volume Information,,0x701,FREE,1,33258,win11refs2tsnapshots.raw
+166,,MODIFY,/System Volume Information,,0x701,FREE,1,33261,win11refs2tsnapshots.raw
+167,,MODIFY,/System Volume Information,,0x701,FREE,1,33264,win11refs2tsnapshots.raw
+168,,MODIFY,/System Volume Information,,0x701,FREE,1,33267,win11refs2tsnapshots.raw
+169,,MODIFY,/System Volume Information,,0x701,FREE,1,33270,win11refs2tsnapshots.raw
+170,,MODIFY,/System Volume Information,,0x701,FREE,1,33273,win11refs2tsnapshots.raw
+171,,MODIFY,/System Volume Information,,0x701,FREE,1,33276,win11refs2tsnapshots.raw
+172,,MODIFY,/System Volume Information,,0x701,FREE,1,33279,win11refs2tsnapshots.raw
+173,,MODIFY,/System Volume Information,,0x701,FREE,1,33282,win11refs2tsnapshots.raw
+174,,MODIFY,/System Volume Information,,0x701,FREE,1,33285,win11refs2tsnapshots.raw
+175,,MODIFY,/System Volume Information,,0x701,FREE,1,33288,win11refs2tsnapshots.raw
+176,,MODIFY,/System Volume Information,,0x701,FREE,1,33291,win11refs2tsnapshots.raw
+177,,MODIFY,/System Volume Information,,0x701,FREE,1,33294,win11refs2tsnapshots.raw
+178,,MODIFY,/System Volume Information,,0x701,FREE,1,33297,win11refs2tsnapshots.raw
+179,,MODIFY,/System Volume Information,,0x701,FREE,1,33300,win11refs2tsnapshots.raw
+180,,MODIFY,/System Volume Information,,0x701,FREE,1,33303,win11refs2tsnapshots.raw
+181,,MODIFY,/System Volume Information,,0x701,FREE,1,33306,win11refs2tsnapshots.raw
+182,,MODIFY,/System Volume Information,,0x701,FREE,1,33309,win11refs2tsnapshots.raw
+183,,MODIFY,/System Volume Information,,0x701,FREE,1,33312,win11refs2tsnapshots.raw
+184,,MODIFY,/System Volume Information,,0x701,FREE,1,33315,win11refs2tsnapshots.raw
+185,,MODIFY,/System Volume Information,,0x701,FREE,1,33318,win11refs2tsnapshots.raw
+186,,MODIFY,/System Volume Information,,0x701,FREE,1,33321,win11refs2tsnapshots.raw
+187,,MODIFY,/System Volume Information,,0x701,FREE,1,33324,win11refs2tsnapshots.raw
+188,,MODIFY,/System Volume Information,,0x701,FREE,1,33327,win11refs2tsnapshots.raw
+189,,MODIFY,/System Volume Information,,0x701,FREE,1,33330,win11refs2tsnapshots.raw
+190,,MODIFY,/System Volume Information,,0x701,FREE,1,33333,win11refs2tsnapshots.raw
+191,,MODIFY,/System Volume Information,,0x701,FREE,1,33336,win11refs2tsnapshots.raw
+192,,MODIFY,/System Volume Information,,0x701,FREE,1,33339,win11refs2tsnapshots.raw
+193,,MODIFY,/System Volume Information,,0x701,FREE,1,33342,win11refs2tsnapshots.raw
+194,,MODIFY,/System Volume Information,,0x701,FREE,1,33345,win11refs2tsnapshots.raw
+195,,MODIFY,/System Volume Information,,0x701,FREE,1,33348,win11refs2tsnapshots.raw
+196,,MODIFY,/System Volume Information,,0x701,FREE,1,33351,win11refs2tsnapshots.raw
+197,,MODIFY,/System Volume Information,,0x701,FREE,1,33354,win11refs2tsnapshots.raw
+198,,MODIFY,/System Volume Information,,0x701,FREE,1,33357,win11refs2tsnapshots.raw
+199,,MODIFY,/System Volume Information,,0x701,FREE,1,33360,win11refs2tsnapshots.raw
+200,,MODIFY,/System Volume Information,,0x701,FREE,1,33363,win11refs2tsnapshots.raw
+201,,MODIFY,/System Volume Information,,0x701,FREE,1,33366,win11refs2tsnapshots.raw
+202,,MODIFY,/System Volume Information,,0x701,FREE,1,33369,win11refs2tsnapshots.raw
+203,,MODIFY,/System Volume Information,,0x701,FREE,1,33372,win11refs2tsnapshots.raw
+204,,MODIFY,/System Volume Information,,0x701,FREE,1,33375,win11refs2tsnapshots.raw
+205,,MODIFY,/System Volume Information,,0x701,FREE,1,33378,win11refs2tsnapshots.raw
+206,,MODIFY,/System Volume Information,,0x701,FREE,1,33381,win11refs2tsnapshots.raw
+207,,MODIFY,/System Volume Information,,0x701,FREE,1,33384,win11refs2tsnapshots.raw
+208,,MODIFY,/System Volume Information,,0x701,FREE,1,33387,win11refs2tsnapshots.raw
+209,,MODIFY,/System Volume Information,,0x701,FREE,1,33390,win11refs2tsnapshots.raw
+210,,MODIFY,/System Volume Information,,0x701,FREE,1,33393,win11refs2tsnapshots.raw
+211,,MODIFY,/System Volume Information,,0x701,FREE,1,33396,win11refs2tsnapshots.raw
+212,,MODIFY,/System Volume Information,,0x701,FREE,1,33399,win11refs2tsnapshots.raw
+213,,MODIFY,/System Volume Information,,0x701,FREE,1,33402,win11refs2tsnapshots.raw
+214,,MODIFY,/System Volume Information,,0x701,FREE,1,33405,win11refs2tsnapshots.raw
+215,,MODIFY,/System Volume Information,,0x701,FREE,1,33408,win11refs2tsnapshots.raw
+216,,MODIFY,/System Volume Information,,0x701,FREE,1,33411,win11refs2tsnapshots.raw
+217,,MODIFY,/System Volume Information,,0x701,FREE,1,33414,win11refs2tsnapshots.raw
+218,,MODIFY,/System Volume Information,,0x701,FREE,1,33417,win11refs2tsnapshots.raw
+219,,MODIFY,/System Volume Information,,0x701,FREE,1,33420,win11refs2tsnapshots.raw
+220,,MODIFY,/System Volume Information,,0x701,FREE,1,33423,win11refs2tsnapshots.raw
+221,,MODIFY,/System Volume Information,,0x701,FREE,1,33426,win11refs2tsnapshots.raw
+222,,MODIFY,/System Volume Information,,0x701,FREE,1,33429,win11refs2tsnapshots.raw
+223,,MODIFY,/System Volume Information,,0x701,FREE,1,33432,win11refs2tsnapshots.raw
+224,,MODIFY,/System Volume Information,,0x701,FREE,1,33435,win11refs2tsnapshots.raw
+225,,MODIFY,/System Volume Information,,0x701,FREE,1,33438,win11refs2tsnapshots.raw
+226,,MODIFY,/System Volume Information,,0x701,FREE,1,33441,win11refs2tsnapshots.raw
+227,,MODIFY,/System Volume Information,,0x701,FREE,1,33444,win11refs2tsnapshots.raw
+228,,MODIFY,/System Volume Information,,0x701,FREE,1,33447,win11refs2tsnapshots.raw
+229,,MODIFY,/System Volume Information,,0x701,FREE,1,33450,win11refs2tsnapshots.raw
+230,,MODIFY,/System Volume Information,,0x701,FREE,1,33453,win11refs2tsnapshots.raw
+231,,MODIFY,/System Volume Information,,0x701,FREE,1,33456,win11refs2tsnapshots.raw
+232,,MODIFY,/System Volume Information,,0x701,FREE,1,33459,win11refs2tsnapshots.raw
+233,,MODIFY,/System Volume Information,,0x701,FREE,1,33462,win11refs2tsnapshots.raw
+234,,MODIFY,/System Volume Information,,0x701,FREE,1,33465,win11refs2tsnapshots.raw
+235,,MODIFY,/System Volume Information,,0x701,FREE,1,33468,win11refs2tsnapshots.raw
+236,,MODIFY,/System Volume Information,,0x701,FREE,1,33471,win11refs2tsnapshots.raw
+237,,MODIFY,/System Volume Information,,0x701,FREE,1,33474,win11refs2tsnapshots.raw
+238,,MODIFY,/System Volume Information,,0x701,FREE,1,33477,win11refs2tsnapshots.raw
+239,,MODIFY,/System Volume Information,,0x701,FREE,1,33480,win11refs2tsnapshots.raw
+240,,MODIFY,/System Volume Information,,0x701,FREE,1,33483,win11refs2tsnapshots.raw
+241,,MODIFY,/System Volume Information,,0x701,FREE,1,33486,win11refs2tsnapshots.raw
+242,,MODIFY,/System Volume Information,,0x701,FREE,1,33489,win11refs2tsnapshots.raw
+243,,MODIFY,/System Volume Information,,0x701,FREE,1,33492,win11refs2tsnapshots.raw
+244,,MODIFY,/System Volume Information,,0x701,FREE,1,33495,win11refs2tsnapshots.raw
+245,,MODIFY,/System Volume Information,,0x701,FREE,1,33498,win11refs2tsnapshots.raw
+246,,MODIFY,/System Volume Information,,0x701,FREE,1,33501,win11refs2tsnapshots.raw
+247,,MODIFY,/System Volume Information,,0x701,FREE,1,33504,win11refs2tsnapshots.raw
+248,,MODIFY,/System Volume Information,,0x701,FREE,1,33507,win11refs2tsnapshots.raw
+249,,MODIFY,/System Volume Information,,0x701,FREE,1,33510,win11refs2tsnapshots.raw
+250,,MODIFY,/System Volume Information,,0x701,FREE,1,33513,win11refs2tsnapshots.raw
+251,,MODIFY,/System Volume Information,,0x701,FREE,1,33516,win11refs2tsnapshots.raw
+252,,MODIFY,/System Volume Information,,0x701,FREE,1,33519,win11refs2tsnapshots.raw
+253,,MODIFY,/System Volume Information,,0x701,FREE,1,33522,win11refs2tsnapshots.raw
+254,,MODIFY,/System Volume Information,,0x701,FREE,1,33525,win11refs2tsnapshots.raw
+255,,MODIFY,/System Volume Information,,0x701,FREE,1,33528,win11refs2tsnapshots.raw
+256,,MODIFY,/System Volume Information,,0x701,FREE,1,33531,win11refs2tsnapshots.raw
+257,,MODIFY,/System Volume Information,,0x701,FREE,1,33534,win11refs2tsnapshots.raw
+258,,MODIFY,/System Volume Information,,0x701,FREE,1,33537,win11refs2tsnapshots.raw
+259,,MODIFY,/System Volume Information,,0x701,FREE,1,33540,win11refs2tsnapshots.raw
+260,,MODIFY,/System Volume Information,,0x701,FREE,1,33543,win11refs2tsnapshots.raw
+261,,MODIFY,/System Volume Information,,0x701,FREE,1,33546,win11refs2tsnapshots.raw
+262,,MODIFY,/System Volume Information,,0x701,FREE,1,33549,win11refs2tsnapshots.raw
+263,,MODIFY,/System Volume Information,,0x701,FREE,1,33552,win11refs2tsnapshots.raw
+264,,MODIFY,/System Volume Information,,0x701,FREE,1,33555,win11refs2tsnapshots.raw
+265,,MODIFY,/System Volume Information,,0x701,FREE,1,33558,win11refs2tsnapshots.raw
+266,,MODIFY,/System Volume Information,,0x701,FREE,1,33561,win11refs2tsnapshots.raw
+267,,MODIFY,/System Volume Information,,0x701,FREE,1,33565,win11refs2tsnapshots.raw
+268,,MODIFY,/System Volume Information,,0x701,FREE,1,33568,win11refs2tsnapshots.raw
+269,,MODIFY,/System Volume Information,,0x701,FREE,1,33571,win11refs2tsnapshots.raw
+270,,MODIFY,/System Volume Information,,0x701,FREE,1,33574,win11refs2tsnapshots.raw
+271,,MODIFY,/System Volume Information,,0x701,FREE,1,33577,win11refs2tsnapshots.raw
+272,,MODIFY,/System Volume Information,,0x701,FREE,1,33580,win11refs2tsnapshots.raw
+273,,MODIFY,/System Volume Information,,0x701,FREE,1,33583,win11refs2tsnapshots.raw
+274,,MODIFY,/System Volume Information,,0x701,FREE,1,33586,win11refs2tsnapshots.raw
+275,,MODIFY,/System Volume Information,,0x701,FREE,1,33589,win11refs2tsnapshots.raw
+276,,MODIFY,/System Volume Information,,0x701,FREE,1,33592,win11refs2tsnapshots.raw
+277,2026-05-16T16:50:53.584Z,CREATE,/System Volume Information,FVE2.{8252fd17-a486-4ad4-b1ca-f4fe64d23218},0x701,INSERT_ROW INSERT_ROW SET_OBJECT,3,33599,win11refs2tsnapshots.raw
+278,,ENTRY_REMOVE,/System Volume Information,,0x701,DELETE_ROW,1,33600,win11refs2tsnapshots.raw
+279,,MODIFY,/System Volume Information,,0x701,FREE,1,33601,win11refs2tsnapshots.raw
+280,,MODIFY,/System Volume Information,,0x701,FREE,1,33602,win11refs2tsnapshots.raw
+281,,MODIFY,/System Volume Information,,0x701,FREE,1,33603,win11refs2tsnapshots.raw
+282,,MODIFY,/System Volume Information,,0x701,FREE,1,33604,win11refs2tsnapshots.raw
+283,,MODIFY,/System Volume Information,,0x701,FREE,1,33605,win11refs2tsnapshots.raw
+284,,MODIFY,/System Volume Information,,0x701,FREE,1,33606,win11refs2tsnapshots.raw
+285,,MODIFY,/System Volume Information,,0x701,FREE,1,33607,win11refs2tsnapshots.raw
+286,,MODIFY,/System Volume Information,,0x701,FREE,1,33608,win11refs2tsnapshots.raw
+287,,MODIFY,/System Volume Information,,0x701,FREE,1,33609,win11refs2tsnapshots.raw
+288,,MODIFY,/System Volume Information,,0x701,FREE,1,33610,win11refs2tsnapshots.raw
+289,,MODIFY,/System Volume Information,,0x701,FREE,1,33611,win11refs2tsnapshots.raw
+290,,MODIFY,/System Volume Information,,0x701,FREE,1,33612,win11refs2tsnapshots.raw
+291,,MODIFY,/System Volume Information,,0x701,FREE,1,33613,win11refs2tsnapshots.raw
+292,,MODIFY,/System Volume Information,,0x701,FREE,1,33614,win11refs2tsnapshots.raw
+293,,MODIFY,/System Volume Information,,0x701,FREE,1,33615,win11refs2tsnapshots.raw
+294,,MODIFY,/System Volume Information,,0x701,FREE,1,33616,win11refs2tsnapshots.raw
+295,,MODIFY,/System Volume Information,,0x701,FREE,1,33617,win11refs2tsnapshots.raw
+296,,MODIFY,/System Volume Information,,0x701,FREE,1,33618,win11refs2tsnapshots.raw
+297,,MODIFY,/System Volume Information,,0x701,FREE,1,33619,win11refs2tsnapshots.raw
+298,,MODIFY,/System Volume Information,,0x701,FREE,1,33620,win11refs2tsnapshots.raw
+299,,MODIFY,/System Volume Information,,0x701,FREE,1,33621,win11refs2tsnapshots.raw
+300,,MODIFY,/System Volume Information,,0x701,FREE,1,33622,win11refs2tsnapshots.raw
+301,,MODIFY,/System Volume Information,,0x701,FREE,1,33623,win11refs2tsnapshots.raw
+302,,MODIFY,/System Volume Information,,0x701,FREE,1,33624,win11refs2tsnapshots.raw
+303,,MODIFY,/System Volume Information,,0x701,FREE,1,33625,win11refs2tsnapshots.raw
+304,,MODIFY,/System Volume Information,,0x701,FREE,1,33626,win11refs2tsnapshots.raw
+305,,MODIFY,/System Volume Information,,0x701,FREE,1,33627,win11refs2tsnapshots.raw
+306,,MODIFY,/System Volume Information,,0x701,FREE,1,33628,win11refs2tsnapshots.raw
+307,,MODIFY,/System Volume Information,,0x701,FREE,1,33629,win11refs2tsnapshots.raw
+308,,MODIFY,/System Volume Information,,0x701,FREE,1,33630,win11refs2tsnapshots.raw
+309,,MODIFY,/System Volume Information,,0x701,FREE,1,33631,win11refs2tsnapshots.raw
+310,,MODIFY,/System Volume Information,,0x701,FREE,1,33632,win11refs2tsnapshots.raw
+311,,MODIFY,/System Volume Information,,0x701,FREE,1,33633,win11refs2tsnapshots.raw
+312,,MODIFY,/System Volume Information,,0x701,FREE,1,33634,win11refs2tsnapshots.raw
+313,,MODIFY,/System Volume Information,,0x701,FREE,1,33635,win11refs2tsnapshots.raw
+314,,MODIFY,/System Volume Information,,0x701,FREE,1,33636,win11refs2tsnapshots.raw
+315,,MODIFY,/System Volume Information,,0x701,FREE,1,33637,win11refs2tsnapshots.raw
+316,,MODIFY,/System Volume Information,,0x701,FREE,1,33638,win11refs2tsnapshots.raw
+317,,MODIFY,/System Volume Information,,0x701,FREE,1,33639,win11refs2tsnapshots.raw
+318,,MODIFY,/System Volume Information,,0x701,FREE,1,33640,win11refs2tsnapshots.raw
+319,,MODIFY,/System Volume Information,,0x701,FREE,1,33641,win11refs2tsnapshots.raw
+320,,MODIFY,/System Volume Information,,0x701,FREE,1,33642,win11refs2tsnapshots.raw
+321,,MODIFY,/System Volume Information,,0x701,FREE,1,33643,win11refs2tsnapshots.raw
+322,,MODIFY,/System Volume Information,,0x701,FREE,1,33644,win11refs2tsnapshots.raw
+323,,MODIFY,/System Volume Information,,0x701,FREE,1,33645,win11refs2tsnapshots.raw
+324,,MODIFY,/System Volume Information,,0x701,FREE,1,33646,win11refs2tsnapshots.raw
+325,,MODIFY,/System Volume Information,,0x701,FREE,1,33647,win11refs2tsnapshots.raw
+326,,MODIFY,/System Volume Information,,0x701,FREE,1,33648,win11refs2tsnapshots.raw
+327,,MODIFY,/System Volume Information,,0x701,FREE,1,33649,win11refs2tsnapshots.raw
+328,,MODIFY,/System Volume Information,,0x701,FREE,1,33650,win11refs2tsnapshots.raw
+329,,MODIFY,/System Volume Information,,0x701,FREE,1,33651,win11refs2tsnapshots.raw
+330,,MODIFY,/System Volume Information,,0x701,FREE,1,33652,win11refs2tsnapshots.raw
+331,,MODIFY,/System Volume Information,,0x701,FREE,1,33653,win11refs2tsnapshots.raw
+332,,MODIFY,/System Volume Information,,0x701,FREE,1,33654,win11refs2tsnapshots.raw
+333,,MODIFY,/System Volume Information,,0x701,FREE,1,33655,win11refs2tsnapshots.raw
+334,,MODIFY,/System Volume Information,,0x701,FREE,1,33656,win11refs2tsnapshots.raw
+335,,MODIFY,/System Volume Information,,0x701,FREE,1,33657,win11refs2tsnapshots.raw
+336,,MODIFY,/System Volume Information,,0x701,FREE,1,33658,win11refs2tsnapshots.raw
+337,,MODIFY,/System Volume Information,,0x701,FREE,1,33659,win11refs2tsnapshots.raw
+338,,MODIFY,/System Volume Information,,0x701,FREE,1,33660,win11refs2tsnapshots.raw
+339,,MODIFY,/System Volume Information,,0x701,FREE,1,33661,win11refs2tsnapshots.raw
+340,,MODIFY,/System Volume Information,,0x701,FREE,1,33662,win11refs2tsnapshots.raw
+341,,MODIFY,/System Volume Information,,0x701,FREE,1,33663,win11refs2tsnapshots.raw
+342,,MODIFY,/System Volume Information,,0x701,FREE,1,33664,win11refs2tsnapshots.raw
+343,,MODIFY,/System Volume Information,,0x701,FREE,1,33665,win11refs2tsnapshots.raw
+344,,MODIFY,/System Volume Information,,0x701,FREE,1,33666,win11refs2tsnapshots.raw
+345,,MODIFY,/System Volume Information,,0x701,FREE,1,33667,win11refs2tsnapshots.raw
+346,,MODIFY,/System Volume Information,,0x701,FREE,1,33668,win11refs2tsnapshots.raw
+347,,MODIFY,/System Volume Information,,0x701,FREE,1,33669,win11refs2tsnapshots.raw
+348,,MODIFY,/System Volume Information,,0x701,FREE,1,33670,win11refs2tsnapshots.raw
+349,,MODIFY,/System Volume Information,,0x701,FREE,1,33671,win11refs2tsnapshots.raw
+350,,MODIFY,/System Volume Information,,0x701,FREE,1,33672,win11refs2tsnapshots.raw
+351,,MODIFY,/System Volume Information,,0x701,FREE,1,33673,win11refs2tsnapshots.raw
+352,,MODIFY,/System Volume Information,,0x701,FREE,1,33674,win11refs2tsnapshots.raw
+353,,MODIFY,/System Volume Information,,0x701,FREE,1,33675,win11refs2tsnapshots.raw
+354,,MODIFY,/System Volume Information,,0x701,FREE,1,33676,win11refs2tsnapshots.raw
+355,,MODIFY,/System Volume Information,,0x701,FREE,1,33677,win11refs2tsnapshots.raw
+356,,MODIFY,/System Volume Information,,0x701,FREE,1,33678,win11refs2tsnapshots.raw
+357,,MODIFY,/System Volume Information,,0x701,FREE,1,33679,win11refs2tsnapshots.raw
+358,,MODIFY,/System Volume Information,,0x701,FREE,1,33680,win11refs2tsnapshots.raw
+359,,MODIFY,/System Volume Information,,0x701,FREE,1,33681,win11refs2tsnapshots.raw
+360,,MODIFY,/System Volume Information,,0x701,FREE,1,33682,win11refs2tsnapshots.raw
+361,,MODIFY,/System Volume Information,,0x701,FREE,1,33683,win11refs2tsnapshots.raw
+362,,MODIFY,/System Volume Information,,0x701,FREE,1,33684,win11refs2tsnapshots.raw
+363,,MODIFY,/System Volume Information,,0x701,FREE,1,33685,win11refs2tsnapshots.raw
+364,,MODIFY,/System Volume Information,,0x701,FREE,1,33686,win11refs2tsnapshots.raw
+365,,MODIFY,/System Volume Information,,0x701,FREE,1,33687,win11refs2tsnapshots.raw
+366,,MODIFY,/System Volume Information,,0x701,FREE,1,33688,win11refs2tsnapshots.raw
+367,,MODIFY,/System Volume Information,,0x701,FREE,1,33689,win11refs2tsnapshots.raw
+368,,MODIFY,/System Volume Information,,0x701,FREE,1,33690,win11refs2tsnapshots.raw
+369,,MODIFY,/System Volume Information,,0x701,FREE,1,33691,win11refs2tsnapshots.raw
+370,,MODIFY,/System Volume Information,,0x701,FREE,1,33692,win11refs2tsnapshots.raw
+371,,MODIFY,/System Volume Information,,0x701,FREE,1,33693,win11refs2tsnapshots.raw
+372,,MODIFY,/System Volume Information,,0x701,FREE,1,33694,win11refs2tsnapshots.raw
+373,,MODIFY,/System Volume Information,,0x701,FREE,1,33695,win11refs2tsnapshots.raw
+374,,MODIFY,/System Volume Information,,0x701,FREE,1,33696,win11refs2tsnapshots.raw
+375,,MODIFY,/System Volume Information,,0x701,FREE,1,33697,win11refs2tsnapshots.raw
+376,,MODIFY,/System Volume Information,,0x701,FREE,1,33698,win11refs2tsnapshots.raw
+377,,MODIFY,/System Volume Information,,0x701,FREE,1,33699,win11refs2tsnapshots.raw
+378,,MODIFY,/System Volume Information,,0x701,FREE,1,33700,win11refs2tsnapshots.raw
+379,,MODIFY,/System Volume Information,,0x701,FREE,1,33701,win11refs2tsnapshots.raw
+380,,MODIFY,/System Volume Information,,0x701,FREE,1,33702,win11refs2tsnapshots.raw
+381,,MODIFY,/System Volume Information,,0x701,FREE,1,33703,win11refs2tsnapshots.raw
+382,,MODIFY,/System Volume Information,,0x701,FREE,1,33704,win11refs2tsnapshots.raw
+383,,MODIFY,/System Volume Information,,0x701,FREE,1,33705,win11refs2tsnapshots.raw
+384,,MODIFY,/System Volume Information,,0x701,FREE,1,33706,win11refs2tsnapshots.raw
+385,,MODIFY,/System Volume Information,,0x701,FREE,1,33707,win11refs2tsnapshots.raw
+386,,MODIFY,/System Volume Information,,0x701,FREE,1,33708,win11refs2tsnapshots.raw
+387,,MODIFY,/System Volume Information,,0x701,FREE,1,33709,win11refs2tsnapshots.raw
+388,,MODIFY,/System Volume Information,,0x701,FREE,1,33710,win11refs2tsnapshots.raw
+389,,MODIFY,/System Volume Information,,0x701,FREE,1,33711,win11refs2tsnapshots.raw
+390,,MODIFY,/System Volume Information,,0x701,FREE,1,33712,win11refs2tsnapshots.raw
+391,,MODIFY,/System Volume Information,,0x701,FREE,1,33713,win11refs2tsnapshots.raw
+392,,MODIFY,/System Volume Information,,0x701,FREE,1,33714,win11refs2tsnapshots.raw
+393,,MODIFY,/System Volume Information,,0x701,FREE,1,33715,win11refs2tsnapshots.raw
+394,,MODIFY,/System Volume Information,,0x701,FREE,1,33716,win11refs2tsnapshots.raw
+395,,MODIFY,/System Volume Information,,0x701,FREE,1,33717,win11refs2tsnapshots.raw
+396,,MODIFY,/System Volume Information,,0x701,FREE,1,33718,win11refs2tsnapshots.raw
+397,,MODIFY,/System Volume Information,,0x701,FREE,1,33719,win11refs2tsnapshots.raw
+398,,MODIFY,/System Volume Information,,0x701,FREE,1,33720,win11refs2tsnapshots.raw
+399,,MODIFY,/System Volume Information,,0x701,FREE,1,33721,win11refs2tsnapshots.raw
+400,,MODIFY,/System Volume Information,,0x701,FREE,1,33722,win11refs2tsnapshots.raw
+401,,MODIFY,/System Volume Information,,0x701,FREE,1,33723,win11refs2tsnapshots.raw
+402,,MODIFY,/System Volume Information,,0x701,FREE,1,33724,win11refs2tsnapshots.raw
+403,,MODIFY,/System Volume Information,,0x701,FREE,1,33725,win11refs2tsnapshots.raw
+404,,MODIFY,/System Volume Information,,0x701,FREE,1,33726,win11refs2tsnapshots.raw
+405,,MODIFY,/System Volume Information,,0x701,FREE,1,33727,win11refs2tsnapshots.raw
+406,,MODIFY,/System Volume Information,,0x701,FREE,1,33728,win11refs2tsnapshots.raw
+407,,MODIFY,/System Volume Information,,0x701,FREE,1,33729,win11refs2tsnapshots.raw
+408,,MODIFY,/System Volume Information,,0x701,FREE,1,33730,win11refs2tsnapshots.raw
+409,,MODIFY,/System Volume Information,,0x701,FREE,1,33731,win11refs2tsnapshots.raw
+410,,MODIFY,/System Volume Information,,0x701,FREE,1,33732,win11refs2tsnapshots.raw
+411,,MODIFY,/System Volume Information,,0x701,FREE,1,33733,win11refs2tsnapshots.raw
+412,,MODIFY,/System Volume Information,,0x701,FREE,1,33734,win11refs2tsnapshots.raw
+413,,MODIFY,/System Volume Information,,0x701,FREE,1,33735,win11refs2tsnapshots.raw
+414,,MODIFY,/System Volume Information,,0x701,FREE,1,33736,win11refs2tsnapshots.raw
+415,,MODIFY,/System Volume Information,,0x701,FREE,1,33737,win11refs2tsnapshots.raw
+416,,MODIFY,/System Volume Information,,0x701,FREE,1,33738,win11refs2tsnapshots.raw
+417,,MODIFY,/System Volume Information,,0x701,FREE,1,33739,win11refs2tsnapshots.raw
+418,,MODIFY,/System Volume Information,,0x701,FREE,1,33740,win11refs2tsnapshots.raw
+419,,MODIFY,/System Volume Information,,0x701,FREE,1,33741,win11refs2tsnapshots.raw
+420,,MODIFY,/System Volume Information,,0x701,FREE,1,33742,win11refs2tsnapshots.raw
+421,,MODIFY,/System Volume Information,,0x701,FREE,1,33743,win11refs2tsnapshots.raw
+422,,MODIFY,/System Volume Information,,0x701,FREE,1,33744,win11refs2tsnapshots.raw
+423,,MODIFY,/System Volume Information,,0x701,FREE,1,33745,win11refs2tsnapshots.raw
+424,,MODIFY,/System Volume Information,,0x701,FREE,1,33746,win11refs2tsnapshots.raw
+425,,MODIFY,/System Volume Information,,0x701,FREE,1,33747,win11refs2tsnapshots.raw
+426,,MODIFY,/System Volume Information,,0x701,FREE,1,33748,win11refs2tsnapshots.raw
+427,,MODIFY,/System Volume Information,,0x701,FREE,1,33749,win11refs2tsnapshots.raw
+428,,MODIFY,/System Volume Information,,0x701,FREE,1,33750,win11refs2tsnapshots.raw
+429,,MODIFY,/System Volume Information,,0x701,FREE,1,33751,win11refs2tsnapshots.raw
+430,,MODIFY,/System Volume Information,,0x701,FREE,1,33752,win11refs2tsnapshots.raw
+431,,MODIFY,/System Volume Information,,0x701,FREE,1,33753,win11refs2tsnapshots.raw
+432,,MODIFY,/System Volume Information,,0x701,FREE,1,33754,win11refs2tsnapshots.raw
+433,,MODIFY,/System Volume Information,,0x701,FREE,1,33755,win11refs2tsnapshots.raw
+434,,MODIFY,/System Volume Information,,0x701,FREE,1,33756,win11refs2tsnapshots.raw
+435,,MODIFY,/System Volume Information,,0x701,FREE,1,33757,win11refs2tsnapshots.raw
+436,,MODIFY,/System Volume Information,,0x701,FREE,1,33758,win11refs2tsnapshots.raw
+437,,MODIFY,/System Volume Information,,0x701,FREE,1,33759,win11refs2tsnapshots.raw
+438,,MODIFY,/System Volume Information,,0x701,FREE,1,33760,win11refs2tsnapshots.raw
+439,,MODIFY,/System Volume Information,,0x701,FREE,1,33761,win11refs2tsnapshots.raw
+440,,MODIFY,/System Volume Information,,0x701,FREE,1,33762,win11refs2tsnapshots.raw
+441,,MODIFY,/System Volume Information,,0x701,FREE,1,33763,win11refs2tsnapshots.raw
+442,,MODIFY,/System Volume Information,,0x701,FREE,1,33764,win11refs2tsnapshots.raw
+443,,MODIFY,/System Volume Information,,0x701,FREE,1,33765,win11refs2tsnapshots.raw
+444,,MODIFY,/System Volume Information,,0x701,FREE,1,33766,win11refs2tsnapshots.raw
+445,,MODIFY,/System Volume Information,,0x701,FREE,1,33767,win11refs2tsnapshots.raw
+446,,MODIFY,/System Volume Information,,0x701,FREE,1,33768,win11refs2tsnapshots.raw
+447,,MODIFY,/System Volume Information,,0x701,FREE,1,33769,win11refs2tsnapshots.raw
+448,,MODIFY,/System Volume Information,,0x701,FREE,1,33770,win11refs2tsnapshots.raw
+449,,MODIFY,/System Volume Information,,0x701,FREE,1,33771,win11refs2tsnapshots.raw
+450,,MODIFY,/System Volume Information,,0x701,FREE,1,33772,win11refs2tsnapshots.raw
+451,,MODIFY,/System Volume Information,,0x701,FREE,1,33773,win11refs2tsnapshots.raw
+452,,MODIFY,/System Volume Information,,0x701,FREE,1,33774,win11refs2tsnapshots.raw
+453,,MODIFY,/System Volume Information,,0x701,FREE,1,33775,win11refs2tsnapshots.raw
+454,,MODIFY,/System Volume Information,,0x701,FREE,1,33776,win11refs2tsnapshots.raw
+455,,MODIFY,/System Volume Information,,0x701,FREE,1,33777,win11refs2tsnapshots.raw
+456,,MODIFY,/System Volume Information,,0x701,FREE,1,33778,win11refs2tsnapshots.raw
+457,,MODIFY,/System Volume Information,,0x701,FREE,1,33779,win11refs2tsnapshots.raw
+458,,MODIFY,/System Volume Information,,0x701,FREE,1,33780,win11refs2tsnapshots.raw
+459,,MODIFY,/System Volume Information,,0x701,FREE,1,33781,win11refs2tsnapshots.raw
+460,,MODIFY,/System Volume Information,,0x701,FREE,1,33782,win11refs2tsnapshots.raw
+461,,MODIFY,/System Volume Information,,0x701,FREE,1,33783,win11refs2tsnapshots.raw
+462,,MODIFY,/System Volume Information,,0x701,FREE,1,33784,win11refs2tsnapshots.raw
+463,,MODIFY,/System Volume Information,,0x701,FREE,1,33785,win11refs2tsnapshots.raw
+464,,MODIFY,/System Volume Information,,0x701,FREE,1,33786,win11refs2tsnapshots.raw
+465,,MODIFY,/System Volume Information,,0x701,FREE,1,33787,win11refs2tsnapshots.raw
+466,,MODIFY,/System Volume Information,,0x701,FREE,1,33788,win11refs2tsnapshots.raw
+467,,MODIFY,/System Volume Information,,0x701,FREE,1,33789,win11refs2tsnapshots.raw
+468,,MODIFY,/System Volume Information,,0x701,FREE,1,33790,win11refs2tsnapshots.raw
+469,,MODIFY,/System Volume Information,,0x701,FREE,1,33791,win11refs2tsnapshots.raw
+470,,MODIFY,/System Volume Information,,0x701,FREE,1,33792,win11refs2tsnapshots.raw
+471,,MODIFY,/System Volume Information,,0x701,FREE,1,33793,win11refs2tsnapshots.raw
+472,,MODIFY,/System Volume Information,,0x701,FREE,1,33794,win11refs2tsnapshots.raw
+473,,MODIFY,/System Volume Information,,0x701,FREE,1,33795,win11refs2tsnapshots.raw
+474,,MODIFY,/System Volume Information,,0x701,FREE,1,33796,win11refs2tsnapshots.raw
+475,,MODIFY,/System Volume Information,,0x701,FREE,1,33797,win11refs2tsnapshots.raw
+476,,MODIFY,/System Volume Information,,0x701,FREE,1,33798,win11refs2tsnapshots.raw
+477,,MODIFY,/System Volume Information,,0x701,FREE,1,33799,win11refs2tsnapshots.raw
+478,,MODIFY,/System Volume Information,,0x701,FREE,1,33800,win11refs2tsnapshots.raw
+479,,MODIFY,/System Volume Information,,0x701,FREE,1,33801,win11refs2tsnapshots.raw
+480,,MODIFY,/System Volume Information,,0x701,FREE,1,33802,win11refs2tsnapshots.raw
+481,,MODIFY,/System Volume Information,,0x701,FREE,1,33803,win11refs2tsnapshots.raw
+482,,MODIFY,/System Volume Information,,0x701,FREE,1,33804,win11refs2tsnapshots.raw
+483,,MODIFY,/System Volume Information,,0x701,FREE,1,33805,win11refs2tsnapshots.raw
+484,,MODIFY,/System Volume Information,,0x701,FREE,1,33806,win11refs2tsnapshots.raw
+485,,MODIFY,/System Volume Information,,0x701,FREE,1,33807,win11refs2tsnapshots.raw
+486,,MODIFY,/System Volume Information,,0x701,FREE,1,33808,win11refs2tsnapshots.raw
+487,,MODIFY,/System Volume Information,,0x701,FREE,1,33809,win11refs2tsnapshots.raw
+488,,MODIFY,/System Volume Information,,0x701,FREE,1,33810,win11refs2tsnapshots.raw
+489,,MODIFY,/System Volume Information,,0x701,FREE,1,33811,win11refs2tsnapshots.raw
+490,,MODIFY,/System Volume Information,,0x701,FREE,1,33812,win11refs2tsnapshots.raw
+491,,MODIFY,/System Volume Information,,0x701,FREE,1,33813,win11refs2tsnapshots.raw
+492,,MODIFY,/System Volume Information,,0x701,FREE,1,33814,win11refs2tsnapshots.raw
+493,,MODIFY,/System Volume Information,,0x701,FREE,1,33815,win11refs2tsnapshots.raw
+494,,MODIFY,/System Volume Information,,0x701,FREE,1,33816,win11refs2tsnapshots.raw
+495,,MODIFY,/System Volume Information,,0x701,FREE,1,33817,win11refs2tsnapshots.raw
+496,,MODIFY,/System Volume Information,,0x701,FREE,1,33818,win11refs2tsnapshots.raw
+497,,MODIFY,/System Volume Information,,0x701,FREE,1,33819,win11refs2tsnapshots.raw
+498,,MODIFY,/System Volume Information,,0x701,FREE,1,33820,win11refs2tsnapshots.raw
+499,,MODIFY,/System Volume Information,,0x701,FREE,1,33821,win11refs2tsnapshots.raw
+500,,MODIFY,/System Volume Information,,0x701,FREE,1,33822,win11refs2tsnapshots.raw
+501,,MODIFY,/System Volume Information,,0x701,FREE,1,33823,win11refs2tsnapshots.raw
+502,,MODIFY,/System Volume Information,,0x701,FREE,1,33824,win11refs2tsnapshots.raw
+503,,MODIFY,/System Volume Information,,0x701,FREE,1,33825,win11refs2tsnapshots.raw
+504,,MODIFY,/System Volume Information,,0x701,FREE,1,33826,win11refs2tsnapshots.raw
+505,,MODIFY,/System Volume Information,,0x701,FREE,1,33827,win11refs2tsnapshots.raw
+506,,MODIFY,/System Volume Information,,0x701,FREE,1,33828,win11refs2tsnapshots.raw
+507,,MODIFY,/System Volume Information,,0x701,FREE,1,33829,win11refs2tsnapshots.raw
+508,,MODIFY,/System Volume Information,,0x701,FREE,1,33830,win11refs2tsnapshots.raw
+509,,MODIFY,/System Volume Information,,0x701,FREE,1,33831,win11refs2tsnapshots.raw
+510,,MODIFY,/System Volume Information,,0x701,FREE,1,33832,win11refs2tsnapshots.raw
+511,,MODIFY,/System Volume Information,,0x701,FREE,1,33833,win11refs2tsnapshots.raw
+512,,MODIFY,/System Volume Information,,0x701,FREE,1,33834,win11refs2tsnapshots.raw
+513,,MODIFY,/System Volume Information,,0x701,FREE,1,33835,win11refs2tsnapshots.raw
+514,,MODIFY,/System Volume Information,,0x701,FREE,1,33836,win11refs2tsnapshots.raw
+515,,MODIFY,/System Volume Information,,0x701,FREE,1,33837,win11refs2tsnapshots.raw
+516,,MODIFY,/System Volume Information,,0x701,FREE,1,33838,win11refs2tsnapshots.raw
+517,,MODIFY,/System Volume Information,,0x701,FREE,1,33839,win11refs2tsnapshots.raw
+518,,MODIFY,/System Volume Information,,0x701,FREE,1,33840,win11refs2tsnapshots.raw
+519,,MODIFY,/System Volume Information,,0x701,FREE,1,33841,win11refs2tsnapshots.raw
+520,,MODIFY,/System Volume Information,,0x701,FREE,1,33842,win11refs2tsnapshots.raw
+521,,MODIFY,/System Volume Information,,0x701,FREE,1,33843,win11refs2tsnapshots.raw
+522,,MODIFY,/System Volume Information,,0x701,FREE,1,33844,win11refs2tsnapshots.raw
+523,,MODIFY,/System Volume Information,,0x701,FREE,1,33845,win11refs2tsnapshots.raw
+524,,MODIFY,/System Volume Information,,0x701,FREE,1,33846,win11refs2tsnapshots.raw
+525,,MODIFY,/System Volume Information,,0x701,FREE,1,33847,win11refs2tsnapshots.raw
+526,,MODIFY,/System Volume Information,,0x701,FREE,1,33848,win11refs2tsnapshots.raw
+527,,MODIFY,/System Volume Information,,0x701,FREE,1,33849,win11refs2tsnapshots.raw
+528,,MODIFY,/System Volume Information,,0x701,FREE,1,33850,win11refs2tsnapshots.raw
+529,,MODIFY,/System Volume Information,,0x701,FREE,1,33851,win11refs2tsnapshots.raw
+530,,MODIFY,/System Volume Information,,0x701,FREE,1,33852,win11refs2tsnapshots.raw
+531,,MODIFY,/System Volume Information,,0x701,FREE,1,33853,win11refs2tsnapshots.raw
+532,,MODIFY,/System Volume Information,,0x701,FREE,1,33854,win11refs2tsnapshots.raw
+533,,MODIFY,/System Volume Information,,0x701,FREE,1,33855,win11refs2tsnapshots.raw
+534,,MODIFY,/System Volume Information,,0x701,FREE,1,33856,win11refs2tsnapshots.raw
+535,,MODIFY,/System Volume Information,,0x701,FREE,1,33857,win11refs2tsnapshots.raw
+536,,MODIFY,/System Volume Information,,0x701,FREE,1,33858,win11refs2tsnapshots.raw
+537,,MODIFY,/System Volume Information,,0x701,FREE,1,33859,win11refs2tsnapshots.raw
+538,,MODIFY,/System Volume Information,,0x701,FREE,1,33860,win11refs2tsnapshots.raw
+539,,MODIFY,/System Volume Information,,0x701,FREE,1,33861,win11refs2tsnapshots.raw
+540,,MODIFY,/System Volume Information,,0x701,FREE,1,33862,win11refs2tsnapshots.raw
+541,,MODIFY,/System Volume Information,,0x701,FREE,1,33863,win11refs2tsnapshots.raw
+542,,MODIFY,/System Volume Information,,0x701,FREE,1,33864,win11refs2tsnapshots.raw
+543,,MODIFY,/System Volume Information,,0x701,FREE,1,33865,win11refs2tsnapshots.raw
+544,,MODIFY,/System Volume Information,,0x701,FREE,1,33866,win11refs2tsnapshots.raw
+545,,MODIFY,/System Volume Information,,0x701,FREE,1,33867,win11refs2tsnapshots.raw
+546,,MODIFY,/System Volume Information,,0x701,FREE,1,33868,win11refs2tsnapshots.raw
+547,2026-05-16T16:51:49.699Z,CREATE,/test,test,0x702,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,33870,win11refs2tsnapshots.raw
+548,,ALLOCATE,/test,,0x702,ALLOCATE,1,33873,win11refs2tsnapshots.raw
+549,2026-05-16T16:51:50.452Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,elvis_dir_zulu_323770,0x703,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,33874,win11refs2tsnapshots.raw
+550,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,33876,win11refs2tsnapshots.raw
+551,2026-05-16T16:51:50.513Z,CREATE,/test,xbpt_mike_india_868820.log,0x702,INSERT_ROW INSERT_ROW SET_OBJECT,3,33877,win11refs2tsnapshots.raw
+552,,STREAM_UPD,/test,,0x702,UPDATE_STREAM,1,33878,win11refs2tsnapshots.raw
+553,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,33880,win11refs2tsnapshots.raw
+554,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,ALLOCATE,1,33884,win11refs2tsnapshots.raw
+555,,DELETE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE,4,33886,win11refs2tsnapshots.raw
+556,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,UPDATE_STREAM,1,33887,win11refs2tsnapshots.raw
+557,,REPARENT,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,xbpt_audit_oscar_237968.log,0x703,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,33889,win11refs2tsnapshots.raw
+558,2026-05-16T16:51:50.737Z,CREATE,/test,xbpt_symlink_record_442168.lnk,0x702,INSERT_ROW INSERT_ROW SET_OBJECT,3,33890,win11refs2tsnapshots.raw
+559,2026-05-16T16:51:50.774Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,elvis_dir_audit_423251,0x704,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,33892,win11refs2tsnapshots.raw
+560,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,ALLOCATE,1,33893,win11refs2tsnapshots.raw
+561,2026-05-16T16:51:50.798Z,CREATE,/test,xbpt_backup_report_125235.md,0x702,INSERT_ROW INSERT_ROW SET_OBJECT,3,33894,win11refs2tsnapshots.raw
+562,,STREAM_UPD,/test,,0x702,UPDATE_STREAM,1,33895,win11refs2tsnapshots.raw
+563,2026-05-16T16:51:50.837Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,xbpt_temp_whiskey_187024.dat,0x703,INSERT_ROW INSERT_ROW SET_OBJECT,3,33898,win11refs2tsnapshots.raw
+564,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,UPDATE_STREAM,1,33899,win11refs2tsnapshots.raw
+565,2026-05-16T16:51:50.868Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,xbpt_delta_index_269434.cfg,0x703,INSERT_ROW INSERT_ROW SET_OBJECT,3,33901,win11refs2tsnapshots.raw
+566,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,UPDATE_STREAM,1,33902,win11refs2tsnapshots.raw
+567,,STREAM_UPD,/test,,0x702,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,33903,win11refs2tsnapshots.raw
+568,2026-05-16T16:51:50.881Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,xbpt_alpha_yankee_153471.txt,0x703,INSERT_ROW INSERT_ROW SET_OBJECT,3,33904,win11refs2tsnapshots.raw
+569,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,UPDATE_STREAM,1,33905,win11refs2tsnapshots.raw
+570,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,33906,win11refs2tsnapshots.raw
+571,,DELETE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE,4,33907,win11refs2tsnapshots.raw
+572,,STREAM_UPD,/test,,0x702,UPDATE_STREAM,1,33909,win11refs2tsnapshots.raw
+573,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,33911,win11refs2tsnapshots.raw
+574,,REPARENT,/test,xbpt_foxtrot_quebec_889096.dat,0x702,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,33914,win11refs2tsnapshots.raw
+575,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,33919,win11refs2tsnapshots.raw
+576,2026-05-16T16:51:51.107Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,xbpt_archive_uniform_901294.cfg,0x703,INSERT_ROW INSERT_ROW SET_OBJECT,3,33920,win11refs2tsnapshots.raw
+577,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,33921,win11refs2tsnapshots.raw
+578,2026-05-16T16:51:51.120Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,elvis_dir_romeo_944038,0x706,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,33923,win11refs2tsnapshots.raw
+579,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,ALLOCATE,1,33924,win11refs2tsnapshots.raw
+580,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,33925,win11refs2tsnapshots.raw
+581,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,ALLOCATE,1,33926,win11refs2tsnapshots.raw
+582,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,33927,win11refs2tsnapshots.raw
+583,2026-05-16T16:51:51.250Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,xbpt_yankee_gamma_631547.txt,0x703,INSERT_ROW INSERT_ROW SET_OBJECT,3,33928,win11refs2tsnapshots.raw
+584,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,UPDATE_STREAM,1,33929,win11refs2tsnapshots.raw
+585,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,ALLOCATE,1,33931,win11refs2tsnapshots.raw
+586,,STREAM_UPD,/test,,0x702,UPDATE_STREAM,1,33932,win11refs2tsnapshots.raw
+587,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,,0x707,ALLOCATE,1,33934,win11refs2tsnapshots.raw
+588,2026-05-16T16:51:51.317Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,xbpt_backup_whiskey_354321.dat,0x704,INSERT_ROW INSERT_ROW SET_OBJECT,3,33936,win11refs2tsnapshots.raw
+589,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,UPDATE_STREAM,1,33937,win11refs2tsnapshots.raw
+590,2026-05-16T16:51:51.348Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,xbpt_log_log_475663.dat,0x703,INSERT_ROW INSERT_ROW SET_OBJECT,3,33938,win11refs2tsnapshots.raw
+591,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,UPDATE_STREAM,1,33939,win11refs2tsnapshots.raw
+592,2026-05-16T16:51:51.312Z,MOVE,/test,elvis_dir_delta_490814,0x702,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW SET_PARENT_ID,5,33940,win11refs2tsnapshots.raw
+593,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,33942,win11refs2tsnapshots.raw
+594,2026-05-16T16:51:51.394Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899,elvis_dir_sierra_471343,0x708,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,33943,win11refs2tsnapshots.raw
+595,2026-05-16T16:51:51.404Z,CREATE,OID 0x709,elvis_dir_index_768455,0x709,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,33944,win11refs2tsnapshots.raw
+596,,REPARENT,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,DELETE_ROW REPARENT_TABLE INSERT_ROW,3,33945,win11refs2tsnapshots.raw
+597,2026-05-16T16:51:51.437Z,CREATE,/test,xbpt_data_tango_520795.ini,0x702,INSERT_ROW INSERT_ROW SET_OBJECT,3,33946,win11refs2tsnapshots.raw
+598,,STREAM_UPD,/test,,0x702,UPDATE_STREAM,1,33947,win11refs2tsnapshots.raw
+599,,MODIFY,/test,,0x702,FREE,1,33948,win11refs2tsnapshots.raw
+600,2026-05-16T16:51:51.470Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899,xbpt_record_kilo_574610.bak,0x708,INSERT_ROW INSERT_ROW SET_OBJECT,3,33949,win11refs2tsnapshots.raw
+601,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899,,0x708,UPDATE_STREAM,1,33950,win11refs2tsnapshots.raw
+602,2026-05-16T16:51:51.524Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,xbpt_cache_tango_980936.bak,0x704,INSERT_ROW INSERT_ROW SET_OBJECT,3,33951,win11refs2tsnapshots.raw
+603,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,UPDATE_STREAM,1,33952,win11refs2tsnapshots.raw
+604,2026-05-16T16:51:51.577Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,xbpt_gamma_trace_145085.json,0x704,INSERT_ROW INSERT_ROW SET_OBJECT,3,33953,win11refs2tsnapshots.raw
+605,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,UPDATE_STREAM,1,33954,win11refs2tsnapshots.raw
+606,,REPARENT,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,DELETE_ROW REPARENT_TABLE INSERT_ROW,3,33955,win11refs2tsnapshots.raw
+607,2026-05-16T16:51:51.659Z,CREATE,/test,xbpt_data_gamma_192767.txt,0x702,INSERT_ROW INSERT_ROW SET_OBJECT,3,33958,win11refs2tsnapshots.raw
+608,,STREAM_UPD,/test,,0x702,UPDATE_STREAM,1,33959,win11refs2tsnapshots.raw
+609,,MODIFY,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,UPDATE_ROW,1,33961,win11refs2tsnapshots.raw
+610,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,UPDATE_STREAM,1,33962,win11refs2tsnapshots.raw
+611,2026-05-16T16:51:51.742Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,xbpt_victor_output_615372.log,0x707,INSERT_ROW INSERT_ROW SET_OBJECT,3,33963,win11refs2tsnapshots.raw
+612,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,,0x707,UPDATE_STREAM,1,33964,win11refs2tsnapshots.raw
+613,2026-05-16T16:51:51.756Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,xbpt_kilo_kilo_772105.txt,0x703,INSERT_ROW INSERT_ROW SET_OBJECT,3,33965,win11refs2tsnapshots.raw
+614,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,UPDATE_STREAM,1,33966,win11refs2tsnapshots.raw
+615,2026-05-16T16:51:51.770Z,CREATE,/test,xbpt_quebec_log_715153.log,0x702,INSERT_ROW INSERT_ROW SET_OBJECT,3,33967,win11refs2tsnapshots.raw
+616,,STREAM_UPD,/test,,0x702,UPDATE_STREAM,1,33968,win11refs2tsnapshots.raw
+617,2026-05-16T16:51:51.801Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,xbpt_log_whiskey_169575.dat,0x707,INSERT_ROW INSERT_ROW SET_OBJECT,3,33970,win11refs2tsnapshots.raw
+618,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,,0x707,UPDATE_STREAM,1,33971,win11refs2tsnapshots.raw
+619,,STREAM_UPD,/test,,0x702,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,33973,win11refs2tsnapshots.raw
+620,2026-05-16T16:51:50.819Z,RENAME,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,xbpt_config_draft_453929.log,0x703,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,33974,win11refs2tsnapshots.raw
+621,2026-05-16T16:51:51.844Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805,elvis_dir_zulu_272755,0x70b,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,33976,win11refs2tsnapshots.raw
+622,2026-05-16T16:51:51.853Z,CREATE,OID 0x70c,elvis_dir_archive_133203,0x70c,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,33977,win11refs2tsnapshots.raw
+623,2026-05-16T16:51:51.878Z,CREATE,/test,xbpt_uniform_lima_991753.md,0x702,INSERT_ROW INSERT_ROW SET_OBJECT,3,33979,win11refs2tsnapshots.raw
+624,,STREAM_UPD,/test,,0x702,UPDATE_STREAM,1,33980,win11refs2tsnapshots.raw
+625,2026-05-16T16:51:51.890Z,CREATE,/test,xbpt_record_record_227971.txt,0x702,INSERT_ROW INSERT_ROW SET_OBJECT,3,33981,win11refs2tsnapshots.raw
+626,,STREAM_UPD,/test,,0x702,UPDATE_STREAM,1,33982,win11refs2tsnapshots.raw
+627,,ALLOCATE,/test,,0x702,ALLOCATE,1,33983,win11refs2tsnapshots.raw
+628,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,33984,win11refs2tsnapshots.raw
+629,2026-05-16T16:51:51.924Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,xbpt_gamma_alpha_473126.tmp,0x707,INSERT_ROW INSERT_ROW SET_OBJECT,3,33985,win11refs2tsnapshots.raw
+630,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,,0x707,UPDATE_STREAM,1,33986,win11refs2tsnapshots.raw
+631,,STREAM_UPD,/test,,0x702,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,33987,win11refs2tsnapshots.raw
+632,,STREAM_UPD,/test,,0x702,UPDATE_STREAM,1,33988,win11refs2tsnapshots.raw
+633,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,33989,win11refs2tsnapshots.raw
+634,2026-05-16T16:51:51.955Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,xbpt_papa_data_402558.bak,0x704,INSERT_ROW INSERT_ROW SET_OBJECT,3,33990,win11refs2tsnapshots.raw
+635,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,UPDATE_STREAM,1,33991,win11refs2tsnapshots.raw
+636,,REPARENT,/test,,0x702,DELETE_ROW REPARENT_TABLE INSERT_ROW,3,33992,win11refs2tsnapshots.raw
+637,2026-05-16T16:51:52.037Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,xbpt_zulu_hotel_553479.bak,0x704,INSERT_ROW INSERT_ROW SET_OBJECT,3,33993,win11refs2tsnapshots.raw
+638,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,UPDATE_STREAM,1,33994,win11refs2tsnapshots.raw
+639,2026-05-16T16:51:52.068Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805,xbpt_echo_whiskey_534063.tmp,0x70b,INSERT_ROW INSERT_ROW SET_OBJECT,3,33996,win11refs2tsnapshots.raw
+640,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805,,0x70b,UPDATE_STREAM,1,33997,win11refs2tsnapshots.raw
+641,2026-05-16T16:51:51.968Z,MOVE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,elvis_dir_yankee_334324,0x707,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW SET_PARENT_ID,5,33998,win11refs2tsnapshots.raw
+642,2021-05-18T07:16:04.999Z,RENAME,/test,xbpt_record_gamma_441485.log,0x702,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34000,win11refs2tsnapshots.raw
+643,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,UPDATE_STREAM,1,34001,win11refs2tsnapshots.raw
+644,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,UPDATE_STREAM,1,34003,win11refs2tsnapshots.raw
+645,2026-05-16T16:51:52.186Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,xbpt_yankee_output_689860.csv,0x706,INSERT_ROW INSERT_ROW SET_OBJECT,3,34004,win11refs2tsnapshots.raw
+646,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,UPDATE_STREAM,1,34005,win11refs2tsnapshots.raw
+647,2026-05-16T16:51:52.195Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805,xbpt_beta_delta_991192.tmp,0x70b,INSERT_ROW INSERT_ROW SET_OBJECT,3,34006,win11refs2tsnapshots.raw
+648,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805,,0x70b,UPDATE_STREAM,1,34007,win11refs2tsnapshots.raw
+649,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608,,0x70d,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34008,win11refs2tsnapshots.raw
+650,2026-05-16T16:51:52.210Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899,xbpt_echo_foxtrot_782748.md,0x708,INSERT_ROW INSERT_ROW SET_OBJECT,3,34009,win11refs2tsnapshots.raw
+651,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899,,0x708,UPDATE_STREAM,1,34010,win11refs2tsnapshots.raw
+652,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608,,0x70d,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34012,win11refs2tsnapshots.raw
+653,2026-05-16T16:51:52.244Z,CREATE,/test,xbpt_foxtrot_victor_595630.dat,0x702,INSERT_ROW INSERT_ROW SET_OBJECT,3,34013,win11refs2tsnapshots.raw
+654,,STREAM_UPD,/test,,0x702,UPDATE_STREAM,1,34014,win11refs2tsnapshots.raw
+655,2026-05-16T16:51:52.254Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,xbpt_yankee_india_647904.log,0x704,INSERT_ROW INSERT_ROW SET_OBJECT,3,34015,win11refs2tsnapshots.raw
+656,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,UPDATE_STREAM,1,34016,win11refs2tsnapshots.raw
+657,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,UPDATE_STREAM,1,34017,win11refs2tsnapshots.raw
+658,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608,,0x70d,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34019,win11refs2tsnapshots.raw
+659,,DELETE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899,elvis_dir_record_917619,0x708,DELETE_ROW DELETE_ROW DELETE_TABLE DELETE_ROW,4,34021,win11refs2tsnapshots.raw
+660,2026-05-16T16:51:52.267Z,RENAME,/test,elvis_dir_november_609537,0x702,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34022,win11refs2tsnapshots.raw
+661,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,ALLOCATE,1,34023,win11refs2tsnapshots.raw
+662,,REPARENT,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805,xbpt_beta_delta_991192.tmp,0x70b,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,34024,win11refs2tsnapshots.raw
+663,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,UPDATE_STREAM,1,34025,win11refs2tsnapshots.raw
+664,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608,,0x70d,UPDATE_STREAM,1,34027,win11refs2tsnapshots.raw
+665,2026-05-16T16:51:52.359Z,MOVE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,elvis_dir_backup_535345,0x704,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW SET_PARENT_ID,5,34030,win11refs2tsnapshots.raw
+666,2026-05-16T16:51:52.517Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805,xbpt_alpha_delta_830163.ini,0x70b,INSERT_ROW INSERT_ROW SET_OBJECT,3,34032,win11refs2tsnapshots.raw
+667,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805,,0x70b,UPDATE_STREAM,1,34033,win11refs2tsnapshots.raw
+668,,DELETE,/test,,0x702,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE,4,34035,win11refs2tsnapshots.raw
+669,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34036,win11refs2tsnapshots.raw
+670,2026-05-16T16:51:52.565Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,xbpt_beta_audit_333607.json,0x707,INSERT_ROW INSERT_ROW SET_OBJECT,3,34037,win11refs2tsnapshots.raw
+671,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,,0x707,UPDATE_STREAM,1,34038,win11refs2tsnapshots.raw
+672,2026-05-16T16:51:52.571Z,CREATE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,xbpt_foxtrot_config_200139.ini,0x710,INSERT_ROW INSERT_ROW SET_OBJECT,3,34039,win11refs2tsnapshots.raw
+673,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,UPDATE_STREAM,1,34040,win11refs2tsnapshots.raw
+674,2026-05-16T16:51:52.596Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805,xbpt_delta_cache_147912.bin,0x70b,INSERT_ROW INSERT_ROW SET_OBJECT,3,34042,win11refs2tsnapshots.raw
+675,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805,,0x70b,UPDATE_STREAM,1,34043,win11refs2tsnapshots.raw
+676,,REPARENT,/test,xbpt_record_record_227971.txt,0x702,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,34045,win11refs2tsnapshots.raw
+677,2026-05-16T16:51:52.644Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,xbpt_alpha_beta_546905.tmp,0x711,INSERT_ROW INSERT_ROW SET_OBJECT,3,34047,win11refs2tsnapshots.raw
+678,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,,0x711,UPDATE_STREAM,1,34048,win11refs2tsnapshots.raw
+679,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,ALLOCATE,1,34049,win11refs2tsnapshots.raw
+680,2026-05-16T16:51:52.661Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,xbpt_whiskey_kilo_275488.json,0x704,INSERT_ROW INSERT_ROW SET_OBJECT,3,34050,win11refs2tsnapshots.raw
+681,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,UPDATE_STREAM,1,34051,win11refs2tsnapshots.raw
+682,2026-05-16T16:51:52.701Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,xbpt_gamma_whiskey_418191.csv,0x711,INSERT_ROW INSERT_ROW SET_OBJECT,3,34052,win11refs2tsnapshots.raw
+683,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,,0x711,UPDATE_STREAM,1,34053,win11refs2tsnapshots.raw
+684,2026-05-16T16:51:52.712Z,CREATE,/test,xbpt_archive_sync_860921.cfg,0x702,INSERT_ROW INSERT_ROW SET_OBJECT,3,34054,win11refs2tsnapshots.raw
+685,,STREAM_UPD,/test,,0x702,UPDATE_STREAM,1,34055,win11refs2tsnapshots.raw
+686,2026-05-16T16:51:52.725Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,xbpt_trace_yankee_986396.csv,0x707,INSERT_ROW INSERT_ROW SET_OBJECT,3,34056,win11refs2tsnapshots.raw
+687,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,,0x707,UPDATE_STREAM,1,34057,win11refs2tsnapshots.raw
+688,2026-05-16T16:51:52.747Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805,xbpt_sierra_temp_920867.dat,0x70b,INSERT_ROW INSERT_ROW SET_OBJECT,3,34059,win11refs2tsnapshots.raw
+689,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805,,0x70b,UPDATE_STREAM,1,34060,win11refs2tsnapshots.raw
+690,2026-05-16T16:51:52.756Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,xbpt_hotel_sync_810225.ini,0x707,INSERT_ROW INSERT_ROW SET_OBJECT,3,34061,win11refs2tsnapshots.raw
+691,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,,0x707,UPDATE_STREAM,1,34062,win11refs2tsnapshots.raw
+692,2026-05-16T16:51:52.768Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,xbpt_quebec_foxtrot_777338.ini,0x707,INSERT_ROW INSERT_ROW SET_OBJECT,3,34063,win11refs2tsnapshots.raw
+693,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,,0x707,UPDATE_STREAM,1,34064,win11refs2tsnapshots.raw
+694,2026-05-16T16:51:52.701Z,MOVE,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,xbpt_gamma_whiskey_418191.csv,0x711,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34066,win11refs2tsnapshots.raw
+695,2026-05-16T16:51:52.865Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,xbpt_lima_lima_890070.dat,0x706,INSERT_ROW INSERT_ROW SET_OBJECT,3,34067,win11refs2tsnapshots.raw
+696,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,UPDATE_STREAM,1,34068,win11refs2tsnapshots.raw
+697,2026-05-16T16:51:52.874Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,xbpt_tango_archive_240492.tmp,0x706,INSERT_ROW INSERT_ROW SET_OBJECT,3,34069,win11refs2tsnapshots.raw
+698,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,UPDATE_STREAM,1,34070,win11refs2tsnapshots.raw
+699,,STREAM_UPD,/test,,0x702,UPDATE_STREAM,1,34072,win11refs2tsnapshots.raw
+700,,STREAM_UPD,/test/elvis_dir_record_449015,,0x70f,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34073,win11refs2tsnapshots.raw
+701,,STREAM_UPD,/test/elvis_dir_record_449015,,0x70f,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34075,win11refs2tsnapshots.raw
+702,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805,,0x70b,ALLOCATE,1,34076,win11refs2tsnapshots.raw
+703,,MODIFY,/test,,0x702,FREE,1,34078,win11refs2tsnapshots.raw
+704,,REPARENT,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,,0x711,DELETE_ROW REPARENT_TABLE INSERT_ROW,3,34079,win11refs2tsnapshots.raw
+705,2026-05-16T16:51:52.974Z,CREATE,/test/elvis_dir_record_449015,xbpt_output_papa_412411.log,0x70f,INSERT_ROW INSERT_ROW SET_OBJECT,3,34080,win11refs2tsnapshots.raw
+706,,STREAM_UPD,/test/elvis_dir_record_449015,,0x70f,UPDATE_STREAM,1,34081,win11refs2tsnapshots.raw
+707,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805,,0x70b,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34083,win11refs2tsnapshots.raw
+708,,DELETE,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264,elvis_dir_alpha_144478,0x712,DELETE_ROW DELETE_ROW DELETE_TABLE DELETE_ROW,4,34084,win11refs2tsnapshots.raw
+709,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,ALLOCATE,1,34085,win11refs2tsnapshots.raw
+710,,STREAM_UPD,/test,,0x702,UPDATE_STREAM,1,34086,win11refs2tsnapshots.raw
+711,2026-05-16T16:51:53.077Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,xbpt_mike_tango_822153.dat,0x706,INSERT_ROW INSERT_ROW SET_OBJECT,3,34087,win11refs2tsnapshots.raw
+712,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,UPDATE_STREAM,1,34088,win11refs2tsnapshots.raw
+713,2026-05-16T16:51:53.092Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,xbpt_hotel_alpha_382213.tmp,0x704,INSERT_ROW INSERT_ROW SET_OBJECT,3,34089,win11refs2tsnapshots.raw
+714,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,UPDATE_STREAM,1,34090,win11refs2tsnapshots.raw
+715,2026-05-16T16:51:53.107Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,xbpt_temp_audit_764882.bak,0x704,INSERT_ROW INSERT_ROW SET_OBJECT,3,34091,win11refs2tsnapshots.raw
+716,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,UPDATE_STREAM,1,34092,win11refs2tsnapshots.raw
+717,2026-05-16T16:51:53.114Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,xbpt_yankee_alpha_567882.json,0x704,INSERT_ROW INSERT_ROW SET_OBJECT,3,34093,win11refs2tsnapshots.raw
+718,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,UPDATE_STREAM,1,34094,win11refs2tsnapshots.raw
+719,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,,0x711,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34095,win11refs2tsnapshots.raw
+720,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,ALLOCATE,1,34096,win11refs2tsnapshots.raw
+721,2026-05-16T16:51:53.146Z,CREATE,OID 0x714,elvis_dir_whiskey_547057,0x714,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,34097,win11refs2tsnapshots.raw
+722,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805,,0x70b,ALLOCATE,1,34098,win11refs2tsnapshots.raw
+723,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,UPDATE_STREAM,1,34099,win11refs2tsnapshots.raw
+724,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805,,0x70b,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34100,win11refs2tsnapshots.raw
+725,2026-05-16T16:51:53.172Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264,xbpt_november_cache_127869.dat,0x712,INSERT_ROW INSERT_ROW SET_OBJECT,3,34101,win11refs2tsnapshots.raw
+726,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264,,0x712,UPDATE_STREAM,1,34102,win11refs2tsnapshots.raw
+727,2026-05-16T16:51:53.190Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,xbpt_lima_oscar_843603.tmp,0x706,INSERT_ROW INSERT_ROW SET_OBJECT,3,34104,win11refs2tsnapshots.raw
+728,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,UPDATE_STREAM,1,34105,win11refs2tsnapshots.raw
+729,,ALLOCATE,/test,,0x702,ALLOCATE,1,34107,win11refs2tsnapshots.raw
+730,2026-05-16T16:51:53.302Z,CREATE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,xbpt_lima_romeo_145243.txt,0x710,INSERT_ROW INSERT_ROW SET_OBJECT,3,34109,win11refs2tsnapshots.raw
+731,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,UPDATE_STREAM,1,34110,win11refs2tsnapshots.raw
+732,,MODIFY,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,UPDATE_ROW,1,34111,win11refs2tsnapshots.raw
+733,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,UPDATE_STREAM,1,34112,win11refs2tsnapshots.raw
+734,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,,0x711,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34113,win11refs2tsnapshots.raw
+735,2026-05-16T16:51:53.421Z,CREATE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,xbpt_temp_foxtrot_215860.tmp,0x710,INSERT_ROW INSERT_ROW SET_OBJECT,3,34116,win11refs2tsnapshots.raw
+736,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,UPDATE_STREAM,1,34117,win11refs2tsnapshots.raw
+737,2026-05-16T16:51:53.427Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,xbpt_config_india_582905.json,0x707,INSERT_ROW INSERT_ROW SET_OBJECT,3,34118,win11refs2tsnapshots.raw
+738,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,,0x707,UPDATE_STREAM,1,34119,win11refs2tsnapshots.raw
+739,,REPARENT,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,DELETE_ROW REPARENT_TABLE INSERT_ROW,3,34120,win11refs2tsnapshots.raw
+740,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,ALLOCATE,1,34121,win11refs2tsnapshots.raw
+741,2026-05-16T16:51:53.470Z,CREATE,/test,xbpt_foxtrot_config_966558.log,0x702,INSERT_ROW INSERT_ROW SET_OBJECT,3,34122,win11refs2tsnapshots.raw
+742,,STREAM_UPD,/test,,0x702,UPDATE_STREAM,1,34123,win11refs2tsnapshots.raw
+743,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34125,win11refs2tsnapshots.raw
+744,2026-05-16T16:51:53.514Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,xbpt_papa_audit_649170.md,0x704,INSERT_ROW INSERT_ROW SET_OBJECT,3,34126,win11refs2tsnapshots.raw
+745,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,UPDATE_STREAM,1,34127,win11refs2tsnapshots.raw
+746,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805,,0x70b,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34129,win11refs2tsnapshots.raw
+747,,REPARENT,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,DELETE_ROW REPARENT_TABLE INSERT_ROW,3,34130,win11refs2tsnapshots.raw
+748,,REPARENT,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,xbpt_report_whiskey_438679.dat,0x711,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,34131,win11refs2tsnapshots.raw
+749,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,UPDATE_STREAM,1,34132,win11refs2tsnapshots.raw
+750,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,ALLOCATE,1,34134,win11refs2tsnapshots.raw
+751,,OP,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805,,0x70b,INSERT_ROW INSERT_ROW INSERT_ROW,3,34136,win11refs2tsnapshots.raw
+752,2026-05-16T16:51:53.685Z,CREATE,OID 0x716,elvis_dir_sierra_678563,0x716,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,34137,win11refs2tsnapshots.raw
+753,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,ALLOCATE,1,34140,win11refs2tsnapshots.raw
+754,2026-05-16T16:51:52.359Z,MOVE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,xbpt_yankee_gamma_631547.txt,0x703,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34141,win11refs2tsnapshots.raw
+755,2026-05-16T16:51:53.981Z,CREATE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,xbpt_uniform_data_334904.md,0x710,INSERT_ROW INSERT_ROW SET_OBJECT,3,34142,win11refs2tsnapshots.raw
+756,,CONTAINER,,,,MOVE_CONTAINER MOVE_CONTAINER MOVE_CONTAINER MOVE_CONTAINER MOVE_CONTAINER MOVE_CONTAINER,6,34143,win11refs2tsnapshots.raw
+757,,ALLOCATE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,ALLOCATE,1,34144,win11refs2tsnapshots.raw
+758,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,UPDATE_STREAM,1,34145,win11refs2tsnapshots.raw
+759,,STREAM_UPD,/test,,0x702,UPDATE_STREAM,1,34147,win11refs2tsnapshots.raw
+760,,MODIFY,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,FREE,1,34150,win11refs2tsnapshots.raw
+761,2026-05-16T16:51:54.062Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083,xbpt_yankee_echo_729349.tmp,0x715,INSERT_ROW INSERT_ROW SET_OBJECT,3,34152,win11refs2tsnapshots.raw
+762,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083,,0x715,UPDATE_STREAM,1,34153,win11refs2tsnapshots.raw
+763,2026-05-16T16:51:54.081Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083,xbpt_record_temp_940076.txt,0x715,INSERT_ROW INSERT_ROW SET_OBJECT,3,34154,win11refs2tsnapshots.raw
+764,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083,,0x715,UPDATE_STREAM,1,34155,win11refs2tsnapshots.raw
+765,2026-05-16T16:51:54.124Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,xbpt_backup_echo_585708.csv,0x711,INSERT_ROW INSERT_ROW SET_OBJECT,3,34158,win11refs2tsnapshots.raw
+766,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,,0x711,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34159,win11refs2tsnapshots.raw
+767,,MODIFY,/test,,0x702,FREE,1,34162,win11refs2tsnapshots.raw
+768,2026-05-16T16:51:54.145Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,xbpt_record_output_751721.ini,0x704,INSERT_ROW INSERT_ROW SET_OBJECT,3,34163,win11refs2tsnapshots.raw
+769,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34164,win11refs2tsnapshots.raw
+770,2026-05-16T16:51:54.181Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083,xbpt_audit_oscar_497672.tmp,0x715,INSERT_ROW INSERT_ROW SET_OBJECT,3,34165,win11refs2tsnapshots.raw
+771,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083,,0x715,UPDATE_STREAM,1,34166,win11refs2tsnapshots.raw
+772,,STREAM_UPD,/test/elvis_dir_victor_783323,,0x717,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34167,win11refs2tsnapshots.raw
+773,2026-05-16T16:51:54.204Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083,xbpt_oscar_sierra_369457.log,0x715,INSERT_ROW INSERT_ROW SET_OBJECT,3,34169,win11refs2tsnapshots.raw
+774,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083,,0x715,UPDATE_STREAM,1,34170,win11refs2tsnapshots.raw
+775,2026-05-16T16:51:54.216Z,CREATE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,xbpt_oscar_foxtrot_635028.xml,0x710,INSERT_ROW INSERT_ROW SET_OBJECT,3,34171,win11refs2tsnapshots.raw
+776,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,UPDATE_STREAM,1,34172,win11refs2tsnapshots.raw
+777,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,UPDATE_STREAM,1,34173,win11refs2tsnapshots.raw
+778,2026-05-16T16:51:54.255Z,CREATE,/test/elvis_dir_victor_783323,xbpt_whiskey_tango_704744.ini,0x717,INSERT_ROW INSERT_ROW SET_OBJECT,3,34174,win11refs2tsnapshots.raw
+779,,STREAM_UPD,/test/elvis_dir_victor_783323,,0x717,UPDATE_STREAM,1,34175,win11refs2tsnapshots.raw
+780,,STREAM_UPD,/test,,0x702,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34178,win11refs2tsnapshots.raw
+781,2026-05-16T16:51:54.428Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083,xbpt_audit_foxtrot_604743.xml,0x715,INSERT_ROW INSERT_ROW SET_OBJECT,3,34180,win11refs2tsnapshots.raw
+782,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083,,0x715,UPDATE_STREAM,1,34181,win11refs2tsnapshots.raw
+783,2026-05-16T16:51:54.456Z,CREATE,/test,xbpt_config_output_842495.md,0x702,INSERT_ROW INSERT_ROW SET_OBJECT,3,34182,win11refs2tsnapshots.raw
+784,,STREAM_UPD,/test,,0x702,UPDATE_STREAM,1,34183,win11refs2tsnapshots.raw
+785,2026-05-16T16:51:54.465Z,CREATE,/test,xbpt_quebec_whiskey_691833.bak,0x702,INSERT_ROW INSERT_ROW SET_OBJECT,3,34184,win11refs2tsnapshots.raw
+786,,STREAM_UPD,/test,,0x702,UPDATE_STREAM,1,34185,win11refs2tsnapshots.raw
+787,2026-05-16T16:51:54.506Z,CREATE,/test/elvis_dir_record_449015,xbpt_india_delta_132534.bak,0x70f,INSERT_ROW INSERT_ROW SET_OBJECT,3,34187,win11refs2tsnapshots.raw
+788,,STREAM_UPD,/test/elvis_dir_record_449015,,0x70f,UPDATE_STREAM,1,34188,win11refs2tsnapshots.raw
+789,2026-05-16T16:51:54.516Z,CREATE,/test/elvis_dir_victor_783323,xbpt_beta_echo_315584.ini,0x717,INSERT_ROW INSERT_ROW SET_OBJECT,3,34189,win11refs2tsnapshots.raw
+790,,STREAM_UPD,/test/elvis_dir_victor_783323,,0x717,UPDATE_STREAM,1,34190,win11refs2tsnapshots.raw
+791,2026-05-16T16:51:54.563Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805,xbpt_log_backup_939898.json,0x70b,INSERT_ROW INSERT_ROW SET_OBJECT,3,34191,win11refs2tsnapshots.raw
+792,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805,,0x70b,UPDATE_STREAM,1,34192,win11refs2tsnapshots.raw
+793,2026-05-16T16:51:54.570Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083,xbpt_alpha_victor_764737.log,0x715,INSERT_ROW INSERT_ROW SET_OBJECT,3,34193,win11refs2tsnapshots.raw
+794,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083,,0x715,UPDATE_STREAM,1,34194,win11refs2tsnapshots.raw
+795,2026-05-16T16:51:54.584Z,CREATE,/test/elvis_dir_record_449015,xbpt_sierra_kilo_206137.json,0x70f,INSERT_ROW INSERT_ROW SET_OBJECT,3,34195,win11refs2tsnapshots.raw
+796,,STREAM_UPD,/test/elvis_dir_record_449015,,0x70f,UPDATE_STREAM,1,34196,win11refs2tsnapshots.raw
+797,2026-05-16T16:51:54.576Z,MOVE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083,xbpt_alpha_victor_764737.log,0x715,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34199,win11refs2tsnapshots.raw
+798,2026-05-16T16:51:54.182Z,MOVE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083,xbpt_audit_oscar_497672.tmp,0x715,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34200,win11refs2tsnapshots.raw
+799,2026-05-16T16:51:54.686Z,CREATE,/test/elvis_dir_record_449015,xbpt_india_cache_443358.ini,0x70f,INSERT_ROW INSERT_ROW SET_OBJECT,3,34201,win11refs2tsnapshots.raw
+800,,STREAM_UPD,/test/elvis_dir_record_449015,,0x70f,UPDATE_STREAM,1,34202,win11refs2tsnapshots.raw
+801,,STREAM_UPD,/test/elvis_dir_record_449015,,0x70f,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34204,win11refs2tsnapshots.raw
+802,,MODIFY,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083,,0x715,FREE,1,34206,win11refs2tsnapshots.raw
+803,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805,,0x70b,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34207,win11refs2tsnapshots.raw
+804,2026-05-16T16:51:54.805Z,CREATE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,xbpt_temp_sierra_130629.tmp,0x710,INSERT_ROW INSERT_ROW SET_OBJECT,3,34208,win11refs2tsnapshots.raw
+805,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,UPDATE_STREAM,1,34209,win11refs2tsnapshots.raw
+806,2026-05-16T16:51:54.820Z,MOVE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,elvis_dir_beta_540503,0x704,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW SET_PARENT_ID,5,34211,win11refs2tsnapshots.raw
+807,,STREAM_UPD,/test/elvis_dir_victor_783323,,0x717,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34213,win11refs2tsnapshots.raw
+808,,REPARENT,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,,0x711,DELETE_ROW REPARENT_TABLE INSERT_ROW,3,34214,win11refs2tsnapshots.raw
+809,2026-05-16T16:51:54.880Z,CREATE,/test/elvis_dir_victor_783323,xbpt_delta_echo_626074.json,0x717,INSERT_ROW INSERT_ROW SET_OBJECT,3,34215,win11refs2tsnapshots.raw
+810,,STREAM_UPD,/test/elvis_dir_victor_783323,,0x717,UPDATE_STREAM,1,34216,win11refs2tsnapshots.raw
+811,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,,0x711,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34217,win11refs2tsnapshots.raw
+812,2026-05-16T16:51:54.894Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,xbpt_alpha_victor_250409.ini,0x706,INSERT_ROW INSERT_ROW SET_OBJECT,3,34218,win11refs2tsnapshots.raw
+813,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,UPDATE_STREAM,1,34219,win11refs2tsnapshots.raw
+814,2026-05-16T16:51:54.929Z,CREATE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,xbpt_config_delta_436836.cfg,0x710,INSERT_ROW INSERT_ROW SET_OBJECT,3,34221,win11refs2tsnapshots.raw
+815,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,UPDATE_STREAM,1,34222,win11refs2tsnapshots.raw
+816,2026-05-16T16:51:54.867Z,RENAME,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,elvis_dir_archive_539743,0x706,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34223,win11refs2tsnapshots.raw
+817,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899,,0x708,UPDATE_STREAM,1,34224,win11refs2tsnapshots.raw
+818,2026-05-16T16:51:55.008Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,xbpt_yankee_foxtrot_727835.bak,0x704,INSERT_ROW INSERT_ROW SET_OBJECT,3,34227,win11refs2tsnapshots.raw
+819,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,UPDATE_STREAM,1,34228,win11refs2tsnapshots.raw
+820,,STREAM_UPD,/test/elvis_dir_victor_783323,,0x717,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34231,win11refs2tsnapshots.raw
+821,,REPARENT,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608,,0x70d,DELETE_ROW REPARENT_TABLE INSERT_ROW,3,34234,win11refs2tsnapshots.raw
+822,,DELETE,/test,,0x702,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE,4,34237,win11refs2tsnapshots.raw
+823,2026-05-16T16:51:55.124Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790,xbpt_draft_india_571157.ini,0x71a,INSERT_ROW INSERT_ROW SET_OBJECT,3,34238,win11refs2tsnapshots.raw
+824,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790,,0x71a,UPDATE_STREAM,1,34239,win11refs2tsnapshots.raw
+825,,MODIFY,/test,,0x702,FREE,1,34240,win11refs2tsnapshots.raw
+826,2026-05-16T16:51:55.192Z,CREATE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,xbpt_lima_temp_514782.csv,0x710,INSERT_ROW INSERT_ROW SET_OBJECT,3,34241,win11refs2tsnapshots.raw
+827,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,UPDATE_STREAM,1,34242,win11refs2tsnapshots.raw
+828,2026-05-16T16:51:55.205Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,xbpt_mike_audit_688657.cfg,0x711,INSERT_ROW INSERT_ROW SET_OBJECT,3,34243,win11refs2tsnapshots.raw
+829,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,,0x711,UPDATE_STREAM,1,34244,win11refs2tsnapshots.raw
+830,,DELETE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805,,0x70b,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE,4,34245,win11refs2tsnapshots.raw
+831,,MODIFY,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790,,0x71a,UPDATE_ROW,1,34246,win11refs2tsnapshots.raw
+832,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790,,0x71a,UPDATE_STREAM,1,34247,win11refs2tsnapshots.raw
+833,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608,,0x70d,ALLOCATE,1,34248,win11refs2tsnapshots.raw
+834,2026-05-16T16:51:55.286Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,xbpt_sync_echo_229861.md,0x706,INSERT_ROW INSERT_ROW SET_OBJECT,3,34249,win11refs2tsnapshots.raw
+835,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,UPDATE_STREAM,1,34250,win11refs2tsnapshots.raw
+836,2026-05-16T16:51:55.113Z,RENAME,/test,elvis_dir_november_369871,0x702,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34251,win11refs2tsnapshots.raw
+837,,STREAM_UPD,/test/elvis_dir_victor_783323,,0x717,UPDATE_STREAM,1,34253,win11refs2tsnapshots.raw
+838,2026-05-16T16:51:55.331Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,xbpt_audit_india_563500.bin,0x706,INSERT_ROW INSERT_ROW SET_OBJECT,3,34254,win11refs2tsnapshots.raw
+839,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,UPDATE_STREAM,1,34255,win11refs2tsnapshots.raw
+840,2026-05-16T16:51:55.368Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,xbpt_audit_data_566396.txt,0x706,INSERT_ROW INSERT_ROW SET_OBJECT,3,34257,win11refs2tsnapshots.raw
+841,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,UPDATE_STREAM,1,34258,win11refs2tsnapshots.raw
+842,2026-05-16T16:51:55.205Z,MOVE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,elvis_dir_beta_261576,0x706,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW SET_PARENT_ID,5,34259,win11refs2tsnapshots.raw
+843,2026-05-16T16:51:55.427Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790,xbpt_lima_uniform_330272.xml,0x71a,INSERT_ROW INSERT_ROW SET_OBJECT,3,34260,win11refs2tsnapshots.raw
+844,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790,,0x71a,UPDATE_STREAM,1,34261,win11refs2tsnapshots.raw
+845,,STREAM_UPD,/test/elvis_dir_victor_783323,,0x717,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34262,win11refs2tsnapshots.raw
+846,2026-05-16T16:51:55.442Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,xbpt_config_archive_855545.dat,0x704,INSERT_ROW INSERT_ROW SET_OBJECT,3,34263,win11refs2tsnapshots.raw
+847,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,UPDATE_STREAM,1,34264,win11refs2tsnapshots.raw
+848,2026-05-16T16:51:55.450Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,xbpt_foxtrot_alpha_964103.json,0x711,INSERT_ROW INSERT_ROW SET_OBJECT,3,34265,win11refs2tsnapshots.raw
+849,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,,0x711,UPDATE_STREAM,1,34266,win11refs2tsnapshots.raw
+850,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790,,0x71a,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34268,win11refs2tsnapshots.raw
+851,2026-05-16T16:51:55.485Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790,xbpt_foxtrot_romeo_979913.json,0x71a,INSERT_ROW INSERT_ROW SET_OBJECT,3,34269,win11refs2tsnapshots.raw
+852,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790,,0x71a,UPDATE_STREAM,1,34270,win11refs2tsnapshots.raw
+853,,REPARENT,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899,xbpt_echo_foxtrot_782748.md,0x708,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,34277,win11refs2tsnapshots.raw
+854,2026-05-16T16:51:55.549Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509,xbpt_archive_archive_963000.bin,0x719,INSERT_ROW INSERT_ROW SET_OBJECT,3,34278,win11refs2tsnapshots.raw
+855,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509,,0x719,UPDATE_STREAM,1,34279,win11refs2tsnapshots.raw
+856,,STREAM_UPD,/test/elvis_dir_victor_783323,,0x717,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34280,win11refs2tsnapshots.raw
+857,2026-05-16T16:51:53.164Z,MOVE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805,xbpt_romeo_output_514691.txt,0x70b,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34282,win11refs2tsnapshots.raw
+858,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509,,0x719,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34284,win11refs2tsnapshots.raw
+859,2026-05-16T16:51:55.665Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,xbpt_whiskey_romeo_486272.ini,0x704,INSERT_ROW INSERT_ROW SET_OBJECT,3,34286,win11refs2tsnapshots.raw
+860,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,UPDATE_STREAM,1,34287,win11refs2tsnapshots.raw
+861,2026-05-16T16:51:55.673Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,xbpt_archive_temp_427331.xml,0x706,INSERT_ROW INSERT_ROW SET_OBJECT,3,34288,win11refs2tsnapshots.raw
+862,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,UPDATE_STREAM,1,34289,win11refs2tsnapshots.raw
+863,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083,,0x715,ALLOCATE,1,34290,win11refs2tsnapshots.raw
+864,,MODIFY,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,FREE,1,34291,win11refs2tsnapshots.raw
+865,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34293,win11refs2tsnapshots.raw
+866,2026-05-16T16:51:55.816Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,xbpt_echo_tango_714597.log,0x707,INSERT_ROW INSERT_ROW SET_OBJECT,3,34295,win11refs2tsnapshots.raw
+867,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,,0x707,UPDATE_STREAM,1,34296,win11refs2tsnapshots.raw
+868,,DELETE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE,4,34297,win11refs2tsnapshots.raw
+869,2026-05-16T16:51:55.897Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790,xbpt_archive_log_561904.tmp,0x71a,INSERT_ROW INSERT_ROW SET_OBJECT,3,34299,win11refs2tsnapshots.raw
+870,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790,,0x71a,UPDATE_STREAM,1,34300,win11refs2tsnapshots.raw
+871,,STREAM_UPD,/test/elvis_dir_victor_783323,,0x717,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34301,win11refs2tsnapshots.raw
+872,,REPARENT,/test/elvis_dir_victor_783323,xbpt_lima_mike_416685.csv,0x717,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,34302,win11refs2tsnapshots.raw
+873,2026-05-16T16:51:55.381Z,RENAME,/test,elvis_dir_papa_268291,0x702,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34304,win11refs2tsnapshots.raw
+874,2026-05-16T16:51:55.946Z,CREATE,/test/elvis_dir_record_449015,xbpt_draft_quebec_447516.csv,0x70f,INSERT_ROW INSERT_ROW SET_OBJECT,3,34305,win11refs2tsnapshots.raw
+875,,STREAM_UPD,/test/elvis_dir_record_449015,,0x70f,UPDATE_STREAM,1,34306,win11refs2tsnapshots.raw
+876,2026-05-16T16:51:55.956Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,xbpt_tango_victor_844323.json,0x706,INSERT_ROW INSERT_ROW SET_OBJECT,3,34307,win11refs2tsnapshots.raw
+877,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,UPDATE_STREAM,1,34308,win11refs2tsnapshots.raw
+878,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,UPDATE_STREAM,1,34309,win11refs2tsnapshots.raw
+879,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264,,0x712,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34310,win11refs2tsnapshots.raw
+880,2026-05-16T16:51:56.046Z,CREATE,OID 0x71e,elvis_dir_echo_418892,0x71e,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,34312,win11refs2tsnapshots.raw
+881,,STREAM_UPD,/test/elvis_dir_record_449015,,0x70f,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34314,win11refs2tsnapshots.raw
+882,2026-05-16T16:51:56.114Z,CREATE,/test/elvis_dir_record_449015,xbpt_november_november_194585.ini,0x70f,INSERT_ROW INSERT_ROW SET_OBJECT,3,34317,win11refs2tsnapshots.raw
+883,,STREAM_UPD,/test/elvis_dir_record_449015,,0x70f,UPDATE_STREAM,1,34318,win11refs2tsnapshots.raw
+884,,REPARENT,/test,xbpt_quebec_whiskey_691833.bak,0x702,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,34319,win11refs2tsnapshots.raw
+885,,DELETE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083,elvis_dir_sierra_678563,0x715,DELETE_ROW DELETE_ROW DELETE_TABLE DELETE_ROW,4,34320,win11refs2tsnapshots.raw
+886,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398,,0x718,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34321,win11refs2tsnapshots.raw
+887,2026-05-16T16:51:56.171Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264,xbpt_uniform_cache_833806.bak,0x712,INSERT_ROW INSERT_ROW SET_OBJECT,3,34322,win11refs2tsnapshots.raw
+888,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264,,0x712,UPDATE_STREAM,1,34323,win11refs2tsnapshots.raw
+889,,STREAM_UPD,OID 0x71e,,0x71e,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34324,win11refs2tsnapshots.raw
+890,2026-05-16T16:51:56.146Z,RENAME,/test/elvis_dir_victor_783323,elvis_dir_audit_388279,0x717,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34325,win11refs2tsnapshots.raw
+891,2026-05-16T16:51:56.193Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,xbpt_sierra_sierra_406804.tmp,0x704,INSERT_ROW INSERT_ROW SET_OBJECT,3,34326,win11refs2tsnapshots.raw
+892,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,UPDATE_STREAM,1,34327,win11refs2tsnapshots.raw
+893,2026-05-16T16:51:56.094Z,RENAME,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,elvis_dir_quebec_873661,0x707,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34328,win11refs2tsnapshots.raw
+894,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,UPDATE_STREAM,1,34329,win11refs2tsnapshots.raw
+895,2026-05-16T16:51:55.644Z,RENAME,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,elvis_dir_audit_449941,0x711,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34330,win11refs2tsnapshots.raw
+896,2026-05-16T16:51:56.297Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264,xbpt_beta_report_756229.csv,0x712,INSERT_ROW INSERT_ROW SET_OBJECT,3,34331,win11refs2tsnapshots.raw
+897,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264,,0x712,UPDATE_STREAM,1,34332,win11refs2tsnapshots.raw
+898,,STREAM_UPD,/test,,0x702,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34334,win11refs2tsnapshots.raw
+899,2026-05-16T16:51:56.320Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,xbpt_delta_sierra_216359.bin,0x704,INSERT_ROW INSERT_ROW SET_OBJECT,3,34335,win11refs2tsnapshots.raw
+900,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,UPDATE_STREAM,1,34336,win11refs2tsnapshots.raw
+901,,STREAM_UPD,/test/elvis_dir_record_449015,,0x70f,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34337,win11refs2tsnapshots.raw
+902,2026-05-16T16:51:56.335Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398,xbpt_data_beta_187732.md,0x718,INSERT_ROW INSERT_ROW SET_OBJECT,3,34338,win11refs2tsnapshots.raw
+903,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398,,0x718,UPDATE_STREAM,1,34339,win11refs2tsnapshots.raw
+904,2026-05-16T16:51:56.344Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398,xbpt_hotel_cache_656385.bin,0x718,INSERT_ROW INSERT_ROW SET_OBJECT,3,34340,win11refs2tsnapshots.raw
+905,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398,,0x718,UPDATE_STREAM,1,34341,win11refs2tsnapshots.raw
+906,,DELETE,/test/elvis_dir_victor_783323,xbpt_mike_index_566002.csv,0x717,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_ROW DELETE_ROW DELETE_TABLE,6,34343,win11refs2tsnapshots.raw
+907,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398,,0x718,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34344,win11refs2tsnapshots.raw
+908,2026-05-16T16:51:56.400Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,xbpt_yankee_log_978386.xml,0x703,INSERT_ROW INSERT_ROW SET_OBJECT,3,34345,win11refs2tsnapshots.raw
+909,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,UPDATE_STREAM,1,34346,win11refs2tsnapshots.raw
+910,2026-05-16T16:51:56.259Z,RENAME,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,xbpt_quebec_backup_495340.cfg,0x711,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34347,win11refs2tsnapshots.raw
+911,2026-05-16T16:51:56.424Z,CREATE,/test/elvis_dir_victor_783323,xbpt_data_romeo_946788.bin,0x717,INSERT_ROW INSERT_ROW SET_OBJECT,3,34348,win11refs2tsnapshots.raw
+912,,STREAM_UPD,/test/elvis_dir_victor_783323,,0x717,UPDATE_STREAM,1,34349,win11refs2tsnapshots.raw
+913,2026-05-16T16:51:56.437Z,CREATE,/test/elvis_dir_record_449015,xbpt_delta_config_202215.bin,0x70f,INSERT_ROW INSERT_ROW SET_OBJECT,3,34350,win11refs2tsnapshots.raw
+914,,STREAM_UPD,/test/elvis_dir_record_449015,,0x70f,UPDATE_STREAM,1,34351,win11refs2tsnapshots.raw
+915,,DELETE,OID 0x71e,,0x71e,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE,4,34352,win11refs2tsnapshots.raw
+916,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34353,win11refs2tsnapshots.raw
+917,,MODIFY,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,FREE,1,34354,win11refs2tsnapshots.raw
+918,2026-05-16T16:51:56.529Z,CREATE,OID 0x720,elvis_dir_report_869722,0x720,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,34355,win11refs2tsnapshots.raw
+919,2026-05-16T16:51:56.550Z,CREATE,/test,xbpt_india_trace_307426.json,0x702,INSERT_ROW INSERT_ROW SET_OBJECT,3,34357,win11refs2tsnapshots.raw
+920,,STREAM_UPD,/test,,0x702,UPDATE_STREAM,1,34358,win11refs2tsnapshots.raw
+921,2026-05-16T16:51:56.571Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398,xbpt_india_temp_254875.bak,0x718,INSERT_ROW INSERT_ROW SET_OBJECT,3,34359,win11refs2tsnapshots.raw
+922,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398,,0x718,UPDATE_STREAM,1,34360,win11refs2tsnapshots.raw
+923,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,ALLOCATE,1,34362,win11refs2tsnapshots.raw
+924,2026-05-16T16:51:52.204Z,MOVE,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608,xbpt_archive_sync_589134.csv,0x70d,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34363,win11refs2tsnapshots.raw
+925,,ENTRY_REMOVE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398,xbpt_data_beta_187732.md,0x718,DELETE_ROW DELETE_ROW UPDATE_DATA_WITH,3,34364,win11refs2tsnapshots.raw
+926,2026-05-16T16:51:56.582Z,RENAME,/test,elvis_dir_audit_430310,0x702,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34365,win11refs2tsnapshots.raw
+927,2026-05-16T16:51:53.804Z,MOVE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,xbpt_lima_romeo_145243.txt,0x710,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34366,win11refs2tsnapshots.raw
+928,2026-05-16T16:51:56.664Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,xbpt_tango_draft_409450.csv,0x706,INSERT_ROW INSERT_ROW SET_OBJECT,3,34367,win11refs2tsnapshots.raw
+929,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,UPDATE_STREAM,1,34368,win11refs2tsnapshots.raw
+930,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264,,0x712,ALLOCATE,1,34369,win11refs2tsnapshots.raw
+931,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,UPDATE_STREAM,1,34370,win11refs2tsnapshots.raw
+932,2026-05-16T16:51:56.587Z,MOVE,/test/elvis_dir_victor_783323,elvis_dir_papa_867118,0x717,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW SET_PARENT_ID,5,34371,win11refs2tsnapshots.raw
+933,2026-05-16T16:51:53.130Z,MOVE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,xbpt_backup_delta_875492.txt,0x704,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34372,win11refs2tsnapshots.raw
+934,2026-05-16T16:51:56.768Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235,elvis_dir_zulu_127761,0x721,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,34373,win11refs2tsnapshots.raw
+935,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,ALLOCATE,1,34374,win11refs2tsnapshots.raw
+936,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264,,0x712,ALLOCATE,1,34376,win11refs2tsnapshots.raw
+937,,MODIFY,/test,,0x702,UPDATE_ROW,1,34377,win11refs2tsnapshots.raw
+938,,STREAM_UPD,/test,,0x702,UPDATE_STREAM,1,34378,win11refs2tsnapshots.raw
+939,2026-05-16T16:51:54.576Z,RENAME,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,xbpt_gamma_beta_871678.log,0x711,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34379,win11refs2tsnapshots.raw
+940,,DELETE,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,,0x711,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE,4,34380,win11refs2tsnapshots.raw
+941,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,,0x707,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34381,win11refs2tsnapshots.raw
+942,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34383,win11refs2tsnapshots.raw
+943,2026-05-16T16:51:56.946Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235,xbpt_mike_india_444246.xml,0x721,INSERT_ROW INSERT_ROW SET_OBJECT,3,34384,win11refs2tsnapshots.raw
+944,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235,,0x721,UPDATE_STREAM,1,34385,win11refs2tsnapshots.raw
+945,2026-05-16T16:51:57.016Z,CREATE,/test/elvis_dir_record_449015,xbpt_report_echo_124913.json,0x70f,INSERT_ROW INSERT_ROW SET_OBJECT,3,34387,win11refs2tsnapshots.raw
+946,,STREAM_UPD,/test/elvis_dir_record_449015,,0x70f,UPDATE_STREAM,1,34388,win11refs2tsnapshots.raw
+947,2026-05-16T16:51:57.022Z,CREATE,/test,xbpt_tango_hotel_685730.json,0x702,INSERT_ROW INSERT_ROW SET_OBJECT,3,34389,win11refs2tsnapshots.raw
+948,,STREAM_UPD,/test,,0x702,UPDATE_STREAM,1,34390,win11refs2tsnapshots.raw
+949,2026-05-16T16:51:57.046Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,xbpt_quebec_audit_121864.cfg,0x707,INSERT_ROW INSERT_ROW SET_OBJECT,3,34392,win11refs2tsnapshots.raw
+950,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,,0x707,UPDATE_STREAM,1,34393,win11refs2tsnapshots.raw
+951,2026-05-16T16:51:57.052Z,CREATE,/test,xbpt_draft_tango_958869.bin,0x702,INSERT_ROW INSERT_ROW SET_OBJECT,3,34394,win11refs2tsnapshots.raw
+952,,STREAM_UPD,/test,,0x702,UPDATE_STREAM,1,34395,win11refs2tsnapshots.raw
+953,,STREAM_UPD,/test/elvis_dir_record_449015,,0x70f,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34396,win11refs2tsnapshots.raw
+954,2026-05-16T16:51:57.069Z,CREATE,/test,xbpt_config_log_714507.md,0x702,INSERT_ROW INSERT_ROW SET_OBJECT,3,34397,win11refs2tsnapshots.raw
+955,,STREAM_UPD,/test,,0x702,UPDATE_STREAM,1,34398,win11refs2tsnapshots.raw
+956,,DELETE,/test/elvis_dir_record_449015,,0x70f,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE,4,34399,win11refs2tsnapshots.raw
+957,,ALLOCATE,/test/elvis_dir_index_149423,,0x722,ALLOCATE,1,34401,win11refs2tsnapshots.raw
+958,2026-05-16T16:51:57.146Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,xbpt_india_whiskey_159747.csv,0x707,INSERT_ROW INSERT_ROW SET_OBJECT,3,34402,win11refs2tsnapshots.raw
+959,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,,0x707,UPDATE_STREAM,1,34403,win11refs2tsnapshots.raw
+960,2026-05-16T16:51:56.748Z,RENAME,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,elvis_dir_zulu_460102,0x707,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34404,win11refs2tsnapshots.raw
+961,2026-05-16T16:51:57.197Z,CREATE,/test,xbpt_hotel_alpha_375121.txt,0x702,INSERT_ROW INSERT_ROW SET_OBJECT,3,34405,win11refs2tsnapshots.raw
+962,,STREAM_UPD,/test,,0x702,UPDATE_STREAM,1,34406,win11refs2tsnapshots.raw
+963,,REPARENT,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,xbpt_gamma_trace_145085.json,0x704,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,34408,win11refs2tsnapshots.raw
+964,,REPARENT,/test/elvis_dir_papa_805353/elvis_dir_november_478580,xbpt_config_delta_436836.cfg,0x710,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,34410,win11refs2tsnapshots.raw
+965,2026-05-16T16:51:57.265Z,CREATE,/test,xbpt_symlink_hotel_632659.lnk,0x702,INSERT_ROW INSERT_ROW SET_OBJECT,3,34411,win11refs2tsnapshots.raw
+966,,ENTRY_REMOVE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,xbpt_config_delta_436836.cfg,0x710,DELETE_ROW DELETE_ROW,2,34413,win11refs2tsnapshots.raw
+967,,STREAM_UPD,/test/elvis_dir_record_449015,,0x70f,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34416,win11refs2tsnapshots.raw
+968,,DELETE,/test,,0x702,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE,4,34417,win11refs2tsnapshots.raw
+969,,REPARENT,/test/elvis_dir_record_449015,xbpt_uniform_alpha_635589.csv,0x70f,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,34418,win11refs2tsnapshots.raw
+970,,REPARENT,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,DELETE_ROW REPARENT_TABLE INSERT_ROW,3,34419,win11refs2tsnapshots.raw
+971,2026-05-16T16:51:57.422Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,xbpt_audit_log_130131.ini,0x706,INSERT_ROW INSERT_ROW SET_OBJECT,3,34420,win11refs2tsnapshots.raw
+972,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,UPDATE_STREAM,1,34421,win11refs2tsnapshots.raw
+973,,DELETE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790,,0x71a,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE,4,34422,win11refs2tsnapshots.raw
+974,,STREAM_UPD,/test/elvis_dir_india_800575,,0x723,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34423,win11refs2tsnapshots.raw
+975,2026-05-16T16:51:57.457Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,xbpt_report_alpha_806856.csv,0x707,INSERT_ROW INSERT_ROW SET_OBJECT,3,34424,win11refs2tsnapshots.raw
+976,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,,0x707,UPDATE_STREAM,1,34425,win11refs2tsnapshots.raw
+977,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235,,0x721,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34426,win11refs2tsnapshots.raw
+978,,REPARENT,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,xbpt_lima_cache_587912.csv,0x711,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,34427,win11refs2tsnapshots.raw
+979,,DELETE,OID 0x71e,elvis_dir_report_869722,0x71e,DELETE_ROW DELETE_ROW DELETE_TABLE DELETE_ROW,4,34428,win11refs2tsnapshots.raw
+980,2026-05-16T16:51:57.533Z,CREATE,/test/elvis_dir_india_800575,xbpt_draft_victor_387228.txt,0x723,INSERT_ROW INSERT_ROW SET_OBJECT,3,34433,win11refs2tsnapshots.raw
+981,,STREAM_UPD,/test/elvis_dir_india_800575,,0x723,UPDATE_STREAM,1,34434,win11refs2tsnapshots.raw
+982,2026-05-16T16:51:57.578Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_archive_704644,xbpt_uniform_oscar_320878.log,0x724,INSERT_ROW INSERT_ROW SET_OBJECT,3,34436,win11refs2tsnapshots.raw
+983,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_archive_704644,,0x724,UPDATE_STREAM,1,34437,win11refs2tsnapshots.raw
+984,2026-05-16T16:51:57.358Z,RENAME,/test,elvis_dir_log_202031,0x702,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34441,win11refs2tsnapshots.raw
+985,2026-05-16T16:51:51.832Z,MOVE,/test/elvis_dir_record_449015,xbpt_uniform_config_360967.cfg,0x70f,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34444,win11refs2tsnapshots.raw
+986,,ALLOCATE,/test,,0x702,ALLOCATE,1,34446,win11refs2tsnapshots.raw
+987,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,UPDATE_STREAM,1,34447,win11refs2tsnapshots.raw
+988,,REPARENT,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,xbpt_beta_audit_333607.json,0x707,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,34448,win11refs2tsnapshots.raw
+989,,REPARENT,/test/elvis_dir_record_449015,xbpt_report_echo_124913.json,0x70f,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,34449,win11refs2tsnapshots.raw
+990,2026-05-16T16:51:57.392Z,RENAME,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,elvis_dir_kilo_908237,0x707,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34450,win11refs2tsnapshots.raw
+991,2026-05-16T16:51:57.770Z,CREATE,/test/elvis_dir_record_449015,xbpt_whiskey_sync_681180.xml,0x70f,INSERT_ROW INSERT_ROW SET_OBJECT,3,34451,win11refs2tsnapshots.raw
+992,,STREAM_UPD,/test/elvis_dir_record_449015,,0x70f,UPDATE_STREAM,1,34452,win11refs2tsnapshots.raw
+993,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34453,win11refs2tsnapshots.raw
+994,,STREAM_UPD,/test/elvis_dir_india_800575,,0x723,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34455,win11refs2tsnapshots.raw
+995,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,,0x707,ALLOCATE,1,34456,win11refs2tsnapshots.raw
+996,2026-05-16T16:51:57.921Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235,xbpt_sierra_record_710410.bin,0x721,INSERT_ROW INSERT_ROW SET_OBJECT,3,34457,win11refs2tsnapshots.raw
+997,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235,,0x721,UPDATE_STREAM,1,34458,win11refs2tsnapshots.raw
+998,2026-05-16T16:51:57.955Z,CREATE,/test/elvis_dir_record_449015,xbpt_november_quebec_231876.bak,0x70f,INSERT_ROW INSERT_ROW SET_OBJECT,3,34460,win11refs2tsnapshots.raw
+999,,STREAM_UPD,/test/elvis_dir_record_449015,,0x70f,UPDATE_STREAM,1,34461,win11refs2tsnapshots.raw
+1000,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34463,win11refs2tsnapshots.raw
+1001,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,,0x711,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34466,win11refs2tsnapshots.raw
+1002,2026-05-16T16:51:58.023Z,CREATE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,xbpt_november_report_437342.bin,0x710,INSERT_ROW INSERT_ROW SET_OBJECT,3,34467,win11refs2tsnapshots.raw
+1003,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,UPDATE_STREAM,1,34468,win11refs2tsnapshots.raw
+1004,,MODIFY,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,UPDATE_ROW,1,34469,win11refs2tsnapshots.raw
+1005,2026-05-16T16:51:58.052Z,CREATE,OID 0x726,elvis_dir_sierra_206622,0x726,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,34470,win11refs2tsnapshots.raw
+1006,2026-05-16T16:51:58.062Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,xbpt_sierra_papa_124233.bin,0x706,INSERT_ROW INSERT_ROW SET_OBJECT,3,34471,win11refs2tsnapshots.raw
+1007,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,UPDATE_STREAM,1,34472,win11refs2tsnapshots.raw
+1008,,CONTAINER,,,,MOVE_CONTAINER MOVE_CONTAINER MOVE_CONTAINER MOVE_CONTAINER MOVE_CONTAINER MOVE_CONTAINER,6,34476,win11refs2tsnapshots.raw
+1009,,MODIFY,/test,,0x702,FREE,1,34477,win11refs2tsnapshots.raw
+1010,2026-05-16T16:51:58.003Z,MOVE,/test/elvis_dir_record_449015,elvis_dir_sync_733187,0x70f,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW SET_PARENT_ID,5,34481,win11refs2tsnapshots.raw
+1011,,MODIFY,/test/elvis_dir_index_149423,,0x722,FREE,1,34483,win11refs2tsnapshots.raw
+1012,2026-05-16T16:51:58.235Z,CREATE,/test/elvis_dir_india_800575,xbpt_kilo_config_292054.json,0x723,INSERT_ROW INSERT_ROW SET_OBJECT,3,34484,win11refs2tsnapshots.raw
+1013,,MODIFY,/test/elvis_dir_india_800575,,0x723,UPDATE_ROW,1,34485,win11refs2tsnapshots.raw
+1014,2026-05-16T16:51:54.031Z,MOVE,/test,xbpt_victor_alpha_349060.log,0x702,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34491,win11refs2tsnapshots.raw
+1015,2023-11-27T07:16:30.165Z,MOVE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,xbpt_sierra_sierra_406804.tmp,0x704,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34492,win11refs2tsnapshots.raw
+1016,2026-05-16T16:51:58.334Z,CREATE,/test/elvis_dir_papa_805353,xbpt_mike_oscar_154118.csv,0x725,INSERT_ROW INSERT_ROW SET_OBJECT,3,34493,win11refs2tsnapshots.raw
+1017,,STREAM_UPD,/test/elvis_dir_papa_805353,,0x725,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34494,win11refs2tsnapshots.raw
+1018,,ALLOCATE,/test/elvis_dir_papa_805353,,0x725,ALLOCATE,1,34497,win11refs2tsnapshots.raw
+1019,,MODIFY,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398,,0x718,FREE,1,34498,win11refs2tsnapshots.raw
+1020,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,,0x707,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34499,win11refs2tsnapshots.raw
+1021,,ALLOCATE,/test/elvis_dir_record_449015,,0x70f,ALLOCATE,1,34502,win11refs2tsnapshots.raw
+1022,,MODIFY,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,,0x711,UPDATE_ROW,1,34503,win11refs2tsnapshots.raw
+1023,,ALLOCATE,/test/elvis_dir_record_449015,,0x70f,ALLOCATE,1,34506,win11refs2tsnapshots.raw
+1024,,REPARENT,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805,xbpt_echo_whiskey_534063.tmp,0x70b,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,34507,win11refs2tsnapshots.raw
+1025,,ALLOCATE,/test,,0x702,ALLOCATE,1,34508,win11refs2tsnapshots.raw
+1026,,REPARENT,/test/elvis_dir_india_800575,xbpt_draft_victor_387228.txt,0x723,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,34509,win11refs2tsnapshots.raw
+1027,2026-05-16T16:51:58.591Z,CREATE,/test/elvis_dir_record_449015,xbpt_gamma_archive_952302.cfg,0x70f,INSERT_ROW INSERT_ROW SET_OBJECT,3,34511,win11refs2tsnapshots.raw
+1028,,UPDATE,/test/elvis_dir_record_449015,,0x70f,DELETE_ROW INSERT_ROW,2,34512,win11refs2tsnapshots.raw
+1029,,DELETE,/test,,0x702,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE,4,34513,win11refs2tsnapshots.raw
+1030,2026-05-16T16:51:58.615Z,CREATE,OID 0x728,elvis_dir_mike_728074,0x728,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,34514,win11refs2tsnapshots.raw
+1031,,MODIFY,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,FREE,1,34518,win11refs2tsnapshots.raw
+1032,,ALLOCATE,/test,,0x702,ALLOCATE,1,34519,win11refs2tsnapshots.raw
+1033,,REPARENT,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,xbpt_yankee_log_978386.xml,0x703,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,34521,win11refs2tsnapshots.raw
+1034,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,UPDATE_STREAM,1,34522,win11refs2tsnapshots.raw
+1035,,STREAM_UPD,/test/elvis_dir_victor_783323,,0x717,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34523,win11refs2tsnapshots.raw
+1036,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790,,0x71a,ALLOCATE,1,34524,win11refs2tsnapshots.raw
+1037,,STREAM_UPD,/test/elvis_dir_india_800575,,0x723,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34525,win11refs2tsnapshots.raw
+1038,2026-05-16T16:51:58.393Z,MOVE,/test/elvis_dir_victor_783323,elvis_dir_record_340186,0x717,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW SET_PARENT_ID,5,34527,win11refs2tsnapshots.raw
+1039,,ALLOCATE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,ALLOCATE,1,34529,win11refs2tsnapshots.raw
+1040,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,,0x711,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34531,win11refs2tsnapshots.raw
+1041,2026-05-16T16:51:58.902Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,xbpt_temp_mike_134457.bak,0x711,INSERT_ROW INSERT_ROW SET_OBJECT,3,34532,win11refs2tsnapshots.raw
+1042,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,,0x711,UPDATE_STREAM,1,34533,win11refs2tsnapshots.raw
+1043,,STREAM_UPD,/test/elvis_dir_index_149423,,0x722,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34535,win11refs2tsnapshots.raw
+1044,2026-05-16T16:51:58.945Z,CREATE,/test/elvis_dir_victor_783323,xbpt_romeo_quebec_189040.ini,0x717,INSERT_ROW INSERT_ROW SET_OBJECT,3,34537,win11refs2tsnapshots.raw
+1045,,STREAM_UPD,/test/elvis_dir_victor_783323,,0x717,UPDATE_STREAM,1,34538,win11refs2tsnapshots.raw
+1046,,DELETE,/test/elvis_dir_papa_805353,,0x725,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE,4,34540,win11refs2tsnapshots.raw
+1047,,STREAM_UPD,/test/elvis_dir_index_149423,,0x722,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34541,win11refs2tsnapshots.raw
+1048,2026-05-16T16:51:59.000Z,CREATE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,xbpt_delta_report_275249.dat,0x710,INSERT_ROW INSERT_ROW SET_OBJECT,3,34542,win11refs2tsnapshots.raw
+1049,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,UPDATE_STREAM,1,34543,win11refs2tsnapshots.raw
+1050,2026-05-16T16:51:59.006Z,CREATE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,xbpt_delta_echo_268401.csv,0x710,INSERT_ROW INSERT_ROW SET_OBJECT,3,34544,win11refs2tsnapshots.raw
+1051,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,UPDATE_STREAM,1,34545,win11refs2tsnapshots.raw
+1052,2026-05-16T16:51:59.048Z,CREATE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,xbpt_echo_uniform_357255.txt,0x710,INSERT_ROW INSERT_ROW SET_OBJECT,3,34546,win11refs2tsnapshots.raw
+1053,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,UPDATE_STREAM,1,34547,win11refs2tsnapshots.raw
+1054,2026-05-16T16:51:59.060Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_lima_252141,elvis_dir_output_527690,0x72a,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,34548,win11refs2tsnapshots.raw
+1055,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_lima_252141,,0x72a,ALLOCATE,1,34551,win11refs2tsnapshots.raw
+1056,2026-05-16T16:51:58.902Z,MOVE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,elvis_dir_trace_317145,0x710,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW SET_PARENT_ID,5,34552,win11refs2tsnapshots.raw
+1057,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,UPDATE_STREAM,1,34553,win11refs2tsnapshots.raw
+1058,2026-05-16T16:51:59.071Z,RENAME,/test,elvis_dir_trace_430316,0x702,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34555,win11refs2tsnapshots.raw
+1059,2026-05-16T16:51:59.156Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235,xbpt_zulu_hotel_356824.dat,0x721,INSERT_ROW INSERT_ROW SET_OBJECT,3,34556,win11refs2tsnapshots.raw
+1060,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235,,0x721,UPDATE_STREAM,1,34557,win11refs2tsnapshots.raw
+1061,,REPARENT,/test/elvis_dir_record_449015,,0x70f,DELETE_ROW REPARENT_TABLE INSERT_ROW,3,34561,win11refs2tsnapshots.raw
+1062,2026-05-16T16:51:59.263Z,CREATE,/test/elvis_dir_victor_783323,xbpt_trace_hotel_502150.xml,0x717,INSERT_ROW INSERT_ROW SET_OBJECT,3,34562,win11refs2tsnapshots.raw
+1063,,STREAM_UPD,/test/elvis_dir_victor_783323,,0x717,UPDATE_STREAM,1,34563,win11refs2tsnapshots.raw
+1064,,DELETE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE,4,34564,win11refs2tsnapshots.raw
+1065,,STREAM_UPD,/test/elvis_dir_papa_805353,,0x725,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34565,win11refs2tsnapshots.raw
+1066,,STREAM_UPD,/test/elvis_dir_papa_805353,,0x725,UPDATE_STREAM,1,34566,win11refs2tsnapshots.raw
+1067,,REPARENT,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083,xbpt_audit_foxtrot_604743.xml,0x715,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,34568,win11refs2tsnapshots.raw
+1068,2026-05-16T16:51:55.692Z,MOVE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083,xbpt_audit_foxtrot_604743.xml,0x715,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34569,win11refs2tsnapshots.raw
+1069,2026-05-16T16:51:59.380Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235,xbpt_index_november_257579.json,0x721,INSERT_ROW INSERT_ROW SET_OBJECT,3,34571,win11refs2tsnapshots.raw
+1070,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235,,0x721,UPDATE_STREAM,1,34572,win11refs2tsnapshots.raw
+1071,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_lima_252141,,0x72a,ALLOCATE,1,34574,win11refs2tsnapshots.raw
+1072,,STREAM_UPD,/test,,0x702,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34575,win11refs2tsnapshots.raw
+1073,2026-05-16T16:51:59.431Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235,xbpt_hotel_yankee_781098.log,0x721,INSERT_ROW INSERT_ROW SET_OBJECT,3,34577,win11refs2tsnapshots.raw
+1074,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235,,0x721,UPDATE_STREAM,1,34578,win11refs2tsnapshots.raw
+1075,,STREAM_UPD,/test/elvis_dir_record_449015,,0x70f,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34580,win11refs2tsnapshots.raw
+1076,2026-05-16T16:51:59.524Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_lima_252141,xbpt_yankee_report_288078.log,0x72a,INSERT_ROW INSERT_ROW SET_OBJECT,3,34581,win11refs2tsnapshots.raw
+1077,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141,,0x72a,UPDATE_STREAM,1,34582,win11refs2tsnapshots.raw
+1078,,STREAM_UPD,/test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/elvis_dir_oscar_874075,,0x72b,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34583,win11refs2tsnapshots.raw
+1079,2026-05-16T16:51:59.599Z,CREATE,OID 0x72c,elvis_dir_gamma_237351,0x72c,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,34597,win11refs2tsnapshots.raw
+1080,2026-05-16T16:51:59.610Z,CREATE,/test/elvis_dir_index_149423,xbpt_cache_data_251427.md,0x722,INSERT_ROW INSERT_ROW SET_OBJECT,3,34598,win11refs2tsnapshots.raw
+1081,,STREAM_UPD,/test/elvis_dir_index_149423,,0x722,UPDATE_STREAM,1,34599,win11refs2tsnapshots.raw
+1082,2026-05-16T16:51:59.616Z,CREATE,/test/elvis_dir_india_800575,xbpt_sync_whiskey_455123.bin,0x723,INSERT_ROW INSERT_ROW SET_OBJECT,3,34600,win11refs2tsnapshots.raw
+1083,,STREAM_UPD,/test/elvis_dir_india_800575,,0x723,UPDATE_STREAM,1,34601,win11refs2tsnapshots.raw
+1084,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34602,win11refs2tsnapshots.raw
+1085,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790,,0x71a,UPDATE_STREAM,1,34603,win11refs2tsnapshots.raw
+1086,2026-05-16T16:51:59.665Z,CREATE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,xbpt_cache_temp_800486.csv,0x710,INSERT_ROW INSERT_ROW SET_OBJECT,3,34604,win11refs2tsnapshots.raw
+1087,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,UPDATE_STREAM,1,34605,win11refs2tsnapshots.raw
+1088,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34607,win11refs2tsnapshots.raw
+1089,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_lima_252141,,0x72a,ALLOCATE,1,34609,win11refs2tsnapshots.raw
+1090,2026-05-16T16:51:58.125Z,MOVE,/test/elvis_dir_index_149423,xbpt_archive_india_944507.txt,0x722,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34612,win11refs2tsnapshots.raw
+1091,2026-05-16T16:51:59.801Z,CREATE,/test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/elvis_dir_oscar_874075,xbpt_oscar_output_507222.json,0x72b,INSERT_ROW INSERT_ROW SET_OBJECT,3,34613,win11refs2tsnapshots.raw
+1092,,STREAM_UPD,/test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/elvis_dir_oscar_874075,,0x72b,UPDATE_STREAM,1,34614,win11refs2tsnapshots.raw
+1093,2026-05-16T16:51:59.814Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235,xbpt_backup_sierra_949923.ini,0x721,INSERT_ROW INSERT_ROW SET_OBJECT,3,34615,win11refs2tsnapshots.raw
+1094,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235,,0x721,UPDATE_STREAM,1,34616,win11refs2tsnapshots.raw
+1095,,STREAM_UPD,/test/elvis_dir_record_449015,,0x70f,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34617,win11refs2tsnapshots.raw
+1096,2026-05-16T16:51:59.829Z,CREATE,OID 0x72d,elvis_dir_backup_752812,0x72d,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,34618,win11refs2tsnapshots.raw
+1097,2026-05-16T16:51:56.664Z,MOVE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,xbpt_mike_whiskey_306157.csv,0x706,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34619,win11refs2tsnapshots.raw
+1098,2026-05-16T16:51:59.866Z,CREATE,/test/elvis_dir_victor_783323,xbpt_draft_november_935526.json,0x717,INSERT_ROW INSERT_ROW SET_OBJECT,3,34620,win11refs2tsnapshots.raw
+1099,,STREAM_UPD,/test/elvis_dir_victor_783323,,0x717,UPDATE_STREAM,1,34621,win11refs2tsnapshots.raw
+1100,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,,0x711,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34622,win11refs2tsnapshots.raw
+1101,2026-05-16T16:51:55.323Z,MOVE,/test/elvis_dir_papa_805353,xbpt_tango_archive_367353.ini,0x725,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34623,win11refs2tsnapshots.raw
+1102,2026-05-16T16:51:59.906Z,CREATE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,xbpt_temp_kilo_142924.dat,0x710,INSERT_ROW INSERT_ROW SET_OBJECT,3,34624,win11refs2tsnapshots.raw
+1103,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,UPDATE_STREAM,1,34625,win11refs2tsnapshots.raw
+1104,,STREAM_UPD,/test,,0x702,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34626,win11refs2tsnapshots.raw
+1105,2026-05-16T16:51:59.524Z,RENAME,/test/elvis_dir_papa_805353,elvis_dir_output_527690,0x725,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34627,win11refs2tsnapshots.raw
+1106,2026-05-16T16:51:59.946Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235,xbpt_lima_config_611703.json,0x721,INSERT_ROW INSERT_ROW SET_OBJECT,3,34628,win11refs2tsnapshots.raw
+1107,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235,,0x721,UPDATE_STREAM,1,34629,win11refs2tsnapshots.raw
+1108,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141,,0x72a,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34631,win11refs2tsnapshots.raw
+1109,2026-05-16T16:51:59.992Z,CREATE,/test/elvis_dir_victor_783323,xbpt_oscar_delta_192166.ini,0x717,INSERT_ROW INSERT_ROW SET_OBJECT,3,34632,win11refs2tsnapshots.raw
+1110,,STREAM_UPD,/test/elvis_dir_victor_783323,,0x717,UPDATE_STREAM,1,34633,win11refs2tsnapshots.raw
+1111,,STREAM_UPD,/test/elvis_dir_index_149423,,0x722,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34634,win11refs2tsnapshots.raw
+1112,,STREAM_UPD,/test/elvis_dir_papa_805353,,0x725,UPDATE_STREAM,1,34635,win11refs2tsnapshots.raw
+1113,,REPARENT,/test/elvis_dir_india_800575,,0x723,DELETE_ROW REPARENT_TABLE INSERT_ROW,3,34636,win11refs2tsnapshots.raw
+1114,2026-05-16T16:51:56.344Z,MOVE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398,xbpt_hotel_cache_656385.bin,0x718,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34637,win11refs2tsnapshots.raw
+1115,2026-05-16T16:52:00.079Z,CREATE,OID 0x72e,elvis_dir_tango_787748,0x72e,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,34638,win11refs2tsnapshots.raw
+1116,,STREAM_UPD,/test/elvis_dir_victor_783323,,0x717,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34640,win11refs2tsnapshots.raw
+1117,2026-05-16T16:51:59.940Z,RENAME,/test,elvis_dir_data_501822,0x702,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34641,win11refs2tsnapshots.raw
+1118,,ALLOCATE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,ALLOCATE,1,34643,win11refs2tsnapshots.raw
+1119,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235,,0x721,UPDATE_STREAM,1,34644,win11refs2tsnapshots.raw
+1120,2026-05-16T16:52:00.168Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,xbpt_sync_echo_156375.ini,0x711,INSERT_ROW INSERT_ROW SET_OBJECT,3,34645,win11refs2tsnapshots.raw
+1121,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,,0x711,UPDATE_STREAM,1,34646,win11refs2tsnapshots.raw
+1122,2026-05-16T16:52:00.174Z,CREATE,/test/elvis_dir_india_800575,xbpt_oscar_backup_284025.json,0x723,INSERT_ROW INSERT_ROW SET_OBJECT,3,34647,win11refs2tsnapshots.raw
+1123,,STREAM_UPD,/test/elvis_dir_india_800575,,0x723,UPDATE_STREAM,1,34648,win11refs2tsnapshots.raw
+1124,,REPARENT,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,,0x711,DELETE_ROW REPARENT_TABLE INSERT_ROW,3,34649,win11refs2tsnapshots.raw
+1125,,REPARENT,/test,,0x702,DELETE_ROW REPARENT_TABLE INSERT_ROW,3,34651,win11refs2tsnapshots.raw
+1126,2026-05-16T16:52:00.271Z,CREATE,/test/elvis_dir_index_149423,xbpt_sync_output_795963.bin,0x722,INSERT_ROW INSERT_ROW SET_OBJECT,3,34652,win11refs2tsnapshots.raw
+1127,,STREAM_UPD,/test/elvis_dir_index_149423,,0x722,UPDATE_STREAM,1,34653,win11refs2tsnapshots.raw
+1128,2026-05-16T16:52:00.349Z,CREATE,/test/elvis_dir_record_449015,xbpt_alpha_echo_381900.ini,0x70f,INSERT_ROW INSERT_ROW SET_OBJECT,3,34657,win11refs2tsnapshots.raw
+1129,,STREAM_UPD,/test/elvis_dir_record_449015,,0x70f,UPDATE_STREAM,1,34658,win11refs2tsnapshots.raw
+1130,2026-05-16T16:52:00.365Z,CREATE,/test/elvis_dir_india_800575,xbpt_output_victor_198806.ini,0x723,INSERT_ROW INSERT_ROW SET_OBJECT,3,34659,win11refs2tsnapshots.raw
+1131,,STREAM_UPD,/test/elvis_dir_india_800575,,0x723,UPDATE_STREAM,1,34660,win11refs2tsnapshots.raw
+1132,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34661,win11refs2tsnapshots.raw
+1133,2026-05-16T16:52:00.385Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235,xbpt_kilo_sync_474043.csv,0x721,INSERT_ROW INSERT_ROW SET_OBJECT,3,34662,win11refs2tsnapshots.raw
+1134,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235,,0x721,UPDATE_STREAM,1,34663,win11refs2tsnapshots.raw
+1135,,ALLOCATE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,ALLOCATE,1,34665,win11refs2tsnapshots.raw
+1136,2026-05-16T16:52:00.403Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235,xbpt_archive_sierra_974936.cfg,0x721,INSERT_ROW INSERT_ROW SET_OBJECT,3,34666,win11refs2tsnapshots.raw
+1137,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235,,0x721,UPDATE_STREAM,1,34667,win11refs2tsnapshots.raw
+1138,2023-05-14T07:16:43.232Z,CREATE,/test/elvis_dir_record_449015,xbpt_hardlink_echo_387599.ini,0x70f,INSERT_ROW INSERT_ROW,2,34669,win11refs2tsnapshots.raw
+1139,2026-05-16T16:52:00.430Z,CREATE,/test,xbpt_symlink_output_831744.lnk,0x702,INSERT_ROW INSERT_ROW SET_OBJECT,3,34670,win11refs2tsnapshots.raw
+1140,2026-05-16T16:52:00.515Z,CREATE,/test/elvis_dir_india_800575,xbpt_log_beta_973172.txt,0x723,INSERT_ROW INSERT_ROW SET_OBJECT,3,34672,win11refs2tsnapshots.raw
+1141,,STREAM_UPD,/test/elvis_dir_india_800575,,0x723,UPDATE_STREAM,1,34673,win11refs2tsnapshots.raw
+1142,2026-05-16T16:52:00.530Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_lima_252141,xbpt_alpha_delta_877195.json,0x72a,INSERT_ROW INSERT_ROW SET_OBJECT,3,34674,win11refs2tsnapshots.raw
+1143,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141,,0x72a,UPDATE_STREAM,1,34675,win11refs2tsnapshots.raw
+1144,2024-12-12T07:16:57.786Z,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM UPDATE_DATA_WITH UPDATE_STREAM,8,34677,win11refs2tsnapshots.raw
+1145,2026-05-16T16:52:00.129Z,RENAME,/test,elvis_dir_november_514349,0x702,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34678,win11refs2tsnapshots.raw
+1146,2026-05-16T16:52:00.643Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235,xbpt_log_mike_997799.bin,0x721,INSERT_ROW INSERT_ROW SET_OBJECT,3,34679,win11refs2tsnapshots.raw
+1147,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235,,0x721,UPDATE_STREAM,1,34680,win11refs2tsnapshots.raw
+1148,2026-05-16T16:52:00.424Z,RENAME,/test/elvis_dir_papa_805353,elvis_dir_kilo_689693,0x725,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34681,win11refs2tsnapshots.raw
+1149,,REPARENT,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,,0x711,DELETE_ROW REPARENT_TABLE INSERT_ROW,3,34682,win11refs2tsnapshots.raw
+1150,,STREAM_UPD,/test/elvis_dir_record_449015,,0x70f,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34683,win11refs2tsnapshots.raw
+1151,2026-05-16T16:52:00.796Z,CREATE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,xbpt_config_log_890790.bak,0x710,INSERT_ROW INSERT_ROW SET_OBJECT,3,34688,win11refs2tsnapshots.raw
+1152,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,UPDATE_STREAM,1,34689,win11refs2tsnapshots.raw
+1153,2026-05-16T16:52:00.820Z,CREATE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,xbpt_audit_sync_528794.xml,0x710,INSERT_ROW INSERT_ROW SET_OBJECT,3,34691,win11refs2tsnapshots.raw
+1154,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,UPDATE_STREAM,1,34692,win11refs2tsnapshots.raw
+1155,2026-05-16T16:52:00.877Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235,xbpt_delta_log_234524.log,0x721,INSERT_ROW INSERT_ROW SET_OBJECT,3,34693,win11refs2tsnapshots.raw
+1156,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235,,0x721,UPDATE_STREAM,1,34694,win11refs2tsnapshots.raw
+1157,2026-05-16T16:52:00.889Z,CREATE,/test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324,xbpt_log_romeo_711888.cfg,0x730,INSERT_ROW INSERT_ROW SET_OBJECT,3,34695,win11refs2tsnapshots.raw
+1158,,STREAM_UPD,/test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324,,0x730,UPDATE_STREAM,1,34696,win11refs2tsnapshots.raw
+1159,2026-05-16T16:52:00.909Z,CREATE,/test,xbpt_config_log_982725.bin,0x702,INSERT_ROW INSERT_ROW SET_OBJECT,3,34697,win11refs2tsnapshots.raw
+1160,,STREAM_UPD,/test,,0x702,UPDATE_STREAM,1,34698,win11refs2tsnapshots.raw
+1161,,MODIFY,/test/elvis_dir_record_449015/elvis_dir_lima_252141,,0x72a,FREE,1,34700,win11refs2tsnapshots.raw
+1162,2026-05-16T16:52:00.972Z,CREATE,/test/elvis_dir_index_149423/elvis_dir_victor_121923,xbpt_zulu_papa_839258.bin,0x72f,INSERT_ROW INSERT_ROW SET_OBJECT,3,34701,win11refs2tsnapshots.raw
+1163,,STREAM_UPD,/test/elvis_dir_index_149423/elvis_dir_victor_121923,,0x72f,UPDATE_STREAM,1,34702,win11refs2tsnapshots.raw
+1164,2026-05-16T16:52:00.979Z,CREATE,/test/elvis_dir_index_149423/elvis_dir_victor_121923,xbpt_archive_record_387558.cfg,0x72f,INSERT_ROW INSERT_ROW SET_OBJECT,3,34703,win11refs2tsnapshots.raw
+1165,,STREAM_UPD,/test/elvis_dir_index_149423/elvis_dir_victor_121923,,0x72f,UPDATE_STREAM,1,34704,win11refs2tsnapshots.raw
+1166,2026-05-16T16:52:01.000Z,CREATE,/test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324,xbpt_trace_gamma_472483.cfg,0x730,INSERT_ROW INSERT_ROW SET_OBJECT,3,34706,win11refs2tsnapshots.raw
+1167,,STREAM_UPD,/test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324,,0x730,UPDATE_STREAM,1,34707,win11refs2tsnapshots.raw
+1168,2026-05-16T16:52:01.006Z,CREATE,/test/elvis_dir_index_149423/elvis_dir_victor_121923,xbpt_temp_uniform_753565.cfg,0x72f,INSERT_ROW INSERT_ROW SET_OBJECT,3,34708,win11refs2tsnapshots.raw
+1169,,STREAM_UPD,/test/elvis_dir_index_149423/elvis_dir_victor_121923,,0x72f,UPDATE_STREAM,1,34709,win11refs2tsnapshots.raw
+1170,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,,0x707,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34711,win11refs2tsnapshots.raw
+1171,2026-05-16T16:52:01.040Z,CREATE,/test/elvis_dir_victor_783323,xbpt_quebec_echo_201709.md,0x717,INSERT_ROW INSERT_ROW SET_OBJECT,3,34712,win11refs2tsnapshots.raw
+1172,,STREAM_UPD,/test/elvis_dir_victor_783323,,0x717,UPDATE_STREAM,1,34713,win11refs2tsnapshots.raw
+1173,2026-05-16T16:52:01.066Z,CREATE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,xbpt_papa_index_238422.csv,0x710,INSERT_ROW INSERT_ROW SET_OBJECT,3,34714,win11refs2tsnapshots.raw
+1174,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,UPDATE_STREAM,1,34715,win11refs2tsnapshots.raw
+1175,,MODIFY,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,UPDATE_ROW,1,34719,win11refs2tsnapshots.raw
+1176,2026-05-16T16:52:01.134Z,CREATE,/test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165,xbpt_log_foxtrot_796125.ini,0x731,INSERT_ROW INSERT_ROW SET_OBJECT,3,34721,win11refs2tsnapshots.raw
+1177,,STREAM_UPD,/test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165,,0x731,UPDATE_STREAM,1,34722,win11refs2tsnapshots.raw
+1178,,STREAM_UPD,/test/elvis_dir_papa_805353,,0x725,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34723,win11refs2tsnapshots.raw
+1179,,ALLOCATE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,ALLOCATE,1,34724,win11refs2tsnapshots.raw
+1180,2026-05-16T16:52:01.236Z,CREATE,OID 0x733,elvis_dir_beta_786640,0x733,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,34727,win11refs2tsnapshots.raw
+1181,2026-05-16T16:52:01.266Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,xbpt_index_temp_198731.cfg,0x707,INSERT_ROW INSERT_ROW SET_OBJECT,3,34730,win11refs2tsnapshots.raw
+1182,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,,0x707,UPDATE_STREAM,1,34731,win11refs2tsnapshots.raw
+1183,,STREAM_UPD,/test/elvis_dir_record_449015,,0x70f,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34732,win11refs2tsnapshots.raw
+1184,2026-05-16T16:51:56.359Z,RENAME,/test/elvis_dir_record_449015/elvis_dir_papa_104235,xbpt_yankee_foxtrot_198114.bak,0x721,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34735,win11refs2tsnapshots.raw
+1185,2026-05-16T16:52:01.345Z,CREATE,/test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324,xbpt_audit_sierra_999014.csv,0x730,INSERT_ROW INSERT_ROW SET_OBJECT,3,34737,win11refs2tsnapshots.raw
+1186,,STREAM_UPD,/test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324,,0x730,UPDATE_STREAM,1,34738,win11refs2tsnapshots.raw
+1187,,REPARENT,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083,xbpt_draft_cache_206712.txt,0x715,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,34739,win11refs2tsnapshots.raw
+1188,2026-05-16T16:52:01.363Z,CREATE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,xbpt_delta_index_661828.xml,0x710,INSERT_ROW INSERT_ROW SET_OBJECT,3,34740,win11refs2tsnapshots.raw
+1189,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,UPDATE_STREAM,1,34741,win11refs2tsnapshots.raw
+1190,,STREAM_UPD,/test/elvis_dir_papa_805353,,0x725,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34745,win11refs2tsnapshots.raw
+1191,2026-05-16T16:52:01.424Z,CREATE,/test/elvis_dir_index_149423/elvis_dir_victor_121923,xbpt_zulu_echo_160107.cfg,0x72f,INSERT_ROW INSERT_ROW SET_OBJECT,3,34746,win11refs2tsnapshots.raw
+1192,,STREAM_UPD,/test/elvis_dir_index_149423/elvis_dir_victor_121923,,0x72f,UPDATE_STREAM,1,34747,win11refs2tsnapshots.raw
+1193,2026-05-16T16:52:01.443Z,CREATE,/test,xbpt_whiskey_sierra_446370.txt,0x702,INSERT_ROW INSERT_ROW SET_OBJECT,3,34748,win11refs2tsnapshots.raw
+1194,,STREAM_UPD,/test,,0x702,UPDATE_STREAM,1,34749,win11refs2tsnapshots.raw
+1195,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141,,0x72a,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34750,win11refs2tsnapshots.raw
+1196,,DELETE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE,4,34752,win11refs2tsnapshots.raw
+1197,2026-05-16T16:51:51.358Z,RENAME,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,xbpt_papa_temp_918582.dat,0x704,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34753,win11refs2tsnapshots.raw
+1198,,STREAM_UPD,/test/elvis_dir_victor_783323,,0x717,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34755,win11refs2tsnapshots.raw
+1199,2026-05-16T16:52:01.597Z,CREATE,/test/elvis_dir_index_149423,xbpt_config_sync_830891.tmp,0x722,INSERT_ROW INSERT_ROW SET_OBJECT,3,34777,win11refs2tsnapshots.raw
+1200,,STREAM_UPD,/test/elvis_dir_index_149423,,0x722,UPDATE_STREAM,1,34778,win11refs2tsnapshots.raw
+1201,,DELETE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE,4,34783,win11refs2tsnapshots.raw
+1202,,STREAM_UPD,/test/elvis_dir_papa_805353,,0x725,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34784,win11refs2tsnapshots.raw
+1203,2026-05-16T16:52:01.662Z,CREATE,OID 0x735,elvis_dir_foxtrot_677051,0x735,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,34785,win11refs2tsnapshots.raw
+1204,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235,,0x721,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34787,win11refs2tsnapshots.raw
+1205,2026-05-16T16:52:01.685Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,xbpt_report_india_560484.txt,0x711,INSERT_ROW INSERT_ROW SET_OBJECT,3,34788,win11refs2tsnapshots.raw
+1206,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,,0x711,UPDATE_STREAM,1,34789,win11refs2tsnapshots.raw
+1207,2026-05-16T16:52:01.697Z,CREATE,/test/elvis_dir_india_800575,xbpt_report_temp_854937.tmp,0x723,INSERT_ROW INSERT_ROW SET_OBJECT,3,34790,win11refs2tsnapshots.raw
+1208,,STREAM_UPD,/test/elvis_dir_india_800575,,0x723,UPDATE_STREAM,1,34791,win11refs2tsnapshots.raw
+1209,2026-05-16T16:52:01.706Z,CREATE,/test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165,xbpt_oscar_foxtrot_866936.json,0x731,INSERT_ROW INSERT_ROW SET_OBJECT,3,34792,win11refs2tsnapshots.raw
+1210,,STREAM_UPD,/test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165,,0x731,UPDATE_STREAM,1,34793,win11refs2tsnapshots.raw
+1211,2026-05-16T16:52:01.764Z,CREATE,/test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165,xbpt_zulu_india_473528.csv,0x731,INSERT_ROW INSERT_ROW SET_OBJECT,3,34794,win11refs2tsnapshots.raw
+1212,,STREAM_UPD,/test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165,,0x731,UPDATE_STREAM,1,34795,win11refs2tsnapshots.raw
+1213,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,,0x711,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34798,win11refs2tsnapshots.raw
+1214,,STREAM_UPD,/test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165,,0x731,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34800,win11refs2tsnapshots.raw
+1215,,DELETE,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509,,0x719,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE,4,34801,win11refs2tsnapshots.raw
+1216,,ALLOCATE,/test/elvis_dir_index_149423,,0x722,ALLOCATE,1,34803,win11refs2tsnapshots.raw
+1217,2026-05-16T16:52:01.884Z,CREATE,OID 0x736,elvis_dir_quebec_896971,0x736,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,34805,win11refs2tsnapshots.raw
+1218,2026-05-16T16:52:01.111Z,MOVE,/test/elvis_dir_index_149423,elvis_dir_report_590629,0x722,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW SET_PARENT_ID,5,34806,win11refs2tsnapshots.raw
+1219,2026-05-16T16:52:01.903Z,CREATE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,xbpt_oscar_archive_384713.txt,0x710,INSERT_ROW INSERT_ROW SET_OBJECT,3,34807,win11refs2tsnapshots.raw
+1220,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,UPDATE_STREAM,1,34808,win11refs2tsnapshots.raw
+1221,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,,0x707,ALLOCATE,1,34810,win11refs2tsnapshots.raw
+1222,2026-05-16T16:52:01.929Z,CREATE,/test/elvis_dir_india_800575,xbpt_cache_lima_454391.txt,0x723,INSERT_ROW INSERT_ROW SET_OBJECT,3,34811,win11refs2tsnapshots.raw
+1223,,STREAM_UPD,/test/elvis_dir_india_800575,,0x723,UPDATE_STREAM,1,34812,win11refs2tsnapshots.raw
+1224,2026-05-16T16:52:01.978Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235,xbpt_temp_foxtrot_475776.md,0x721,INSERT_ROW INSERT_ROW SET_OBJECT,3,34813,win11refs2tsnapshots.raw
+1225,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235,,0x721,UPDATE_STREAM,1,34814,win11refs2tsnapshots.raw
+1226,,CONTAINER,,,,MOVE_CONTAINER MOVE_CONTAINER MOVE_CONTAINER MOVE_CONTAINER MOVE_CONTAINER MOVE_CONTAINER MOVE_CONTAINER MOVE_CONTAINER MOVE_CONTAINER,9,34815,win11refs2tsnapshots.raw
+1227,,MODIFY,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,FREE,1,34818,win11refs2tsnapshots.raw
+1228,2026-05-16T16:52:02.035Z,CREATE,/test/elvis_dir_victor_783323,xbpt_sierra_echo_709659.md,0x717,INSERT_ROW INSERT_ROW SET_OBJECT,3,34819,win11refs2tsnapshots.raw
+1229,,STREAM_UPD,/test/elvis_dir_victor_783323,,0x717,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34820,win11refs2tsnapshots.raw
+1230,2026-05-16T16:52:02.046Z,CREATE,/test/elvis_dir_papa_805353,xbpt_november_hotel_509136.md,0x725,INSERT_ROW INSERT_ROW SET_OBJECT,3,34821,win11refs2tsnapshots.raw
+1231,,STREAM_UPD,/test/elvis_dir_papa_805353,,0x725,UPDATE_STREAM,1,34822,win11refs2tsnapshots.raw
+1232,2026-05-16T16:52:02.102Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,xbpt_audit_data_437649.txt,0x707,INSERT_ROW INSERT_ROW SET_OBJECT,3,34826,win11refs2tsnapshots.raw
+1233,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,,0x707,UPDATE_STREAM,1,34827,win11refs2tsnapshots.raw
+1234,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,,0x707,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34829,win11refs2tsnapshots.raw
+1235,,MODIFY,/test/elvis_dir_victor_783323,,0x717,FREE,1,34831,win11refs2tsnapshots.raw
+1236,2026-05-16T16:52:02.154Z,CREATE,/test/elvis_dir_victor_783323,xbpt_romeo_yankee_383561.cfg,0x717,INSERT_ROW INSERT_ROW SET_OBJECT,3,34832,win11refs2tsnapshots.raw
+1237,,STREAM_UPD,/test/elvis_dir_victor_783323,,0x717,UPDATE_STREAM,1,34833,win11refs2tsnapshots.raw
+1238,,MODIFY,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,FREE,1,34836,win11refs2tsnapshots.raw
+1239,,REPARENT,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,xbpt_sierra_papa_124233.bin,0x706,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,34838,win11refs2tsnapshots.raw
+1240,2026-05-16T16:51:58.063Z,MOVE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,xbpt_sierra_papa_124233.bin,0x706,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34839,win11refs2tsnapshots.raw
+1241,,ALLOCATE,/test/elvis_dir_india_800575,,0x723,ALLOCATE,1,34841,win11refs2tsnapshots.raw
+1242,,ALLOCATE,/test/elvis_dir_index_149423,,0x722,ALLOCATE,1,34843,win11refs2tsnapshots.raw
+1243,2026-05-16T16:52:02.052Z,RENAME,/test/elvis_dir_index_149423/elvis_dir_victor_121923,elvis_dir_uniform_716659,0x72f,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34846,win11refs2tsnapshots.raw
+1244,2026-05-16T16:52:02.102Z,MOVE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,xbpt_audit_data_437649.txt,0x707,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34847,win11refs2tsnapshots.raw
+1245,2026-05-16T16:52:02.259Z,CREATE,/test/elvis_dir_papa_805353,xbpt_temp_data_294711.md,0x725,INSERT_ROW INSERT_ROW SET_OBJECT,3,34848,win11refs2tsnapshots.raw
+1246,,STREAM_UPD,/test/elvis_dir_papa_805353,,0x725,UPDATE_STREAM,1,34849,win11refs2tsnapshots.raw
+1247,,STREAM_UPD,/test/elvis_dir_victor_783323,,0x717,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34851,win11refs2tsnapshots.raw
+1248,2026-05-16T16:52:02.285Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,xbpt_kilo_beta_246643.bin,0x711,INSERT_ROW INSERT_ROW SET_OBJECT,3,34852,win11refs2tsnapshots.raw
+1249,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,,0x711,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34853,win11refs2tsnapshots.raw
+1250,,MODIFY,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462,,0x703,FREE,1,34854,win11refs2tsnapshots.raw
+1251,2026-05-16T16:52:02.316Z,CREATE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,xbpt_alpha_cache_742120.dat,0x710,INSERT_ROW INSERT_ROW SET_OBJECT,3,34859,win11refs2tsnapshots.raw
+1252,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,UPDATE_STREAM,1,34860,win11refs2tsnapshots.raw
+1253,2026-05-16T16:52:02.361Z,CREATE,OID 0x738,elvis_dir_kilo_545516,0x738,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,34861,win11refs2tsnapshots.raw
+1254,2026-05-16T16:51:59.701Z,MOVE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,xbpt_cache_temp_800486.csv,0x710,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34862,win11refs2tsnapshots.raw
+1255,2026-05-16T16:52:02.376Z,CREATE,/test/elvis_dir_record_449015,xbpt_foxtrot_lima_318386.tmp,0x70f,INSERT_ROW INSERT_ROW SET_OBJECT,3,34863,win11refs2tsnapshots.raw
+1256,,STREAM_UPD,/test/elvis_dir_record_449015,,0x70f,UPDATE_STREAM,1,34864,win11refs2tsnapshots.raw
+1257,,DELETE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE,4,34865,win11refs2tsnapshots.raw
+1258,2026-05-16T16:52:02.439Z,CREATE,/test/elvis_dir_papa_805353/elvis_dir_november_478580,xbpt_lima_victor_941030.cfg,0x710,INSERT_ROW INSERT_ROW SET_OBJECT,3,34866,win11refs2tsnapshots.raw
+1259,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580,,0x710,UPDATE_STREAM,1,34867,win11refs2tsnapshots.raw
+1260,2026-05-16T16:52:02.445Z,CREATE,/test/elvis_dir_victor_783323,xbpt_november_quebec_999278.md,0x717,INSERT_ROW INSERT_ROW SET_OBJECT,3,34868,win11refs2tsnapshots.raw
+1261,,STREAM_UPD,/test/elvis_dir_victor_783323,,0x717,UPDATE_STREAM,1,34869,win11refs2tsnapshots.raw
+1262,2026-05-16T16:52:02.458Z,CREATE,/test/elvis_dir_papa_805353,xbpt_papa_victor_656146.log,0x725,INSERT_ROW INSERT_ROW SET_OBJECT,3,34870,win11refs2tsnapshots.raw
+1263,,STREAM_UPD,/test/elvis_dir_papa_805353,,0x725,UPDATE_STREAM,1,34871,win11refs2tsnapshots.raw
+1264,2026-05-16T16:52:02.485Z,CREATE,/test/elvis_dir_index_149423/elvis_dir_victor_121923,xbpt_hotel_mike_996142.cfg,0x72f,INSERT_ROW INSERT_ROW SET_OBJECT,3,34874,win11refs2tsnapshots.raw
+1265,,STREAM_UPD,/test/elvis_dir_index_149423/elvis_dir_victor_121923,,0x72f,UPDATE_STREAM,1,34875,win11refs2tsnapshots.raw
+1266,,MODIFY,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,,0x711,FREE,1,34880,win11refs2tsnapshots.raw
+1267,,REPARENT,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398,xbpt_zulu_whiskey_391283.tmp,0x718,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,34881,win11refs2tsnapshots.raw
+1268,,STREAM_UPD,/test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324,,0x730,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34884,win11refs2tsnapshots.raw
+1269,2026-05-16T16:52:02.645Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_tango_434284,xbpt_data_config_437965.csv,0x737,INSERT_ROW INSERT_ROW SET_OBJECT,3,34886,win11refs2tsnapshots.raw
+1270,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_tango_434284,,0x737,UPDATE_STREAM,1,34887,win11refs2tsnapshots.raw
+1271,,STREAM_UPD,/test/elvis_dir_record_449015,,0x70f,UPDATE_STREAM,1,34888,win11refs2tsnapshots.raw
+1272,,STREAM_UPD,/test/elvis_dir_papa_805353/elvis_dir_november_478580/elvis_dir_kilo_751807,,0x739,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34889,win11refs2tsnapshots.raw
+1273,,MODIFY,/test,,0x702,FREE,1,34890,win11refs2tsnapshots.raw
+1274,2026-05-16T16:52:02.708Z,CREATE,/test/elvis_dir_india_800575,xbpt_cache_index_408825.bin,0x723,INSERT_ROW INSERT_ROW SET_OBJECT,3,34891,win11refs2tsnapshots.raw
+1275,,STREAM_UPD,/test/elvis_dir_india_800575,,0x723,UPDATE_STREAM,1,34892,win11refs2tsnapshots.raw
+1276,2026-05-16T16:52:02.719Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_report_664539,elvis_dir_report_664539,0x73a,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,34893,win11refs2tsnapshots.raw
+1277,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_tango_434284,,0x737,ALLOCATE,1,34894,win11refs2tsnapshots.raw
+1278,2026-05-16T16:52:02.772Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_tango_434284/elvis_dir_record_864004,elvis_dir_record_864004,0x73b,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,34898,win11refs2tsnapshots.raw
+1279,,MODIFY,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,FREE,1,34899,win11refs2tsnapshots.raw
+1280,,STREAM_UPD,/test/elvis_dir_india_800575,,0x723,UPDATE_STREAM,1,34900,win11refs2tsnapshots.raw
+1281,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,,0x707,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34902,win11refs2tsnapshots.raw
+1282,,REPARENT,/test/elvis_dir_papa_805353/elvis_dir_november_478580,xbpt_delta_index_661828.xml,0x710,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,34903,win11refs2tsnapshots.raw
+1283,2026-05-16T16:52:02.819Z,CREATE,/test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324,xbpt_cache_temp_298348.bak,0x730,INSERT_ROW INSERT_ROW SET_OBJECT,3,34904,win11refs2tsnapshots.raw
+1284,,STREAM_UPD,/test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324,,0x730,UPDATE_STREAM,1,34905,win11refs2tsnapshots.raw
+1285,,MODIFY,/test/elvis_dir_record_449015,,0x70f,FREE,1,34908,win11refs2tsnapshots.raw
+1286,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235,,0x721,ALLOCATE,1,34911,win11refs2tsnapshots.raw
+1287,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x706,UPDATE_STREAM,1,34912,win11refs2tsnapshots.raw
+1288,2026-05-16T16:52:02.977Z,CREATE,/test,xbpt_marked_eveliselaurence_670394.txt,0x702,INSERT_ROW INSERT_ROW SET_OBJECT,3,34915,win11refs2tsnapshots.raw
+1289,2026-05-16T16:52:02.989Z,CREATE,/test/elvis_dir_india_800575,xbpt_large_2mb_report_507726.txt,0x723,INSERT_ROW INSERT_ROW SET_OBJECT,3,34916,win11refs2tsnapshots.raw
+1290,,STREAM_UPD,/test/elvis_dir_india_800575,,0x723,UPDATE_STREAM,1,34917,win11refs2tsnapshots.raw
+1291,2026-05-16T16:52:03.000Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,xbpt_large_86mb_india_568540.txt,0x711,INSERT_ROW INSERT_ROW SET_OBJECT,3,34918,win11refs2tsnapshots.raw
+1292,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,,0x711,UPDATE_STREAM,1,34919,win11refs2tsnapshots.raw
+1293,2026-05-16T16:52:03.005Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,xbpt_large_7mb_india_845613.txt,0x711,INSERT_ROW INSERT_ROW SET_OBJECT,3,34920,win11refs2tsnapshots.raw
+1294,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,,0x711,UPDATE_STREAM,1,34921,win11refs2tsnapshots.raw
+1295,,STREAM_UPD,/test/elvis_dir_index_149423/elvis_dir_victor_121923,,0x72f,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34922,win11refs2tsnapshots.raw
+1296,2026-05-16T16:52:03.019Z,CREATE,/test/elvis_dir_victor_783323,xbpt_large_149mb_alpha_610845.dat,0x717,INSERT_ROW INSERT_ROW SET_OBJECT,3,34923,win11refs2tsnapshots.raw
+1297,,STREAM_UPD,/test/elvis_dir_victor_783323,,0x717,UPDATE_STREAM,1,34924,win11refs2tsnapshots.raw
+1298,2026-05-16T16:52:03.024Z,CREATE,/test,xbpt_large_99mb_report_414178.tmp,0x702,INSERT_ROW INSERT_ROW SET_OBJECT,3,34925,win11refs2tsnapshots.raw
+1299,,STREAM_UPD,/test,,0x702,UPDATE_STREAM,1,34926,win11refs2tsnapshots.raw
+1300,,STREAM_UPD,/test/elvis_dir_record_449015,,0x70f,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34927,win11refs2tsnapshots.raw
+1301,,CONTAINER,,,,MOVE_CONTAINER,1,34959,win11refs2tsnapshots.raw
+1302,2026-05-16T16:54:44.129Z,CREATE,/testsnapshots,testsnapshots,0x73c,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,34961,win11refs2tsnapshots.raw
+1303,2026-05-16T16:55:20.980Z,CREATE,/testsnapshots,arg.txt,0x73c,INSERT_ROW INSERT_ROW SET_OBJECT,3,34964,win11refs2tsnapshots.raw
+1304,2026-05-16T16:55:20.980Z,STREAM_UPD,/testsnapshots,,0x73c,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM UPDATE_DATA_WITH UPDATE_STREAM,8,34968,win11refs2tsnapshots.raw
+1305,,OP,/testsnapshots,,0x73c,OPEN_TABLE_FROM,1,34969,win11refs2tsnapshots.raw
+1306,,STREAM_UPD,/testsnapshots,,0x73c,UPDATE_STREAM,1,34971,win11refs2tsnapshots.raw
+1307,,OP,/testsnapshots,,0x73c,PREPARE_ENTRY,1,34973,win11refs2tsnapshots.raw
+1308,,OP,/testsnapshots,,0x73c,OPEN_TABLE_FROM,1,34975,win11refs2tsnapshots.raw
+1309,,STREAM_UPD,/testsnapshots,,0x73c,UPDATE_STREAM,1,34977,win11refs2tsnapshots.raw
+1310,2026-05-16T17:15:16.840Z,CREATE,/testsnapshots,arg.txt.bak.20260516191516,0x73c,INSERT_ROW INSERT_ROW SET_OBJECT,3,34979,win11refs2tsnapshots.raw
+1311,,MODIFY,/testsnapshots,,0x73c,UPDATE_ROW,1,34980,win11refs2tsnapshots.raw
+1312,2026-05-16T17:16:20.028Z,CREATE,/testsnapshots,arg.txt.bak.20260516191620,0x73c,INSERT_ROW INSERT_ROW SET_OBJECT,3,34984,win11refs2tsnapshots.raw
+1313,,MODIFY,/testsnapshots,,0x73c,UPDATE_ROW,1,34985,win11refs2tsnapshots.raw
+1314,2026-05-16T17:16:47.928Z,CREATE,/testsnapshots,test.txt,0x73c,INSERT_ROW INSERT_ROW SET_OBJECT,3,34987,win11refs2tsnapshots.raw
+1315,2026-05-16T17:16:47.928Z,STREAM_UPD,/testsnapshots,,0x73c,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM UPDATE_DATA_WITH UPDATE_STREAM,8,34991,win11refs2tsnapshots.raw
+1316,,OP,/testsnapshots,,0x73c,OPEN_TABLE_FROM,1,34992,win11refs2tsnapshots.raw
+1317,,MODIFY,/testsnapshots,,0x73c,FREE,1,34993,win11refs2tsnapshots.raw
+1318,,ALLOCATE,/testsnapshots,,0x73c,ALLOCATE,1,34995,win11refs2tsnapshots.raw
+1319,,OP,/testsnapshots,,0x73c,OPEN_TABLE_FROM,1,34997,win11refs2tsnapshots.raw
+1320,,MODIFY,/testsnapshots,,0x73c,FREE,1,34998,win11refs2tsnapshots.raw
+1321,,ALLOCATE,/testsnapshots,,0x73c,ALLOCATE,1,35000,win11refs2tsnapshots.raw
+1322,,MODIFY,/testsnapshots,,0x73c,FREE,1,35001,win11refs2tsnapshots.raw
+1323,,ALLOCATE,/testsnapshots,,0x73c,ALLOCATE,1,35003,win11refs2tsnapshots.raw
+1324,,OP,/testsnapshots,,0x73c,OPEN_TABLE_FROM,1,35004,win11refs2tsnapshots.raw
+1325,2026-05-16T17:21:14.891Z,CREATE,/testsnapshots,testxyz.txt,0x73c,INSERT_ROW INSERT_ROW SET_OBJECT,3,35005,win11refs2tsnapshots.raw
+1326,2026-05-16T17:26:23.978Z,CREATE,/testsnapshots,testads.txt,0x73c,INSERT_ROW INSERT_ROW SET_OBJECT,3,35008,win11refs2tsnapshots.raw
+1327,2026-05-16T17:26:23.978Z,STREAM_UPD,/testsnapshots,,0x73c,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM UPDATE_DATA_WITH UPDATE_STREAM,8,35011,win11refs2tsnapshots.raw
+1328,,OP,/testsnapshots,,0x73c,OPEN_TABLE_FROM,1,35012,win11refs2tsnapshots.raw
+1329,,ENTRY_REMOVE,/testsnapshots,,0x73c,DELETE_ROW,1,35015,win11refs2tsnapshots.raw
+1330,2026-05-16T17:26:23.978Z,STREAM_UPD,/testsnapshots,0Ȁ,0x73c,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM INSERT_ROW ALLOCATE UPDATE_STREAM UPDATE_ROW UPDATE_DATA_WITH UPDATE_STREAM UPDATE_ROW,11,35016,win11refs2tsnapshots.raw
+1331,2026-05-16T17:30:57.292Z,CREATE,/testsnapshots,xbpt_beta_sierra_570651.json,0x73c,INSERT_ROW INSERT_ROW SET_OBJECT,3,35017,win11refs2tsnapshots.raw
+1332,,MODIFY,/testsnapshots,,0x73c,UPDATE_ROW,1,35018,win11refs2tsnapshots.raw
+1333,,OP,/testsnapshots,,0x73c,OPEN_TABLE_FROM,1,35021,win11refs2tsnapshots.raw
+1334,,ALLOCATE,/testsnapshots,,0x73c,ALLOCATE,1,35022,win11refs2tsnapshots.raw
+1335,,ALLOCATE,/testsnapshots,,0x73c,ALLOCATE,1,35024,win11refs2tsnapshots.raw
+1336,,OP,/testsnapshots,,0x73c,OPEN_TABLE_FROM,1,35026,win11refs2tsnapshots.raw
+1337,,STREAM_UPD,/testsnapshots,,0x73c,UPDATE_STREAM,1,35027,win11refs2tsnapshots.raw
+1338,2026-05-16T17:34:52.056Z,CREATE,/testsnapshots,lasttest.txt,0x73c,INSERT_ROW INSERT_ROW SET_OBJECT,3,35029,win11refs2tsnapshots.raw
+1339,,ENTRY_REMOVE,/testsnapshots,,0x73c,DELETE_ROW,1,35030,win11refs2tsnapshots.raw
+1340,,ENTRY_REMOVE,/testsnapshots,,0x73c,DELETE_ROW,1,35031,win11refs2tsnapshots.raw
+1341,2026-05-16T17:34:52.056Z,STREAM_UPD,/testsnapshots,,0x73c,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM UPDATE_DATA_WITH UPDATE_STREAM,8,35035,win11refs2tsnapshots.raw
+1342,,OP,/testsnapshots,,0x73c,OPEN_TABLE_FROM,1,35036,win11refs2tsnapshots.raw
+1343,,STREAM_UPD,/testsnapshots,,0x73c,UPDATE_STREAM,1,35038,win11refs2tsnapshots.raw
+1344,,OP,/testsnapshots,,0x73c,OPEN_TABLE_FROM,1,35040,win11refs2tsnapshots.raw

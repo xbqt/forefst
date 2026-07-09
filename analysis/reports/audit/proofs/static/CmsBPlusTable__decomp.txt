@@ -1,0 +1,38 @@
+
+// === CmsBPlusTable @ 14003c580 ===
+
+/* WARNING: Function: _guard_dispatch_icall replaced with injection: guard_dispatch_icall */
+/* public: __cdecl CmsBPlusTable::CmsBPlusTable(class CmsBPlusTable * __ptr64,class
+ utl::unique_ptr<class CmsCompositeBase,struct utl::default_delete<class CmsCompositeBase>
+ >,struct SmsInternalPropertyDef const & __ptr64,unsigned char,struct _SmsCacheInfo *
+ __ptr64,struct SmsBindable * __ptr64) __ptr64 */
+
+CmsBPlusTable * __thiscall
+CmsBPlusTable::CmsBPlusTable
+ (CmsBPlusTable *this,CmsBPlusTable *param_1,longlong *param_3,undefined8 param_4,
+ char param_5,undefined8 param_6,undefined8 *param_7)
+
+{
+ longlong lVar1;
+ code *pcVar2;
+ CmsBPlusTable CVar3;
+ ulonglong uVar4;
+ CmsEmbeddedComposite *pCVar5;
+ CmsEmbeddedComposite *this_00;
+ 
+ *(undefined8 *)(this + 8) = 1;
+ this[0x10] = (CmsBPlusTable)0x0;
+ *(undefined8 *)(this + 0x18) = param_4;
+ *(undefined ***)this = &_vftable_;
+ if (param_1 == (CmsBPlusTable *)0x0) {
+ param_1 = this;
+ }
+ *(undefined8 *)(this + 0x30) = 0;
+ *(undefined8 *)(this + 0x38) = 0;
+ *(undefined8 *)(this + 0x48) = 0;
+ *(undefined8 *)(this + 0x58) = 0;
+ *(undefined8 *)(this + 0x60) = 0;
+ *(undefined8 *)(this + 0x68) = 0;
+ *(undefined8 *)(this + 0x70) = 0;
+ *(undefined8 *)(this + 0x78) = 0;
+ *(undefined4 *)(this + 0x80) = 0;

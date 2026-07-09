@@ -1,0 +1,69 @@
+# forefst win11refs2tsnapshots.raw snapshots
+# ----------------------------------------------------------------------------
+==============================================================================
+ReFS Stream Snapshot Analysis
+==============================================================================
+  Image:        analysis/rawdisk/disks/step3/win11refs2tsnapshots.raw
+  ReFS version: 3.14
+  Cluster size: 0x1000
+  Objects:      47
+
+  Files with snapshots: 5
+  Total snapshots:      10
+
+------------------------------------------------------------------------------
+
+  FILE testsnapshots/arg.txt
+    Created:      2026-05-16 16:55:20 UTC
+    Modified:     2026-05-16 17:12:30 UTC
+    Resident:     1096 bytes
+    Snapshots:    1
+
+    [1] "test2"
+        Stream size:   11 bytes
+
+  FILE testsnapshots/lasttest.txt
+    Created:      2026-05-16 17:34:52 UTC
+    Modified:     2026-05-16 17:35:57 UTC
+    Resident:     1600 bytes
+    Snapshots:    2
+
+    [1] "sameaslastversion"
+        Stream size:   201 bytes
+    [2] "first"
+        Stream size:   186 bytes
+
+  FILE testsnapshots/test.txt
+    Created:      2026-05-16 17:16:47 UTC
+    Modified:     2026-05-16 17:19:37 UTC
+    Resident:     2520 bytes
+    Snapshots:    4
+
+    [1] "v3"
+        Stream size:   92 bytes
+    [2] "v2"
+        Stream size:   65 bytes
+    [3] "last"
+        Stream size:   5 bytes
+    [4] "firstversion"
+        Stream size:   42 bytes
+
+  FILE testsnapshots/testads.txt
+    Created:      2026-05-16 17:26:23 UTC
+    Modified:     2026-05-16 17:27:58 UTC
+    Resident:     1768 bytes
+    Snapshots:    1
+
+    [1] "beforeads"
+        Stream size:   12 bytes
+
+  FILE testsnapshots/xbpt_beta_sierra_570651.json
+    Created:      2026-05-16 17:30:57 UTC
+    Modified:     2026-05-16 17:34:32 UTC
+    Resident:     1888 bytes
+    Snapshots:    2
+
+    [1] "versionmodified"
+        Stream size:   3202036 bytes
+    [2] "copiedversion"
+        Stream size:   71395 bytes

@@ -1,0 +1,22 @@
+# forefst win11refs2tsnapshots.raw specials
+# ----------------------------------------------------------------------------
+======================================================================
+ReFS special-attribute inventory — win11refs2tsnapshots.raw (ReFS 3.14)
+======================================================================
+  TYPE           COUNT   run `specials <type>` for the list
+  ------------------------------------------------------------
+  ads                3   named data streams
+  reparse            3   symlinks / junctions / WSL links
+  wsl                0   WSL / Linux-metadata links
+  hardlink           0   multi-linked files (link groups)
+  sparse             0   allocated < logical size
+  encrypted          0   EFS-encrypted ($EFS)
+  compressed         0   WOF / compressed
+  integrity          0   integrity checksum stream
+  ea                 0   extended attributes / WSL EA
+  snapshot           5   CoW prior-version streams
+  ------------------------------------------------------------
+  10 distinct files carry >=1 special attribute.
+  (per-type counts OVERLAP — one file can be several types at once, so the
+   rows above sum to more than this de-duplicated total.)
+  Deep ops: reparse --index · snapshots --extract · dataruns · export ads "file:stream"

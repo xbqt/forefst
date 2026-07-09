@@ -1,0 +1,397 @@
+
+// === RefsCommonCreate @ 1402d07d0 ===
+
+/* WARNING: Function: __security_check_cookie replaced with injection: security_check_cookie */
+/* WARNING: Function: __chkstk replaced with injection: alloca_probe */
+/* long __cdecl RefsCommonCreate(struct _IRP_CONTEXT * __ptr64,struct _IRP * __ptr64,struct
+ _CREATE_CONTEXT * __ptr64) */
+
+long __cdecl RefsCommonCreate(_IRP_CONTEXT *param_1,_IRP *param_2,_CREATE_CONTEXT *param_3)
+
+{
+ uint *puVar1;
+ _CREATE_CONTEXT *p_Var2;
+ _CmsKey *p_Var3;
+ byte bVar4;
+ ushort uVar5;
+ ushort uVar6;
+ short sVar7;
+ ushort *puVar8;
+ IndexSCB *pIVar9;
+ _SCB *p_Var10;
+ _FILE_NETWORK_OPEN_INFORMATION *p_Var11;
+ longlong lVar12;
+ undefined8 uVar13;
+ undefined8 uVar14;
+ bool bVar15;
+ bool bVar16;
+ char cVar17;
+ uchar uVar18;
+ int iVar19;
+ long lVar20;
+ ulong uVar21;
+ uint uVar22;
+ _LCB *p_Var23;
+ _SCB *p_Var24;
+ short *psVar25;
+ undefined1 uVar26;
+ uint uVar27;
+ __uint64 _Var28;
+ IndexSCB *pIVar29;
+ _IRP_CONTEXT *p_Var30;
+ _IRP_CONTEXT *p_Var31;
+ ulonglong uVar32;
+ longlong lVar33;
+ short *psVar34;
+ void *pvVar35;
+ _VCB *p_Var36;
+ undefined1 *puVar37;
+ undefined1 *puVar38;
+ _CREATE_CONTEXT *p_Var39;
+ uint uVar40;
+ undefined8 uVar41;
+ longlong *plVar42;
+ _IRP *p_Var43;
+ _UNICODE_STRING *p_Var44;
+ _FCB *p_Var45;
+ _REFS_FILE_REFERENCE *p_Var46;
+ uchar in_R9B;
+ ulonglong uVar47;
+ _DIR_INDEX_ENTRY *p_Var48;
+ undefined4 uVar49;
+ undefined4 uVar50;
+ undefined4 uVar51;
+ undefined4 uVar52;
+ undefined *puStackY_230;
+ undefined1 auStackY_228 [32];
+ CheckBuffersOnly CVar53;
+ longlong local_1e0 [3];
+ long local_1c8 [2];
+ _IRP_CONTEXT *local_1c0;
+ _CREATE_CONTEXT *local_1b8;
+ short local_1b0;
+ _IRP *local_1a8;
+ undefined1 local_1a0;
+ _VCB *local_198;
+ _DIR_INDEX_ENTRY *local_190;
+ int local_188;
+ _LCB *local_180;
+ byte local_178;
+ undefined8 local_168;
+ undefined8 uStack_160;
+ _CREATE_CONTEXT *local_158;
+ _LCB *local_150;
+ ulonglong local_148;
+ short *psStack_140;
+ longlong local_138;
+ uint local_130;
+ _CREATE_CONTEXT *local_128;
+ undefined8 local_118;
+ undefined8 uStack_110;
+ _REFS_FILE_REFERENCE *local_108;
+ _VCB *local_100;
+ _CREATE_CONTEXT *local_f8;
+ undefined8 local_f0;
+ undefined8 uStack_e8;
+ undefined8 local_e0;
+ undefined8 local_d8;
+ uint local_d0;
+ undefined8 local_c8;
+ _SCB *local_c0;
+ _CmsKey *local_b8;
+ undefined4 local_98;
+ undefined4 uStack_94;
+ undefined4 uStack_90;
+ undefined4 uStack_8c;
+ undefined8 local_88;
+ undefined8 uStack_80;
+ undefined8 local_78;
+ undefined8 uStack_70;
+ undefined8 local_68;
+ undefined8 uStack_60;
+ undefined4 local_58;
+ ulonglong local_50;
+ 
+ puVar38 = auStackY_228;
+ local_50 = __security_cookie ^ (ulonglong)local_1c8;
+ local_188 = 0;
+ local_f0 = 0;
+ uStack_e8 = 0;
+ local_1b0 = 0;
+ p_Var36 = *(_VCB **)(param_1 + 0x40);
+ local_150 = (_LCB *)0x0;
+ local_180 = (_LCB *)0x0;
+ local_78 = 0;
+ uStack_70 = 0;
+ local_68 = 0;
+ uStack_60 = 0;
+ local_58 = 0;
+ local_190 = (_DIR_INDEX_ENTRY *)0x0;
+ local_118 = 0;
+ uStack_110 = 0;
+ local_128 = param_3 + 0x10;
+ local_168 = 0;
+ uStack_160 = 0;
+ local_148 = 0;
+ psStack_140 = (short *)0x0;
+ local_138 = 0;
+ lVar33 = *(longlong *)(param_3 + 0x98);
+ *(undefined8 *)(param_3 + 0x20) = *(undefined8 *)(lVar33 + 0x30);
+ *(undefined4 *)(param_3 + 0x28) =
+ *(undefined4 *)(*(longlong *)(*(longlong *)(lVar33 + 8) + 8) + 0x10);
+ *(undefined4 *)(param_3 + 0x2c) =
+ *(undefined4 *)(*(longlong *)(*(longlong *)(lVar33 + 8) + 8) + 0x14);
+ *(undefined4 *)(param_3 + 0x30) = *(undefined4 *)(*(longlong *)(lVar33 + 8) + 0x10);
+ *(undefined4 *)(param_3 + 0x40) = 0;
+ *(undefined8 *)(param_3 + 0x78) = 0;
+ puStackY_230 = (undefined *)0x1402d08e6;
+ local_1c0 = param_1;
+ local_1b8 = param_3;
+ local_1a8 = param_2;
+ local_198 = p_Var36;
+ local_158 = param_3;
+ local_100 = p_Var36;
+ local_f8 = param_3;
+ iVar19 = IoGetIrpExtraCreateParameter(param_2,&local_138);
+ if ((iVar19 < 0) || (local_138 == 0)) {
+LAB_1402d0dc7:
+ uVar41 = 0;
+ local_1c8[0] = 0;
+ if (((((byte)*(undefined4 *)(*(longlong *)(param_3 + 0x98) + 0x10) & 0x41) != 0x41) &&
+ (*(longlong *)(param_2 + 0x58) <= *(longlong *)(p_Var36 + 0x1e0))) &&
+ (-1 < *(longlong *)(param_2 + 0x58))) {
+ uVar32 = *(ulonglong *)(param_1 + 8);
+ if ((uVar32 & 1) == 0) {
+ puStackY_230 = (undefined *)0x1402d0e18;
+ lVar20 = RefsPostRequest(param_1,param_2,'\x01','\0');
+ puVar38 = auStackY_228;
+ goto LAB_1402d312e;
+ }
+ if ((uVar32 >> 0x15 & 1) != 0) {
+ in_R9B = '\0';
+ puStackY_230 = (undefined *)0x1402d0e3c;
+ KeWaitForSingleObject(&RefsEncryptionPendingEvent,0);
+ *(ulonglong *)(param_1 + 8) = *(ulonglong *)(param_1 + 8) & 0xffffffffffdfffff;
+ uVar32 = *(ulonglong *)(param_1 + 8);
+ }
+ if (param_2[0x44] != (_IRP)0x0) {
+ puStackY_230 = (undefined *)0x1402d0e67;
+ RefsCompleteCreateRequest(param_1,param_3,param_2,0xc0000120);
+ if ((((undefined **)WPP_GLOBAL_Control != &WPP_GLOBAL_Control) &&
+ ((*(uint *)(WPP_GLOBAL_Control + 0x2c) & 0x100) != 0)) &&
+ (3 < (byte)WPP_GLOBAL_Control[0x29])) {
+ puStackY_230 = (undefined *)0x1402d0ea1;
+ WPP_SF_D(*(undefined8 *)(WPP_GLOBAL_Control + 0x18),0x18,
+ &WPP_2e1c4a577b2f36c9269c48846c8beb4b_Traceguids,0xc0000120);
+ }
+ if (RefsStatusDebugEnabled != '\0') {
+ puStackY_230 = (undefined *)0x1402d0ec5;
+ RefsStatusDebug(-0x3ffffee0,(_IRP_CONTEXT *)0x0,"Create.c",0x8ca);
+ }
+ lVar20 = -0x3ffffee0;
+ puVar38 = auStackY_228;
+ goto LAB_1402d312e;
+ }
+ *(_CREATE_CONTEXT **)(param_1 + 0x90) = param_3;
+ if ((*(byte *)(*(longlong *)(param_3 + 0x98) + 2) & 2) != 0) {
+ uVar32 = uVar32 | 0x100;
+ *(ulonglong *)(param_1 + 8) = uVar32;
+ }
+ puVar8 = *(ushort **)(param_3 + 200);
+ if (((puVar8 != (ushort *)0x0) && (7 < *puVar8)) && ((*(uint *)(puVar8 + 2) & 8) != 0)) {
+ *(uint *)(param_3 + 0x88) = *(uint *)(param_3 + 0x88) | 0x80;
+ }
+ if (RefsThrottleCreates < *(uint *)(p_Var36 + 0xdec)) {
+ uVar32 = 0;
+ uVar41 = 0;
+ puStackY_230 = (undefined *)0x1402d0f2c;
+ RefsProcessAsyncCloses(p_Var36,0,2);
+ }
+ p_Var39 = local_1b8;
+ if ((*(byte *)(*(longlong *)(local_1b8 + 0x98) + 2) & 2) != 0) {
+ uVar41 = 0;
+ puStackY_230 = (undefined *)0x1402d0f4d;
+ RefsProcessAsyncCloses(p_Var36,(DrainAll)CONCAT71((int7)(uVar32 >> 8),1),2);
+ puStackY_230 = (undefined *)0x1402d0f59;
+ CLOSE_QUEUE::WaitForWorkers((CLOSE_QUEUE *)(p_Var36 + 0xdc0));
+ }
+ p_Var31 = local_1c0;
+ uVar41 = CONCAT71((int7)((ulonglong)uVar41 >> 8),1);
+ if ((*(uint *)(local_1c0 + 8) & 0x100) == 0) {
+ puStackY_230 = (undefined *)0x1402d0f7b;
+ RefsAcquireSharedVcb(local_1c0,p_Var36,'\x01');
+ }
+ else {
+ puStackY_230 = (undefined *)0x1402d0f74;
+ RefsAcquireExclusiveVcb(local_1c0,p_Var36,'\x01');
+ }
+ uVar40 = (uint)uVar41;
+ uVar22 = *(uint *)(p_Var39 + 0x88);
+ uVar27 = uVar22 | 0x800;
+ *(uint *)(p_Var39 + 0x88) = uVar27;
+ lVar33 = *(longlong *)(p_Var39 + 0x20);
+ uVar49 = *(undefined4 *)(lVar33 + 0x58);
+ uVar50 = *(undefined4 *)(lVar33 + 0x5c);
+ uVar51 = *(undefined4 *)(lVar33 + 0x60);
+ uVar52 = *(undefined4 *)(lVar33 + 100);
+ *(undefined4 *)p_Var39 = uVar49;
+ *(undefined4 *)(p_Var39 + 4) = uVar50;
+ *(undefined4 *)(p_Var39 + 8) = uVar51;
+ *(undefined4 *)(p_Var39 + 0xc) = uVar52;
+ *(undefined4 *)(param_3 + 0x10) = uVar49;
+ *(undefined4 *)(param_3 + 0x14) = uVar50;
+ *(undefined4 *)(param_3 + 0x18) = uVar51;
+ *(undefined4 *)(param_3 + 0x1c) = uVar52;
+ local_d0 = *(uint *)(p_Var36 + 0x18);
+ if ((local_d0 & 0x802) == 0) {
+ if ((local_d0 & 0x20) == 0) {
+ lVar33 = *(longlong *)(p_Var39 + 0x98);
+ if (-1 < *(char *)(lVar33 + 2)) {
+ uVar27 = uVar22 | 0x820;
+ *(uint *)(p_Var39 + 0x88) = uVar27;
+ }
+ if ((*(uint *)(lVar33 + 0x10) & 0x2000) != 0) {
+ *(uint *)(p_Var39 + 0x88) = uVar27 | 0x40;
+ }
+ bVar4 = *(byte *)(lVar33 + 0x13);
+ local_178 = bVar4;
+ if ((((*(uint *)(local_198 + 0x18) >> 0x19 & 1) == 0) || (5 < bVar4)) ||
+ ((0x35U >> (bVar4 & 0x1f) & 1) == 0)) {
+ if (*(longlong *)(p_Var39 + 0xc0) == 0) {
+LAB_1402d1328:
+ if ((*(uint *)(local_198 + 0x18) & 1) == 0) {
+LAB_1402d31fb:
+ *(uint *)(p_Var31 + 4) = *(uint *)(p_Var31 + 4) | 0x200000;
+ if ((((undefined **)WPP_GLOBAL_Control != &WPP_GLOBAL_Control) &&
+ ((*(uint *)(WPP_GLOBAL_Control + 0x2c) & 0x100) != 0)) &&
+ (3 < (byte)WPP_GLOBAL_Control[0x29])) {
+ uVar40 = 0x401cf388;
+ puStackY_230 = (undefined *)0x1402d323d;
+ WPP_SF_D(*(undefined8 *)(WPP_GLOBAL_Control + 0x18),0x1f,
+ &WPP_2e1c4a577b2f36c9269c48846c8beb4b_Traceguids,0xc00000d8);
+ }
+ p_Var31 = local_1c0;
+ if (RefsStatusDebugEnabled != '\0') {
+ uVar40 = 0x401ce060;
+ puStackY_230 = (undefined *)0x1402d3266;
+ RefsStatusDebug(-0x3fffff28,local_1c0,"Create.c",0x9a0);
+ }
+ /* WARNING: Subroutine does not return */
+ puStackY_230 = &UNK_1402d3273;
+ RefsRaiseStatusInternal(p_Var31,-0x3fffff28,uVar40);
+ }
+ uVar40 = 0;
+ puStackY_230 = (undefined *)0x1402d133f;
+ uVar18 = RefsPingVolume(p_Var31,local_198,(uchar *)0x0);
+ puVar38 = auStackY_228;
+ if (uVar18 == '\0') goto LAB_1402d31fb;
+ if ((((bVar4 & 0xfa) == 0) && (bVar4 != 1)) ||
+ ((*(uint *)(*(longlong *)(p_Var39 + 0x98) + 0x10) & 8) != 0)) {
+ *(uint *)(p_Var31 + 4) = *(uint *)(p_Var31 + 4) | 0x10000;
+ }
+ lVar33 = *(longlong *)(*(longlong *)(p_Var39 + 0x20) + 0x40);
+ if (((lVar33 != 0) &&
+ (*(undefined8 *)(*(longlong *)(p_Var39 + 0x20) + 0x10) =
+ *(undefined8 *)(lVar33 + 0x10), *(short *)p_Var39 != 0)) &&
+ ((**(short **)(p_Var39 + 8) == 0x3a && ((byte)(bVar4 - 2) < 2)))) {
+ *(uint *)(p_Var31 + 4) = *(uint *)(p_Var31 + 4) | 0x10000;
+ }
+ if ((*(uint *)(p_Var39 + 0x88) & 0x40) == 0) {
+ lVar33 = *(longlong *)(p_Var39 + 0x20);
+ if (((2 < *(ushort *)(lVar33 + 0x58)) &&
+ (psVar34 = *(short **)(lVar33 + 0x60), psVar34[1] == 0x5c)) &&
+ (*psVar34 == 0x5c)) {
+ *(ushort *)(lVar33 + 0x58) = *(ushort *)(lVar33 + 0x58) - 2;
+ pvVar35 = *(void **)(*(longlong *)(p_Var39 + 0x20) + 0x60);
+ uVar5 = *(ushort *)(*(longlong *)(p_Var39 + 0x20) + 0x58);
+ uVar40 = (uint)uVar5;
+ puStackY_230 = (undefined *)0x1402d15a0;
+ memcpy(pvVar35,(void *)((longlong)pvVar35 + 2),(ulonglong)uVar5);
+ in_R9B = (uchar)psVar34;
+ lVar33 = *(longlong *)(p_Var39 + 0x20);
+ if ((2 < *(ushort *)(lVar33 + 0x58)) &&
+ (*(short *)(*(longlong *)(lVar33 + 0x60) + 2) == 0x5c)) {
+ if (((undefined **)WPP_GLOBAL_Control != &WPP_GLOBAL_Control) &&
+ (((*(uint *)(WPP_GLOBAL_Control + 0x2c) & 0x100) != 0 &&
+ (3 < (byte)WPP_GLOBAL_Control[0x29])))) {
+ in_R9B = '3';
+ uVar40 = 0x401cf388;
+ puStackY_230 = (undefined *)0x1402d15fc;
+ WPP_SF_D(*(undefined8 *)(WPP_GLOBAL_Control + 0x18));
+ }
+ lVar20 = -0x3fffffcd;
+ if (RefsStatusDebugEnabled == '\0') goto LAB_1402d10ba;
+ in_R9B = 'K';
+ uVar40 = 0x401ce060;
+ puStackY_230 = (undefined *)0x1402d1628;
+ RefsStatusDebug(-0x3fffffcd,(_IRP_CONTEXT *)0x0,"Create.c",0xa4b);
+ local_1c8[0] = -0x3fffffcd;
+ puVar38 = auStackY_228;
+ p_Var39 = local_1b8;
+ p_Var31 = local_1c0;
+ goto LAB_1402d1d6e;
+ }
+ }
+ uVar5 = *(ushort *)(lVar33 + 0x58);
+ in_R9B = (uchar)uVar5;
+ if (uVar5 != 0) {
+ plVar42 = (longlong *)(lVar33 + 0x60);
+ if ((*(longlong *)(lVar33 + 0x40) != 0) && (*(short *)*plVar42 == 0x5c)) {
+ if (((undefined **)WPP_GLOBAL_Control != &WPP_GLOBAL_Control) &&
+ (((*(uint *)(WPP_GLOBAL_Control + 0x2c) & 0x100) != 0 &&
+ (3 < (byte)WPP_GLOBAL_Control[0x29])))) {
+ in_R9B = '\r';
+ plVar42 = (longlong *)&WPP_2e1c4a577b2f36c9269c48846c8beb4b_Traceguids;
+ puStackY_230 = (undefined *)0x1402d169b;
+ WPP_SF_D(*(undefined8 *)(WPP_GLOBAL_Control + 0x18));
+ }
+ uVar40 = (uint)plVar42;
+ lVar20 = -0x3ffffff3;
+ if (RefsStatusDebugEnabled == '\0') {
+LAB_1402d10ba:
+ puVar38 = auStackY_228;
+ p_Var39 = local_1b8;
+ p_Var31 = local_1c0;
+ local_1c8[0] = lVar20;
+ }
+ else {
+ in_R9B = '[';
+ uVar40 = 0x401ce060;
+ puStackY_230 = (undefined *)0x1402d16c7;
+ RefsStatusDebug(-0x3ffffff3,(_IRP_CONTEXT *)0x0,"Create.c",0xa5b);
+ local_1c8[0] = -0x3ffffff3;
+ puVar38 = auStackY_228;
+ p_Var39 = local_1b8;
+ p_Var31 = local_1c0;
+ }
+ goto LAB_1402d1d6e;
+ }
+ if ((*(short *)(*plVar42 + -2 + (ulonglong)(uVar5 >> 1) * 2) == 0x5c) &&
+ (2 < uVar5)) {
+ *(uint *)(p_Var39 + 0x88) = *(uint *)(p_Var39 + 0x88) | 8;
+ *(short *)(lVar33 + 0x58) = *(short *)(lVar33 + 0x58) + -2;
+ uVar5 = *(ushort *)(*(longlong *)(p_Var39 + 0x20) + 0x58);
+ if ((uVar5 != 0) &&
+ (*(short *)(*(longlong *)(*(longlong *)(p_Var39 + 0x20) + 0x60) + -2 +
+ (ulonglong)(uVar5 >> 1) * 2) == 0x5c)) {
+ if ((((undefined **)WPP_GLOBAL_Control != &WPP_GLOBAL_Control) &&
+ ((*(uint *)(WPP_GLOBAL_Control + 0x2c) & 0x100) != 0)) &&
+ (3 < (byte)WPP_GLOBAL_Control[0x29])) {
+ in_R9B = '3';
+ plVar42 = (longlong *)&WPP_2e1c4a577b2f36c9269c48846c8beb4b_Traceguids;
+ puStackY_230 = (undefined *)0x1402d1765;
+ WPP_SF_D(*(undefined8 *)(WPP_GLOBAL_Control + 0x18));
+ }
+ uVar40 = (uint)plVar42;
+ lVar20 = -0x3fffffcd;
+ if (RefsStatusDebugEnabled == '\0') goto LAB_1402d10ba;
+ in_R9B = 'q';
+ uVar40 = 0x401ce060;
+ puStackY_230 = (undefined *)0x1402d1791;
+ RefsStatusDebug(-0x3fffffcd,(_IRP_CONTEXT *)0x0,"Create.c",0xa71);
+ local_1c8[0] = -0x3fffffcd;
+ puVar38 = auStackY_228;
+ p_Var39 = local_1b8;
+ p_Var31 = local_1c0;
+ goto LAB_1402d1d6e;
+ 

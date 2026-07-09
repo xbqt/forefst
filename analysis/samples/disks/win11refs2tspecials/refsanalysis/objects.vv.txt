@@ -1,0 +1,2757 @@
+==============================================================================
+ReFS Object ID Table
+==============================================================================
+  Image:            win11refs2tspecials.raw
+  Partition start:  0x1000000
+  Cluster size:     0x1000
+  ReFS version:     3.14
+  CPC:              0x4000 (shift=15)
+  Container entries:32767
+  OID Table root:   [0x11610, 0x11611, 0x11612, 0x11613]
+  OID Table phys:   [0x1610, 0x1611, 0x1612, 0x1613]
+
+Total objects: 230
+
+  OID      Name                             Root LCN Physical LCN    Sig Extra
+  ----------------------------------------------------------------------------
+  0x7      Upcase Table                      0x10050         0x50   MSB+      
+  0x8      Upcase Table (dup)                0x1004c         0x4c   MSB+      
+  0x9      Logfile Information Table         0x100a8         0xa8   MSB+      
+  0xa      Logfile Information (dup)         0x100a4         0xa4   MSB+      
+  0xd      Trash Table                       0x100ac         0xac   MSB+      
+  0x30     Session Activity Table            0x1240c       0x240c   MSB+      
+  0x500    Volume Information                0x11600       0x1600   MSB+      
+  0x501    Volume Information (dup)          0x10e00        0xe00   MSB+      
+  0x520    FS Metadata                       0x12600       0x2600   MSB+    +8
+  0x530    Security Descriptor Stream        0x13a00       0x3a00   MSB+      
+  0x540    Reparse Point Index               0x10a20        0xa20   MSB+      
+  0x541    Reparse Point Index (dup)         0x11234       0x1234   MSB+      
+  0x600    Root Directory                    0x12008       0x2008   MSB+    +8
+  0x701    Directory/File (0x701)            0x13818       0x3818   MSB+    +8
+  0x702    Directory/File (0x702)            0x1360c       0x360c   MSB+    +8
+  0x703    Directory/File (0x703)            0x11608       0x1608   MSB+    +8
+  0x704    Directory/File (0x704)            0x12e2c       0x2e2c   MSB+    +8
+  0x705    Directory/File (0x705)            0x13c0c       0x3c0c   MSB+    +8
+  0x707    Directory/File (0x707)            0x10220        0x220   MSB+    +8
+  0x708    Directory/File (0x708)            0x11418       0x1418   MSB+    +8
+  0x709    Directory/File (0x709)            0x13434       0x3434   MSB+    +8
+  0x70b    Directory/File (0x70b)            0x12414       0x2414   MSB+    +8
+  0x70c    Directory/File (0x70c)            0x11e1c       0x1e1c   MSB+    +8
+  0x70d    Directory/File (0x70d)            0x11420       0x1420   MSB+    +8
+  0x70e    Directory/File (0x70e)            0x11e04       0x1e04   MSB+    +8
+  0x712    Directory/File (0x712)            0x11208       0x1208   MSB+    +8
+  0x713    Directory/File (0x713)            0x10c14        0xc14   MSB+    +8
+  0x714    Directory/File (0x714)            0x13008       0x3008   MSB+    +8
+  0x716    Directory/File (0x716)            0x13210       0x3210   MSB+    +8
+  0x717    Directory/File (0x717)            0x13204       0x3204   MSB+    +8
+  0x718    Directory/File (0x718)            0x1300c       0x300c   MSB+    +8
+  0x719    Directory/File (0x719)            0x11018       0x1018   MSB+    +8
+  0x71a    Directory/File (0x71a)            0x1381c       0x381c   MSB+    +8
+  0x71b    Directory/File (0x71b)            0x11a08       0x1a08   MSB+    +8
+  0x71d    Directory/File (0x71d)            0x13224       0x3224   MSB+    +8
+  0x71e    Directory/File (0x71e)            0x1380c       0x380c   MSB+    +8
+  0x71f    Directory/File (0x71f)            0x13208       0x3208   MSB+    +8
+  0x720    Directory/File (0x720)            0x10404        0x404   MSB+    +8
+  0x722    Directory/File (0x722)            0x11a2c       0x1a2c   MSB+    +8
+  0x723    Directory/File (0x723)            0x13218       0x3218   MSB+    +8
+  0x724    Directory/File (0x724)            0x11a04       0x1a04   MSB+    +8
+  0x725    Directory/File (0x725)            0x100b4         0xb4   MSB+    +8
+  0x726    Directory/File (0x726)            0x13c00       0x3c00   MSB+    +8
+  0x727    Directory/File (0x727)            0x10c20        0xc20   MSB+    +8
+  0x728    Directory/File (0x728)            0x10810        0x810   MSB+    +8
+  0x72b    Directory/File (0x72b)            0x13e10       0x3e10   MSB+    +8
+  0x72d    Directory/File (0x72d)            0x13408       0x3408   MSB+    +8
+  0x72e    Directory/File (0x72e)            0x1080c        0x80c   MSB+    +8
+  0x72f    Directory/File (0x72f)            0x11438       0x1438   MSB+    +8
+  0x730    Directory/File (0x730)            0x10204        0x204   MSB+    +8
+  0x734    Directory/File (0x734)            0x13e0c       0x3e0c   MSB+    +8
+  0x737    Directory/File (0x737)            0x10610        0x610   MSB+    +8
+  0x738    Directory/File (0x738)            0x11e08       0x1e08   MSB+    +8
+  0x739    Directory/File (0x739)            0x11218       0x1218   MSB+    +8
+  0x73b    Directory/File (0x73b)            0x12014       0x2014   MSB+    +8
+  0x73c    Directory/File (0x73c)            0x12210       0x2210   MSB+    +8
+  0x73e    Directory/File (0x73e)            0x13404       0x3404   MSB+    +8
+  0x73f    Directory/File (0x73f)            0x12e30       0x2e30   MSB+    +8
+  0x740    Directory/File (0x740)            0x13228       0x3228   MSB+    +8
+  0x741    Directory/File (0x741)            0x12200       0x2200   MSB+    +8
+  0x742    Directory/File (0x742)            0x13a14       0x3a14   MSB+    +8
+  0x743    Directory/File (0x743)            0x10208        0x208   MSB+    +8
+  0x744    Directory/File (0x744)            0x12e20       0x2e20   MSB+    +8
+  0x745    Directory/File (0x745)            0x11808       0x1808   MSB+    +8
+  0x746    Directory/File (0x746)            0x11a14       0x1a14   MSB+    +8
+  0x748    Directory/File (0x748)            0x13200       0x3200   MSB+    +8
+  0x749    Directory/File (0x749)            0x10410        0x410   MSB+    +8
+  0x74a    Directory/File (0x74a)            0x100b0         0xb0   MSB+    +8
+  0x74b    Directory/File (0x74b)            0x12e18       0x2e18   MSB+    +8
+  0x74c    Directory/File (0x74c)            0x10a0c        0xa0c   MSB+    +8
+  0x74d    Directory/File (0x74d)            0x13e1c       0x3e1c   MSB+    +8
+  0x74e    Directory/File (0x74e)            0x12614       0x2614   MSB+    +8
+  0x74f    Directory/File (0x74f)            0x10604        0x604   MSB+    +8
+  0x750    Directory/File (0x750)            0x1302c       0x302c   MSB+    +8
+  0x751    Directory/File (0x751)            0x1141c       0x141c   MSB+    +8
+  0x753    Directory/File (0x753)            0x13620       0x3620   MSB+    +8
+  0x755    Directory/File (0x755)            0x10c18        0xc18   MSB+    +8
+  0x756    Directory/File (0x756)            0x11210       0x1210   MSB+    +8
+  0x758    Directory/File (0x758)            0x11a18       0x1a18   MSB+    +8
+  0x759    Directory/File (0x759)            0x10834        0x834   MSB+    +8
+  0x75a    Directory/File (0x75a)            0x13014       0x3014   MSB+    +8
+  0x75b    Directory/File (0x75b)            0x12c04       0x2c04   MSB+    +8
+  0x75c    Directory/File (0x75c)            0x10824        0x824   MSB+    +8
+  0x75d    Directory/File (0x75d)            0x10214        0x214   MSB+    +8
+  0x75e    Directory/File (0x75e)            0x11c00       0x1c00   MSB+    +8
+  0x75f    Directory/File (0x75f)            0x13828       0x3828   MSB+    +8
+  0x760    Directory/File (0x760)            0x1040c        0x40c   MSB+    +8
+  0x762    Directory/File (0x762)            0x1280c       0x280c   MSB+    +8
+  0x763    Directory/File (0x763)            0x1081c        0x81c   MSB+    +8
+  0x764    Directory/File (0x764)            0x11a0c       0x1a0c   MSB+    +8
+  0x765    Directory/File (0x765)            0x10c0c        0xc0c   MSB+    +8
+  0x767    Directory/File (0x767)            0x12400       0x2400   MSB+    +8
+  0x768    Directory/File (0x768)            0x13834       0x3834   MSB+    +8
+  0x769    Directory/File (0x769)            0x12e24       0x2e24   MSB+    +8
+  0x76a    Directory/File (0x76a)            0x11a3c       0x1a3c   MSB+    +8
+  0x76b    Directory/File (0x76b)            0x11a20       0x1a20   MSB+    +8
+  0x76c    Directory/File (0x76c)            0x13c1c       0x3c1c   MSB+    +8
+  0x76d    Directory/File (0x76d)            0x12e04       0x2e04   MSB+    +8
+  0x76e    Directory/File (0x76e)            0x11200       0x1200   MSB+    +8
+  0x76f    Directory/File (0x76f)            0x1361c       0x361c   MSB+    +8
+  0x770    Directory/File (0x770)            0x11620       0x1620   MSB+    +8
+  0x771    Directory/File (0x771)            0x10e04        0xe04   MSB+    +8
+  0x772    Directory/File (0x772)            0x10c1c        0xc1c   MSB+    +8
+  0x773    Directory/File (0x773)            0x13e14       0x3e14   MSB+    +8
+  0x774    Directory/File (0x774)            0x11e14       0x1e14   MSB+    +8
+  0x775    Directory/File (0x775)            0x10c40        0xc40   MSB+    +8
+  0x776    Directory/File (0x776)            0x13810       0x3810   MSB+    +8
+  0x777    Directory/File (0x777)            0x11404       0x1404   MSB+    +8
+  0x778    Directory/File (0x778)            0x12424       0x2424   MSB+    +8
+  0x779    Directory/File (0x779)            0x1003c         0x3c   MSB+    +8
+  0x77c    Directory/File (0x77c)            0x11818       0x1818   MSB+    +8
+  0x77d    Directory/File (0x77d)            0x12c00       0x2c00   MSB+    +8
+  0x77e    Directory/File (0x77e)            0x13230       0x3230   MSB+    +8
+  0x780    Directory/File (0x780)            0x13400       0x3400   MSB+    +8
+  0x781    Directory/File (0x781)            0x12a24       0x2a24   MSB+    +8
+  0x782    Directory/File (0x782)            0x1301c       0x301c   MSB+    +8
+  0x783    Directory/File (0x783)            0x10814        0x814   MSB+    +8
+  0x787    Directory/File (0x787)            0x12218       0x2218   MSB+    +8
+  0x789    Directory/File (0x789)            0x12e3c       0x2e3c   MSB+    +8
+  0x78a    Directory/File (0x78a)            0x13c04       0x3c04   MSB+    +8
+  0x78b    Directory/File (0x78b)            0x13618       0x3618   MSB+    +8
+  0x78c    Directory/File (0x78c)            0x12420       0x2420   MSB+    +8
+  0x78d    Directory/File (0x78d)            0x11a24       0x1a24   MSB+    +8
+  0x78e    Directory/File (0x78e)            0x1261c       0x261c   MSB+    +8
+  0x78f    Directory/File (0x78f)            0x11410       0x1410   MSB+    +8
+  0x790    Directory/File (0x790)            0x11424       0x1424   MSB+    +8
+  0x791    Directory/File (0x791)            0x10804        0x804   MSB+    +8
+  0x794    Directory/File (0x794)            0x11a30       0x1a30   MSB+    +8
+  0x795    Directory/File (0x795)            0x1020c        0x20c   MSB+    +8
+  0x797    Directory/File (0x797)            0x12824       0x2824   MSB+    +8
+  0x798    Directory/File (0x798)            0x10c38        0xc38   MSB+    +8
+  0x799    Directory/File (0x799)            0x11810       0x1810   MSB+    +8
+  0x79b    Directory/File (0x79b)            0x12a18       0x2a18   MSB+    +8
+  0x79c    Directory/File (0x79c)            0x1041c        0x41c   MSB+    +8
+  0x79d    Directory/File (0x79d)            0x12818       0x2818   MSB+    +8
+  0x79f    Directory/File (0x79f)            0x13824       0x3824   MSB+    +8
+  0x7a1    Directory/File (0x7a1)            0x10200        0x200   MSB+    +8
+  0x7a2    Directory/File (0x7a2)            0x1100c       0x100c   MSB+    +8
+  0x7a3    Directory/File (0x7a3)            0x11e00       0x1e00   MSB+    +8
+  0x7a4    Directory/File (0x7a4)            0x12404       0x2404   MSB+    +8
+  0x7a6    Directory/File (0x7a6)            0x13430       0x3430   MSB+    +8
+  0x7a7    Directory/File (0x7a7)            0x10e20        0xe20   MSB+    +8
+  0x7a8    Directory/File (0x7a8)            0x1382c       0x382c   MSB+    +8
+  0x7a9    Directory/File (0x7a9)            0x11400       0x1400   MSB+    +8
+  0x7ab    Directory/File (0x7ab)            0x11604       0x1604   MSB+    +8
+  0x7ac    Directory/File (0x7ac)            0x10040         0x40   MSB+    +8
+  0x7ad    Directory/File (0x7ad)            0x12020       0x2020   MSB+    +8
+  0x7ae    Directory/File (0x7ae)            0x12028       0x2028   MSB+    +8
+  0x7af    Directory/File (0x7af)            0x11224       0x1224   MSB+    +8
+  0x7b0    Directory/File (0x7b0)            0x12010       0x2010   MSB+    +8
+  0x7b2    Directory/File (0x7b2)            0x12000       0x2000   MSB+    +8
+  0x7b3    Directory/File (0x7b3)            0x100d0         0xd0   MSB+    +8
+  0x7b4    Directory/File (0x7b4)            0x10600        0x600   MSB+    +8
+  0x7b5    Directory/File (0x7b5)            0x11450       0x1450   MSB+    +8
+  0x7b6    Directory/File (0x7b6)            0x12e4c       0x2e4c   MSB+    +8
+  0x7b7    Directory/File (0x7b7)            0x11c18       0x1c18   MSB+    +8
+  0x7b8    Directory/File (0x7b8)            0x12018       0x2018   MSB+    +8
+  0x7b9    Directory/File (0x7b9)            0x1260c       0x260c   MSB+    +8
+  0x7ba    Directory/File (0x7ba)            0x1140c       0x140c   MSB+    +8
+  0x7bb    Directory/File (0x7bb)            0x11448       0x1448   MSB+    +8
+  0x7bd    Directory/File (0x7bd)            0x10218        0x218   MSB+    +8
+  0x7be    Directory/File (0x7be)            0x12030       0x2030   MSB+    +8
+  0x7bf    Directory/File (0x7bf)            0x12c08       0x2c08   MSB+    +8
+  0x7c1    Directory/File (0x7c1)            0x11204       0x1204   MSB+    +8
+  0x7c2    Directory/File (0x7c2)            0x100c0         0xc0   MSB+    +8
+  0x7c3    Directory/File (0x7c3)            0x11a28       0x1a28   MSB+    +8
+  0x7c4    Directory/File (0x7c4)            0x11614       0x1614   MSB+    +8
+  0x7c5    Directory/File (0x7c5)            0x1180c       0x180c   MSB+    +8
+  0x7c6    Directory/File (0x7c6)            0x1322c       0x322c   MSB+    +8
+  0x7c7    Directory/File (0x7c7)            0x12410       0x2410   MSB+    +8
+  0x7c8    Directory/File (0x7c8)            0x12a04       0x2a04   MSB+    +8
+  0x7c9    Directory/File (0x7c9)            0x12c30       0x2c30   MSB+    +8
+  0x7ca    Directory/File (0x7ca)            0x11a40       0x1a40   MSB+    +8
+  0x7cb    Directory/File (0x7cb)            0x100c8         0xc8   MSB+    +8
+  0x7cc    Directory/File (0x7cc)            0x10624        0x624   MSB+    +8
+  0x7cd    Directory/File (0x7cd)            0x13c18       0x3c18   MSB+    +8
+  0x7ce    Directory/File (0x7ce)            0x13c20       0x3c20   MSB+    +8
+  0x7cf    Directory/File (0x7cf)            0x12c34       0x2c34   MSB+    +8
+  0x7d0    Directory/File (0x7d0)            0x11c0c       0x1c0c   MSB+    +8
+  0x7d1    Directory/File (0x7d1)            0x13820       0x3820   MSB+    +8
+  0x7d2    Directory/File (0x7d2)            0x1202c       0x202c   MSB+    +8
+  0x7d3    Directory/File (0x7d3)            0x11638       0x1638   MSB+    +8
+  0x7d5    Directory/File (0x7d5)            0x11228       0x1228   MSB+    +8
+  0x7d6    Directory/File (0x7d6)            0x12038       0x2038   MSB+    +8
+  0x7d7    Directory/File (0x7d7)            0x1221c       0x221c   MSB+    +8
+  0x7d8    Directory/File (0x7d8)            0x13e38       0x3e38   MSB+    +8
+  0x7d9    Directory/File (0x7d9)            0x11e2c       0x1e2c   MSB+    +8
+  0x7da    Directory/File (0x7da)            0x11e30       0x1e30   MSB+    +8
+  0x7db    Directory/File (0x7db)            0x13e08       0x3e08   MSB+    +8
+  0x7dc    Directory/File (0x7dc)            0x1121c       0x121c   MSB+    +8
+  0x7dd    Directory/File (0x7dd)            0x13c30       0x3c30   MSB+    +8
+  0x7de    Directory/File (0x7de)            0x10e14        0xe14   MSB+    +8
+  0x7df    Directory/File (0x7df)            0x13c34       0x3c34   MSB+    +8
+  0x7e0    Directory/File (0x7e0)            0x11a1c       0x1a1c   MSB+    +8
+  0x7e1    Directory/File (0x7e1)            0x10614        0x614   MSB+    +8
+  0x7e2    Directory/File (0x7e2)            0x13a04       0x3a04   MSB+    +8
+  0x7e3    Directory/File (0x7e3)            0x10a04        0xa04   MSB+    +8
+  0x7e4    Directory/File (0x7e4)            0x11000       0x1000   MSB+    +8
+  0x7e5    Directory/File (0x7e5)            0x11828       0x1828   MSB+    +8
+  0x7e6    Directory/File (0x7e6)            0x1242c       0x242c   MSB+    +8
+  0x7e7    Directory/File (0x7e7)            0x11648       0x1648   MSB+    +8
+  0x7e9    Directory/File (0x7e9)            0x13240       0x3240   MSB+    +8
+  0x7ea    Directory/File (0x7ea)            0x10e28        0xe28   MSB+    +8
+  0x7eb    Directory/File (0x7eb)            0x1323c       0x323c   MSB+    +8
+  0x7ee    Directory/File (0x7ee)            0x1162c       0x162c   MSB+    +8
+  0x7f0    Directory/File (0x7f0)            0x11428       0x1428   MSB+    +8
+  0x7f2    Directory/File (0x7f2)            0x13238       0x3238   MSB+    +8
+  0x7f3    Directory/File (0x7f3)            0x10c08        0xc08   MSB+    +8
+  0x7f4    Directory/File (0x7f4)            0x10e34        0xe34   MSB+    +8
+  0x7f5    Directory/File (0x7f5)            0x13e34       0x3e34   MSB+    +8
+  0x7f8    Directory/File (0x7f8)            0x11644       0x1644   MSB+    +8
+  0x7fa    Directory/File (0x7fa)            0x12630       0x2630   MSB+    +8
+  0x7fb    Directory/File (0x7fb)            0x12e28       0x2e28   MSB+    +8
+  0x7fc    Directory/File (0x7fc)            0x11824       0x1824   MSB+    +8
+  0x7fd    Directory/File (0x7fd)            0x12c44       0x2c44   MSB+    +8
+  0x804    Directory/File (0x804)            0x11430       0x1430   MSB+    +8
+  0x805    Directory/File (0x805)            0x13628       0x3628   MSB+    +8
+  0x806    Directory/File (0x806)            0x1083c        0x83c   MSB+    +8
+  0x807    Directory/File (0x807)            0x12a28       0x2a28   MSB+    +8
+  0x808    Directory/File (0x808)            0x11830       0x1830   MSB+    +8
+  0x80d    Directory/File (0x80d)            0x12814       0x2814   MSB+    +8
+  0x80e    Directory/File (0x80e)            0x11640       0x1640   MSB+    +8
+  0x812    Directory/File (0x812)            0x10238        0x238   MSB+    +8
+  0x813    Directory/File (0x813)            0x12228       0x2228   MSB+    +8
+  0x814    Directory/File (0x814)            0x1163c       0x163c   MSB+    +8
+  0x817    Directory/File (0x817)            0x10618        0x618   MSB+    +8
+  0x81a    Directory/File (0x81a)            0x10620        0x620   MSB+    +8
+  0x81c    Directory/File (0x81c)            0x13a24       0x3a24   MSB+    +8
+  0x81d    Directory/File (0x81d)            0x11020       0x1020   MSB+    +8
+  0x81e    Directory/File (0x81e)            0x10430        0x430   MSB+    +8
+
+Detailed object entries
+------------------------------------------------------------------------------
+
+  OID 0x7 — Upcase Table
+    Key (raw):  00000000000000000700000000000000
+    VLCN tuple: [0x10050, 0x10051, 0x10052, 0x10053]
+    PLCN tuple: [0x50, 0x51, 0x52, 0x53]
+    Absolute:   0x1050000
+    Signature:  MSB+
+    Value size: 80 bytes (standard=80, extra=0)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x0 0x0 0x0
+
+  OID 0x8 — Upcase Table (dup)
+    Key (raw):  00000000000000000800000000000000
+    VLCN tuple: [0x1004c, 0x1004d, 0x1004e, 0x1004f]
+    PLCN tuple: [0x4c, 0x4d, 0x4e, 0x4f]
+    Absolute:   0x104c000
+    Signature:  MSB+
+    Value size: 80 bytes (standard=80, extra=0)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x0 0x0 0x0
+
+  OID 0x9 — Logfile Information Table
+    Key (raw):  00000000000000000900000000000000
+    VLCN tuple: [0x100a8, 0x100a9, 0x100aa, 0x100ab]
+    PLCN tuple: [0xa8, 0xa9, 0xaa, 0xab]
+    Absolute:   0x10a8000
+    Signature:  MSB+
+    Value size: 80 bytes (standard=80, extra=0)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x0 0x0 0x0
+
+  OID 0xa — Logfile Information (dup)
+    Key (raw):  00000000000000000a00000000000000
+    VLCN tuple: [0x100a4, 0x100a5, 0x100a6, 0x100a7]
+    PLCN tuple: [0xa4, 0xa5, 0xa6, 0xa7]
+    Absolute:   0x10a4000
+    Signature:  MSB+
+    Value size: 80 bytes (standard=80, extra=0)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x0 0x0 0x0
+
+  OID 0xd — Trash Table
+    Key (raw):  00000000000000000d00000000000000
+    VLCN tuple: [0x100ac, 0x100ad, 0x100ae, 0x100af]
+    PLCN tuple: [0xac, 0xad, 0xae, 0xaf]
+    Absolute:   0x10ac000
+    Signature:  MSB+
+    Value size: 80 bytes (standard=80, extra=0)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x0 0x2 0x0
+
+  OID 0x30 — Session Activity Table
+    Key (raw):  00000000000000003000000000000000
+    VLCN tuple: [0x1240c, 0x1240d, 0x1240e, 0x1240f]
+    PLCN tuple: [0x240c, 0x240d, 0x240e, 0x240f]
+    Absolute:   0x340c000
+    Signature:  MSB+
+    Value size: 80 bytes (standard=80, extra=0)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x0 0x1383 0x1
+
+  OID 0x500 — Volume Information
+    Key (raw):  00000000000000000005000000000000
+    VLCN tuple: [0x11600, 0x11601, 0x11602, 0x11603]
+    PLCN tuple: [0x1600, 0x1601, 0x1602, 0x1603]
+    Absolute:   0x2600000
+    Signature:  MSB+
+    Value size: 80 bytes (standard=80, extra=0)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x0 0x8 0x1
+
+  OID 0x501 — Volume Information (dup)
+    Key (raw):  00000000000000000105000000000000
+    VLCN tuple: [0x10e00, 0x10e01, 0x10e02, 0x10e03]
+    PLCN tuple: [0xe00, 0xe01, 0xe02, 0xe03]
+    Absolute:   0x1e00000
+    Signature:  MSB+
+    Value size: 80 bytes (standard=80, extra=0)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x0 0x8 0x1
+
+  OID 0x520 — FS Metadata
+    Key (raw):  00000000000000002005000000000000
+    VLCN tuple: [0x12600, 0x12601, 0x12602, 0x12603]
+    PLCN tuple: [0x2600, 0x2601, 0x2602, 0x2603]
+    Absolute:   0x3600000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x7 0x1
+    Extra bytes (8):
+    00000050  00 05 00 00 00 00 00 00                           ........
+
+  OID 0x530 — Security Descriptor Stream
+    Key (raw):  00000000000000003005000000000000
+    VLCN tuple: [0x13a00, 0x13a01, 0x13a02, 0x13a03]
+    PLCN tuple: [0x3a00, 0x3a01, 0x3a02, 0x3a03]
+    Absolute:   0x4a00000
+    Signature:  MSB+
+    Value size: 80 bytes (standard=80, extra=0)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x0 0x451 0x1
+
+  OID 0x540 — Reparse Point Index
+    Key (raw):  00000000000000004005000000000000
+    VLCN tuple: [0x10a20, 0x10a21, 0x10a22, 0x10a23]
+    PLCN tuple: [0xa20, 0xa21, 0xa22, 0xa23]
+    Absolute:   0x1a20000
+    Signature:  MSB+
+    Value size: 80 bytes (standard=80, extra=0)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x0 0x1372 0x1
+
+  OID 0x541 — Reparse Point Index (dup)
+    Key (raw):  00000000000000004105000000000000
+    VLCN tuple: [0x11234, 0x11235, 0x11236, 0x11237]
+    PLCN tuple: [0x1234, 0x1235, 0x1236, 0x1237]
+    Absolute:   0x2234000
+    Signature:  MSB+
+    Value size: 80 bytes (standard=80, extra=0)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x0 0x1372 0x1
+
+  OID 0x600 — Root Directory
+    Key (raw):  00000000000000000006000000000000
+    VLCN tuple: [0x12008, 0x12009, 0x1200a, 0x1200b]
+    PLCN tuple: [0x2008, 0x2009, 0x200a, 0x200b]
+    Absolute:   0x3008000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1383 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x701 — Directory/File (0x701)
+    Key (raw):  00000000000000000107000000000000
+    VLCN tuple: [0x13818, 0x13819, 0x1381a, 0x1381b]
+    PLCN tuple: [0x3818, 0x3819, 0x381a, 0x381b]
+    Absolute:   0x4818000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x44d 0x1
+    Extra bytes (8):
+    00000050  11 01 00 00 00 00 00 00                           ........
+
+  OID 0x702 — Directory/File (0x702)
+    Key (raw):  00000000000000000207000000000000
+    VLCN tuple: [0x1360c, 0x1360d, 0x1360e, 0x1360f]
+    PLCN tuple: [0x360c, 0x360d, 0x360e, 0x360f]
+    Absolute:   0x460c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9da 0x1
+    Extra bytes (8):
+    00000050  17 00 00 00 00 00 00 00                           ........
+
+  OID 0x703 — Directory/File (0x703)
+    Key (raw):  00000000000000000307000000000000
+    VLCN tuple: [0x11608, 0x11609, 0x1160a, 0x1160b]
+    PLCN tuple: [0x1608, 0x1609, 0x160a, 0x160b]
+    Absolute:   0x2608000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9da 0x1
+    Extra bytes (8):
+    00000050  14 00 00 00 00 00 00 00                           ........
+
+  OID 0x704 — Directory/File (0x704)
+    Key (raw):  00000000000000000407000000000000
+    VLCN tuple: [0x12e2c, 0x12e2d, 0x12e2e, 0x12e2f]
+    PLCN tuple: [0x2e2c, 0x2e2d, 0x2e2e, 0x2e2f]
+    Absolute:   0x3e2c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9da 0x1
+    Extra bytes (8):
+    00000050  0e 00 00 00 00 00 00 00                           ........
+
+  OID 0x705 — Directory/File (0x705)
+    Key (raw):  00000000000000000507000000000000
+    VLCN tuple: [0x13c0c, 0x13c0d, 0x13c0e, 0x13c0f]
+    PLCN tuple: [0x3c0c, 0x3c0d, 0x3c0e, 0x3c0f]
+    Absolute:   0x4c0c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9da 0x1
+    Extra bytes (8):
+    00000050  0b 00 00 00 00 00 00 00                           ........
+
+  OID 0x707 — Directory/File (0x707)
+    Key (raw):  00000000000000000707000000000000
+    VLCN tuple: [0x10220, 0x10221, 0x10222, 0x10223]
+    PLCN tuple: [0x220, 0x221, 0x222, 0x223]
+    Absolute:   0x1220000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9d8 0x1
+    Extra bytes (8):
+    00000050  0f 00 00 00 00 00 00 00                           ........
+
+  OID 0x708 — Directory/File (0x708)
+    Key (raw):  00000000000000000807000000000000
+    VLCN tuple: [0x11418, 0x11419, 0x1141a, 0x1141b]
+    PLCN tuple: [0x1418, 0x1419, 0x141a, 0x141b]
+    Absolute:   0x2418000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9d8 0x1
+    Extra bytes (8):
+    00000050  13 00 00 00 00 00 00 00                           ........
+
+  OID 0x709 — Directory/File (0x709)
+    Key (raw):  00000000000000000907000000000000
+    VLCN tuple: [0x13434, 0x13435, 0x13436, 0x13437]
+    PLCN tuple: [0x3434, 0x3435, 0x3436, 0x3437]
+    Absolute:   0x4434000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9d8 0x1
+    Extra bytes (8):
+    00000050  17 00 00 00 00 00 00 00                           ........
+
+  OID 0x70b — Directory/File (0x70b)
+    Key (raw):  00000000000000000b07000000000000
+    VLCN tuple: [0x12414, 0x12415, 0x12416, 0x12417]
+    PLCN tuple: [0x2414, 0x2415, 0x2416, 0x2417]
+    Absolute:   0x3414000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9d8 0x1
+    Extra bytes (8):
+    00000050  0d 00 00 00 00 00 00 00                           ........
+
+  OID 0x70c — Directory/File (0x70c)
+    Key (raw):  00000000000000000c07000000000000
+    VLCN tuple: [0x11e1c, 0x11e1d, 0x11e1e, 0x11e1f]
+    PLCN tuple: [0x1e1c, 0x1e1d, 0x1e1e, 0x1e1f]
+    Absolute:   0x2e1c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x93f 0x1
+    Extra bytes (8):
+    00000050  0b 00 00 00 00 00 00 00                           ........
+
+  OID 0x70d — Directory/File (0x70d)
+    Key (raw):  00000000000000000d07000000000000
+    VLCN tuple: [0x11420, 0x11421, 0x11422, 0x11423]
+    PLCN tuple: [0x1420, 0x1421, 0x1422, 0x1423]
+    Absolute:   0x2420000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9c5 0x1
+    Extra bytes (8):
+    00000050  07 00 00 00 00 00 00 00                           ........
+
+  OID 0x70e — Directory/File (0x70e)
+    Key (raw):  00000000000000000e07000000000000
+    VLCN tuple: [0x11e04, 0x11e05, 0x11e06, 0x11e07]
+    PLCN tuple: [0x1e04, 0x1e05, 0x1e06, 0x1e07]
+    Absolute:   0x2e04000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9da 0x1
+    Extra bytes (8):
+    00000050  0c 00 00 00 00 00 00 00                           ........
+
+  OID 0x712 — Directory/File (0x712)
+    Key (raw):  00000000000000001207000000000000
+    VLCN tuple: [0x11208, 0x11209, 0x1120a, 0x1120b]
+    PLCN tuple: [0x1208, 0x1209, 0x120a, 0x120b]
+    Absolute:   0x2208000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x4e6 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x713 — Directory/File (0x713)
+    Key (raw):  00000000000000001307000000000000
+    VLCN tuple: [0x10c14, 0x10c15, 0x10c16, 0x10c17]
+    PLCN tuple: [0xc14, 0xc15, 0xc16, 0xc17]
+    Absolute:   0x1c14000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x903 0x1
+    Extra bytes (8):
+    00000050  02 00 00 00 00 00 00 00                           ........
+
+  OID 0x714 — Directory/File (0x714)
+    Key (raw):  00000000000000001407000000000000
+    VLCN tuple: [0x13008, 0x13009, 0x1300a, 0x1300b]
+    PLCN tuple: [0x3008, 0x3009, 0x300a, 0x300b]
+    Absolute:   0x4008000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9da 0x1
+    Extra bytes (8):
+    00000050  05 00 00 00 00 00 00 00                           ........
+
+  OID 0x716 — Directory/File (0x716)
+    Key (raw):  00000000000000001607000000000000
+    VLCN tuple: [0x13210, 0x13211, 0x13212, 0x13213]
+    PLCN tuple: [0x3210, 0x3211, 0x3212, 0x3213]
+    Absolute:   0x4210000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9da 0x1
+    Extra bytes (8):
+    00000050  08 00 00 00 00 00 00 00                           ........
+
+  OID 0x717 — Directory/File (0x717)
+    Key (raw):  00000000000000001707000000000000
+    VLCN tuple: [0x13204, 0x13205, 0x13206, 0x13207]
+    PLCN tuple: [0x3204, 0x3205, 0x3206, 0x3207]
+    Absolute:   0x4204000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x531 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x718 — Directory/File (0x718)
+    Key (raw):  00000000000000001807000000000000
+    VLCN tuple: [0x1300c, 0x1300d, 0x1300e, 0x1300f]
+    PLCN tuple: [0x300c, 0x300d, 0x300e, 0x300f]
+    Absolute:   0x400c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9da 0x1
+    Extra bytes (8):
+    00000050  09 00 00 00 00 00 00 00                           ........
+
+  OID 0x719 — Directory/File (0x719)
+    Key (raw):  00000000000000001907000000000000
+    VLCN tuple: [0x11018, 0x11019, 0x1101a, 0x1101b]
+    PLCN tuple: [0x1018, 0x1019, 0x101a, 0x101b]
+    Absolute:   0x2018000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9da 0x1
+    Extra bytes (8):
+    00000050  09 00 00 00 00 00 00 00                           ........
+
+  OID 0x71a — Directory/File (0x71a)
+    Key (raw):  00000000000000001a07000000000000
+    VLCN tuple: [0x1381c, 0x1381d, 0x1381e, 0x1381f]
+    PLCN tuple: [0x381c, 0x381d, 0x381e, 0x381f]
+    Absolute:   0x481c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x95a 0x1
+    Extra bytes (8):
+    00000050  09 00 00 00 00 00 00 00                           ........
+
+  OID 0x71b — Directory/File (0x71b)
+    Key (raw):  00000000000000001b07000000000000
+    VLCN tuple: [0x11a08, 0x11a09, 0x11a0a, 0x11a0b]
+    PLCN tuple: [0x1a08, 0x1a09, 0x1a0a, 0x1a0b]
+    Absolute:   0x2a08000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x997 0x1
+    Extra bytes (8):
+    00000050  05 00 00 00 00 00 00 00                           ........
+
+  OID 0x71d — Directory/File (0x71d)
+    Key (raw):  00000000000000001d07000000000000
+    VLCN tuple: [0x13224, 0x13225, 0x13226, 0x13227]
+    PLCN tuple: [0x3224, 0x3225, 0x3226, 0x3227]
+    Absolute:   0x4224000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9da 0x1
+    Extra bytes (8):
+    00000050  0d 00 00 00 00 00 00 00                           ........
+
+  OID 0x71e — Directory/File (0x71e)
+    Key (raw):  00000000000000001e07000000000000
+    VLCN tuple: [0x1380c, 0x1380d, 0x1380e, 0x1380f]
+    PLCN tuple: [0x380c, 0x380d, 0x380e, 0x380f]
+    Absolute:   0x480c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x5b3 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x71f — Directory/File (0x71f)
+    Key (raw):  00000000000000001f07000000000000
+    VLCN tuple: [0x13208, 0x13209, 0x1320a, 0x1320b]
+    PLCN tuple: [0x3208, 0x3209, 0x320a, 0x320b]
+    Absolute:   0x4208000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x903 0x1
+    Extra bytes (8):
+    00000050  07 00 00 00 00 00 00 00                           ........
+
+  OID 0x720 — Directory/File (0x720)
+    Key (raw):  00000000000000002007000000000000
+    VLCN tuple: [0x10404, 0x10405, 0x10406, 0x10407]
+    PLCN tuple: [0x404, 0x405, 0x406, 0x407]
+    Absolute:   0x1404000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x579 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x722 — Directory/File (0x722)
+    Key (raw):  00000000000000002207000000000000
+    VLCN tuple: [0x11a2c, 0x11a2d, 0x11a2e, 0x11a2f]
+    PLCN tuple: [0x1a2c, 0x1a2d, 0x1a2e, 0x1a2f]
+    Absolute:   0x2a2c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x95a 0x1
+    Extra bytes (8):
+    00000050  04 00 00 00 00 00 00 00                           ........
+
+  OID 0x723 — Directory/File (0x723)
+    Key (raw):  00000000000000002307000000000000
+    VLCN tuple: [0x13218, 0x13219, 0x1321a, 0x1321b]
+    PLCN tuple: [0x3218, 0x3219, 0x321a, 0x321b]
+    Absolute:   0x4218000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x997 0x1
+    Extra bytes (8):
+    00000050  0a 00 00 00 00 00 00 00                           ........
+
+  OID 0x724 — Directory/File (0x724)
+    Key (raw):  00000000000000002407000000000000
+    VLCN tuple: [0x11a04, 0x11a05, 0x11a06, 0x11a07]
+    PLCN tuple: [0x1a04, 0x1a05, 0x1a06, 0x1a07]
+    Absolute:   0x2a04000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x5b3 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x725 — Directory/File (0x725)
+    Key (raw):  00000000000000002507000000000000
+    VLCN tuple: [0x100b4, 0x100b5, 0x100b6, 0x100b7]
+    PLCN tuple: [0xb4, 0xb5, 0xb6, 0xb7]
+    Absolute:   0x10b4000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9da 0x1
+    Extra bytes (8):
+    00000050  04 00 00 00 00 00 00 00                           ........
+
+  OID 0x726 — Directory/File (0x726)
+    Key (raw):  00000000000000002607000000000000
+    VLCN tuple: [0x13c00, 0x13c01, 0x13c02, 0x13c03]
+    PLCN tuple: [0x3c00, 0x3c01, 0x3c02, 0x3c03]
+    Absolute:   0x4c00000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9d8 0x1
+    Extra bytes (8):
+    00000050  09 00 00 00 00 00 00 00                           ........
+
+  OID 0x727 — Directory/File (0x727)
+    Key (raw):  00000000000000002707000000000000
+    VLCN tuple: [0x10c20, 0x10c21, 0x10c22, 0x10c23]
+    PLCN tuple: [0xc20, 0xc21, 0xc22, 0xc23]
+    Absolute:   0x1c20000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9da 0x1
+    Extra bytes (8):
+    00000050  02 00 00 00 00 00 00 00                           ........
+
+  OID 0x728 — Directory/File (0x728)
+    Key (raw):  00000000000000002807000000000000
+    VLCN tuple: [0x10810, 0x10811, 0x10812, 0x10813]
+    PLCN tuple: [0x810, 0x811, 0x812, 0x813]
+    Absolute:   0x1810000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9da 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x72b — Directory/File (0x72b)
+    Key (raw):  00000000000000002b07000000000000
+    VLCN tuple: [0x13e10, 0x13e11, 0x13e12, 0x13e13]
+    PLCN tuple: [0x3e10, 0x3e11, 0x3e12, 0x3e13]
+    Absolute:   0x4e10000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9da 0x1
+    Extra bytes (8):
+    00000050  09 00 00 00 00 00 00 00                           ........
+
+  OID 0x72d — Directory/File (0x72d)
+    Key (raw):  00000000000000002d07000000000000
+    VLCN tuple: [0x13408, 0x13409, 0x1340a, 0x1340b]
+    PLCN tuple: [0x3408, 0x3409, 0x340a, 0x340b]
+    Absolute:   0x4408000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9d8 0x1
+    Extra bytes (8):
+    00000050  09 00 00 00 00 00 00 00                           ........
+
+  OID 0x72e — Directory/File (0x72e)
+    Key (raw):  00000000000000002e07000000000000
+    VLCN tuple: [0x1080c, 0x1080d, 0x1080e, 0x1080f]
+    PLCN tuple: [0x80c, 0x80d, 0x80e, 0x80f]
+    Absolute:   0x180c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x972 0x1
+    Extra bytes (8):
+    00000050  08 00 00 00 00 00 00 00                           ........
+
+  OID 0x72f — Directory/File (0x72f)
+    Key (raw):  00000000000000002f07000000000000
+    VLCN tuple: [0x11438, 0x11439, 0x1143a, 0x1143b]
+    PLCN tuple: [0x1438, 0x1439, 0x143a, 0x143b]
+    Absolute:   0x2438000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9d8 0x1
+    Extra bytes (8):
+    00000050  09 00 00 00 00 00 00 00                           ........
+
+  OID 0x730 — Directory/File (0x730)
+    Key (raw):  00000000000000003007000000000000
+    VLCN tuple: [0x10204, 0x10205, 0x10206, 0x10207]
+    PLCN tuple: [0x204, 0x205, 0x206, 0x207]
+    Absolute:   0x1204000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x7ae 0x1
+    Extra bytes (8):
+    00000050  02 00 00 00 00 00 00 00                           ........
+
+  OID 0x734 — Directory/File (0x734)
+    Key (raw):  00000000000000003407000000000000
+    VLCN tuple: [0x13e0c, 0x13e0d, 0x13e0e, 0x13e0f]
+    PLCN tuple: [0x3e0c, 0x3e0d, 0x3e0e, 0x3e0f]
+    Absolute:   0x4e0c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9d8 0x1
+    Extra bytes (8):
+    00000050  07 00 00 00 00 00 00 00                           ........
+
+  OID 0x737 — Directory/File (0x737)
+    Key (raw):  00000000000000003707000000000000
+    VLCN tuple: [0x10610, 0x10611, 0x10612, 0x10613]
+    PLCN tuple: [0x610, 0x611, 0x612, 0x613]
+    Absolute:   0x1610000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x694 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x738 — Directory/File (0x738)
+    Key (raw):  00000000000000003807000000000000
+    VLCN tuple: [0x11e08, 0x11e09, 0x11e0a, 0x11e0b]
+    PLCN tuple: [0x1e08, 0x1e09, 0x1e0a, 0x1e0b]
+    Absolute:   0x2e08000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9d8 0x1
+    Extra bytes (8):
+    00000050  04 00 00 00 00 00 00 00                           ........
+
+  OID 0x739 — Directory/File (0x739)
+    Key (raw):  00000000000000003907000000000000
+    VLCN tuple: [0x11218, 0x11219, 0x1121a, 0x1121b]
+    PLCN tuple: [0x1218, 0x1219, 0x121a, 0x121b]
+    Absolute:   0x2218000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9d8 0x1
+    Extra bytes (8):
+    00000050  0a 00 00 00 00 00 00 00                           ........
+
+  OID 0x73b — Directory/File (0x73b)
+    Key (raw):  00000000000000003b07000000000000
+    VLCN tuple: [0x12014, 0x12015, 0x12016, 0x12017]
+    PLCN tuple: [0x2014, 0x2015, 0x2016, 0x2017]
+    Absolute:   0x3014000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9da 0x1
+    Extra bytes (8):
+    00000050  06 00 00 00 00 00 00 00                           ........
+
+  OID 0x73c — Directory/File (0x73c)
+    Key (raw):  00000000000000003c07000000000000
+    VLCN tuple: [0x12210, 0x12211, 0x12212, 0x12213]
+    PLCN tuple: [0x2210, 0x2211, 0x2212, 0x2213]
+    Absolute:   0x3210000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x716 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x73e — Directory/File (0x73e)
+    Key (raw):  00000000000000003e07000000000000
+    VLCN tuple: [0x13404, 0x13405, 0x13406, 0x13407]
+    PLCN tuple: [0x3404, 0x3405, 0x3406, 0x3407]
+    Absolute:   0x4404000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x716 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x73f — Directory/File (0x73f)
+    Key (raw):  00000000000000003f07000000000000
+    VLCN tuple: [0x12e30, 0x12e31, 0x12e32, 0x12e33]
+    PLCN tuple: [0x2e30, 0x2e31, 0x2e32, 0x2e33]
+    Absolute:   0x3e30000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9d8 0x1
+    Extra bytes (8):
+    00000050  07 00 00 00 00 00 00 00                           ........
+
+  OID 0x740 — Directory/File (0x740)
+    Key (raw):  00000000000000004007000000000000
+    VLCN tuple: [0x13228, 0x13229, 0x1322a, 0x1322b]
+    PLCN tuple: [0x3228, 0x3229, 0x322a, 0x322b]
+    Absolute:   0x4228000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9da 0x1
+    Extra bytes (8):
+    00000050  05 00 00 00 00 00 00 00                           ........
+
+  OID 0x741 — Directory/File (0x741)
+    Key (raw):  00000000000000004107000000000000
+    VLCN tuple: [0x12200, 0x12201, 0x12202, 0x12203]
+    PLCN tuple: [0x2200, 0x2201, 0x2202, 0x2203]
+    Absolute:   0x3200000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x772 0x1
+    Extra bytes (8):
+    00000050  02 00 00 00 00 00 00 00                           ........
+
+  OID 0x742 — Directory/File (0x742)
+    Key (raw):  00000000000000004207000000000000
+    VLCN tuple: [0x13a14, 0x13a15, 0x13a16, 0x13a17]
+    PLCN tuple: [0x3a14, 0x3a15, 0x3a16, 0x3a17]
+    Absolute:   0x4a14000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9d8 0x1
+    Extra bytes (8):
+    00000050  05 00 00 00 00 00 00 00                           ........
+
+  OID 0x743 — Directory/File (0x743)
+    Key (raw):  00000000000000004307000000000000
+    VLCN tuple: [0x10208, 0x10209, 0x1020a, 0x1020b]
+    PLCN tuple: [0x208, 0x209, 0x20a, 0x20b]
+    Absolute:   0x1208000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9da 0x1
+    Extra bytes (8):
+    00000050  07 00 00 00 00 00 00 00                           ........
+
+  OID 0x744 — Directory/File (0x744)
+    Key (raw):  00000000000000004407000000000000
+    VLCN tuple: [0x12e20, 0x12e21, 0x12e22, 0x12e23]
+    PLCN tuple: [0x2e20, 0x2e21, 0x2e22, 0x2e23]
+    Absolute:   0x3e20000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x772 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x745 — Directory/File (0x745)
+    Key (raw):  00000000000000004507000000000000
+    VLCN tuple: [0x11808, 0x11809, 0x1180a, 0x1180b]
+    PLCN tuple: [0x1808, 0x1809, 0x180a, 0x180b]
+    Absolute:   0x2808000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x772 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x746 — Directory/File (0x746)
+    Key (raw):  00000000000000004607000000000000
+    VLCN tuple: [0x11a14, 0x11a15, 0x11a16, 0x11a17]
+    PLCN tuple: [0x1a14, 0x1a15, 0x1a16, 0x1a17]
+    Absolute:   0x2a14000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9da 0x1
+    Extra bytes (8):
+    00000050  03 00 00 00 00 00 00 00                           ........
+
+  OID 0x748 — Directory/File (0x748)
+    Key (raw):  00000000000000004807000000000000
+    VLCN tuple: [0x13200, 0x13201, 0x13202, 0x13203]
+    PLCN tuple: [0x3200, 0x3201, 0x3202, 0x3203]
+    Absolute:   0x4200000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x772 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x749 — Directory/File (0x749)
+    Key (raw):  00000000000000004907000000000000
+    VLCN tuple: [0x10410, 0x10411, 0x10412, 0x10413]
+    PLCN tuple: [0x410, 0x411, 0x412, 0x413]
+    Absolute:   0x1410000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x7e4 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x74a — Directory/File (0x74a)
+    Key (raw):  00000000000000004a07000000000000
+    VLCN tuple: [0x100b0, 0x100b1, 0x100b2, 0x100b3]
+    PLCN tuple: [0xb0, 0xb1, 0xb2, 0xb3]
+    Absolute:   0x10b0000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x8d3 0x1
+    Extra bytes (8):
+    00000050  02 00 00 00 00 00 00 00                           ........
+
+  OID 0x74b — Directory/File (0x74b)
+    Key (raw):  00000000000000004b07000000000000
+    VLCN tuple: [0x12e18, 0x12e19, 0x12e1a, 0x12e1b]
+    PLCN tuple: [0x2e18, 0x2e19, 0x2e1a, 0x2e1b]
+    Absolute:   0x3e18000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9d8 0x1
+    Extra bytes (8):
+    00000050  04 00 00 00 00 00 00 00                           ........
+
+  OID 0x74c — Directory/File (0x74c)
+    Key (raw):  00000000000000004c07000000000000
+    VLCN tuple: [0x10a0c, 0x10a0d, 0x10a0e, 0x10a0f]
+    PLCN tuple: [0xa0c, 0xa0d, 0xa0e, 0xa0f]
+    Absolute:   0x1a0c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x997 0x1
+    Extra bytes (8):
+    00000050  07 00 00 00 00 00 00 00                           ........
+
+  OID 0x74d — Directory/File (0x74d)
+    Key (raw):  00000000000000004d07000000000000
+    VLCN tuple: [0x13e1c, 0x13e1d, 0x13e1e, 0x13e1f]
+    PLCN tuple: [0x3e1c, 0x3e1d, 0x3e1e, 0x3e1f]
+    Absolute:   0x4e1c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x7ae 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x74e — Directory/File (0x74e)
+    Key (raw):  00000000000000004e07000000000000
+    VLCN tuple: [0x12614, 0x12615, 0x12616, 0x12617]
+    PLCN tuple: [0x2614, 0x2615, 0x2616, 0x2617]
+    Absolute:   0x3614000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x7ae 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x74f — Directory/File (0x74f)
+    Key (raw):  00000000000000004f07000000000000
+    VLCN tuple: [0x10604, 0x10605, 0x10606, 0x10607]
+    PLCN tuple: [0x604, 0x605, 0x606, 0x607]
+    Absolute:   0x1604000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9d8 0x1
+    Extra bytes (8):
+    00000050  04 00 00 00 00 00 00 00                           ........
+
+  OID 0x750 — Directory/File (0x750)
+    Key (raw):  00000000000000005007000000000000
+    VLCN tuple: [0x1302c, 0x1302d, 0x1302e, 0x1302f]
+    PLCN tuple: [0x302c, 0x302d, 0x302e, 0x302f]
+    Absolute:   0x402c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x7ae 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x751 — Directory/File (0x751)
+    Key (raw):  00000000000000005107000000000000
+    VLCN tuple: [0x1141c, 0x1141d, 0x1141e, 0x1141f]
+    PLCN tuple: [0x141c, 0x141d, 0x141e, 0x141f]
+    Absolute:   0x241c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x93f 0x1
+    Extra bytes (8):
+    00000050  06 00 00 00 00 00 00 00                           ........
+
+  OID 0x753 — Directory/File (0x753)
+    Key (raw):  00000000000000005307000000000000
+    VLCN tuple: [0x13620, 0x13621, 0x13622, 0x13623]
+    PLCN tuple: [0x3620, 0x3621, 0x3622, 0x3623]
+    Absolute:   0x4620000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9da 0x1
+    Extra bytes (8):
+    00000050  03 00 00 00 00 00 00 00                           ........
+
+  OID 0x755 — Directory/File (0x755)
+    Key (raw):  00000000000000005507000000000000
+    VLCN tuple: [0x10c18, 0x10c19, 0x10c1a, 0x10c1b]
+    PLCN tuple: [0xc18, 0xc19, 0xc1a, 0xc1b]
+    Absolute:   0x1c18000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9d8 0x1
+    Extra bytes (8):
+    00000050  07 00 00 00 00 00 00 00                           ........
+
+  OID 0x756 — Directory/File (0x756)
+    Key (raw):  00000000000000005607000000000000
+    VLCN tuple: [0x11210, 0x11211, 0x11212, 0x11213]
+    PLCN tuple: [0x1210, 0x1211, 0x1212, 0x1213]
+    Absolute:   0x2210000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9da 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x758 — Directory/File (0x758)
+    Key (raw):  00000000000000005807000000000000
+    VLCN tuple: [0x11a18, 0x11a19, 0x11a1a, 0x11a1b]
+    PLCN tuple: [0x1a18, 0x1a19, 0x1a1a, 0x1a1b]
+    Absolute:   0x2a18000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x81a 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x759 — Directory/File (0x759)
+    Key (raw):  00000000000000005907000000000000
+    VLCN tuple: [0x10834, 0x10835, 0x10836, 0x10837]
+    PLCN tuple: [0x834, 0x835, 0x836, 0x837]
+    Absolute:   0x1834000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x997 0x1
+    Extra bytes (8):
+    00000050  05 00 00 00 00 00 00 00                           ........
+
+  OID 0x75a — Directory/File (0x75a)
+    Key (raw):  00000000000000005a07000000000000
+    VLCN tuple: [0x13014, 0x13015, 0x13016, 0x13017]
+    PLCN tuple: [0x3014, 0x3015, 0x3016, 0x3017]
+    Absolute:   0x4014000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9da 0x1
+    Extra bytes (8):
+    00000050  09 00 00 00 00 00 00 00                           ........
+
+  OID 0x75b — Directory/File (0x75b)
+    Key (raw):  00000000000000005b07000000000000
+    VLCN tuple: [0x12c04, 0x12c05, 0x12c06, 0x12c07]
+    PLCN tuple: [0x2c04, 0x2c05, 0x2c06, 0x2c07]
+    Absolute:   0x3c04000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9c5 0x1
+    Extra bytes (8):
+    00000050  02 00 00 00 00 00 00 00                           ........
+
+  OID 0x75c — Directory/File (0x75c)
+    Key (raw):  00000000000000005c07000000000000
+    VLCN tuple: [0x10824, 0x10825, 0x10826, 0x10827]
+    PLCN tuple: [0x824, 0x825, 0x826, 0x827]
+    Absolute:   0x1824000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x87a 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x75d — Directory/File (0x75d)
+    Key (raw):  00000000000000005d07000000000000
+    VLCN tuple: [0x10214, 0x10215, 0x10216, 0x10217]
+    PLCN tuple: [0x214, 0x215, 0x216, 0x217]
+    Absolute:   0x1214000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9da 0x1
+    Extra bytes (8):
+    00000050  04 00 00 00 00 00 00 00                           ........
+
+  OID 0x75e — Directory/File (0x75e)
+    Key (raw):  00000000000000005e07000000000000
+    VLCN tuple: [0x11c00, 0x11c01, 0x11c02, 0x11c03]
+    PLCN tuple: [0x1c00, 0x1c01, 0x1c02, 0x1c03]
+    Absolute:   0x2c00000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9d8 0x1
+    Extra bytes (8):
+    00000050  03 00 00 00 00 00 00 00                           ........
+
+  OID 0x75f — Directory/File (0x75f)
+    Key (raw):  00000000000000005f07000000000000
+    VLCN tuple: [0x13828, 0x13829, 0x1382a, 0x1382b]
+    PLCN tuple: [0x3828, 0x3829, 0x382a, 0x382b]
+    Absolute:   0x4828000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9d8 0x1
+    Extra bytes (8):
+    00000050  03 00 00 00 00 00 00 00                           ........
+
+  OID 0x760 — Directory/File (0x760)
+    Key (raw):  00000000000000006007000000000000
+    VLCN tuple: [0x1040c, 0x1040d, 0x1040e, 0x1040f]
+    PLCN tuple: [0x40c, 0x40d, 0x40e, 0x40f]
+    Absolute:   0x140c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9da 0x1
+    Extra bytes (8):
+    00000050  06 00 00 00 00 00 00 00                           ........
+
+  OID 0x762 — Directory/File (0x762)
+    Key (raw):  00000000000000006207000000000000
+    VLCN tuple: [0x1280c, 0x1280d, 0x1280e, 0x1280f]
+    PLCN tuple: [0x280c, 0x280d, 0x280e, 0x280f]
+    Absolute:   0x380c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x903 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x763 — Directory/File (0x763)
+    Key (raw):  00000000000000006307000000000000
+    VLCN tuple: [0x1081c, 0x1081d, 0x1081e, 0x1081f]
+    PLCN tuple: [0x81c, 0x81d, 0x81e, 0x81f]
+    Absolute:   0x181c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x903 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x764 — Directory/File (0x764)
+    Key (raw):  00000000000000006407000000000000
+    VLCN tuple: [0x11a0c, 0x11a0d, 0x11a0e, 0x11a0f]
+    PLCN tuple: [0x1a0c, 0x1a0d, 0x1a0e, 0x1a0f]
+    Absolute:   0x2a0c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9da 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x765 — Directory/File (0x765)
+    Key (raw):  00000000000000006507000000000000
+    VLCN tuple: [0x10c0c, 0x10c0d, 0x10c0e, 0x10c0f]
+    PLCN tuple: [0xc0c, 0xc0d, 0xc0e, 0xc0f]
+    Absolute:   0x1c0c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9da 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x767 — Directory/File (0x767)
+    Key (raw):  00000000000000006707000000000000
+    VLCN tuple: [0x12400, 0x12401, 0x12402, 0x12403]
+    PLCN tuple: [0x2400, 0x2401, 0x2402, 0x2403]
+    Absolute:   0x3400000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x903 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x768 — Directory/File (0x768)
+    Key (raw):  00000000000000006807000000000000
+    VLCN tuple: [0x13834, 0x13835, 0x13836, 0x13837]
+    PLCN tuple: [0x3834, 0x3835, 0x3836, 0x3837]
+    Absolute:   0x4834000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x997 0x1
+    Extra bytes (8):
+    00000050  03 00 00 00 00 00 00 00                           ........
+
+  OID 0x769 — Directory/File (0x769)
+    Key (raw):  00000000000000006907000000000000
+    VLCN tuple: [0x12e24, 0x12e25, 0x12e26, 0x12e27]
+    PLCN tuple: [0x2e24, 0x2e25, 0x2e26, 0x2e27]
+    Absolute:   0x3e24000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9d8 0x1
+    Extra bytes (8):
+    00000050  04 00 00 00 00 00 00 00                           ........
+
+  OID 0x76a — Directory/File (0x76a)
+    Key (raw):  00000000000000006a07000000000000
+    VLCN tuple: [0x11a3c, 0x11a3d, 0x11a3e, 0x11a3f]
+    PLCN tuple: [0x1a3c, 0x1a3d, 0x1a3e, 0x1a3f]
+    Absolute:   0x2a3c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x997 0x1
+    Extra bytes (8):
+    00000050  02 00 00 00 00 00 00 00                           ........
+
+  OID 0x76b — Directory/File (0x76b)
+    Key (raw):  00000000000000006b07000000000000
+    VLCN tuple: [0x11a20, 0x11a21, 0x11a22, 0x11a23]
+    PLCN tuple: [0x1a20, 0x1a21, 0x1a22, 0x1a23]
+    Absolute:   0x2a20000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x997 0x1
+    Extra bytes (8):
+    00000050  02 00 00 00 00 00 00 00                           ........
+
+  OID 0x76c — Directory/File (0x76c)
+    Key (raw):  00000000000000006c07000000000000
+    VLCN tuple: [0x13c1c, 0x13c1d, 0x13c1e, 0x13c1f]
+    PLCN tuple: [0x3c1c, 0x3c1d, 0x3c1e, 0x3c1f]
+    Absolute:   0x4c1c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x997 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x76d — Directory/File (0x76d)
+    Key (raw):  00000000000000006d07000000000000
+    VLCN tuple: [0x12e04, 0x12e05, 0x12e06, 0x12e07]
+    PLCN tuple: [0x2e04, 0x2e05, 0x2e06, 0x2e07]
+    Absolute:   0x3e04000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9d8 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x76e — Directory/File (0x76e)
+    Key (raw):  00000000000000006e07000000000000
+    VLCN tuple: [0x11200, 0x11201, 0x11202, 0x11203]
+    PLCN tuple: [0x1200, 0x1201, 0x1202, 0x1203]
+    Absolute:   0x2200000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9d8 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x76f — Directory/File (0x76f)
+    Key (raw):  00000000000000006f07000000000000
+    VLCN tuple: [0x1361c, 0x1361d, 0x1361e, 0x1361f]
+    PLCN tuple: [0x361c, 0x361d, 0x361e, 0x361f]
+    Absolute:   0x461c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x997 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x770 — Directory/File (0x770)
+    Key (raw):  00000000000000007007000000000000
+    VLCN tuple: [0x11620, 0x11621, 0x11622, 0x11623]
+    PLCN tuple: [0x1620, 0x1621, 0x1622, 0x1623]
+    Absolute:   0x2620000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9d8 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x771 — Directory/File (0x771)
+    Key (raw):  00000000000000007107000000000000
+    VLCN tuple: [0x10e04, 0x10e05, 0x10e06, 0x10e07]
+    PLCN tuple: [0xe04, 0xe05, 0xe06, 0xe07]
+    Absolute:   0x1e04000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9da 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x772 — Directory/File (0x772)
+    Key (raw):  00000000000000007207000000000000
+    VLCN tuple: [0x10c1c, 0x10c1d, 0x10c1e, 0x10c1f]
+    PLCN tuple: [0xc1c, 0xc1d, 0xc1e, 0xc1f]
+    Absolute:   0x1c1c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9d8 0x1
+    Extra bytes (8):
+    00000050  02 00 00 00 00 00 00 00                           ........
+
+  OID 0x773 — Directory/File (0x773)
+    Key (raw):  00000000000000007307000000000000
+    VLCN tuple: [0x13e14, 0x13e15, 0x13e16, 0x13e17]
+    PLCN tuple: [0x3e14, 0x3e15, 0x3e16, 0x3e17]
+    Absolute:   0x4e14000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9d8 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x774 — Directory/File (0x774)
+    Key (raw):  00000000000000007407000000000000
+    VLCN tuple: [0x11e14, 0x11e15, 0x11e16, 0x11e17]
+    PLCN tuple: [0x1e14, 0x1e15, 0x1e16, 0x1e17]
+    Absolute:   0x2e14000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x9d8 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x775 — Directory/File (0x775)
+    Key (raw):  00000000000000007507000000000000
+    VLCN tuple: [0x10c40, 0x10c41, 0x10c42, 0x10c43]
+    PLCN tuple: [0xc40, 0xc41, 0xc42, 0xc43]
+    Absolute:   0x1c40000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5b 0x1
+    Extra bytes (8):
+    00000050  1a 00 00 00 00 00 00 00                           ........
+
+  OID 0x776 — Directory/File (0x776)
+    Key (raw):  00000000000000007607000000000000
+    VLCN tuple: [0x13810, 0x13811, 0x13812, 0x13813]
+    PLCN tuple: [0x3810, 0x3811, 0x3812, 0x3813]
+    Absolute:   0x4810000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5a 0x1
+    Extra bytes (8):
+    00000050  11 00 00 00 00 00 00 00                           ........
+
+  OID 0x777 — Directory/File (0x777)
+    Key (raw):  00000000000000007707000000000000
+    VLCN tuple: [0x11404, 0x11405, 0x11406, 0x11407]
+    PLCN tuple: [0x1404, 0x1405, 0x1406, 0x1407]
+    Absolute:   0x2404000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5a 0x1
+    Extra bytes (8):
+    00000050  0e 00 00 00 00 00 00 00                           ........
+
+  OID 0x778 — Directory/File (0x778)
+    Key (raw):  00000000000000007807000000000000
+    VLCN tuple: [0x12424, 0x12425, 0x12426, 0x12427]
+    PLCN tuple: [0x2424, 0x2425, 0x2426, 0x2427]
+    Absolute:   0x3424000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf44 0x1
+    Extra bytes (8):
+    00000050  09 00 00 00 00 00 00 00                           ........
+
+  OID 0x779 — Directory/File (0x779)
+    Key (raw):  00000000000000007907000000000000
+    VLCN tuple: [0x1003c, 0x1003d, 0x1003e, 0x1003f]
+    PLCN tuple: [0x3c, 0x3d, 0x3e, 0x3f]
+    Absolute:   0x103c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5b 0x1
+    Extra bytes (8):
+    00000050  11 00 00 00 00 00 00 00                           ........
+
+  OID 0x77c — Directory/File (0x77c)
+    Key (raw):  00000000000000007c07000000000000
+    VLCN tuple: [0x11818, 0x11819, 0x1181a, 0x1181b]
+    PLCN tuple: [0x1818, 0x1819, 0x181a, 0x181b]
+    Absolute:   0x2818000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5a 0x1
+    Extra bytes (8):
+    00000050  0d 00 00 00 00 00 00 00                           ........
+
+  OID 0x77d — Directory/File (0x77d)
+    Key (raw):  00000000000000007d07000000000000
+    VLCN tuple: [0x12c00, 0x12c01, 0x12c02, 0x12c03]
+    PLCN tuple: [0x2c00, 0x2c01, 0x2c02, 0x2c03]
+    Absolute:   0x3c00000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5b 0x1
+    Extra bytes (8):
+    00000050  0a 00 00 00 00 00 00 00                           ........
+
+  OID 0x77e — Directory/File (0x77e)
+    Key (raw):  00000000000000007e07000000000000
+    VLCN tuple: [0x13230, 0x13231, 0x13232, 0x13233]
+    PLCN tuple: [0x3230, 0x3231, 0x3232, 0x3233]
+    Absolute:   0x4230000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf57 0x1
+    Extra bytes (8):
+    00000050  0c 00 00 00 00 00 00 00                           ........
+
+  OID 0x780 — Directory/File (0x780)
+    Key (raw):  00000000000000008007000000000000
+    VLCN tuple: [0x13400, 0x13401, 0x13402, 0x13403]
+    PLCN tuple: [0x3400, 0x3401, 0x3402, 0x3403]
+    Absolute:   0x4400000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5b 0x1
+    Extra bytes (8):
+    00000050  07 00 00 00 00 00 00 00                           ........
+
+  OID 0x781 — Directory/File (0x781)
+    Key (raw):  00000000000000008107000000000000
+    VLCN tuple: [0x12a24, 0x12a25, 0x12a26, 0x12a27]
+    PLCN tuple: [0x2a24, 0x2a25, 0x2a26, 0x2a27]
+    Absolute:   0x3a24000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5a 0x1
+    Extra bytes (8):
+    00000050  12 00 00 00 00 00 00 00                           ........
+
+  OID 0x782 — Directory/File (0x782)
+    Key (raw):  00000000000000008207000000000000
+    VLCN tuple: [0x1301c, 0x1301d, 0x1301e, 0x1301f]
+    PLCN tuple: [0x301c, 0x301d, 0x301e, 0x301f]
+    Absolute:   0x401c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5b 0x1
+    Extra bytes (8):
+    00000050  04 00 00 00 00 00 00 00                           ........
+
+  OID 0x783 — Directory/File (0x783)
+    Key (raw):  00000000000000008307000000000000
+    VLCN tuple: [0x10814, 0x10815, 0x10816, 0x10817]
+    PLCN tuple: [0x814, 0x815, 0x816, 0x817]
+    Absolute:   0x1814000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf32 0x1
+    Extra bytes (8):
+    00000050  0d 00 00 00 00 00 00 00                           ........
+
+  OID 0x787 — Directory/File (0x787)
+    Key (raw):  00000000000000008707000000000000
+    VLCN tuple: [0x12218, 0x12219, 0x1221a, 0x1221b]
+    PLCN tuple: [0x2218, 0x2219, 0x221a, 0x221b]
+    Absolute:   0x3218000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5b 0x1
+    Extra bytes (8):
+    00000050  0a 00 00 00 00 00 00 00                           ........
+
+  OID 0x789 — Directory/File (0x789)
+    Key (raw):  00000000000000008907000000000000
+    VLCN tuple: [0x12e3c, 0x12e3d, 0x12e3e, 0x12e3f]
+    PLCN tuple: [0x2e3c, 0x2e3d, 0x2e3e, 0x2e3f]
+    Absolute:   0x3e3c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xced 0x1
+    Extra bytes (8):
+    00000050  06 00 00 00 00 00 00 00                           ........
+
+  OID 0x78a — Directory/File (0x78a)
+    Key (raw):  00000000000000008a07000000000000
+    VLCN tuple: [0x13c04, 0x13c05, 0x13c06, 0x13c07]
+    PLCN tuple: [0x3c04, 0x3c05, 0x3c06, 0x3c07]
+    Absolute:   0x4c04000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5b 0x1
+    Extra bytes (8):
+    00000050  0a 00 00 00 00 00 00 00                           ........
+
+  OID 0x78b — Directory/File (0x78b)
+    Key (raw):  00000000000000008b07000000000000
+    VLCN tuple: [0x13618, 0x13619, 0x1361a, 0x1361b]
+    PLCN tuple: [0x3618, 0x3619, 0x361a, 0x361b]
+    Absolute:   0x4618000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5b 0x1
+    Extra bytes (8):
+    00000050  0f 00 00 00 00 00 00 00                           ........
+
+  OID 0x78c — Directory/File (0x78c)
+    Key (raw):  00000000000000008c07000000000000
+    VLCN tuple: [0x12420, 0x12421, 0x12422, 0x12423]
+    PLCN tuple: [0x2420, 0x2421, 0x2422, 0x2423]
+    Absolute:   0x3420000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5b 0x1
+    Extra bytes (8):
+    00000050  03 00 00 00 00 00 00 00                           ........
+
+  OID 0x78d — Directory/File (0x78d)
+    Key (raw):  00000000000000008d07000000000000
+    VLCN tuple: [0x11a24, 0x11a25, 0x11a26, 0x11a27]
+    PLCN tuple: [0x1a24, 0x1a25, 0x1a26, 0x1a27]
+    Absolute:   0x2a24000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xabf 0x1
+    Extra bytes (8):
+    00000050  02 00 00 00 00 00 00 00                           ........
+
+  OID 0x78e — Directory/File (0x78e)
+    Key (raw):  00000000000000008e07000000000000
+    VLCN tuple: [0x1261c, 0x1261d, 0x1261e, 0x1261f]
+    PLCN tuple: [0x261c, 0x261d, 0x261e, 0x261f]
+    Absolute:   0x361c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xb1e 0x1
+    Extra bytes (8):
+    00000050  02 00 00 00 00 00 00 00                           ........
+
+  OID 0x78f — Directory/File (0x78f)
+    Key (raw):  00000000000000008f07000000000000
+    VLCN tuple: [0x11410, 0x11411, 0x11412, 0x11413]
+    PLCN tuple: [0x1410, 0x1411, 0x1412, 0x1413]
+    Absolute:   0x2410000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5b 0x1
+    Extra bytes (8):
+    00000050  0e 00 00 00 00 00 00 00                           ........
+
+  OID 0x790 — Directory/File (0x790)
+    Key (raw):  00000000000000009007000000000000
+    VLCN tuple: [0x11424, 0x11425, 0x11426, 0x11427]
+    PLCN tuple: [0x1424, 0x1425, 0x1426, 0x1427]
+    Absolute:   0x2424000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5b 0x1
+    Extra bytes (8):
+    00000050  0c 00 00 00 00 00 00 00                           ........
+
+  OID 0x791 — Directory/File (0x791)
+    Key (raw):  00000000000000009107000000000000
+    VLCN tuple: [0x10804, 0x10805, 0x10806, 0x10807]
+    PLCN tuple: [0x804, 0x805, 0x806, 0x807]
+    Absolute:   0x1804000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xeec 0x1
+    Extra bytes (8):
+    00000050  05 00 00 00 00 00 00 00                           ........
+
+  OID 0x794 — Directory/File (0x794)
+    Key (raw):  00000000000000009407000000000000
+    VLCN tuple: [0x11a30, 0x11a31, 0x11a32, 0x11a33]
+    PLCN tuple: [0x1a30, 0x1a31, 0x1a32, 0x1a33]
+    Absolute:   0x2a30000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5a 0x1
+    Extra bytes (8):
+    00000050  0b 00 00 00 00 00 00 00                           ........
+
+  OID 0x795 — Directory/File (0x795)
+    Key (raw):  00000000000000009507000000000000
+    VLCN tuple: [0x1020c, 0x1020d, 0x1020e, 0x1020f]
+    PLCN tuple: [0x20c, 0x20d, 0x20e, 0x20f]
+    Absolute:   0x120c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5b 0x1
+    Extra bytes (8):
+    00000050  0d 00 00 00 00 00 00 00                           ........
+
+  OID 0x797 — Directory/File (0x797)
+    Key (raw):  00000000000000009707000000000000
+    VLCN tuple: [0x12824, 0x12825, 0x12826, 0x12827]
+    PLCN tuple: [0x2824, 0x2825, 0x2826, 0x2827]
+    Absolute:   0x3824000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf44 0x1
+    Extra bytes (8):
+    00000050  05 00 00 00 00 00 00 00                           ........
+
+  OID 0x798 — Directory/File (0x798)
+    Key (raw):  00000000000000009807000000000000
+    VLCN tuple: [0x10c38, 0x10c39, 0x10c3a, 0x10c3b]
+    PLCN tuple: [0xc38, 0xc39, 0xc3a, 0xc3b]
+    Absolute:   0x1c38000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf27 0x1
+    Extra bytes (8):
+    00000050  06 00 00 00 00 00 00 00                           ........
+
+  OID 0x799 — Directory/File (0x799)
+    Key (raw):  00000000000000009907000000000000
+    VLCN tuple: [0x11810, 0x11811, 0x11812, 0x11813]
+    PLCN tuple: [0x1810, 0x1811, 0x1812, 0x1813]
+    Absolute:   0x2810000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5a 0x1
+    Extra bytes (8):
+    00000050  06 00 00 00 00 00 00 00                           ........
+
+  OID 0x79b — Directory/File (0x79b)
+    Key (raw):  00000000000000009b07000000000000
+    VLCN tuple: [0x12a18, 0x12a19, 0x12a1a, 0x12a1b]
+    PLCN tuple: [0x2a18, 0x2a19, 0x2a1a, 0x2a1b]
+    Absolute:   0x3a18000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xe4b 0x1
+    Extra bytes (8):
+    00000050  04 00 00 00 00 00 00 00                           ........
+
+  OID 0x79c — Directory/File (0x79c)
+    Key (raw):  00000000000000009c07000000000000
+    VLCN tuple: [0x1041c, 0x1041d, 0x1041e, 0x1041f]
+    PLCN tuple: [0x41c, 0x41d, 0x41e, 0x41f]
+    Absolute:   0x141c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5a 0x1
+    Extra bytes (8):
+    00000050  09 00 00 00 00 00 00 00                           ........
+
+  OID 0x79d — Directory/File (0x79d)
+    Key (raw):  00000000000000009d07000000000000
+    VLCN tuple: [0x12818, 0x12819, 0x1281a, 0x1281b]
+    PLCN tuple: [0x2818, 0x2819, 0x281a, 0x281b]
+    Absolute:   0x3818000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xb58 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x79f — Directory/File (0x79f)
+    Key (raw):  00000000000000009f07000000000000
+    VLCN tuple: [0x13824, 0x13825, 0x13826, 0x13827]
+    PLCN tuple: [0x3824, 0x3825, 0x3826, 0x3827]
+    Absolute:   0x4824000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xb58 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7a1 — Directory/File (0x7a1)
+    Key (raw):  0000000000000000a107000000000000
+    VLCN tuple: [0x10200, 0x10201, 0x10202, 0x10203]
+    PLCN tuple: [0x200, 0x201, 0x202, 0x203]
+    Absolute:   0x1200000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xdeb 0x1
+    Extra bytes (8):
+    00000050  07 00 00 00 00 00 00 00                           ........
+
+  OID 0x7a2 — Directory/File (0x7a2)
+    Key (raw):  0000000000000000a207000000000000
+    VLCN tuple: [0x1100c, 0x1100d, 0x1100e, 0x1100f]
+    PLCN tuple: [0x100c, 0x100d, 0x100e, 0x100f]
+    Absolute:   0x200c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5b 0x1
+    Extra bytes (8):
+    00000050  08 00 00 00 00 00 00 00                           ........
+
+  OID 0x7a3 — Directory/File (0x7a3)
+    Key (raw):  0000000000000000a307000000000000
+    VLCN tuple: [0x11e00, 0x11e01, 0x11e02, 0x11e03]
+    PLCN tuple: [0x1e00, 0x1e01, 0x1e02, 0x1e03]
+    Absolute:   0x2e00000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5a 0x1
+    Extra bytes (8):
+    00000050  06 00 00 00 00 00 00 00                           ........
+
+  OID 0x7a4 — Directory/File (0x7a4)
+    Key (raw):  0000000000000000a407000000000000
+    VLCN tuple: [0x12404, 0x12405, 0x12406, 0x12407]
+    PLCN tuple: [0x2404, 0x2405, 0x2406, 0x2407]
+    Absolute:   0x3404000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xe30 0x1
+    Extra bytes (8):
+    00000050  03 00 00 00 00 00 00 00                           ........
+
+  OID 0x7a6 — Directory/File (0x7a6)
+    Key (raw):  0000000000000000a607000000000000
+    VLCN tuple: [0x13430, 0x13431, 0x13432, 0x13433]
+    PLCN tuple: [0x3430, 0x3431, 0x3432, 0x3433]
+    Absolute:   0x4430000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xc1c 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7a7 — Directory/File (0x7a7)
+    Key (raw):  0000000000000000a707000000000000
+    VLCN tuple: [0x10e20, 0x10e21, 0x10e22, 0x10e23]
+    PLCN tuple: [0xe20, 0xe21, 0xe22, 0xe23]
+    Absolute:   0x1e20000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xc1c 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7a8 — Directory/File (0x7a8)
+    Key (raw):  0000000000000000a807000000000000
+    VLCN tuple: [0x1382c, 0x1382d, 0x1382e, 0x1382f]
+    PLCN tuple: [0x382c, 0x382d, 0x382e, 0x382f]
+    Absolute:   0x482c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5b 0x1
+    Extra bytes (8):
+    00000050  0c 00 00 00 00 00 00 00                           ........
+
+  OID 0x7a9 — Directory/File (0x7a9)
+    Key (raw):  0000000000000000a907000000000000
+    VLCN tuple: [0x11400, 0x11401, 0x11402, 0x11403]
+    PLCN tuple: [0x1400, 0x1401, 0x1402, 0x1403]
+    Absolute:   0x2400000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xc1c 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7ab — Directory/File (0x7ab)
+    Key (raw):  0000000000000000ab07000000000000
+    VLCN tuple: [0x11604, 0x11605, 0x11606, 0x11607]
+    PLCN tuple: [0x1604, 0x1605, 0x1606, 0x1607]
+    Absolute:   0x2604000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf44 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7ac — Directory/File (0x7ac)
+    Key (raw):  0000000000000000ac07000000000000
+    VLCN tuple: [0x10040, 0x10041, 0x10042, 0x10043]
+    PLCN tuple: [0x40, 0x41, 0x42, 0x43]
+    Absolute:   0x1040000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xc6b 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7ad — Directory/File (0x7ad)
+    Key (raw):  0000000000000000ad07000000000000
+    VLCN tuple: [0x12020, 0x12021, 0x12022, 0x12023]
+    PLCN tuple: [0x2020, 0x2021, 0x2022, 0x2023]
+    Absolute:   0x3020000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf57 0x1
+    Extra bytes (8):
+    00000050  04 00 00 00 00 00 00 00                           ........
+
+  OID 0x7ae — Directory/File (0x7ae)
+    Key (raw):  0000000000000000ae07000000000000
+    VLCN tuple: [0x12028, 0x12029, 0x1202a, 0x1202b]
+    PLCN tuple: [0x2028, 0x2029, 0x202a, 0x202b]
+    Absolute:   0x3028000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xc6b 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7af — Directory/File (0x7af)
+    Key (raw):  0000000000000000af07000000000000
+    VLCN tuple: [0x11224, 0x11225, 0x11226, 0x11227]
+    PLCN tuple: [0x1224, 0x1225, 0x1226, 0x1227]
+    Absolute:   0x2224000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf44 0x1
+    Extra bytes (8):
+    00000050  07 00 00 00 00 00 00 00                           ........
+
+  OID 0x7b0 — Directory/File (0x7b0)
+    Key (raw):  0000000000000000b007000000000000
+    VLCN tuple: [0x12010, 0x12011, 0x12012, 0x12013]
+    PLCN tuple: [0x2010, 0x2011, 0x2012, 0x2013]
+    Absolute:   0x3010000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf1c 0x1
+    Extra bytes (8):
+    00000050  04 00 00 00 00 00 00 00                           ........
+
+  OID 0x7b2 — Directory/File (0x7b2)
+    Key (raw):  0000000000000000b207000000000000
+    VLCN tuple: [0x12000, 0x12001, 0x12002, 0x12003]
+    PLCN tuple: [0x2000, 0x2001, 0x2002, 0x2003]
+    Absolute:   0x3000000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xc6b 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7b3 — Directory/File (0x7b3)
+    Key (raw):  0000000000000000b307000000000000
+    VLCN tuple: [0x100d0, 0x100d1, 0x100d2, 0x100d3]
+    PLCN tuple: [0xd0, 0xd1, 0xd2, 0xd3]
+    Absolute:   0x10d0000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf32 0x1
+    Extra bytes (8):
+    00000050  02 00 00 00 00 00 00 00                           ........
+
+  OID 0x7b4 — Directory/File (0x7b4)
+    Key (raw):  0000000000000000b407000000000000
+    VLCN tuple: [0x10600, 0x10601, 0x10602, 0x10603]
+    PLCN tuple: [0x600, 0x601, 0x602, 0x603]
+    Absolute:   0x1600000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xced 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7b5 — Directory/File (0x7b5)
+    Key (raw):  0000000000000000b507000000000000
+    VLCN tuple: [0x11450, 0x11451, 0x11452, 0x11453]
+    PLCN tuple: [0x1450, 0x1451, 0x1452, 0x1453]
+    Absolute:   0x2450000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf32 0x1
+    Extra bytes (8):
+    00000050  02 00 00 00 00 00 00 00                           ........
+
+  OID 0x7b6 — Directory/File (0x7b6)
+    Key (raw):  0000000000000000b607000000000000
+    VLCN tuple: [0x12e4c, 0x12e4d, 0x12e4e, 0x12e4f]
+    PLCN tuple: [0x2e4c, 0x2e4d, 0x2e4e, 0x2e4f]
+    Absolute:   0x3e4c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf32 0x1
+    Extra bytes (8):
+    00000050  08 00 00 00 00 00 00 00                           ........
+
+  OID 0x7b7 — Directory/File (0x7b7)
+    Key (raw):  0000000000000000b707000000000000
+    VLCN tuple: [0x11c18, 0x11c19, 0x11c1a, 0x11c1b]
+    PLCN tuple: [0x1c18, 0x1c19, 0x1c1a, 0x1c1b]
+    Absolute:   0x2c18000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xeec 0x1
+    Extra bytes (8):
+    00000050  05 00 00 00 00 00 00 00                           ........
+
+  OID 0x7b8 — Directory/File (0x7b8)
+    Key (raw):  0000000000000000b807000000000000
+    VLCN tuple: [0x12018, 0x12019, 0x1201a, 0x1201b]
+    PLCN tuple: [0x2018, 0x2019, 0x201a, 0x201b]
+    Absolute:   0x3018000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xe30 0x1
+    Extra bytes (8):
+    00000050  03 00 00 00 00 00 00 00                           ........
+
+  OID 0x7b9 — Directory/File (0x7b9)
+    Key (raw):  0000000000000000b907000000000000
+    VLCN tuple: [0x1260c, 0x1260d, 0x1260e, 0x1260f]
+    PLCN tuple: [0x260c, 0x260d, 0x260e, 0x260f]
+    Absolute:   0x360c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xcb2 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7ba — Directory/File (0x7ba)
+    Key (raw):  0000000000000000ba07000000000000
+    VLCN tuple: [0x1140c, 0x1140d, 0x1140e, 0x1140f]
+    PLCN tuple: [0x140c, 0x140d, 0x140e, 0x140f]
+    Absolute:   0x240c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xced 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7bb — Directory/File (0x7bb)
+    Key (raw):  0000000000000000bb07000000000000
+    VLCN tuple: [0x11448, 0x11449, 0x1144a, 0x1144b]
+    PLCN tuple: [0x1448, 0x1449, 0x144a, 0x144b]
+    Absolute:   0x2448000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf27 0x1
+    Extra bytes (8):
+    00000050  06 00 00 00 00 00 00 00                           ........
+
+  OID 0x7bd — Directory/File (0x7bd)
+    Key (raw):  0000000000000000bd07000000000000
+    VLCN tuple: [0x10218, 0x10219, 0x1021a, 0x1021b]
+    PLCN tuple: [0x218, 0x219, 0x21a, 0x21b]
+    Absolute:   0x1218000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5b 0x1
+    Extra bytes (8):
+    00000050  03 00 00 00 00 00 00 00                           ........
+
+  OID 0x7be — Directory/File (0x7be)
+    Key (raw):  0000000000000000be07000000000000
+    VLCN tuple: [0x12030, 0x12031, 0x12032, 0x12033]
+    PLCN tuple: [0x2030, 0x2031, 0x2032, 0x2033]
+    Absolute:   0x3030000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf32 0x1
+    Extra bytes (8):
+    00000050  04 00 00 00 00 00 00 00                           ........
+
+  OID 0x7bf — Directory/File (0x7bf)
+    Key (raw):  0000000000000000bf07000000000000
+    VLCN tuple: [0x12c08, 0x12c09, 0x12c0a, 0x12c0b]
+    PLCN tuple: [0x2c08, 0x2c09, 0x2c0a, 0x2c0b]
+    Absolute:   0x3c08000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xe87 0x1
+    Extra bytes (8):
+    00000050  03 00 00 00 00 00 00 00                           ........
+
+  OID 0x7c1 — Directory/File (0x7c1)
+    Key (raw):  0000000000000000c107000000000000
+    VLCN tuple: [0x11204, 0x11205, 0x11206, 0x11207]
+    PLCN tuple: [0x1204, 0x1205, 0x1206, 0x1207]
+    Absolute:   0x2204000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xeec 0x1
+    Extra bytes (8):
+    00000050  02 00 00 00 00 00 00 00                           ........
+
+  OID 0x7c2 — Directory/File (0x7c2)
+    Key (raw):  0000000000000000c207000000000000
+    VLCN tuple: [0x100c0, 0x100c1, 0x100c2, 0x100c3]
+    PLCN tuple: [0xc0, 0xc1, 0xc2, 0xc3]
+    Absolute:   0x10c0000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xd7d 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7c3 — Directory/File (0x7c3)
+    Key (raw):  0000000000000000c307000000000000
+    VLCN tuple: [0x11a28, 0x11a29, 0x11a2a, 0x11a2b]
+    PLCN tuple: [0x1a28, 0x1a29, 0x1a2a, 0x1a2b]
+    Absolute:   0x2a28000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5a 0x1
+    Extra bytes (8):
+    00000050  04 00 00 00 00 00 00 00                           ........
+
+  OID 0x7c4 — Directory/File (0x7c4)
+    Key (raw):  0000000000000000c407000000000000
+    VLCN tuple: [0x11614, 0x11615, 0x11616, 0x11617]
+    PLCN tuple: [0x1614, 0x1615, 0x1616, 0x1617]
+    Absolute:   0x2614000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf57 0x1
+    Extra bytes (8):
+    00000050  04 00 00 00 00 00 00 00                           ........
+
+  OID 0x7c5 — Directory/File (0x7c5)
+    Key (raw):  0000000000000000c507000000000000
+    VLCN tuple: [0x1180c, 0x1180d, 0x1180e, 0x1180f]
+    PLCN tuple: [0x180c, 0x180d, 0x180e, 0x180f]
+    Absolute:   0x280c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5b 0x1
+    Extra bytes (8):
+    00000050  04 00 00 00 00 00 00 00                           ........
+
+  OID 0x7c6 — Directory/File (0x7c6)
+    Key (raw):  0000000000000000c607000000000000
+    VLCN tuple: [0x1322c, 0x1322d, 0x1322e, 0x1322f]
+    PLCN tuple: [0x322c, 0x322d, 0x322e, 0x322f]
+    Absolute:   0x422c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5b 0x1
+    Extra bytes (8):
+    00000050  06 00 00 00 00 00 00 00                           ........
+
+  OID 0x7c7 — Directory/File (0x7c7)
+    Key (raw):  0000000000000000c707000000000000
+    VLCN tuple: [0x12410, 0x12411, 0x12412, 0x12413]
+    PLCN tuple: [0x2410, 0x2411, 0x2412, 0x2413]
+    Absolute:   0x3410000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf32 0x1
+    Extra bytes (8):
+    00000050  04 00 00 00 00 00 00 00                           ........
+
+  OID 0x7c8 — Directory/File (0x7c8)
+    Key (raw):  0000000000000000c807000000000000
+    VLCN tuple: [0x12a04, 0x12a05, 0x12a06, 0x12a07]
+    PLCN tuple: [0x2a04, 0x2a05, 0x2a06, 0x2a07]
+    Absolute:   0x3a04000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xdcf 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7c9 — Directory/File (0x7c9)
+    Key (raw):  0000000000000000c907000000000000
+    VLCN tuple: [0x12c30, 0x12c31, 0x12c32, 0x12c33]
+    PLCN tuple: [0x2c30, 0x2c31, 0x2c32, 0x2c33]
+    Absolute:   0x3c30000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf32 0x1
+    Extra bytes (8):
+    00000050  06 00 00 00 00 00 00 00                           ........
+
+  OID 0x7ca — Directory/File (0x7ca)
+    Key (raw):  0000000000000000ca07000000000000
+    VLCN tuple: [0x11a40, 0x11a41, 0x11a42, 0x11a43]
+    PLCN tuple: [0x1a40, 0x1a41, 0x1a42, 0x1a43]
+    Absolute:   0x2a40000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5b 0x1
+    Extra bytes (8):
+    00000050  02 00 00 00 00 00 00 00                           ........
+
+  OID 0x7cb — Directory/File (0x7cb)
+    Key (raw):  0000000000000000cb07000000000000
+    VLCN tuple: [0x100c8, 0x100c9, 0x100ca, 0x100cb]
+    PLCN tuple: [0xc8, 0xc9, 0xca, 0xcb]
+    Absolute:   0x10c8000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5b 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7cc — Directory/File (0x7cc)
+    Key (raw):  0000000000000000cc07000000000000
+    VLCN tuple: [0x10624, 0x10625, 0x10626, 0x10627]
+    PLCN tuple: [0x624, 0x625, 0x626, 0x627]
+    Absolute:   0x1624000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5a 0x1
+    Extra bytes (8):
+    00000050  02 00 00 00 00 00 00 00                           ........
+
+  OID 0x7cd — Directory/File (0x7cd)
+    Key (raw):  0000000000000000cd07000000000000
+    VLCN tuple: [0x13c18, 0x13c19, 0x13c1a, 0x13c1b]
+    PLCN tuple: [0x3c18, 0x3c19, 0x3c1a, 0x3c1b]
+    Absolute:   0x4c18000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xe30 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7ce — Directory/File (0x7ce)
+    Key (raw):  0000000000000000ce07000000000000
+    VLCN tuple: [0x13c20, 0x13c21, 0x13c22, 0x13c23]
+    PLCN tuple: [0x3c20, 0x3c21, 0x3c22, 0x3c23]
+    Absolute:   0x4c20000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xe30 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7cf — Directory/File (0x7cf)
+    Key (raw):  0000000000000000cf07000000000000
+    VLCN tuple: [0x12c34, 0x12c35, 0x12c36, 0x12c37]
+    PLCN tuple: [0x2c34, 0x2c35, 0x2c36, 0x2c37]
+    Absolute:   0x3c34000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5b 0x1
+    Extra bytes (8):
+    00000050  03 00 00 00 00 00 00 00                           ........
+
+  OID 0x7d0 — Directory/File (0x7d0)
+    Key (raw):  0000000000000000d007000000000000
+    VLCN tuple: [0x11c0c, 0x11c0d, 0x11c0e, 0x11c0f]
+    PLCN tuple: [0x1c0c, 0x1c0d, 0x1c0e, 0x1c0f]
+    Absolute:   0x2c0c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5b 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7d1 — Directory/File (0x7d1)
+    Key (raw):  0000000000000000d107000000000000
+    VLCN tuple: [0x13820, 0x13821, 0x13822, 0x13823]
+    PLCN tuple: [0x3820, 0x3821, 0x3822, 0x3823]
+    Absolute:   0x4820000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5b 0x1
+    Extra bytes (8):
+    00000050  02 00 00 00 00 00 00 00                           ........
+
+  OID 0x7d2 — Directory/File (0x7d2)
+    Key (raw):  0000000000000000d207000000000000
+    VLCN tuple: [0x1202c, 0x1202d, 0x1202e, 0x1202f]
+    PLCN tuple: [0x202c, 0x202d, 0x202e, 0x202f]
+    Absolute:   0x302c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xe87 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7d3 — Directory/File (0x7d3)
+    Key (raw):  0000000000000000d307000000000000
+    VLCN tuple: [0x11638, 0x11639, 0x1163a, 0x1163b]
+    PLCN tuple: [0x1638, 0x1639, 0x163a, 0x163b]
+    Absolute:   0x2638000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5b 0x1
+    Extra bytes (8):
+    00000050  02 00 00 00 00 00 00 00                           ........
+
+  OID 0x7d5 — Directory/File (0x7d5)
+    Key (raw):  0000000000000000d507000000000000
+    VLCN tuple: [0x11228, 0x11229, 0x1122a, 0x1122b]
+    PLCN tuple: [0x1228, 0x1229, 0x122a, 0x122b]
+    Absolute:   0x2228000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf32 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7d6 — Directory/File (0x7d6)
+    Key (raw):  0000000000000000d607000000000000
+    VLCN tuple: [0x12038, 0x12039, 0x1203a, 0x1203b]
+    PLCN tuple: [0x2038, 0x2039, 0x203a, 0x203b]
+    Absolute:   0x3038000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5b 0x1
+    Extra bytes (8):
+    00000050  04 00 00 00 00 00 00 00                           ........
+
+  OID 0x7d7 — Directory/File (0x7d7)
+    Key (raw):  0000000000000000d707000000000000
+    VLCN tuple: [0x1221c, 0x1221d, 0x1221e, 0x1221f]
+    PLCN tuple: [0x221c, 0x221d, 0x221e, 0x221f]
+    Absolute:   0x321c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5b 0x1
+    Extra bytes (8):
+    00000050  04 00 00 00 00 00 00 00                           ........
+
+  OID 0x7d8 — Directory/File (0x7d8)
+    Key (raw):  0000000000000000d807000000000000
+    VLCN tuple: [0x13e38, 0x13e39, 0x13e3a, 0x13e3b]
+    PLCN tuple: [0x3e38, 0x3e39, 0x3e3a, 0x3e3b]
+    Absolute:   0x4e38000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf08 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7d9 — Directory/File (0x7d9)
+    Key (raw):  0000000000000000d907000000000000
+    VLCN tuple: [0x11e2c, 0x11e2d, 0x11e2e, 0x11e2f]
+    PLCN tuple: [0x1e2c, 0x1e2d, 0x1e2e, 0x1e2f]
+    Absolute:   0x2e2c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xeec 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7da — Directory/File (0x7da)
+    Key (raw):  0000000000000000da07000000000000
+    VLCN tuple: [0x11e30, 0x11e31, 0x11e32, 0x11e33]
+    PLCN tuple: [0x1e30, 0x1e31, 0x1e32, 0x1e33]
+    Absolute:   0x2e30000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xeec 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7db — Directory/File (0x7db)
+    Key (raw):  0000000000000000db07000000000000
+    VLCN tuple: [0x13e08, 0x13e09, 0x13e0a, 0x13e0b]
+    PLCN tuple: [0x3e08, 0x3e09, 0x3e0a, 0x3e0b]
+    Absolute:   0x4e08000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf32 0x1
+    Extra bytes (8):
+    00000050  02 00 00 00 00 00 00 00                           ........
+
+  OID 0x7dc — Directory/File (0x7dc)
+    Key (raw):  0000000000000000dc07000000000000
+    VLCN tuple: [0x1121c, 0x1121d, 0x1121e, 0x1121f]
+    PLCN tuple: [0x121c, 0x121d, 0x121e, 0x121f]
+    Absolute:   0x221c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xeec 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7dd — Directory/File (0x7dd)
+    Key (raw):  0000000000000000dd07000000000000
+    VLCN tuple: [0x13c30, 0x13c31, 0x13c32, 0x13c33]
+    PLCN tuple: [0x3c30, 0x3c31, 0x3c32, 0x3c33]
+    Absolute:   0x4c30000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf25 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7de — Directory/File (0x7de)
+    Key (raw):  0000000000000000de07000000000000
+    VLCN tuple: [0x10e14, 0x10e15, 0x10e16, 0x10e17]
+    PLCN tuple: [0xe14, 0xe15, 0xe16, 0xe17]
+    Absolute:   0x1e14000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5b 0x1
+    Extra bytes (8):
+    00000050  02 00 00 00 00 00 00 00                           ........
+
+  OID 0x7df — Directory/File (0x7df)
+    Key (raw):  0000000000000000df07000000000000
+    VLCN tuple: [0x13c34, 0x13c35, 0x13c36, 0x13c37]
+    PLCN tuple: [0x3c34, 0x3c35, 0x3c36, 0x3c37]
+    Absolute:   0x4c34000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf32 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7e0 — Directory/File (0x7e0)
+    Key (raw):  0000000000000000e007000000000000
+    VLCN tuple: [0x11a1c, 0x11a1d, 0x11a1e, 0x11a1f]
+    PLCN tuple: [0x1a1c, 0x1a1d, 0x1a1e, 0x1a1f]
+    Absolute:   0x2a1c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf44 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7e1 — Directory/File (0x7e1)
+    Key (raw):  0000000000000000e107000000000000
+    VLCN tuple: [0x10614, 0x10615, 0x10616, 0x10617]
+    PLCN tuple: [0x614, 0x615, 0x616, 0x617]
+    Absolute:   0x1614000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf44 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7e2 — Directory/File (0x7e2)
+    Key (raw):  0000000000000000e207000000000000
+    VLCN tuple: [0x13a04, 0x13a05, 0x13a06, 0x13a07]
+    PLCN tuple: [0x3a04, 0x3a05, 0x3a06, 0x3a07]
+    Absolute:   0x4a04000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf57 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7e3 — Directory/File (0x7e3)
+    Key (raw):  0000000000000000e307000000000000
+    VLCN tuple: [0x10a04, 0x10a05, 0x10a06, 0x10a07]
+    PLCN tuple: [0xa04, 0xa05, 0xa06, 0xa07]
+    Absolute:   0x1a04000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5a 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7e4 — Directory/File (0x7e4)
+    Key (raw):  0000000000000000e407000000000000
+    VLCN tuple: [0x11000, 0x11001, 0x11002, 0x11003]
+    PLCN tuple: [0x1000, 0x1001, 0x1002, 0x1003]
+    Absolute:   0x2000000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0xf5a 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x7e5 — Directory/File (0x7e5)
+    Key (raw):  0000000000000000e507000000000000
+    VLCN tuple: [0x11828, 0x11829, 0x1182a, 0x1182b]
+    PLCN tuple: [0x1828, 0x1829, 0x182a, 0x182b]
+    Absolute:   0x2828000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1382 0x1
+    Extra bytes (8):
+    00000050  24 00 00 00 00 00 00 00                           $.......
+
+  OID 0x7e6 — Directory/File (0x7e6)
+    Key (raw):  0000000000000000e607000000000000
+    VLCN tuple: [0x1242c, 0x1242d, 0x1242e, 0x1242f]
+    PLCN tuple: [0x242c, 0x242d, 0x242e, 0x242f]
+    Absolute:   0x342c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1372 0x1
+    Extra bytes (8):
+    00000050  10 00 00 00 00 00 00 00                           ........
+
+  OID 0x7e7 — Directory/File (0x7e7)
+    Key (raw):  0000000000000000e707000000000000
+    VLCN tuple: [0x11648, 0x11649, 0x1164a, 0x1164b]
+    PLCN tuple: [0x1648, 0x1649, 0x164a, 0x164b]
+    Absolute:   0x2648000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1382 0x1
+    Extra bytes (8):
+    00000050  1b 00 00 00 00 00 00 00                           ........
+
+  OID 0x7e9 — Directory/File (0x7e9)
+    Key (raw):  0000000000000000e907000000000000
+    VLCN tuple: [0x13240, 0x13241, 0x13242, 0x13243]
+    PLCN tuple: [0x3240, 0x3241, 0x3242, 0x3243]
+    Absolute:   0x4240000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1382 0x1
+    Extra bytes (8):
+    00000050  16 00 00 00 00 00 00 00                           ........
+
+  OID 0x7ea — Directory/File (0x7ea)
+    Key (raw):  0000000000000000ea07000000000000
+    VLCN tuple: [0x10e28, 0x10e29, 0x10e2a, 0x10e2b]
+    PLCN tuple: [0xe28, 0xe29, 0xe2a, 0xe2b]
+    Absolute:   0x1e28000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1372 0x1
+    Extra bytes (8):
+    00000050  16 00 00 00 00 00 00 00                           ........
+
+  OID 0x7eb — Directory/File (0x7eb)
+    Key (raw):  0000000000000000eb07000000000000
+    VLCN tuple: [0x1323c, 0x1323d, 0x1323e, 0x1323f]
+    PLCN tuple: [0x323c, 0x323d, 0x323e, 0x323f]
+    Absolute:   0x423c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1382 0x1
+    Extra bytes (8):
+    00000050  03 00 00 00 00 00 00 00                           ........
+
+  OID 0x7ee — Directory/File (0x7ee)
+    Key (raw):  0000000000000000ee07000000000000
+    VLCN tuple: [0x1162c, 0x1162d, 0x1162e, 0x1162f]
+    PLCN tuple: [0x162c, 0x162d, 0x162e, 0x162f]
+    Absolute:   0x262c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1372 0x1
+    Extra bytes (8):
+    00000050  0c 00 00 00 00 00 00 00                           ........
+
+  OID 0x7f0 — Directory/File (0x7f0)
+    Key (raw):  0000000000000000f007000000000000
+    VLCN tuple: [0x11428, 0x11429, 0x1142a, 0x1142b]
+    PLCN tuple: [0x1428, 0x1429, 0x142a, 0x142b]
+    Absolute:   0x2428000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1372 0x1
+    Extra bytes (8):
+    00000050  04 00 00 00 00 00 00 00                           ........
+
+  OID 0x7f2 — Directory/File (0x7f2)
+    Key (raw):  0000000000000000f207000000000000
+    VLCN tuple: [0x13238, 0x13239, 0x1323a, 0x1323b]
+    PLCN tuple: [0x3238, 0x3239, 0x323a, 0x323b]
+    Absolute:   0x4238000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1382 0x1
+    Extra bytes (8):
+    00000050  1c 00 00 00 00 00 00 00                           ........
+
+  OID 0x7f3 — Directory/File (0x7f3)
+    Key (raw):  0000000000000000f307000000000000
+    VLCN tuple: [0x10c08, 0x10c09, 0x10c0a, 0x10c0b]
+    PLCN tuple: [0xc08, 0xc09, 0xc0a, 0xc0b]
+    Absolute:   0x1c08000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1372 0x1
+    Extra bytes (8):
+    00000050  1d 00 00 00 00 00 00 00                           ........
+
+  OID 0x7f4 — Directory/File (0x7f4)
+    Key (raw):  0000000000000000f407000000000000
+    VLCN tuple: [0x10e34, 0x10e35, 0x10e36, 0x10e37]
+    PLCN tuple: [0xe34, 0xe35, 0xe36, 0xe37]
+    Absolute:   0x1e34000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1382 0x1
+    Extra bytes (8):
+    00000050  14 00 00 00 00 00 00 00                           ........
+
+  OID 0x7f5 — Directory/File (0x7f5)
+    Key (raw):  0000000000000000f507000000000000
+    VLCN tuple: [0x13e34, 0x13e35, 0x13e36, 0x13e37]
+    PLCN tuple: [0x3e34, 0x3e35, 0x3e36, 0x3e37]
+    Absolute:   0x4e34000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1382 0x1
+    Extra bytes (8):
+    00000050  05 00 00 00 00 00 00 00                           ........
+
+  OID 0x7f8 — Directory/File (0x7f8)
+    Key (raw):  0000000000000000f807000000000000
+    VLCN tuple: [0x11644, 0x11645, 0x11646, 0x11647]
+    PLCN tuple: [0x1644, 0x1645, 0x1646, 0x1647]
+    Absolute:   0x2644000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1372 0x1
+    Extra bytes (8):
+    00000050  07 00 00 00 00 00 00 00                           ........
+
+  OID 0x7fa — Directory/File (0x7fa)
+    Key (raw):  0000000000000000fa07000000000000
+    VLCN tuple: [0x12630, 0x12631, 0x12632, 0x12633]
+    PLCN tuple: [0x2630, 0x2631, 0x2632, 0x2633]
+    Absolute:   0x3630000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1382 0x1
+    Extra bytes (8):
+    00000050  18 00 00 00 00 00 00 00                           ........
+
+  OID 0x7fb — Directory/File (0x7fb)
+    Key (raw):  0000000000000000fb07000000000000
+    VLCN tuple: [0x12e28, 0x12e29, 0x12e2a, 0x12e2b]
+    PLCN tuple: [0x2e28, 0x2e29, 0x2e2a, 0x2e2b]
+    Absolute:   0x3e28000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1372 0x1
+    Extra bytes (8):
+    00000050  06 00 00 00 00 00 00 00                           ........
+
+  OID 0x7fc — Directory/File (0x7fc)
+    Key (raw):  0000000000000000fc07000000000000
+    VLCN tuple: [0x11824, 0x11825, 0x11826, 0x11827]
+    PLCN tuple: [0x1824, 0x1825, 0x1826, 0x1827]
+    Absolute:   0x2824000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1382 0x1
+    Extra bytes (8):
+    00000050  03 00 00 00 00 00 00 00                           ........
+
+  OID 0x7fd — Directory/File (0x7fd)
+    Key (raw):  0000000000000000fd07000000000000
+    VLCN tuple: [0x12c44, 0x12c45, 0x12c46, 0x12c47]
+    PLCN tuple: [0x2c44, 0x2c45, 0x2c46, 0x2c47]
+    Absolute:   0x3c44000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1372 0x1
+    Extra bytes (8):
+    00000050  07 00 00 00 00 00 00 00                           ........
+
+  OID 0x804 — Directory/File (0x804)
+    Key (raw):  00000000000000000408000000000000
+    VLCN tuple: [0x11430, 0x11431, 0x11432, 0x11433]
+    PLCN tuple: [0x1430, 0x1431, 0x1432, 0x1433]
+    Absolute:   0x2430000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1382 0x1
+    Extra bytes (8):
+    00000050  10 00 00 00 00 00 00 00                           ........
+
+  OID 0x805 — Directory/File (0x805)
+    Key (raw):  00000000000000000508000000000000
+    VLCN tuple: [0x13628, 0x13629, 0x1362a, 0x1362b]
+    PLCN tuple: [0x3628, 0x3629, 0x362a, 0x362b]
+    Absolute:   0x4628000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1372 0x1
+    Extra bytes (8):
+    00000050  0a 00 00 00 00 00 00 00                           ........
+
+  OID 0x806 — Directory/File (0x806)
+    Key (raw):  00000000000000000608000000000000
+    VLCN tuple: [0x1083c, 0x1083d, 0x1083e, 0x1083f]
+    PLCN tuple: [0x83c, 0x83d, 0x83e, 0x83f]
+    Absolute:   0x183c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1382 0x1
+    Extra bytes (8):
+    00000050  0f 00 00 00 00 00 00 00                           ........
+
+  OID 0x807 — Directory/File (0x807)
+    Key (raw):  00000000000000000708000000000000
+    VLCN tuple: [0x12a28, 0x12a29, 0x12a2a, 0x12a2b]
+    PLCN tuple: [0x2a28, 0x2a29, 0x2a2a, 0x2a2b]
+    Absolute:   0x3a28000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1382 0x1
+    Extra bytes (8):
+    00000050  02 00 00 00 00 00 00 00                           ........
+
+  OID 0x808 — Directory/File (0x808)
+    Key (raw):  00000000000000000808000000000000
+    VLCN tuple: [0x11830, 0x11831, 0x11832, 0x11833]
+    PLCN tuple: [0x1830, 0x1831, 0x1832, 0x1833]
+    Absolute:   0x2830000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1382 0x1
+    Extra bytes (8):
+    00000050  0a 00 00 00 00 00 00 00                           ........
+
+  OID 0x80d — Directory/File (0x80d)
+    Key (raw):  00000000000000000d08000000000000
+    VLCN tuple: [0x12814, 0x12815, 0x12816, 0x12817]
+    PLCN tuple: [0x2814, 0x2815, 0x2816, 0x2817]
+    Absolute:   0x3814000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1382 0x1
+    Extra bytes (8):
+    00000050  08 00 00 00 00 00 00 00                           ........
+
+  OID 0x80e — Directory/File (0x80e)
+    Key (raw):  00000000000000000e08000000000000
+    VLCN tuple: [0x11640, 0x11641, 0x11642, 0x11643]
+    PLCN tuple: [0x1640, 0x1641, 0x1642, 0x1643]
+    Absolute:   0x2640000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1372 0x1
+    Extra bytes (8):
+    00000050  03 00 00 00 00 00 00 00                           ........
+
+  OID 0x812 — Directory/File (0x812)
+    Key (raw):  00000000000000001208000000000000
+    VLCN tuple: [0x10238, 0x10239, 0x1023a, 0x1023b]
+    PLCN tuple: [0x238, 0x239, 0x23a, 0x23b]
+    Absolute:   0x1238000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1382 0x1
+    Extra bytes (8):
+    00000050  07 00 00 00 00 00 00 00                           ........
+
+  OID 0x813 — Directory/File (0x813)
+    Key (raw):  00000000000000001308000000000000
+    VLCN tuple: [0x12228, 0x12229, 0x1222a, 0x1222b]
+    PLCN tuple: [0x2228, 0x2229, 0x222a, 0x222b]
+    Absolute:   0x3228000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1382 0x1
+    Extra bytes (8):
+    00000050  06 00 00 00 00 00 00 00                           ........
+
+  OID 0x814 — Directory/File (0x814)
+    Key (raw):  00000000000000001408000000000000
+    VLCN tuple: [0x1163c, 0x1163d, 0x1163e, 0x1163f]
+    PLCN tuple: [0x163c, 0x163d, 0x163e, 0x163f]
+    Absolute:   0x263c000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1372 0x1
+    Extra bytes (8):
+    00000050  05 00 00 00 00 00 00 00                           ........
+
+  OID 0x817 — Directory/File (0x817)
+    Key (raw):  00000000000000001708000000000000
+    VLCN tuple: [0x10618, 0x10619, 0x1061a, 0x1061b]
+    PLCN tuple: [0x618, 0x619, 0x61a, 0x61b]
+    Absolute:   0x1618000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1372 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x81a — Directory/File (0x81a)
+    Key (raw):  00000000000000001a08000000000000
+    VLCN tuple: [0x10620, 0x10621, 0x10622, 0x10623]
+    PLCN tuple: [0x620, 0x621, 0x622, 0x623]
+    Absolute:   0x1620000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1372 0x1
+    Extra bytes (8):
+    00000050  02 00 00 00 00 00 00 00                           ........
+
+  OID 0x81c — Directory/File (0x81c)
+    Key (raw):  00000000000000001c08000000000000
+    VLCN tuple: [0x13a24, 0x13a25, 0x13a26, 0x13a27]
+    PLCN tuple: [0x3a24, 0x3a25, 0x3a26, 0x3a27]
+    Absolute:   0x4a24000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1372 0x1
+    Extra bytes (8):
+    00000050  02 00 00 00 00 00 00 00                           ........
+
+  OID 0x81d — Directory/File (0x81d)
+    Key (raw):  00000000000000001d08000000000000
+    VLCN tuple: [0x11020, 0x11021, 0x11022, 0x11023]
+    PLCN tuple: [0x1020, 0x1021, 0x1022, 0x1023]
+    Absolute:   0x2020000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1372 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........
+
+  OID 0x81e — Directory/File (0x81e)
+    Key (raw):  00000000000000001e08000000000000
+    VLCN tuple: [0x10430, 0x10431, 0x10432, 0x10433]
+    PLCN tuple: [0x430, 0x431, 0x432, 0x433]
+    Absolute:   0x1430000
+    Signature:  MSB+
+    Value size: 88 bytes (standard=80, extra=8)
+    u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x8 0x1372 0x1
+    Extra bytes (8):
+    00000050  01 00 00 00 00 00 00 00                           ........

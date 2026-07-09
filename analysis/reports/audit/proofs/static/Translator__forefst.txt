@@ -1,0 +1,10 @@
+class Translator:
+ def __init__(self, m, cpc):
+ self.map = m; self.cpc = cpc
+ self.shift = cpc.bit_length() if cpc > 0 else 0
+ self.mask = cpc - 1 if cpc > 0 else 0
+ def tr(self, vlcn):
+ cid = vlcn >> self.shift
+ return self.map[cid] + (vlcn & self.mask) if cid in self.map else vlcn
+
+# ─── B+ tree walker ──────────────────────────────────────────────────

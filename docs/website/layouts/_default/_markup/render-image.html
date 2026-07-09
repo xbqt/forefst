@@ -1,0 +1,11 @@
+{{- $src := .Destination -}}
+{{- if strings.HasSuffix $src ".svg" -}}
+  {{- $svg := resources.Get (printf "diagrams/%s" (path.Base $src)) -}}
+  {{- if $svg -}}
+    <figure class="diagram-fig">{{ $svg.Content | safeHTML }}{{ with .Text }}<figcaption>{{ . }}</figcaption>{{ end }}</figure>
+  {{- else -}}
+    <img src="{{ $src | safeURL }}" alt="{{ .Text }}" loading="lazy">
+  {{- end -}}
+{{- else -}}
+  <img src="{{ $src | safeURL }}" alt="{{ .Text }}"{{ with .Title }} title="{{ . }}"{{ end }} loading="lazy">
+{{- end -}}

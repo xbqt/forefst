@@ -1,0 +1,23 @@
+==============================================================================
+ReFS Deleted File Finder
+==============================================================================
+  Image:        win11refstestmftecmd.raw
+  ReFS version: 3.14
+  Cluster size: 0x1000
+  Checkpoints:  2 (VC: 617, 616)
+  Objects:      250
+
+── Trash Table (OID 0xD) ──
+  Empty (all deletions fully processed)
+
+── Checkpoint Comparison ──
+  Current checkpoint: VC=617
+  Previous checkpoint: VC=616
+  Same top-level files in both (change may be in subdirectories or metadata)
+
+── Orphaned Page Scan ──
+  Current tree references 1052 unique physical clusters
+  Scanning up to 50000 clusters for orphaned MSB+ pages...
+  Found 292 orphaned MSB+ leaf pages
+  No deleted file entries found in scanned area
+

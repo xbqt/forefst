@@ -1,0 +1,86 @@
+# forefst win11refs2tsnapshots.raw summary -q
+# ----------------------------------------------------------------------------
+==============================================================================
+ReFS Volume Fast Extended Summary
+==============================================================================
+  Image:              win11refs2tsnapshots.raw
+  Image size:         2.0 TB
+  ReFS version:       3.14
+  Volume GUID:        c2b2e9e9-007b-49bf-92ec-5690bfd86923
+  Volume serial:      0x2c4a226f4a22364c
+  Volume label:       win11refs2tsnapshots
+  Volume size:        2.0 TB
+  Cluster size:       0x1000 (4.0 KB)
+  Container size:     0x4000000 (64.0 MB)
+  Checksum:           CRC64
+
+------------------------------------------------------------------------------
+Hashes
+------------------------------------------------------------------------------
+  VBR SHA-256:        2291b5b0537de224b6276c04b16c71ab73ee93f093bdc9b4acc2f695e2e9403f
+  SUPB SHA-256:       85cb53e7d4b181d5b5af37061bb9f8413167b968f11ef59287f075433f80ad20
+  CHKP SHA-256:       2972908a619b3e5733b4d6385d5a94fa6722b04eccebcd31b56f9dc82e43f7f7
+
+------------------------------------------------------------------------------
+Checkpoint
+------------------------------------------------------------------------------
+  Virtual clock:      265
+  Flags:              0x682
+                        · 0x002 = always-set
+                        · 0x080 = native-Win11-format (v3.10+)
+                        · 0x200 = indirect-root-list
+                        · 0x400 = metadata-checksum (CRC64/SHA-256)
+  Objects:            47
+  Containers mapped:  32767
+
+------------------------------------------------------------------------------
+Global Root Tables
+------------------------------------------------------------------------------
+  Object ID Table                  47 rows
+  Medium Allocator                 18 rows
+  Container Allocator             165 rows
+  Schema Table                     29 rows
+  Parent-Child Table               35 rows
+  Object ID Table dup              47 rows
+  Block RefCount                   21 rows
+  Container Table               32767 rows
+  Container Table dup           32767 rows
+  Schema Table dup                 29 rows
+  Container Index                   0 rows
+  Integrity State                   1 rows
+  Small Allocator                   8 rows
+
+------------------------------------------------------------------------------
+Volume Detail
+------------------------------------------------------------------------------
+  Volume version:     3.14
+  Driver version:     3.14
+  Volume created:     2026-05-16 16:50:42.7888372
+  Volume modified:    2026-05-16 16:50:44.1722315
+  Volume state:       NATIVE v3.14
+  Security descs:     7
+  Reparse index:      3 entries
+  Trash table:        0 entries
+  Containers used:    32766 / 32767 (100.0%)
+  Free space (est):   64.0 MB
+  FS Metadata rows:   1
+  USN Journal:        Inactive
+
+For complete file statistics, use the `summary` subcommand (full directory walk)
+
+------------------------------------------------------------------------------
+File System Content (from directory walk)
+------------------------------------------------------------------------------
+  Directories:        34
+  Files:              270 (12 resident)
+  Total file size:    432.8 MB
+  Oldest timestamp:   2021-05-18 07:16:04.9990009
+  Newest timestamp:   2026-05-16 17:35:57.4899352
+  Encrypted files:    0
+  Integrity files:    0
+  Compressed files:   0
+  Hard links (extra): 0
+  Snapshots:          10
+  ADS entries:        3
+
+Tip: the `fastsummary` subcommand gives quick volume metadata without a directory walk

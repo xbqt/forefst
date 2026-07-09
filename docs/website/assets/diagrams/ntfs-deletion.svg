@@ -1,0 +1,6 @@
+<svg class="diagram" viewBox="0 0 760 170" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The three steps of file deletion">
+<rect class="dg-box" x="20"  y="40" width="220" height="60" rx="8"/><text class="dg-title" x="36" y="62" font-size="12" font-weight="700">1 · record freed</text><text class="dg-muted" x="36" y="82" font-size="10.5">MFT in-use flag cleared</text>
+<rect class="dg-box" x="270" y="40" width="220" height="60" rx="8"/><text class="dg-title" x="286" y="62" font-size="12" font-weight="700">2 · name removed</text><text class="dg-muted" x="286" y="82" font-size="10.5">directory index entry deleted</text>
+<rect class="dg-box" x="520" y="40" width="220" height="60" rx="8"/><text class="dg-title" x="536" y="62" font-size="12" font-weight="700">3 · clusters freed</text><text class="dg-muted" x="536" y="82" font-size="10.5">$Bitmap bits cleared</text>
+<text class="dg-accent" x="20" y="138" font-size="11">The content itself is not wiped — it survives until those clusters/records are reused (the basis for recovery).</text>
+</svg>

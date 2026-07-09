@@ -1,0 +1,3551 @@
+# forefst win11refs2tspecials.raw reparse
+# ----------------------------------------------------------------------------
+==============================================================================
+ReFS Reparse Points
+==============================================================================
+  Image:        analysis/rawdisk/disks/step3/win11refs2tspecials.raw
+  ReFS version: 3.14
+
+  Files with REPARSE_POINT flag: 508
+  Files with WSL EAs: 0
+  Total files scanned: 1550
+
+  Showing 508 entries:
+
+  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_symlink_gamma_582874.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\test\xbpt_foxtrot_india_714766.ini
+    Display:   j:\test\xbpt_foxtrot_india_714766.ini
+    Relative:  False
+
+  test/xbpt_symlink_hotel_632659.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\test\elvis_dir_log_202031\elvis_dir_record_340186\elvis_dir_gamma_109016\elvis_dir_config_541148\xbpt_index_zulu_828859.bak
+    Display:   j:\test\elvis_dir_log_202031\elvis_dir_record_340186\elvis_dir_gamma_109016\elvis_dir_config_541148\xbpt_index_zulu_828859.bak
+    Relative:  False
+
+  test/xbpt_symlink_output_831744.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\test\xbpt_yankee_audit_433793.xml
+    Display:   j:\test\xbpt_yankee_audit_433793.xml
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_alpha_598099/dir_index_953906/hardlink_sync_683343.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\dir_victor_676301\symlink_zulu_334450.lnk
+
+  testspecials/dir_gamma_163068/dir_alpha_598099/dir_trace_251622/symlink_data_516669.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_gamma_163068\dir_echo_659970\hardlink_lima_237877.lnk
+
+  testspecials/dir_gamma_163068/dir_alpha_598099/dir_trace_251622/symlink_hotel_394885.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_yankee_391369\symlink_cache_897060.lnk
+    Display:   j:\testspecials\dir_lima_342873\dir_yankee_391369\symlink_cache_897060.lnk
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_alpha_598099/dir_trace_251622/symlink_output_403147.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\oscar_uniform_727619.lnk
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\oscar_uniform_727619.lnk
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_alpha_598099/hardlink_mike_847533.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_romeo_975581\symlink_india_845383.lnk
+
+  testspecials/dir_gamma_163068/dir_alpha_598099/hardlink_output_626240.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\dir_config_134078\symlink_lima_207932.lnk
+
+  testspecials/dir_gamma_163068/dir_alpha_598099/symlink_alpha_302926.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\archive_draft_584891.csv
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\archive_draft_584891.csv
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_alpha_598099/symlink_backup_374908.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_yankee_391369\dir_config_947995\beta_lima_133526.xml
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_yankee_391369\dir_config_947995\beta_lima_133526.xml
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_config_495144/dir_quebec_465938/symlink_sierra_761056.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_archive_409111\dir_romeo_975581\symlink_kilo_639983.lnk
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_archive_409111\dir_romeo_975581\symlink_kilo_639983.lnk
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_config_495144/hardlink_tango_983687.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\dir_victor_676301\hardlink_cache_174893.bin
+
+  testspecials/dir_gamma_163068/dir_config_495144/symlink_archive_481962.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_uniform_544837\dir_output_654155\dir_config_531397\hardlink_tango_446105.xml
+    Display:   j:\testspecials\dir_uniform_544837\dir_output_654155\dir_config_531397\hardlink_tango_446105.xml
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/cache_beta_922615.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_victor_893234\symlink_foxtrot_254926.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/hardlink_alpha_523977.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_config_356395\symlink_audit_305752.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/hardlink_papa_858656.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_india_623599\dir_index_446416\india_index_571205.bin
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/symlink_foxtrot_698630.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\symlink_record_329460.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/symlink_kilo_639983.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_victor_676301\hardlink_whiskey_222537.lnk
+    Display:   j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_victor_676301\hardlink_whiskey_222537.lnk
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/symlink_sierra_999524.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\dir_romeo_975581\output_india_449169.md
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/symlink_trace_678820.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_config_134078\hardlink_cache_210740.lnk
+    Display:   j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_config_134078\hardlink_cache_210740.lnk
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_papa_887644.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\draft_uniform_166420.txt
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_yankee_725332.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\foxtrot_romeo_101133.csv
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/symlink_audit_479963.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\yankee_romeo_767149.bak
+    Display:   j:\testspecials\dir_lima_342873\yankee_romeo_767149.bak
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/symlink_lima_478054.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_yankee_391369\symlink_foxtrot_254926.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/symlink_record_329460.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_foxtrot_946233\dir_archive_409111\dir_victor_676301\yankee_backup_463169.bak
+    Display:   j:\testspecials\dir_foxtrot_946233\dir_archive_409111\dir_victor_676301\yankee_backup_463169.bak
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/symlink_whiskey_950291.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_november_947335\hardlink_beta_859345.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/symlink_yankee_956806.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\draft_uniform_166420.txt
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_beta_159096/mike_record_340390.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_config_356395\hardlink_lima_619070.bak
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_beta_159096/symlink_beta_527893.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_india_623599\dir_index_446416\foxtrot_config_239576.cfg
+    Display:   j:\testspecials\dir_lima_342873\dir_india_623599\dir_index_446416\foxtrot_config_239576.cfg
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_beta_159096/symlink_foxtrot_310495.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_data_748538\hardlink_papa_658266.bin
+    Display:   j:\testspecials\dir_data_748538\hardlink_papa_658266.bin
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/cache_whiskey_662260.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_cache_939593\backup_beta_229699.tmp
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/dir_echo_285482/cache_uniform_376235.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_config_134078\hardlink_romeo_851109.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/dir_echo_285482/hardlink_india_662068.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_archive_409111\hardlink_data_601823.txt
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/dir_echo_285482/symlink_delta_802995.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\dir_config_134078\symlink_lima_207932.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/dir_echo_285482/symlink_oscar_621832.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\dir_romeo_975581\zulu_foxtrot_691851.log
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/dir_yankee_435831/hardlink_zulu_958047.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_config_134078\papa_papa_152513.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/dir_yankee_435831/symlink_data_819691.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_november_947335\trace_report_277987.json
+    Display:   j:\testspecials\dir_november_947335\trace_report_277987.json
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/dir_yankee_435831/symlink_uniform_369086.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_india_623599\hardlink_lima_860295.lnk
+    Display:   j:\testspecials\dir_lima_342873\dir_india_623599\hardlink_lima_860295.lnk
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_november_632940.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_november_947335\hardlink_beta_859345.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_output_564816.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_tango_400582\kilo_beta_797319.dat
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_quebec_957314.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\dir_config_134078\papa_papa_152513.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/symlink_audit_305752.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_november_947335\november_cache_821954.dat
+    Display:   j:\testspecials\dir_november_947335\november_cache_821954.dat
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/symlink_audit_611693.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\tango_lima_351713.tmp
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/symlink_oscar_946241.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\hardlink_yankee_419979.dat
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/symlink_quebec_607857.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\foxtrot_romeo_101133.csv
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/symlink_whiskey_720413.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_victor_893234\symlink_foxtrot_254926.lnk
+    Display:   j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_victor_893234\symlink_foxtrot_254926.lnk
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/symlink_zulu_160840.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_archive_409111\dir_victor_676301\hardlink_cache_174893.bin
+    Display:   j:\testspecials\dir_lima_342873\dir_archive_409111\dir_victor_676301\hardlink_cache_174893.bin
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/symlink_zulu_871090.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_kilo_659195\tango_beta_157499.json
+    Display:   j:\testspecials\dir_kilo_659195\tango_beta_157499.json
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_foxtrot_394781/hardlink_november_479422.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\dir_config_134078\symlink_lima_207932.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_foxtrot_394781/symlink_kilo_641971.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_gamma_163068\dir_echo_659970\whiskey_index_751651.log
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_foxtrot_394781/symlink_romeo_122485.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_india_623599\dir_kilo_929277\symlink_audit_445884.lnk
+    Display:   j:\testspecials\dir_lima_342873\dir_india_623599\dir_kilo_929277\symlink_audit_445884.lnk
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_foxtrot_394781/symlink_sierra_386667.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_india_623599\dir_index_446416\papa_victor_867137.csv
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416/audit_foxtrot_329465.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_romeo_975581\symlink_foxtrot_875088.lnk
+    Display:   j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_romeo_975581\symlink_foxtrot_875088.lnk
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416/config_romeo_839631.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_victor_893234\symlink_foxtrot_254926.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416/hardlink_cache_210740.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\foxtrot_romeo_101133.csv
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416/hardlink_kilo_107223.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\foxtrot_romeo_101133.csv
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416/hardlink_romeo_851109.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\alpha_backup_597620.dat
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416/india_trace_876507.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_foxtrot_946233\symlink_quebec_310797.lnk
+    Display:   j:\testspecials\dir_foxtrot_946233\symlink_quebec_310797.lnk
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416/symlink_lima_207932.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_victor_676301\gamma_draft_783843.bin
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416/symlink_output_783603.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_november_947335\hardlink_log_446439.tmp
+    Display:   j:\testspecials\dir_november_947335\hardlink_log_446439.tmp
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416/symlink_quebec_790872.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\hardlink_archive_151069.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416/symlink_sierra_640469.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\hardlink_draft_507334.lnk
+    Display:   j:\testspecials\hardlink_draft_507334.lnk
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/config_alpha_435266.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\hardlink_yankee_419979.dat
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/hardlink_alpha_934021.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\foxtrot_romeo_101133.csv
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/hardlink_uniform_333563.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\hardlink_archive_151069.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/hardlink_whiskey_222537.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\tango_lima_351713.tmp
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/symlink_audit_445884.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_romeo_851778\hardlink_hotel_423014.csv
+    Display:   j:\testspecials\dir_lima_342873\dir_romeo_851778\hardlink_hotel_423014.csv
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/symlink_beta_143606.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_november_947335\november_cache_821954.dat
+    Display:   j:\testspecials\dir_november_947335\november_cache_821954.dat
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/symlink_lima_541682.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_november_947335\yankee_delta_445163.json
+    Display:   j:\testspecials\dir_november_947335\yankee_delta_445163.json
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/symlink_lima_738451.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_papa_873348\zulu_november_980765.csv
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/symlink_trace_382042.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\draft_uniform_166420.txt
+    Display:   j:\testspecials\draft_uniform_166420.txt
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/symlink_zulu_334450.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_papa_873348\hardlink_trace_280509.csv
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/hardlink_lima_860295.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\foxtrot_romeo_101133.csv
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/symlink_lima_816808.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_config_356395\symlink_audit_305752.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/symlink_whiskey_639876.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_config_134078\papa_papa_152513.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/dir_india_917272/hardlink_data_978230.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\tango_lima_351713.tmp
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/dir_india_917272/symlink_log_199902.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_romeo_851778\symlink_papa_608876.lnk
+    Display:   j:\testspecials\dir_lima_342873\dir_romeo_851778\symlink_papa_608876.lnk
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/dir_india_917272/symlink_log_891807.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_victor_676301\yankee_backup_463169.bak
+    Display:   j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_victor_676301\yankee_backup_463169.bak
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/dir_november_900842/symlink_sierra_699196.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_romeo_851778\dir_uniform_978658\hardlink_config_365199.lnk
+    Display:   j:\testspecials\dir_lima_342873\dir_romeo_851778\dir_uniform_978658\hardlink_config_365199.lnk
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/dir_uniform_978658/hardlink_config_365199.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\draft_uniform_166420.txt
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/dir_uniform_978658/symlink_delta_644959.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_audit_601474\foxtrot_oscar_943219.log
+    Display:   j:\testspecials\dir_lima_342873\dir_audit_601474\foxtrot_oscar_943219.log
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/dir_uniform_978658/symlink_lima_483572.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_config_356395\yankee_mike_675054.md
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/foxtrot_papa_859484.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\dir_config_134078\papa_papa_152513.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/hardlink_alpha_979102.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\foxtrot_romeo_101133.csv
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/hardlink_gamma_141481.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\dir_config_134078\symlink_lima_207932.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/symlink_cache_500963.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_config_134078\papa_papa_152513.lnk
+    Display:   j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_config_134078\papa_papa_152513.lnk
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/symlink_papa_608876.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\dir_victor_676301\symlink_zulu_334450.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/symlink_report_473372.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_yankee_391369\dir_data_954098\symlink_india_823611.lnk
+    Display:   j:\testspecials\dir_lima_342873\dir_yankee_391369\dir_data_954098\symlink_india_823611.lnk
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_tango_400582/config_audit_795745.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\foxtrot_romeo_101133.csv
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_tango_400582/dir_delta_350531/symlink_whiskey_296438.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_tango_400582\draft_sync_698433.txt
+    Display:   j:\testspecials\dir_lima_342873\dir_tango_400582\draft_sync_698433.txt
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_tango_400582/hardlink_archive_593670.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\report_sierra_356241.csv
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_tango_400582/hardlink_archive_957365.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_config_134078\hardlink_romeo_851109.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_tango_400582/symlink_data_606708.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_november_947335\oscar_uniform_234600.tmp
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_tango_400582/symlink_log_720453.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_kilo_659195\foxtrot_delta_292770.ini
+    Display:   j:\testspecials\dir_kilo_659195\foxtrot_delta_292770.ini
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_tango_400582/symlink_sierra_155354.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_foxtrot_946233\yankee_romeo_767149.bak
+    Display:   j:\testspecials\dir_foxtrot_946233\yankee_romeo_767149.bak
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_tango_400582/symlink_sync_910036.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\dir_romeo_975581\hardlink_sync_966265.txt
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_uniform_329376/foxtrot_output_443473.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_config_134078\hardlink_romeo_851109.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_uniform_329376/hardlink_victor_637607.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\draft_uniform_166420.txt
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/delta_november_448080.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_november_947335\oscar_uniform_234600.tmp
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/dir_config_947995/symlink_gamma_374088.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_config_134078\hardlink_kilo_107223.lnk
+    Display:   j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_config_134078\hardlink_kilo_107223.lnk
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/dir_data_954098/alpha_yankee_758485.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_romeo_314364\hardlink_uniform_813699.ini
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/dir_data_954098/hardlink_papa_440371.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_papa_873348\hardlink_trace_280509.csv
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/dir_data_954098/symlink_archive_122316.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_yankee_391369\dir_config_947995\mike_romeo_616983.csv
+    Display:   j:\testspecials\dir_lima_342873\dir_yankee_391369\dir_config_947995\mike_romeo_616983.csv
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/dir_data_954098/symlink_echo_573674.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_archive_409111\hardlink_yankee_725332.lnk
+    Display:   j:\testspecials\dir_lima_342873\dir_archive_409111\hardlink_yankee_725332.lnk
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/dir_data_954098/symlink_november_522467.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_india_623599\dir_index_446416\config_romeo_839631.lnk
+    Display:   j:\testspecials\dir_lima_342873\dir_india_623599\dir_index_446416\config_romeo_839631.lnk
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/dir_data_954098/symlink_tango_357223.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_india_623599\dir_index_446416\hardlink_kilo_107223.lnk
+    Display:   j:\testspecials\dir_lima_342873\dir_india_623599\dir_index_446416\hardlink_kilo_107223.lnk
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/dir_data_954098/whiskey_hotel_520535.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_victor_676301\hardlink_whiskey_222537.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/dir_trace_681284/hardlink_hotel_363890.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_india_623599\dir_index_446416\papa_victor_867137.csv
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/dir_trace_681284/symlink_whiskey_903088.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_tango_400582\kilo_beta_797319.dat
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/hardlink_index_977867.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\dir_victor_676301\hardlink_cache_174893.bin
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/hardlink_india_417486.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_victor_676301\gamma_draft_783843.bin
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/hardlink_lima_840096.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\symlink_record_329460.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/hardlink_sierra_659180.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\dir_config_134078\symlink_lima_207932.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/mike_romeo_215177.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_november_947335\hardlink_log_446439.tmp
+    Display:   j:\testspecials\dir_november_947335\hardlink_log_446439.tmp
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/symlink_alpha_576533.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\hardlink_yankee_419979.dat
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/symlink_cache_897060.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_foxtrot_946233\dir_archive_409111\dir_victor_676301\symlink_lima_738451.lnk
+    Display:   j:\testspecials\dir_foxtrot_946233\dir_archive_409111\dir_victor_676301\symlink_lima_738451.lnk
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/symlink_foxtrot_254926.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\foxtrot_romeo_101133.csv
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/symlink_mike_898898.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\draft_uniform_166420.txt
+    Display:   j:\testspecials\draft_uniform_166420.txt
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/oscar_uniform_727619.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_victor_893234\sync_quebec_717296.bin
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/symlink_delta_673470.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_tango_400582\draft_sync_698433.txt
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_tango_400582\draft_sync_698433.txt
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/symlink_delta_712821.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_romeo_975581\symlink_india_845383.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/symlink_lima_456505.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_yankee_391369\dir_config_947995\draft_oscar_791651.xml
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_yankee_391369\dir_config_947995\draft_oscar_791651.xml
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/symlink_oscar_789035.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_archive_409111\hardlink_beta_807149.txt
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_archive_409111\hardlink_beta_807149.txt
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/symlink_quebec_310797.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\hardlink_archive_151069.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/symlink_romeo_661865.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_config_356395\hardlink_foxtrot_829175.tmp
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_config_356395\hardlink_foxtrot_829175.tmp
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/symlink_sierra_531546.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\lima_echo_738968.dat
+    Display:   j:\testspecials\dir_gamma_163068\lima_echo_738968.dat
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/symlink_zulu_658223.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_yankee_391369\dir_config_947995\beta_lima_133526.xml
+    Display:   j:\testspecials\dir_lima_342873\dir_yankee_391369\dir_config_947995\beta_lima_133526.xml
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_data_619360/hardlink_draft_508552.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_papa_873348\zulu_november_980765.csv
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_data_619360/hardlink_kilo_184567.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_config_356395\yankee_mike_675054.md
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_data_619360/hardlink_mike_897108.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_archive_409111\dir_romeo_975581\log_papa_426305.bin
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_data_619360/symlink_backup_292797.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_india_623599\dir_index_446416\symlink_output_783603.lnk
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_india_623599\dir_index_446416\symlink_output_783603.lnk
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_quebec_876879/hardlink_yankee_114054.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\hardlink_yankee_419979.dat
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_quebec_876879/symlink_draft_725956.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_config_356395\cache_whiskey_662260.lnk
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_config_356395\cache_whiskey_662260.lnk
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/dir_quebec_876879/symlink_kilo_957471.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_archive_409111\dir_romeo_975581\symlink_kilo_639983.lnk
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_archive_409111\dir_romeo_975581\symlink_kilo_639983.lnk
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/hardlink_beta_974697.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\dir_romeo_975581\output_india_449169.md
+
+  testspecials/dir_gamma_163068/dir_echo_659970/hardlink_cache_439955.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_india_623599\dir_index_446416\symlink_sierra_640469.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/hardlink_lima_237877.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_victor_676301\gamma_draft_783843.bin
+
+  testspecials/dir_gamma_163068/dir_echo_659970/symlink_delta_431361.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_november_947335\dir_sync_924581\dir_backup_133264\record_audit_213236.ini
+    Display:   j:\testspecials\dir_november_947335\dir_sync_924581\dir_backup_133264\record_audit_213236.ini
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/symlink_papa_559525.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_config_356395\dir_echo_285482\yankee_gamma_494728.ini
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_config_356395\dir_echo_285482\yankee_gamma_494728.ini
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_echo_659970/symlink_report_667855.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_india_623599\dir_index_446416\symlink_sierra_640469.lnk
+
+  testspecials/dir_gamma_163068/dir_echo_659970/symlink_romeo_322401.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_romeo_851778\dir_uniform_978658\symlink_lima_483572.lnk
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_romeo_851778\dir_uniform_978658\symlink_lima_483572.lnk
+    Relative:  False
+
+  testspecials/dir_gamma_163068/dir_uniform_944801/hardlink_oscar_359289.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_november_947335\dir_sync_112058\dir_whiskey_376642\archive_draft_740308.cfg
+
+  testspecials/dir_gamma_163068/hardlink_backup_432445.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\draft_uniform_166420.txt
+
+  testspecials/dir_gamma_163068/symlink_echo_745724.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_uniform_544837\dir_output_654155\papa_sierra_190261.xml
+    Display:   j:\testspecials\dir_uniform_544837\dir_output_654155\papa_sierra_190261.xml
+    Relative:  False
+
+  testspecials/dir_gamma_163068/symlink_lima_645693.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_november_947335\dir_archive_582163\alpha_draft_805745.ini
+    Display:   j:\testspecials\dir_november_947335\dir_archive_582163\alpha_draft_805745.ini
+    Relative:  False
+
+  testspecials/dir_gamma_163068/symlink_mike_502586.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_november_947335\dir_mike_527964\dir_whiskey_996109\yankee_record_217829.log
+    Display:   j:\testspecials\dir_november_947335\dir_mike_527964\dir_whiskey_996109\yankee_record_217829.log
+    Relative:  False
+
+  testspecials/dir_gamma_163068/symlink_uniform_983169.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\report_sierra_356241.csv
+
+  testspecials/dir_november_947335/dir_archive_582163/symlink_india_107089.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_november_947335\dir_mike_527964\archive_hotel_315130.json
+    Display:   j:\testspecials\dir_november_947335\dir_mike_527964\archive_hotel_315130.json
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_archive_582163/symlink_log_351399.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\symlink_romeo_661865.lnk
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\symlink_romeo_661865.lnk
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_archive_582163/symlink_report_596293.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_archive_409111\dir_romeo_975581\log_papa_426305.bin
+
+  testspecials/dir_november_947335/dir_draft_325504/hardlink_oscar_281315.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\foxtrot_romeo_101133.csv
+
+  testspecials/dir_november_947335/dir_draft_325504/hardlink_trace_225938.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\draft_uniform_166420.txt
+
+  testspecials/dir_november_947335/dir_draft_325504/hardlink_yankee_514895.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\dir_romeo_975581\zulu_foxtrot_691851.log
+
+  testspecials/dir_november_947335/dir_draft_325504/symlink_kilo_364548.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_india_623599\hardlink_alpha_563527.xml
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_india_623599\hardlink_alpha_563527.xml
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_draft_325504/symlink_victor_626456.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_november_947335\dir_sync_112058\dir_whiskey_376642\symlink_quebec_535323.lnk
+    Display:   j:\testspecials\dir_november_947335\dir_sync_112058\dir_whiskey_376642\symlink_quebec_535323.lnk
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_india_538407/dir_draft_269665/hardlink_beta_457394.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\dir_romeo_975581\hardlink_sync_966265.txt
+
+  testspecials/dir_november_947335/dir_india_538407/dir_draft_269665/hardlink_oscar_715955.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\dir_config_134078\symlink_lima_207932.lnk
+
+  testspecials/dir_november_947335/dir_india_538407/dir_draft_269665/symlink_delta_791647.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_config_356395\hardlink_oscar_678275.dat
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_config_356395\hardlink_oscar_678275.dat
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_india_538407/dir_lima_396840/dir_draft_855171/dir_lima_128289/hardlink_hotel_528176.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_victor_676301\gamma_draft_783843.bin
+
+  testspecials/dir_november_947335/dir_india_538407/dir_lima_396840/dir_draft_855171/dir_report_943963/hardlink_oscar_423663.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\draft_uniform_166420.txt
+
+  testspecials/dir_november_947335/dir_india_538407/dir_lima_396840/dir_draft_855171/hardlink_data_240235.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\alpha_backup_597620.dat
+
+  testspecials/dir_november_947335/dir_india_538407/dir_lima_396840/dir_draft_855171/symlink_trace_135498.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_config_356395\symlink_quebec_607857.lnk
+    Display:   j:\testspecials\dir_lima_342873\dir_config_356395\symlink_quebec_607857.lnk
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_india_538407/dir_lima_396840/dir_draft_855171/symlink_trace_651220.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\symlink_quebec_150555.lnk
+    Display:   j:\testspecials\symlink_quebec_150555.lnk
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_india_538407/dir_lima_396840/dir_draft_855171/symlink_uniform_733669.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\hardlink_uniform_425955.csv
+    Display:   j:\testspecials\hardlink_uniform_425955.csv
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_india_538407/dir_lima_396840/dir_draft_855171/symlink_victor_323436.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\quebec_sierra_815130.csv
+    Display:   j:\testspecials\quebec_sierra_815130.csv
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_india_538407/dir_lima_396840/symlink_draft_262339.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_november_947335\dir_india_538407\dir_lima_396840\dir_draft_855171\dir_report_943963\hardlink_draft_747208.cfg
+    Display:   j:\testspecials\dir_november_947335\dir_india_538407\dir_lima_396840\dir_draft_855171\dir_report_943963\hardlink_draft_747208.cfg
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_india_538407/dir_lima_396840/symlink_draft_945500.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_november_947335\symlink_beta_673621.lnk
+    Display:   j:\testspecials\dir_november_947335\symlink_beta_673621.lnk
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_india_538407/dir_lima_396840/symlink_gamma_930329.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_india_623599\dir_index_446416\papa_victor_867137.csv
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_india_623599\dir_index_446416\papa_victor_867137.csv
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_india_538407/dir_lima_396840/symlink_yankee_655483.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\report_sierra_356241.csv
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\report_sierra_356241.csv
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_india_538407/hardlink_quebec_745385.lnk
+    Type:      FILE
+    Attrs:     0x400
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_victor_676301\hardlink_alpha_934021.lnk
+
+  testspecials/dir_november_947335/dir_india_538407/symlink_temp_475367.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_uniform_544837\mike_alpha_122874.csv
+    Display:   j:\testspecials\dir_uniform_544837\mike_alpha_122874.csv
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_india_538407/symlink_temp_929959.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_yankee_391369\dir_data_954098\whiskey_hotel_520535.lnk
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_yankee_391369\dir_data_954098\whiskey_hotel_520535.lnk
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_mike_527964/dir_config_596261/hardlink_beta_568396.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\dir_config_134078\symlink_lima_207932.lnk
+
+  testspecials/dir_november_947335/dir_mike_527964/dir_config_596261/symlink_mike_408650.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\hardlink_romeo_645285.bin
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\hardlink_romeo_645285.bin
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_mike_527964/dir_whiskey_996109/index_mike_805708.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_india_623599\dir_index_446416\india_index_571205.bin
+
+  testspecials/dir_november_947335/dir_mike_527964/dir_whiskey_996109/symlink_temp_902056.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_november_947335\dir_sync_924581\dir_whiskey_376642\temp_alpha_479281.bin
+    Display:   j:\testspecials\dir_november_947335\dir_sync_924581\dir_whiskey_376642\temp_alpha_479281.bin
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_mike_527964/hardlink_temp_252938.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\foxtrot_romeo_101133.csv
+
+  testspecials/dir_november_947335/dir_mike_527964/symlink_alpha_330007.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\dir_victor_676301\hardlink_cache_174893.bin
+
+  testspecials/dir_november_947335/dir_mike_527964/symlink_log_868978.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\cache_beta_922615.lnk
+    Display:   j:\testspecials\dir_lima_342873\cache_beta_922615.lnk
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_mike_527964/symlink_uniform_825809.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_november_947335\dir_mike_527964\dir_quebec_394414\hardlink_india_222831.dat
+    Display:   j:\testspecials\dir_november_947335\dir_mike_527964\dir_quebec_394414\hardlink_india_222831.dat
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_mike_527964/symlink_victor_207943.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\cache_cache_968991.json
+
+  testspecials/dir_november_947335/dir_mike_527964/symlink_whiskey_432937.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_config_356395\dir_log_150885\uniform_config_149232.bin
+    Display:   j:\testspecials\dir_lima_342873\dir_config_356395\dir_log_150885\uniform_config_149232.bin
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_mike_527964/symlink_yankee_939835.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_india_623599\dir_index_446416\papa_papa_152513.lnk
+    Display:   j:\testspecials\dir_lima_342873\dir_india_623599\dir_index_446416\papa_papa_152513.lnk
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_oscar_742900/dir_hotel_438882/hardlink_november_610240.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_gamma_163068\dir_echo_659970\hardlink_lima_237877.lnk
+
+  testspecials/dir_november_947335/dir_oscar_742900/dir_index_790214/hardlink_data_251406.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\foxtrot_romeo_101133.csv
+
+  testspecials/dir_november_947335/dir_oscar_742900/hardlink_archive_174157.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\dir_config_134078\symlink_quebec_790872.lnk
+
+  testspecials/dir_november_947335/dir_oscar_742900/symlink_config_969057.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_yankee_391369\symlink_cache_897060.lnk
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_yankee_391369\symlink_cache_897060.lnk
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_oscar_742900/zulu_papa_691621.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_archive_409111\hardlink_output_296985.csv
+
+  testspecials/dir_november_947335/dir_sync_924581/dir_backup_133264/hardlink_cache_295664.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_victor_676301\hardlink_whiskey_222537.lnk
+
+  testspecials/dir_november_947335/dir_sync_924581/dir_backup_133264/hardlink_quebec_141047.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\draft_uniform_166420.txt
+
+  testspecials/dir_november_947335/dir_sync_924581/dir_backup_133264/hardlink_romeo_381547.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\draft_uniform_166420.txt
+
+  testspecials/dir_november_947335/dir_sync_924581/dir_backup_133264/symlink_tango_581704.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_config_356395\symlink_audit_305752.lnk
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_config_356395\symlink_audit_305752.lnk
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_sync_924581/dir_backup_133264/symlink_trace_764545.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\hardlink_papa_658266.bin
+    Display:   j:\testspecials\dir_gamma_163068\hardlink_papa_658266.bin
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_sync_924581/dir_backup_133264/symlink_whiskey_473032.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_config_356395\dir_echo_285482\hardlink_november_895737.lnk
+    Display:   j:\testspecials\dir_lima_342873\dir_config_356395\dir_echo_285482\hardlink_november_895737.lnk
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_sync_924581/dir_echo_116967/hardlink_uniform_498755.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\foxtrot_romeo_101133.csv
+
+  testspecials/dir_november_947335/dir_sync_924581/dir_echo_116967/symlink_backup_736144.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\hardlink_archive_151069.lnk
+    Display:   j:\testspecials\hardlink_archive_151069.lnk
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_sync_924581/dir_echo_116967/symlink_echo_385823.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_romeo_851778\symlink_papa_608876.lnk
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_romeo_851778\symlink_papa_608876.lnk
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_sync_924581/dir_echo_116967/symlink_temp_360575.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_yankee_391369\dir_config_947995\config_sierra_867367.tmp
+    Display:   j:\testspecials\dir_lima_342873\dir_yankee_391369\dir_config_947995\config_sierra_867367.tmp
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_sync_924581/dir_mike_306826/hardlink_mike_757305.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_yankee_391369\symlink_foxtrot_254926.lnk
+
+  testspecials/dir_november_947335/dir_sync_924581/dir_mike_306826/hardlink_report_998757.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_gamma_163068\dir_echo_659970\whiskey_index_751651.log
+
+  testspecials/dir_november_947335/dir_sync_924581/dir_mike_306826/symlink_quebec_535323.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_india_623599\dir_kilo_929277\mike_november_838527.csv
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_india_623599\dir_kilo_929277\mike_november_838527.csv
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_sync_924581/hardlink_beta_182005.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\draft_uniform_166420.txt
+
+  testspecials/dir_november_947335/dir_sync_924581/hardlink_beta_890570.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\cache_cache_968991.json
+
+  testspecials/dir_november_947335/dir_sync_924581/hardlink_romeo_346011.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\dir_config_134078\symlink_quebec_790872.lnk
+
+  testspecials/dir_november_947335/dir_sync_924581/symlink_archive_318729.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_config_356395\symlink_zulu_871090.lnk
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_config_356395\symlink_zulu_871090.lnk
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_sync_924581/symlink_backup_314920.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_india_623599\dir_index_446416\india_index_571205.bin
+
+  testspecials/dir_november_947335/dir_sync_924581/symlink_delta_430435.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_yankee_391369\hardlink_lima_840096.lnk
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_yankee_391369\hardlink_lima_840096.lnk
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_sync_924581/symlink_oscar_996243.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_romeo_851778\dir_india_917272\dir_tango_488439\alpha_papa_542985.csv
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_romeo_851778\dir_india_917272\dir_tango_488439\alpha_papa_542985.csv
+    Relative:  False
+
+  testspecials/dir_november_947335/dir_sync_924581/symlink_temp_573008.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\hardlink_archive_151069.lnk
+    Display:   j:\testspecials\hardlink_archive_151069.lnk
+    Relative:  False
+
+  testspecials/dir_november_947335/hardlink_echo_315124.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_victor_893234\sync_quebec_717296.bin
+
+  testspecials/dir_november_947335/hardlink_india_683240.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_papa_873348\hardlink_trace_280509.csv
+
+  testspecials/dir_november_947335/hardlink_mike_432099.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_november_947335\dir_india_538407\dir_lima_396840\dir_draft_855171\temp_beta_837937.dat
+
+  testspecials/dir_november_947335/hardlink_record_490681.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_config_134078\papa_papa_152513.lnk
+
+  testspecials/dir_november_947335/hardlink_report_486615.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\foxtrot_romeo_101133.csv
+
+  testspecials/dir_november_947335/symlink_beta_673621.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_yankee_391369\hardlink_audit_733110.csv
+    Display:   j:\testspecials\dir_lima_342873\dir_yankee_391369\hardlink_audit_733110.csv
+    Relative:  False
+
+  testspecials/dir_november_947335/symlink_data_928538.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\dir_config_134078\symlink_quebec_790872.lnk
+
+  testspecials/dir_november_947335/symlink_mike_590203.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_quebec_876879\hardlink_yankee_114054.lnk
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_quebec_876879\hardlink_yankee_114054.lnk
+    Relative:  False
+
+  testspecials/dir_november_947335/symlink_oscar_752971.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_november_947335\dir_sync_112058\dir_whiskey_376642\archive_draft_740308.cfg
+
+  testspecials/dir_november_947335/symlink_papa_109718.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_archive_409111\hardlink_data_601823.txt
+
+  testspecials/dir_november_947335/symlink_uniform_875056.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_yankee_391369\dir_data_954098\symlink_echo_573674.lnk
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_yankee_391369\dir_data_954098\symlink_echo_573674.lnk
+    Relative:  False
+
+  testspecials/dir_november_947335/symlink_victor_382333.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_november_947335\dir_mike_527964\archive_hotel_315130.json
+    Display:   j:\testspecials\dir_november_947335\dir_mike_527964\archive_hotel_315130.json
+    Relative:  False
+
+  testspecials/dir_oscar_867591/dir_sync_598613/symlink_november_133602.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_romeo_851778\dir_india_917272\backup_lima_536980.tmp
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_romeo_851778\dir_india_917272\backup_lima_536980.tmp
+    Relative:  False
+
+  testspecials/dir_oscar_867591/dir_sync_598613/symlink_tango_777906.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_november_947335\hardlink_log_446439.tmp
+    Display:   j:\testspecials\dir_november_947335\hardlink_log_446439.tmp
+    Relative:  False
+
+  testspecials/dir_uniform_195248/symlink_log_800291.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_november_947335\dir_sync_112058\dir_whiskey_376642\victor_sync_253872.txt
+    Display:   j:\testspecials\dir_november_947335\dir_sync_112058\dir_whiskey_376642\victor_sync_253872.txt
+    Relative:  False
+
+  testspecials/dir_uniform_195248/symlink_zulu_165913.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_archive_409111\dir_romeo_975581\symlink_trace_678820.lnk
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_archive_409111\dir_romeo_975581\symlink_trace_678820.lnk
+    Relative:  False
+
+  testspecials/dir_uniform_544837/dir_cache_866824/dir_quebec_590081/hardlink_data_436147.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\foxtrot_romeo_101133.csv
+
+  testspecials/dir_uniform_544837/dir_cache_866824/dir_quebec_590081/hardlink_whiskey_413133.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\dir_config_134078\papa_papa_152513.lnk
+
+  testspecials/dir_uniform_544837/dir_cache_866824/dir_quebec_590081/symlink_mike_477028.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\foxtrot_delta_292770.ini
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\foxtrot_delta_292770.ini
+    Relative:  False
+
+  testspecials/dir_uniform_544837/dir_cache_866824/hardlink_temp_990607.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_config_134078\papa_papa_152513.lnk
+
+  testspecials/dir_uniform_544837/dir_cache_866824/symlink_report_997392.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_yankee_391369\dir_data_954098\hardlink_papa_440371.lnk
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_yankee_391369\dir_data_954098\hardlink_papa_440371.lnk
+    Relative:  False
+
+  testspecials/dir_uniform_544837/dir_cache_866824/symlink_romeo_182068.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_romeo_851778\hardlink_romeo_347826.cfg
+    Display:   j:\testspecials\dir_lima_342873\dir_romeo_851778\hardlink_romeo_347826.cfg
+    Relative:  False
+
+  testspecials/dir_uniform_544837/dir_output_654155/dir_config_531397/hardlink_foxtrot_343333.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_archive_409111\dir_romeo_975581\log_papa_426305.bin
+
+  testspecials/dir_uniform_544837/dir_output_654155/dir_config_531397/hardlink_output_122196.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_archive_409111\dir_cache_939593\backup_beta_229699.tmp
+
+  testspecials/dir_uniform_544837/dir_output_654155/hardlink_cache_944565.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\dir_victor_676301\hardlink_cache_174893.bin
+
+  testspecials/dir_uniform_544837/dir_output_654155/hardlink_oscar_615892.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_papa_873348\hardlink_trace_280509.csv
+
+  testspecials/dir_uniform_544837/dir_output_654155/symlink_audit_275806.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_romeo_851778\dir_india_917272\hardlink_data_978230.lnk
+    Display:   j:\testspecials\dir_lima_342873\dir_romeo_851778\dir_india_917272\hardlink_data_978230.lnk
+    Relative:  False
+
+  testspecials/dir_uniform_544837/dir_output_654155/symlink_audit_345216.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_uniform_544837\dir_cache_866824\hardlink_temp_990607.lnk
+    Display:   j:\testspecials\dir_uniform_544837\dir_cache_866824\hardlink_temp_990607.lnk
+    Relative:  False
+
+  testspecials/dir_uniform_544837/dir_output_654155/symlink_beta_706697.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_archive_409111\dir_romeo_975581\hotel_whiskey_254415.xml
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_archive_409111\dir_romeo_975581\hotel_whiskey_254415.xml
+    Relative:  False
+
+  testspecials/dir_uniform_544837/dir_output_654155/symlink_draft_438208.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_lima_342873\dir_archive_409111\dir_victor_676301\hardlink_cache_174893.bin
+
+  testspecials/dir_uniform_544837/dir_output_654155/symlink_oscar_877689.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_november_947335\november_cache_821954.dat
+    Display:   j:\testspecials\dir_november_947335\november_cache_821954.dat
+    Relative:  False
+
+  testspecials/dir_uniform_544837/hardlink_temp_352593.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_november_947335\oscar_uniform_234600.tmp
+
+  testspecials/dir_uniform_544837/symlink_config_979911.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_archive_409111\dir_victor_676301\hotel_record_407322.log
+    Display:   j:\testspecials\dir_lima_342873\dir_archive_409111\dir_victor_676301\hotel_record_407322.log
+    Relative:  False
+
+  testspecials/dir_uniform_544837/symlink_oscar_387149.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_data_619360\hardlink_kilo_184567.lnk
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_data_619360\hardlink_kilo_184567.lnk
+    Relative:  False
+
+  testspecials/dir_uniform_544837/symlink_quebec_205035.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\hardlink_uniform_425955.csv
+    Display:   j:\testspecials\hardlink_uniform_425955.csv
+    Relative:  False
+
+  testspecials/dir_uniform_544837/symlink_zulu_693202.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_november_947335\trace_report_277987.json
+    Display:   j:\testspecials\dir_november_947335\trace_report_277987.json
+    Relative:  False
+
+  testspecials/hardlink_alpha_915629.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_november_947335\hardlink_beta_859345.lnk
+
+  testspecials/hardlink_archive_151069.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\alpha_backup_597620.dat
+
+  testspecials/hardlink_quebec_133239.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\hardlink_archive_151069.lnk
+
+  testspecials/hotel_whiskey_430948.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_kilo_659195\dir_romeo_314364\hardlink_uniform_813699.ini
+
+  testspecials/symlink_gamma_119189.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_archive_409111\dir_romeo_975581\symlink_kilo_639983.lnk
+    Display:   j:\testspecials\dir_lima_342873\dir_archive_409111\dir_romeo_975581\symlink_kilo_639983.lnk
+    Relative:  False
+
+  testspecials/symlink_index_352405.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials\dir_november_947335\dir_india_538407\dir_lima_396840\dir_draft_855171\temp_beta_837937.dat
+
+  testspecials/symlink_oscar_411250.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_yankee_391369\dir_data_954098\symlink_november_522467.lnk
+    Display:   j:\testspecials\dir_gamma_163068\dir_echo_659970\dir_cache_507104\dir_yankee_391369\dir_data_954098\symlink_november_522467.lnk
+    Relative:  False
+
+  testspecials/symlink_quebec_150555.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_india_623599\dir_index_446416\symlink_quebec_790872.lnk
+    Display:   j:\testspecials\dir_lima_342873\dir_india_623599\dir_index_446416\symlink_quebec_790872.lnk
+    Relative:  False
+
+  testspecials/symlink_record_238832.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials\dir_lima_342873\dir_yankee_391369\dir_config_947995\symlink_gamma_374088.lnk
+    Display:   j:\testspecials\dir_lima_342873\dir_yankee_391369\dir_config_947995\symlink_gamma_374088.lnk
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_alpha_760694.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_november_469600\dir_yankee_150988\victor_whiskey_810580.txt
+
+  testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_foxtrot_281812.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\output_zulu_513021.log
+
+  testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_hotel_731581.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_938878\dir_log_116948\dir_delta_966483\symlink_victor_657489.lnk
+
+  testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_temp_113223.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_india_549062\dir_gamma_420872\delta_lima_895236.log
+
+  testspecials2/dir_kilo_616914/dir_backup_630871/symlink_log_111325.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_101009\dir_november_469600\dir_november_374306\symlink_hotel_334451.lnk
+    Display:   j:\testspecials2\dir_beta_101009\dir_november_469600\dir_november_374306\symlink_hotel_334451.lnk
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_backup_630871/symlink_mike_131286.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_101009\dir_november_469600\dir_november_374306\dir_quebec_843211\hardlink_report_295824.dat
+    Display:   j:\testspecials2\dir_beta_101009\dir_november_469600\dir_november_374306\dir_quebec_843211\hardlink_report_295824.dat
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_backup_630871/symlink_zulu_906328.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_oscar_397968\dir_india_406972\gamma_kilo_662684.lnk
+    Display:   j:\testspecials2\dir_oscar_397968\dir_india_406972\gamma_kilo_662684.lnk
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_hotel_911814/hardlink_lima_651828.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_november_469600\dir_november_374306\dir_quebec_843211\symlink_draft_785303.lnk
+
+  testspecials2/dir_kilo_616914/dir_hotel_911814/symlink_delta_795625.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_yankee_150988\dir_temp_241630\hardlink_quebec_640044.lnk
+    Display:   j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_yankee_150988\dir_temp_241630\hardlink_quebec_640044.lnk
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_index_179689/beta_backup_157301.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_oscar_397968\dir_india_406972\symlink_output_517618.lnk
+
+  testspecials2/dir_kilo_616914/dir_index_179689/dir_yankee_777638/symlink_tango_548400.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_log_298284\dir_draft_685915\dir_index_311771\delta_index_239633.lnk
+    Display:   j:\testspecials2\dir_log_298284\dir_draft_685915\dir_index_311771\delta_index_239633.lnk
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_index_179689/hardlink_echo_988970.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_index_179689\symlink_quebec_297144.lnk
+
+  testspecials2/dir_kilo_616914/dir_index_179689/hardlink_sierra_213109.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_report_323740\symlink_whiskey_159120.lnk
+
+  testspecials2/dir_kilo_616914/dir_index_179689/hardlink_sync_103993.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\symlink_oscar_990437.lnk
+
+  testspecials2/dir_kilo_616914/dir_index_179689/symlink_alpha_258108.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_kilo_616914\symlink_output_232496.lnk
+
+  testspecials2/dir_kilo_616914/dir_index_179689/symlink_mike_374290.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_944880\hardlink_india_251075.lnk
+    Display:   j:\testspecials2\dir_beta_944880\hardlink_india_251075.lnk
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_index_179689/symlink_quebec_297144.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_101009\dir_november_469600\dir_yankee_150988\delta_backup_731274.md
+    Display:   j:\testspecials2\dir_beta_101009\dir_november_469600\dir_yankee_150988\delta_backup_731274.md
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_india_415253/hardlink_tango_391027.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\zulu_audit_664443.log
+
+  testspecials2/dir_kilo_616914/dir_india_415253/symlink_archive_783446.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_yankee_150988\dir_hotel_533721\symlink_kilo_569394.lnk
+    Display:   j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_yankee_150988\dir_hotel_533721\symlink_kilo_569394.lnk
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_india_415253/symlink_index_184871.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_log_298284\dir_draft_685915\dir_index_311771\symlink_alpha_988639.lnk
+    Display:   j:\testspecials2\dir_log_298284\dir_draft_685915\dir_index_311771\symlink_alpha_988639.lnk
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_papa_668661/dir_audit_580437/symlink_log_249337.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_yankee_150988\dir_hotel_533721\hardlink_sync_127557.md
+    Display:   j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_yankee_150988\dir_hotel_533721\hardlink_sync_127557.md
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_archive_113008/symlink_draft_412163.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_log_298284\cache_victor_115152.csv
+    Display:   j:\testspecials2\dir_log_298284\cache_victor_115152.csv
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_archive_113008/symlink_mike_818446.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\foxtrot_output_368928.md
+    Display:   j:\testspecials2\foxtrot_output_368928.md
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_archive_113008/symlink_uniform_661976.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\hardlink_uniform_628960.log
+    Display:   j:\testspecials2\hardlink_uniform_628960.log
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_archive_113008/symlink_yankee_605383.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_101009\uniform_sierra_103233.md
+    Display:   j:\testspecials2\dir_beta_101009\uniform_sierra_103233.md
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_india_281865/hardlink_quebec_654655.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_november_469600\dir_november_374306\dir_archive_113008\symlink_uniform_661976.lnk
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_india_281865/symlink_uniform_711820.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_log_298284\dir_draft_685915\symlink_lima_722928.lnk
+    Display:   j:\testspecials2\dir_log_298284\dir_draft_685915\symlink_lima_722928.lnk
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/audit_uniform_292915.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_report_323740\symlink_whiskey_159120.lnk
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/index_audit_358432.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_log_116948\hardlink_victor_213450.xml
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/symlink_echo_484187.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\zulu_audit_664443.log
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/symlink_foxtrot_692291.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\tango_yankee_206279.bin
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/symlink_victor_298115.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_938878\dir_log_116948\dir_delta_966483\symlink_victor_657489.lnk
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/dir_archive_278198/symlink_archive_582952.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_backup_897883\hardlink_gamma_827521.md
+    Display:   j:\testspecials2\dir_backup_897883\hardlink_gamma_827521.md
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/hardlink_beta_342827.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_log_116948\dir_trace_160242\symlink_victor_298115.lnk
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/symlink_cache_183222.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\backup_whiskey_151615.bak
+    Display:   j:\testspecials2\backup_whiskey_151615.bak
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/symlink_draft_785303.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_log_298284\dir_report_323740\audit_tango_331066.dat
+    Display:   j:\testspecials2\dir_log_298284\dir_report_323740\audit_tango_331066.dat
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_draft_341999.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\tango_yankee_206279.bin
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_hotel_454926.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_november_469600\dir_november_374306\dir_archive_113008\symlink_uniform_661976.lnk
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/symlink_foxtrot_414830.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_log_298284\dir_log_116948\hardlink_romeo_377680.md
+    Display:   j:\testspecials2\dir_log_298284\dir_log_116948\hardlink_romeo_377680.md
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/symlink_hotel_334451.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\november_papa_479034.log
+    Display:   j:\testspecials2\november_papa_479034.log
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/symlink_sync_248794.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_938878\dir_log_116948\dir_trace_160242\report_kilo_156881.xml
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/symlink_tango_625710.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_india_549062\hardlink_draft_656922.lnk
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/symlink_victor_440875.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_101009\dir_audit_757886\cache_romeo_160364.tmp
+    Display:   j:\testspecials2\dir_beta_101009\dir_audit_757886\cache_romeo_160364.tmp
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/symlink_zulu_972818.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\draft_romeo_843020.log
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/hardlink_beta_783090.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_zulu_832854\hardlink_record_266685.lnk
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/hardlink_kilo_328638.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_november_469600\dir_november_374306\symlink_foxtrot_414830.lnk
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/hardlink_yankee_809501.lnk
+    Type:      FILE
+    Attrs:     0x400
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\zulu_audit_664443.log
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/symlink_kilo_569394.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_log_298284\symlink_output_203335.lnk
+    Display:   j:\testspecials2\dir_log_298284\symlink_output_203335.lnk
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_india_422520/symlink_audit_937896.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_november_469600\dir_november_374306\symlink_foxtrot_414830.lnk
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_papa_820469/dir_papa_622200/hardlink_log_235932.lnk
+    Type:      FILE
+    Attrs:     0x400
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_backup_897883\dir_temp_556555\hardlink_beta_783090.lnk
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_papa_820469/dir_papa_622200/symlink_delta_931926.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_quebec_123706\alpha_sync_934987.bak
+    Display:   j:\testspecials2\dir_quebec_123706\alpha_sync_934987.bak
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_papa_820469/dir_papa_622200/symlink_romeo_188012.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_november_469600\dir_november_374306\dir_archive_113008\symlink_uniform_661976.lnk
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_papa_820469/hardlink_audit_955008.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_938878\dir_log_116948\dir_trace_160242\hardlink_draft_865503.log
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_papa_820469/symlink_config_454530.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_101009\dir_india_549062\dir_gamma_420872\symlink_temp_258160.lnk
+    Display:   j:\testspecials2\dir_beta_101009\dir_india_549062\dir_gamma_420872\symlink_temp_258160.lnk
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_papa_820469/symlink_hotel_902291.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\symlink_oscar_990437.lnk
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_papa_820469/symlink_trace_113741.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_quebec_123706\gamma_tango_178044.dat
+    Display:   j:\testspecials2\dir_quebec_123706\gamma_tango_178044.dat
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/dir_echo_440846/symlink_draft_962859.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_india_549062\dir_gamma_420872\delta_lima_895236.log
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/hardlink_audit_719394.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_report_323740\symlink_whiskey_260344.lnk
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/hardlink_cache_238469.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\zulu_audit_664443.log
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/hardlink_kilo_452190.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_report_323740\symlink_whiskey_260344.lnk
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/hardlink_quebec_640044.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_backup_897883\symlink_delta_174805.lnk
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/symlink_kilo_716056.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_november_469600\dir_november_374306\hardlink_victor_213450.xml
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/whiskey_echo_140228.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_zulu_832854\hardlink_zulu_203183.txt
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_alpha_917333.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_quebec_123706\gamma_tango_178044.dat
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_beta_171315.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_zulu_832854\hardlink_zulu_203183.txt
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_record_312034.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_india_549062\hardlink_draft_656922.lnk
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_sierra_216393.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\draft_romeo_843020.log
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_sierra_461249.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_kilo_616914\symlink_output_232496.lnk
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/mike_data_969891.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\zulu_audit_664443.log
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/symlink_report_901803.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\hardlink_november_168764.lnk
+    Display:   j:\testspecials2\hardlink_november_168764.lnk
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/symlink_temp_122542.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_101009\dir_audit_508297\dir_echo_277480\sierra_november_841717.md
+    Display:   j:\testspecials2\dir_beta_101009\dir_audit_508297\dir_echo_277480\sierra_november_841717.md
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/symlink_trace_298622.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\yankee_india_996670.tmp
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/hardlink_audit_255345.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_zulu_832854\hardlink_record_266685.lnk
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/symlink_archive_419672.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_oscar_397968\dir_zulu_210476\dir_beta_287500\dir_archive_157527\dir_november_114427\temp_oscar_397616.dat
+    Display:   j:\testspecials2\dir_oscar_397968\dir_zulu_210476\dir_beta_287500\dir_archive_157527\dir_november_114427\temp_oscar_397616.dat
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/symlink_audit_890163.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_backup_897883\hardlink_gamma_827521.md
+    Display:   j:\testspecials2\dir_backup_897883\hardlink_gamma_827521.md
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/symlink_cache_849330.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_101009\dir_november_469600\dir_yankee_150988\dir_papa_820469\dir_papa_622200\hardlink_cache_824366.log
+    Display:   j:\testspecials2\dir_beta_101009\dir_november_469600\dir_yankee_150988\dir_papa_820469\dir_papa_622200\hardlink_cache_824366.log
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/dir_victor_389261/symlink_index_642846.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_log_116948\hardlink_romeo_377680.md
+
+  testspecials2/dir_kilo_616914/hardlink_cache_870525.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_log_116948\hardlink_victor_213450.xml
+
+  testspecials2/dir_kilo_616914/hardlink_delta_989509.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_november_469600\dir_november_374306\dir_quebec_843211\symlink_draft_785303.lnk
+
+  testspecials2/dir_kilo_616914/hardlink_romeo_836206.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\zulu_audit_664443.log
+
+  testspecials2/dir_kilo_616914/hardlink_yankee_632028.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_log_116948\hardlink_victor_213450.xml
+
+  testspecials2/dir_kilo_616914/symlink_india_973183.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_zulu_832854\archive_output_434698.txt
+
+  testspecials2/dir_kilo_616914/symlink_log_459209.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_oscar_397968\hardlink_delta_247296.lnk
+    Display:   j:\testspecials2\dir_oscar_397968\hardlink_delta_247296.lnk
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/symlink_oscar_560625.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\dir_backup_630871\alpha_sync_934987.bak
+    Display:   j:\testspecials2\dir_kilo_616914\dir_backup_630871\alpha_sync_934987.bak
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/symlink_output_232496.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_oscar_397968\dir_romeo_329803\symlink_quebec_300982.lnk
+    Display:   j:\testspecials2\dir_oscar_397968\dir_romeo_329803\symlink_quebec_300982.lnk
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/symlink_record_436076.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_november_374306\dir_papa_764536\hardlink_tango_661477.bin
+    Display:   j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_november_374306\dir_papa_764536\hardlink_tango_661477.bin
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/symlink_victor_657489.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_938878\uniform_echo_684024.xml
+    Display:   j:\testspecials2\dir_beta_938878\uniform_echo_684024.xml
+    Relative:  False
+
+  testspecials2/dir_kilo_616914/symlink_yankee_365679.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_quebec_123706\gamma_tango_178044.dat
+
+  testspecials2/dir_kilo_616914/victor_foxtrot_346767.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_log_116948\dir_trace_160242\symlink_foxtrot_692291.lnk
+
+  testspecials2/dir_log_298284/dir_draft_685915/dir_alpha_727718/symlink_audit_299378.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\symlink_india_973183.lnk
+    Display:   j:\testspecials2\dir_kilo_616914\symlink_india_973183.lnk
+    Relative:  False
+
+  testspecials2/dir_log_298284/dir_draft_685915/dir_alpha_727718/symlink_data_565527.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\symlink_oscar_560625.lnk
+    Display:   j:\testspecials2\dir_kilo_616914\symlink_oscar_560625.lnk
+    Relative:  False
+
+  testspecials2/dir_log_298284/dir_draft_685915/dir_alpha_727718/symlink_temp_672806.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_yankee_150988\hardlink_quebec_144962.xml
+    Display:   j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_yankee_150988\hardlink_quebec_144962.xml
+    Relative:  False
+
+  testspecials2/dir_log_298284/dir_draft_685915/dir_gamma_618415/symlink_alpha_450892.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_november_374306\dir_papa_764536\hardlink_config_800823.md
+    Display:   j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_november_374306\dir_papa_764536\hardlink_config_800823.md
+    Relative:  False
+
+  testspecials2/dir_log_298284/dir_draft_685915/dir_gamma_618415/whiskey_uniform_217140.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_yankee_150988\hardlink_audit_985925.md
+
+  testspecials2/dir_log_298284/dir_draft_685915/dir_papa_627382/hardlink_audit_769019.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_india_549062\hardlink_draft_656922.lnk
+
+  testspecials2/dir_log_298284/dir_draft_685915/dir_papa_627382/hotel_lima_179937.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_log_116948\hardlink_romeo_377680.md
+
+  testspecials2/dir_log_298284/dir_draft_685915/dir_papa_627382/symlink_backup_511464.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_oscar_397968\dir_romeo_329803\data_romeo_908795.dat
+    Display:   j:\testspecials2\dir_oscar_397968\dir_romeo_329803\data_romeo_908795.dat
+    Relative:  False
+
+  testspecials2/dir_log_298284/dir_draft_685915/dir_papa_627382/symlink_draft_534958.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_backup_897883\hardlink_record_312034.lnk
+
+  testspecials2/dir_log_298284/dir_draft_685915/dir_papa_627382/symlink_quebec_304098.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_oscar_397968\audit_delta_498222.tmp
+    Display:   j:\testspecials2\dir_oscar_397968\audit_delta_498222.tmp
+    Relative:  False
+
+  testspecials2/dir_log_298284/dir_draft_685915/dir_papa_627382/symlink_record_592997.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_november_469600\dir_yankee_150988\dir_papa_820469\dir_papa_622200\hardlink_log_235932.lnk
+
+  testspecials2/dir_log_298284/dir_draft_685915/dir_report_598294/hardlink_sierra_394857.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_november_469600\dir_november_374306\hardlink_victor_213450.xml
+
+  testspecials2/dir_log_298284/dir_draft_685915/dir_report_598294/symlink_foxtrot_698151.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\dir_backup_630871\hotel_tango_211756.txt
+    Display:   j:\testspecials2\dir_kilo_616914\dir_backup_630871\hotel_tango_211756.txt
+    Relative:  False
+
+  testspecials2/dir_log_298284/dir_draft_685915/dir_report_598294/symlink_lima_441536.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\dir_india_549062\dir_alpha_968646\dir_echo_972255\symlink_config_569900.lnk
+    Display:   j:\testspecials2\dir_kilo_616914\dir_india_549062\dir_alpha_968646\dir_echo_972255\symlink_config_569900.lnk
+    Relative:  False
+
+  testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/hardlink_echo_356927.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_log_116948\hardlink_victor_213450.xml
+
+  testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/hardlink_mike_333357.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_zulu_832854\hardlink_zulu_203183.txt
+
+  testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/hardlink_quebec_938994.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_log_116948\hardlink_romeo_377680.md
+
+  testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/symlink_alpha_988639.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_yankee_150988\dir_temp_241630\dir_echo_440846\archive_trace_992413.md
+    Display:   j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_yankee_150988\dir_temp_241630\dir_echo_440846\archive_trace_992413.md
+    Relative:  False
+
+  testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/symlink_foxtrot_134106.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_101009\dir_audit_508297\dir_echo_277480\symlink_config_569900.lnk
+    Display:   j:\testspecials2\dir_beta_101009\dir_audit_508297\dir_echo_277480\symlink_config_569900.lnk
+    Relative:  False
+
+  testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/symlink_lima_305901.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_india_549062\hardlink_draft_656922.lnk
+
+  testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/symlink_oscar_593768.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_backup_897883\hardlink_audit_985925.md
+    Display:   j:\testspecials2\dir_backup_897883\hardlink_audit_985925.md
+    Relative:  False
+
+  testspecials2/dir_log_298284/dir_draft_685915/hardlink_temp_776394.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_oscar_397968\echo_temp_747773.lnk
+
+  testspecials2/dir_log_298284/dir_draft_685915/symlink_archive_261676.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\dir_india_415253\symlink_index_184871.lnk
+    Display:   j:\testspecials2\dir_kilo_616914\dir_india_415253\symlink_index_184871.lnk
+    Relative:  False
+
+  testspecials2/dir_log_298284/dir_draft_685915/symlink_backup_985310.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_oscar_397968\sierra_alpha_225040.tmp
+    Display:   j:\testspecials2\dir_oscar_397968\sierra_alpha_225040.tmp
+    Relative:  False
+
+  testspecials2/dir_log_298284/dir_draft_685915/symlink_gamma_290081.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_101009\dir_index_375787\hardlink_output_553502.log
+    Display:   j:\testspecials2\dir_beta_101009\dir_index_375787\hardlink_output_553502.log
+    Relative:  False
+
+  testspecials2/dir_log_298284/dir_draft_685915/symlink_lima_722928.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\trace_india_709514.bin
+    Display:   j:\testspecials2\trace_india_709514.bin
+    Relative:  False
+
+  testspecials2/dir_log_298284/dir_draft_685915/symlink_yankee_303331.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_backup_897883\dir_temp_556555\symlink_kilo_569394.lnk
+    Display:   j:\testspecials2\dir_backup_897883\dir_temp_556555\symlink_kilo_569394.lnk
+    Relative:  False
+
+  testspecials2/dir_log_298284/dir_draft_685915/symlink_zulu_286586.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_log_298284\record_beta_561663.json
+    Display:   j:\testspecials2\dir_log_298284\record_beta_561663.json
+    Relative:  False
+
+  testspecials2/dir_log_298284/dir_hotel_354514/archive_audit_948451.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\symlink_output_203335.lnk
+
+  testspecials2/dir_log_298284/dir_hotel_354514/dir_draft_263211/symlink_data_642486.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\symlink_oscar_560625.lnk
+    Display:   j:\testspecials2\dir_kilo_616914\symlink_oscar_560625.lnk
+    Relative:  False
+
+  testspecials2/dir_log_298284/dir_hotel_354514/dir_draft_263211/symlink_sync_547958.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\dir_backup_630871\dir_quebec_439106\whiskey_beta_764411.dat
+    Display:   j:\testspecials2\dir_kilo_616914\dir_backup_630871\dir_quebec_439106\whiskey_beta_764411.dat
+    Relative:  False
+
+  testspecials2/dir_log_298284/hardlink_lima_770799.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_india_549062\hardlink_draft_656922.lnk
+
+  testspecials2/dir_log_298284/hardlink_oscar_160656.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_log_116948\dir_papa_764536\hardlink_tango_661477.bin
+
+  testspecials2/dir_log_298284/hardlink_output_798674.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_zulu_832854\archive_output_434698.txt
+
+  testspecials2/dir_log_298284/symlink_hotel_186892.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_101009\dir_november_469600\config_whiskey_746300.csv
+    Display:   j:\testspecials2\dir_beta_101009\dir_november_469600\config_whiskey_746300.csv
+    Relative:  False
+
+  testspecials2/dir_log_298284/symlink_log_904148.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\trace_trace_495265.log
+    Display:   j:\testspecials2\trace_trace_495265.log
+    Relative:  False
+
+  testspecials2/dir_log_298284/symlink_mike_662111.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_938878\dir_log_116948\dir_delta_966483\symlink_victor_657489.lnk
+    Display:   j:\testspecials2\dir_beta_938878\dir_log_116948\dir_delta_966483\symlink_victor_657489.lnk
+    Relative:  False
+
+  testspecials2/dir_log_298284/symlink_output_203335.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_938878\dir_log_116948\dir_trace_160242\hardlink_draft_865503.log
+
+  testspecials2/dir_log_298284/symlink_yankee_956350.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_yankee_150988\hardlink_sierra_216393.lnk
+    Display:   j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_yankee_150988\hardlink_sierra_216393.lnk
+    Relative:  False
+
+  testspecials2/dir_log_298284/symlink_zulu_498964.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_log_298284\dir_hotel_354514\hardlink_record_579332.cfg
+    Display:   j:\testspecials2\dir_log_298284\dir_hotel_354514\hardlink_record_579332.cfg
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_india_406972/gamma_kilo_662684.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_backup_897883\dir_hotel_533721\symlink_kilo_569394.lnk
+    Display:   j:\testspecials2\dir_backup_897883\dir_hotel_533721\symlink_kilo_569394.lnk
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_india_406972/hardlink_cache_809079.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_log_116948\dir_trace_160242\symlink_foxtrot_692291.lnk
+
+  testspecials2/dir_oscar_397968/dir_india_406972/hardlink_output_246692.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_november_469600\dir_yankee_150988\dir_india_422520\papa_delta_650001.csv
+
+  testspecials2/dir_oscar_397968/dir_india_406972/hardlink_tango_214459.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_log_116948\dir_trace_160242\symlink_foxtrot_692291.lnk
+
+  testspecials2/dir_oscar_397968/dir_india_406972/index_india_307795.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_101009\dir_november_469600\dir_yankee_150988\dir_papa_820469\dir_papa_622200\symlink_romeo_188012.lnk
+    Display:   j:\testspecials2\dir_beta_101009\dir_november_469600\dir_yankee_150988\dir_papa_820469\dir_papa_622200\symlink_romeo_188012.lnk
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_india_406972/symlink_archive_836132.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_yankee_150988\dir_papa_820469\symlink_config_454530.lnk
+    Display:   j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_yankee_150988\dir_papa_820469\symlink_config_454530.lnk
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_india_406972/symlink_hotel_774915.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_101009\dir_november_469600\dir_november_374306\dir_quebec_843211\symlink_draft_785303.lnk
+    Display:   j:\testspecials2\dir_beta_101009\dir_november_469600\dir_november_374306\dir_quebec_843211\symlink_draft_785303.lnk
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_india_406972/symlink_romeo_942053.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_101009\dir_audit_508297\dir_echo_277480\hardlink_log_887909.log
+    Display:   j:\testspecials2\dir_beta_101009\dir_audit_508297\dir_echo_277480\hardlink_log_887909.log
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_india_406972/symlink_victor_347441.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_101009\dir_november_469600\dir_yankee_150988\dir_temp_241630\hardlink_cache_238469.lnk
+    Display:   j:\testspecials2\dir_beta_101009\dir_november_469600\dir_yankee_150988\dir_temp_241630\hardlink_cache_238469.lnk
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_oscar_522053/dir_sync_436503/hardlink_cache_780862.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_delta_126962\dir_papa_820469\hardlink_audit_955008.lnk
+
+  testspecials2/dir_oscar_397968/dir_oscar_522053/dir_sync_436503/symlink_beta_444840.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_oscar_397968\hardlink_gamma_652358.md
+    Display:   j:\testspecials2\dir_oscar_397968\hardlink_gamma_652358.md
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_oscar_522053/dir_sync_436503/symlink_record_842863.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\dir_victor_389261\dir_november_374306\dir_quebec_843211\november_alpha_101476.dat
+    Display:   j:\testspecials2\dir_kilo_616914\dir_victor_389261\dir_november_374306\dir_quebec_843211\november_alpha_101476.dat
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_oscar_522053/hardlink_foxtrot_491402.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_november_469600\dir_yankee_150988\dir_papa_820469\dir_papa_622200\hardlink_log_235932.lnk
+
+  testspecials2/dir_oscar_397968/dir_oscar_522053/hardlink_lima_211638.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_log_116948\dir_trace_160242\symlink_victor_298115.lnk
+
+  testspecials2/dir_oscar_397968/dir_oscar_522053/hardlink_record_242304.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_log_116948\dir_trace_160242\symlink_foxtrot_692291.lnk
+
+  testspecials2/dir_oscar_397968/dir_oscar_522053/symlink_archive_123149.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_index_179689\symlink_quebec_297144.lnk
+
+  testspecials2/dir_oscar_397968/dir_oscar_522053/symlink_data_379695.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_944880\hardlink_record_266685.lnk
+    Display:   j:\testspecials2\dir_beta_944880\hardlink_record_266685.lnk
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_oscar_522053/symlink_hotel_749904.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\trace_trace_495265.log
+    Display:   j:\testspecials2\trace_trace_495265.log
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_oscar_522053/symlink_tango_620207.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\mike_index_889080.lnk
+    Display:   j:\testspecials2\mike_index_889080.lnk
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_oscar_522053/symlink_temp_673265.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_101009\dir_november_469600\dir_yankee_150988\mike_data_969891.lnk
+    Display:   j:\testspecials2\dir_beta_101009\dir_november_469600\dir_yankee_150988\mike_data_969891.lnk
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/cache_gamma_641927.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_zulu_832854\hardlink_record_266685.lnk
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/dir_echo_972255/hardlink_draft_267301.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_india_549062\hardlink_draft_656922.lnk
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/dir_echo_972255/symlink_archive_909364.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_101009\dir_november_469600\dir_november_374306\dir_papa_764536\hardlink_config_800823.md
+    Display:   j:\testspecials2\dir_beta_101009\dir_november_469600\dir_november_374306\dir_papa_764536\hardlink_config_800823.md
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/dir_index_575924/symlink_data_951676.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_101009\dir_india_549062\report_tango_970124.log
+    Display:   j:\testspecials2\dir_beta_101009\dir_india_549062\report_tango_970124.log
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/hardlink_output_468761.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\zulu_audit_664443.log
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/symlink_delta_215767.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_log_298284\india_romeo_106206.bak
+    Display:   j:\testspecials2\dir_log_298284\india_romeo_106206.bak
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/symlink_index_717307.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_backup_897883\symlink_delta_174805.lnk
+    Display:   j:\testspecials2\dir_backup_897883\symlink_delta_174805.lnk
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/symlink_victor_739074.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\hardlink_alpha_380079.lnk
+    Display:   j:\testspecials2\hardlink_alpha_380079.lnk
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/symlink_whiskey_159120.lnk
+    Type:      FILE
+    Attrs:     0x400
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\zulu_audit_664443.log
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/symlink_whiskey_260344.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_log_116948\dir_trace_160242\symlink_foxtrot_692291.lnk
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/hardlink_config_240430.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_yankee_150988\dir_papa_820469\dir_papa_622200\symlink_romeo_188012.lnk
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/hardlink_draft_656922.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_report_323740\symlink_whiskey_159120.lnk
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/hardlink_gamma_510663.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_kilo_616914\symlink_output_232496.lnk
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/hardlink_record_814297.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_zulu_832854\hardlink_record_266685.lnk
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/hardlink_romeo_456496.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_backup_897883\hardlink_record_312034.lnk
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/symlink_beta_640876.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_log_298284\dir_zulu_832854\symlink_cache_734165.lnk
+    Display:   j:\testspecials2\dir_log_298284\dir_zulu_832854\symlink_cache_734165.lnk
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/symlink_cache_498605.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_101009\dir_india_549062\symlink_oscar_987169.lnk
+    Display:   j:\testspecials2\dir_beta_101009\dir_india_549062\symlink_oscar_987169.lnk
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/symlink_data_980591.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\output_zulu_513021.log
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/symlink_oscar_844656.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_oscar_397968\zulu_config_800454.log
+    Display:   j:\testspecials2\dir_oscar_397968\zulu_config_800454.log
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/symlink_oscar_987169.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\sierra_audit_780213.lnk
+    Display:   j:\testspecials2\sierra_audit_780213.lnk
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/symlink_sierra_502416.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_backup_897883\hardlink_backup_499752.json
+    Display:   j:\testspecials2\dir_backup_897883\hardlink_backup_499752.json
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/hardlink_data_467273.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_log_116948\hardlink_victor_213450.xml
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/hardlink_tango_280498.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\tango_yankee_206279.bin
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/hardlink_yankee_631512.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\zulu_audit_664443.log
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/symlink_delta_801514.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_101009\dir_november_469600\dir_november_374306\symlink_sync_248794.lnk
+    Display:   j:\testspecials2\dir_beta_101009\dir_november_469600\dir_november_374306\symlink_sync_248794.lnk
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/symlink_gamma_256586.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_oscar_397968\dir_zulu_210476\symlink_beta_388884.lnk
+    Display:   j:\testspecials2\dir_oscar_397968\dir_zulu_210476\symlink_beta_388884.lnk
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/symlink_gamma_722999.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\dir_index_179689\symlink_quebec_297144.lnk
+    Display:   j:\testspecials2\dir_kilo_616914\dir_index_179689\symlink_quebec_297144.lnk
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/symlink_oscar_742735.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\symlink_log_459209.lnk
+    Display:   j:\testspecials2\dir_kilo_616914\symlink_log_459209.lnk
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/symlink_papa_643394.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_november_469600\dir_yankee_150988\dir_india_422520\papa_delta_650001.csv
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/symlink_quebec_300982.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_101009\dir_india_549062\dir_alpha_968646\symlink_victor_739074.lnk
+    Display:   j:\testspecials2\dir_beta_101009\dir_india_549062\dir_alpha_968646\symlink_victor_739074.lnk
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/symlink_temp_258160.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_backup_897883\dir_papa_820469\symlink_trace_113741.lnk
+    Display:   j:\testspecials2\dir_backup_897883\dir_papa_820469\symlink_trace_113741.lnk
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_romeo_329803/symlink_uniform_586495.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_yankee_150988\symlink_temp_122542.lnk
+    Display:   j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_yankee_150988\symlink_temp_122542.lnk
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/dir_archive_157527/hardlink_echo_880765.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\zulu_audit_664443.log
+
+  testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/dir_archive_157527/hardlink_index_603936.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_quebec_123706\gamma_tango_178044.dat
+
+  testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/dir_archive_157527/hardlink_india_251075.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_log_116948\dir_papa_764536\hardlink_tango_661477.bin
+
+  testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/dir_archive_157527/hardlink_record_266685.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\zulu_audit_664443.log
+
+  testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/dir_archive_157527/hardlink_temp_274986.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_938878\dir_log_116948\dir_delta_966483\symlink_victor_657489.lnk
+
+  testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/dir_archive_157527/symlink_cache_734165.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_log_298284\symlink_mike_662111.lnk
+    Display:   j:\testspecials2\dir_log_298284\symlink_mike_662111.lnk
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/dir_archive_157527/symlink_echo_923385.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_101009\dir_november_469600\dir_november_374306\hardlink_victor_213450.xml
+    Display:   j:\testspecials2\dir_beta_101009\dir_november_469600\dir_november_374306\hardlink_victor_213450.xml
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/dir_archive_157527/symlink_hotel_161113.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\zulu_audit_664443.log
+
+  testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/dir_archive_157527/symlink_temp_304257.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_oscar_397968\dir_romeo_329803\dir_audit_460776\dir_alpha_968646\dir_index_575924\symlink_data_951676.lnk
+    Display:   j:\testspecials2\dir_oscar_397968\dir_romeo_329803\dir_audit_460776\dir_alpha_968646\dir_index_575924\symlink_data_951676.lnk
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/dir_archive_157527/symlink_victor_785594.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_report_323740\symlink_whiskey_159120.lnk
+
+  testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/hardlink_romeo_575217.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\yankee_india_996670.tmp
+
+  testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/symlink_audit_657658.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\dir_india_549062\dir_alpha_968646\dir_echo_972255\cache_tango_191402.md
+    Display:   j:\testspecials2\dir_kilo_616914\dir_india_549062\dir_alpha_968646\dir_echo_972255\cache_tango_191402.md
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/symlink_november_800550.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_november_374306\dir_archive_113008\tango_config_159789.csv
+    Display:   j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_november_374306\dir_archive_113008\tango_config_159789.csv
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/symlink_record_284965.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_oscar_397968\archive_uniform_339976.xml
+    Display:   j:\testspecials2\dir_oscar_397968\archive_uniform_339976.xml
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_zulu_210476/report_record_803368.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_november_469600\dir_november_374306\hardlink_victor_213450.xml
+
+  testspecials2/dir_oscar_397968/dir_zulu_210476/symlink_beta_388884.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_101009\dir_india_549062\report_tango_970124.log
+    Display:   j:\testspecials2\dir_beta_101009\dir_india_549062\report_tango_970124.log
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_zulu_210476/symlink_index_883056.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_oscar_397968\symlink_record_203254.lnk
+    Display:   j:\testspecials2\dir_oscar_397968\symlink_record_203254.lnk
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_zulu_210476/symlink_quebec_968190.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_log_298284\symlink_mike_662111.lnk
+    Display:   j:\testspecials2\dir_log_298284\symlink_mike_662111.lnk
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_zulu_210476/symlink_report_659060.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_log_298284\dir_draft_685915\dir_romeo_104507\alpha_mike_159752.md
+    Display:   j:\testspecials2\dir_log_298284\dir_draft_685915\dir_romeo_104507\alpha_mike_159752.md
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/dir_zulu_210476/symlink_romeo_705711.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_oscar_397968\dir_india_406972\symlink_victor_347441.lnk
+    Display:   j:\testspecials2\dir_oscar_397968\dir_india_406972\symlink_victor_347441.lnk
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/echo_temp_747773.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_101009\dir_audit_508297\hardlink_cache_865974.xml
+    Display:   j:\testspecials2\dir_beta_101009\dir_audit_508297\hardlink_cache_865974.xml
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/hardlink_delta_247296.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_log_116948\dir_trace_160242\symlink_foxtrot_692291.lnk
+
+  testspecials2/dir_oscar_397968/hardlink_trace_513307.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\zulu_audit_664443.log
+
+  testspecials2/dir_oscar_397968/symlink_india_426397.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_backup_897883\symlink_beta_924913.lnk
+    Display:   j:\testspecials2\dir_backup_897883\symlink_beta_924913.lnk
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/symlink_lima_847060.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_november_374306\dir_papa_764536\hardlink_config_800823.md
+
+  testspecials2/dir_oscar_397968/symlink_papa_123601.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_log_298284\data_report_421046.csv
+    Display:   j:\testspecials2\dir_log_298284\data_report_421046.csv
+    Relative:  False
+
+  testspecials2/dir_oscar_397968/symlink_record_203254.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_backup_897883\symlink_delta_174805.lnk
+
+  testspecials2/dir_oscar_397968/symlink_whiskey_241368.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_report_323740\symlink_whiskey_260344.lnk
+
+  testspecials2/dir_oscar_397968/symlink_yankee_564246.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_delta_126962\dir_papa_820469\hardlink_audit_955008.lnk
+
+  testspecials2/dir_output_765435/symlink_gamma_675335.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_yankee_150988\dir_temp_241630\hardlink_trace_911678.md
+    Display:   j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_yankee_150988\dir_temp_241630\hardlink_trace_911678.md
+    Relative:  False
+
+  testspecials2/dir_output_765435/symlink_india_945527.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_november_374306\echo_mike_940162.md
+    Display:   j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_november_374306\echo_mike_940162.md
+    Relative:  False
+
+  testspecials2/dir_output_765435/symlink_log_175981.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_oscar_397968\echo_temp_747773.lnk
+
+  testspecials2/dir_output_765435/symlink_quebec_126264.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_log_298284\dir_draft_685915\dir_papa_627382\symlink_record_592997.lnk
+    Display:   j:\testspecials2\dir_log_298284\dir_draft_685915\dir_papa_627382\symlink_record_592997.lnk
+    Relative:  False
+
+  testspecials2/dir_sync_303009/dir_foxtrot_191463/dir_hotel_747527/symlink_archive_470520.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\hardlink_backup_438537.md
+    Display:   j:\testspecials2\hardlink_backup_438537.md
+    Relative:  False
+
+  testspecials2/dir_sync_303009/dir_foxtrot_191463/dir_hotel_747527/symlink_data_610933.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_log_298284\zulu_romeo_832791.csv
+    Display:   j:\testspecials2\dir_log_298284\zulu_romeo_832791.csv
+    Relative:  False
+
+  testspecials2/dir_sync_303009/dir_foxtrot_191463/dir_hotel_747527/symlink_oscar_551299.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_oscar_397968\dir_romeo_329803\dir_audit_460776\hotel_papa_995384.csv
+    Display:   j:\testspecials2\dir_oscar_397968\dir_romeo_329803\dir_audit_460776\hotel_papa_995384.csv
+    Relative:  False
+
+  testspecials2/dir_sync_303009/dir_foxtrot_191463/hardlink_papa_271371.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_oscar_397968\dir_india_406972\symlink_output_517618.lnk
+
+  testspecials2/dir_sync_303009/symlink_backup_676107.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_yankee_150988\hardlink_sierra_747286.md
+    Display:   j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_yankee_150988\hardlink_sierra_747286.md
+    Relative:  False
+
+  testspecials2/dir_sync_303009/symlink_delta_302482.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_log_298284\sync_sierra_408339.xml
+    Display:   j:\testspecials2\dir_log_298284\sync_sierra_408339.xml
+    Relative:  False
+
+  testspecials2/dir_sync_303009/symlink_hotel_290314.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_yankee_150988\dir_papa_820469\dir_papa_622200\symlink_romeo_188012.lnk
+
+  testspecials2/dir_sync_303009/symlink_yankee_423212.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_oscar_397968\dir_romeo_329803\dir_audit_460776\dir_alpha_968646\symlink_victor_739074.lnk
+    Display:   j:\testspecials2\dir_oscar_397968\dir_romeo_329803\dir_audit_460776\dir_alpha_968646\symlink_victor_739074.lnk
+    Relative:  False
+
+  testspecials2/dir_sync_303009/whiskey_data_165434.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_yankee_150988\mike_data_969891.lnk
+
+  testspecials2/dir_trace_120580/dir_archive_273893/report_alpha_998299.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_zulu_832854\hardlink_zulu_203183.txt
+
+  testspecials2/dir_trace_120580/dir_archive_273893/symlink_audit_329530.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_oscar_397968\dir_oscar_522053\symlink_archive_123149.lnk
+    Display:   j:\testspecials2\dir_oscar_397968\dir_oscar_522053\symlink_archive_123149.lnk
+    Relative:  False
+
+  testspecials2/dir_trace_120580/dir_draft_331288/symlink_mike_895060.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_oscar_397968\dir_romeo_329803\dir_audit_460776\dir_alpha_968646\cache_gamma_641927.lnk
+    Display:   j:\testspecials2\dir_oscar_397968\dir_romeo_329803\dir_audit_460776\dir_alpha_968646\cache_gamma_641927.lnk
+    Relative:  False
+
+  testspecials2/dir_trace_120580/dir_india_806622/dir_india_458223/symlink_audit_201415.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_trace_120580\symlink_romeo_780779.lnk
+    Display:   j:\testspecials2\dir_trace_120580\symlink_romeo_780779.lnk
+    Relative:  False
+
+  testspecials2/dir_trace_120580/hardlink_audit_781905.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_november_374306\dir_papa_764536\hardlink_config_800823.md
+
+  testspecials2/dir_trace_120580/hardlink_papa_211122.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_log_116948\hardlink_victor_213450.xml
+
+  testspecials2/dir_trace_120580/symlink_cache_281035.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_quebec_123706\alpha_sync_934987.bak
+    Display:   j:\testspecials2\dir_quebec_123706\alpha_sync_934987.bak
+    Relative:  False
+
+  testspecials2/dir_trace_120580/symlink_data_109741.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\dir_backup_630871\gamma_tango_178044.dat
+    Display:   j:\testspecials2\dir_kilo_616914\dir_backup_630871\gamma_tango_178044.dat
+    Relative:  False
+
+  testspecials2/dir_trace_120580/symlink_romeo_780779.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_oscar_397968\sierra_alpha_225040.tmp
+    Display:   j:\testspecials2\dir_oscar_397968\sierra_alpha_225040.tmp
+    Relative:  False
+
+  testspecials2/dir_trace_120580/symlink_trace_508691.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_yankee_474982\hardlink_draft_565596.lnk
+    Display:   j:\testspecials2\dir_yankee_474982\hardlink_draft_565596.lnk
+    Relative:  False
+
+  testspecials2/dir_yankee_474982/dir_mike_734231/dir_oscar_550398/symlink_tango_534747.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_oscar_397968\symlink_record_203254.lnk
+    Display:   j:\testspecials2\dir_oscar_397968\symlink_record_203254.lnk
+    Relative:  False
+
+  testspecials2/dir_yankee_474982/dir_mike_734231/log_trace_158883.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_oscar_397968\dir_trace_903934\hardlink_record_525004.xml
+
+  testspecials2/dir_yankee_474982/dir_mike_734231/symlink_backup_881176.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_yankee_150988\dir_temp_241630\index_cache_892295.bak
+    Display:   j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_yankee_150988\dir_temp_241630\index_cache_892295.bak
+    Relative:  False
+
+  testspecials2/dir_yankee_474982/dir_mike_734231/symlink_kilo_170589.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\hardlink_uniform_628960.log
+    Display:   j:\testspecials2\hardlink_uniform_628960.log
+    Relative:  False
+
+  testspecials2/dir_yankee_474982/dir_mike_734231/symlink_log_677947.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_oscar_397968\symlink_india_426397.lnk
+
+  testspecials2/dir_yankee_474982/dir_mike_734231/symlink_temp_631313.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_november_469600\dir_yankee_150988\victor_whiskey_810580.txt
+
+  testspecials2/dir_yankee_474982/dir_romeo_902399/dir_hotel_937726/hardlink_papa_568772.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_oscar_397968\symlink_india_426397.lnk
+
+  testspecials2/dir_yankee_474982/dir_romeo_902399/dir_hotel_937726/symlink_report_973652.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\dir_victor_389261\dir_yankee_150988\dir_papa_820469\hardlink_audit_955008.lnk
+    Display:   j:\testspecials2\dir_kilo_616914\dir_victor_389261\dir_yankee_150988\dir_papa_820469\hardlink_audit_955008.lnk
+    Relative:  False
+
+  testspecials2/dir_yankee_474982/dir_romeo_902399/hardlink_oscar_983517.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\yankee_india_996670.tmp
+
+  testspecials2/dir_yankee_474982/dir_romeo_902399/hardlink_victor_717565.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_india_549062\dir_gamma_420872\delta_lima_895236.log
+
+  testspecials2/dir_yankee_474982/dir_romeo_902399/symlink_gamma_306751.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_log_298284\dir_draft_685915\config_delta_582464.csv
+    Display:   j:\testspecials2\dir_log_298284\dir_draft_685915\config_delta_582464.csv
+    Relative:  False
+
+  testspecials2/dir_yankee_474982/hardlink_draft_565596.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_log_116948\dir_trace_160242\symlink_foxtrot_692291.lnk
+
+  testspecials2/dir_yankee_474982/india_report_749813.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_november_469600\dir_november_374306\dir_archive_113008\symlink_mike_818446.lnk
+
+  testspecials2/dir_yankee_474982/symlink_sync_108402.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_beta_101009\dir_november_469600\dir_yankee_150988\dir_temp_241630\symlink_backup_291372.lnk
+    Display:   j:\testspecials2\dir_beta_101009\dir_november_469600\dir_yankee_150988\dir_temp_241630\symlink_backup_291372.lnk
+    Relative:  False
+
+  testspecials2/dir_yankee_474982/symlink_whiskey_247953.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_101009\dir_november_469600\dir_november_374306\dir_quebec_843211\symlink_draft_785303.lnk
+
+  testspecials2/draft_cache_115911.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_log_116948\dir_papa_764536\hardlink_tango_661477.bin
+
+  testspecials2/hardlink_alpha_380079.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\zulu_audit_664443.log
+
+  testspecials2/hardlink_data_959532.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_log_298284\dir_log_116948\dir_papa_764536\hardlink_tango_661477.bin
+
+  testspecials2/sierra_audit_780213.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)  [non-resident]
+    Target:    j:\testspecials2\dir_beta_938878\dir_log_116948\dir_trace_160242\report_kilo_156881.xml
+
+  testspecials2/symlink_temp_374832.lnk
+    Type:      FILE
+    Attrs:     0x420
+    Reparse:   IO_REPARSE_TAG_SYMLINK (0xa000000c)
+    Target:    \??\j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_november_374306\dir_archive_113008\symlink_yankee_605383.lnk
+    Display:   j:\testspecials2\dir_kilo_616914\dir_november_469600\dir_november_374306\dir_archive_113008\symlink_yankee_605383.lnk
+    Relative:  False
+
+
+  Reparse Index (OID 0x540): 344 indexed entries
+    IO_REPARSE_TAG_SYMLINK: 344

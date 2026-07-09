@@ -1,0 +1,39 @@
+﻿GENERATE-FSACTIVITY v3.20 - REPLAY REPORT
+===========================================
+Replay input : .\fsactivity_baseline.json
+OriginalRoot : c:\users\refs\Downloads\test1
+ReplayRoot   : r:\testintegrity\
+Actions      : 1000
+Duration     : 00:00:06.4705146
+CSV log      : c:\tools\log\fsactivity_20260519_124641_replay_log.csv
+
+Action statistics:
+  APPEND_FILE|OK                          78
+  APPEND_FILE|SKIP                         1
+  COPY_FILE|OK                            72
+  CREATE_ADS|OK                            4
+  CREATE_DIR|OK                           57
+  CREATE_FILE|OK                         252
+  CREATE_HARDLINK|OK                       4
+  CREATE_MARKED_FILE|OK                    1
+  CREATE_SYMLINK_FILE|OK                   4
+  DELETE_DIR|OK                           26
+  DELETE_FILE|OK                          73
+  MOVE_DIR|OK                             43
+  MOVE_FILE|OK                            80
+  RENAME_DIR|OK                           45
+  RENAME_FILE|OK                          74
+  SET_TIMESTAMPS|OK                       74
+  SET_TIMESTAMPS|SKIP                      1
+  WRITE_FILE|OK                          109
+  WRITE_FILE|SKIP                          2
+
+First replay errors/skips:
+  #56 WRITE_FILE/SKIP: Exception calling "WriteAllBytes" with "2" argument(s): "Could not find a part of the path 'C:\users\refs\Downloads\test1\xbpt_symlink_record_442168.lnk'."
+  #80 APPEND_FILE/SKIP: Exception calling "Open" with "3" argument(s): "Could not find a part of the path 'C:\users\refs\Downloads\test1\xbpt_symlink_record_442168.lnk'."
+  #656 WRITE_FILE/SKIP: Exception calling "WriteAllBytes" with "2" argument(s): "Could not find a part of the path 'C:\users\refs\Downloads\test1\xbpt_symlink_hotel_632659.lnk'."
+  #702 SET_TIMESTAMPS/SKIP: Exception calling "SetCreationTimeUtc" with "2" argument(s): "Could not find file 'C:\users\refs\Downloads\test1\elvis_dir_log_739131\elvis_dir_trace_775911\elvis_dir_papa_455656\elvis_dir_sync_718743\elvis_dir_gamma_109016\elvis_dir_zulu_984398\elvis_dir_cache_558805\xbpt_symlink_gamma_582874.lnk'."
+
+Replay note: JSON replay files support root remapping from original root_dir to -RootDir. Missing parents and missing replay sources are recreated when required, and the Error column contains the real exception for remaining failures. v3.18 uses fast replay sizing for large files with FileStream.SetLength, avoiding slow per-byte replay writes near the end of large workloads.
+CSV log replay uses the paths stored in the CSV because the original root is not encoded separately.
+Some privileged or filesystem-specific actions, such as symlinks or ADS, may be skipped without Administrator rights or filesystem support.

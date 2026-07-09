@@ -1,0 +1,78 @@
+==============================================================================
+ReFS Volume Summary (extended)
+==============================================================================
+  Image:              wininsiderrefs8gtest2.raw
+  ReFS version:       3.14
+  Volume GUID:        40c09f25-7f3f-4813-88be-e28be75c7526
+  Volume label:       winsiderrefs8gtest2
+  Volume size:        7.9 GB
+  Cluster size:       0x10000 (64.0 KB)
+  Container size:     0x4000000 (64.0 MB)
+  Checksum:           SHA-256
+  Compression:        None
+
+------------------------------------------------------------------------------
+Checkpoint
+------------------------------------------------------------------------------
+  Virtual clock:      161
+  Flags:              0x2682
+  Containers mapped:  127
+
+------------------------------------------------------------------------------
+File System Content
+------------------------------------------------------------------------------
+  Objects:            132
+  Directories:        118
+  Files:              776 (467 resident)
+  Total file size:    45.1 MB
+  Security descs:     7
+  Oldest timestamp:   2021-05-18 07:16:04 UTC
+  Newest timestamp:   2026-05-19 20:00:58 UTC
+
+------------------------------------------------------------------------------
+Global Root Tables
+------------------------------------------------------------------------------
+  Object ID Table                 132 rows
+  Medium Allocator                 24 rows
+  Container Allocator               2 rows
+  Schema Table                     30 rows
+  Parent-Child Table              119 rows
+  Object ID Table dup             132 rows
+  Block RefCount                    4 rows
+  Container Table                 127 rows
+  Container Table dup             127 rows
+  Schema Table dup                 30 rows
+  Container Index                   0 rows
+  Integrity State                   1 rows
+  Small Allocator                   2 rows
+
+------------------------------------------------------------------------------
+Volume Detail (OID 0x500)
+------------------------------------------------------------------------------
+  Volume version:     3.14
+  Driver version:     3.15
+  Volume created:     2026-05-19 19:56:46 UTC
+  Volume modified:    2026-05-19 19:56:47 UTC
+  Schema count:       35
+
+------------------------------------------------------------------------------
+FS Metadata Directory (OID 0x520)
+------------------------------------------------------------------------------
+  Rows:               1
+  Children:           (none)
+  USN Journal:        Inactive
+
+------------------------------------------------------------------------------
+Extended Metrics
+------------------------------------------------------------------------------
+  Reparse index:      173 entries
+  Symlinks:           173
+  Snapshots:          0
+  ADS entries:        54
+  Hard links (extra): 144
+  Encrypted files:    0
+  Integrity files:    0
+  Compressed files:   0
+  Trash table:        0 entries
+  Containers used:    126 / 127 (99.2%)
+  Free space (est):   64.0 MB

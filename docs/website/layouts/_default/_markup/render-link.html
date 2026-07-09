@@ -1,0 +1,22 @@
+{{- $u := urls.Parse .Destination -}}
+{{- $text := .Text -}}
+{{- if and (eq $u.Scheme "") (not $u.Host) (strings.HasSuffix $u.Path ".md") -}}
+  {{- /* 1) try resolving relative to the current page */ -}}
+  {{- $ref := strings.TrimSuffix $u.Path ".md" -}}
+  {{- $target := .Page.GetPage $ref -}}
+  {{- /* 2) fall back to a global match by filename -> robust to the .md files being reorganised */ -}}
+  {{- if not $target -}}
+    {{- $base := path.Base $u.Path -}}
+    {{- range site.RegularPages -}}
+      {{- if and (not $target) (eq .File.LogicalName $base) -}}{{- $target = . -}}{{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if $target -}}
+    <a href="{{ $target.RelPermalink }}{{ with $u.Fragment }}#{{ . }}{{ end }}"{{ with .Title }} title="{{ . }}"{{ end }}>{{ $text | safeHTML }}</a>
+  {{- else -}}
+    {{- warnf "render-link: unresolved internal link %q in %s" .Destination .Page.File.Path -}}
+    <a href="{{ .Destination }}" class="broken-link">{{ $text | safeHTML }}</a>
+  {{- end -}}
+{{- else -}}
+  <a href="{{ .Destination | safeURL }}"{{ if $u.Host }} rel="noopener" target="_blank"{{ end }}{{ with .Title }} title="{{ . }}"{{ end }}>{{ $text | safeHTML }}</a>
+{{- end -}}

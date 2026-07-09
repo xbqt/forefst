@@ -1,0 +1,43 @@
+
+ReFS Schema Table
+
+------------------------------------------------------------------------------
+System table schemas (13 entries)
+------------------------------------------------------------------------------
+  TypeID   Name                             Properties  Level
+  ------------------------------------------------------------
+  0xe010   Allocator Table                       57360  57360
+  0xe030   Object ID Table                           0  57392
+  0xe040   Parent-Child Table                        0  57408
+  0xe060   Schema Table                              0  57440
+  0xe080   Integrity State Table                     0  57472
+  0xe090   Upcase / Logfile Info Table               0  57488
+  0xe0b0   Block RefCount Table                      0  57520
+  0xe0c0   Container Table                           0  57536
+  0xe0d0   Trash Table                               0  57552
+  0xe100   Container Index Table                     0  57600
+  0xe110   Read Cache Metadata                       0  57616
+  0xe120   Candidate Table (Dirty Ranges)            0  57632
+  0xe130   Heat Engine Persistence                   0  57648
+
+------------------------------------------------------------------------------
+Attribute table schemas (16 entries)
+------------------------------------------------------------------------------
+  TypeID   Name                             Properties  Level
+  ------------------------------------------------------------
+  0x110    Directory Entry List                      1    272
+  0x120    File Stream                               1    288
+  0x130    $FILE_NAME (dir entry)                    1    304
+  0x140    $FILE_NAME (long)                         1    320
+  0x150    Volume Information                        1    336
+  0x160    Reparse Index                             1    352
+  0x170    Reparse Point                             1    368
+  0x180    $DATA                                     1    384
+  0x190    $STANDARD_INFORMATION                     1    400
+  0x1a0    $INDEX_ROOT                               1    416
+  0x1b0    Stream Snapshot ($SNAPSHOT)               1    432
+  0x1c0    $REPARSE_POINT (v3.7+)                    1    448
+  0x1d0    $EA_INFORMATION (v3.7+)                   1    464
+  0x1e0    $EA (v3.14+)                              1    480
+  0x1f0    $LOGGED_UTILITY_STREAM (v3.14+)           1    496
+  0x200    $LOGGED_UTILITY_STREAM_V2 ($EFS)          1    512

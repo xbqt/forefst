@@ -1,0 +1,17 @@
+path,basename,group,result,value
+analysis/rawdisk/disks/step1/win10refsmini.raw,win10refsmini.raw,0x8c124849,PASS,bad=0/6
+analysis/rawdisk/disks/step2/win10refs110g.raw,win10refs110g.raw,0x9072e8cf,PASS,bad=0/34
+analysis/rawdisk/disks/step2/win10refs19g.raw,win10refs19g.raw,0x2e05b20e,PASS,bad=0/34
+analysis/rawdisk/disks/step2/win10refs2g.raw,win10refs2g.raw,0x6efa66d0,PASS,bad=0/34
+analysis/rawdisk/disks/step2/win10refs5g4k.raw,win10refs5g4k.raw,0x665a7518,PASS,bad=0/34
+analysis/rawdisk/disks/step2/win10refs5g64k.raw,win10refs5g64k.raw,0x9c08ff9e,PASS,bad=0/34
+analysis/rawdisk/disks/step2/win10refs8g.raw,win10refs8g.raw,0x842e27e9,PASS,bad=0/34
+analysis/rawdisk/disks/step3/win10refs2tspecials.raw,win10refs2tspecials.raw,0x3e2ced2c,PASS,bad=0/149
+analysis/rawdisk/disks/step3/win10refs8gsetintegristystreams1.raw,win10refs8gsetintegristystreams1.raw,0x6244d94d,PASS,bad=0/34
+analysis/rawdisk/disks/step3/win10to11refs4g_beforewin11mount.raw,win10to11refs4g_beforewin11mount.raw,0x4e1e1549,PASS,bad=0/34
+analysis/rawdisk/disks/step4/win10refsmini_testchecksum.raw,win10refsmini_testchecksum.raw,0x8c124849,PASS,bad=0/6
+analysis/rawdisk/disks/step4/win10refsmini_testchecksum_corrupt.raw,win10refsmini_testchecksum_corrupt.raw,0x8c124849,PASS,bad=0/6
+analysis/rawdisk/disks/step4/win1121h2test.raw,win1121h2test.raw,0xd6b0fe3e,PASS,bad=0/110
+analysis/rawdisk/disks/step4/win1122h2test.raw,win1122h2test.raw,0x8ebc1a34,PASS,bad=0/137
+analysis/rawdisk/disks/step4/win1122h2test_testchecksum.raw,win1122h2test_testchecksum.raw,0x8ebc1a34,PASS,bad=0/137
+analysis/rawdisk/disks/step5/win10refsmini.raw,win10refsmini.raw,0x8c124849,PASS,bad=0/6

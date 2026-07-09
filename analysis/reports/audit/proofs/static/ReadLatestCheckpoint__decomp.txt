@@ -1,0 +1,111 @@
+
+// === ReadLatestCheckpoint @ 1400b0c24 ===
+
+/* WARNING: Function: __security_check_cookie replaced with injection: security_check_cookie */
+/* public: long __cdecl CmsVolume::ReadLatestCheckpoint(class CmsTransactionContext * __ptr64)
+ __ptr64 */
+
+long __thiscall CmsVolume::ReadLatestCheckpoint(CmsVolume *this,CmsTransactionContext *param_1)
+
+{
+ undefined1 auVar1 [16];
+ uint uVar2;
+ char cVar3;
+ bool bVar4;
+ long lVar5;
+ unique_ptr<struct_SmsPersistentRollbackProtectionInformation,struct_tlx::generic_delete<struct_SmsPersistentRollbackProtectionInformation,struct_tlx::operator_delete_deallocate>_>
+ *puVar6;
+ LcnWithChecksum *pLVar7;
+ __uint64 _Var8;
+ void *pvVar9;
+ SmsCheckpointRecord *pSVar10;
+ ushort uVar11;
+ ulong uVar12;
+ nothrow_t *pnVar13;
+ unique_ptr<class_CmsChecksum,struct_utl::default_delete<class_CmsChecksum>_> *this_00;
+ ulong uVar14;
+ longlong lVar15;
+ ulonglong uVar16;
+ unique_ptr<void,struct_tlx::generic_delete<void,struct_tlx::operator_delete_deallocate>_> *this_01
+ ;
+ ushort uVar17;
+ SmsCheckpointRecord *pSVar18;
+ uchar uVar19;
+ int iVar20;
+ uint uVar21;
+ uint uVar23;
+ longlong lVar24;
+ undefined1 auStackY_128 [32];
+ uchar in_stack_ffffffffffffff40;
+ char local_a8 [4];
+ uchar local_a4 [4];
+ _MS_TELEMETRY_DATA *local_a0;
+ unique_ptr<class_CmsChecksum,struct_utl::default_delete<class_CmsChecksum>_> local_98 [16];
+ CmsTransactionContext *local_88;
+ void *local_80;
+ __uint64 local_78;
+ char local_70;
+ longlong local_68;
+ longlong lStack_60;
+ longlong local_58;
+ longlong lStack_50;
+ ulonglong local_48;
+ ulonglong uVar22;
+ 
+ local_48 = __security_cookie ^ (ulonglong)auStackY_128;
+ lVar24 = 2;
+ lVar15 = 2;
+ this_00 = local_98;
+ uVar16 = 0;
+ local_88 = param_1;
+ do {
+ utl::unique_ptr<class_CmsChecksum,struct_utl::default_delete<class_CmsChecksum>_>::
+ unique_ptr<class_CmsChecksum,struct_utl::default_delete<class_CmsChecksum>_>(this_00);
+ this_00 = this_00 + 8;
+ lVar15 = lVar15 + -1;
+ } while (lVar15 != 0);
+ local_68 = 0;
+ lStack_60 = 0;
+ uVar21 = 0xffffffff;
+ local_a4[0] = '\0';
+ local_a4[1] = '\0';
+ local_58 = 0;
+ lStack_50 = 0;
+ local_a8[0] = '\x01';
+ for (; (uint)uVar16 < 2; uVar16 = (ulonglong)((uint)uVar16 + 1)) {
+ puVar6 = (unique_ptr<struct_SmsPersistentRollbackProtectionInformation,struct_tlx::generic_delete<struct_SmsPersistentRollbackProtectionInformation,struct_tlx::operator_delete_deallocate>_>
+ *)tlx::make_unique_oversize<struct_SmsCheckpointRecord,0>((__uint64)&local_a0);
+ utl::
+ unique_ptr<struct_SmsPersistentRollbackProtectionInformation,struct_tlx::generic_delete<struct_SmsPersistentRollbackProtectionInformation,struct_tlx::operator_delete_deallocate>_>
+ ::operator=((unique_ptr<struct_SmsPersistentRollbackProtectionInformation,struct_tlx::generic_delete<struct_SmsPersistentRollbackProtectionInformation,struct_tlx::operator_delete_deallocate>_>
+ *)(local_98 + uVar16 * 8),puVar6);
+ utl::unique_ptr<void,struct_tlx::generic_delete<void,struct_tlx::operator_delete_deallocate>_>::
+ ~unique_ptr<void,struct_tlx::generic_delete<void,struct_tlx::operator_delete_deallocate>_>
+ ((unique_ptr<void,struct_tlx::generic_delete<void,struct_tlx::operator_delete_deallocate>_>
+ *)&local_a0);
+ if (*(longlong *)(local_98 + uVar16 * 8) == 0) goto LAB_1400b0cd2;
+ }
+ while( true ) {
+ uVar16 = 0;
+ while( true ) {
+ uVar22 = 0;
+ uVar23 = (uint)uVar16;
+ if (1 < uVar23) break;
+ lVar15 = uVar16 * 0x68;
+ local_68 = *(longlong *)(this + lVar15 + 0x6d8);
+ if (*(uint *)(this + lVar15 + 0x6e0) < 2) {
+ lStack_50 = 0;
+ lStack_60 = 0;
+ local_58 = 0;
+ }
+ else {
+ lStack_60 = local_68 + 1;
+ local_58 = local_68 + 2;
+ lStack_50 = local_68 + 3;
+ }
+ lVar5 = ReadAndRepairSelfChecksumBlock
+ (this,local_88,local_a8,(SmsBigIdentifier *)0x0,(_LCN_TUPLE *)&local_68,
+ *(uint *)(this + lVar15 + 0x6e0),*(void **)(local_98 + uVar16 * 8),
+ ValidateCheckpointRecordCallback,ChooseCheckpointRecord<0>,
+ local_a4 + uVar16,(_SmsScrubIoOutput *)0x0,(_SCRUB_PARITY_EXTENT_DATA *)0x0
+ ,local_a8,in_stack_ffffffffffffff40,'\0');

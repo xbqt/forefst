@@ -1,0 +1,10 @@
+<svg class="diagram" viewBox="0 0 760 150" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Disk layout and the ReFS partition">
+<text class="dg-muted" x="20" y="26" font-size="11">UEFI / GPT disk — the ReFS partition starts with the VBR (FSRS)</text>
+<rect class="dg-box" x="20"  y="40" width="90"  height="48" rx="5"/><text class="dg-muted" x="65"  y="61" text-anchor="middle" font-size="10.5">Protective</text><text class="dg-muted" x="65" y="76" text-anchor="middle" font-size="10.5">MBR</text>
+<rect class="dg-box" x="114" y="40" width="90"  height="48" rx="5"/><text class="dg-muted" x="159" y="61" text-anchor="middle" font-size="10.5">GPT</text><text class="dg-muted" x="159" y="76" text-anchor="middle" font-size="10.5">header</text>
+<rect class="dg-box" x="208" y="40" width="110" height="48" rx="5"/><text class="dg-muted" x="263" y="61" text-anchor="middle" font-size="10.5">partition</text><text class="dg-muted" x="263" y="76" text-anchor="middle" font-size="10.5">entries</text>
+<rect class="dg-box-accent" x="322" y="40" width="418" height="48" rx="5"/>
+<text class="dg-accent" x="531" y="61" text-anchor="middle" font-size="12" font-weight="700">ReFS partition</text>
+<text class="dg-muted" x="531" y="78" text-anchor="middle" font-size="10.5">VBR (FSRS) → SUPB → CHKP → B+-tree forest</text>
+<text class="dg-muted" x="20" y="122" font-size="10.5">Legacy BIOS/MBR boots from the MBR; modern UEFI uses GPT + an EFI System Partition.</text>
+</svg>

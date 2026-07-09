@@ -1,0 +1,49 @@
+
+ReFS Parent-Child Table
+
+------------------------------------------------------------------------------
+Parent-Child Relationships
+------------------------------------------------------------------------------
+  Total entries:      35
+  Unique parents:     18
+  Unique children:    35
+  Unique OIDs:        36
+  Tree roots:         0x600
+
+  Parent         → Child            Parent Name               → Child Name
+  ------------------------------------------------------------------------
+  0x600          → 0x520            Root Directory            → FS Metadata
+  0x600          → 0x701            Root Directory            → Dir/File (0x701)
+  0x600          → 0x702            Root Directory            → Dir/File (0x702)
+  0x600          → 0x73c            Root Directory            → Dir/File (0x73c)
+  0x702          → 0x70f            Dir/File (0x702)          → Dir/File (0x70f)
+  0x702          → 0x717            Dir/File (0x702)          → Dir/File (0x717)
+  0x702          → 0x722            Dir/File (0x702)          → Dir/File (0x722)
+  0x702          → 0x723            Dir/File (0x702)          → Dir/File (0x723)
+  0x702          → 0x725            Dir/File (0x702)          → Dir/File (0x725)
+  0x703          → 0x708            Dir/File (0x703)          → Dir/File (0x708)
+  0x706          → 0x704            Dir/File (0x706)          → Dir/File (0x704)
+  0x706          → 0x718            Dir/File (0x706)          → Dir/File (0x718)
+  0x706          → 0x71a            Dir/File (0x706)          → Dir/File (0x71a)
+  0x706          → 0x724            Dir/File (0x706)          → Dir/File (0x724)
+  0x707          → 0x703            Dir/File (0x707)          → Dir/File (0x703)
+  0x707          → 0x706            Dir/File (0x707)          → Dir/File (0x706)
+  0x70b          → 0x715            Dir/File (0x70b)          → Dir/File (0x715)
+  0x70f          → 0x721            Dir/File (0x70f)          → Dir/File (0x721)
+  0x70f          → 0x72a            Dir/File (0x70f)          → Dir/File (0x72a)
+  0x70f          → 0x737            Dir/File (0x70f)          → Dir/File (0x737)
+  0x710          → 0x739            Dir/File (0x710)          → Dir/File (0x739)
+  0x711          → 0x70d            Dir/File (0x711)          → Dir/File (0x70d)
+  0x711          → 0x712            Dir/File (0x711)          → Dir/File (0x712)
+  0x711          → 0x719            Dir/File (0x711)          → Dir/File (0x719)
+  0x718          → 0x70b            Dir/File (0x718)          → Dir/File (0x70b)
+  0x721          → 0x707            Dir/File (0x721)          → Dir/File (0x707)
+  0x721          → 0x734            Dir/File (0x721)          → Dir/File (0x734)
+  0x722          → 0x72f            Dir/File (0x722)          → Dir/File (0x72f)
+  0x725          → 0x710            Dir/File (0x725)          → Dir/File (0x710)
+  0x72a          → 0x711            Dir/File (0x72a)          → Dir/File (0x711)
+  0x72a          → 0x73a            Dir/File (0x72a)          → Dir/File (0x73a)
+  0x72f          → 0x730            Dir/File (0x72f)          → Dir/File (0x730)
+  0x730          → 0x731            Dir/File (0x730)          → Dir/File (0x731)
+  0x731          → 0x72b            Dir/File (0x731)          → Dir/File (0x72b)
+  0x737          → 0x73b            Dir/File (0x737)          → Dir/File (0x73b)

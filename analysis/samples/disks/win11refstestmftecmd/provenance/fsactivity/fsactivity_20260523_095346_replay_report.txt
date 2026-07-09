@@ -1,0 +1,46 @@
+﻿GENERATE-FSACTIVITY v3.18 - REPLAY REPORT
+===========================================
+Replay input : C:\tools\logmftecmdtest\fsactivity_20260523_094753_replay.json
+OriginalRoot : M:\testintegrity\
+ReplayRoot   : N:\testintegrity\
+Actions      : 1000
+Duration     : 00:00:07.4426955
+CSV log      : C:\tools\logmftecmdtest\fsactivity_20260523_095346_replay_log.csv
+
+Action statistics:
+  APPEND_FILE|OK                          22
+  APPEND_FILE|SKIP                         4
+  COPY_FILE|OK                            19
+  COPY_FILE|SKIP                           5
+  CREATE_ADS|OK                          123
+  CREATE_ADS|SKIP                         29
+  CREATE_DIR|OK                          111
+  CREATE_FILE|OK                         160
+  CREATE_HARDLINK|OK                     152
+  CREATE_SYMLINK_FILE|OK                 151
+  DELETE_DIR|OK                           31
+  DELETE_FILE|OK                          22
+  MOVE_DIR|OK                             29
+  MOVE_FILE|OK                            29
+  RENAME_DIR|OK                           30
+  RENAME_FILE|OK                          33
+  SET_TIMESTAMPS|OK                       23
+  SET_TIMESTAMPS|SKIP                      4
+  WRITE_FILE|OK                           17
+  WRITE_FILE|SKIP                          6
+
+First replay errors/skips:
+  #205 CREATE_ADS/SKIP: Could not open the alternate data stream 'hidden_9691' of the file 'M:\testintegrity\dir_tango_306249\xbpt_symlink_whiskey_434761.lnk'.
+  #264 CREATE_ADS/SKIP: Could not open the alternate data stream 'hidden_2844' of the file 'M:\testintegrity\dir_draft_196876\dir_kilo_310520\xbpt_symlink_record_461797.lnk'.
+  #281 CREATE_ADS/SKIP: Could not open the alternate data stream 'hidden_8179' of the file 'M:\testintegrity\dir_report_583335\xbpt_symlink_echo_957266.lnk'.
+  #289 CREATE_ADS/SKIP: Could not open the alternate data stream 'hidden_1586' of the file 'M:\testintegrity\dir_report_583335\dir_romeo_282269\xbpt_symlink_beta_760193.lnk'.
+  #291 SET_TIMESTAMPS/SKIP: Exception calling "SetCreationTimeUtc" with "2" argument(s): "Could not find a part of the path 'M:\testintegrity\dir_november_274328\dir_kilo_987907\dir_record_374823\xbpt_symlink_cache_711911.lnk'."
+  #365 WRITE_FILE/SKIP: Exception calling "WriteAllBytes" with "2" argument(s): "Could not find a part of the path 'M:\testintegrity\dir_tango_306249\xbpt_symlink_mike_445436.lnk'."
+  #366 CREATE_ADS/SKIP: Could not open the alternate data stream 'hidden_4353' of the file 'M:\testintegrity\dir_draft_196876\dir_kilo_310520\xbpt_symlink_record_461797.lnk'.
+  #377 CREATE_ADS/SKIP: Could not open the alternate data stream 'hidden_2512' of the file 'M:\testintegrity\dir_report_583335\dir_romeo_282269\xbpt_symlink_yankee_461939.lnk'.
+  #383 WRITE_FILE/SKIP: Exception calling "WriteAllBytes" with "2" argument(s): "Could not find a part of the path 'M:\testintegrity\xbpt_data_romeo_144525.lnk'."
+  #453 CREATE_ADS/SKIP: Could not open the alternate data stream 'hidden_5457' of the file 'M:\testintegrity\dir_draft_196876\dir_data_379372\dir_config_156929\dir_oscar_738913\xbpt_symlink_log_990746.lnk'.
+
+Replay note: JSON replay files support root remapping from original root_dir to -RootDir. Missing parents and missing replay sources are recreated when required, and the Error column contains the real exception for remaining failures. v3.18 uses fast replay sizing for large files with FileStream.SetLength, avoiding slow per-byte replay writes near the end of large workloads.
+CSV log replay uses the paths stored in the CSV because the original root is not encoded separately.
+Some privileged or filesystem-specific actions, such as symlinks or ADS, may be skipped without Administrator rights or filesystem support.

@@ -1,0 +1,25 @@
+# forefst win11refs2tspecials.raw deleted --no-slack
+# ----------------------------------------------------------------------------
+==============================================================================
+ReFS Deleted File Finder
+==============================================================================
+  Image:        analysis/rawdisk/disks/step3/win11refs2tspecials.raw
+  ReFS version: 3.14
+  Cluster size: 0x1000
+  Checkpoints:  2 (VC: 367, 366)
+  Objects:      230
+
+── Trash Table (OID 0xD) ──
+  Empty (all deletions fully processed)
+
+── Checkpoint Comparison ──
+  Current checkpoint: VC=367
+  Previous checkpoint: VC=366
+  Same top-level files in both (change may be in subdirectories or metadata)
+
+── Recovery methods ──
+  Ran: Trash table (0xD), checkpoint diff.
+  Slack scan SKIPPED (--no-slack). Run without it (the default) to recover deleted rows.
+  (Windows Recycle Bin is separate: see the `recyclebin` command.)
+
+

@@ -1,0 +1,27 @@
+==============================================================================
+ReFS Deleted File Finder
+==============================================================================
+  Image:        wininsiderrefs8gtest2.raw
+  ReFS version: 3.14
+  Cluster size: 0x10000
+  Checkpoints:  2 (VC: 161, 160)
+  Objects:      132
+
+── Trash Table (OID 0xD) ──
+  Empty (all deletions fully processed)
+
+── Checkpoint Comparison ──
+  Current checkpoint: VC=161
+  Previous checkpoint: VC=160
+  Same top-level files in both (change may be in subdirectories or metadata)
+
+── Orphaned Page Scan ──
+  Current tree references 145 unique physical clusters
+  Scanning up to 50000 clusters for orphaned MSB+ pages...
+  Found 46 orphaned MSB+ leaf pages
+
+  Old versions of existing files (orphaned pages): 3
+    System Volume Information (cluster 49)
+    testintegrity (cluster 49)
+    testspecials (cluster 49)
+

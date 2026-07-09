@@ -1,0 +1,74 @@
+
+ReFS Boot Sector / FSRS
+========================================================================
+Image:        wininsiderrefs8gtest2.raw
+Image size:   8.0 GiB (8589934592 bytes)
+VBR SHA-256:  ae4fee4b0bf7d973a0ceffc9d5fbf7b0a69d38740b560a44cc6084c64b1fae72
+VBR offset:   0x1000000
+
+Interpreted values
+------------------------------------------------------------------------
+Field                 Value                                                                                        
+--------------------  ---------------------------------------------------------------------------------------------
+fs_name               ReFS....                                                                                     
+fsrs_identifier       FSRS                                                                                         
+vbr_size              0x0200 (512)                                                                                 
+format_version        3.14                                                                                         
+checksum_algorithm    0x0004 (SHA256)                                                                              
+format_instance_guid  f7a39fac-959d-44d2-80ca-b22a4cf636a0                                                         
+cluster_size          512 * 128 = 65536 (64.0 KiB)                                                                 
+volume_size           16646144 * 512 = 8522825728 (7.9 GiB)                                                        
+container_size        64.0 MiB (1024 clusters)                                                                     
+container_count       127                                                                                          
+volume_flags          0x00000066 [0x02=mounted, 0x04=valid-ReFS, 0x20=Win11-boot-behavior, 0x40=checksum-algo-gate]
+volume_serial         0x54709FDD709FC3E0                                                                           
+checksum_stored       0xE9F5                                                                                       
+checksum_computed     0xE9F5 [OK]                                                                                  
+
+Boot sector structure
+------------------------------------------------------------------------
+Byte range  Description          Raw value                                      
+----------  -------------------  -----------------------------------------------
+0x00-0x02   Jump instruction     00 00 00                                       
+0x03-0x0a   FS name (ReFS)       52 65 46 53 00 00 00 00                        
+0x0b-0x0f   Reserved             00 00 00 00 00                                 
+0x10-0x13   FSRS identifier      46 53 52 53                                    
+0x14-0x15   VBR size             00 02                                          
+0x16-0x17   Checksum             f5 e9                                          
+0x18-0x1f   Total sector count   00 00 fe 00 00 00 00 00                        
+0x20-0x23   Bytes per sector     00 02 00 00                                    
+0x24-0x27   Sectors per cluster  80 00 00 00                                    
+0x28-0x29   Version              03 0e                                          
+0x2a-0x2b   Checksum algorithm   04 00                                          
+0x2c-0x2f   Volume flags         66 00 00 00                                    
+0x30-0x37   Reserved             00 00 00 00 00 00 00 00                        
+0x38-0x3f   Volume serial        e0 c3 9f 70 dd 9f 70 54                        
+0x40-0x47   Bytes per container  00 00 00 04 00 00 00 00                        
+0x48-0x57   Extended GUID        ac 9f a3 f7 9d 95 d2 44 80 ca b2 2a 4c f6 36 a0
+
+Verbose calculations
+------------------------------------------------------------------------
+  VBR offset     = 0x1000000
+  VBR SHA-256    = ae4fee4b0bf7d973a0ceffc9d5fbf7b0a69d38740b560a44cc6084c64b1fae72
+
+  cluster_size   = 512 * 128 = 65536 (64.0 KiB)
+  volume_size    = 16646144 * 512 = 8522825728 (7.9 GiB)
+
+  container_size = 0x4000000 (64.0 MiB)
+  clusters/cont  = 1024
+  container_cnt  = 127
+
+  volume_flags   = 0x00000066
+  bits set       = 0x00000002, 0x00000004, 0x00000020, 0x00000040
+  meaning        = 0x02=mounted, 0x04=valid-ReFS, 0x20=Win11-boot-behavior, 0x40=checksum-algo-gate
+
+  checksum algo  = ROR1+ADD over 0x03..512, skip 0x16-0x17
+  stored         = 0xE9F5
+  computed       = 0xE9F5
+
+  format GUID    = f7a39fac-959d-44d2-80ca-b22a4cf636a0
+
+  GPT partition  = #2 'Basic data partition'
+  partition LBA  = 32768-16775167
+  partition size = 8572108800 (8.0 GiB)
+

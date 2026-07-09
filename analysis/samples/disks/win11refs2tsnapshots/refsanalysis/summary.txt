@@ -1,0 +1,47 @@
+==============================================================================
+ReFS Volume Summary
+==============================================================================
+  Image:              win11refs2tsnapshots.raw
+  ReFS version:       3.14
+  Volume GUID:        c2b2e9e9-007b-49bf-92ec-5690bfd86923
+  Volume label:       win11refs2tsnapshots
+  Volume size:        2.0 TB
+  Cluster size:       0x1000 (4.0 KB)
+  Container size:     0x4000000 (64.0 MB)
+  Checksum:           CRC64
+  Compression:        None
+
+------------------------------------------------------------------------------
+Checkpoint
+------------------------------------------------------------------------------
+  Virtual clock:      265
+  Flags:              0x682
+  Containers mapped:  32767
+
+------------------------------------------------------------------------------
+File System Content
+------------------------------------------------------------------------------
+  Objects:            47
+  Directories:        34
+  Files:              270 (219 resident)
+  Total file size:    13.8 MB
+  Security descs:     7
+  Oldest timestamp:   2021-05-18 07:16:04 UTC
+  Newest timestamp:   2026-05-16 17:35:57 UTC
+
+------------------------------------------------------------------------------
+Global Root Tables
+------------------------------------------------------------------------------
+  Object ID Table                  47 rows
+  Medium Allocator                 18 rows
+  Container Allocator             165 rows
+  Schema Table                     29 rows
+  Parent-Child Table               35 rows
+  Object ID Table dup              47 rows
+  Block RefCount                   21 rows
+  Container Table               32767 rows
+  Container Table dup           32767 rows
+  Schema Table dup                 29 rows
+  Container Index                   0 rows
+  Integrity State                   1 rows
+  Small Allocator                   8 rows

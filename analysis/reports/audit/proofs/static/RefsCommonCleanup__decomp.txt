@@ -1,0 +1,400 @@
+
+// === RefsCommonCleanup @ 1402d3970 ===
+
+/* WARNING: Function: __security_check_cookie replaced with injection: security_check_cookie */
+/* long __cdecl RefsCommonCleanup(struct _IRP_CONTEXT * __ptr64,struct _IRP * __ptr64) */
+
+long __cdecl RefsCommonCleanup(_IRP_CONTEXT *param_1,_IRP *param_2)
+
+{
+ ushort uVar1;
+ short sVar2;
+ _SCB *p_Var3;
+ _VCB *p_Var4;
+ _FCB *p_Var5;
+ _LCB *p_Var6;
+ char cVar7;
+ uchar uVar8;
+ bool bVar9;
+ _SCB _Var10;
+ int iVar11;
+ REFS_SHARED_ACCESS_OPEN_FLAGS RVar12;
+ long lVar13;
+ _FCB *p_Var14;
+ undefined8 *puVar15;
+ uint uVar16;
+ uint7 uVar21;
+ _SCB *p_Var17;
+ _IRP_CONTEXT *p_Var18;
+ _UNICODE_STRING *p_Var19;
+ _IRP_CONTEXT *p_Var20;
+ uint uVar22;
+ ulonglong uVar23;
+ REFS_CLEANUP_FLAGS RVar24;
+ REFS_CLEANUP_FLAGS RVar25;
+ _IRP *p_Var26;
+ int iVar27;
+ _UNICODE_STRING *p_Var28;
+ code *pcVar29;
+ undefined8 uVar30;
+ _REFS_ACQUIRE_FLAGS _Var31;
+ longlong lVar32;
+ ulong uVar33;
+ byte bVar34;
+ byte bVar35;
+ _UNICODE_STRING *p_Var36;
+ undefined1 auStackY_2d8 [32];
+ uchar in_stack_fffffffffffffd48;
+ _SCB **pp_Var37;
+ REFS_CLEANUP_FLAGS local_278;
+ undefined2 local_277;
+ byte local_274;
+ _IRP_CONTEXT *local_270;
+ int local_268;
+ _UNICODE_STRING local_264;
+ _UNICODE_STRING *local_260;
+ _UNICODE_STRING *local_258;
+ _SCB *local_250;
+ byte local_248;
+ bool local_247;
+ undefined1 local_246;
+ uchar local_245;
+ _LCB *local_240;
+ _UNICODE_STRING *local_238;
+ _SCB *local_230;
+ _SCB *local_228;
+ _VCB *local_220;
+ _FCB *local_218;
+ uchar local_210 [8];
+ _IRP *local_208;
+ ulong local_200;
+ _IRP *local_1f8;
+ _LCB *local_1f0;
+ _SCB *local_1e8;
+ uint local_1e0;
+ uint local_1dc;
+ _SCB *local_1d8;
+ _SCB *local_1d0;
+ _UNICODE_STRING *local_1c8;
+ int local_1c0;
+ uint local_1bc;
+ int local_1b8;
+ int local_1b4;
+ _SCB *local_1b0;
+ ulonglong local_1a8;
+ _UNICODE_STRING *local_1a0;
+ _UNICODE_STRING *local_198;
+ _UNICODE_STRING *local_190;
+ _UNICODE_STRING *local_180;
+ _UNICODE_STRING *local_178;
+ _VCB *local_160;
+ _UNICODE_STRING *local_150;
+ _UNICODE_STRING *local_140;
+ _UNICODE_STRING *local_130;
+ _LCB *local_128;
+ _LCB *local_120;
+ _FCB *local_118;
+ longlong local_d8;
+ longlong local_c0;
+ _FCB *local_a8;
+ _SCB *local_a0;
+ _UNICODE_STRING *local_88;
+ _SCB *local_80;
+ _UNICODE_STRING *local_70;
+ undefined8 uStack_68;
+ undefined8 local_60;
+ undefined8 local_58;
+ undefined8 uStack_50;
+ undefined8 local_48;
+ undefined8 uStack_40;
+ undefined8 local_38;
+ ulonglong local_30;
+ 
+ local_30 = __security_cookie ^ (ulonglong)auStackY_2d8;
+ p_Var36 = (_UNICODE_STRING *)0x0;
+ uVar22 = 0;
+ local_268 = 0;
+ local_240 = (_LCB *)0x0;
+ local_1f0 = (_LCB *)0x0;
+ local_228 = (_SCB *)0x0;
+ local_277 = 0;
+ local_278 = (REFS_CLEANUP_FLAGS)0x1;
+ *(undefined8 *)(param_2 + 0x38) = 2;
+ local_250 = *(_SCB **)(*(longlong *)(param_2 + 0xb8) + 0x30);
+ p_Var3 = *(_SCB **)(local_250 + 0x18);
+ local_270 = param_1;
+ local_260 = (_UNICODE_STRING *)param_1;
+ local_230 = p_Var3;
+ local_208 = param_2;
+ local_1f8 = param_2;
+ local_1e8 = local_250;
+ local_1d8 = p_Var3;
+ local_1d0 = local_250;
+ if (p_Var3 == (_SCB *)0x0) {
+LAB_1402d6623:
+ *(uint *)(local_250 + 0x50) = *(uint *)(local_250 + 0x50) | 0x4000;
+ RefsCompleteCleanupRequest(param_1,param_2,0);
+ return 0;
+ }
+ p_Var4 = *(_VCB **)(p_Var3 + 0x90);
+ p_Var28 = *(_UNICODE_STRING **)(local_250 + 0x20);
+ p_Var5 = *(_FCB **)(p_Var3 + 0x88);
+ local_258 = p_Var28;
+ local_238 = p_Var28;
+ local_220 = p_Var4;
+ local_218 = p_Var5;
+ if ((p_Var28 == (_UNICODE_STRING *)0x0) ||
+ (local_264 = p_Var28[0x50], ((char)local_264 - 1U & 0xfb) == 0)) goto LAB_1402d6623;
+ bVar34 = ((byte)p_Var28[4] & 8) * '\x02';
+ local_277._1_1_ = 0;
+ bVar35 = local_277._1_1_;
+ local_277._1_1_ = 0;
+ *(undefined4 *)(param_1 + 0x278) = *(undefined4 *)(p_Var28 + 0x54);
+ local_277._0_1_ = bVar34;
+ if (local_264 == (_UNICODE_STRING)0x4) {
+ if (((*(uint *)(p_Var4 + 0x18) & 2) == 0) ||
+ ((_SCB *)(*(ulonglong *)(p_Var4 + 0x368) & 0xfffffffffffffffe) != local_250)) {
+ if ((*(uint *)(*(longlong *)(param_1 + 0x68) + 8) >> 0x17 & 1) == 0) goto LAB_1402d3ad9;
+ }
+ else {
+ RefsAcquireExclusiveVcb(param_1,p_Var4,'\x01');
+ }
+ }
+ else if ((*(uint *)(param_1 + 8) >> 8 & 1) == 0) {
+LAB_1402d3ad9:
+ RefsAcquireSharedVcb(param_1,p_Var4,'\x01');
+ }
+ else {
+ local_277._1_1_ = bVar35;
+ RefsAcquireExclusiveVcb(param_1,p_Var4,'\x01');
+ }
+ uVar23 = (ulonglong)*(uint *)(p_Var4 + 0x18);
+ p_Var19 = local_260;
+ if (((((*(uint *)(p_Var4 + 0x18) & 0x8000823) == 1) && ((*(uint *)(p_Var3 + 300) & 0x4000) == 0))
+ && (*(longlong *)(p_Var4 + 0x70) != 0)) && (cVar7 = MsAreWritesDoomed(), cVar7 == '\0')) {
+ local_277._1_1_ = local_277._1_1_ | 4;
+ }
+ if ((uVar23 & 0x2000020) == 0) {
+ local_260 = (_UNICODE_STRING *)local_270;
+ p_Var19 = (_UNICODE_STRING *)local_270;
+ bVar34 = (byte)local_277;
+ if ((*(ulonglong *)(p_Var5 + 8) & 0x20) != 0) {
+ local_1f8 = local_208;
+ goto LAB_1402d3b8a;
+ }
+ local_274 = 0;
+ local_1f8 = local_208;
+ }
+ else {
+LAB_1402d3b8a:
+ local_274 = 8;
+ }
+ local_274 = local_277._1_1_ & 0xf7 | local_274;
+ if ((*(uint *)(p_Var4 + 0x18) >> 0x1a & 1) != 0) {
+ bVar34 = bVar34 | 4;
+ local_277._0_1_ = bVar34;
+ }
+ p_Var17 = p_Var3;
+ local_277._1_1_ = local_274;
+ RefsAcquireFcbWithPaging((_IRP_CONTEXT *)p_Var19,p_Var5,p_Var3,0x10);
+ uVar33 = (ulong)p_Var17;
+ uVar16 = *(uint *)(p_Var28 + 4);
+ if ((int)uVar16 < 0) {
+ *(int *)(p_Var3 + 0x158) = *(int *)(p_Var3 + 0x158) + -1;
+ local_198 = p_Var28 + 4;
+ *(uint *)local_198 = *(uint *)local_198 & 0x7fffffff;
+ uVar16 = *(uint *)local_198;
+ }
+ if (((*(uint *)(p_Var28 + 8) & 4) == 0) && ((*(uint *)(p_Var5 + 8) >> 0xb & 1) == 0)) {
+ bVar35 = 0;
+ }
+ else {
+ bVar35 = 8;
+ }
+ RVar24 = (REFS_CLEANUP_FLAGS)((byte)local_278 & 0xf7 | bVar35);
+ local_1a0 = *(_UNICODE_STRING **)(p_Var28 + 0x48);
+ if ((local_1a0 == (_UNICODE_STRING *)0x0) || ((*(uint *)(local_1a0 + 4) & 2) != 0)) {
+ local_1c8 = (_UNICODE_STRING *)0x0;
+ local_190 = p_Var28 + 4;
+ *(uint *)local_190 = uVar16 & 0xfffbffff;
+ }
+ else {
+ local_228 = (_SCB *)p_Var36;
+ local_1c8 = local_1a0;
+ if (*(longlong *)(local_1a0 + 0x18) != 0) {
+ local_228 = *(_SCB **)(local_1a0 + 0x18);
+ }
+ }
+ p_Var17 = (_SCB *)p_Var5;
+ p_Var19 = local_1c8;
+ local_278 = RVar24;
+ local_240 = (_LCB *)local_1c8;
+ local_1f0 = (_LCB *)local_1c8;
+ uVar8 = RefsIsFileOpen(p_Var5);
+ if ((uVar8 == '\0') && (((byte)p_Var5[8] & 1) == 0)) {
+ if (((undefined **)WPP_GLOBAL_Control != &WPP_GLOBAL_Control) &&
+ (((*(uint *)(WPP_GLOBAL_Control + 0x2c) >> 8 & 1) != 0 &&
+ (3 < (byte)WPP_GLOBAL_Control[0x29])))) {
+ uVar33 = 0x401cf308;
+ WPP_SF_D(*(undefined8 *)(WPP_GLOBAL_Control + 0x18),0xc,
+ &WPP_b9503d9adc0036e7fb39a37ccd1caa45_Traceguids,0xc0000128);
+ }
+ p_Var20 = local_270;
+ if (RefsStatusDebugEnabled != '\0') {
+ uVar33 = 0x401ce070;
+ RefsStatusDebug(-0x3ffffed8,local_270,"Cleanup.c",0x5b8);
+ }
+ /* WARNING: Subroutine does not return */
+ RefsRaiseStatusInternal(p_Var20,-0x3ffffed8,uVar33);
+ }
+ if ((((local_274 & 4) == 0) || ((local_274 & 8) != 0)) || (((byte)p_Var5[8] & 1) != 0)) {
+LAB_1402d413e:
+ p_Var20 = local_270;
+ pcVar29 = (code *)(ulonglong)local_274;
+ if (local_264 == (_UNICODE_STRING)0x2) {
+ if (((((*(uint *)(p_Var3 + 0x98) & 0x20) == 0) && ((local_274 & 4) != 0)) &&
+ ((local_274 & 8) == 0)) && ((*(byte *)(*(longlong *)(p_Var3 + 0x88) + 8) & 1) == 0)) {
+ RefsUpdateScbFromAttribute((_IRP_CONTEXT *)local_260,p_Var3,(RefsAttributeManager *)0x0);
+ }
+ bVar34 = local_274;
+ pcVar29 = (code *)0x0;
+ RefsSnapshotScb((_IRP_CONTEXT *)local_260,p_Var3,0);
+ sVar2 = *(short *)(p_Var3 + 0xd8);
+ if (((sVar2 == 0x80) || (sVar2 == 0xb0)) &&
+ ((*(short *)p_Var3 == 0x805 && (*(_SCB **)(*(longlong *)(p_Var3 + 0x90) + 0x48) != p_Var3))
+ )) {
+LAB_1402d49b0:
+ p_Var26 = local_1f8;
+ in_stack_fffffffffffffd48 = '\0';
+ pcVar29 = (code *)0x0;
+ FsRtlCheckOplock(p_Var3 + 0x58,local_1f8);
+ }
+ else {
+ p_Var26 = local_1f8;
+ if (sVar2 == 0xa0) {
+ if (*(short *)(p_Var3 + 0xe0) == 8) {
+ pcVar29 = (code *)0x8;
+ iVar11 = memcmp(*(void **)(p_Var3 + 0xe8),L"$I30",8);
+ if (iVar11 != 0) goto LAB_1402d4998;
+ bVar9 = true;
+ }
+ else {
+LAB_1402d4998:
+ bVar9 = false;
+ }
+ p_Var26 = local_1f8;
+ if ((bVar9) && ((*(short *)p_Var3 == 0x804 || (*(short *)p_Var3 == 0x803))))
+ goto LAB_1402d49b0;
+ }
+ }
+ p_Var17 = local_250;
+ if ((*(short *)p_Var3 == 0x805) && (*(longlong *)(p_Var3 + 0x180) != 0)) {
+ pcVar29 = (code *)IoGetRequestorProcess(p_Var26);
+ p_Var17 = local_250;
+ FsRtlFastUnlockAll(*(undefined8 *)(p_Var3 + 0x180),local_250);
+ }
+ local_1e8 = *(_SCB **)(p_Var3 + 0x90);
+ local_1bc = *(uint *)(local_1e8 + 0x18);
+ if ((local_1bc & 0x4000005) == 1) {
+ if (((*(short *)p_Var3 == 0x805) && ((*(uint *)(p_Var3 + 300) & 0x40) == 0)) &&
+ (-1 < *(char *)(*(longlong *)(p_Var3 + 0x88) + 8))) {
+ local_1c0 = Feature_ReFS_Batch_September_Fixes_1__private_IsEnabledDeviceUsageNoInline();
+ if ((local_1c0 == 0) || ((*(uint *)(p_Var3 + 0x98) & 0x20) != 0)) {
+ cVar7 = FsRtlOplockIsFastIoPossible(p_Var3 + 0x58);
+ if (cVar7 == '\0') goto LAB_1402d4afb;
+ if ((((-1 < *(short *)(p_Var3 + 0x100)) &&
+ ((*(longlong *)(p_Var3 + 0x180) == 0 ||
+ (*(char *)(*(longlong *)(p_Var3 + 0x180) + 0x10) == '\0')))) &&
+ ((*(uint *)(local_1e8 + 0x18) & 0x2000000) == 0)) &&
+ ((*(byte *)(*(longlong *)(p_Var3 + 0x88) + 8) & 0x20) == 0)) {
+ _Var10 = (_SCB)0x1;
+ goto LAB_1402d4afd;
+ }
+ }
+ _Var10 = (_SCB)0x2;
+ }
+ else {
+LAB_1402d4afb:
+ _Var10 = (_SCB)0x0;
+ }
+ }
+ else {
+ _Var10 = (_SCB)0x0;
+ }
+LAB_1402d4afd:
+ p_Var3[5] = _Var10;
+ if ((((bVar34 & 4) == 0) || ((bVar34 & 8) != 0)) || (((byte)p_Var5[8] & 1) != 0)) {
+ *(uint *)(p_Var17 + 0x50) = *(uint *)(p_Var17 + 0x50) | 0x4000;
+ p_Var20 = local_270;
+ if ((((local_277._1_1_ & 4) == 0) || (((byte)p_Var5[8] & 1) != 0)) ||
+ ((*(uint *)(p_Var3 + 300) & 0x40) != 0)) {
+ local_277._1_1_ = local_277._1_1_ | 0x20;
+ }
+ }
+ else {
+ pcVar29 = (code *)CONCAT71((int7)((ulonglong)pcVar29 >> 8),1);
+ RefsUpdateScbFromFileObject((_FILE_OBJECT *)p_Var17,p_Var3,'\x01');
+ p_Var6 = local_240;
+ p_Var19 = local_258;
+ p_Var20 = local_270;
+ RVar24 = local_278;
+ *(uint *)(local_250 + 0x50) = *(uint *)(local_250 + 0x50) | 0x4000;
+ if (local_268 == 0) {
+ local_246 = 0;
+ p_Var28 = p_Var19;
+ p_Var17 = local_250;
+ if ((((byte)local_278 & 0x40) == 0) &&
+ ((local_240 == (_LCB *)0x0 ||
+ (((*(uint *)(local_240 + 4) & 1) != 0 && (*(int *)(local_240 + 0xb0) == 1)))))) {
+ if (((byte)local_278 & 0x10) == 0) {
+ if (local_240 != (_LCB *)0x0) {
+ if (*(uint *)(p_Var5 + 0xb4) < 2) {
+ local_277._0_1_ = (byte)local_277 & 0xbf;
+ *(uint *)(local_240 + 4) = *(uint *)(local_240 + 4) | 0x40;
+ goto LAB_1402d4f89;
+ }
+ local_277._0_1_ = (byte)local_277 | 0x40;
+ RefsAcquireExclusiveScb(local_270,local_228,0);
+ local_277._1_1_ = local_277._1_1_ | 0x80;
+ p_Var17 = *(_SCB **)(p_Var5 + 0x148);
+ if (p_Var17 != local_228) {
+ _Var31 = 5;
+ if ((*(uint *)(p_Var20 + 8) >> 8 & 1) == 0) {
+ _Var31 = 3;
+ }
+ uVar8 = RefsAcquireExclusiveFcb(p_Var20,*(_FCB **)(p_Var17 + 0x88),p_Var17,_Var31)
+ ;
+ uVar33 = (ulong)p_Var17;
+ if (uVar8 == '\0') {
+ *(ulonglong *)(p_Var20 + 8) = *(ulonglong *)(p_Var20 + 8) | 0x100;
+ if ((((undefined **)WPP_GLOBAL_Control != &WPP_GLOBAL_Control) &&
+ ((*(uint *)(WPP_GLOBAL_Control + 0x2c) >> 8 & 1) != 0)) &&
+ (3 < (byte)WPP_GLOBAL_Control[0x29])) {
+ uVar33 = 0x401cf308;
+ WPP_SF_(*(undefined8 *)(WPP_GLOBAL_Control + 0x18),0xf);
+ }
+ p_Var20 = local_270;
+ if (RefsStatusDebugEnabled != '\0') {
+ uVar33 = 0x401ce070;
+ RefsStatusDebug(-0x3fffff28,local_270,"Cleanup.c",0x8dd);
+ }
+ /* WARNING: Subroutine does not return */
+ RefsRaiseStatusInternal(p_Var20,-0x3fffff28,uVar33);
+ }
+ }
+ local_278 = (REFS_CLEANUP_FLAGS)((byte)local_278 & 0xfe);
+ local_1b4 = Feature_ReFS_Batch_Apr_Fixes__private_IsEnabledDeviceUsageNoInline();
+ if (local_1b4 == 0) {
+ RefsPostUsnChange(p_Var20,p_Var5,0x80010000,(_FILE_NAME *)(p_Var6 + 0xc0));
+ }
+ RefsRemoveLink(p_Var20,p_Var5,local_228,(_UNICODE_STRING *)(p_Var6 + 0x60));
+ RefsConvertToStandardInfoLinkCount(p_Var20,p_Var5,*(int *)(p_Var5 + 0xb4) + -1);
+ local_1b8 = Feature_ReFS_Batch_Apr_Fixes__private_IsEnabledDeviceUsageNoInline();
+ if (local_1b8 != 0) {
+ RefsPostUsnChange(p_Var20,p_Var5,0x80010000,(_FILE_NAME *)(p_Var6 + 0xc0));
+ }
+ RefsCheckpointCurrentTransaction(p_Var20);
+ *(int *)(p_Var5 + 0xb4) = *(int *)(p_Var5 + 0xb4) + -1;
+ local_278 = (REFS_CLEANUP_FLAGS)((byte)local_278 | 4);
+ p_Var28 = *(_UNICODE_STRING **)(p_Var6 + 0x18);
+ if (*(_UNICODE_STRING **)(p_Var6 + 0x18) == (_UNICODE_STRING *)0x0) {

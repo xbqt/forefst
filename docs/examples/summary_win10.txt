@@ -1,0 +1,47 @@
+==============================================================================
+ReFS Volume Summary
+==============================================================================
+ Image: win10refs2tspecials.raw
+ ReFS version: 3.4
+ Volume GUID: edc30f16-3c23-4a90-b075-cbe32d784c71
+ Volume label: win10refs2tspecials
+ Volume size: 2.0 TB
+ Cluster size: 0x1000 (4.0 KB)
+ Container size: 0x4000000 (64.0 MB)
+ Checksum: None
+ Compression: Not configured
+
+------------------------------------------------------------------------------
+Checkpoint
+------------------------------------------------------------------------------
+ Virtual clock: 61
+ Flags: 0x2
+ Containers mapped: 32767
+
+------------------------------------------------------------------------------
+File System Content
+------------------------------------------------------------------------------
+ Objects: 160
+ Directories: 148
+ Files: 1035 (1035 resident)
+ Total file size: 0.0 B
+ Security descs: 7
+ Oldest timestamp: 2021-05-18 07:16:04 UTC
+ Newest timestamp: 2026-05-16 12:07:35 UTC
+
+------------------------------------------------------------------------------
+Global Root Tables
+------------------------------------------------------------------------------
+ Object ID Table 160 rows
+ Medium Allocator 16 rows
+ Container Allocator 165 rows
+ Schema Table 27 rows
+ Parent-Child Table 149 rows
+ Object ID Table dup 160 rows
+ Block RefCount 0 rows
+ Container Table 32767 rows
+ Container Table dup 32767 rows
+ Schema Table dup 27 rows
+ Container Index 0 rows
+ Integrity State 3 rows
+ Small Allocator 8 rows

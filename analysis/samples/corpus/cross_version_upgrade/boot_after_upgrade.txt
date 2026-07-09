@@ -1,0 +1,24 @@
+
+ReFS Boot Sector at offset 0x1000000
+SHA-256: 82e47b4cdcbb054065995c7c962811ac27d948b1a26a86d2cd7fb8653752fa33
+
+Field                 Offset  Raw bytes                                        Interpreted          
+--------------------  ------  -----------------------------------------------  ---------------------
+Jump instruction      0x00    00 00 00                                                              
+FS name (ReFS)        0x03    52 65 46 53 00 00 00 00                          ReFS....             
+Reserved              0x0B    00 00 00 00 00                                                        
+FSRS identifier       0x10    46 53 52 53                                      FSRS                 
+VBR size              0x14    00 02                                            512 (0x0200)         
+Checksum              0x16    1d f1                                            0xF11D [OK]          
+Total sector count    0x18    00 00 7e 00 00 00 00 00                          8257536 (3.9 GiB)    
+Bytes per sector      0x20    00 02 00 00                                      512                  
+Sectors per cluster   0x24    08 00 00 00                                      8 (cluster = 4.0 KiB)
+Version               0x28    03 0e                                            3.14                 
+Checksum algorithm    0x2A    00 00                                            0x0000 (None)        
+Volume flags          0x2C    06 00 00 00                                      0x00000006           
+Reserved              0x30    00 00 00 00 00 00 00 00                                               
+Volume serial         0x38    89 2b 15 1e 49 15 1e 4e                          0x4E1E15491E152B89   
+Bytes per container   0x40    00 00 00 04 00 00 00 00                          64.0 MiB             
+Format instance GUID  0x48    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  (not set)            
+Reserved (trailing)   0x58    424 bytes                                        all zero             
+

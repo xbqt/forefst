@@ -1,0 +1,20 @@
+
+ReFS Superblock (SUPB) at offset 0x101E000
+SHA-256: b6e9c6ccaafb96547a67b33b403f9a1fc6f5182458a76cb5a3fb42c62418adbf
+
+Field                   Offset  Raw bytes                                            Interpreted                         
+----------------------  ------  ---------------------------------------------------  ------------------------------------
+Signature               0x00    53 55 50 42                                          SUPB                                
+Page header             0x00    53 55 50 42 02 00 00 00 00 00 00 00 5f cc 49 aa ...                                      
+Volume GUID             0x50    6e 2e 9b bf dc 46 9d 4e b5 77 b1 60 58 d3 fe 3b      bf9b2e6e-46dc-4e9d-b577-b16058d3fe3b
+GUID XOR (vol sig)         -                                                         0xAA49CC5F                          
+Superblock version      0x68    01 00 00 00 00 00 00 00                              1                                   
+Checkpoint refs offset  0x70    c0 00 00 00                                          SUPB+0xC0                           
+Checkpoint refs count   0x74    02 00 00 00                                          2                                   
+Self-desc offset        0x78    d0 00 00 00                                          SUPB+0xD0                           
+Self-desc length        0x7C    30 00 00 00                                          0x30 (48)                           
+
+  CHKP #1: cluster 0x2874 -> 0x3874000  vc=616 ac=607
+  CHKP #2: cluster 0x1E3F4 -> 0x1F3F4000  vc=617 ac=608 *
+  (* = active checkpoint)
+
