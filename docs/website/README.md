@@ -78,8 +78,9 @@ root) drive it:
 
 - **`.gitlab-ci.yml`** — the GitLab Pages job: runs `website/build.py`, then `hugo --minify` with the
   Pages `baseURL`, and publishes `public/`. Rebuilds on every push. Edit `BASEURL` to your real URL.
-- **`.github/workflows/mirror-to-gitlab.yml`** — mirrors this GitHub repo into the GitLab `forefst` project
-  on every push, so GitLab rebuilds automatically. Needs a `GITLAB_TOKEN` secret (setup in the file header).
+- **`.github/workflows/mirror-to-gitlab.yml`** — on every push, mirrors a clean source snapshot (with the
+  large LFS-tracked lab disk images stripped out — GitLab doesn't need them) into the GitLab `forefst`
+  project, so GitLab rebuilds automatically. Needs a `GITLAB_TOKEN` secret (setup in the file header).
 
 Sub-path (`/forefst/`) is handled: `baseURL` comes from the CI `-b` flag, and the search-index fetch is
 base-aware (`window.SEARCH_INDEX`, injected in `layouts/_default/baseof.html`). To host on GitHub Pages
