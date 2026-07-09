@@ -4,6 +4,8 @@
   {{- /* 1) try resolving relative to the current page */ -}}
   {{- $ref := strings.TrimSuffix $u.Path ".md" -}}
   {{- $target := .Page.GetPage $ref -}}
+  {{- /* from a site-only page at the root (Home/About), a bare ref mis-resolves to the Home page; discard it so the global filename match below runs */ -}}
+  {{- if $target -}}{{- if $target.IsHome -}}{{- $target = false -}}{{- end -}}{{- end -}}
   {{- /* 2) fall back to a global match by filename -> robust to the .md files being reorganised */ -}}
   {{- if not $target -}}
     {{- $base := path.Base $u.Path -}}
@@ -18,8 +20,8 @@
     <a href="{{ .Destination }}" class="broken-link">{{ $text | safeHTML }}</a>
   {{- end -}}
 {{- else if and (eq $u.Scheme "") (not $u.Host) (strings.HasPrefix $u.Path "/") -}}
-  {{- /* internal absolute path (e.g. /concepts/x/): make it baseURL-aware so it keeps the site's sub-path */ -}}
-  <a href="{{ $u.Path | relURL }}{{ with $u.Fragment }}#{{ . }}{{ end }}"{{ with .Title }} title="{{ . }}"{{ end }}>{{ $text | safeHTML }}</a>
+  {{- /* internal absolute path (e.g. /concepts/x/): strip the leading slash so relURL adds the site's sub-path (relURL leaves a leading-slash path untouched) */ -}}
+  <a href="{{ $u.Path | strings.TrimPrefix "/" | relURL }}{{ with $u.Fragment }}#{{ . }}{{ end }}"{{ with .Title }} title="{{ . }}"{{ end }}>{{ $text | safeHTML }}</a>
 {{- else -}}
   <a href="{{ .Destination | safeURL }}"{{ if $u.Host }} rel="noopener" target="_blank"{{ end }}{{ with .Title }} title="{{ . }}"{{ end }}>{{ $text | safeHTML }}</a>
 {{- end -}}
