@@ -13,6 +13,7 @@
   <footer class="page-footer">
     {{ with site.Params.github }}<a href="{{ . }}">Source &amp; tools on GitHub</a> · {{ end }}
     Generated from the project documentation · ReFS Reference
+    {{ with site.Params.coverage_note }}<br><span class="footer-coverage">{{ . }}</span>{{ end }}
   </footer>
   <script>window.SEARCH_INDEX = "{{ "index.json" | relURL }}";</script>
   <script src="{{ "js/theme.js" | relURL }}"></script>

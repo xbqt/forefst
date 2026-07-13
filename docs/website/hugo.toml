@@ -15,6 +15,8 @@ enableEmoji = true
   github_tree = "https://github.com/xbqt/forefst/tree/main"   # link a directory
   github_blob = "https://github.com/xbqt/forefst/blob/main"   # link a file
   defaultTheme = "light"                            # light | dark
+  # Footer coverage stamp — bump when the regression harness is re-run against a newer build.
+  coverage_note = "Validated against ReFS 3.4–3.14 · latest tested build 26100.8521 (24H2)"
 
 [markup]
   [markup.goldmark.renderer]

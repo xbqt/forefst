@@ -75,6 +75,11 @@ What matters when you sit down in front of a ReFS volume — each point links to
 Two open-source, pure-Python tools (3.6+ standard library, no install, no third-party dependencies) read a
 raw image or volume. They live in the source repository — **[github.com/xbqt/forefst](https://github.com/xbqt/forefst)**.
 
+Unlike the NTFS workflow, there is no artifact to extract first: ReFS has no single `$MFT` file, so instead of
+carving one file out of an image and feeding it to a parser, you point the tool at the raw image and it
+bootstraps the whole volume — the metadata tree, the change journal, and the transaction log all come from the
+same image.
+
 ### [forefst.py](forefst.md) — the forensic tool
 
 The ReFS answer to MFTECmd: point it at an image and get analyst-ready output. It can:
