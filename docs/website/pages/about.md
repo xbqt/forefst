@@ -8,6 +8,8 @@ This reference and its tools come from a master's thesis — *"Forensic analysis
 System (ReFS) version 3.14"* (University of Mons, 2026). The aim was to bring public ReFS forensic
 knowledge up to the version shipping today and to give an analyst tooling they can actually run.
 
+*forefst and this reference are the work of **Baptiste Bonnet**.*
+
 ## Why it exists
 
 ReFS is Microsoft's modern, increasingly deployed file system: it is the default for Storage Spaces

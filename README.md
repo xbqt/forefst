@@ -15,6 +15,8 @@ Why *forefst*? Because of *forensic* and Re*FS*. And also because ReFS is all ab
 
 Originally built for my master's thesis (*"Forensic analysis of the Resilient File System (ReFS) version 3.14"*, University of Mons, 2026), the project now reaches well beyond its original academic scope. This is its first public release.
 
+I hope it's useful — please feel free to open an issue with feedback or corrections.
+
 ## What's novel here
 
 **The tool itself, first of all.** ReFS is fourteen years old, and — as far as I know — an open-source forensic tool for it has never really existed. The open tools I'm aware of (libfsrefs, pyrefs, the Sleuth Kit extension from Prade et al.'s work, journal parsers such as ARIN) each cover only a slice — an early version, a single artifact, or the format as it stood at 3.4 — and everything that opens a *current* volume is commercial and closed, a file list you cannot audit. So, as far as I can tell, forefst is the first tool anyone can download, read line by line, and point at a modern ReFS volume for the complete forensic job — listing, timelines, both journals, deleted files, prior versions, content extraction, security descriptors. And refsanalysis is the companion none of its predecessors shipped: the structure-level lab that keeps all of it re-testable when Microsoft moves the format again — which is how earlier efforts have tended to fall behind.
@@ -31,15 +33,9 @@ Originally built for my master's thesis (*"Forensic analysis of the Resilient Fi
 
 Each is documented in depth under [docs/concepts/](docs/concepts/).
 
-## Requirements
-
-- **Runs anywhere Python 3.6+ runs** — Linux, macOS, Windows. Standard library only: no `pip install`, no dependencies, no build step. Clone and run.
-- **Read-only by design.** Both tools open the input strictly read-only. The single write-capable operation is `refsanalysis.py bootedit repair`, and even that works on a sparse *copy* by default and refuses `--inplace` unless you explicitly ask for it on a writable image — so pointing either tool at evidence is safe.
-- **Input:** a raw ReFS image (`dd` / `.raw`), a raw disk or partition device, or an E01 exported to raw (`ewfexport disk.E01`, or mount with `xmount --in ewf --out raw`). forefst locates the ReFS partition inside a full-disk image automatically. Reading a live device (`/dev/sdX`, `\\.\PhysicalDriveN`) needs root / Administrator; reading an image file does not.
-- **Performance:** pure Python, so it trades raw speed for portability and auditability. Runtime scales with volume size and file count; `timeline --fast`, `-q`, and `--depth` are the triage levers when you need a first pass fast.
-- **Generating fresh test images needs Windows** — the lab is PowerShell, and only Windows can format ReFS. *Reading and analysing* images is cross-platform.
-
 ## Quick start
+
+The only requirement is **Python 3.6+** — standard library only: no `pip install`, no dependencies, no build step. Clone and run, on Linux, macOS, or Windows. Both tools open the input strictly **read-only**, so pointing either at evidence is safe (the one write-capable operation, `refsanalysis.py bootedit repair`, works on a sparse *copy* by default and refuses `--inplace` unless you ask for it).
 
 ```bash
 # Everything forefst can do, one line each
@@ -55,7 +51,7 @@ python3 forefst.py disk.raw summary
 python3 forefst.py disk.raw mlog --parse
 ```
 
-Every subcommand has detailed help: `python3 forefst.py <image> help <subcommand>`.
+The input can be a raw ReFS image (`dd` / `.raw`), a raw disk or partition device, or an E01 exported to raw (`ewfexport disk.E01`, or mount with `xmount --in ewf --out raw`) — forefst finds the ReFS partition inside a full-disk image automatically. Reading a live device (`/dev/sdX`, `\\.\PhysicalDriveN`) needs root / Administrator; an image file does not. Every subcommand has detailed help: `python3 forefst.py <image> help <subcommand>`.
 
 ### Try it in two minutes
 
@@ -194,7 +190,7 @@ The complete index — every structure, attribute, and concept — is in **[docs
 
 ## Author
 
-Maintained by **xbqt** on GitHub and **xbpt** on GitLab — same author. The code and issues live on GitHub; the published reference lives on GitLab Pages at [xbpt.gitlab.io/forefst](https://xbpt.gitlab.io/forefst/). I hope it's useful — please feel free to open an issue with feedback or corrections.
+Baptiste Bonnet.
 
 ## License
 

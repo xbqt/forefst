@@ -54,38 +54,61 @@ EXCLUDE = {"README.md"}
 UNPUBLISHED = {"readme.md", "knowledge_map.md", "contributing.md", "changelog.md",
                "test_baseline_images.md", "methodology.md"}
 
-# Ordered concept subsections. Each concept .md is placed in the first group that lists it;
-# anything not listed falls into "General". Edit freely — it only drives grouping/ordering.
+# Ordered subsections for grouped sections (concepts, structures). Each page is placed in the first
+# group that lists it; a page listed nowhere falls into the LAST group. Order WITHIN a group follows
+# its file list here (emitted as the page `sort` key). Edit freely — this only drives site grouping.
 CONCEPT_GROUPS = [
     ("General", [
-        "file_systems.md", "windows_file_systems.md", "architecture.md", "driver_architecture.md",
-        "ntfs_comparison.md", "carrier_categories.md",
-        "version_detection.md", "version_evolution.md",
+        "ntfs_comparison.md", "version_detection.md", "version_evolution.md", "driver_architecture.md",
     ]),
     ("On-disk mechanics", [
-        "bootstrap_chain.md", "virtual_addressing.md", "cluster_page_size.md", "resident_storage.md",
-        "copy_on_write.md", "allocation_space_mgmt.md", "BITMAP.md", "transactions_crash_consistency.md",
+        "bootstrap_chain.md", "architecture.md", "virtual_addressing.md", "cluster_page_size.md",
+        "resident_storage.md", "copy_on_write.md", "allocation_space_mgmt.md",
+        "transactions_crash_consistency.md",
     ]),
     ("Integrity & redundancy", [
         "checksum_architecture.md", "integrity_streams.md", "redundancy.md",
     ]),
     ("Files, metadata & features", [
-        "object_ids_fileids.md", "oid_allocation.md", "hard_links.md", "attributes.md",
+        "object_ids_fileids.md", "oid_allocation.md", "attributes.md", "hard_links.md",
         "snapshots_versioning.md", "wsl_metadata.md", "compression.md", "deduplication.md",
         "tiering.md",
     ]),
     ("Forensics & recovery", [
-        "deletion_recovery.md", "timestomp_detection.md", "artifact_timeline.md",
-        "what_survives.md", "forensic_analysis_workflow.md", "tool_artifact_map.md",
+        "deletion_recovery.md", "what_survives.md", "timestomp_detection.md", "artifact_timeline.md",
+        "forensic_analysis_workflow.md", "tool_artifact_map.md",
+    ]),
+    ("Background & context", [
+        "file_systems.md", "windows_file_systems.md", "carrier_categories.md",
     ]),
 ]
-CONCEPT_GROUP_ORDER = [g for g, _ in CONCEPT_GROUPS]
+STRUCTURE_GROUPS = [
+    ("Boot & bootstrap", [
+        "vbr.md", "supb.md", "chkp.md", "system_oids.md",
+    ]),
+    ("B+-tree rows & pages", [
+        "btree_node.md", "page_header.md", "page_references.md", "directory_entries.md",
+        "extent_descriptors.md", "reverse_index.md",
+    ]),
+    ("System tables (the 13 roots)", [
+        "object_table.md", "schema_table.md", "parent_child_table.md", "container_table.md",
+        "container_index.md", "allocators.md", "block_refcount.md", "integrity_state.md",
+        "volume_info.md", "security_descriptors.md", "reparse_points.md", "upcase_table.md",
+        "trash_table.md",
+    ]),
+    ("Journals & logs", [
+        "usn_journal.md", "mlog.md",
+    ]),
+]
+SECTION_GROUPS = {"concepts": CONCEPT_GROUPS, "structures": STRUCTURE_GROUPS}
 
-def concept_group(basename):
-    for g, files in CONCEPT_GROUPS:
+def grouping_for(basename, groups):
+    """(group_name, group_order_index, sort_within_group) for a page in a grouped section."""
+    for gi, (g, files) in enumerate(groups):
         if basename in files:
-            return g
-    return "General"
+            return g, gi, files.index(basename)
+    last = len(groups) - 1
+    return groups[last][0], last, 99
 
 # Each page may carry one or more figures (svg, caption), inserted after the lead paragraph.
 # SVGs live in website/assets/diagrams/ and are inlined + themed by the image render hook.
@@ -364,13 +387,14 @@ def inject_diagram(body, basename):
     return "\n\n".join(parts)
 
 
-def transform(src_path, group=None, weight=None):
+def transform(src_path, group=None, weight=None, sort=None):
     raw = open(src_path, encoding="utf-8").read()
     body = dejargon(scrub_cbw4(unwrap_unpublished_links(strip_footer(raw))))
     body = _drop_empty_table_cols(body)
     body = inject_diagram(body, os.path.basename(src_path))
     title = first_h1(body) or os.path.splitext(os.path.basename(src_path))[0].replace("_", " ").title()
-    fm = ['---', f'title: "{yaml_escape(title)}"', f'sort: "{yaml_escape(sort_key(title))}"']
+    sort_val = sort if sort is not None else sort_key(title)
+    fm = ['---', f'title: "{yaml_escape(title)}"', f'sort: "{yaml_escape(sort_val)}"']
     if group is not None:
         fm.append(f'group: "{yaml_escape(group)}"')
     if weight is not None:
@@ -406,20 +430,20 @@ def build():
     counts = {}
 
     for sec in SECTIONS:
+        groups = SECTION_GROUPS.get(sec)
         # section landing page
         fm = ['---', f'title: "{sec.capitalize()}"']
-        if sec == "concepts":
-            fm.append("groups: [" + ", ".join(f'"{g}"' for g in CONCEPT_GROUP_ORDER) + "]")
+        if groups:
+            fm.append("groups: [" + ", ".join(f'"{g}"' for g, _ in groups) + "]")
         fm.append("---\n\n")
         write(os.path.join(CONTENT, sec, "_index.md"), "\n".join(fm) + section_index_body(sec))
 
         n = 0
         for src in listed_md(os.path.join(DOCS, sec)):
             base = os.path.basename(src)
-            if sec == "concepts":
-                grp = concept_group(base)
-                gw = CONCEPT_GROUP_ORDER.index(grp)
-                _, text = transform(src, group=grp, weight=gw)
+            if groups:
+                grp, gw, si = grouping_for(base, groups)
+                _, text = transform(src, group=grp, weight=gw, sort=f"{si:02d}")
             else:
                 _, text = transform(src)
             write(os.path.join(CONTENT, sec, base), text)

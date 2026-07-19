@@ -7,6 +7,12 @@ is also what bounds how long deleted file data stays carveable. A freed cluster 
 when allocated until the allocator hands it to a new write, so reconstructing the allocator's view is the
 precondition for trusting any claim that a cluster is "in use" or "available."
 
+> **There is no `$BITMAP` attribute.** An analyst arriving from NTFS — where `$Bitmap` (MFT entry 6) is the
+> volume free-space map — will look for an equivalent per-file attribute here and find none: no object
+> carries a `$BITMAP` attribute, and there is no such type code (the string appears only as a debug label).
+> The role NTFS gives to `$Bitmap` is played instead by this three-tier allocator; its exact row layout is
+> on the [Allocators](../structures/allocators.md) structure page.
+
 ## The three tiers
 
 All three tiers are allocator tables (schema `0xe010`) holding the *same* on-disk row format; they differ

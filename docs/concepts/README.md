@@ -95,7 +95,6 @@ cares.
 | [Cluster and Page Size](cluster_page_size.md) | The format-time 4 KiB vs 64 KiB choice that fixes page size and CPC |
 | [Virtual Addressing](virtual_addressing.md) | The two-level VLCN → PLCN translation — the #1 thing an NTFS tool gets wrong |
 | [Space Allocation](allocation_space_mgmt.md) | The three-tier bitmap allocator and the recently-deallocated carving window |
-| [$BITMAP](BITMAP.md) | Why there is **no** `$BITMAP` attribute — the free-space map is the allocator, not an attribute |
 
 ### Integrity, redundancy & crash consistency
 | Page | What it is / why it matters |

@@ -56,7 +56,6 @@ When a fact changes, this map shows every page that documents it (the cross-doc-
 
 | Page | Topic | Master § | Findings | Evidence | Status |
 |------|-------|----------|----------|----------|--------|
-| [BITMAP.md](concepts/BITMAP.md) | $BITMAP is not a ReFS per-file attribute. No object carries a $BITMAP attribute and there is no | — | CT_ALLC_001, CT_ALLC_002, CT_ALLC_003, CT_ALLC_RA_001 | E2/RD | CONFIRMED |
 | [allocation_space_mgmt.md](concepts/allocation_space_mgmt.md) | ReFS decides which clusters are free and which are in use with a three-tier bitmap allocator (Medium, | — | GN_ARCH_RA_001, FS_CHKP_021, CT_ALLC_001, CT_ALLC_002, CT_ALLC_003, CT_ALLC_RA_001, CT_ALLC_004, FS_DEL_RA_002, GN_ALLC_SA_001, FS_CHKP_RA_015 | E2/RD | CONFIRMED |
 | [architecture.md](concepts/architecture.md) | The single most useful fact for anyone parsing ReFS is that the driver is built in two layers, and only | — | GN_ARCH_001, GN_ARCH_002 | E1/E2/RD | CORRECTED |
 | [artifact_timeline.md](concepts/artifact_timeline.md) | Time is the spine of most filesystem investigations, and ReFS scatters it across five | — | FS_SUPB_005, FS_CHKP_005, FS_CHKP_006, AP_REDO_001–039, FN_LINK_003 | E2/RD | CONFIRMED |
@@ -109,4 +108,4 @@ When a fact changes, this map shows every page that documents it (the cross-doc-
 | [read_a_hard_link_group.md](examples/read_a_hard_link_group.md) | physical file — and prove the reconstruction is correct by decoding the on-disk identity | — | FN_LINK_002, FN_LINK_003 (E59), FS_OTBL_RA_008, MD_SI_RA_009, MD_SI_RA_001 | RD | CONFIRMED |
 
 ---
-*77 pages indexed. Provenance (status · evidence · findings · date): `audit_dates.tsv`. Claim register: `analysis/reference_table.csv` (repo root). Per-claim proof harness: `analysis/reports/audit/`.*
+*76 pages indexed. Provenance (status · evidence · findings · date): `audit_dates.tsv`. Claim register: `analysis/reference_table.csv` (repo root). Per-claim proof harness: `analysis/reports/audit/`.*
