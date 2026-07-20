@@ -1,5 +1,6 @@
 ---
 title: "About"
+description: "About forefst — an open-source forensic reference and toolset for Microsoft's Resilient File System (ReFS), grown from a 2026 master's thesis by Baptiste Bonnet."
 ---
 
 # About this project

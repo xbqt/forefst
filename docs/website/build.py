@@ -102,6 +102,15 @@ STRUCTURE_GROUPS = [
 ]
 SECTION_GROUPS = {"concepts": CONCEPT_GROUPS, "structures": STRUCTURE_GROUPS}
 
+# Per-section meta descriptions for SEO — emitted into each section _index front matter
+# (drives <meta name="description"> + Open Graph on the section landing pages).
+SECTION_DESCRIPTIONS = {
+    "concepts":   "How ReFS works: copy-on-write, virtual addressing, the object model, deletion recovery, and timestomp detection — the mechanisms behind the on-disk format.",
+    "structures": "Byte-level on-disk layouts of every ReFS metadata structure — VBR, superblock, checkpoint, B+-tree pages, the 13 system tables, and the journals.",
+    "attributes": "The ReFS attribute set decoded — $STANDARD_INFORMATION, $DATA, $EA (WSL $LX*), $REPARSE_POINT, $EFS, and more.",
+    "tools":      "forefst.py and refsanalysis.py — open-source, pure-Python forensic and structural analysis for ReFS volumes.",
+}
+
 def grouping_for(basename, groups):
     """(group_name, group_order_index, sort_within_group) for a page in a grouped section."""
     for gi, (g, files) in enumerate(groups):
@@ -433,6 +442,8 @@ def build():
         groups = SECTION_GROUPS.get(sec)
         # section landing page
         fm = ['---', f'title: "{sec.capitalize()}"']
+        if SECTION_DESCRIPTIONS.get(sec):
+            fm.append(f'description: "{yaml_escape(SECTION_DESCRIPTIONS[sec])}"')
         if groups:
             fm.append("groups: [" + ", ".join(f'"{g}"' for g, _ in groups) + "]")
         fm.append("---\n\n")

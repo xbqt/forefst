@@ -188,10 +188,6 @@ The complete index — every structure, attribute, and concept — is in **[docs
 
 **How it was verified.** Every claim lives in a live register — [`analysis/reference_table.csv`](analysis/reference_table.csv), **432 structural claims** across ReFS 3.4–3.14 — and carries an **evidence level**: **E1** (binary string literal), **E2** (PDB symbol / decompiled code), **E3** (structural inference), **RD** (parsed from a 110+ volume raw-disk corpus, decompiled against 4 `refs.sys` builds). A byte-level claim is accepted only when the decompiled driver and the raw disk agree (`E2+RD`). The method, the evidence model, and a worked example are in **[docs/methodology.md](docs/methodology.md)**; everything needed to reproduce it ships under `analysis/` (`lab/`, `samples/`, `reports/`) — point the scripts at your own corpus via `REFS_DISKS` / `REFS_CORPUS`.
 
-## Author
-
-Baptiste Bonnet.
-
 ## License
 
-GNU General Public License v3.0 — see [LICENSE](LICENSE).
+Written by Baptiste Bonnet and released under the GNU General Public License v3.0 — see [LICENSE](LICENSE).

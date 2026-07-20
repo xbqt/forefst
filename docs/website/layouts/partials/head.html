@@ -1,7 +1,22 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+{{ $desc := or .Description site.Params.description }}
+{{ $ogtitle := cond .IsHome site.Title .Title }}
 <title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title>
-<meta name="description" content="{{ with .Description }}{{ . }}{{ else }}{{ site.Params.description }}{{ end }}">
+<meta name="description" content="{{ $desc }}">
+<meta name="keywords" content="{{ with .Params.keywords }}{{ . }}{{ else }}{{ site.Params.keywords }}{{ end }}">
+<meta name="author" content="{{ site.Params.author }}">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="{{ .Permalink }}">
+<meta property="og:site_name" content="{{ site.Title }}">
+<meta property="og:type" content="{{ cond .IsHome "website" "article" }}">
+<meta property="og:title" content="{{ $ogtitle }}">
+<meta property="og:description" content="{{ $desc }}">
+<meta property="og:url" content="{{ .Permalink }}">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ $ogtitle }}">
+<meta name="twitter:description" content="{{ $desc }}">
 {{ $css := resources.Get "css/main.css" | minify | fingerprint }}
 <link rel="stylesheet" href="{{ $css.RelPermalink }}">
 {{ $light := resources.Get "css/syntax-light.css" }}{{ with $light }}<link rel="stylesheet" href="{{ (. | minify | fingerprint).RelPermalink }}">{{ end }}

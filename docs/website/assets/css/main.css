@@ -81,7 +81,7 @@ a:hover{color:var(--accent-hover);text-decoration:underline}
 @media (max-width:600px){.roots-chain{flex-direction:column}.roots-chain .chain-arrow{transform:rotate(90deg);align-self:center}}
 .sidebar{border-right:1px solid var(--border-light);padding:1.5rem 1rem;
   position:sticky;top:var(--topbar-h);align-self:start;height:calc(100vh - var(--topbar-h));overflow-y:auto}
-.sidebar .sec-title{font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:var(--text-muted);
+.sidebar .sec-title{font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:var(--text-secondary);
   font-weight:700;margin:0 0 .6rem .4rem}
 .sidebar ul{list-style:none;margin:0;padding:0}
 .sidebar li a{display:block;padding:.32rem .5rem;border-radius:var(--radius-sm);color:var(--text-secondary);
