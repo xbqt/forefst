@@ -49,7 +49,7 @@ can be audited later:
 
 A fact is strongest when the code and the disk agree. (In the repository these grades are written
 `E1`–`E3` and `RD`.) They are an analysis aid and are deliberately kept off the reference pages, which
-simply state what was established. See the **[Methodology](methodology.md)** page for how every claim was
+simply state what was established. See the **[Methodology](verification.md)** page for how every claim was
 verified, and how to follow any one of them to its evidence.
 
 ## The tools

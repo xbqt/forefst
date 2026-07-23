@@ -479,7 +479,7 @@ def build():
         write(os.path.join(CONTENT, "glossary.md"), text)
 
     # Home + About (site-only Markdown)
-    for src, dst in [("home.md", "_index.md"), ("about.md", "about.md"), ("methodology.md", "methodology.md")]:
+    for src, dst in [("home.md", "_index.md"), ("about.md", "about.md"), ("verification.md", "verification.md")]:
         p = os.path.join(PAGES, src)
         if os.path.isfile(p):
             shutil.copyfile(p, os.path.join(CONTENT, dst))
