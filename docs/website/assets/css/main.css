@@ -1,7 +1,13 @@
 /* ReFS Reference — theme ported from "refsworld" (clean light/dark design system)
    + a flatcap-style section sidebar layout. */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+/* Self-hosted fonts — no external requests */
+@font-face{font-family:'Inter';font-style:normal;font-weight:400;font-display:swap;src:url(../fonts/inter-400.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:500;font-display:swap;src:url(../fonts/inter-500.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:600;font-display:swap;src:url(../fonts/inter-600.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-style:normal;font-weight:700;font-display:swap;src:url(../fonts/inter-700.woff2) format('woff2')}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:400;font-display:swap;src:url(../fonts/jbmono-400.woff2) format('woff2')}
+@font-face{font-family:'JetBrains Mono';font-style:normal;font-weight:500;font-display:swap;src:url(../fonts/jbmono-500.woff2) format('woff2')}
 
 :root{
   --bg:#ffffff; --bg-alt:#f8f9fc; --surface:#f0f2f7; --surface2:#e4e8f0;

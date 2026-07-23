@@ -9,7 +9,7 @@ ReFS is Microsoft's modern, self-healing file system — the default for Storage
 - **[Structural documentation](docs/)** of every on-disk format decoded during the work, also published as a browsable website at **[xbpt.gitlab.io/forefst](https://xbpt.gitlab.io/forefst/)**.
 - **[Lab and verification materials](analysis/)** for building controlled ReFS test images and re-checking every claim.
 
-All versions 3.4–3.14 parse; some enriched fields are version-dependent, with the best coverage on 3.10+ and 3.14. Python 3.6+, standard library only — clone and run.
+All versions 3.4–3.14 parse; some enriched fields are version-dependent, with the best coverage on 3.10+ and 3.14. Python 3.7+, standard library only — clone and run.
 
 Why *forefst*? Because of *forensic* and Re*FS*. And also because ReFS is all about B+-trees. And finally because, I think, the more forest on the planet, the better.
 
@@ -35,7 +35,7 @@ Each is documented in depth under [docs/concepts/](docs/concepts/).
 
 ## Quick start
 
-The only requirement is **Python 3.6+** — standard library only: no `pip install`, no dependencies, no build step. Clone and run, on Linux, macOS, or Windows. Both tools open the input strictly **read-only**, so pointing either at evidence is safe (the one write-capable operation, `refsanalysis.py bootedit repair`, works on a sparse *copy* by default and refuses `--inplace` unless you ask for it).
+The only requirement is **Python 3.7+** — standard library only: no `pip install`, no dependencies, no build step. Clone and run, on Linux, macOS, or Windows. Both tools open the input strictly **read-only**, so pointing either at evidence is safe (the one write-capable operation, `refsanalysis.py bootedit repair`, works on a sparse *copy* by default and refuses `--inplace` unless you ask for it).
 
 ```bash
 # Everything forefst can do, one line each
@@ -55,18 +55,18 @@ The input can be a raw ReFS image (`dd` / `.raw`), a raw disk or partition devic
 
 ### Try it in two minutes
 
-A small ReFS test image ships with the repo. Decompress it, then point forefst at it:
+The sample images are **Git LFS** objects. The quickest way in is to download the one used below directly — no clone needed:
 
 ```bash
-zstd -d analysis/samples/disks/win11refs2tsnapshots/win11refs2tsnapshots.raw.zst
-IMG=analysis/samples/disks/win11refs2tsnapshots/win11refs2tsnapshots.raw
+curl -L -O https://github.com/xbqt/forefst/raw/main/analysis/samples/disks/win11refs2tsnapshots/win11refs2tsnapshots.raw.zst
+zstd -d win11refs2tsnapshots.raw.zst
 
-python3 forefst.py "$IMG" summary        # volume overview
-python3 forefst.py "$IMG" -o files.csv   # full file listing
-python3 forefst.py "$IMG" snapshots      # this image showcases CoW stream snapshots
+python3 forefst.py win11refs2tsnapshots.raw summary        # volume overview
+python3 forefst.py win11refs2tsnapshots.raw -o files.csv   # full file listing
+python3 forefst.py win11refs2tsnapshots.raw snapshots      # this image showcases CoW stream snapshots
 ```
 
-The other sample images under `analysis/samples/disks/` ship as split archives — see [`analysis/samples/README.md`](analysis/samples/README.md) for the one-line reassemble-and-decompress recipe and what each image demonstrates.
+If you cloned the repo, `git lfs install && git lfs pull` fetches all the sample images instead. See [`analysis/samples/README.md`](analysis/samples/README.md) for the other images (each a Git LFS object) and what each demonstrates.
 
 ## For NTFS analysts
 
@@ -103,7 +103,7 @@ forefst/
 ├── refsanalysis.py           # structure / lab tool — decode one on-disk structure at a time
 ├── docs/                     # standalone ReFS structural reference
 │   ├── structures/           #   25 byte-level on-disk layouts
-│   ├── concepts/             #   34 forensic concepts & mechanisms
+│   ├── concepts/             #   33 forensic concepts & mechanisms
 │   ├── attributes/           #   11 per-attribute pages
 │   ├── examples/             #   5 worked walkthroughs (real tool output)
 │   ├── tools/                #   tool usage documentation
@@ -190,4 +190,4 @@ The complete index — every structure, attribute, and concept — is in **[docs
 
 ## License
 
-Written by Baptiste Bonnet and released under the GNU General Public License v3.0 — see [LICENSE](LICENSE).
+Written by Baptiste Bonnet and released under the GNU General Public License v3.0 or later — see [LICENSE](LICENSE).

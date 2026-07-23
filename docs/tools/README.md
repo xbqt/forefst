@@ -45,7 +45,7 @@ pages, or from each tool's built-in `--help` (`forefst.py <image> <cmd> --help`)
 
 ## Constraints and provenance
 
-Both tools are **Python 3.6+ stdlib only** (no third-party dependencies) and operate read-only on a copy
+Both tools are **Python 3.7+ stdlib only** (no third-party dependencies) and operate read-only on a copy
 of the image. They were validated across the same corpus the reference rests on — see
 [how this was verified](../methodology.md). Worked, image-specific runs of these tools are in
 [examples](../examples/README.md).

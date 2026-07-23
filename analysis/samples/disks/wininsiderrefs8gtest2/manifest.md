@@ -1,7 +1,7 @@
 # Sample command manifest — wininsiderrefs8gtest2.raw
 
 Every file under `forefst/`, and the exact command that produced it. Run each against your
-reassembled `wininsiderrefs8gtest2.raw` (see this image's README to recompose the disk).
+decompressed `wininsiderrefs8gtest2.raw` (see this image's README to fetch it).
 
 ## forefst/
 

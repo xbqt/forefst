@@ -14,7 +14,7 @@ Curated structure-analysis output showing how the same structures (boot / checkp
 
 ### `disks/` — full per-image bundles
 
-Three ReFS 3.14 images, each chosen to showcase a different feature area, each shipped with its
+Four ReFS 3.14 images, each chosen to showcase a different feature area, each shipped with its
 provenance and a complete set of tool output:
 
 | Image | Format | Showcases |
@@ -27,7 +27,7 @@ provenance and a complete set of tool output:
 Each `disks/<image>/` contains:
 
 ```
-<image>.raw.zst.part-*    the ReFS disk image — a split zstd archive (recompose + decompress; see below)
+<image>.raw.zst           the ReFS disk image — a zstd archive stored via Git LFS (fetch + decompress; see below)
 README.md                  what the image showcases + how to reproduce its output
 manifest.md                every output file -> the exact command that produced it
 provenance/
@@ -45,19 +45,23 @@ image's `forefst/` — see, for instance, `disks/win11refs2tsnapshots/forefst/fi
 `.../snapshots.txt`. Every `.txt` sample opens with a `# forefst <image> …` header naming its command,
 and each image's `manifest.md` maps **all** files (including the CSV/JSON ones) to their exact command.
 
-### Recomposing the disk images
+### Getting the disk images
 
-Each `.raw` ships as a **zstd archive (created with `zstd --ultra -22`) split into ~77 MiB parts**, so every
-file stays within typical Git size limits. To use one — reassemble, decompress, and keep it sparse:
+Each `.raw` ships as a **zstd archive (`zstd --ultra -22`) stored with Git LFS**. Two ways to get one:
 
 ```bash
-cat <image>.raw.zst.part-* > <image>.raw.zst    # 1. reassemble the parts (alphabetical order is correct)
-zstd -d <image>.raw.zst                          # 2. decompress  ->  <image>.raw
+# A — you cloned the repo:
+git lfs install && git lfs pull      # fetch the archives (or: git lfs pull --include "analysis/samples/disks/<image>/*")
+
+# B — download just one, no clone:
+curl -L -O https://github.com/xbqt/forefst/raw/main/analysis/samples/disks/<image>/<image>.raw.zst
+
+zstd -d <image>.raw.zst              # then decompress -> <image>.raw
 ```
 
-ReFS volumes are mostly empty space, so the decompressed `.raw` is sparse; whenever you copy or move it, use
-`cp --sparse=always <image>.raw <dest>` so it never materialises its full nominal size (2 TiB / 8 GiB). Each
-image's own README gives its exact `cat` command (all images use the same `…raw.zst.part-*` part naming). `win11refs2tsnapshots.raw` is added later.
+If a `.raw.zst` is only ~130 bytes it is an LFS *pointer* — run `git lfs pull`. ReFS volumes are mostly empty,
+so the decompressed `.raw` is sparse; copy it with `cp --sparse=always <image>.raw <dest>` so it never
+materialises its full nominal size (2 TiB / 8 GiB).
 
 **Conventions in `refsanalysis/`:** `<sub>.txt` is the default run; `<sub>.vv.txt` /
 `<sub>.v.txt` is the fullest verbosity that adds detail (`-vv` for the 7 subcommands that support it,

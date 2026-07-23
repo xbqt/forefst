@@ -151,7 +151,7 @@ def cmd_example(image, remaining, partition_start):
 
 ## Dependencies
 
-Python 3.6+ standard library only. No pip packages.
+Python 3.7+ standard library only. No pip packages.
 
 ## Cross-References
 

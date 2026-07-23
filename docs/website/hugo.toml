@@ -19,6 +19,7 @@ enableEmoji = true
   defaultTheme = "light"                            # light | dark
   # Footer coverage stamp — bump when the regression harness is re-run against a newer build.
   coverage_note = "Validated against ReFS 3.4–3.14 · latest tested build 26100.8521 (24H2)"
+  tool_version = "1.0.0"                            # footer version stamp — bump at each release
 
 [markup]
   [markup.goldmark.renderer]
@@ -61,6 +62,11 @@ enableEmoji = true
   name = "About"
   pageRef = "/about"
   weight = 7
+
+[[menu.main]]
+  name = "Methodology"
+  pageRef = "/methodology"
+  weight = 8
 
 [outputs]
   home = ["HTML", "JSON"]    # JSON = the client-side search index

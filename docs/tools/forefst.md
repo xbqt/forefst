@@ -519,7 +519,7 @@ The `deleted` subcommand adds two further opt-in methods (orphaned-page scan, B+
 
 ## Using forefst.py as a library
 
-`forefst.py` is Python 3.6+ standard library only (no pip packages) and exports the parsing primitives, imported by `refsanalysis.py` and available to any script:
+`forefst.py` is Python 3.7+ standard library only (no pip packages) and exports the parsing primitives, imported by `refsanalysis.py` and available to any script:
 
 | Function | Signature | Purpose |
 |----------|-----------|---------|
@@ -556,7 +556,7 @@ finally:
 
 ## Dependencies
 
-Python 3.6+ standard library only. No pip packages.
+Python 3.7+ standard library only. No pip packages.
 
 ## Cross-References
 

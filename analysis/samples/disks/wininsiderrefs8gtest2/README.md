@@ -18,8 +18,8 @@ streams enabled on the directory).
 
 ## Layout
 
-- `wininsiderrefs8gtest2.raw.zst.part-*` — the ReFS disk image: a zstd archive (`zstd --ultra -22`) split into parts.
-  Recompose and decompress before use (see **Reproduce** below). All tool output here was produced from the raw image.
+- `wininsiderrefs8gtest2.raw.zst` — the ReFS disk image: a zstd archive (`zstd --ultra -22`) stored via Git LFS.
+  Decompress before use (see **Reproduce** below). All tool output here was produced from the raw image.
 - `provenance/`
   - `commands.md` — curated creation / populate / unmount commands, verified against the on-disk tree.
   - `fsactivity/` — the 4 `Generate-FSActivity` run reports that actually shaped this volume.
@@ -34,7 +34,7 @@ streams enabled on the directory).
 
 ```bash
 cd analysis/samples/disks/wininsiderrefs8gtest2
-cat wininsiderrefs8gtest2.raw.zst.part-* > wininsiderrefs8gtest2.raw.zst && zstd -d wininsiderrefs8gtest2.raw.zst && cd -   # recompose + decompress -> wininsiderrefs8gtest2.raw
+git lfs pull --include "analysis/samples/disks/wininsiderrefs8gtest2/*" && zstd -d wininsiderrefs8gtest2.raw.zst && cd -   # fetch + decompress -> wininsiderrefs8gtest2.raw
 python3 forefst.py      analysis/samples/disks/wininsiderrefs8gtest2/wininsiderrefs8gtest2.raw --summary-plus
 python3 refsanalysis.py analysis/samples/disks/wininsiderrefs8gtest2/wininsiderrefs8gtest2.raw boot -vv
 ```

@@ -49,7 +49,8 @@ can be audited later:
 
 A fact is strongest when the code and the disk agree. (In the repository these grades are written
 `E1`–`E3` and `RD`.) They are an analysis aid and are deliberately kept off the reference pages, which
-simply state what was established.
+simply state what was established. See the **[Methodology](methodology.md)** page for how every claim was
+verified, and how to follow any one of them to its evidence.
 
 ## The tools
 
@@ -60,7 +61,7 @@ simply state what was established.
   structural analyser: boot / checkpoint / superblock, the B+-tree tables, security, reparse points,
   the USN journal, the durable log, snapshots, timelines, and more.
 
-Both are pure Python (3.6+ standard library, no dependencies) and read a raw image or volume. See the
+Both are pure Python (3.7+ standard library, no dependencies) and read a raw image or volume. See the
 **[forefst.py](forefst.md)** and **[refsanalysis.py](refsanalysis.md)** pages for usage on this site, or **[the repository](https://github.com/xbqt/forefst)**
 to download them.
 
@@ -70,3 +71,7 @@ The tools, the complete claim register with its per-claim proofs, and the lab pr
 an equivalent image corpus all live in the source repository.
 
 {{< github-note >}}
+
+---
+
+*This site uses [GoatCounter](https://www.goatcounter.com/) for anonymous, cookie-less visitor counts — no personal data, no cross-site tracking.*

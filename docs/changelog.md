@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.0.0 — 2026-07-23 — first public release
+
+First public release. Functionally the same tool as the internal **v3.6.0** development build below —
+renumbered to **1.0.0** for the public debut and to avoid confusion with ReFS's own version numbers
+(ReFS 3.4–3.14). The per-version development history from the thesis follows.
+
+## Development history (pre-1.0, during the thesis)
+
+*The entries below are the internal `3.x` development versions from the thesis work — not ReFS versions,
+and not separate public releases; they trace how v1.0.0 was built.*
+
 ## v3.6.0 — 2026-07-04 (first-audit enhancements · F5 residency fix · F6 per-name-MACB timestomp · `recyclebin`)
 
 **New forensic capabilities from the first-audit review, plus two disk-proven findings.**

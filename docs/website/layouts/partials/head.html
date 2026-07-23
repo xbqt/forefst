@@ -2,7 +2,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 {{ $desc := or .Description site.Params.description }}
 {{ $ogtitle := cond .IsHome site.Title .Title }}
-<title>{{ if .IsHome }}{{ site.Title }}{{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title>
+<title>{{ if .IsHome }}{{ site.Title }} — Resilient File System on-disk format and forensics (v3.4–3.14){{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title>
 <meta name="description" content="{{ $desc }}">
 <meta name="keywords" content="{{ with .Params.keywords }}{{ . }}{{ else }}{{ site.Params.keywords }}{{ end }}">
 <meta name="author" content="{{ site.Params.author }}">
@@ -21,4 +21,3 @@
 <link rel="stylesheet" href="{{ $css.RelPermalink }}">
 {{ $light := resources.Get "css/syntax-light.css" }}{{ with $light }}<link rel="stylesheet" href="{{ (. | minify | fingerprint).RelPermalink }}">{{ end }}
 {{ $dark := resources.Get "css/syntax-dark.css" }}{{ with $dark }}<link rel="stylesheet" href="{{ (. | minify | fingerprint).RelPermalink }}">{{ end }}
-<link rel="preconnect" href="https://fonts.googleapis.com">

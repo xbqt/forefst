@@ -57,7 +57,7 @@ from forefst import (
 )
 
 PROG = "refsanalysis"
-VERSION = "3.6.0"
+VERSION = "1.0.0"
 
 
 

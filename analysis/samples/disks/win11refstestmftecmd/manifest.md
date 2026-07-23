@@ -1,7 +1,7 @@
 # Sample command manifest — win11refstestmftecmd.raw
 
 Every file under `forefst/`, and the exact command that produced it. Run each against your
-reassembled `win11refstestmftecmd.raw` (see this image's README to recompose the disk).
+decompressed `win11refstestmftecmd.raw` (see this image's README to fetch it).
 
 ## forefst/
 

@@ -210,7 +210,7 @@ def validate_image(path, die_fn=None):
 
 # ─── Constants ────────────────────────────────────────────────────────
 PROG = "forefst"
-VERSION = "3.6.0"
+VERSION = "1.0.0"
 # Non-resident directory entries have a short value (OID + timestamps + attrs + size).
 # Resident entries (small files) embed full $SI + data inline and are longer.
 NON_RESIDENT_MAX_VALUE = 84

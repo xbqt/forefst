@@ -80,7 +80,7 @@ What matters when you sit down in front of a ReFS volume — each point links to
 
 ## The tools
 
-Two open-source, pure-Python tools (3.6+ standard library, no install, no third-party dependencies) read a
+Two open-source, pure-Python tools (3.7+ standard library, no install, no third-party dependencies) read a
 raw image or volume. They live in the source repository — **[github.com/xbqt/forefst](https://github.com/xbqt/forefst)**.
 
 Unlike the NTFS workflow, there is no artifact to extract first: ReFS has no single `$MFT` file, so instead of
@@ -121,15 +121,17 @@ against new ReFS builds.
 
 ### Try it in two minutes
 
-Both tools are pure Python (3.6+, standard library) — nothing to install. Clone the
-[repository](https://github.com/xbqt/forefst), grab one of the sample images under `analysis/samples/`
-(each ships with a one-line decompress recipe), and run:
+Both tools are pure Python (3.7+, standard library) — nothing to install. Download the sample image used
+below directly (no clone needed), decompress, and run:
 
 ```bash
-python3 forefst.py disk.raw summary        # volume overview: version, size, counts, upgrade state
-python3 forefst.py disk.raw -o files.csv   # full 38-column listing, opens straight in Timeline Explorer
-python3 forefst.py disk.raw mlog --parse   # decode the transaction log into user actions
+curl -L -O https://github.com/xbqt/forefst/raw/main/analysis/samples/disks/win11refs2tsnapshots/win11refs2tsnapshots.raw.zst
+zstd -d win11refs2tsnapshots.raw.zst
+
+python3 forefst.py win11refs2tsnapshots.raw summary        # volume overview: version, size, counts, upgrade state
+python3 forefst.py win11refs2tsnapshots.raw -o files.csv   # full 38-column listing, opens straight in Timeline Explorer
+python3 forefst.py win11refs2tsnapshots.raw mlog --parse   # decode the transaction log into user actions
 ```
 
-Point it at a raw image (`dd` / `.raw`), a disk device, or an E01 exported to raw — forefst finds the ReFS
-partition itself.
+Or clone the repo and run `git lfs pull` to fetch all the sample images. Point forefst at a raw image
+(`dd` / `.raw`), a disk device, or an E01 exported to raw — it finds the ReFS partition itself.

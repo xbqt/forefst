@@ -63,8 +63,8 @@ Load-bearing claims prefer **E2 + RD** — confirmed in both the code and the by
 
 Every claim is one row in **`analysis/reference_table.csv`** (432 rows), keyed by a stable **finding ID**
 of the form `<CATEGORY>_<STRUCTURE>[_RA|_SA]_<NNN>` (e.g. `FS_CHKP_RA_001`, `MD_SI_RA_015`,
-`GN_ALLC_SA_001`). The categories follow Carrier's five data categories (`GN` general, `FS` file system,
-`CT` content, `MD` metadata, `FN` file name, `AP` application); `RA` marks a raw-disk-anchored finding,
+`GN_ALLC_SA_001`). The categories map to Carrier's five data categories (`FS` file system, `CT` content,
+`MD` metadata, `FN` file name, `AP` application), plus `GN` for general/cross-cutting findings; `RA` marks a raw-disk-anchored finding,
 `SA` a static-analysis-anchored one. Each row records the claim, its source, the **static** status + notes,
 the **raw-disk** status + notes, and the evidence level — so the row alone tells you *what* was claimed and
 *how both axes were checked*. A claim's status is one of **CONFIRMED** (prior work independently verified),
@@ -75,12 +75,13 @@ This register is the single, complete central reference; the docs cite **only** 
 
 ## 6. The verification protocol
 
-Beyond first acceptance, structural claims are held to a three-axis re-verification (see
-`analysis/tools/CLAIM_VERIFICATION_PROTOCOL.md`): **(a)** decompile the function that implements the fact,
+Beyond first acceptance, structural claims are held to a three-axis re-verification (documented in
+`analysis/reports/audit/README.md`): **(a)** decompile the function that implements the fact,
 **(b)** re-measure it across **all** corpus images, **(c)** check it adversarially — try to refute it, and
 let the bytes (not an assumed offset) pick the structure frame. A change is accepted only when the static
-and the all-disk axes agree. The script `analysis/tools/analysis_scripts/verify_claim.py --regress` runs an
-anti-regression suite over the corpus so a later edit cannot silently break a settled fact.
+and the all-disk axes agree. The verification scripts ship under `analysis/reports/` (for example
+`verify_tool_tables.py`, which runs against a fresh clone), and every claim's per-axis proof is recorded
+under `analysis/reports/audit/`.
 
 ## 7. How a claim was validated — the lifecycle, by example
 

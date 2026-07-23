@@ -1,7 +1,7 @@
 # Sample command manifest — win11refs2tspecials.raw
 
 Every file under `forefst/`, and the exact command that produced it. Run each against your
-reassembled `win11refs2tspecials.raw` (see this image's README to recompose the disk).
+decompressed `win11refs2tspecials.raw` (see this image's README to fetch it).
 
 ## forefst/
 
