@@ -57,16 +57,16 @@ enableEmoji = true
 [[menu.main]]
   name = "Glossary"
   pageRef = "/glossary"
-  weight = 6
+  weight = 7
 [[menu.main]]
   name = "About"
   pageRef = "/about"
-  weight = 7
+  weight = 8
 
 [[menu.main]]
   name = "Methodology"
   pageRef = "/verification"
-  weight = 8
+  weight = 6
 
 [outputs]
   home = ["HTML", "JSON"]    # JSON = the client-side search index
