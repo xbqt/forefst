@@ -19,7 +19,7 @@ metadata linking them — sits inside the one parent directory row.
 
 That has a direct consequence for how you reach a snapshotted file: because the whole chain is resident
 inside the parent directory's type-0x30 value, the file is addressed by `(parent_oid, filename)` — a
-path — and **not** by an Object-Table OID, since resident files have no own OID. A tooling lookup keyed
+path — and **not** by an Object-Table OID, since files have no own OID (resident or not). A tooling lookup keyed
 on `--oid` will miss them; use a path-based lookup.
 
 The link between a `$SNAPSHOT` record and the extents it froze is a stream **sub-id namespace** carried

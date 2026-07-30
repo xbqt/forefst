@@ -105,7 +105,7 @@ python3 refsanalysis.py <image> objects     # Object Table: OID → VLCN, system
 
 ### Step 4 — Enumerate live files
 
-With the Object Table loaded, walk the directory forest. Each file's metadata lives in its own B+-tree;
+With the Object Table loaded, walk the directory forest. Each **directory** has its own B+-tree, while a **file**'s metadata lives as rows inside a directory's tree (files have no tree of their own);
 **resident** content is stored inline (key flags 0x01) and **non-resident** content is described by
 type-0x40 [extent entries](../structures/extent_descriptors.md) (VCN→VLCN→PLCN). Whether a given stream
 is inline or extent-based — and the byte-layout difference that follows — is on

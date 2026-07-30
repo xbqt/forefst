@@ -13,9 +13,12 @@
   <footer class="page-footer">
     {{ with site.Params.github }}<a href="{{ . }}">Source &amp; tools on GitHub</a> · {{ end }}
     Generated from the project documentation · ReFS Reference
+    {{ with site.Params.coverage_note }}<br><span class="footer-coverage">forefst v{{ site.Params.tool_version }} · {{ . }}</span>{{ end }}
   </footer>
   <script>window.SEARCH_INDEX = "{{ "index.json" | relURL }}";</script>
   <script src="{{ "js/theme.js" | relURL }}"></script>
   <script src="{{ "js/search.js" | relURL }}" defer></script>
+  <!-- GoatCounter analytics (same account as the other xbpt.gitlab.io pages) -->
+  <script data-goatcounter="https://xbpt.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 </body>
 </html>

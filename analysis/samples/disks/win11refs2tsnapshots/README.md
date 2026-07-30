@@ -14,8 +14,8 @@ exercise).
 
 ## Layout
 
-- `win11refs2tsnapshots.raw.zst.part-*` — the ReFS disk image: a zstd archive (`zstd --ultra -22`) split into parts. **(image added later — this directory currently holds only the README, provenance, and tool output)**
-  Recompose and decompress before use (see **Reproduce** below). All tool output here was produced from the raw image.
+- `win11refs2tsnapshots.raw.zst` — the ReFS disk image: a zstd archive (`zstd --ultra -22`) stored via Git LFS.
+  Decompress before use (see **Reproduce** below). All tool output here was produced from the raw image.
 - `provenance/`
   - `commands.md` — curated creation / populate / **stream-snapshot** / unmount commands, verified
     against the on-disk tree.
@@ -32,7 +32,7 @@ exercise).
 
 ```bash
 cd analysis/samples/disks/win11refs2tsnapshots
-cat win11refs2tsnapshots.raw.zst.part-* > win11refs2tsnapshots.raw.zst && zstd -d win11refs2tsnapshots.raw.zst && cd -   # recompose + decompress -> win11refs2tsnapshots.raw
+git lfs pull --include "analysis/samples/disks/win11refs2tsnapshots/*" && zstd -d win11refs2tsnapshots.raw.zst && cd -   # fetch + decompress -> win11refs2tsnapshots.raw
 python3 forefst.py      analysis/samples/disks/win11refs2tsnapshots/win11refs2tsnapshots.raw --summary-plus
 python3 refsanalysis.py analysis/samples/disks/win11refs2tsnapshots/win11refs2tsnapshots.raw snapshots
 ```

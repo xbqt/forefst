@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (C) 2026 xbpt
+# Copyright (C) 2026 Baptiste Bonnet
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ metadata for each file and directory:
   - Reparse point target (symlinks, junctions)
   - Deleted file detection: Trash Table + orphan objects + checkpoint comparison
   - Previous file versions via $SNAPSHOT embedded attributes
-  - Hard link detection (same OID in multiple directories)
+  - Hard link detection (names sharing one home-directory OID + file_id, size-matched)
   - ReFS version info
 
 Supports ReFS 3.4 through 3.14+ and Windows Insider builds.
@@ -210,7 +210,7 @@ def validate_image(path, die_fn=None):
 
 # ─── Constants ────────────────────────────────────────────────────────
 PROG = "forefst"
-VERSION = "3.6.0"
+VERSION = "1.0.0"
 # Non-resident directory entries have a short value (OID + timestamps + attrs + size).
 # Resident entries (small files) embed full $SI + data inline and are longer.
 NON_RESIDENT_MAX_VALUE = 84
@@ -1561,8 +1561,8 @@ def internal_flags_str(flags):
 
 def resolve_path(f, ps, cs, tr, obj_map, path):
     """Resolve a '/dir/sub/file' path to (parent_oid, key, value) of its type-0x30 row.
-    Case-insensitive (ReFS default). Resident files have no OID — they are found inline in the
-    parent's row. Returns (None, None, None) if not found."""
+    Case-insensitive (ReFS default). Files have no OID — they are found by name in the
+    parent directory's tree. Returns (None, None, None) if not found."""
     parts = [p for p in path.replace("\\", "/").split("/") if p and p != "."]
     if not parts:
         return (None, None, None)
@@ -1601,7 +1601,7 @@ def resolve_path(f, ps, cs, tr, obj_map, path):
 
 
 def count_snapshots_from_btree(f, ps, cs, tr, vlcns):
-    """Count true snapshot entries in a file's own B+-tree (non-resident files)."""
+    """Count true snapshot entries in an object's B+-tree."""
     try:
         rows = walk_bplus(f, ps, cs, tr, vlcns)
     except Exception:
@@ -3229,6 +3229,37 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
 
     return results
 
+
+def fs_content_summary(f, ps, cs, tr, obj_map, plus=True, depth=100):
+    """Single source of truth for the file-system-content counts shown by `summary` in BOTH forefst and
+    refsanalysis (refsanalysis calls this, it does NOT re-implement the walk). Walks the tree ONCE from
+    root (enriched) and returns (counts, results). `counts` holds RAW values (each caller formats):
+    directories, files, resident_files (correct F5+B2 is_resident), total_file_size_bytes, oldest_ft,
+    newest_ft, and — when plus — encrypted_files, integrity_files, compressed_files, reparse_files,
+    hardlink_extra, snapshots, ads_entries."""
+    results = walk_directory_tree(f, ps, cs, tr, obj_map, 0x600, depth, True, set())
+    counts = {
+        "directories": sum(1 for r in results if r["is_dir"]),
+        "files": sum(1 for r in results if not r["is_dir"]),
+        "resident_files": sum(1 for r in results if r.get("is_resident")),
+        "total_file_size_bytes": sum(r.get("file_size", 0) for r in results),
+    }
+    times = [t for r in results for t in (r.get("create_time", 0), r.get("modify_time", 0)) if t and t > 0]
+    counts["oldest_ft"] = min(times) if times else 0
+    counts["newest_ft"] = max(times) if times else 0
+    if plus:
+        counts["encrypted_files"] = sum(1 for r in results if r.get("is_encrypted"))
+        counts["integrity_files"] = sum(1 for r in results if r.get("has_integrity"))
+        counts["compressed_files"] = sum(1 for r in results if r.get("is_compressed"))
+        counts["reparse_files"] = sum(1 for r in results if r.get("has_reparse"))
+        _hl = [r for r in results if r.get("hard_link_count", 1) > 1]
+        _hl_groups = {tuple(sorted(r.get("hard_link_names") or [f"oid:{r.get('oid')}"])) for r in _hl}
+        counts["hardlink_extra"] = len(_hl) - len(_hl_groups)
+        counts["snapshots"] = sum(r.get("snapshot_count", 0) for r in results)
+        counts["ads_entries"] = sum(1 for r in results if r.get("has_ads"))
+    return counts, results
+
+
 def _volume_times(f, ps, cs, tr, obj_map):
     """(vol_create, vol_modify) FILETIMEs from the volume-info object (OID 0x500,
     key 0x0520, +0x90/+0xA0). Returns (0, 0) if unavailable. Used by --timestomp
@@ -3679,7 +3710,6 @@ def _print_fastsummary(summary, plus_mode=False):
             print(f"                        · {_line}")
     except (ValueError, TypeError):
         pass
-    print(f"  Objects:            {summary['objects']}")
     print(f"  Containers mapped:  {summary['containers_mapped']}")
     print()
     print("-" * w)
@@ -8558,7 +8588,7 @@ SUBCOMMANDS = {
     "files":       "List files and directories (default)",
     "summary":     "Extended volume summary — full directory walk + all metrics",
     "search":      "Search files/directories by name (PATTERN; add --regex)  [alias: find]",
-    "details":     "All attributes for one object by path or OID (/path | 0xOID | --path | --oid)",
+    "details":     "All attributes for one object — a file by /path, a directory/system object by /path or 0xOID (/path | 0xOID | --path | --oid)",
 }
 # Still callable + documented (`fastsummary --help`), but hidden from --list/overview to reduce option
 # overload — `summary` is a strict content superset. (Q7.)
@@ -8768,7 +8798,7 @@ FORENSIC_SUBCOMMANDS = {
     "mlog":      "MLog (durable log) parser — redo records and transactions (-v/--parse/--stats/--json/--raw-scan/--info)",
     "timeline":  "Super-timeline — merge USN + MLog + $SI MACB, sorted by time (--csv/--no-si/--file/--oid/--limit/--source/--depth)",
     "timestomp": "Timestamp-anomaly detection — $SI MACB vs USN, flags back-dating (--all/--json/--csv/--min/--margin-days/--depth)",
-    "extract":   "Extract a file's content to stdout by path or --oid (--oid/--depth)",
+    "extract":   "Extract a file's content to stdout by path (--oid = directory to search within, not the file; --depth)",
     "security":  "Security descriptors / ACLs per object (-v/--files/--json/--audit/--sid/--file)",
     "specials":  "Special-attribute files — ads/reparse/wsl/hardlink/sparse/encrypted/compressed/integrity/ea/snapshot (specials [type|all])",
     "reparse":   "Reparse points — symlinks/junctions/WSL + the reparse index (-v/--index/--json/--tag/--file)",
@@ -8937,10 +8967,10 @@ CMD_HELP = {
          ("search secret --deleted", "include deleted/Trash objects")],
  },
  "details": {
-  "tag": "All attributes for ONE object, by path or OID",
+  "tag": "All attributes for ONE object — files by /path, directory/system objects by /path or 0xOID",
   "desc": ["Full record for a single file, directory or object: timestamps, attributes (incl. EA),",
            "SecurityId/owner, USN, reparse target, and — for resident files — the inline sub-records",
-           "($DATA, ADS, $EA/WSL metadata, snapshots). Address it by /path, 0xOID, or --path/--oid."],
+           "($DATA, ADS, $EA/WSL metadata, snapshots). Address a file by /path; a directory or system object by /path or 0xOID (files have no OID)."],
   "opts": [("/path", "(positional) e.g. /dir/file.txt — a leading slash means path"),
            ("0xOID", "(positional) e.g. 0x705 — a 0x prefix means OID"),
            ("--path P / --oid O", "explicit addressing (same as the positional forms)"),
@@ -9472,31 +9502,22 @@ def main():
 
         # Full summary: needs directory walk (enriched, so ADS/SecurityId/reparse counts are correct)
         log(f"[{PROG}] Walking directory tree for full summary...")
-        results = walk_directory_tree(f, ps, cs, tr, obj_map, 0x600, args.depth, True, set())
-        ndirs = sum(1 for r in results if r["is_dir"])
-        nfiles = sum(1 for r in results if not r["is_dir"])
-        nresident = sum(1 for r in results if r.get("is_resident"))
-        total_size = sum(r.get("file_size", 0) for r in results)
-        times = [r.get("create_time", 0) for r in results] + [r.get("modify_time", 0) for r in results]
-        times = [t for t in times if t and t > 0]
-        oldest = filetime_to_iso(min(times)) if times else "(none)"
-        newest = filetime_to_iso(max(times)) if times else "(none)"
+        counts, results = fs_content_summary(f, ps, cs, tr, obj_map, plus=is_plus, depth=args.depth)
         walk_summary = {
-            "directories": ndirs, "files": nfiles, "resident_files": nresident,
-            "total_file_size": _human_size(total_size), "total_file_size_bytes": total_size,
-            "oldest_timestamp": oldest, "newest_timestamp": newest,
+            "directories": counts["directories"], "files": counts["files"],
+            "resident_files": counts["resident_files"],
+            "total_file_size": _human_size(counts["total_file_size_bytes"]),
+            "total_file_size_bytes": counts["total_file_size_bytes"],
+            "oldest_timestamp": filetime_to_iso(counts["oldest_ft"]) if counts["oldest_ft"] else "(none)",
+            "newest_timestamp": filetime_to_iso(counts["newest_ft"]) if counts["newest_ft"] else "(none)",
         }
         if is_plus:
-            walk_summary["encrypted_files"] = sum(1 for r in results if r.get("is_encrypted"))
-            walk_summary["integrity_files"] = sum(1 for r in results if r.get("has_integrity"))
-            walk_summary["compressed_files"] = sum(1 for r in results if r.get("is_compressed"))
-            # C9: "extra" = names beyond the first = N-1 per physical object. The old sum counted every
-            # NAME of multi-name files (N, not N-1). Group rows by their shared hard_link_names set, subtract.
-            _hl = [r for r in results if r.get("hard_link_count", 1) > 1]
-            _hl_groups = {tuple(sorted(r.get("hard_link_names") or [f"oid:{r.get('oid')}"])) for r in _hl}
-            walk_summary["hardlink_extra"] = len(_hl) - len(_hl_groups)
-            walk_summary["snapshots"] = sum(r.get("snapshot_count", 0) for r in results)
-            walk_summary["ads_entries"] = sum(1 for r in results if r.get("has_ads"))
+            walk_summary["encrypted_files"] = counts["encrypted_files"]
+            walk_summary["integrity_files"] = counts["integrity_files"]
+            walk_summary["compressed_files"] = counts["compressed_files"]
+            walk_summary["hardlink_extra"] = counts["hardlink_extra"]
+            walk_summary["snapshots"] = counts["snapshots"]
+            walk_summary["ads_entries"] = counts["ads_entries"]
         # UsnJournalId: the volume-constant journal epoch carried by every file's $SI val+0x70
         # (reliable, unlike the $Max stream). Take the most common non-zero value.
         _jids = {}

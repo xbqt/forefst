@@ -1,10 +1,10 @@
 # Trash Table
 
-The Trash Table (OID 0x0D, schema 0xe0d0) is an asynchronous deletion queue. When a non-resident file or directory is deleted, its OID is reparented into this table for deferred background cleanup rather than being freed immediately. This makes the table the single most promising on-disk location for recovering recently deleted files on ReFS.
+The Trash Table (OID 0x0D, schema 0xe0d0) is an asynchronous deletion queue. When a **directory** is deleted, its OID is reparented into this table for deferred background cleanup rather than being freed immediately (files carry no OID of their own, so they are not reparented here). Because a deleted directory's B+-tree still holds its children's records, the table is a promising on-disk lead for recovering recently deleted content on ReFS.
 
 ## Key format — 16 bytes
 
-The key contains the reparented OID of the deleted file or directory. The table holds keys only; the file's data and metadata stay in place and remain reachable through the [Object Table](object_table.md) until the background cleaner runs.
+The key contains the reparented OID of the deleted **directory**. The table holds keys only; the object's data and metadata stay in place and remain reachable through the [Object Table](object_table.md) until the background cleaner runs.
 
 | Offset | Size | Field | Description |
 |--------|------|-------|-------------|

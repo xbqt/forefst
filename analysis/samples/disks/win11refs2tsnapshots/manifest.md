@@ -1,7 +1,7 @@
 # Sample command manifest — win11refs2tsnapshots.raw
 
-Every file under `forefst/`, and the exact command that produced it. Run each against your
-reassembled `win11refs2tsnapshots.raw` (see this image's README to recompose the disk).
+Every file under `forefst/` and `refsanalysis/`, and the exact command that produced it.
+Regenerate with `analysis/tools/analysis_scripts/gen_samples.sh`. Image path shown as the basename.
 
 ## forefst/
 
@@ -44,8 +44,46 @@ reassembled `win11refs2tsnapshots.raw` (see this image's README to recompose the
 
 ## refsanalysis/
 
-Structure-analysis output. Naming convention: `<sub>.txt` = default run,
-`<sub>.v.txt` / `<sub>.vv.txt` = higher verbosity, `<sub>.<opt>.txt` = that option
-(e.g. `security.files.txt` = `refsanalysis win11refs2tsnapshots.raw security --files`,
-`reparse.index.txt` = `refsanalysis win11refs2tsnapshots.raw reparse --index`).
-The forensic subcommands were reached via the passthrough `refsanalysis win11refs2tsnapshots.raw forefst <cmd>`.
+| File | Command |
+|------|---------|
+| `summary.txt` | `refsanalysis win11refs2tsnapshots.raw summary` |
+| `summary-plus.txt` | `refsanalysis win11refs2tsnapshots.raw summary++` |
+| `files.txt` | `refsanalysis win11refs2tsnapshots.raw files` |
+| `files.v.txt` | `refsanalysis win11refs2tsnapshots.raw files -v` |
+| `attributes.txt` | `refsanalysis win11refs2tsnapshots.raw attributes` |
+| `boot.txt` | `refsanalysis win11refs2tsnapshots.raw boot` |
+| `boot.vv.txt` | `refsanalysis win11refs2tsnapshots.raw boot -vv` |
+| `supb.txt` | `refsanalysis win11refs2tsnapshots.raw supb` |
+| `supb.vv.txt` | `refsanalysis win11refs2tsnapshots.raw supb -vv` |
+| `chkp.txt` | `refsanalysis win11refs2tsnapshots.raw chkp` |
+| `chkp.vv.txt` | `refsanalysis win11refs2tsnapshots.raw chkp -vv` |
+| `objects.txt` | `refsanalysis win11refs2tsnapshots.raw objects` |
+| `objects.vv.txt` | `refsanalysis win11refs2tsnapshots.raw objects -vv` |
+| `schema.txt` | `refsanalysis win11refs2tsnapshots.raw schema` |
+| `schema.vv.txt` | `refsanalysis win11refs2tsnapshots.raw schema -vv` |
+| `parentchild.txt` | `refsanalysis win11refs2tsnapshots.raw parentchild` |
+| `parentchild.vv.txt` | `refsanalysis win11refs2tsnapshots.raw parentchild -vv` |
+| `containers.txt` | `refsanalysis win11refs2tsnapshots.raw containers` |
+| `containers.v.txt` | `refsanalysis win11refs2tsnapshots.raw containers -v` |
+| `upcase.txt` | `refsanalysis win11refs2tsnapshots.raw upcase` |
+| `upcase.vv.txt` | `refsanalysis win11refs2tsnapshots.raw upcase -vv` |
+| `oid30.txt` | `refsanalysis win11refs2tsnapshots.raw oid30` |
+| `oid30.v.txt` | `refsanalysis win11refs2tsnapshots.raw oid30 -v` |
+| `integrity.txt` | `refsanalysis win11refs2tsnapshots.raw forefst integrity` |
+| `integrity.v.txt` | `refsanalysis win11refs2tsnapshots.raw forefst integrity -v` |
+| `dataruns.txt` | `refsanalysis win11refs2tsnapshots.raw forefst dataruns` |
+| `dataruns.v.txt` | `refsanalysis win11refs2tsnapshots.raw forefst dataruns -v` |
+| `deleted.txt` | `refsanalysis win11refs2tsnapshots.raw forefst deleted` |
+| `deleted.scan-pages.txt` | `refsanalysis win11refs2tsnapshots.raw forefst deleted --scan-pages` |
+| `snapshots.txt` | `refsanalysis win11refs2tsnapshots.raw forefst snapshots` |
+| `snapshots.v.txt` | `refsanalysis win11refs2tsnapshots.raw forefst snapshots -v` |
+| `mlog.txt` | `refsanalysis win11refs2tsnapshots.raw forefst mlog` |
+| `mlog.v.txt` | `refsanalysis win11refs2tsnapshots.raw forefst mlog -v` |
+| `timeline.txt` | `refsanalysis win11refs2tsnapshots.raw forefst timeline` |
+| `timestomp.txt` | `refsanalysis win11refs2tsnapshots.raw forefst timestomp` |
+| `usn.txt` | `refsanalysis win11refs2tsnapshots.raw forefst usn` |
+| `security.txt` | `refsanalysis win11refs2tsnapshots.raw forefst security` |
+| `security.v.txt` | `refsanalysis win11refs2tsnapshots.raw forefst security -v` |
+| `security.files.txt` | `refsanalysis win11refs2tsnapshots.raw forefst security --files` |
+| `reparse.txt` | `refsanalysis win11refs2tsnapshots.raw forefst reparse` |
+| `reparse.index.txt` | `refsanalysis win11refs2tsnapshots.raw forefst reparse --index` |

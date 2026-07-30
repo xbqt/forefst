@@ -3,7 +3,7 @@
 # structures pages NOT listed here are rendered in the 'On-disk formats & row types' table.
 # Columns (tab-separated): file<TAB>group<TAB>root_oid<TAB>table_id<TAB>schema<TAB>what<TAB>subcommands
 file	group	root_oid	table_id	schema	what	subcommands
-object_table.md	system-table	#0 / #5	0x02 / 0x04	0xe030	Master OID → table-location map for every persistent object	
+object_table.md	system-table	#0 / #5	0x02 / 0x04	0xe030	Master OID → table-location map for every persistent directory/system object	
 allocators.md	system-table	#1 / #2 / #12	0x21 / 0x20 / 0x22	0xe010	Three-tier cluster allocator (Medium / Container / Small)	
 parent_child_table.md	system-table	#4	0x03	0xe040	Directory hierarchy index (parent → child OIDs)	
 schema_table.md	system-table	#3 / #9	0x01 / 0x06	0xe060	Self-describing per-table key-comparison rules	

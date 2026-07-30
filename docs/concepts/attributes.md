@@ -13,14 +13,14 @@ and where each attribute physically lives.
 
 ## Two levels, and why
 
-ReFS gives every object its own B+-tree. The rows of that tree are keyed, and the **first two bytes of
+ReFS gives every **directory and system object** its own B+-tree; a file has none — a file's rows live inside a directory's tree. The rows of that tree are keyed, and the **first two bytes of
 the key** name what the row is. For user objects (OID ≥ 0x600) there are only **four** outer key types,
 and that small set is the whole top-level attribute vocabulary:
 
 | Key type | What it is | Forensic role |
 |----------|-----------|---------------|
 | 0x10 | `$STANDARD_INFORMATION` + the embedded sub-record tree | timestamps, flags, security ID — and the container for everything in level 2 |
-| 0x20 | [Reverse Index](../structures/reverse_index.md) | parent → child back-reference, used for orphan detection |
+| 0x20 | [FileId Index](../structures/reverse_index.md) | per-object FileId → identity index (Format A = child name; Format B = home-dir back-reference) — recovers a file's name / home dir if its 0x30 row is lost |
 | 0x30 | `$FILE_NAME` / [directory entries](../structures/directory_entries.md) | the child names a directory holds |
 | 0x40 | [Extent Descriptors](../structures/extent_descriptors.md) | the data-run allocation of a non-resident file |
 
@@ -105,7 +105,7 @@ The same attribute can be stored in three different places depending on the file
 | `$EA_INFORMATION` | rare | SI (0xD0) | — |
 | `$EA` | rare | SI (0xE0) | — |
 | `$EFS` | never | MI (0x100) | — |
-| Reverse Index | N/A | N/A | type 0x20 at the object level |
+| FileId index (0x20) | N/A | N/A | type 0x20 at the object level |
 | Extent descriptors | N/A | N/A | type 0x40 at the object level |
 
 The recurring pattern: a *directory's* attributes hang off its type-0x10 tree, while a *file's* content

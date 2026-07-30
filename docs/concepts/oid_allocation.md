@@ -1,7 +1,8 @@
 # OID Allocation — Monotonic Counter and Deletion Estimation
 
-Every persistent ReFS object draws its 64-bit Object ID (OID) from a single per-volume counter that
-only ever moves forward. The driver hardcodes a boundary at **0x700**, hands out **0x701** as the first
+Every persistent ReFS **directory and system object** draws its 64-bit Object ID (OID) from a single per-volume counter that
+only ever moves forward. **Files are not allocated an OID** — a new file instead takes the next
+per-directory child ordinal (NextFileId) from its parent directory. The driver hardcodes a boundary at **0x700**, hands out **0x701** as the first
 user OID, and on deletion frees the object's B+-tree row but **never rewinds the counter**. The forensic
 payoff is large: OIDs are monotonic, never reused, and the *gaps* they leave behind let an analyst
 estimate how many objects were created and later deleted — something NTFS makes impossible because it

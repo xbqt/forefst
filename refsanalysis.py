@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# Copyright (C) 2026 xbpt
+# Copyright (C) 2026 Baptiste Bonnet
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -49,15 +49,16 @@ from pathlib import Path
 
 from forefst import (
     FILE_ATTR_FLAGS, SUPB_LCN, Translator, _is_snapshot_value, _parse_ads_from_value, _select_ct_root, attrs_to_str,
-    bootstrap, count_snapshots_in_resident, find_refs_partition, get_object_si,
+    bootstrap, count_snapshots_in_resident, find_refs_partition, fs_content_summary, get_object_si,
     get_resident_file_size, gpt_partition_detail, le16, le32, le64,
     parse_chkp as _forefst_parse_chkp, parse_resident_btree_rows,
     parse_supb as _forefst_parse_supb, parse_vbr as _forefst_parse_vbr, resolve_path,
-    validate_image as _validate_image, walk_bplus
+    validate_image as _validate_image, walk_bplus, walk_directory_tree,
+    _current_stream_extent_backed, _multilevel_extent_backed_size,
 )
 
 PROG = "refsanalysis"
-VERSION = "3.6.0"
+VERSION = "1.0.0"
 
 
 
@@ -79,10 +80,10 @@ SUBCOMMANDS = [
     ("attributes",  "File attribute details (EAs, timestamps, sizes)",
      ["-v: verbose", "--oid 0xNNN: start OID", "--depth N: recursion depth",
       "--filter {encrypted,wsl,reparse,snapshot}: filter by type"]),
-    ("details",     "Full details for ANY file by PATH (resident files have no OID)",
+    ("details",     "Full details for ANY file by PATH (files have no OID)",
      ["<path>: e.g. /dir/file.txt", "--json: JSON output",
       "(decodes inline $SI, $DATA, ADS, snapshots, $EA, reparse for resident files;",
-      " own B+-tree for non-resident — addresses resident files that have no OID)"]),
+      " out-of-line extents for non-resident — addresses files by path, since files have no OID)"]),
 
     # ── Security and metadata ──
 
@@ -378,69 +379,9 @@ def _summary_human_size(n):
         n /= 1024
     return f"{n:.1f} PB"
 
-def _count_dir_entries(f, ps, cs, tr, obj_map, oid, depth=0, max_depth=50, ext=None):
-    empty = (0, 0, 0, 0, None, None)
-    if oid not in obj_map or depth > max_depth:
-        return empty
-    try:
-        rows = walk_bplus(f, ps, cs, tr, obj_map[oid])
-    except Exception:
-        return empty
-    ndirs = nfiles = nresident = 0; total_size = 0
-    oldest = newest = None
-    for kd, vd in rows:
-        if len(kd) < 4: continue
-        _kt = le16(kd, 0)
-        if _kt == 0x40:
-            # backing type-0x40 stream as (alloc, size) under (this dir, file_id). The finalize step
-            # resolves each name to the candidate stream (local or home) whose size matches the name's
-            # own size — the per-directory ordinal (file_id @key+0x08) collides, so size is the
-            # disambiguator. alloc @val+0x60, size @val+0x58. (#340 / over-merge fix 2026-06-20.)
-            if ext is not None and len(kd) >= 0x10:
-                _a = le64(vd, 0x60) if len(vd) >= 0x68 else 0
-                _s = le64(vd, 0x58) if len(vd) >= 0x60 else 0
-                ext["_t40"][(oid, le64(kd, 0x08))] = (_a, _s)
-            continue
-        if _kt != 0x30: continue
-        if len(vd) <= 84:
-            child_oid = le64(vd, 0x08) if len(vd) >= 0x10 else 0
-            create_time = le64(vd, 0x10) if len(vd) >= 0x18 else 0
-            modify_time = le64(vd, 0x18) if len(vd) >= 0x20 else 0
-            file_attrs = le32(vd, 0x40) if len(vd) >= 0x44 else 0
-            file_size = le64(vd, 0x38) if len(vd) >= 0x40 else 0
-            is_dir = bool(file_attrs & 0x10000000)
-        else:
-            child_oid = 0; create_time = le64(vd, 0x28) if len(vd) >= 0x30 else 0
-            modify_time = le64(vd, 0x30) if len(vd) >= 0x38 else 0
-            file_attrs = le32(vd, 0x48) if len(vd) >= 0x4C else 0
-            file_size = get_resident_file_size(vd); is_dir = False; nresident += 1  # C10: real size, not 0
-        if ext is not None:
-            if file_attrs & 0x4000: ext["encrypted"] += 1
-            if file_attrs & 0x8000: ext["integrity"] += 1
-            if file_attrs & 0x0800: ext["compressed"] += 1
-            if file_attrs & 0x0400: ext["reparse"] += 1
-            if child_oid and not is_dir:
-                # Defer hard-link grouping: collect (parent dir, file_id, home-backref, size, ctime,
-                # mtime) and resolve each name to its true backing type-0x40 record after the full walk
-                # (finalize in cmd_summary). The old (home, ordinal, size, ctime, mtime) tuple
-                # false-merged distinct files that collided on it (fixed 2026-06-19; §J).
-                file_id = le64(vd, 0x00) if len(vd) >= 8 else 0
-                if file_id:
-                    ext["_links"].append((oid, file_id, child_oid, file_size, create_time, modify_time))
-        if is_dir:
-            ndirs += 1
-            if child_oid and child_oid in obj_map:
-                sd, sf, sr, ss, so, sn = _count_dir_entries(f, ps, cs, tr, obj_map, child_oid, depth+1, max_depth, ext)
-                ndirs += sd; nfiles += sf; nresident += sr; total_size += ss
-                if so and (oldest is None or so < oldest): oldest = so
-                if sn and (newest is None or sn > newest): newest = sn
-        else:
-            nfiles += 1; total_size += file_size
-        for t in [create_time, modify_time]:
-            if t and t != 0xFFFFFFFFFFFFFFFF:
-                if oldest is None or t < oldest: oldest = t
-                if newest is None or t > newest: newest = t
-    return ndirs, nfiles, nresident, total_size, oldest, newest
+# NOTE: the file-system-content counts for `summary` now come from forefst.fs_content_summary (single
+# source of truth: correct F5+B2 is_resident + FN_LINK_002 hard-link grouping). The former local
+# `_count_dir_entries` walk — a duplicate with the old length-only is_resident — was removed.
 
 
 def cmd_summary(image, remaining, partition_start, plus_mode=False):
@@ -510,34 +451,16 @@ def cmd_summary(image, remaining, partition_start, plus_mode=False):
                         vol_detail["vol_flags_540"] = le32(vd, 4) if len(vd) >= 8 else 0
             except Exception: pass
 
-        # File/dir counts (extended counters in plus_mode)
-        ext = {"encrypted": 0, "integrity": 0, "compressed": 0, "reparse": 0,
-               "hardlinks": 0, "_t40": {}, "_links": []} if plus_mode else None
-        ndirs, nfiles, nresident, total_size, oldest, newest = _count_dir_entries(f, ps, cs, tr, obj_map, 0x600, ext=ext)
-
-        # Finalize hard-link count: group each name by its TRUE physical stream (owner-dir, file_id).
-        # The per-directory ordinal (file_id) collides, so resolve each name to the candidate stream —
-        # local (parent,file_id) or home (home,file_id) — whose 0x40 size EQUALS the name's own size
-        # (the on-disk disambiguator). STRICT size-match => 0 over-merge; names matching no candidate
-        # are not merged (solo). extra-names = sum(group_size - 1). Validated all-disk 2026-06-20.
-        if ext is not None:
-            _hl = {}
-            for _i, (_P, _fid, _home, _S, _ct, _mt) in enumerate(ext["_links"]):
-                _loc = ext["_t40"].get((_P, _fid)); _rem = ext["_t40"].get((_home, _fid))  # (alloc,size) or None
-                if _loc and _loc[1] == _S and _loc[0] > 0:           # living here: local size+alloc match
-                    _sg = ("obj", _P, _fid)
-                elif _rem and _rem[1] == _S:                          # content at home: home size matches
-                    _sg = ("obj", _home, _fid)
-                elif _loc and _loc[1] == _S:                          # local size matches (alloc 0 edge)
-                    _sg = ("obj", _P, _fid)
-                elif _S == 0 and _rem is not None and _rem[1] == 0:   # empty file: canonical empty home stream
-                    _sg = ("obj", _home, _fid, 0)
-                elif _S == 0 and _loc is not None and _loc[1] == 0:
-                    _sg = ("obj", _P, _fid, 0)
-                else:                                                 # no size-matching stream -> solo
-                    _sg = ("solo", _i)
-                _hl[_sg] = _hl.get(_sg, 0) + 1
-            ext["hardlinks"] = sum(c - 1 for c in _hl.values() if c > 1)
+        # File/dir counts + extended feature counts come from forefst's authoritative walk
+        # (fs_content_summary): single source of truth for is_resident (F5+B2) and the hard-link grouping
+        # (FN_LINK_002). No second walk / duplicated logic here (was _count_dir_entries + a hard-link copy).
+        _c, _ = fs_content_summary(f, ps, cs, tr, obj_map, plus=plus_mode)
+        ndirs = _c["directories"]; nfiles = _c["files"]; nresident = _c["resident_files"]
+        total_size = _c["total_file_size_bytes"]
+        oldest = _c["oldest_ft"] or None; newest = _c["newest_ft"] or None
+        ext = ({"encrypted": _c["encrypted_files"], "integrity": _c["integrity_files"],
+                "compressed": _c["compressed_files"], "reparse": _c["reparse_files"],
+                "hardlinks": _c["hardlink_extra"]} if plus_mode else None)
 
         # Security descriptor count
         sec_count = 0
@@ -677,7 +600,10 @@ def cmd_summary(image, remaining, partition_start, plus_mode=False):
                     if s.get("is_true_snapshot", True): total_snaps += 1
                     else: total_ads += 1
             summary["snapshots"] = total_snaps
-            summary["ads_entries"] = total_ads
+            # ADS count: use forefst's value (fs_content_summary counts FILES-with-ADS) so summary++ agrees
+            # with forefst `summary`; the local _find_snapshot_files total (0xB0 entries) matched neither
+            # forefst's files-with-ADS nor the true stream total. forefst has priority. (Finding #5.)
+            summary["ads_entries"] = _c.get("ads_entries", total_ads)
 
         if args["json"]:
             print(json.dumps(summary, indent=2))
@@ -707,7 +633,6 @@ def cmd_summary(image, remaining, partition_start, plus_mode=False):
         print("-" * w)
         print("File System Content")
         print("-" * w)
-        print(f"  Objects:            {summary['objects']}")
         print(f"  Directories:        {summary['directories']}")
         print(f"  Files:              {summary['files']} ({summary['resident_files']} resident)")
         print(f"  Total file size:    {summary['total_file_size']}")
@@ -2471,6 +2396,18 @@ def _parse_dir_entries(f, ps, cs, tr, vlcns):
             resident = True
 
         ads_list = _parse_ads_from_value(vd) if resident and len(vd) > 0xA8 else []
+        # F5/B2 (mirrors forefst.walk_directory_tree): a long-value file whose CURRENT $DATA is extent-backed
+        # is actually NON-RESIDENT. ADS were already read from the inline value above (correct); only the
+        # reported residency -- and, for the B2 nested-subtree case, the size -- must reflect on-disk truth.
+        # Delegates the decision to forefst's residency primitives => identical to forefst files/summary/details.
+        if resident and not is_dir:
+            if _current_stream_extent_backed(vd):
+                resident = False
+            else:
+                _ml = _multilevel_extent_backed_size(vd, cs)
+                if _ml is not None:
+                    file_size = _ml
+                    resident = False
         entries.append({
             "name": name, "flags": flags, "child_oid": child_oid, "home_oid": home_oid,
             "file_id": file_id,
@@ -2504,12 +2441,14 @@ def _backing_file_attrs(idx, home_oid, file_id, size):
     cands = idx.get((home_oid, file_id))
     if not cands:
         return None
-    if len(cands) == 1:
-        return cands[0][1]
+    # Require a SIZE match (val+0x58) even for a single candidate: the per-dir file_id COLLIDES, so a lone
+    # candidate can belong to a DIFFERENT file (e.g. a size-0 stub whose only same-ordinal backing is another
+    # file's, winsider). forefst's walk (hl_groups) resolves strictly by size and leaves attrs untouched on
+    # no match; mirror that -> return None (no bogus EA bit). #327 stub fix.
     for sz, fa in cands:
         if sz == size:
             return fa
-    return cands[0][1]
+    return None
 
 
 def _apply_backing_ea(results, idx):
@@ -2810,9 +2749,26 @@ def cmd_attributes(image, remaining, partition_start):
 
         results = []
         _analyze_dir_attributes(f, ps, cs, tr, obj_map, start_oid, "", 0, max_depth, results, filt)
-        # OR the authoritative EA bit (type-0x40 backing +0x48) back into non-resident files; the
-        # type-0x30 pointer (+0x40) this walk read drops it. Keeps Attributes/has_ea correct (= forefst).
-        _apply_backing_ea(results, _build_backing_index(f, ps, cs, tr, obj_map))
+        # Consistency (findings #1-4): source the residency verdict, the EA-corrected FileAttributes, and the
+        # backing-resolved SecurityId/USN/IntFlags for non-resident files from forefst's AUTHORITATIVE
+        # walk_directory_tree (which resolves the type-0x40 backing via the collision-safe hl_groups pass) --
+        # so `attributes` agrees with forefst/summary/details. The local walk still supplies WSL/timestamps/
+        # ADS (walk_directory_tree does not surface WSL metadata). One extra walk; correctness over speed.
+        _ffp = {r["path"]: r for r in
+                walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, True, set())}
+        for r in results:
+            a = _ffp.get(r.get("path"))
+            if a is None:
+                continue
+            r["is_resident"] = a.get("is_resident", r.get("is_resident"))
+            r["file_attrs"] = a.get("file_attrs", r.get("file_attrs", 0))
+            for _flag in ("is_encrypted", "is_compressed", "has_reparse", "has_ea"):
+                r[_flag] = a.get(_flag, r.get(_flag))
+            # SecurityId/USN/IntFlags from forefst for EVERY entry: a directory's come from its own $SI, a
+            # non-resident file's from the type-0x40 backing (both resolved by the walk); for resident files
+            # this is a no-op (identical inline value). refsanalysis' local walk omitted them off-resident.
+            for _bk in ("security_id", "usn", "internal_flags"):
+                r[_bk] = a.get(_bk, r.get(_bk, 0))
 
         total = len(results)
         dirs = sum(1 for r in results if r.get("is_dir"))
@@ -2943,7 +2899,7 @@ def _resolve_nonresident_usn(f, ps, cs, tr, obj_map, parent_oid, child_oid, file
 
 
 def cmd_details(image, remaining, partition_start):
-    """Feature A: full details for ANY file by PATH (resident files have no OID)."""
+    """Feature A: full details for ANY file by PATH (files have no OID)."""
     args = _parse_args(remaining, flags=["--json"], valued=[])
     path = args["_rest"][0] if args["_rest"] else None
     if not path:
@@ -3064,6 +3020,24 @@ def cmd_details(image, remaining, partition_start):
                     if _bfa is not None and (_bfa & 0x40000):
                         info["file_attrs"] = info.get("file_attrs", 0) | 0x40000
 
+        # Consistency with forefst: forefst's OWN `details` resolves a FILE via walk_directory_tree and uses
+        # that record. Do the same so residency (F5/B2), SecurityId and USN match files/attributes/summary
+        # exactly -- the record carries the collision-safe backing resolution we must not re-derive by hand.
+        if not info.get("is_dir"):
+            _norm = path.replace("\\", "/").strip("/")
+            _m = next((r for r in walk_directory_tree(f, ps, cs, tr, obj_map, 0x600, 100, True, set())
+                       if r.get("path") == _norm), None)
+            if _m is not None:
+                resident = _m.get("is_resident", resident)
+                info["file_attrs"] = _m.get("file_attrs", info.get("file_attrs", 0))
+                info["snapshot_count"] = _m.get("snapshot_count", info.get("snapshot_count", 0))
+                if _m.get("security_id"):
+                    info["security_id"] = _m["security_id"]
+                    info.pop("security_unavailable", None)
+                if _m.get("usn"):
+                    info["last_usn"] = _m["usn"]
+                    info.setdefault("usn_journal_id", info.get("usn_journal_id", 0))
+
         if args["json"]:
             print(json.dumps(info, indent=2, default=str)); return 0
 
@@ -3103,7 +3077,10 @@ def cmd_details(image, remaining, partition_start):
                 print(f"  ReparseTag:     0x{info['reparse_tag']:08x}")
             if info.get("packed_ea_size"):
                 print(f"  PackedEaSize:   {info['packed_ea_size']}")
-        if resident:
+        if "subrecords" in info:
+            # Show the inline sub-records for ANY long-value entry (len>84): a file whose residency was just
+            # corrected to NON-RESIDENT (F5) still carries its ADS/snapshot/EA/reparse chain inline, so keep
+            # listing it -- only the Storage LABEL above changed, not the on-disk inline record.
             s = info["subrecords"]
             print()
             print(f"  Sub-records:    {len(s['data'])} $DATA, {len(s['ads'])} ADS, "
@@ -3896,7 +3873,7 @@ CMD_HELP = {
    "ex": [("attributes --filter wsl", "files carrying WSL/Linux metadata"),
           ("attributes -v --filter reparse", "reparse points with decoded buffers"),
           ("attributes -v", "full attribute dump incl. EAs")]},
- "details": {"tag": "Full details for ANY file by path (resident files have no OID)",
+ "details": {"tag": "Full details for ANY file by path (files have no OID)",
    "desc": ["Complete per-file record addressed by PATH: timestamps, attributes, SecurityId, and the",
             "inline sub-records for resident files ($DATA, ADS, snapshots, $EA, reparse)."],
    "opts": [("/path", "(positional) e.g. /dir/file.txt"), ("--json", "emit the record as JSON")],

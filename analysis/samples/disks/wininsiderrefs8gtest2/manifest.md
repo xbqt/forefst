@@ -1,7 +1,7 @@
 # Sample command manifest — wininsiderrefs8gtest2.raw
 
-Every file under `forefst/`, and the exact command that produced it. Run each against your
-reassembled `wininsiderrefs8gtest2.raw` (see this image's README to recompose the disk).
+Every file under `forefst/` and `refsanalysis/`, and the exact command that produced it.
+Regenerate with `analysis/tools/analysis_scripts/gen_samples.sh`. Image path shown as the basename.
 
 ## forefst/
 
@@ -44,8 +44,46 @@ reassembled `wininsiderrefs8gtest2.raw` (see this image's README to recompose th
 
 ## refsanalysis/
 
-Structure-analysis output. Naming convention: `<sub>.txt` = default run,
-`<sub>.v.txt` / `<sub>.vv.txt` = higher verbosity, `<sub>.<opt>.txt` = that option
-(e.g. `security.files.txt` = `refsanalysis wininsiderrefs8gtest2.raw security --files`,
-`reparse.index.txt` = `refsanalysis wininsiderrefs8gtest2.raw reparse --index`).
-The forensic subcommands were reached via the passthrough `refsanalysis wininsiderrefs8gtest2.raw forefst <cmd>`.
+| File | Command |
+|------|---------|
+| `summary.txt` | `refsanalysis wininsiderrefs8gtest2.raw summary` |
+| `summary-plus.txt` | `refsanalysis wininsiderrefs8gtest2.raw summary++` |
+| `files.txt` | `refsanalysis wininsiderrefs8gtest2.raw files` |
+| `files.v.txt` | `refsanalysis wininsiderrefs8gtest2.raw files -v` |
+| `attributes.txt` | `refsanalysis wininsiderrefs8gtest2.raw attributes` |
+| `boot.txt` | `refsanalysis wininsiderrefs8gtest2.raw boot` |
+| `boot.vv.txt` | `refsanalysis wininsiderrefs8gtest2.raw boot -vv` |
+| `supb.txt` | `refsanalysis wininsiderrefs8gtest2.raw supb` |
+| `supb.vv.txt` | `refsanalysis wininsiderrefs8gtest2.raw supb -vv` |
+| `chkp.txt` | `refsanalysis wininsiderrefs8gtest2.raw chkp` |
+| `chkp.vv.txt` | `refsanalysis wininsiderrefs8gtest2.raw chkp -vv` |
+| `objects.txt` | `refsanalysis wininsiderrefs8gtest2.raw objects` |
+| `objects.vv.txt` | `refsanalysis wininsiderrefs8gtest2.raw objects -vv` |
+| `schema.txt` | `refsanalysis wininsiderrefs8gtest2.raw schema` |
+| `schema.vv.txt` | `refsanalysis wininsiderrefs8gtest2.raw schema -vv` |
+| `parentchild.txt` | `refsanalysis wininsiderrefs8gtest2.raw parentchild` |
+| `parentchild.vv.txt` | `refsanalysis wininsiderrefs8gtest2.raw parentchild -vv` |
+| `containers.txt` | `refsanalysis wininsiderrefs8gtest2.raw containers` |
+| `containers.v.txt` | `refsanalysis wininsiderrefs8gtest2.raw containers -v` |
+| `upcase.txt` | `refsanalysis wininsiderrefs8gtest2.raw upcase` |
+| `upcase.vv.txt` | `refsanalysis wininsiderrefs8gtest2.raw upcase -vv` |
+| `oid30.txt` | `refsanalysis wininsiderrefs8gtest2.raw oid30` |
+| `oid30.v.txt` | `refsanalysis wininsiderrefs8gtest2.raw oid30 -v` |
+| `integrity.txt` | `refsanalysis wininsiderrefs8gtest2.raw forefst integrity` |
+| `integrity.v.txt` | `refsanalysis wininsiderrefs8gtest2.raw forefst integrity -v` |
+| `dataruns.txt` | `refsanalysis wininsiderrefs8gtest2.raw forefst dataruns` |
+| `dataruns.v.txt` | `refsanalysis wininsiderrefs8gtest2.raw forefst dataruns -v` |
+| `deleted.txt` | `refsanalysis wininsiderrefs8gtest2.raw forefst deleted` |
+| `deleted.scan-pages.txt` | `refsanalysis wininsiderrefs8gtest2.raw forefst deleted --scan-pages` |
+| `snapshots.txt` | `refsanalysis wininsiderrefs8gtest2.raw forefst snapshots` |
+| `snapshots.v.txt` | `refsanalysis wininsiderrefs8gtest2.raw forefst snapshots -v` |
+| `mlog.txt` | `refsanalysis wininsiderrefs8gtest2.raw forefst mlog` |
+| `mlog.v.txt` | `refsanalysis wininsiderrefs8gtest2.raw forefst mlog -v` |
+| `timeline.txt` | `refsanalysis wininsiderrefs8gtest2.raw forefst timeline` |
+| `timestomp.txt` | `refsanalysis wininsiderrefs8gtest2.raw forefst timestomp` |
+| `usn.txt` | `refsanalysis wininsiderrefs8gtest2.raw forefst usn` |
+| `security.txt` | `refsanalysis wininsiderrefs8gtest2.raw forefst security` |
+| `security.v.txt` | `refsanalysis wininsiderrefs8gtest2.raw forefst security -v` |
+| `security.files.txt` | `refsanalysis wininsiderrefs8gtest2.raw forefst security --files` |
+| `reparse.txt` | `refsanalysis wininsiderrefs8gtest2.raw forefst reparse` |
+| `reparse.index.txt` | `refsanalysis wininsiderrefs8gtest2.raw forefst reparse --index` |

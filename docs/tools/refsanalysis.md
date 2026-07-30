@@ -77,7 +77,7 @@ refsanalysis.py disk.raw all > structure_dump.txt       # run every structure to
 |---------|-------------|----------|
 | `files` | Flat namespace listing from the root (or `--oid` subtree). `-v` adds a wide table with decoded attributes, sizes and modified-times. `--depth N` bounds recursion (default 20). | `files -v` · `files --oid 0x705` |
 | `attributes` | Per-file attribute deep-dive: decoded flags (TitleCase, space-pipe-space separated, e.g. `Archive | Encrypted`), internal flags, timestamps, EFS/reparse/WSL. `-v` decodes the Extended-Attributes block ($LXMOD/$LXUID/…). `--filter {encrypted,wsl,reparse,snapshot}` narrows results. | `attributes --filter wsl` · `attributes -v --filter reparse` |
-| `details` | Full record for ANY file by **path**: timestamps, attributes, SecurityId, and — for resident files — inline sub-records ($DATA, ADS, snapshots, $EA, reparse). Resident files have no Object-Table OID of their own. `--json` for structured output. | `details /hello.txt` · `details /dir/big.bin --json` |
+| `details` | Full record for ANY file by **path**: timestamps, attributes, SecurityId, and — for resident files — inline sub-records ($DATA, ADS, snapshots, $EA, reparse). Files have no Object-Table OID of their own — address them by path. `--json` for structured output. | `details /hello.txt` · `details /dir/big.bin --json` |
 
 > forefst's `files`/`details` subcommands are the forensic-grade equivalents (38-column CSV/JSON, owner+group SID, hard-link names+counts, snapshot counts, reparse targets, FileId/HomeOid join keys, IsSparse). refsanalysis keeps a lighter, human-readable lab view.
 
@@ -151,7 +151,7 @@ def cmd_example(image, remaining, partition_start):
 
 ## Dependencies
 
-Python 3.6+ standard library only. No pip packages.
+Python 3.7+ standard library only. No pip packages.
 
 ## Cross-References
 

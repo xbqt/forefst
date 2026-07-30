@@ -1,6 +1,6 @@
 # Object Table
 
-The Object Table (roots #0 and #5, schema 0xe030) is the master OID-to-table mapping. Every persistent object -- file, directory, or system table -- has exactly one entry, so it is the pivot of the entire namespace: a file is reachable only through it.
+The Object Table (roots #0 and #5, schema 0xe030) is the master OID-to-table mapping. Every persistent **directory and system object** has exactly one entry, so it is the pivot of the namespace. **A file has no Object-Table entry of its own** — it is a set of rows inside its home directory's tree, reached through that directory's OID plus the file's per-directory child ordinal.
 
 ## Key Format -- 16 bytes
 

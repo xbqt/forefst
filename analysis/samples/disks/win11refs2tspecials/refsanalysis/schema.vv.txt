@@ -9,7 +9,7 @@ ReFS Schema Table
 ------------------------------------------------------------------------------
 System table schemas (13 entries)
 ------------------------------------------------------------------------------
-  TypeID   Name                             Properties  Level
+  TypeID   Name                                 u32[8] SelfID
   ------------------------------------------------------------
   0xe010   Allocator Table                       57360  57360
   0xe030   Object ID Table                           0  57392
@@ -28,24 +28,24 @@ System table schemas (13 entries)
 ------------------------------------------------------------------------------
 Attribute table schemas (16 entries)
 ------------------------------------------------------------------------------
-  TypeID   Name                             Properties  Level
+  TypeID   Name                                 u32[8] SelfID
   ------------------------------------------------------------
   0x110    Directory Entry List                      1    272
   0x120    File Stream                               1    288
-  0x130    Short Name Entry                          1    304
-  0x140    Long Name Entry                           1    320
+  0x130    $FILE_NAME (dir entry)                    1    304
+  0x140    $FILE_NAME (long)                         1    320
   0x150    Volume Information                        1    336
   0x160    Reparse Index                             1    352
   0x170    Reparse Point                             1    368
-  0x180    Standard Information                      1    384
-  0x190    File Name                                 1    400
-  0x1a0    Extended Attributes                       1    416
+  0x180    $DATA                                     1    384
+  0x190    $STANDARD_INFORMATION                     1    400
+  0x1a0    $INDEX_ROOT                               1    416
   0x1b0    Stream Snapshot ($SNAPSHOT)               1    432
   0x1c0    $REPARSE_POINT (v3.7+)                    1    448
   0x1d0    $EA_INFORMATION (v3.7+)                   1    464
   0x1e0    $EA (v3.14+)                              1    480
   0x1f0    $LOGGED_UTILITY_STREAM (v3.14+)           1    496
-  0x200    Data Stream                               1    512
+  0x200    $LOGGED_UTILITY_STREAM_V2 ($EFS)          1    512
 
 ------------------------------------------------------------------------------
 Schema entry details
@@ -54,234 +54,234 @@ Schema entry details
   0x110 — Directory Entry List
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0x9 (9)
+    key_rules_selector:  0x9 (9)
     property_count:      1
-    level:               272
-    self_type:           0x110
+    self_schema_id:      0x110
+    self_schema_id(dup): 0x110
 
   0x120 — File Stream
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0xb (11)
+    key_rules_selector:  0xb (11)
     property_count:      1
-    level:               288
-    self_type:           0x120
+    self_schema_id:      0x120
+    self_schema_id(dup): 0x120
 
-  0x130 — Short Name Entry
+  0x130 — $FILE_NAME (dir entry)
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0x9 (9)
+    key_rules_selector:  0x9 (9)
     property_count:      1
-    level:               304
-    self_type:           0x130
+    self_schema_id:      0x130
+    self_schema_id(dup): 0x130
 
-  0x140 — Long Name Entry
+  0x140 — $FILE_NAME (long)
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0x1 (1)
+    key_rules_selector:  0x1 (1)
     property_count:      1
-    level:               320
-    self_type:           0x140
+    self_schema_id:      0x140
+    self_schema_id(dup): 0x140
 
   0x150 — Volume Information
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0x1 (1)
+    key_rules_selector:  0x1 (1)
     property_count:      1
-    level:               336
-    self_type:           0x150
+    self_schema_id:      0x150
+    self_schema_id(dup): 0x150
 
   0x160 — Reparse Index
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0x9 (9)
+    key_rules_selector:  0x9 (9)
     property_count:      1
-    level:               352
-    self_type:           0x160
+    self_schema_id:      0x160
+    self_schema_id(dup): 0x160
 
   0x170 — Reparse Point
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0x9 (9)
+    key_rules_selector:  0x9 (9)
     property_count:      1
-    level:               368
-    self_type:           0x170
+    self_schema_id:      0x170
+    self_schema_id(dup): 0x170
 
-  0x180 — Standard Information
+  0x180 — $DATA
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0x9 (9)
+    key_rules_selector:  0x9 (9)
     property_count:      1
-    level:               384
-    self_type:           0x180
+    self_schema_id:      0x180
+    self_schema_id(dup): 0x180
 
-  0x190 — File Name
+  0x190 — $STANDARD_INFORMATION
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0x9 (9)
+    key_rules_selector:  0x9 (9)
     property_count:      1
-    level:               400
-    self_type:           0x190
+    self_schema_id:      0x190
+    self_schema_id(dup): 0x190
 
-  0x1a0 — Extended Attributes
+  0x1a0 — $INDEX_ROOT
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0xb (11)
+    key_rules_selector:  0xb (11)
     property_count:      1
-    level:               416
-    self_type:           0x1a0
+    self_schema_id:      0x1a0
+    self_schema_id(dup): 0x1a0
 
   0x1b0 — Stream Snapshot ($SNAPSHOT)
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0x9 (9)
+    key_rules_selector:  0x9 (9)
     property_count:      1
-    level:               432
-    self_type:           0x1b0
+    self_schema_id:      0x1b0
+    self_schema_id(dup): 0x1b0
 
   0x1c0 — $REPARSE_POINT (v3.7+)
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0xf (15)
+    key_rules_selector:  0xf (15)
     property_count:      1
-    level:               448
-    self_type:           0x1c0
+    self_schema_id:      0x1c0
+    self_schema_id(dup): 0x1c0
 
   0x1d0 — $EA_INFORMATION (v3.7+)
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0xf (15)
+    key_rules_selector:  0xf (15)
     property_count:      1
-    level:               464
-    self_type:           0x1d0
+    self_schema_id:      0x1d0
+    self_schema_id(dup): 0x1d0
 
   0x1e0 — $EA (v3.14+)
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0xf (15)
+    key_rules_selector:  0xf (15)
     property_count:      1
-    level:               480
-    self_type:           0x1e0
+    self_schema_id:      0x1e0
+    self_schema_id(dup): 0x1e0
 
   0x1f0 — $LOGGED_UTILITY_STREAM (v3.14+)
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0xf (15)
+    key_rules_selector:  0xf (15)
     property_count:      1
-    level:               496
-    self_type:           0x1f0
+    self_schema_id:      0x1f0
+    self_schema_id(dup): 0x1f0
 
-  0x200 — Data Stream
+  0x200 — $LOGGED_UTILITY_STREAM_V2 ($EFS)
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0xb (11)
+    key_rules_selector:  0xb (11)
     property_count:      1
-    level:               512
-    self_type:           0x200
+    self_schema_id:      0x200
+    self_schema_id(dup): 0x200
 
   0xe010 — Allocator Table
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0x3 (3)
+    key_rules_selector:  0x3 (3)
     property_count:      57360
-    level:               57360
-    self_type:           0xe010
+    self_schema_id:      0xe010
+    self_schema_id(dup): 0xe010
 
   0xe030 — Object ID Table
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0x6 (6)
+    key_rules_selector:  0x6 (6)
     property_count:      0
-    level:               57392
-    self_type:           0xe030
+    self_schema_id:      0xe030
+    self_schema_id(dup): 0xe030
 
   0xe040 — Parent-Child Table
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0x8 (8)
+    key_rules_selector:  0x8 (8)
     property_count:      0
-    level:               57408
-    self_type:           0xe040
+    self_schema_id:      0xe040
+    self_schema_id(dup): 0xe040
 
   0xe060 — Schema Table
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0x2 (2)
+    key_rules_selector:  0x2 (2)
     property_count:      0
-    level:               57440
-    self_type:           0xe060
+    self_schema_id:      0xe060
+    self_schema_id(dup): 0xe060
 
   0xe080 — Integrity State Table
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0x3 (3)
+    key_rules_selector:  0x3 (3)
     property_count:      0
-    level:               57472
-    self_type:           0xe080
+    self_schema_id:      0xe080
+    self_schema_id(dup): 0xe080
 
   0xe090 — Upcase / Logfile Info Table
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0x2 (2)
+    key_rules_selector:  0x2 (2)
     property_count:      0
-    level:               57488
-    self_type:           0xe090
+    self_schema_id:      0xe090
+    self_schema_id(dup): 0xe090
 
   0xe0b0 — Block RefCount Table
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0x3 (3)
+    key_rules_selector:  0x3 (3)
     property_count:      0
-    level:               57520
-    self_type:           0xe0b0
+    self_schema_id:      0xe0b0
+    self_schema_id(dup): 0xe0b0
 
   0xe0c0 — Container Table
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0xa (10)
+    key_rules_selector:  0xa (10)
     property_count:      0
-    level:               57536
-    self_type:           0xe0c0
+    self_schema_id:      0xe0c0
+    self_schema_id(dup): 0xe0c0
 
   0xe0d0 — Trash Table
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0x6 (6)
+    key_rules_selector:  0x6 (6)
     property_count:      0
-    level:               57552
-    self_type:           0xe0d0
+    self_schema_id:      0xe0d0
+    self_schema_id(dup): 0xe0d0
 
   0xe100 — Container Index Table
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0xa (10)
+    key_rules_selector:  0xa (10)
     property_count:      0
-    level:               57600
-    self_type:           0xe100
+    self_schema_id:      0xe100
+    self_schema_id(dup): 0xe100
 
   0xe110 — Read Cache Metadata
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0x1 (1)
+    key_rules_selector:  0x1 (1)
     property_count:      0
-    level:               57616
-    self_type:           0xe110
+    self_schema_id:      0xe110
+    self_schema_id(dup): 0xe110
 
   0xe120 — Candidate Table (Dirty Ranges)
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0x10 (16)
+    key_rules_selector:  0x10 (16)
     property_count:      0
-    level:               57632
-    self_type:           0xe120
+    self_schema_id:      0xe120
+    self_schema_id(dup): 0xe120
 
   0xe130 — Heat Engine Persistence
     descriptor_size:     0x50 (80)
     key_desc_size:       0x18 (24)
-    value_desc_offset:   0x11 (17)
+    key_rules_selector:  0x11 (17)
     property_count:      0
-    level:               57648
-    self_type:           0xe130
+    self_schema_id:      0xe130
+    self_schema_id(dup): 0xe130
 
 ------------------------------------------------------------------------------
 Raw schema values
@@ -305,7 +305,7 @@ Raw schema values
     00000030  60 01 00 00 60 00 00 00 00 00 00 00 00 40 00 00
     00000040  00 10 00 00 0e 00 00 00 01 00 00 00 4b 00 00 00
 
-  0x130 — Short Name Entry (80 bytes)
+  0x130 — $FILE_NAME (dir entry) (80 bytes)
     u32[0..9]:  0x50 0x18 0x0 0x0 0x0 0x0 0x38 0x9 0x1 0x130
     u32[10..19]: 0x130 0x0 0x0 0x40 0x0 0x4000 0x1000 0x0 0x1 0x4b
     00000000  50 00 00 00 18 00 00 00 00 00 00 00 00 00 00 00
@@ -314,7 +314,7 @@ Raw schema values
     00000030  00 00 00 00 40 00 00 00 00 00 00 00 00 40 00 00
     00000040  00 10 00 00 00 00 00 00 01 00 00 00 4b 00 00 00
 
-  0x140 — Long Name Entry (80 bytes)
+  0x140 — $FILE_NAME (long) (80 bytes)
     u32[0..9]:  0x50 0x18 0x0 0x0 0x0 0x0 0x38 0x1 0x1 0x140
     u32[10..19]: 0x140 0x0 0x0 0xc0 0x0 0x4000 0x1000 0x81 0x1 0x4b
     00000000  50 00 00 00 18 00 00 00 00 00 00 00 00 00 00 00
@@ -350,7 +350,7 @@ Raw schema values
     00000030  90 01 00 00 80 00 00 00 00 00 00 00 00 40 00 00
     00000040  00 10 00 00 09 00 00 00 01 00 00 00 4b 00 00 00
 
-  0x180 — Standard Information (80 bytes)
+  0x180 — $DATA (80 bytes)
     u32[0..9]:  0x50 0x18 0x0 0x0 0x0 0x0 0x38 0x9 0x1 0x180
     u32[10..19]: 0x180 0x0 0x280 0x80 0x0 0x4000 0x1000 0x1 0x1 0x4b
     00000000  50 00 00 00 18 00 00 00 00 00 00 00 00 00 00 00
@@ -359,7 +359,7 @@ Raw schema values
     00000030  80 02 00 00 80 00 00 00 00 00 00 00 00 40 00 00
     00000040  00 10 00 00 01 00 00 00 01 00 00 00 4b 00 00 00
 
-  0x190 — File Name (80 bytes)
+  0x190 — $STANDARD_INFORMATION (80 bytes)
     u32[0..9]:  0x50 0x18 0x0 0x0 0x0 0x0 0x38 0x9 0x1 0x190
     u32[10..19]: 0x190 0x0 0x280 0x80 0x0 0x4000 0x1000 0x9 0x1 0x4b
     00000000  50 00 00 00 18 00 00 00 00 00 00 00 00 00 00 00
@@ -368,7 +368,7 @@ Raw schema values
     00000030  80 02 00 00 80 00 00 00 00 00 00 00 00 40 00 00
     00000040  00 10 00 00 09 00 00 00 01 00 00 00 4b 00 00 00
 
-  0x1a0 — Extended Attributes (80 bytes)
+  0x1a0 — $INDEX_ROOT (80 bytes)
     u32[0..9]:  0x50 0x18 0x0 0x0 0x0 0x0 0x38 0xb 0x1 0x1a0
     u32[10..19]: 0x1a0 0x0 0x178 0x60 0x0 0x4000 0x1000 0xe 0x1 0x4b
     00000000  50 00 00 00 18 00 00 00 00 00 00 00 00 00 00 00
@@ -422,7 +422,7 @@ Raw schema values
     00000030  80 02 00 00 80 00 00 00 00 00 00 00 00 40 00 00
     00000040  00 10 00 00 01 10 00 00 01 00 00 00 4b 00 00 00
 
-  0x200 — Data Stream (80 bytes)
+  0x200 — $LOGGED_UTILITY_STREAM_V2 ($EFS) (80 bytes)
     u32[0..9]:  0x50 0x18 0x0 0x0 0x0 0x0 0x38 0xb 0x1 0x200
     u32[10..19]: 0x200 0x0 0x178 0x60 0x0 0x4000 0x1000 0x100e 0x1 0x4b
     00000000  50 00 00 00 18 00 00 00 00 00 00 00 00 00 00 00

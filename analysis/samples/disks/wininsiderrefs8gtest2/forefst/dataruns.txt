@@ -3,7 +3,7 @@
 ==============================================================================
 ReFS File Data Extent Analysis
 ==============================================================================
-  Image:        analysis/rawdisk/disks/step4/wininsiderrefs8gtest2.raw
+  Image:        wininsiderrefs8gtest2.raw
   ReFS version: 3.14
   Cluster size: 0x10000 (65536 bytes)
   Containers:   127
@@ -22,10 +22,10 @@ File Data Locations
             size=186635, attrs=Archive, extents=3, clusters=3
             created=2026-05-19 20:00:53
   EXTENT    testintegrity/xbpt_config_hotel_558589.txt
-            size=192688, attrs=Archive, extents=3, clusters=3
+            size=192688, attrs=Archive, extents=2, clusters=3
             created=2026-05-19 20:00:53
   EXTENT    testintegrity/xbpt_india_temp_831504.csv
-            size=475328, attrs=Archive, extents=2, clusters=2
+            size=475328, attrs=Archive, extents=2, clusters=8
             created=2024-04-02 07:16:32
   EXTENT    testintegrity/xbpt_log_november_496320.csv
             size=552331, attrs=Archive, extents=5, clusters=9
@@ -34,7 +34,7 @@ File Data Locations
             size=19465, attrs=Archive, extents=1, clusters=1
             created=2026-05-19 20:00:53
   EXTENT    testintegrity/xbpt_tango_foxtrot_898933.txt
-            size=207263, attrs=Archive, extents=3, clusters=3
+            size=207263, attrs=Archive, extents=4, clusters=4
             created=2026-05-19 20:00:55
   EXTENT    testintegrity/elvis_dir_index_149423/xbpt_beta_archive_985685.tmp
             size=310564, attrs=Archive, extents=2, clusters=5
@@ -76,7 +76,7 @@ File Data Locations
             size=113106, attrs=Archive, extents=2, clusters=2
             created=2026-05-19 20:00:57
   EXTENT    testintegrity/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_log_output_579275.dat
-            size=123468, attrs=Archive, extents=3, clusters=3
+            size=123468, attrs=Archive, extents=2, clusters=2
             created=2026-05-19 20:00:52
   EXTENT    testintegrity/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_quebec_papa_978800.txt
             size=30711, attrs=Archive, extents=1, clusters=1
@@ -88,7 +88,7 @@ File Data Locations
             size=219586, attrs=Archive, extents=4, clusters=4
             created=2025-04-01 07:16:26
   EXTENT    testintegrity/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_victor_tango_152379.bin
-            size=505381, attrs=Archive, extents=3, clusters=3
+            size=505381, attrs=Archive, extents=2, clusters=8
             created=2026-05-19 20:00:54
   EXTENT    testintegrity/elvis_dir_record_449015/xbpt_log_india_171227.csv
             size=189614, attrs=Archive, extents=2, clusters=3
@@ -118,7 +118,7 @@ File Data Locations
             size=453270, attrs=Archive, extents=2, clusters=7
             created=2026-05-19 19:57:29
   EXTENT    testspecials/hardlink_mike_271728.log
-            size=490289, attrs=Archive, extents=2, clusters=5
+            size=490289, attrs=Archive, extents=2, clusters=8
             created=2026-05-19 19:57:52
   EXTENT    testspecials/hardlink_quebec_943171.cfg
             size=125006, attrs=Archive, extents=1, clusters=2
@@ -232,7 +232,7 @@ File Data Locations
             size=412992, attrs=Archive, extents=2, clusters=7
             created=2026-05-19 19:57:28
   EXTENT    testspecials/dir_record_119518/hardlink_delta_549379.txt
-            size=145844, attrs=Archive, extents=3, clusters=4
+            size=145844, attrs=Archive, extents=1, clusters=3
             created=2026-05-19 19:57:31
   EXTENT    testspecials/dir_record_119518/hardlink_foxtrot_594825.dat
             size=332026, attrs=Archive, extents=3, clusters=6
@@ -253,19 +253,19 @@ File Data Locations
             size=452206, attrs=Archive, extents=2, clusters=7
             created=2026-05-19 19:57:29
   EXTENT    testspecials/dir_record_119518/dir_delta_826049/hardlink_gamma_400394.cfg
-            size=125006, attrs=Archive, extents=2, clusters=7
+            size=125006, attrs=Archive, extents=1, clusters=2
             created=2024-10-16 19:59:02
   EXTENT    testspecials/dir_record_119518/dir_delta_826049/hardlink_hotel_901359.dat
-            size=209606, attrs=Archive, extents=1, clusters=1
+            size=209606, attrs=Archive, extents=1, clusters=4
             created=2026-05-19 19:57:58
   EXTENT    testspecials/dir_record_119518/dir_delta_826049/hardlink_kilo_521074.cfg
-            size=125006, attrs=Archive, extents=2, clusters=7
+            size=125006, attrs=Archive, extents=1, clusters=2
             created=2024-10-16 19:59:02
   EXTENT    testspecials/dir_record_119518/dir_delta_826049/hardlink_romeo_346873.ini
             size=388409, attrs=Archive, extents=3, clusters=6
             created=2026-05-19 19:57:29
   EXTENT    testspecials/dir_record_119518/dir_delta_826049/hardlink_trace_466793.bak
-            size=388768, attrs=Archive, extents=2, clusters=7
+            size=388768, attrs=Archive, extents=2, clusters=6
             created=2026-05-19 19:57:30
   EXTENT    testspecials/dir_record_119518/dir_delta_826049/hotel_cache_529895.dat
             size=93133, attrs=Archive, extents=2, clusters=2

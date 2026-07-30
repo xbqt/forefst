@@ -48,7 +48,7 @@ are **0/5** (Object), **3/9** (Schema), **7/8** (Container); Block Refcount (#6)
 
 | Table | Root # | Table ID | Schema | Addressing | What it is |
 |-------|--------|----------|--------|------------|-----------|
-| [Object Table](object_table.md) | #0 / #5 | 0x02 / 0x04 | 0xe030 | Virtual | Master OID → table-location map for every persistent object |
+| [Object Table](object_table.md) | #0 / #5 | 0x02 / 0x04 | 0xe030 | Virtual | Master OID → table-location map for every persistent directory/system object |
 | [Allocators](allocators.md) | #1 / #2 / #12 | 0x21 / 0x20 / 0x22 | 0xe010 | Virtual / Virtual / **Real** | Three-tier cluster allocator (Medium / Container / Small) |
 | [Schema Table](schema_table.md) | #3 / #9 | 0x01 / 0x06 | 0xe060 | Virtual | Self-describing per-table key-comparison rules |
 | [Parent-Child Table](parent_child_table.md) | #4 | 0x03 | 0xe040 | Virtual | Directory hierarchy index (parent → child OIDs) |

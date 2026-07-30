@@ -3,7 +3,7 @@
 ==============================================================================
 ReFS File Data Extent Analysis
 ==============================================================================
-  Image:        analysis/rawdisk/disks/step3/win11refs2tspecials.raw
+  Image:        win11refs2tspecials.raw
   ReFS version: 3.14
   Cluster size: 0x1000 (4096 bytes)
   Containers:   32767
@@ -13,7 +13,7 @@ ReFS File Data Extent Analysis
     Total files analyzed:   547
     Resident (inline):      390
     Non-resident (extents): 157
-    With decoded extents:   137
+    With decoded extents:   136
 
 ==============================================================================
 File Data Locations
@@ -22,10 +22,10 @@ File Data Locations
             size=186635, attrs=Archive, extents=5, clusters=46
             created=2026-05-16 16:41:28
   EXTENT    test/xbpt_config_hotel_558589.txt
-            size=192688, attrs=Archive, extents=8, clusters=35
+            size=192688, attrs=Archive, extents=2, clusters=48
             created=2026-05-16 16:41:28
   EXTENT    test/xbpt_india_temp_831504.csv
-            size=475328, attrs=Archive, extents=2, clusters=19
+            size=475328, attrs=Archive, extents=2, clusters=117
             created=2024-04-02 07:16:32
   EXTENT    test/xbpt_log_november_496320.csv
             size=552331, attrs=Archive, extents=6, clusters=135
@@ -34,7 +34,7 @@ File Data Locations
             size=19465, attrs=Archive, extents=2, clusters=5
             created=2026-05-16 16:41:29
   EXTENT    test/xbpt_tango_foxtrot_898933.txt
-            size=207263, attrs=Archive, extents=8, clusters=35
+            size=207263, attrs=Archive, extents=4, clusters=51
             created=2026-05-16 16:41:31
   EXTENT    test/elvis_dir_index_149423/xbpt_beta_archive_985685.tmp
             size=310564, attrs=Archive, extents=2, clusters=76
@@ -76,7 +76,7 @@ File Data Locations
             size=113106, attrs=Archive, extents=2, clusters=28
             created=2026-05-16 16:41:33
   EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_log_output_579275.dat
-            size=123468, attrs=Archive, extents=5, clusters=46
+            size=123468, attrs=Archive, extents=2, clusters=31
             created=2026-05-16 16:41:28
   EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_quebec_papa_978800.txt
             size=30711, attrs=Archive, extents=2, clusters=8
@@ -88,7 +88,7 @@ File Data Locations
             size=219586, attrs=Archive, extents=6, clusters=54
             created=2025-04-01 07:16:26
   EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_victor_tango_152379.bin
-            size=505381, attrs=Archive, extents=5, clusters=46
+            size=505381, attrs=Archive, extents=2, clusters=124
             created=2026-05-16 16:41:30
   EXTENT    test/elvis_dir_record_449015/xbpt_log_india_171227.csv
             size=189614, attrs=Archive, extents=2, clusters=47
@@ -127,7 +127,7 @@ File Data Locations
             size=293302, attrs=Archive, extents=2, clusters=118
             created=2022-08-11 16:34:51
   EXTENT    testspecials/hardlink_output_565061.txt
-            size=6791, attrs=Archive, extents=2, clusters=77
+            size=6791, attrs=Archive, extents=2, clusters=2
             created=2026-05-16 16:36:00
   EXTENT    testspecials/hardlink_uniform_425955.csv
             size=493090, attrs=Archive, extents=2, clusters=118
@@ -157,10 +157,10 @@ File Data Locations
             size=401219, attrs=Archive, extents=3, clusters=98
             created=2026-05-16 16:35:09
   EXTENT    testspecials/dir_november_947335/hardlink_echo_752214.tmp
-            size=240062, attrs=Archive, extents=2, clusters=23
+            size=240062, attrs=Archive, extents=4, clusters=59
             created=2026-05-16 16:34:27
   EXTENT    testspecials/dir_november_947335/hardlink_log_446439.tmp
-            size=216069, attrs=Archive, extents=2, clusters=23
+            size=216069, attrs=Archive, extents=4, clusters=59
             created=2026-05-16 16:34:27
   EXTENT    testspecials/dir_november_947335/hardlink_oscar_269153.ini
             size=60201, attrs=Archive, extents=2, clusters=15
@@ -250,7 +250,7 @@ File Data Locations
             size=14876, attrs=Archive, extents=2, clusters=4
             created=2026-05-16 16:34:26
   EXTENT    testspecials2/backup_draft_705865.log
-            size=119857, attrs=Archive, extents=1, clusters=34
+            size=119857, attrs=Archive, extents=2, clusters=30
             created=2026-05-16 16:38:10
   EXTENT    testspecials2/beta_foxtrot_228821.json
             size=111602, attrs=Archive, extents=2, clusters=28
@@ -267,9 +267,6 @@ File Data Locations
   EXTENT    testspecials2/foxtrot_output_368928.md
             size=210671, attrs=Archive, extents=2, clusters=52
             created=2026-05-16 16:37:44
-  EXTENT    testspecials2/hardlink_hotel_900638.xml
-            size=116264, attrs=Archive, extents=1, clusters=34
-            created=2026-05-16 16:37:43
   EXTENT    testspecials2/hardlink_uniform_628960.log
             size=191037, attrs=Archive, extents=3, clusters=47
             created=2022-10-13 16:40:23
@@ -415,7 +412,7 @@ File Data Locations
             size=433603, attrs=Archive, extents=3, clusters=106
             created=2026-05-16 16:38:15
   EXTENT    testspecials2/dir_yankee_474982/papa_sierra_887773.txt
-            size=28102, attrs=Archive, extents=2, clusters=30
+            size=28102, attrs=Archive, extents=2, clusters=7
             created=2026-05-16 16:39:12
   EXTENT    testspecials2/dir_yankee_474982/dir_mike_734231/backup_data_170141.bak
             size=444442, attrs=Archive, extents=4, clusters=109

@@ -49,9 +49,17 @@ Schema 0xe090 is **shared** between the Upcase Table (OIDs 0x07/0x08) and the Lo
 
 ## Case-sensitive directories
 
-ReFS v3.14 adds per-directory case-sensitive mode (opt-in). When a directory is marked
-case-sensitive, the Upcase Table is bypassed for that directory's filename comparisons, which then
-use binary (byte-exact) key comparison instead of the default case-folded comparison.
+ReFS v3.14 adds a per-directory, opt-in case-sensitive mode (`fsutil file setcasesensitiveinfo <dir> enable`).
+A directory is **marked case-sensitive by bit `0x02` in its own `$SI` internal_flags** — the type-0x10 value
+at offset `0x4C` (`0x02` when case-sensitive, `0x00` otherwise). When that bit is set, the Upcase Table is
+**bypassed** for that directory's filename comparisons, which then use **binary (byte-exact)** key comparison
+instead of the default case-folded comparison. Files that differ only in case (`File.txt` / `file.txt`)
+therefore no longer collide on insertion — they coexist as separate directory entries.
+
+Each case variant is its own type-0x30 entry with a **distinct FileId** and its own
+[FileId-index](reverse_index.md) entry; they are **not** given distinct object IDs — a ReFS file has no
+Object-Table OID of its own. The mode cannot be enabled on a directory that already holds names differing
+only by case (the driver rejects it).
 
 ## Version presence
 

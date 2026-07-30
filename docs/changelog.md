@@ -1,5 +1,16 @@
 # Changelog
 
+## v1.0.0 — 2026-07-23 — first public release
+
+First public release. Functionally the same tool as the internal **v3.6.0** development build below —
+renumbered to **1.0.0** for the public debut and to avoid confusion with ReFS's own version numbers
+(ReFS 3.4–3.14). The per-version development history from the thesis follows.
+
+## Development history (pre-1.0, during the thesis)
+
+*The entries below are the internal `3.x` development versions from the thesis work — not ReFS versions,
+and not separate public releases; they trace how v1.0.0 was built.*
+
 ## v3.6.0 — 2026-07-04 (first-audit enhancements · F5 residency fix · F6 per-name-MACB timestomp · `recyclebin`)
 
 **New forensic capabilities from the first-audit review, plus two disk-proven findings.**
@@ -291,7 +302,7 @@ These are the **tool-behavior** changes that followed the 405-claim audit (the e
 - **A — `details <path>`** (new): full details for ANY file **by path** — resident files have **no OID**
  (their `target_oid` is the sentinel `0x1e000000001`; they live inline in the parent dir row), so `--oid`
  could never reach them. Decodes inline `$SI` (MACB, SecurityId, LastUsn, FileSize (resident index entry; the type-0x10 $SI DataSize is unpopulated)), `$DATA`, ADS,
- snapshots, `$EA`, reparse for resident files; own B+-tree for non-resident. `--json`. Verified: matches
+ snapshots, `$EA`, reparse for resident files; out-of-line extents for non-resident (no own B+-tree). `--json`. Verified: matches
  the lister 15/15 (size + SecurityId).
 - **B — `snapshots --file <name>`** lists a file's snapshot versions; `--extract DIR` exports each
  (the 2 modes; built on the verified `recover_snapshot_streams`).

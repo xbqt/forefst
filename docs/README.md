@@ -43,7 +43,6 @@ Reverse engineering documentation for the Resilient File System (ReFS), covering
 | [Object IDs and FileIds](concepts/object_ids_fileids.md) | The cross-table join key; OID vs per-directory ordinal |
 | [OID Allocation](concepts/oid_allocation.md) | Monotonic counter, gaps as deletion evidence |
 | [Space Allocation](concepts/allocation_space_mgmt.md) | Three-tier bitmap allocator (Medium / Container / Small) |
-| [$BITMAP](concepts/BITMAP.md) | The allocator bitmap row: 24-byte header + 2048-byte bitmap (1 bit per cluster) — not a per-file attribute |
 | [Compression](concepts/compression.md) | Per-container 24H2 volume compression |
 | [Deduplication](concepts/deduplication.md) | Opt-in post-process block sharing |
 | [Tiered Storage](concepts/tiering.md) | Fast/slow tier relocation and the heat engine |

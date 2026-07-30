@@ -149,8 +149,9 @@ Independent of whether any content survives, deletion leaves a permanent record 
 [Object IDs](object_ids_fileids.md) are 64-bit, monotonically increasing, and **never reused after
 deletion** (user OIDs start at 0x701, set by `MsSetMinimumNewObjectId`; see
 [OID Allocation](oid_allocation.md)). A **gap in the OID sequence is therefore permanent evidence of a past
-deletion** — if 0x720, 0x721, and 0x723 exist but 0x722 does not, a file was created and deleted, and no
-later activity can hide that. **OID density** (present OIDs ÷ range) quantifies the deletion history of a
+deletion** — if 0x720, 0x721, and 0x723 exist but 0x722 does not, a **directory or system object** was created
+and deleted, and no later activity can hide that. (Files carry no OID of their own, so a deleted *file* leaves
+no gap — the OID sequence tracks deleted **objects**, i.e. directories and system tables.) **OID density** (present OIDs ÷ range) quantifies the deletion history of a
 volume: a freshly formatted volume is essentially 100% dense, while a worked volume falls to roughly
 55–79%. This is one of the clearest forensic advantages ReFS has over NTFS, whose MFT records *are* reused
 and so erase their own deletion evidence over time — see [NTFS vs ReFS](ntfs_comparison.md) for the full

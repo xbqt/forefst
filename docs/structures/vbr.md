@@ -17,7 +17,8 @@ backup copy resides in the last sector of the volume.
 | 0x18 | 8 | Total sector count (u64) | Volume size in 512-byte sectors |
 | 0x20 | 4 | Bytes per sector (u32) | Always 512 |
 | 0x24 | 4 | Sectors per cluster (u32) | 8 (4 KiB clusters) or 128 (64 KiB clusters) |
-| 0x28 | 2 | Version (u16) | Packed major.minor -- see Version values below |
+| 0x28 | 1 | Major version (u8) | 3 on all covered volumes |
+| 0x29 | 1 | Minor version (u8) | 4–14 -- see Version values below |
 | 0x2A | 2 | Checksum algorithm selector (u16) | See Checksum algorithm selector below |
 | 0x2C | 4 | Volume flags (u32) | See Volume flags below |
 | 0x30 | 8 | Reserved | All zeros |
@@ -39,16 +40,16 @@ translation; without it the mount code cannot resolve virtual LCNs through the
 
 ## Version values (offset 0x28)
 
-| Packed value | Major | Minor | Windows release |
+| Bytes 0x28 / 0x29 | Major | Minor | Windows release |
 |-------------|-------|-------|-----------------|
-| 0x0304 | 3 | 4 | Win10 1803 |
-| 0x0307 | 3 | 7 | Win11 21H2 |
-| 0x0309 | 3 | 9 | Win11 22H2 |
-| 0x030A | 3 | 10 | Win11 23H2 |
-| 0x030E | 3 | 14 | Win11 24H2 / Insider 29574 |
+| 03 04 | 3 | 4 | Win10 1803 |
+| 03 07 | 3 | 7 | Win11 21H2 |
+| 03 09 | 3 | 9 | Win11 22H2 |
+| 03 0A | 3 | 10 | Win11 23H2 |
+| 03 0E | 3 | 14 | Win11 24H2 / Insider 29574 |
 
 **Warning:** The version field records mount history, not the original format version. A
-v3.4-formatted volume mounted on Win11 will have its version updated to 0x030E.
+v3.4-formatted volume mounted on Win11 will have its version updated to 3.14.
 
 ## Checksum algorithm selector (offset 0x2A)
 

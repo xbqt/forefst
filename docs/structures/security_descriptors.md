@@ -57,13 +57,15 @@ the file record is resident or non-resident:
 
 ```
 Resident file:     directory entry value offset 0x50 (SecurityId, u64)
-Non-resident file: $SI attribute offset 0x28        (SecurityId, u64)
+Non-resident file: type-0x40 backing record value offset 0x50 (SecurityId, u64)
  -> OID 0x530 (Security Descriptors table)
  -> SECURITY_DESCRIPTOR (Owner SID, Group SID, DACL, SACL)
 ```
 
-Resident files carry the SecurityId inline at value offset 0x50; non-resident files require fetching
-`$SI` from the [Object Table](object_table.md), where the SecurityId is at `$SI` offset 0x28.
+Resident files carry the SecurityId inline at value offset 0x50. A non-resident file carries it in its own
+**type-0x40 backing record** — the file's `$SI` / stream-summary, keyed by (home-dir OID + FileId) — at
+backing value offset 0x50, **not** through the Object Table (a non-resident file has no Object-Table OID of
+its own).
 
 This is a single-table model. `RefsSecurityInitialize` opens only OID 0x530
 (`MsInitializeWellKnownObjectId(0x530, ...)`). The security load/cache/find functions
@@ -122,7 +124,7 @@ The default descriptor applied to new objects at format time is built by
 
 ## Cross-references
 
-- [Directory Entries](directory_entries.md) — resident files carry the SecurityId at value offset 0x50; non-resident files fetch it via `$SI` through the Object Table
+- [Directory Entries](directory_entries.md) — resident files carry the SecurityId at value offset 0x50; non-resident files carry it in their type-0x40 backing record at value offset 0x50 (not via the Object Table)
 - [System OIDs](system_oids.md) — OID 0x520 and OID 0x530
 - [Object Table](object_table.md) — OID resolution for 0x520 and 0x530
 
