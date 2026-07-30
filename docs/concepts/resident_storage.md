@@ -95,18 +95,24 @@ follow [extents](../structures/extent_descriptors.md) only when it is 0x02. The 
 metadata row*, while a deleted non-resident file's bytes can persist in unreferenced clusters long after
 the row is gone — two very different recovery problems sharing one on-disk encoding.
 
-## A reliable detection rule
+## A detection rule (size is a first cut, not the final word)
 
-A parser can classify any directory entry by combining key_flags with the value length:
+A parser classifies a directory entry from key_flags + the value length, then **confirms residency from the
+`$DATA` allocation**:
 
-- A value **larger than 84 bytes** (72 on v3.4) is necessarily a **resident file** — only inline content
-  makes a row that big.
-- An **84-byte value** (72 on v3.4–v3.9) is either a **non-resident file** or a **directory**, separated
-  by the directory attribute bit `0x10000000` at value+0x40.
+- An **84-byte value** (72 on v3.4–v3.9) is a **non-resident file** or a **directory**, separated by the
+  directory attribute bit `0x10000000` at value+0x40.
+- A value **larger than 84 bytes** (72 on v3.4) is a **long value with inline metadata** — usually a
+  resident file, **but not always**: if its current `$DATA` stream is extent-backed on disk, the file is
+  **non-resident** despite the long value.
 
-Size alone gets you to resident-vs-non-resident; the directory bit completes the classification. This
-mirrors the [resident value layout](../structures/directory_entries.md), where the same value also carries
-the file's timestamps, [security ID](../structures/security_descriptors.md), and file size.
+So size gives you a *candidate*, not the verdict. Residency is the **disk-allocated size of the `$DATA`
+stream at value+0x48** (see [Extent Descriptors](../structures/extent_descriptors.md)): `disk_alloc == 0`
+→ inline / **resident**; `disk_alloc > 0` → **non-resident** (content lives in extents). A long inline value
+whose `$DATA` is extent-backed therefore reads non-resident. The long value still mirrors the
+[resident value layout](../structures/directory_entries.md) — timestamps,
+[security ID](../structures/security_descriptors.md), size — read inline; only the residency verdict comes
+from the allocation.
 
 ## Raw example
 

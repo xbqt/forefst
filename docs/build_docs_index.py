@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
-"""Generate the per-directory README indexes and the central KNOWLEDGE_MAP.md
+"""Generate the central KNOWLEDGE_MAP.md (and, only for dirs listed in CONTENT_DIRS, an auto README)
 from each page's H1 + intro, plus structural identifiers from index_meta.tsv.
+
+NOTE: CONTENT_DIRS is empty by default, so this script regenerates ONLY KNOWLEDGE_MAP.md; the
+per-directory READMEs are hand-written prose and are left untouched (see the guard in main()).
 
 Provenance model:
   - Pages carry NO provenance footer. Verification status, evidence grades, and finding
@@ -15,7 +18,7 @@ Provenance model:
     now sourced from `audit_dates.tsv` — it is the where-every-fact-lives index.
 
 Stdlib only.
-  python3 build_docs_index.py            # regenerate READMEs + KNOWLEDGE_MAP.md
+  python3 build_docs_index.py            # regenerate KNOWLEDGE_MAP.md (per-dir READMEs only for CONTENT_DIRS)
   python3 build_docs_index.py --check    # verify-only (non-zero exit if drift / register mismatch)
   python3 build_docs_index.py --preview  # print proposed READMEs to stdout, write nothing
 """
@@ -24,7 +27,9 @@ import os, re, sys, glob, csv, io
 DOCS_ROOT = os.environ.get("DOCS_ROOT") or os.path.dirname(os.path.abspath(__file__))
 HERE = DOCS_ROOT
 CONTENT_DIRS = []
-# All content dirs (attributes/, structures/, concepts/, tools/) have hand-written forensic-reference READMEs (not auto-generated); KNOWLEDGE_MAP still indexes them.
+# All content dirs (attributes/, structures/, concepts/, tools/) have HAND-WRITTEN forensic-reference READMEs (not auto-generated); KNOWLEDGE_MAP still indexes them.
+# Keep CONTENT_DIRS EMPTY: those READMEs are prose. As a hard guard, the write loop in main() refuses to overwrite
+# any README lacking the auto-generated HEAD_NOTE marker, so re-adding a dir here can never clobber a prose README.
 MAP_ONLY_DIRS = ["attributes", "structures", "concepts", "tools", "examples"]
 BOLD_PREAMBLE_RE = re.compile(r"^\*\*[^*]+:")   # a '**Key:** value' metadata preamble line
 # a '**Key:** value' line whose value IS the summary (prose), not a metadata field
@@ -215,9 +220,11 @@ def main():
         return
     drift = 0
     for d in CONTENT_DIRS:
-        new = gen_readme(d, pages[d], meta)
         rp = f"{HERE}/{d}/README.md"
         old = open(rp).read() if os.path.exists(rp) else ""
+        if old and HEAD_NOTE not in old:
+            continue   # SAFETY: never overwrite a HAND-WRITTEN prose README (only auto-generated ones carry HEAD_NOTE)
+        new = gen_readme(d, pages[d], meta)
         if new != old:
             drift += 1
             if not check: open(rp, "w").write(new)

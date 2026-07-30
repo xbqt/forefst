@@ -11,7 +11,7 @@ ReFS File Data Extent Analysis
     Total files analyzed:   547
     Resident (inline):      390
     Non-resident (extents): 157
-    With decoded extents:   137
+    With decoded extents:   136
 
 ==============================================================================
 File Data Locations
@@ -23,7 +23,7 @@ File Data Locations
   RESIDENT  System Volume Information/WPSettings.dat
             size=12 (data inline in directory entry)
   EXTENT    test/xbpt_archive_romeo_596174.txt
-            size=186635, attrs=ARCHIVE, extents=5, clusters=46
+            size=186635, attrs=Archive, extents=5, clusters=46
             created=2026-05-16 16:41:28
             run: fvcn=0 VLCN=0x6720656 PLCN=0x3380656 clusters=1 disk=0x3381656000
             run: fvcn=1 VLCN=0x671ad2e PLCN=0x337ed2e clusters=34 disk=0x337fd2e000
@@ -32,23 +32,19 @@ File Data Locations
             run: fvcn=36 VLCN=0x671b168 PLCN=0x337f168 clusters=1 disk=0x3380168000
             (extents in remote OID 0x7f3)
   EXTENT    test/xbpt_config_hotel_558589.txt
-            size=192688, attrs=ARCHIVE, extents=8, clusters=35
+            size=192688, attrs=Archive, extents=2, clusters=48
             created=2026-05-16 16:41:28
-            run: fvcn=0 VLCN=0x67196cd PLCN=0x337d6cd clusters=1 disk=0x337e6cd000
-            run: fvcn=1 VLCN=0x67196ce PLCN=0x337d6ce clusters=10 disk=0x337e6ce000
-            run: fvcn=11 VLCN=0x67196d8 PLCN=0x337d6d8 clusters=1 disk=0x337e6d8000
-            run: fvcn=12 VLCN=0x671a0c0 PLCN=0x337e0c0 clusters=14 disk=0x337f0c0000
-            run: fvcn=26 VLCN=0x671a0ce PLCN=0x337e0ce clusters=1 disk=0x337f0ce000
-            run: fvcn=27 VLCN=0x671a7d4 PLCN=0x337e7d4 clusters=2 disk=0x337f7d4000
-            run: fvcn=30 VLCN=0x671b192 PLCN=0x337f192 clusters=5 disk=0x3380192000
-            run: fvcn=29 VLCN=0x671a7d6 PLCN=0x337e7d6 clusters=1 disk=0x337f7d6000
+            run: fvcn=1 VLCN=0x671b23c PLCN=0x337f23c clusters=47 disk=0x338023c000
+            run: fvcn=0 VLCN=0x671bd8e PLCN=0x337fd8e clusters=1 disk=0x3380d8e000
+            (extents in remote OID 0x7f8)
   EXTENT    test/xbpt_india_temp_831504.csv
-            size=475328, attrs=ARCHIVE, extents=2, clusters=19
+            size=475328, attrs=Archive, extents=2, clusters=117
             created=2024-04-02 07:16:32
-            run: fvcn=0 VLCN=0x672081a PLCN=0x338081a clusters=1 disk=0x338181a000
-            run: fvcn=1 VLCN=0x672081b PLCN=0x338081b clusters=18 disk=0x338181b000
+            run: fvcn=0 VLCN=0x671b7af PLCN=0x337f7af clusters=1 disk=0x33807af000
+            run: fvcn=1 VLCN=0x671b7b0 PLCN=0x337f7b0 clusters=116 disk=0x33807b0000
+            (extents in remote OID 0x7e9)
   EXTENT    test/xbpt_log_november_496320.csv
-            size=552331, attrs=ARCHIVE, extents=6, clusters=135
+            size=552331, attrs=Archive, extents=6, clusters=135
             created=2026-05-16 16:41:32
             run: fvcn=0 VLCN=0x671b9bc PLCN=0x337f9bc clusters=1 disk=0x33809bc000
             run: fvcn=1 VLCN=0x671ad52 PLCN=0x337ed52 clusters=110 disk=0x337fd52000
@@ -58,22 +54,19 @@ File Data Locations
             run: fvcn=125 VLCN=0x6720fe1 PLCN=0x3380fe1 clusters=10 disk=0x3381fe1000
             (extents in remote OID 0x7f3)
   EXTENT    test/xbpt_sierra_sync_956584.ini
-            size=19465, attrs=ARCHIVE, extents=2, clusters=5
+            size=19465, attrs=Archive, extents=2, clusters=5
             created=2026-05-16 16:41:29
             run: fvcn=0 VLCN=0x6723115 PLCN=0x3383115 clusters=1 disk=0x3384115000
             run: fvcn=1 VLCN=0x6723116 PLCN=0x3383116 clusters=4 disk=0x3384116000
             (extents in remote OID 0x7f2)
   EXTENT    test/xbpt_tango_foxtrot_898933.txt
-            size=207263, attrs=ARCHIVE, extents=8, clusters=35
+            size=207263, attrs=Archive, extents=4, clusters=51
             created=2026-05-16 16:41:31
-            run: fvcn=0 VLCN=0x67196cd PLCN=0x337d6cd clusters=1 disk=0x337e6cd000
-            run: fvcn=1 VLCN=0x67196ce PLCN=0x337d6ce clusters=10 disk=0x337e6ce000
-            run: fvcn=11 VLCN=0x67196d8 PLCN=0x337d6d8 clusters=1 disk=0x337e6d8000
-            run: fvcn=12 VLCN=0x671a0c0 PLCN=0x337e0c0 clusters=14 disk=0x337f0c0000
-            run: fvcn=26 VLCN=0x671a0ce PLCN=0x337e0ce clusters=1 disk=0x337f0ce000
-            run: fvcn=27 VLCN=0x671a7d4 PLCN=0x337e7d4 clusters=2 disk=0x337f7d4000
-            run: fvcn=30 VLCN=0x671b192 PLCN=0x337f192 clusters=5 disk=0x3380192000
-            run: fvcn=29 VLCN=0x671a7d6 PLCN=0x337e7d6 clusters=1 disk=0x337f7d6000
+            run: fvcn=0 VLCN=0x672306b PLCN=0x338306b clusters=1 disk=0x338406b000
+            run: fvcn=1 VLCN=0x67208f7 PLCN=0x33808f7 clusters=42 disk=0x33818f7000
+            run: fvcn=44 VLCN=0x6720d33 PLCN=0x3380d33 clusters=7 disk=0x3381d33000
+            run: fvcn=43 VLCN=0x6720921 PLCN=0x3380921 clusters=1 disk=0x3381921000
+            (extents in remote OID 0x806)
   RESIDENT  test/xbpt_beta_sierra_570651.json
             size=71395 (data inline in directory entry)
   RESIDENT  test/xbpt_config_log_714507.md
@@ -113,25 +106,25 @@ File Data Locations
   RESIDENT  test/xbpt_zulu_hotel_479124.bin
             size=454363 (data inline in directory entry)
   EXTENT    test/elvis_dir_index_149423/xbpt_beta_archive_985685.tmp
-            size=310564, attrs=ARCHIVE, extents=2, clusters=76
+            size=310564, attrs=Archive, extents=2, clusters=76
             created=2023-11-27 07:16:30
             run: fvcn=0 VLCN=0x6721a79 PLCN=0x3381a79 clusters=1 disk=0x3382a79000
             run: fvcn=1 VLCN=0x671bf74 PLCN=0x337ff74 clusters=75 disk=0x3380f74000
             (extents in remote OID 0x7e7)
   EXTENT    test/elvis_dir_index_149423/xbpt_draft_record_749595.cfg
-            size=239973, attrs=ARCHIVE, extents=2, clusters=59
+            size=239973, attrs=Archive, extents=2, clusters=59
             created=2026-05-16 16:41:29
             run: fvcn=0 VLCN=0x671b679 PLCN=0x337f679 clusters=1 disk=0x3380679000
             run: fvcn=1 VLCN=0x671b67a PLCN=0x337f67a clusters=58 disk=0x338067a000
             (extents in remote OID 0x7f3)
   EXTENT    test/elvis_dir_index_149423/xbpt_victor_gamma_564302.csv
-            size=306493, attrs=ARCHIVE, extents=2, clusters=75
+            size=306493, attrs=Archive, extents=2, clusters=75
             created=2026-05-16 16:41:30
             run: fvcn=0 VLCN=0x672041e PLCN=0x338041e clusters=1 disk=0x338141e000
             run: fvcn=1 VLCN=0x671a1a9 PLCN=0x337e1a9 clusters=74 disk=0x337f1a9000
             (extents in remote OID 0x7e9)
   EXTENT    test/elvis_dir_index_149423/xbpt_zulu_kilo_319858.csv
-            size=457030, attrs=ARCHIVE, extents=2, clusters=112
+            size=457030, attrs=Archive, extents=2, clusters=112
             created=2022-05-20 07:16:16
             run: fvcn=1 VLCN=0x671ad52 PLCN=0x337ed52 clusters=111 disk=0x337fd52000
             run: fvcn=0 VLCN=0x671b9bc PLCN=0x337f9bc clusters=1 disk=0x33809bc000
@@ -151,13 +144,13 @@ File Data Locations
   RESIDENT  test/elvis_dir_index_149423/xbpt_yankee_draft_816830.dat
             size=261891 (data inline in directory entry)
   EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_hotel_victor_678038.txt
-            size=453197, attrs=ARCHIVE, extents=2, clusters=111
+            size=453197, attrs=Archive, extents=2, clusters=111
             created=2026-05-16 16:41:34
             run: fvcn=0 VLCN=0x6728ddb PLCN=0x3384ddb clusters=1 disk=0x3385ddb000
             run: fvcn=1 VLCN=0x6722a50 PLCN=0x3382a50 clusters=110 disk=0x3383a50000
             (extents in remote OID 0x7ea)
   EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_whiskey_delta_922359.tmp
-            size=339532, attrs=ARCHIVE, extents=4, clusters=83
+            size=339532, attrs=Archive, extents=4, clusters=83
             created=2024-11-23 07:17:31
             run: fvcn=0 VLCN=0x6721a31 PLCN=0x3381a31 clusters=1 disk=0x3382a31000
             run: fvcn=1 VLCN=0x671bec3 PLCN=0x337fec3 clusters=75 disk=0x3380ec3000
@@ -175,13 +168,13 @@ File Data Locations
   RESIDENT  test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_zulu_papa_839258.bin
             size=166783 (data inline in directory entry)
   EXTENT    test/elvis_dir_india_800575/xbpt_foxtrot_zulu_156856.csv
-            size=130777, attrs=ARCHIVE, extents=2, clusters=32
+            size=130777, attrs=Archive, extents=2, clusters=32
             created=2026-05-16 16:41:30
             run: fvcn=1 VLCN=0x672071b PLCN=0x338071b clusters=31 disk=0x338171b000
             run: fvcn=0 VLCN=0x672306c PLCN=0x338306c clusters=1 disk=0x338406c000
             (extents in remote OID 0x7f2)
   EXTENT    test/elvis_dir_india_800575/xbpt_uniform_lima_155750.md
-            size=145250, attrs=ARCHIVE, extents=2, clusters=36
+            size=145250, attrs=Archive, extents=2, clusters=36
             created=2026-05-16 16:41:28
             run: fvcn=1 VLCN=0x671b515 PLCN=0x337f515 clusters=35 disk=0x3380515000
             run: fvcn=0 VLCN=0x6721a33 PLCN=0x3381a33 clusters=1 disk=0x3382a33000
@@ -213,7 +206,7 @@ File Data Locations
   RESIDENT  test/elvis_dir_india_800575/xbpt_sierra_data_271533.bin
             size=507751 (data inline in directory entry)
   EXTENT    test/elvis_dir_papa_805353/xbpt_temp_log_141240.cfg
-            size=185084, attrs=ARCHIVE, extents=2, clusters=46
+            size=185084, attrs=Archive, extents=2, clusters=46
             created=2026-05-16 16:41:31
             run: fvcn=0 VLCN=0x67213d0 PLCN=0x33813d0 clusters=1 disk=0x33823d0000
             run: fvcn=1 VLCN=0x67213d1 PLCN=0x33813d1 clusters=45 disk=0x33823d1000
@@ -235,7 +228,7 @@ File Data Locations
   RESIDENT  test/elvis_dir_papa_805353/xbpt_temp_data_294711.md
             size=187614 (data inline in directory entry)
   EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_backup_mike_407434.log
-            size=140609, attrs=ARCHIVE, extents=8, clusters=35
+            size=140609, attrs=Archive, extents=8, clusters=35
             created=2021-05-18 07:16:04
             run: fvcn=0 VLCN=0x67196cd PLCN=0x337d6cd clusters=1 disk=0x337e6cd000
             run: fvcn=1 VLCN=0x67196ce PLCN=0x337d6ce clusters=10 disk=0x337e6ce000
@@ -247,39 +240,37 @@ File Data Locations
             run: fvcn=29 VLCN=0x671a7d6 PLCN=0x337e7d6 clusters=1 disk=0x337f7d6000
             (extents in remote OID 0x7e5)
   EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_hardlink_echo_387599.ini
-            size=237968, attrs=ARCHIVE, extents=2, clusters=59
+            size=237968, attrs=Archive, extents=2, clusters=59
             created=2025-02-09 07:17:09
             run: fvcn=0 VLCN=0x6722eaf PLCN=0x3382eaf clusters=1 disk=0x3383eaf000
             run: fvcn=1 VLCN=0x6722eb0 PLCN=0x3382eb0 clusters=58 disk=0x3383eb0000
             (extents in remote OID 0x7f2)
   EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_hotel_kilo_705007.cfg
-            size=239973, attrs=ARCHIVE, extents=2, clusters=59
+            size=239973, attrs=Archive, extents=2, clusters=59
             created=2026-05-16 16:41:31
             run: fvcn=0 VLCN=0x671b679 PLCN=0x337f679 clusters=1 disk=0x3380679000
             run: fvcn=1 VLCN=0x671b67a PLCN=0x337f67a clusters=58 disk=0x338067a000
             (extents in remote OID 0x7f4)
   EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_index_index_579494.cfg
-            size=113106, attrs=ARCHIVE, extents=2, clusters=28
+            size=113106, attrs=Archive, extents=2, clusters=28
             created=2026-05-16 16:41:33
             run: fvcn=0 VLCN=0x6728dbf PLCN=0x3384dbf clusters=1 disk=0x3385dbf000
             run: fvcn=1 VLCN=0x6722021 PLCN=0x3382021 clusters=27 disk=0x3383021000
             (extents in remote OID 0x812)
   EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_log_output_579275.dat
-            size=123468, attrs=ARCHIVE, extents=5, clusters=46
+            size=123468, attrs=Archive, extents=2, clusters=31
             created=2026-05-16 16:41:28
-            run: fvcn=0 VLCN=0x6720656 PLCN=0x3380656 clusters=1 disk=0x3381656000
-            run: fvcn=1 VLCN=0x671ad2e PLCN=0x337ed2e clusters=34 disk=0x337fd2e000
-            run: fvcn=35 VLCN=0x671ad50 PLCN=0x337ed50 clusters=1 disk=0x337fd50000
-            run: fvcn=37 VLCN=0x671b169 PLCN=0x337f169 clusters=9 disk=0x3380169000
-            run: fvcn=36 VLCN=0x671b168 PLCN=0x337f168 clusters=1 disk=0x3380168000
+            run: fvcn=0 VLCN=0x672203c PLCN=0x338203c clusters=1 disk=0x338303c000
+            run: fvcn=1 VLCN=0x672203d PLCN=0x338203d clusters=30 disk=0x338303d000
+            (extents in remote OID 0x7f4)
   EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_quebec_papa_978800.txt
-            size=30711, attrs=ARCHIVE, extents=2, clusters=8
+            size=30711, attrs=Archive, extents=2, clusters=8
             created=2026-05-16 16:41:33
             run: fvcn=0 VLCN=0x6722f75 PLCN=0x3382f75 clusters=1 disk=0x3383f75000
             run: fvcn=1 VLCN=0x6722f76 PLCN=0x3382f76 clusters=7 disk=0x3383f76000
             (extents in remote OID 0x7e5)
   EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_sierra_echo_921063.xml
-            size=546650, attrs=ARCHIVE, extents=4, clusters=134
+            size=546650, attrs=Archive, extents=4, clusters=134
             created=2025-04-02 07:16:24
             run: fvcn=0 VLCN=0x6721a2f PLCN=0x3381a2f clusters=1 disk=0x3382a2f000
             run: fvcn=1 VLCN=0x671b499 PLCN=0x337f499 clusters=123 disk=0x3380499000
@@ -287,7 +278,7 @@ File Data Locations
             run: fvcn=124 VLCN=0x671b514 PLCN=0x337f514 clusters=1 disk=0x3380514000
             (extents in remote OID 0x7f8)
   EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_tango_echo_291736.csv
-            size=219586, attrs=ARCHIVE, extents=6, clusters=54
+            size=219586, attrs=Archive, extents=6, clusters=54
             created=2025-04-01 07:16:26
             run: fvcn=0 VLCN=0x671a966 PLCN=0x337e966 clusters=1 disk=0x337f966000
             run: fvcn=1 VLCN=0x671a967 PLCN=0x337e967 clusters=29 disk=0x337f967000
@@ -297,13 +288,11 @@ File Data Locations
             run: fvcn=44 VLCN=0x6728dc7 PLCN=0x3384dc7 clusters=1 disk=0x3385dc7000
             (extents in remote OID 0x7f4)
   EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_victor_tango_152379.bin
-            size=505381, attrs=ARCHIVE, extents=5, clusters=46
+            size=505381, attrs=Archive, extents=2, clusters=124
             created=2026-05-16 16:41:30
-            run: fvcn=0 VLCN=0x6720656 PLCN=0x3380656 clusters=1 disk=0x3381656000
-            run: fvcn=1 VLCN=0x671ad2e PLCN=0x337ed2e clusters=34 disk=0x337fd2e000
-            run: fvcn=35 VLCN=0x671ad50 PLCN=0x337ed50 clusters=1 disk=0x337fd50000
-            run: fvcn=37 VLCN=0x671b169 PLCN=0x337f169 clusters=9 disk=0x3380169000
-            run: fvcn=36 VLCN=0x671b168 PLCN=0x337f168 clusters=1 disk=0x3380168000
+            run: fvcn=0 VLCN=0x6721110 PLCN=0x3381110 clusters=1 disk=0x3382110000
+            run: fvcn=1 VLCN=0x672023c PLCN=0x338023c clusters=123 disk=0x338123c000
+            (extents in remote OID 0x7fb)
   RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_alpha_cache_742120.dat
             size=401806 (data inline in directory entry)
   RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_archive_trace_798923.cfg
@@ -337,7 +326,7 @@ File Data Locations
   RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_yankee_victor_114004.ini
             size=142209 (data inline in directory entry)
   EXTENT    test/elvis_dir_record_449015/xbpt_log_india_171227.csv
-            size=189614, attrs=ARCHIVE, extents=2, clusters=47
+            size=189614, attrs=Archive, extents=2, clusters=47
             created=2026-05-16 16:41:27
             run: fvcn=0 VLCN=0x67217d8 PLCN=0x33817d8 clusters=1 disk=0x33827d8000
             run: fvcn=1 VLCN=0x67217d9 PLCN=0x33817d9 clusters=46 disk=0x33827d9000
@@ -381,7 +370,7 @@ File Data Locations
   RESIDENT  test/elvis_dir_record_449015/xbpt_whiskey_sync_681180.xml
             size=117140 (data inline in directory entry)
   EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_index_draft_129088.bin
-            size=159126, attrs=ARCHIVE, extents=2, clusters=39
+            size=159126, attrs=Archive, extents=2, clusters=39
             created=2026-05-16 16:41:30
             run: fvcn=0 VLCN=0x672032b PLCN=0x338032b clusters=1 disk=0x338132b000
             run: fvcn=1 VLCN=0x6720176 PLCN=0x3380176 clusters=38 disk=0x3381176000
@@ -399,19 +388,19 @@ File Data Locations
   RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_yankee_report_288078.log
             size=2590 (data inline in directory entry)
   EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_draft_draft_797325.txt
-            size=396015, attrs=ARCHIVE, extents=2, clusters=97
+            size=396015, attrs=Archive, extents=2, clusters=97
             created=2026-05-16 16:41:31
             run: fvcn=0 VLCN=0x6720f75 PLCN=0x3380f75 clusters=1 disk=0x3381f75000
             run: fvcn=1 VLCN=0x6720f76 PLCN=0x3380f76 clusters=96 disk=0x3381f76000
             (extents in remote OID 0x7e5)
   EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_foxtrot_cache_816969.xml
-            size=378484, attrs=ARCHIVE, extents=2, clusters=93
+            size=378484, attrs=Archive, extents=2, clusters=93
             created=2026-05-16 16:41:33
             run: fvcn=0 VLCN=0x672297b PLCN=0x338297b clusters=1 disk=0x338397b000
             run: fvcn=1 VLCN=0x672297c PLCN=0x338297c clusters=92 disk=0x338397c000
             (extents in remote OID 0x7f3)
   EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_victor_sync_949138.bak
-            size=144033, attrs=ARCHIVE, extents=2, clusters=36
+            size=144033, attrs=Archive, extents=2, clusters=36
             created=2026-05-16 16:41:26
             run: fvcn=0 VLCN=0x672283b PLCN=0x338283b clusters=1 disk=0x338383b000
             run: fvcn=1 VLCN=0x672283c PLCN=0x338283c clusters=35 disk=0x338383c000
@@ -445,7 +434,7 @@ File Data Locations
   RESIDENT  test/elvis_dir_record_449015/elvis_dir_tango_434284/xbpt_data_config_437965.csv
             size=82819 (data inline in directory entry)
   EXTENT    test/elvis_dir_victor_783323/xbpt_report_quebec_867569.md
-            size=540829, attrs=ARCHIVE, extents=4, clusters=133
+            size=540829, attrs=Archive, extents=4, clusters=133
             created=2025-05-12 07:17:04
             run: fvcn=0 VLCN=0x671b734 PLCN=0x337f734 clusters=1 disk=0x3380734000
             run: fvcn=1 VLCN=0x671b735 PLCN=0x337f735 clusters=121 disk=0x3380735000
@@ -453,7 +442,7 @@ File Data Locations
             run: fvcn=122 VLCN=0x671b7ae PLCN=0x337f7ae clusters=1 disk=0x33807ae000
             (extents in remote OID 0x7eb)
   EXTENT    test/elvis_dir_victor_783323/xbpt_trace_cache_289808.json
-            size=40965, attrs=ARCHIVE, extents=2, clusters=11
+            size=40965, attrs=Archive, extents=2, clusters=11
             created=2026-05-16 16:41:32
             run: fvcn=1 VLCN=0x6721879 PLCN=0x3381879 clusters=10 disk=0x3382879000
             run: fvcn=0 VLCN=0x6723085 PLCN=0x3383085 clusters=1 disk=0x3384085000
@@ -499,12 +488,12 @@ File Data Locations
   RESIDENT  test/elvis_dir_victor_783323/xbpt_yankee_output_781405.csv
             size=414030 (data inline in directory entry)
   EXTENT    testspecials/cache_romeo_901499.xml
-            size=14876, attrs=ARCHIVE, extents=2, clusters=4
+            size=14876, attrs=Archive, extents=2, clusters=4
             created=2026-05-16 16:34:26
             run: fvcn=0 VLCN=0x6710002 PLCN=0x3378002 clusters=1 disk=0x3379002000
             run: fvcn=1 VLCN=0x6710079 PLCN=0x3378079 clusters=3 disk=0x3379079000
   EXTENT    testspecials/draft_uniform_166420.txt
-            size=502037, attrs=ARCHIVE, extents=6, clusters=123
+            size=502037, attrs=Archive, extents=6, clusters=123
             created=2025-08-10 16:35:01
             run: fvcn=0 VLCN=0x6710cde PLCN=0x3378cde clusters=64 disk=0x3379cde000
             run: fvcn=64 VLCN=0x6710d1e PLCN=0x3378d1e clusters=41 disk=0x3379d1e000
@@ -513,33 +502,34 @@ File Data Locations
             run: fvcn=111 VLCN=0x6711c03 PLCN=0x3379c03 clusters=12 disk=0x337ac03000
             run: fvcn=110 VLCN=0x6711861 PLCN=0x3379861 clusters=1 disk=0x337a861000
   EXTENT    testspecials/foxtrot_romeo_101133.csv
-            size=479429, attrs=ARCHIVE, extents=2, clusters=118
+            size=479429, attrs=Archive, extents=2, clusters=118
             created=2022-05-05 16:35:30
             run: fvcn=0 VLCN=0x6711f73 PLCN=0x3379f73 clusters=64 disk=0x337af73000
             run: fvcn=64 VLCN=0x6711fb3 PLCN=0x3379fb3 clusters=54 disk=0x337afb3000
   EXTENT    testspecials/hardlink_alpha_836959.txt
-            size=240655, attrs=ARCHIVE, extents=2, clusters=59
+            size=240655, attrs=Archive, extents=2, clusters=59
             created=2026-05-16 16:35:12
             run: fvcn=0 VLCN=0x67115de PLCN=0x33795de clusters=1 disk=0x337a5de000
             run: fvcn=1 VLCN=0x67115df PLCN=0x33795df clusters=58 disk=0x337a5df000
             (extents in remote OID 0x704)
   EXTENT    testspecials/hardlink_mike_576693.csv
-            size=293302, attrs=ARCHIVE, extents=2, clusters=118
+            size=293302, attrs=Archive, extents=2, clusters=118
             created=2022-08-11 16:34:51
             run: fvcn=0 VLCN=0x6711f73 PLCN=0x3379f73 clusters=64 disk=0x337af73000
             run: fvcn=64 VLCN=0x6711fb3 PLCN=0x3379fb3 clusters=54 disk=0x337afb3000
   EXTENT    testspecials/hardlink_output_565061.txt
-            size=6791, attrs=ARCHIVE, extents=2, clusters=77
+            size=6791, attrs=Archive, extents=2, clusters=2
             created=2026-05-16 16:36:00
-            run: fvcn=0 VLCN=0x671032d PLCN=0x337832d clusters=64 disk=0x337932d000
-            run: fvcn=64 VLCN=0x671036d PLCN=0x337836d clusters=13 disk=0x337936d000
+            run: fvcn=0 VLCN=0x6711e59 PLCN=0x3379e59 clusters=1 disk=0x337ae59000
+            run: fvcn=1 VLCN=0x6711e5b PLCN=0x3379e5b clusters=1 disk=0x337ae5b000
+            (extents in remote OID 0x743)
   EXTENT    testspecials/hardlink_uniform_425955.csv
-            size=493090, attrs=ARCHIVE, extents=2, clusters=118
+            size=493090, attrs=Archive, extents=2, clusters=118
             created=2024-02-23 16:34:40
             run: fvcn=0 VLCN=0x6711f73 PLCN=0x3379f73 clusters=64 disk=0x337af73000
             run: fvcn=64 VLCN=0x6711fb3 PLCN=0x3379fb3 clusters=54 disk=0x337afb3000
   EXTENT    testspecials/hardlink_yankee_419979.dat
-            size=391674, attrs=ARCHIVE, extents=4, clusters=96
+            size=391674, attrs=Archive, extents=4, clusters=96
             created=2026-05-16 16:34:41
             run: fvcn=0 VLCN=0x6710fdf PLCN=0x3378fdf clusters=64 disk=0x3379fdf000
             run: fvcn=64 VLCN=0x671101f PLCN=0x337901f clusters=29 disk=0x337a01f000
@@ -570,13 +560,13 @@ File Data Locations
   RESIDENT  testspecials/victor_echo_265953.bak
             size=150307 (data inline in directory entry)
   EXTENT    testspecials/dir_gamma_163068/hardlink_papa_658266.bin
-            size=218785, attrs=ARCHIVE, extents=2, clusters=54
+            size=218785, attrs=Archive, extents=2, clusters=54
             created=2026-05-16 16:34:29
             run: fvcn=0 VLCN=0x671028e PLCN=0x337828e clusters=1 disk=0x337928e000
             run: fvcn=1 VLCN=0x671028f PLCN=0x337828f clusters=53 disk=0x337928f000
             (extents in remote OID 0x70b)
   EXTENT    testspecials/dir_gamma_163068/hardlink_yankee_389124.bin
-            size=387261, attrs=ARCHIVE, extents=3, clusters=95
+            size=387261, attrs=Archive, extents=3, clusters=95
             created=2026-05-16 16:34:26
             run: fvcn=0 VLCN=0x6710003 PLCN=0x3378003 clusters=1 disk=0x3379003000
             run: fvcn=1 VLCN=0x6710004 PLCN=0x3378004 clusters=63 disk=0x3379004000
@@ -613,7 +603,7 @@ File Data Locations
   RESIDENT  testspecials/dir_gamma_163068/dir_config_495144/symlink_archive_481962.lnk
             size=0 (data inline in directory entry)
   EXTENT    testspecials/dir_gamma_163068/dir_echo_659970/hardlink_sync_214706.dat
-            size=391674, attrs=ARCHIVE, extents=4, clusters=96
+            size=391674, attrs=Archive, extents=4, clusters=96
             created=2026-05-16 16:34:41
             run: fvcn=0 VLCN=0x6710fdf PLCN=0x3378fdf clusters=64 disk=0x3379fdf000
             run: fvcn=64 VLCN=0x671101f PLCN=0x337901f clusters=29 disk=0x337a01f000
@@ -621,7 +611,7 @@ File Data Locations
             run: fvcn=93 VLCN=0x671103c PLCN=0x337903c clusters=1 disk=0x337a03c000
             (extents in remote OID 0x702)
   EXTENT    testspecials/dir_gamma_163068/dir_echo_659970/whiskey_index_751651.log
-            size=333927, attrs=ARCHIVE, extents=3, clusters=82
+            size=333927, attrs=Archive, extents=3, clusters=82
             created=2026-05-16 16:34:33
             run: fvcn=0 VLCN=0x67105d8 PLCN=0x33785d8 clusters=1 disk=0x33795d8000
             run: fvcn=1 VLCN=0x67105d9 PLCN=0x33785d9 clusters=63 disk=0x33795d9000
@@ -642,46 +632,52 @@ File Data Locations
   RESIDENT  testspecials/dir_gamma_163068/dir_echo_659970/symlink_romeo_322401.lnk
             size=0 (data inline in directory entry)
   EXTENT    testspecials/dir_november_947335/alpha_index_636390.ini
-            size=60201, attrs=ARCHIVE, extents=2, clusters=15
+            size=60201, attrs=Archive, extents=2, clusters=15
             created=2026-05-16 16:34:37
             run: fvcn=0 VLCN=0x6710954 PLCN=0x3378954 clusters=1 disk=0x3379954000
             run: fvcn=1 VLCN=0x6710955 PLCN=0x3378955 clusters=14 disk=0x3379955000
   EXTENT    testspecials/dir_november_947335/audit_trace_964546.txt
-            size=401219, attrs=ARCHIVE, extents=3, clusters=98
+            size=401219, attrs=Archive, extents=3, clusters=98
             created=2026-05-16 16:35:09
             run: fvcn=0 VLCN=0x6711514 PLCN=0x3379514 clusters=1 disk=0x337a514000
             run: fvcn=1 VLCN=0x6711515 PLCN=0x3379515 clusters=63 disk=0x337a515000
             run: fvcn=64 VLCN=0x6711554 PLCN=0x3379554 clusters=34 disk=0x337a554000
   EXTENT    testspecials/dir_november_947335/hardlink_beta_183705.txt
-            size=401219, attrs=ARCHIVE, extents=3, clusters=98
+            size=401219, attrs=Archive, extents=3, clusters=98
             created=2026-05-16 16:35:09
             run: fvcn=0 VLCN=0x6711514 PLCN=0x3379514 clusters=1 disk=0x337a514000
             run: fvcn=1 VLCN=0x6711515 PLCN=0x3379515 clusters=63 disk=0x337a515000
             run: fvcn=64 VLCN=0x6711554 PLCN=0x3379554 clusters=34 disk=0x337a554000
   EXTENT    testspecials/dir_november_947335/hardlink_echo_752214.tmp
-            size=240062, attrs=ARCHIVE, extents=2, clusters=23
+            size=240062, attrs=Archive, extents=4, clusters=59
             created=2026-05-16 16:34:27
-            run: fvcn=0 VLCN=0x67101da PLCN=0x33781da clusters=1 disk=0x33791da000
-            run: fvcn=1 VLCN=0x671022e PLCN=0x337822e clusters=22 disk=0x337922e000
+            run: fvcn=0 VLCN=0x671007c PLCN=0x337807c clusters=1 disk=0x337907c000
+            run: fvcn=1 VLCN=0x671007f PLCN=0x337807f clusters=51 disk=0x337907f000
+            run: fvcn=53 VLCN=0x67109a9 PLCN=0x33789a9 clusters=6 disk=0x33799a9000
+            run: fvcn=52 VLCN=0x67100b2 PLCN=0x33780b2 clusters=1 disk=0x33790b2000
+            (extents in remote OID 0x705)
   EXTENT    testspecials/dir_november_947335/hardlink_log_446439.tmp
-            size=216069, attrs=ARCHIVE, extents=2, clusters=23
+            size=216069, attrs=Archive, extents=4, clusters=59
             created=2026-05-16 16:34:27
-            run: fvcn=0 VLCN=0x67101da PLCN=0x33781da clusters=1 disk=0x33791da000
-            run: fvcn=1 VLCN=0x671022e PLCN=0x337822e clusters=22 disk=0x337922e000
+            run: fvcn=0 VLCN=0x671007c PLCN=0x337807c clusters=1 disk=0x337907c000
+            run: fvcn=1 VLCN=0x671007f PLCN=0x337807f clusters=51 disk=0x337907f000
+            run: fvcn=53 VLCN=0x67109a9 PLCN=0x33789a9 clusters=6 disk=0x33799a9000
+            run: fvcn=52 VLCN=0x67100b2 PLCN=0x33780b2 clusters=1 disk=0x33790b2000
+            (extents in remote OID 0x705)
   NOEXTENT  testspecials/dir_november_947335/hardlink_mike_216457.ini
             size=77841 (extents not decoded — may be in remote OID 0x708)
   EXTENT    testspecials/dir_november_947335/hardlink_oscar_269153.ini
-            size=60201, attrs=ARCHIVE, extents=2, clusters=15
+            size=60201, attrs=Archive, extents=2, clusters=15
             created=2026-05-16 16:34:37
             run: fvcn=0 VLCN=0x6710954 PLCN=0x3378954 clusters=1 disk=0x3379954000
             run: fvcn=1 VLCN=0x6710955 PLCN=0x3378955 clusters=14 disk=0x3379955000
   EXTENT    testspecials/dir_november_947335/hardlink_trace_748877.ini
-            size=60201, attrs=ARCHIVE, extents=2, clusters=15
+            size=60201, attrs=Archive, extents=2, clusters=15
             created=2026-05-16 16:34:37
             run: fvcn=0 VLCN=0x6710954 PLCN=0x3378954 clusters=1 disk=0x3379954000
             run: fvcn=1 VLCN=0x6710955 PLCN=0x3378955 clusters=14 disk=0x3379955000
   EXTENT    testspecials/dir_november_947335/hardlink_uniform_287325.bin
-            size=387261, attrs=ARCHIVE, extents=3, clusters=95
+            size=387261, attrs=Archive, extents=3, clusters=95
             created=2026-05-16 16:34:26
             run: fvcn=0 VLCN=0x6710003 PLCN=0x3378003 clusters=1 disk=0x3379003000
             run: fvcn=1 VLCN=0x6710004 PLCN=0x3378004 clusters=63 disk=0x3379004000
@@ -718,14 +714,14 @@ File Data Locations
   RESIDENT  testspecials/dir_november_947335/yankee_delta_445163.json
             size=42211 (data inline in directory entry)
   EXTENT    testspecials/dir_november_947335/dir_archive_582163/alpha_draft_101283.tmp
-            size=479133, attrs=ARCHIVE, extents=4, clusters=117
+            size=479133, attrs=Archive, extents=4, clusters=117
             created=2026-05-16 16:36:05
             run: fvcn=0 VLCN=0x6710d87 PLCN=0x3378d87 clusters=1 disk=0x3379d87000
             run: fvcn=1 VLCN=0x67101db PLCN=0x33781db clusters=63 disk=0x33791db000
             run: fvcn=64 VLCN=0x671021a PLCN=0x337821a clusters=20 disk=0x337921a000
             run: fvcn=84 VLCN=0x6710acc PLCN=0x3378acc clusters=33 disk=0x3379acc000
   EXTENT    testspecials/dir_november_947335/dir_archive_582163/foxtrot_beta_882942.bin
-            size=387261, attrs=ARCHIVE, extents=3, clusters=95
+            size=387261, attrs=Archive, extents=3, clusters=95
             created=2026-05-16 16:34:26
             run: fvcn=0 VLCN=0x6710003 PLCN=0x3378003 clusters=1 disk=0x3379003000
             run: fvcn=1 VLCN=0x6710004 PLCN=0x3378004 clusters=63 disk=0x3379004000
@@ -744,25 +740,25 @@ File Data Locations
   RESIDENT  testspecials/dir_november_947335/dir_archive_582163/sync_papa_730090.bin
             size=46898 (data inline in directory entry)
   EXTENT    testspecials/dir_november_947335/dir_draft_325504/beta_november_982688.json
-            size=159059, attrs=ARCHIVE, extents=2, clusters=39
+            size=159059, attrs=Archive, extents=2, clusters=39
             created=2026-05-16 16:34:58
             run: fvcn=0 VLCN=0x67112c3 PLCN=0x33792c3 clusters=1 disk=0x337a2c3000
             run: fvcn=1 VLCN=0x67112c4 PLCN=0x33792c4 clusters=38 disk=0x337a2c4000
   EXTENT    testspecials/dir_november_947335/dir_draft_325504/hardlink_mike_930037.xml
-            size=14876, attrs=ARCHIVE, extents=2, clusters=4
+            size=14876, attrs=Archive, extents=2, clusters=4
             created=2026-05-16 16:34:26
             run: fvcn=0 VLCN=0x6710002 PLCN=0x3378002 clusters=1 disk=0x3379002000
             run: fvcn=1 VLCN=0x6710079 PLCN=0x3378079 clusters=3 disk=0x3379079000
             (extents in remote OID 0x702)
   EXTENT    testspecials/dir_november_947335/dir_draft_325504/hardlink_tango_875081.csv
-            size=287132, attrs=ARCHIVE, extents=3, clusters=71
+            size=287132, attrs=Archive, extents=3, clusters=71
             created=2026-05-16 16:34:34
             run: fvcn=0 VLCN=0x671068c PLCN=0x337868c clusters=1 disk=0x337968c000
             run: fvcn=1 VLCN=0x671068d PLCN=0x337868d clusters=63 disk=0x337968d000
             run: fvcn=64 VLCN=0x67106cc PLCN=0x33786cc clusters=7 disk=0x33796cc000
             (extents in remote OID 0x703)
   EXTENT    testspecials/dir_november_947335/dir_draft_325504/hardlink_temp_320465.txt
-            size=418076, attrs=ARCHIVE, extents=3, clusters=103
+            size=418076, attrs=Archive, extents=3, clusters=103
             created=2026-05-16 16:35:30
             run: fvcn=0 VLCN=0x671190e PLCN=0x337990e clusters=1 disk=0x337a90e000
             run: fvcn=1 VLCN=0x671190f PLCN=0x337990f clusters=63 disk=0x337a90f000
@@ -783,13 +779,13 @@ File Data Locations
   RESIDENT  testspecials/dir_november_947335/dir_draft_325504/yankee_papa_632137.lnk
             size=0 (data inline in directory entry)
   EXTENT    testspecials/dir_november_947335/dir_india_538407/hardlink_config_676528.csv
-            size=479429, attrs=ARCHIVE, extents=2, clusters=118
+            size=479429, attrs=Archive, extents=2, clusters=118
             created=2022-05-05 16:35:30
             run: fvcn=0 VLCN=0x6711f73 PLCN=0x3379f73 clusters=64 disk=0x337af73000
             run: fvcn=64 VLCN=0x6711fb3 PLCN=0x3379fb3 clusters=54 disk=0x337afb3000
             (extents in remote OID 0x702)
   EXTENT    testspecials/dir_november_947335/dir_india_538407/hardlink_draft_409887.log
-            size=344423, attrs=ARCHIVE, extents=3, clusters=85
+            size=344423, attrs=Archive, extents=3, clusters=85
             created=2026-05-16 16:36:16
             run: fvcn=0 VLCN=0x67120bc PLCN=0x337a0bc clusters=1 disk=0x337b0bc000
             run: fvcn=1 VLCN=0x67120bd PLCN=0x337a0bd clusters=63 disk=0x337b0bd000
@@ -798,7 +794,7 @@ File Data Locations
   NOEXTENT  testspecials/dir_november_947335/dir_india_538407/hardlink_echo_843063.ini
             size=77841 (extents not decoded — may be in remote OID 0x708)
   EXTENT    testspecials/dir_november_947335/dir_india_538407/hardlink_sierra_850190.bin
-            size=339030, attrs=ARCHIVE, extents=3, clusters=83
+            size=339030, attrs=Archive, extents=3, clusters=83
             created=2026-05-16 16:35:44
             run: fvcn=0 VLCN=0x6711b21 PLCN=0x3379b21 clusters=1 disk=0x337ab21000
             run: fvcn=1 VLCN=0x67180ee PLCN=0x337c0ee clusters=63 disk=0x337d0ee000
@@ -813,18 +809,18 @@ File Data Locations
   RESIDENT  testspecials/dir_november_947335/dir_india_538407/symlink_temp_929959.lnk
             size=0 (data inline in directory entry)
   EXTENT    testspecials/dir_november_947335/dir_mike_527964/archive_hotel_315130.json
-            size=93150, attrs=ARCHIVE, extents=2, clusters=23
+            size=93150, attrs=Archive, extents=2, clusters=23
             created=2026-05-16 16:35:08
             run: fvcn=0 VLCN=0x671147c PLCN=0x337947c clusters=1 disk=0x337a47c000
             run: fvcn=1 VLCN=0x671147d PLCN=0x337947d clusters=22 disk=0x337a47d000
   EXTENT    testspecials/dir_november_947335/dir_mike_527964/hardlink_gamma_178937.cfg
-            size=242955, attrs=ARCHIVE, extents=2, clusters=60
+            size=242955, attrs=Archive, extents=2, clusters=60
             created=2026-05-16 16:35:39
             run: fvcn=0 VLCN=0x6710abf PLCN=0x3378abf clusters=1 disk=0x3379abf000
             run: fvcn=1 VLCN=0x67102c4 PLCN=0x33782c4 clusters=59 disk=0x33792c4000
             (extents in remote OID 0x703)
   EXTENT    testspecials/dir_november_947335/dir_mike_527964/hardlink_oscar_181976.bak
-            size=324299, attrs=ARCHIVE, extents=3, clusters=80
+            size=324299, attrs=Archive, extents=3, clusters=80
             created=2026-05-16 16:34:50
             run: fvcn=0 VLCN=0x6711065 PLCN=0x3379065 clusters=1 disk=0x337a065000
             run: fvcn=1 VLCN=0x6711066 PLCN=0x3379066 clusters=63 disk=0x337a066000
@@ -843,13 +839,13 @@ File Data Locations
   RESIDENT  testspecials/dir_november_947335/dir_mike_527964/symlink_yankee_939835.lnk
             size=0 (data inline in directory entry)
   EXTENT    testspecials/dir_november_947335/dir_oscar_742900/hardlink_index_327362.bin
-            size=256314, attrs=ARCHIVE, extents=2, clusters=63
+            size=256314, attrs=Archive, extents=2, clusters=63
             created=2026-05-16 16:35:57
             run: fvcn=0 VLCN=0x6711db2 PLCN=0x3379db2 clusters=1 disk=0x337adb2000
             run: fvcn=1 VLCN=0x6711db3 PLCN=0x3379db3 clusters=62 disk=0x337adb3000
             (extents in remote OID 0x751)
   EXTENT    testspecials/dir_november_947335/dir_oscar_742900/hardlink_whiskey_488672.json
-            size=93150, attrs=ARCHIVE, extents=2, clusters=23
+            size=93150, attrs=Archive, extents=2, clusters=23
             created=2026-05-16 16:35:08
             run: fvcn=0 VLCN=0x671147c PLCN=0x337947c clusters=1 disk=0x337a47c000
             run: fvcn=1 VLCN=0x671147d PLCN=0x337947d clusters=22 disk=0x337a47d000
@@ -861,7 +857,7 @@ File Data Locations
   RESIDENT  testspecials/dir_november_947335/dir_oscar_742900/zulu_lima_446963.cfg
             size=360540 (data inline in directory entry)
   EXTENT    testspecials/dir_november_947335/dir_sync_924581/hardlink_november_224111.csv
-            size=479429, attrs=ARCHIVE, extents=2, clusters=118
+            size=479429, attrs=Archive, extents=2, clusters=118
             created=2022-05-05 16:35:30
             run: fvcn=0 VLCN=0x6711f73 PLCN=0x3379f73 clusters=64 disk=0x337af73000
             run: fvcn=64 VLCN=0x6711fb3 PLCN=0x3379fb3 clusters=54 disk=0x337afb3000
@@ -887,7 +883,7 @@ File Data Locations
   RESIDENT  testspecials/dir_oscar_867591/dir_hotel_124748/draft_data_710149.tmp
             size=520015 (data inline in directory entry)
   EXTENT    testspecials/dir_oscar_867591/dir_sync_598613/hardlink_draft_602647.json
-            size=93150, attrs=ARCHIVE, extents=2, clusters=23
+            size=93150, attrs=Archive, extents=2, clusters=23
             created=2026-05-16 16:35:08
             run: fvcn=0 VLCN=0x671147c PLCN=0x337947c clusters=1 disk=0x337a47c000
             run: fvcn=1 VLCN=0x671147d PLCN=0x337947d clusters=22 disk=0x337a47d000
@@ -899,7 +895,7 @@ File Data Locations
   RESIDENT  testspecials/dir_oscar_867591/dir_sync_598613/yankee_temp_745277.ini
             size=94964 (data inline in directory entry)
   EXTENT    testspecials/dir_uniform_195248/hardlink_romeo_354340.tmp
-            size=479133, attrs=ARCHIVE, extents=4, clusters=117
+            size=479133, attrs=Archive, extents=4, clusters=117
             created=2026-05-16 16:36:05
             run: fvcn=0 VLCN=0x6710d87 PLCN=0x3378d87 clusters=1 disk=0x3379d87000
             run: fvcn=1 VLCN=0x67101db PLCN=0x33781db clusters=63 disk=0x33791db000
@@ -907,14 +903,14 @@ File Data Locations
             run: fvcn=84 VLCN=0x6710acc PLCN=0x3378acc clusters=33 disk=0x3379acc000
             (extents in remote OID 0x75a)
   EXTENT    testspecials/dir_uniform_195248/hardlink_tango_490232.bak
-            size=301554, attrs=ARCHIVE, extents=3, clusters=74
+            size=301554, attrs=Archive, extents=3, clusters=74
             created=2026-05-16 16:34:44
             run: fvcn=0 VLCN=0x6710ba2 PLCN=0x3378ba2 clusters=1 disk=0x3379ba2000
             run: fvcn=1 VLCN=0x6710ba3 PLCN=0x3378ba3 clusters=63 disk=0x3379ba3000
             run: fvcn=64 VLCN=0x6710be2 PLCN=0x3378be2 clusters=10 disk=0x3379be2000
             (extents in remote OID 0x71d)
   EXTENT    testspecials/dir_uniform_195248/hardlink_temp_982613.txt
-            size=502037, attrs=ARCHIVE, extents=6, clusters=123
+            size=502037, attrs=Archive, extents=6, clusters=123
             created=2025-08-10 16:35:01
             run: fvcn=0 VLCN=0x6710cde PLCN=0x3378cde clusters=64 disk=0x3379cde000
             run: fvcn=64 VLCN=0x6710d1e PLCN=0x3378d1e clusters=41 disk=0x3379d1e000
@@ -938,14 +934,14 @@ File Data Locations
   RESIDENT  testspecials/dir_uniform_195248/dir_hotel_837877/uniform_sync_171039.txt
             size=31839 (data inline in directory entry)
   EXTENT    testspecials/dir_uniform_544837/hardlink_cache_388702.md
-            size=384053, attrs=ARCHIVE, extents=3, clusters=94
+            size=384053, attrs=Archive, extents=3, clusters=94
             created=2026-05-16 16:34:56
             run: fvcn=0 VLCN=0x6711265 PLCN=0x3379265 clusters=1 disk=0x337a265000
             run: fvcn=1 VLCN=0x6711266 PLCN=0x3379266 clusters=63 disk=0x337a266000
             run: fvcn=64 VLCN=0x67112a5 PLCN=0x33792a5 clusters=30 disk=0x337a2a5000
             (extents in remote OID 0x71f)
   EXTENT    testspecials/dir_uniform_544837/hardlink_papa_582242.txt
-            size=77879, attrs=ARCHIVE, extents=2, clusters=20
+            size=77879, attrs=Archive, extents=2, clusters=20
             created=2026-05-16 16:35:09
             run: fvcn=0 VLCN=0x6711576 PLCN=0x3379576 clusters=1 disk=0x337a576000
             run: fvcn=1 VLCN=0x6711577 PLCN=0x3379577 clusters=19 disk=0x337a577000
@@ -974,7 +970,7 @@ File Data Locations
             run: fvcn=64 VLCN=0x6711a7d PLCN=0x3379a7d clusters=14 disk=0x337aa7d000
             (extents in remote OID 0x72e)
   EXTENT    testspecials/dir_uniform_544837/dir_cache_866824/hardlink_oscar_837103.md
-            size=381146, attrs=ARCHIVE, extents=3, clusters=94
+            size=381146, attrs=Archive, extents=3, clusters=94
             created=2026-05-16 16:35:28
             run: fvcn=0 VLCN=0x6711867 PLCN=0x3379867 clusters=1 disk=0x337a867000
             run: fvcn=1 VLCN=0x67118b1 PLCN=0x33798b1 clusters=63 disk=0x337a8b1000
@@ -989,12 +985,12 @@ File Data Locations
   RESIDENT  testspecials/dir_uniform_544837/dir_cache_866824/victor_log_335120.ini
             size=60201 (data inline in directory entry)
   EXTENT    testspecials/dir_uniform_544837/dir_output_654155/draft_output_343220.txt
-            size=77879, attrs=ARCHIVE, extents=2, clusters=20
+            size=77879, attrs=Archive, extents=2, clusters=20
             created=2026-05-16 16:35:09
             run: fvcn=0 VLCN=0x6711576 PLCN=0x3379576 clusters=1 disk=0x337a576000
             run: fvcn=1 VLCN=0x6711577 PLCN=0x3379577 clusters=19 disk=0x337a577000
   EXTENT    testspecials/dir_uniform_544837/dir_output_654155/november_sierra_162462.tmp
-            size=240062, attrs=ARCHIVE, extents=5, clusters=59
+            size=240062, attrs=Archive, extents=5, clusters=59
             created=2026-05-16 16:35:26
             run: fvcn=0 VLCN=0x671007c PLCN=0x337807c clusters=1 disk=0x337907c000
             run: fvcn=1 VLCN=0x671007f PLCN=0x337807f clusters=51 disk=0x337907f000
@@ -1002,7 +998,7 @@ File Data Locations
             run: fvcn=53 VLCN=0x67109a9 PLCN=0x33789a9 clusters=5 disk=0x33799a9000
             run: fvcn=58 VLCN=0x671185c PLCN=0x337985c clusters=1 disk=0x337a85c000
   EXTENT    testspecials/dir_uniform_544837/dir_output_654155/papa_sierra_190261.xml
-            size=14876, attrs=ARCHIVE, extents=2, clusters=4
+            size=14876, attrs=Archive, extents=2, clusters=4
             created=2026-05-16 16:34:26
             run: fvcn=0 VLCN=0x6710002 PLCN=0x3378002 clusters=1 disk=0x3379002000
             run: fvcn=1 VLCN=0x6710079 PLCN=0x3378079 clusters=3 disk=0x3379079000
@@ -1020,16 +1016,18 @@ File Data Locations
   RESIDENT  testspecials/dir_uniform_544837/dir_output_654155/victor_sierra_771451.bak
             size=163421 (data inline in directory entry)
   EXTENT    testspecials2/backup_draft_705865.log
-            size=119857, attrs=ARCHIVE, extents=1, clusters=34
+            size=119857, attrs=Archive, extents=2, clusters=30
             created=2026-05-16 16:38:10
-            run: fvcn=0 VLCN=0x67123ce PLCN=0x337a3ce clusters=34 disk=0x337b3ce000
+            run: fvcn=0 VLCN=0x6713a5b PLCN=0x337ba5b clusters=1 disk=0x337ca5b000
+            run: fvcn=1 VLCN=0x6713a64 PLCN=0x337ba64 clusters=29 disk=0x337ca64000
+            (extents in remote OID 0x7a2)
   EXTENT    testspecials2/beta_foxtrot_228821.json
-            size=111602, attrs=ARCHIVE, extents=2, clusters=28
+            size=111602, attrs=Archive, extents=2, clusters=28
             created=2026-05-16 16:38:29
             run: fvcn=0 VLCN=0x6712c59 PLCN=0x337ac59 clusters=1 disk=0x337bc59000
             run: fvcn=1 VLCN=0x6712d2d PLCN=0x337ad2d clusters=27 disk=0x337bd2d000
   EXTENT    testspecials2/delta_log_990456.ini
-            size=444092, attrs=ARCHIVE, extents=6, clusters=109
+            size=444092, attrs=Archive, extents=6, clusters=109
             created=2026-05-16 16:37:43
             run: fvcn=0 VLCN=0x6713010 PLCN=0x337b010 clusters=64 disk=0x337c010000
             run: fvcn=64 VLCN=0x6713050 PLCN=0x337b050 clusters=24 disk=0x337c050000
@@ -1038,35 +1036,33 @@ File Data Locations
             run: fvcn=105 VLCN=0x6713853 PLCN=0x337b853 clusters=4 disk=0x337c853000
             run: fvcn=104 VLCN=0x6713720 PLCN=0x337b720 clusters=1 disk=0x337c720000
   EXTENT    testspecials2/draft_romeo_843020.log
-            size=480960, attrs=ARCHIVE, extents=3, clusters=118
+            size=480960, attrs=Archive, extents=3, clusters=118
             created=2026-05-16 16:37:43
             run: fvcn=0 VLCN=0x6712c63 PLCN=0x337ac63 clusters=1 disk=0x337bc63000
             run: fvcn=1 VLCN=0x6712c64 PLCN=0x337ac64 clusters=63 disk=0x337bc64000
             run: fvcn=64 VLCN=0x6712ca3 PLCN=0x337aca3 clusters=54 disk=0x337bca3000
   EXTENT    testspecials2/foxtrot_backup_112225.json
-            size=166308, attrs=ARCHIVE, extents=2, clusters=41
+            size=166308, attrs=Archive, extents=2, clusters=41
             created=2026-05-16 16:37:42
             run: fvcn=0 VLCN=0x6712cdb PLCN=0x337acdb clusters=1 disk=0x337bcdb000
             run: fvcn=1 VLCN=0x6712cf9 PLCN=0x337acf9 clusters=40 disk=0x337bcf9000
   EXTENT    testspecials2/foxtrot_output_368928.md
-            size=210671, attrs=ARCHIVE, extents=2, clusters=52
+            size=210671, attrs=Archive, extents=2, clusters=52
             created=2026-05-16 16:37:44
             run: fvcn=0 VLCN=0x6712f92 PLCN=0x337af92 clusters=1 disk=0x337bf92000
             run: fvcn=1 VLCN=0x6712f93 PLCN=0x337af93 clusters=51 disk=0x337bf93000
   NOEXTENT  testspecials2/hardlink_backup_438537.md
             size=265491 (extents not decoded — may be in remote OID 0x779)
-  EXTENT    testspecials2/hardlink_hotel_900638.xml
-            size=116264, attrs=ARCHIVE, extents=1, clusters=34
-            created=2026-05-16 16:37:43
-            run: fvcn=0 VLCN=0x67123ce PLCN=0x337a3ce clusters=34 disk=0x337b3ce000
+  NOEXTENT  testspecials2/hardlink_hotel_900638.xml
+            size=116264 (extents not decoded — may be in remote OID 0x776)
   EXTENT    testspecials2/hardlink_uniform_628960.log
-            size=191037, attrs=ARCHIVE, extents=3, clusters=47
+            size=191037, attrs=Archive, extents=3, clusters=47
             created=2022-10-13 16:40:23
             run: fvcn=0 VLCN=0x67139da PLCN=0x337b9da clusters=40 disk=0x337c9da000
             run: fvcn=41 VLCN=0x6718d78 PLCN=0x337cd78 clusters=6 disk=0x337dd78000
             run: fvcn=40 VLCN=0x6713a02 PLCN=0x337ba02 clusters=1 disk=0x337ca02000
   EXTENT    testspecials2/hardlink_zulu_148090.log
-            size=503630, attrs=ARCHIVE, extents=6, clusters=123
+            size=503630, attrs=Archive, extents=6, clusters=123
             created=2026-05-16 16:37:43
             run: fvcn=0 VLCN=0x6712dc3 PLCN=0x337adc3 clusters=64 disk=0x337bdc3000
             run: fvcn=64 VLCN=0x6712e03 PLCN=0x337ae03 clusters=41 disk=0x337be03000
@@ -1075,17 +1071,17 @@ File Data Locations
             run: fvcn=115 VLCN=0x67190f0 PLCN=0x337d0f0 clusters=8 disk=0x337e0f0000
             run: fvcn=114 VLCN=0x6713359 PLCN=0x337b359 clusters=1 disk=0x337c359000
   EXTENT    testspecials2/india_zulu_632200.md
-            size=138851, attrs=ARCHIVE, extents=1, clusters=34
+            size=138851, attrs=Archive, extents=1, clusters=34
             created=2024-01-08 16:38:05
             run: fvcn=0 VLCN=0x67123ce PLCN=0x337a3ce clusters=34 disk=0x337b3ce000
   EXTENT    testspecials2/mike_cache_429213.bak
-            size=282007, attrs=ARCHIVE, extents=3, clusters=69
+            size=282007, attrs=Archive, extents=3, clusters=69
             created=2021-11-16 16:37:57
             run: fvcn=0 VLCN=0x6712dc2 PLCN=0x337adc2 clusters=1 disk=0x337bdc2000
             run: fvcn=1 VLCN=0x6712e2d PLCN=0x337ae2d clusters=63 disk=0x337be2d000
             run: fvcn=64 VLCN=0x6712e6c PLCN=0x337ae6c clusters=5 disk=0x337be6c000
   EXTENT    testspecials2/november_papa_479034.log
-            size=470303, attrs=ARCHIVE, extents=6, clusters=123
+            size=470303, attrs=Archive, extents=6, clusters=123
             created=2026-05-16 16:37:43
             run: fvcn=0 VLCN=0x6712dc3 PLCN=0x337adc3 clusters=64 disk=0x337bdc3000
             run: fvcn=64 VLCN=0x6712e03 PLCN=0x337ae03 clusters=41 disk=0x337be03000
@@ -1094,19 +1090,19 @@ File Data Locations
             run: fvcn=115 VLCN=0x67190f0 PLCN=0x337d0f0 clusters=8 disk=0x337e0f0000
             run: fvcn=114 VLCN=0x6713359 PLCN=0x337b359 clusters=1 disk=0x337c359000
   EXTENT    testspecials2/quebec_record_289611.log
-            size=185287, attrs=ARCHIVE, extents=2, clusters=46
+            size=185287, attrs=Archive, extents=2, clusters=46
             created=2026-05-16 16:37:49
             run: fvcn=0 VLCN=0x671331d PLCN=0x337b31d clusters=1 disk=0x337c31d000
             run: fvcn=1 VLCN=0x671331e PLCN=0x337b31e clusters=45 disk=0x337c31e000
   NOEXTENT  testspecials2/sync_lima_360177.dat
             size=227150 (extents not decoded — may be in remote OID 0x775)
   EXTENT    testspecials2/trace_output_728574.bin
-            size=278005, attrs=ARCHIVE, extents=2, clusters=68
+            size=278005, attrs=Archive, extents=2, clusters=68
             created=2026-05-16 16:37:43
             run: fvcn=0 VLCN=0x672008f PLCN=0x338008f clusters=64 disk=0x338108f000
             run: fvcn=64 VLCN=0x67200cf PLCN=0x33800cf clusters=4 disk=0x33810cf000
   EXTENT    testspecials2/trace_trace_495265.log
-            size=191037, attrs=ARCHIVE, extents=3, clusters=47
+            size=191037, attrs=Archive, extents=3, clusters=47
             created=2022-10-13 16:40:23
             run: fvcn=0 VLCN=0x67139da PLCN=0x337b9da clusters=40 disk=0x337c9da000
             run: fvcn=41 VLCN=0x6718d78 PLCN=0x337cd78 clusters=6 disk=0x337dd78000
@@ -1132,14 +1128,14 @@ File Data Locations
   RESIDENT  testspecials2/trace_india_709514.bin
             size=21725 (data inline in directory entry)
   EXTENT    testspecials2/dir_kilo_616914/hardlink_audit_267723.cfg
-            size=409516, attrs=ARCHIVE, extents=3, clusters=100
+            size=409516, attrs=Archive, extents=3, clusters=100
             created=2026-05-16 16:37:58
             run: fvcn=0 VLCN=0x67136ad PLCN=0x337b6ad clusters=1 disk=0x337c6ad000
             run: fvcn=1 VLCN=0x67136ae PLCN=0x337b6ae clusters=63 disk=0x337c6ae000
             run: fvcn=64 VLCN=0x67136ed PLCN=0x337b6ed clusters=36 disk=0x337c6ed000
             (extents in remote OID 0x778)
   EXTENT    testspecials2/dir_kilo_616914/hardlink_beta_256791.xml
-            size=357207, attrs=ARCHIVE, extents=7, clusters=88
+            size=357207, attrs=Archive, extents=7, clusters=88
             created=2026-05-16 16:38:30
             run: fvcn=0 VLCN=0x6712c5a PLCN=0x337ac5a clusters=1 disk=0x337bc5a000
             run: fvcn=1 VLCN=0x6712d48 PLCN=0x337ad48 clusters=16 disk=0x337bd48000
@@ -1150,7 +1146,7 @@ File Data Locations
             run: fvcn=64 VLCN=0x6713f74 PLCN=0x337bf74 clusters=24 disk=0x337cf74000
             (extents in remote OID 0x790)
   EXTENT    testspecials2/dir_kilo_616914/hardlink_cache_917598.ini
-            size=444092, attrs=ARCHIVE, extents=6, clusters=109
+            size=444092, attrs=Archive, extents=6, clusters=109
             created=2026-05-16 16:37:43
             run: fvcn=0 VLCN=0x6713010 PLCN=0x337b010 clusters=64 disk=0x337c010000
             run: fvcn=64 VLCN=0x6713050 PLCN=0x337b050 clusters=24 disk=0x337c050000
@@ -1160,14 +1156,14 @@ File Data Locations
             run: fvcn=104 VLCN=0x6713720 PLCN=0x337b720 clusters=1 disk=0x337c720000
             (extents in remote OID 0x775)
   EXTENT    testspecials2/dir_kilo_616914/hardlink_draft_949950.txt
-            size=343899, attrs=ARCHIVE, extents=3, clusters=84
+            size=343899, attrs=Archive, extents=3, clusters=84
             created=2026-05-16 16:37:44
             run: fvcn=0 VLCN=0x6712f3e PLCN=0x337af3e clusters=1 disk=0x337bf3e000
             run: fvcn=1 VLCN=0x6712f3f PLCN=0x337af3f clusters=63 disk=0x337bf3f000
             run: fvcn=64 VLCN=0x6712f7e PLCN=0x337af7e clusters=20 disk=0x337bf7e000
             (extents in remote OID 0x77c)
   EXTENT    testspecials2/dir_kilo_616914/hardlink_oscar_842417.json
-            size=423166, attrs=ARCHIVE, extents=3, clusters=104
+            size=423166, attrs=Archive, extents=3, clusters=104
             created=2026-05-16 16:37:43
             run: fvcn=0 VLCN=0x6712e71 PLCN=0x337ae71 clusters=1 disk=0x337be71000
             run: fvcn=1 VLCN=0x6712e72 PLCN=0x337ae72 clusters=63 disk=0x337be72000
@@ -1175,7 +1171,7 @@ File Data Locations
   NOEXTENT  testspecials2/dir_kilo_616914/hardlink_uniform_692622.md
             size=293997 (extents not decoded — may be in remote OID 0x779)
   EXTENT    testspecials2/dir_kilo_616914/tango_log_555645.json
-            size=423166, attrs=ARCHIVE, extents=3, clusters=104
+            size=423166, attrs=Archive, extents=3, clusters=104
             created=2026-05-16 16:37:43
             run: fvcn=0 VLCN=0x6712e71 PLCN=0x337ae71 clusters=1 disk=0x337be71000
             run: fvcn=1 VLCN=0x6712e72 PLCN=0x337ae72 clusters=63 disk=0x337be72000
@@ -1203,7 +1199,7 @@ File Data Locations
   RESIDENT  testspecials2/dir_kilo_616914/yankee_india_996670.tmp
             size=408980 (data inline in directory entry)
   EXTENT    testspecials2/dir_kilo_616914/dir_backup_630871/gamma_tango_178044.dat
-            size=300868, attrs=ARCHIVE, extents=3, clusters=74
+            size=300868, attrs=Archive, extents=3, clusters=74
             created=2026-05-16 16:37:44
             run: fvcn=0 VLCN=0x6712fc6 PLCN=0x337afc6 clusters=1 disk=0x337bfc6000
             run: fvcn=1 VLCN=0x6712fc7 PLCN=0x337afc7 clusters=63 disk=0x337bfc7000
@@ -1212,7 +1208,7 @@ File Data Locations
   NOEXTENT  testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_cache_865974.xml
             size=170052 (extents not decoded — may be in remote OID 0x776)
   EXTENT    testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_lima_842582.json
-            size=88589, attrs=ARCHIVE, extents=3, clusters=22
+            size=88589, attrs=Archive, extents=3, clusters=22
             created=2025-01-10 16:38:27
             run: fvcn=0 VLCN=0x6713499 PLCN=0x337b499 clusters=1 disk=0x337c499000
             run: fvcn=1 VLCN=0x671349a PLCN=0x337b49a clusters=20 disk=0x337c49a000
@@ -1223,7 +1219,7 @@ File Data Locations
   NOEXTENT  testspecials2/dir_kilo_616914/dir_backup_630871/trace_foxtrot_918703.xml
             size=170052 (extents not decoded — may be in remote OID 0x776)
   EXTENT    testspecials2/dir_kilo_616914/dir_backup_630871/trace_index_996981.txt
-            size=241510, attrs=ARCHIVE, extents=2, clusters=59
+            size=241510, attrs=Archive, extents=2, clusters=59
             created=2026-05-16 16:38:58
             run: fvcn=0 VLCN=0x671880e PLCN=0x337c80e clusters=1 disk=0x337d80e000
             run: fvcn=1 VLCN=0x671880f PLCN=0x337c80f clusters=58 disk=0x337d80f000
@@ -1266,7 +1262,7 @@ File Data Locations
   RESIDENT  testspecials2/dir_kilo_616914/dir_index_179689/yankee_sync_699381.json
             size=473047 (data inline in directory entry)
   EXTENT    testspecials2/dir_kilo_616914/dir_india_415253/hardlink_draft_118833.log
-            size=308051, attrs=ARCHIVE, extents=3, clusters=76
+            size=308051, attrs=Archive, extents=3, clusters=76
             created=2022-11-19 16:38:00
             run: fvcn=0 VLCN=0x671335f PLCN=0x337b35f clusters=1 disk=0x337c35f000
             run: fvcn=1 VLCN=0x6713360 PLCN=0x337b360 clusters=63 disk=0x337c360000
@@ -1285,26 +1281,26 @@ File Data Locations
   RESIDENT  testspecials2/dir_kilo_616914/dir_kilo_696708/quebec_sync_926164.dat
             size=57675 (data inline in directory entry)
   EXTENT    testspecials2/dir_kilo_616914/dir_papa_668661/hardlink_backup_450942.json
-            size=111602, attrs=ARCHIVE, extents=2, clusters=28
+            size=111602, attrs=Archive, extents=2, clusters=28
             created=2026-05-16 16:38:29
             run: fvcn=0 VLCN=0x6712c59 PLCN=0x337ac59 clusters=1 disk=0x337bc59000
             run: fvcn=1 VLCN=0x6712d2d PLCN=0x337ad2d clusters=27 disk=0x337bd2d000
             (extents in remote OID 0x775)
   EXTENT    testspecials2/dir_kilo_616914/dir_papa_668661/hardlink_index_890260.md
-            size=210671, attrs=ARCHIVE, extents=2, clusters=52
+            size=210671, attrs=Archive, extents=2, clusters=52
             created=2026-05-16 16:37:44
             run: fvcn=0 VLCN=0x6712f92 PLCN=0x337af92 clusters=1 disk=0x337bf92000
             run: fvcn=1 VLCN=0x6712f93 PLCN=0x337af93 clusters=51 disk=0x337bf93000
             (extents in remote OID 0x775)
   EXTENT    testspecials2/dir_kilo_616914/dir_papa_668661/hardlink_romeo_734888.log
-            size=191037, attrs=ARCHIVE, extents=3, clusters=47
+            size=191037, attrs=Archive, extents=3, clusters=47
             created=2022-10-13 16:40:23
             run: fvcn=0 VLCN=0x67139da PLCN=0x337b9da clusters=40 disk=0x337c9da000
             run: fvcn=41 VLCN=0x6718d78 PLCN=0x337cd78 clusters=6 disk=0x337dd78000
             run: fvcn=40 VLCN=0x6713a02 PLCN=0x337ba02 clusters=1 disk=0x337ca02000
             (extents in remote OID 0x775)
   EXTENT    testspecials2/dir_kilo_616914/dir_papa_668661/hardlink_yankee_409360.log
-            size=503630, attrs=ARCHIVE, extents=6, clusters=123
+            size=503630, attrs=Archive, extents=6, clusters=123
             created=2026-05-16 16:37:43
             run: fvcn=0 VLCN=0x6712dc3 PLCN=0x337adc3 clusters=64 disk=0x337bdc3000
             run: fvcn=64 VLCN=0x6712e03 PLCN=0x337ae03 clusters=41 disk=0x337be03000
@@ -1318,7 +1314,7 @@ File Data Locations
   RESIDENT  testspecials2/dir_kilo_616914/dir_papa_668661/temp_mike_546971.csv
             size=279159 (data inline in directory entry)
   EXTENT    testspecials2/dir_kilo_616914/dir_victor_389261/hardlink_audit_921244.log
-            size=185287, attrs=ARCHIVE, extents=2, clusters=46
+            size=185287, attrs=Archive, extents=2, clusters=46
             created=2026-05-16 16:37:49
             run: fvcn=0 VLCN=0x671331d PLCN=0x337b31d clusters=1 disk=0x337c31d000
             run: fvcn=1 VLCN=0x671331e PLCN=0x337b31e clusters=45 disk=0x337c31e000
@@ -1342,7 +1338,7 @@ File Data Locations
   RESIDENT  testspecials2/dir_kilo_616914/dir_victor_389261/symlink_cache_849330.lnk
             size=0 (data inline in directory entry)
   EXTENT    testspecials2/dir_log_298284/cache_victor_115152.csv
-            size=244308, attrs=ARCHIVE, extents=4, clusters=60
+            size=244308, attrs=Archive, extents=4, clusters=60
             created=2026-05-16 16:37:45
             run: fvcn=0 VLCN=0x6713069 PLCN=0x337b069 clusters=1 disk=0x337c069000
             run: fvcn=1 VLCN=0x671306a PLCN=0x337b06a clusters=57 disk=0x337c06a000
@@ -1350,46 +1346,46 @@ File Data Locations
             run: fvcn=58 VLCN=0x67130a3 PLCN=0x337b0a3 clusters=1 disk=0x337c0a3000
             (extents in remote OID 0x77d)
   EXTENT    testspecials2/dir_log_298284/gamma_temp_938932.tmp
-            size=481353, attrs=ARCHIVE, extents=3, clusters=118
+            size=481353, attrs=Archive, extents=3, clusters=118
             created=2026-05-16 16:37:48
             run: fvcn=0 VLCN=0x671320a PLCN=0x337b20a clusters=1 disk=0x337c20a000
             run: fvcn=1 VLCN=0x671320b PLCN=0x337b20b clusters=63 disk=0x337c20b000
             run: fvcn=64 VLCN=0x671324a PLCN=0x337b24a clusters=54 disk=0x337c24a000
   EXTENT    testspecials2/dir_log_298284/hardlink_config_217238.json
-            size=423166, attrs=ARCHIVE, extents=3, clusters=104
+            size=423166, attrs=Archive, extents=3, clusters=104
             created=2026-05-16 16:37:43
             run: fvcn=0 VLCN=0x6712e71 PLCN=0x337ae71 clusters=1 disk=0x337be71000
             run: fvcn=1 VLCN=0x6712e72 PLCN=0x337ae72 clusters=63 disk=0x337be72000
             run: fvcn=64 VLCN=0x6712eb1 PLCN=0x337aeb1 clusters=40 disk=0x337beb1000
             (extents in remote OID 0x779)
   EXTENT    testspecials2/dir_log_298284/hardlink_temp_915527.bin
-            size=198602, attrs=ARCHIVE, extents=2, clusters=49
+            size=198602, attrs=Archive, extents=2, clusters=49
             created=2026-05-16 16:38:00
             run: fvcn=0 VLCN=0x6713721 PLCN=0x337b721 clusters=1 disk=0x337c721000
             run: fvcn=1 VLCN=0x6713722 PLCN=0x337b722 clusters=48 disk=0x337c722000
             (extents in remote OID 0x780)
   EXTENT    testspecials2/dir_log_298284/hardlink_whiskey_987832.cfg
-            size=273371, attrs=ARCHIVE, extents=3, clusters=67
+            size=273371, attrs=Archive, extents=3, clusters=67
             created=2026-05-16 16:39:02
             run: fvcn=0 VLCN=0x6718957 PLCN=0x337c957 clusters=1 disk=0x337d957000
             run: fvcn=1 VLCN=0x6718958 PLCN=0x337c958 clusters=63 disk=0x337d958000
             run: fvcn=64 VLCN=0x6718997 PLCN=0x337c997 clusters=3 disk=0x337d997000
             (extents in remote OID 0x7bf)
   EXTENT    testspecials2/dir_log_298284/hardlink_zulu_445780.txt
-            size=343899, attrs=ARCHIVE, extents=3, clusters=84
+            size=343899, attrs=Archive, extents=3, clusters=84
             created=2026-05-16 16:37:44
             run: fvcn=0 VLCN=0x6712f3e PLCN=0x337af3e clusters=1 disk=0x337bf3e000
             run: fvcn=1 VLCN=0x6712f3f PLCN=0x337af3f clusters=63 disk=0x337bf3f000
             run: fvcn=64 VLCN=0x6712f7e PLCN=0x337af7e clusters=20 disk=0x337bf7e000
             (extents in remote OID 0x77c)
   EXTENT    testspecials2/dir_log_298284/hardlink_zulu_454051.json
-            size=144047, attrs=ARCHIVE, extents=2, clusters=36
+            size=144047, attrs=Archive, extents=2, clusters=36
             created=2026-05-16 16:39:04
             run: fvcn=0 VLCN=0x67134af PLCN=0x337b4af clusters=1 disk=0x337c4af000
             run: fvcn=1 VLCN=0x6713857 PLCN=0x337b857 clusters=35 disk=0x337c857000
             (extents in remote OID 0x78f)
   EXTENT    testspecials2/dir_log_298284/india_romeo_106206.bak
-            size=433993, attrs=ARCHIVE, extents=3, clusters=106
+            size=433993, attrs=Archive, extents=3, clusters=106
             created=2026-05-16 16:37:43
             run: fvcn=0 VLCN=0x6712d58 PLCN=0x337ad58 clusters=1 disk=0x337bd58000
             run: fvcn=1 VLCN=0x6712d59 PLCN=0x337ad59 clusters=63 disk=0x337bd59000
@@ -1421,14 +1417,14 @@ File Data Locations
   RESIDENT  testspecials2/dir_log_298284/zulu_romeo_832791.csv
             size=359329 (data inline in directory entry)
   EXTENT    testspecials2/dir_log_298284/dir_draft_685915/hardlink_kilo_662149.bak
-            size=282007, attrs=ARCHIVE, extents=3, clusters=69
+            size=282007, attrs=Archive, extents=3, clusters=69
             created=2021-11-16 16:37:57
             run: fvcn=0 VLCN=0x6712dc2 PLCN=0x337adc2 clusters=1 disk=0x337bdc2000
             run: fvcn=1 VLCN=0x6712e2d PLCN=0x337ae2d clusters=63 disk=0x337be2d000
             run: fvcn=64 VLCN=0x6712e6c PLCN=0x337ae6c clusters=5 disk=0x337be6c000
             (extents in remote OID 0x775)
   EXTENT    testspecials2/dir_log_298284/dir_draft_685915/hardlink_output_218557.log
-            size=503630, attrs=ARCHIVE, extents=6, clusters=123
+            size=503630, attrs=Archive, extents=6, clusters=123
             created=2026-05-16 16:37:43
             run: fvcn=0 VLCN=0x6712dc3 PLCN=0x337adc3 clusters=64 disk=0x337bdc3000
             run: fvcn=64 VLCN=0x6712e03 PLCN=0x337ae03 clusters=41 disk=0x337be03000
@@ -1438,12 +1434,12 @@ File Data Locations
             run: fvcn=114 VLCN=0x6713359 PLCN=0x337b359 clusters=1 disk=0x337c359000
             (extents in remote OID 0x775)
   EXTENT    testspecials2/dir_log_298284/dir_draft_685915/november_zulu_525323.json
-            size=144047, attrs=ARCHIVE, extents=2, clusters=36
+            size=144047, attrs=Archive, extents=2, clusters=36
             created=2026-05-16 16:39:04
             run: fvcn=0 VLCN=0x67134af PLCN=0x337b4af clusters=1 disk=0x337c4af000
             run: fvcn=1 VLCN=0x6713857 PLCN=0x337b857 clusters=35 disk=0x337c857000
   EXTENT    testspecials2/dir_log_298284/dir_draft_685915/sierra_backup_990618.md
-            size=309729, attrs=ARCHIVE, extents=3, clusters=76
+            size=309729, attrs=Archive, extents=3, clusters=76
             created=2026-05-16 16:38:48
             run: fvcn=0 VLCN=0x671867d PLCN=0x337c67d clusters=1 disk=0x337d67d000
             run: fvcn=64 VLCN=0x67186bd PLCN=0x337c6bd clusters=12 disk=0x337d6bd000
@@ -1467,14 +1463,14 @@ File Data Locations
   NOEXTENT  testspecials2/dir_log_298284/dir_hotel_354514/hardlink_output_748297.md
             size=293997 (extents not decoded — may be in remote OID 0x779)
   EXTENT    testspecials2/dir_log_298284/dir_hotel_354514/hardlink_record_579332.cfg
-            size=409516, attrs=ARCHIVE, extents=3, clusters=100
+            size=409516, attrs=Archive, extents=3, clusters=100
             created=2026-05-16 16:37:58
             run: fvcn=0 VLCN=0x67136ad PLCN=0x337b6ad clusters=1 disk=0x337c6ad000
             run: fvcn=1 VLCN=0x67136ae PLCN=0x337b6ae clusters=63 disk=0x337c6ae000
             run: fvcn=64 VLCN=0x67136ed PLCN=0x337b6ed clusters=36 disk=0x337c6ed000
             (extents in remote OID 0x778)
   EXTENT    testspecials2/dir_oscar_397968/hardlink_backup_360005.dat
-            size=300868, attrs=ARCHIVE, extents=3, clusters=74
+            size=300868, attrs=Archive, extents=3, clusters=74
             created=2026-05-16 16:37:44
             run: fvcn=0 VLCN=0x6712fc6 PLCN=0x337afc6 clusters=1 disk=0x337bfc6000
             run: fvcn=1 VLCN=0x6712fc7 PLCN=0x337afc7 clusters=63 disk=0x337bfc7000
@@ -1483,14 +1479,14 @@ File Data Locations
   NOEXTENT  testspecials2/dir_oscar_397968/hardlink_gamma_652358.md
             size=293997 (extents not decoded — may be in remote OID 0x779)
   EXTENT    testspecials2/dir_oscar_397968/hardlink_november_455794.md
-            size=309729, attrs=ARCHIVE, extents=3, clusters=76
+            size=309729, attrs=Archive, extents=3, clusters=76
             created=2026-05-16 16:38:48
             run: fvcn=0 VLCN=0x671867d PLCN=0x337c67d clusters=1 disk=0x337d67d000
             run: fvcn=64 VLCN=0x67186bd PLCN=0x337c6bd clusters=12 disk=0x337d6bd000
             run: fvcn=1 VLCN=0x671867e PLCN=0x337c67e clusters=63 disk=0x337d67e000
             (extents in remote OID 0x78f)
   EXTENT    testspecials2/dir_oscar_397968/output_yankee_438536.log
-            size=191037, attrs=ARCHIVE, extents=3, clusters=47
+            size=191037, attrs=Archive, extents=3, clusters=47
             created=2026-05-16 16:37:43
             run: fvcn=0 VLCN=0x67139da PLCN=0x337b9da clusters=40 disk=0x337c9da000
             run: fvcn=41 VLCN=0x6718d78 PLCN=0x337cd78 clusters=6 disk=0x337dd78000
@@ -1533,7 +1529,7 @@ File Data Locations
   RESIDENT  testspecials2/dir_oscar_397968/dir_india_406972/symlink_victor_347441.lnk
             size=0 (data inline in directory entry)
   EXTENT    testspecials2/dir_oscar_397968/dir_oscar_522053/hardlink_data_812074.log
-            size=503630, attrs=ARCHIVE, extents=6, clusters=123
+            size=503630, attrs=Archive, extents=6, clusters=123
             created=2026-05-16 16:37:43
             run: fvcn=0 VLCN=0x6712dc3 PLCN=0x337adc3 clusters=64 disk=0x337bdc3000
             run: fvcn=64 VLCN=0x6712e03 PLCN=0x337ae03 clusters=41 disk=0x337be03000
@@ -1555,7 +1551,7 @@ File Data Locations
   RESIDENT  testspecials2/dir_oscar_397968/dir_oscar_522053/symlink_temp_673265.lnk
             size=0 (data inline in directory entry)
   EXTENT    testspecials2/dir_oscar_397968/dir_romeo_329803/hardlink_alpha_573983.bin
-            size=278005, attrs=ARCHIVE, extents=2, clusters=68
+            size=278005, attrs=Archive, extents=2, clusters=68
             created=2026-05-16 16:37:43
             run: fvcn=0 VLCN=0x672008f PLCN=0x338008f clusters=64 disk=0x338108f000
             run: fvcn=64 VLCN=0x67200cf PLCN=0x33800cf clusters=4 disk=0x33810cf000
@@ -1585,14 +1581,14 @@ File Data Locations
   RESIDENT  testspecials2/dir_oscar_397968/dir_romeo_329803/zulu_victor_600527.ini
             size=355810 (data inline in directory entry)
   EXTENT    testspecials2/dir_oscar_397968/dir_zulu_210476/hardlink_hotel_135884.log
-            size=191037, attrs=ARCHIVE, extents=3, clusters=47
+            size=191037, attrs=Archive, extents=3, clusters=47
             created=2022-10-13 16:40:23
             run: fvcn=0 VLCN=0x67139da PLCN=0x337b9da clusters=40 disk=0x337c9da000
             run: fvcn=41 VLCN=0x6718d78 PLCN=0x337cd78 clusters=6 disk=0x337dd78000
             run: fvcn=40 VLCN=0x6713a02 PLCN=0x337ba02 clusters=1 disk=0x337ca02000
             (extents in remote OID 0x775)
   EXTENT    testspecials2/dir_oscar_397968/dir_zulu_210476/hardlink_hotel_913275.bak
-            size=304003, attrs=ARCHIVE, extents=3, clusters=75
+            size=304003, attrs=Archive, extents=3, clusters=75
             created=2026-05-16 16:39:17
             run: fvcn=0 VLCN=0x6718cd7 PLCN=0x337ccd7 clusters=1 disk=0x337dcd7000
             run: fvcn=1 VLCN=0x6718cd8 PLCN=0x337ccd8 clusters=63 disk=0x337dcd8000
@@ -1623,7 +1619,7 @@ File Data Locations
   RESIDENT  testspecials2/dir_output_765435/symlink_quebec_126264.lnk
             size=0 (data inline in directory entry)
   EXTENT    testspecials2/dir_sync_303009/hardlink_whiskey_403265.txt
-            size=241510, attrs=ARCHIVE, extents=2, clusters=59
+            size=241510, attrs=Archive, extents=2, clusters=59
             created=2026-05-16 16:38:58
             run: fvcn=0 VLCN=0x671880e PLCN=0x337c80e clusters=1 disk=0x337d80e000
             run: fvcn=1 VLCN=0x671880f PLCN=0x337c80f clusters=58 disk=0x337d80f000
@@ -1637,7 +1633,7 @@ File Data Locations
   RESIDENT  testspecials2/dir_sync_303009/symlink_yankee_423212.lnk
             size=0 (data inline in directory entry)
   EXTENT    testspecials2/dir_sync_303009/dir_foxtrot_191463/hardlink_foxtrot_600465.log
-            size=308051, attrs=ARCHIVE, extents=3, clusters=76
+            size=308051, attrs=Archive, extents=3, clusters=76
             created=2022-11-19 16:38:00
             run: fvcn=0 VLCN=0x671335f PLCN=0x337b35f clusters=1 disk=0x337c35f000
             run: fvcn=1 VLCN=0x6713360 PLCN=0x337b360 clusters=63 disk=0x337c360000
@@ -1666,18 +1662,18 @@ File Data Locations
   RESIDENT  testspecials2/dir_trace_120580/dir_draft_331288/symlink_mike_895060.lnk
             size=0 (data inline in directory entry)
   EXTENT    testspecials2/dir_trace_120580/dir_india_806622/hardlink_temp_444830.txt
-            size=110573, attrs=ARCHIVE, extents=2, clusters=27
+            size=110573, attrs=Archive, extents=2, clusters=27
             created=2023-06-08 16:40:17
             run: fvcn=0 VLCN=0x6713981 PLCN=0x337b981 clusters=1 disk=0x337c981000
             run: fvcn=1 VLCN=0x6713982 PLCN=0x337b982 clusters=26 disk=0x337c982000
             (extents in remote OID 0x797)
   EXTENT    testspecials2/dir_yankee_474982/archive_sync_548371.log
-            size=119857, attrs=ARCHIVE, extents=2, clusters=30
+            size=119857, attrs=Archive, extents=2, clusters=30
             created=2026-05-16 16:38:10
             run: fvcn=0 VLCN=0x6713a5b PLCN=0x337ba5b clusters=1 disk=0x337ca5b000
             run: fvcn=1 VLCN=0x6713a64 PLCN=0x337ba64 clusters=29 disk=0x337ca64000
   EXTENT    testspecials2/dir_yankee_474982/hardlink_audit_459489.xml
-            size=433603, attrs=ARCHIVE, extents=3, clusters=106
+            size=433603, attrs=Archive, extents=3, clusters=106
             created=2026-05-16 16:38:15
             run: fvcn=0 VLCN=0x6713c38 PLCN=0x337bc38 clusters=1 disk=0x337cc38000
             run: fvcn=1 VLCN=0x6713c39 PLCN=0x337bc39 clusters=63 disk=0x337cc39000
@@ -1686,10 +1682,11 @@ File Data Locations
   NOEXTENT  testspecials2/dir_yankee_474982/hardlink_draft_276129.md
             size=293997 (extents not decoded — may be in remote OID 0x779)
   EXTENT    testspecials2/dir_yankee_474982/papa_sierra_887773.txt
-            size=28102, attrs=ARCHIVE, extents=2, clusters=30
+            size=28102, attrs=Archive, extents=2, clusters=7
             created=2026-05-16 16:39:12
-            run: fvcn=0 VLCN=0x6713a5b PLCN=0x337ba5b clusters=1 disk=0x337ca5b000
-            run: fvcn=1 VLCN=0x6713a64 PLCN=0x337ba64 clusters=29 disk=0x337ca64000
+            run: fvcn=0 VLCN=0x6718bcf PLCN=0x337cbcf clusters=1 disk=0x337dbcf000
+            run: fvcn=1 VLCN=0x6718bd0 PLCN=0x337cbd0 clusters=6 disk=0x337dbd0000
+            (extents in remote OID 0x7c5)
   RESIDENT  testspecials2/dir_yankee_474982/output_echo_367591.txt
             size=201893 (data inline in directory entry)
   RESIDENT  testspecials2/dir_yankee_474982/quebec_mike_619714.md
@@ -1701,7 +1698,7 @@ File Data Locations
   RESIDENT  testspecials2/dir_yankee_474982/victor_papa_728014.ini
             size=396872 (data inline in directory entry)
   EXTENT    testspecials2/dir_yankee_474982/dir_mike_734231/backup_data_170141.bak
-            size=444442, attrs=ARCHIVE, extents=4, clusters=109
+            size=444442, attrs=Archive, extents=4, clusters=109
             created=2026-05-16 16:39:34
             run: fvcn=0 VLCN=0x6713fc7 PLCN=0x337bfc7 clusters=1 disk=0x337cfc7000
             run: fvcn=1 VLCN=0x6713280 PLCN=0x337b280 clusters=63 disk=0x337c280000
@@ -1709,7 +1706,7 @@ File Data Locations
             run: fvcn=99 VLCN=0x6713fc8 PLCN=0x337bfc8 clusters=10 disk=0x337cfc8000
             (extents in remote OID 0x78b)
   EXTENT    testspecials2/dir_yankee_474982/dir_mike_734231/report_yankee_685520.bak
-            size=304003, attrs=ARCHIVE, extents=3, clusters=75
+            size=304003, attrs=Archive, extents=3, clusters=75
             created=2026-05-16 16:39:17
             run: fvcn=0 VLCN=0x6718cd7 PLCN=0x337ccd7 clusters=1 disk=0x337dcd7000
             run: fvcn=1 VLCN=0x6718cd8 PLCN=0x337ccd8 clusters=63 disk=0x337dcd8000
@@ -1731,13 +1728,13 @@ File Data Locations
   RESIDENT  testspecials2/dir_yankee_474982/dir_mike_734231/whiskey_draft_464099.bak
             size=155536 (data inline in directory entry)
   EXTENT    testspecials2/dir_yankee_474982/dir_romeo_902399/echo_data_809357.bak
-            size=235461, attrs=ARCHIVE, extents=3, clusters=58
+            size=235461, attrs=Archive, extents=3, clusters=58
             created=2026-05-16 16:38:32
             run: fvcn=0 VLCN=0x6713fe2 PLCN=0x337bfe2 clusters=1 disk=0x337cfe2000
             run: fvcn=1 VLCN=0x6713fe3 PLCN=0x337bfe3 clusters=29 disk=0x337cfe3000
             run: fvcn=30 VLCN=0x6718248 PLCN=0x337c248 clusters=28 disk=0x337d248000
   EXTENT    testspecials2/dir_yankee_474982/dir_romeo_902399/hardlink_kilo_643842.log
-            size=503630, attrs=ARCHIVE, extents=6, clusters=123
+            size=503630, attrs=Archive, extents=6, clusters=123
             created=2026-05-16 16:37:43
             run: fvcn=0 VLCN=0x6712dc3 PLCN=0x337adc3 clusters=64 disk=0x337bdc3000
             run: fvcn=64 VLCN=0x6712e03 PLCN=0x337ae03 clusters=41 disk=0x337be03000

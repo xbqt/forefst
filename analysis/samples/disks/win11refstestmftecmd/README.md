@@ -15,8 +15,8 @@ the journal was created with `fsutil usn createjournal` before population).
 
 ## Layout
 
-- `win11refstestmftecmd.raw.zst.part-*` — the ReFS disk image: a zstd archive (`zstd --ultra -22`) split into parts.
-  Recompose and decompress before use (see **Reproduce** below). All tool output here was produced from the raw image.
+- `win11refstestmftecmd.raw.zst` — the ReFS disk image: a zstd archive (`zstd --ultra -22`) stored via Git LFS.
+  Decompress before use (see **Reproduce** below). All tool output here was produced from the raw image.
 - `provenance/`
   - `commands.md` — create / format / `createjournal` / populate / export / unmount, verified
     against the on-disk tree.
@@ -29,13 +29,13 @@ the journal was created with `fsutil usn createjournal` before population).
 - `manifest.md` — every output file mapped to the exact command that produced it.
 - `forefst/` — every forefst command's output (the `USN` column in the CSV is populated from `$SI` LastUsn).
 - `refsanalysis/` — every subcommand at default + fullest verbosity, plus the option variants.
-  Start with **`usn.txt`** (6 805 records) / **`usn.v.txt`** — the reason this image is here.
+  Start with **`usn.txt`** (6 805 records) — the reason this image is here.
 
 ## Reproduce (from the repo root)
 
 ```bash
 cd analysis/samples/disks/win11refstestmftecmd
-cat win11refstestmftecmd.raw.zst.part-* > win11refstestmftecmd.raw.zst && zstd -d win11refstestmftecmd.raw.zst && cd -   # recompose + decompress -> win11refstestmftecmd.raw
+git lfs pull --include "analysis/samples/disks/win11refstestmftecmd/*" && zstd -d win11refstestmftecmd.raw.zst && cd -   # fetch + decompress -> win11refstestmftecmd.raw
 python3 refsanalysis.py analysis/samples/disks/win11refstestmftecmd/win11refstestmftecmd.raw usn
 python3 refsanalysis.py analysis/samples/disks/win11refstestmftecmd/win11refstestmftecmd.raw usn -v
 # compare the tool's output to provenance/usn_readjournal_export.txt (fsutil's own readjournal)

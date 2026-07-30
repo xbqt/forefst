@@ -160,8 +160,9 @@ not applicable here — for a real worked snapshot extraction use a v3.14 image 
  not reappear. Always corroborate a single slack row (timestamps, neighbours, DELETED-vs-PRIOR flag)
  before relying on it.
 - **OID gaps remain permanent deletion evidence** independent of all the above: the volume reports 19
- objects, and any missing OID between present ones is proof of a create-then-delete that survives
- even full page reallocation.
+ objects, and any missing OID between present ones is proof of a create-then-delete of a **directory or
+ system object** that survives even full page reallocation. (Files carry no OID, so a deleted *file*
+ leaves no gap — that is what the slack-row recovery above is for.)
 
 ## See also
 

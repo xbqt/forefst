@@ -3,7 +3,7 @@
 ==============================================================================
 ReFS File Data Extent Analysis
 ==============================================================================
-  Image:        analysis/rawdisk/disks/step3/win11refs2tsnapshots.raw
+  Image:        win11refs2tsnapshots.raw
   ReFS version: 3.14
   Cluster size: 0x1000 (4096 bytes)
   Containers:   32767
@@ -22,10 +22,10 @@ File Data Locations
             size=186635, attrs=Archive, extents=5, clusters=46
             created=2026-05-16 16:51:53
   EXTENT    test/xbpt_config_hotel_558589.txt
-            size=192688, attrs=Archive, extents=8, clusters=35
+            size=192688, attrs=Archive, extents=2, clusters=48
             created=2026-05-16 16:51:54
   EXTENT    test/xbpt_india_temp_831504.csv
-            size=475328, attrs=Archive, extents=2, clusters=19
+            size=475328, attrs=Archive, extents=2, clusters=117
             created=2024-04-02 07:16:32
   EXTENT    test/xbpt_log_november_496320.csv
             size=552331, attrs=Archive, extents=6, clusters=135
@@ -34,7 +34,7 @@ File Data Locations
             size=19465, attrs=Archive, extents=2, clusters=5
             created=2026-05-16 16:51:54
   EXTENT    test/xbpt_tango_foxtrot_898933.txt
-            size=207263, attrs=Archive, extents=8, clusters=35
+            size=207263, attrs=Archive, extents=4, clusters=51
             created=2026-05-16 16:51:57
   EXTENT    test/elvis_dir_index_149423/xbpt_beta_archive_985685.tmp
             size=310564, attrs=Archive, extents=2, clusters=76
@@ -76,7 +76,7 @@ File Data Locations
             size=113106, attrs=Archive, extents=2, clusters=28
             created=2026-05-16 16:52:00
   EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_log_output_579275.dat
-            size=123468, attrs=Archive, extents=5, clusters=46
+            size=123468, attrs=Archive, extents=2, clusters=31
             created=2026-05-16 16:51:53
   EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_quebec_papa_978800.txt
             size=30711, attrs=Archive, extents=2, clusters=8
@@ -88,7 +88,7 @@ File Data Locations
             size=219586, attrs=Archive, extents=6, clusters=54
             created=2025-04-01 07:16:26
   EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_victor_tango_152379.bin
-            size=505381, attrs=Archive, extents=5, clusters=46
+            size=505381, attrs=Archive, extents=2, clusters=124
             created=2026-05-16 16:51:56
   EXTENT    test/elvis_dir_record_449015/xbpt_log_india_171227.csv
             size=189614, attrs=Archive, extents=2, clusters=47

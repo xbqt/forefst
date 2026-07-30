@@ -8,7 +8,6 @@ ReFS Stream Snapshot Analysis
 
   Files with snapshots: 5
   Total snapshots:      10
-  ADS entries (0xB0):   3 on 3 files
 
 ------------------------------------------------------------------------------
 
@@ -106,9 +105,3 @@ ReFS Stream Snapshot Analysis
         Snap alloc:    73728 bytes
         Snapshot ID:   ?
         Raw val len:   116
-
-------------------------------------------------------------------------------
-  ADS / Named Data Streams (type 0xB0, not snapshots):
-    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_romeo_gamma_831931.dat:"hidden_7357" (46 bytes, sub_id= ADS)
-    test/xbpt_tango_archive_828215.dat:"hidden_1514" (46 bytes, sub_id= ADS)
-    testsnapshots/testads.txt:"adstest" (30 bytes, sub_id=....)

@@ -1,7 +1,9 @@
 # Object IDs and FileIds — the Cross-Table Join Key
 
-Every persistent ReFS object — file, directory, or system table — carries a 64-bit **Object ID
+Every persistent ReFS **directory or system table** carries a 64-bit **Object ID
 (OID)** that the [Object Table](../structures/object_table.md) maps to that object's own B+-tree.
+**A file, by contrast, has no OID of its own** — it lives inside its parent directory's tree, identified
+by that directory's OID together with the per-directory child ordinal described next.
 A separate, much weaker identifier — the per-directory **child ordinal** (`NextFileId`, surfaced as
 the lower half of the 128-bit FileId in USN journal records) — names a child *within one directory*
 and is **reused per directory**. Knowing which identifier is which, and which one is safe to trust,

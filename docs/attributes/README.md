@@ -8,11 +8,12 @@ detailed byte-level page linked from the catalog below.
 ## 1. What a ReFS attribute is
 
 In NTFS, a file's metadata is a list of typed attributes inside its `$MFT` record. ReFS keeps the same
-idea but stores it differently. Every object — file, directory, or system table — has its **own
+idea but stores it differently. Every **directory and system object** has its **own
 B+-tree**, reached by a 64-bit **Object ID (OID)** through the
-[Object Table](../structures/object_table.md). The object's metadata lives in the rows of that tree,
+[Object Table](../structures/object_table.md). Its metadata lives in the rows of that tree,
 and its attributes are **embedded sub-records inside the object's own row**, not a separate attribute
-list.
+list. **A file has no OID or B+-tree of its own** — its metadata and attributes are embedded as
+sub-records inside its row within its containing directory's tree.
 
 So there are two layers:
 
@@ -98,7 +99,7 @@ The broader NTFS↔ReFS architectural mapping is in [NTFS vs ReFS](../concepts/n
 
 ## 5. How attributes look on disk
 
-An object's metadata is its own B+-tree, reached by OID through the Object Table. A directory's tree
+A directory's or system object's metadata is its own B+-tree, reached by OID through the Object Table (a file has none — its attributes live embedded in its containing directory's tree). A directory's tree
 decodes to rows of three kinds — for example a real user directory:
 
 ```
@@ -133,7 +134,7 @@ attribute's detail page and in `structure_reference.md`.
 
 ## 6. Differences from NTFS that matter forensically
 
-- **Attributes are embedded sub-records in the object's own B+-tree row**, not entries in a central
+- **Attributes are embedded sub-records inside the object's row** — a directory/system object's own B+-tree row, or a file's row within its containing directory's tree — not entries in a central
   `$MFT`. Recovering an object's metadata means reaching its row through the Object Table, not scanning
   one table.
 - **Names are not a `$FILE_NAME` attribute** — they live in directory-entry rows, and additionally in

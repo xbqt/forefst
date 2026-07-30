@@ -147,13 +147,18 @@ Timestamps and most fields are at **different offsets** between resident and non
 |-------|----------------|---------------------|
 | Creation time | +0x28 | +0x10 |
 | File attributes | +0x48 | +0x40 |
-| Security ID | +0x50 | Not present (must be fetched from $SI via Object Table) |
+| Security ID | +0x50 | Not in the dir entry — in the type-0x40 **backing** record @+0x50 |
 | File size | +0x58 | +0x38 |
 | Allocated size | +0x60 | +0x30 |
-| LastUsn (per-file USN) | +0x68 (= $SI+0x40) | Not present (fetch from $SI) |
-| UsnJournalId | +0x70 (= $SI+0x48) | Not present (fetch from $SI) |
+| LastUsn (per-file USN) | +0x68 (= $SI+0x40) | Not in the dir entry — in the type-0x40 **backing** @+0x68 |
+| UsnJournalId | +0x70 (= $SI+0x48) | Not in the dir entry — in the type-0x40 **backing** @+0x70 |
 
 A parser **must** resolve the storage mode from key_flags before reading any timestamp. Applying the wrong offset layout will misparse every field.
+
+> **Non-resident SecurityId / USN:** a non-resident file's short dir entry (type 0x30) does not carry these,
+> but they are **not** reached through the Object Table — a non-resident file has no Object-Table OID. They
+> live in the file's own **type-0x40 backing record** (its `$SI` / stream-summary, keyed by home-dir OID +
+> FileId) at backing value+0x50 (SecurityId), +0x68 (LastUsn), +0x70 (UsnJournalId).
 
 ## Hard links
 

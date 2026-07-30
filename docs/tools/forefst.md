@@ -95,7 +95,7 @@ forefst.py disk.raw search secret --deleted           # include deleted objects
 
 ### `details` — all attributes for ONE object
 
-Full record for a single file, directory or object: timestamps, attributes (incl. EA), SecurityId/owner, USN, reparse target, and — for resident files — the inline sub-records ($DATA, ADS, $EA / WSL metadata, snapshots). Address it by `/path`, `0xOID`, or `--path`/`--oid`.
+Full record for a single file, directory or object: timestamps, attributes (incl. EA), SecurityId/owner, USN, reparse target, and — for resident files — the inline sub-records ($DATA, ADS, $EA / WSL metadata, snapshots). Address a file by `/path`; a directory or system object by `/path` or `0xOID` (files have no OID). `--path`/`--oid` are the explicit forms.
 
 | Option | Description |
 |--------|-------------|
@@ -519,7 +519,7 @@ The `deleted` subcommand adds two further opt-in methods (orphaned-page scan, B+
 
 ## Using forefst.py as a library
 
-`forefst.py` is Python 3.6+ standard library only (no pip packages) and exports the parsing primitives, imported by `refsanalysis.py` and available to any script:
+`forefst.py` is Python 3.7+ standard library only (no pip packages) and exports the parsing primitives, imported by `refsanalysis.py` and available to any script:
 
 | Function | Signature | Purpose |
 |----------|-----------|---------|
@@ -556,7 +556,7 @@ finally:
 
 ## Dependencies
 
-Python 3.6+ standard library only. No pip packages.
+Python 3.7+ standard library only. No pip packages.
 
 ## Cross-References
 

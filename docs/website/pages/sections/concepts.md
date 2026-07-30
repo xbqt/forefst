@@ -1,6 +1,6 @@
 How ReFS works — the mechanisms behind the on-disk format, grouped from orientation to deep internals.
 
-**New to ReFS?** Start with **General** — [File Systems](file_systems.md), [NTFS vs ReFS](ntfs_comparison.md),
+**New to ReFS?** Start with **General** — [NTFS vs ReFS](ntfs_comparison.md), [Version Detection](version_detection.md),
 and [Version Evolution](version_evolution.md) give you the lay of the land.
 
 For a forensic investigation the load-bearing concepts are the bootstrap and addressing model

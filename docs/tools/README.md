@@ -24,7 +24,7 @@ Rule of thumb: **`forefst.py` for everything file- and forensics-related (triage
 
 | Group | Subcommands |
 |-------|-------------|
-| **Listing & triage** | `files` (+`--filter`) · `summary` · `search` · `details` (any file/object by path or OID) · `specials` (special-attribute files — WSL / reparse / ADS discovery) |
+| **Listing & triage** | `files` (+`--filter`) · `summary` · `search` · `details` (a file by path; a directory/system object by path or OID) · `specials` (special-attribute files — WSL / reparse / ADS discovery) |
 | **Change history** | `usn` ([USN Journal](../structures/usn_journal.md)) · `mlog` ([MLog](../structures/mlog.md)) · `timeline` ([Artifact Timeline](../concepts/artifact_timeline.md)) · `timestomp` ([Timestomping Detection](../concepts/timestomp_detection.md)) |
 | **Recovery & content** | `extract` · `deleted` ([Deletion Recovery](../concepts/deletion_recovery.md)) · `recyclebin` (`$RECYCLE.BIN` `$I` metadata) · `snapshots` ([Snapshots](../concepts/snapshots_versioning.md)) · `dataruns` |
 | **Security & metadata** | `security` ([Security Descriptors](../structures/security_descriptors.md)) · `reparse` ([Reparse Points](../structures/reparse_points.md)) · `integrity` ([Integrity Streams](../concepts/integrity_streams.md)) · `export` |
@@ -45,7 +45,7 @@ pages, or from each tool's built-in `--help` (`forefst.py <image> <cmd> --help`)
 
 ## Constraints and provenance
 
-Both tools are **Python 3.6+ stdlib only** (no third-party dependencies) and operate read-only on a copy
+Both tools are **Python 3.7+ stdlib only** (no third-party dependencies) and operate read-only on a copy
 of the image. They were validated across the same corpus the reference rests on — see
 [how this was verified](../methodology.md). Worked, image-specific runs of these tools are in
 [examples](../examples/README.md).

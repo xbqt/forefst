@@ -46,7 +46,7 @@ Key terms used throughout the ReFS documentation.
 : The operation type in an `_SmsRedoRecord` entry (offset 0x04, u32). The dispatched ranges are contiguous: v3.4 = 29 values 0x00–0x1C (0 gaps); v3.14 = 44 values 0x00–0x2B, of which only 0x17 returns an explicit error (NTSTATUS `0xC0000427`, the generic unhandled-opcode status -- the same error as out-of-range opcodes). Dispatched by `CmsLogRedoQueue::PerformRedo`. See [MLog](structures/mlog.md).
 
 **OID** (Object Identifier)
-: A 64-bit, monotonically increasing, never-reused identifier for every file and directory on the volume. Allocated from a counter; lower OID = earlier creation.
+: A 64-bit, monotonically increasing, never-reused identifier for every **directory and system object** on the volume (files have none — a file is named by a 128-bit FileId of home-directory OID + per-directory child ordinal). Allocated from a counter; lower OID = earlier creation.
 
 **FileId** (128-bit, USN V3)
 : The 16-byte file identifier carried in USN V3 records. Upper 64 bits = the **home directory's OID** (volume-unique); lower 64 bits = the **child ordinal** (`NextFileId`, a per-directory counter that is reused across directories). It identifies a child *relative to its home directory* — the lower half alone is not a volume-wide identity. See [Object IDs and FileIds](concepts/object_ids_fileids.md).
@@ -94,7 +94,7 @@ Key terms used throughout the ReFS documentation.
 ## Tables
 
 **Object Table**
-: Master OID-to-location mapping. Every persistent object has one entry. Roots #0 and #5 (failover pair).
+: Master OID-to-location mapping. Every persistent directory or system object has one entry (files have none). Roots #0 and #5 (failover pair).
 
 **Container Table**
 : Maps virtual container IDs to physical disk locations. Roots #7 and #8 (failover pair). Uses real (physical) LCNs.

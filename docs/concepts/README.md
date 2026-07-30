@@ -10,9 +10,10 @@ what order do I read it?"* If this is a fresh volume, start with the reading ord
 
 A handful of ideas recur on almost every page; carry them before opening any single one.
 
-- **Every object is its own B+-tree.** A file, directory, or system table is reached by a 64-bit
+- **Every directory is its own B+-tree.** A directory or system table is reached by a 64-bit
   **Object ID (OID)** through the [Object Table](../structures/object_table.md); its metadata and
-  [attributes](attributes.md) live in the rows of *that* tree, not in a central `$MFT`.
+  [attributes](attributes.md) live in the rows of *that* tree, not in a central `$MFT`. **A file has no
+  OID or tree of its own** — it is a set of rows inside a directory's tree, reached by path.
 - **Addresses are virtual.** A cluster number in an extent or a table root is a VLCN — it must be
   translated to a physical cluster through the [Container Table](../structures/container_table.md). Skip
   the translation and you read the wrong sectors ([Virtual Addressing](virtual_addressing.md)).
@@ -95,7 +96,6 @@ cares.
 | [Cluster and Page Size](cluster_page_size.md) | The format-time 4 KiB vs 64 KiB choice that fixes page size and CPC |
 | [Virtual Addressing](virtual_addressing.md) | The two-level VLCN → PLCN translation — the #1 thing an NTFS tool gets wrong |
 | [Space Allocation](allocation_space_mgmt.md) | The three-tier bitmap allocator and the recently-deallocated carving window |
-| [$BITMAP](BITMAP.md) | Why there is **no** `$BITMAP` attribute — the free-space map is the allocator, not an attribute |
 
 ### Integrity, redundancy & crash consistency
 | Page | What it is / why it matters |
