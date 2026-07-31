@@ -95,15 +95,37 @@ The procedure walks every live and orphan `MSB+` leaf page for type-0x30 row hea
 ([directory-entry keys](../structures/directory_entries.md): `key_off == 0x10`, key type 0x30, in-bounds,
 decodable UTF-16 name) that are **not** in the live offset array; it decodes the name + MACB + attributes
 and **grades by confidence** — high when both MACB timestamps are plausible FILETIMEs, partial when the
-name is a fragment from a row whose body was partly overwritten. It then cross-flags each recovered row as
-**deleted** (name absent from the live tree) versus **prior-version** (a copy-on-write remnant of a
-still-living file). Implemented as `forefst.py <image> deleted --slack` (`--extract DIR` to write the
-recovered rows). On the clean baseline it produced **0 false positives** — every recovered name was
-genuinely absent from the live tree — with roughly 70% high-confidence and the partials flagged.
+name is a fragment from a row whose body was partly overwritten. It records which directory each row was
+**deleted from** — the owning table OID at page offset `0x48` ([page header](../structures/page_header.md)
+`TableIdLow`). Implemented as `forefst.py <image> deleted` (the slack scan runs by **default**; add
+`--no-slack` for a fast Trash+checkpoint pass); `export deleted DIR` writes the recovered rows out.
+
+**Deleted vs prior-version — decided per owning directory, not by a global name.** Each recovered row is
+either a genuine deletion or a copy-on-write remnant of a file that still exists. The test is
+**owner-aware**: a row is a *prior version* only when its **owning directory is still live and still holds
+that exact name**; otherwise it is genuinely **deleted**. (An earlier global-name test — "is this name
+present anywhere on the volume" — hid real deletions whenever a common filename, e.g. `Shield.png`, also
+lived in some unrelated directory; on one real Windows image that concealed ~17,800 genuine deletions.)
+
+**Non-resident content is carve-able from slack too.** A deleted non-resident file keeps its data in
+separate on-disk extents, and its **extent map lives in a type-0x40 backing record** that is unlinked from
+the live tree at deletion — but whose body **survives in the same page slack** as the name row. The scan
+recovers that backing, matches it to the name row by `(file_id, home-dir)` + exact size, and reconstructs
+the file from those clusters (`export deleted --carve`, best-effort — the clusters may have been
+reallocated). When even the extent table has been zeroed in the surviving remnant, only metadata is left.
+
+**Deleted directories are reconstructed as a group.** When a directory is deleted its own page survives in
+slack holding its children's rows, but its OID is gone from the tree — so those children are recovered with
+an **unresolvable parent**. They are grouped under `$DELETED/DIR_OID_0x<oid>/<child>`, anchored on the one
+reliable fact (the physical page they were recovered from). The deleted directory's *name* is offered only
+as a **best-effort candidate**, and is explicitly flagged **ambiguous** when rename/move churn left several
+conflicting names for the same OID in slack — a named ancestor path is never asserted, because the slack
+holds multiple epochs and any single reconstructed name could be a pre-rename artifact.
 
 > **Caveat.** Slack recovery is **image-dependent**: it finds only what survives in un-rewritten slack. A
 > heavily rewritten or freshly compacted page may retain nothing, so a single recovered row should always
-> be corroborated (timestamps, surrounding rows) before it is relied on.
+> be corroborated (timestamps, surrounding rows) before it is relied on. Carved non-resident content is
+> best-effort — the extent *map* survived, but the data clusters may have been reused since deletion.
 
 ## What decides whether the bytes survive
 
@@ -181,7 +203,15 @@ page-header OID at offset 0x48 (`TableIdLow`) with offset 0x40 always 0 is RD-ve
 The checkpoint differential decoding to identical 13-root pointer lists across the corpus is RD
 (finding **FS_CHKP_RA_014**). Method 5 — `CmsBPlusTable::DeleteFromIndex` removing only the offset-array entry and
 leaving the row body in slack — is E2 for the deletion mechanism and RD for the recovery (0 false positives
-on the baseline; finding **FS_DEL_RA_005**). The survival metrics and recovery categories are RD on a 266-transaction
-gap analysis. OID monotonicity, no-reuse, and the 55–79% worked-volume density are RD. See
+on the baseline; finding **FS_DEL_RA_005**). Its three refinements are RD-verified across the corpus (both
+v3.4 and v3.14): the **owner-aware** deleted-vs-prior test (every re-classified row was genuinely absent
+from its owning directory — 0 false re-classifications; ~17,800 previously-hidden deletions surfaced on one
+real Windows image); the **type-0x40 backing carve** (the deleted non-resident extent map recovered from
+slack reconstructs byte-for-byte identically to the live extract path — validated on live files, and on
+deleted files that preserved the generator's `GFSAREPLAY` content signature at their original clusters); and
+the **deleted-directory grouping** under `$DELETED/DIR_OID_0x<oid>/` (present on 30 of the corpus's ReFS
+images; the name-candidate ambiguity is corroborated against the fsactivity generation logs, which record
+the `RENAME_DIR` events that leave multiple names per OID in slack). The survival metrics and recovery
+categories are RD on a 266-transaction gap analysis. OID monotonicity, no-reuse, and the 55–79% worked-volume density are RD. See
 [how this was verified](../methodology.md) to trace these to the exact images and measurements in
 `analysis/`.

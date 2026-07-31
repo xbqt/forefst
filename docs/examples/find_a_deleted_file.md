@@ -55,10 +55,10 @@ honestly so**:
 So `--deleted` reports `0 deleted` here. That is the correct answer for *these three methods* — it is
 **not** the end of the story.
 
-### Step 2 — The strong method: B+-tree node slack (`forefst deleted --slack`, Method 5)
+### Step 2 — The strong method: B+-tree node slack (`forefst deleted`, Method 5)
 
 ```sh
-python3 forefst.py "$IMG" deleted --slack
+python3 forefst.py "$IMG" deleted          # the slack scan runs by default (--no-slack skips it)
 ```
 
 ```
@@ -67,7 +67,7 @@ python3 forefst.py "$IMG" deleted --slack
  (ReFS deletion removes only the row's index slot; the row body persists).
  Scanned 55 live pages + 11 orphan pages with recoverable slack rows
 
- DELETED (name not in the live tree): 21 [18 with valid timestamps, 3 partial remnants]
+ DELETED (no longer listed in their owning directory): 21 [18 with valid timestamps, 3 partial remnants]
 
  FILE FVE2.{09cf57b8-9e6c-43d4-ae1f-0408882a397d}.1 (resident, live-slack @ cluster 3072 off 0x2e50)
  Created: 2026-05-23 08:46:26 UTC
@@ -91,6 +91,8 @@ python3 forefst.py "$IMG" deleted --slack
  WPSettings.dat (live-slack @ cluster 3072 off 0x378)
  desktop.ini (live-slack @ cluster 14852 off 0x378)
  ... (10 prior-version remnants total) ...
+
+ DELETED files: 0 of 21 are RESIDENT with full content recoverable; 5 are non-resident (carve-able with --carve).
 ```
 
 This is the recovery payoff. ReFS deletion (`CmsBPlusTable::DeleteFromIndex`) removes only the
@@ -102,10 +104,17 @@ reuses the space.
 - Each recovered row is a live type-0x30 filename entry decoded out of slack: a filename plus inline
  [`$STANDARD_INFORMATION`](../attributes/STANDARD_INFORMATION.md) carrying the MACB timestamps. The
  `cluster N off 0xNNNN` locator is exactly where the orphaned row body sits.
-- **DELETED vs PRIOR VERSIONS** is the load-bearing distinction: a *deleted* row's name is absent from
- the live tree (a real removal); a *prior-version* row is a CoW remnant of a file that **still
- exists** (e.g. `WPSettings.dat`, `desktop.ini` here are live), so it is an old metadata snapshot,
- not a deletion.
+- **DELETED vs PRIOR VERSIONS** is the load-bearing distinction, decided **per owning directory**: a
+ *deleted* row is no longer listed in the directory it was recovered from (a real removal); a
+ *prior-version* row is a CoW remnant of a file whose owning directory is still live **and still holds
+ that name** (e.g. `WPSettings.dat`, `desktop.ini` here are live), so it is an old metadata snapshot, not
+ a deletion. The test is per-directory on purpose — a common filename deleted from one folder is not
+ masked just because another live folder happens to hold the same name.
+- **Non-resident deleted files carve too.** The roll-up notes `5 non-resident (carve-able with --carve)`:
+ for these the file's data is in separate extents, and the extent map survived in a type-0x40 backing
+ record recovered from the same slack — `export deleted --carve` reconstructs them best-effort (the
+ clusters may have been reused since deletion). Deleted directories, when present, are grouped under
+ `$DELETED/DIR_OID_0x<oid>/` (none on this clean single-delete image).
 - Rows are **confidence-graded**: 18 here have two plausible FILETIMEs (high confidence); 3 are
  **partial remnants** — name fragments from a row whose body was partly overwritten (note `'FVE2.{b'`,
  a truncated name). Per finding FS_DEL_RA_005 the doc records **0 false positives** on the clean baseline.
