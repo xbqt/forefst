@@ -1,5 +1,24 @@
 # Changelog
 
+## Unreleased — deleted-file recovery enhancements
+
+**Three additions to the B+-tree node-slack recovery path (Method 5), all corpus-validated on v3.4 and v3.14.**
+
+- **Exact-extent recovery of deleted non-resident files.** A deleted non-resident file's extent map lives in a
+  type-0x40 backing record that is unlinked from the live tree at deletion but whose body survives in the same page
+  slack. `deleted` now recovers that backing, matches it to the name row by `(file_id, home-dir)` + exact size, and
+  `export deleted --carve` reconstructs the file from those clusters (best-effort — clusters may have been reused).
+  The carve reassembles byte-for-byte identically to the live `extract` path.
+- **Deleted-directory grouping.** When a directory is deleted, its children survive in slack but its OID leaves the
+  tree; those children are now grouped under `$DELETED/DIR_OID_0x<oid>/<child>` (anchored on the physical page they
+  were recovered from). The deleted folder's name is offered only as a best-effort candidate, and flagged **ambiguous**
+  when rename/move churn left several conflicting names for the same OID in slack — a named ancestor path is never
+  asserted. Present on 30 of the corpus's ReFS images.
+- **Owner-aware deleted-vs-prior split.** A recovered row is a *prior version* only when its owning directory is still
+  live **and** still holds that exact name — decided per directory, not by a global "name exists somewhere" test. This
+  stops a real deletion being hidden just because a common filename (e.g. `Shield.png`) also lives in another folder;
+  on one real Windows image it surfaced ~17,800 previously-hidden deletions, with zero false re-classifications.
+
 ## v1.0.0 — 2026-07-23 — first public release
 
 First public release. Functionally the same tool as the internal **v3.6.0** development build below —

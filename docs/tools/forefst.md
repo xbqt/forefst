@@ -300,7 +300,7 @@ forefst.py disk.raw reparse --tag 0xa000000c --json    # only symlinks, as JSON
 |--------|------|-------|
 | Trash table (`0xD`) | always | names removed but storage not yet reclaimed — fast, reliable |
 | Checkpoint diff | always | top-level names in the older checkpoint but not the current one |
-| B+-tree node-slack scan | **default** (skip with `--no-slack`) | deleted rows still sitting in a tree page's free space — plus the directory each was **deleted from** (owning-table OID `page+0x48` → path; blank if unmapped, never invented) |
+| B+-tree node-slack scan | **default** (skip with `--no-slack`) | deleted rows still sitting in a tree page's free space — plus the directory each was **deleted from** (owning-table OID `page+0x48` → path; blank if unmapped, never invented). If that parent directory was **itself deleted**, its children are grouped under `$DELETED/DIR_OID_0x<oid>/` with the deleted folder's name offered as a best-effort, ambiguity-flagged hint |
 | Orphaned-page scan | `--scan-pages` | rows in metadata pages no longer linked into the live tree |
 
 The slack scan **runs by default**; `--no-slack` gives a fast Trash+checkpoint pass and `--trash` returns after the Trash table only. Bound scans with `--max-scan`; filter with `--search SUB`.
@@ -310,13 +310,13 @@ The slack scan **runs by default**; `--no-slack` gives a fast Trash+checkpoint p
 | Verdict | Meaning | `export deleted` writes |
 |---------|---------|--------------------------|
 | `FULL FILE recoverable` | **resident** file — `$DATA` is inline in the record and decodes | `.recovered` (the full file) |
-| `extent_backed` | **non-resident** file — data is in on-disk extents, but the extent **map** survives in the remnant | `.carved` **with `--carve`** (best-effort; see below) |
+| `extent_backed` | **non-resident** file — data is in on-disk extents, and the extent **map** survives in slack (inline in the record, *or* in a type-0x40 backing recovered from the same page slack) | `.carved` **with `--carve`** (best-effort; see below) |
 | `metadata only` | non-resident file with no usable data/extent info in the remnant | `.row` only (name/size/timestamps) |
 | `fragment only` | a Trash-table key/value fragment | `.row` only |
 
-The verdict is annotated for EFS (`CIPHERTEXT`), sparse (`short read expected`), and partial slack remnants (`corroborate`). "Recoverable" means the bytes (or their extent map) are **present** in the remnant, *not* that they are un-overwritten (there is no allocation/freshness check). A roll-up at the end splits **deleted files** from **prior versions of files still present**, so the counts reconcile exactly with the files `export deleted` writes.
+The verdict is annotated for EFS (`CIPHERTEXT`), sparse (`short read expected`), and partial slack remnants (`corroborate`). "Recoverable" means the bytes (or their extent map) are **present** in the remnant, *not* that they are un-overwritten (there is no allocation/freshness check). A roll-up at the end splits **deleted files** from **prior versions of files still present** — decided per **owning directory** (a row is a prior version only if its owning directory is still live *and* still holds that exact name), so a real deletion is never hidden by a same-named file living in some other directory. The counts reconcile exactly with the files `export deleted` writes.
 
-> **Resident vs non-resident — what you can restore.** A **resident** deleted file's *full content* is recovered straight from the remnant (`.recovered`). A **non-resident** file keeps its data in separate on-disk extents — but for the common case the *extent map* is held inline in the record (`extent_backed`), so `export deleted --carve` reconstructs the file from those clusters **best-effort** (they may have been reallocated — the output is labelled `.carved` and flagged in the manifest). Only when even the extent map is gone (`metadata only`) is nothing but the record recoverable here. A complementary, not-yet-implemented method — **whole-disk signature carving** (scan every cluster for file magics, filesystem-agnostic) — would recover those remaining cases.
+> **Resident vs non-resident — what you can restore.** A **resident** deleted file's *full content* is recovered straight from the remnant (`.recovered`). A **non-resident** file keeps its data in separate on-disk extents — but the *extent map* survives in slack (either inline in the record, or in the file's type-0x40 backing record, which is unlinked from the live tree at deletion yet whose body persists in the same page slack and is matched back to the name by `file_id`+size), so `export deleted --carve` reconstructs the file from those clusters **best-effort** (they may have been reallocated — the output is labelled `.carved` and flagged in the manifest). Only when even the extent map has been zeroed in the surviving remnant (`metadata only`) is nothing but the record recoverable here. A complementary, not-yet-implemented method — **whole-disk signature carving** (scan every cluster for file magics, filesystem-agnostic) — would recover those remaining cases.
 
 | Option | Description |
 |--------|-------------|

@@ -6837,6 +6837,48 @@ def _scan_page_slack(page, plcn, tag):
         out.append(e)
     return out
 
+def _scan_page_slack_t40(page):
+    """Recover type-0x40 BACKING records (a non-resident file's own $SI + $DATA extent map) from B+-tree
+    node SLACK — the rows unlinked from the live offset array when the file was deleted. ReFS deletion
+    removes only the offset-array slot; the type-0x40 body (with its extent table) persists until a CoW
+    rewrite, exactly like the type-0x30 name row. Keyed (file_id @key+0x08, parent_oid @key+0x10). Returns
+    {file_id, parent_oid, vd} rows for later join to a recovered type-0x30 name row (by file_id + home +
+    size). This is what makes exact-extent recovery of a DELETED non-resident file possible: its extents
+    live in this separate backing, NOT inline in the name row, and the backing is gone from the live tree."""
+    out = []
+    if len(page) < 0x54 or page[:4] != b"MSB+":
+        return out
+    thoff = 0x50 + le32(page, 0x50)
+    if thoff + 40 > len(page):
+        return out
+    tbl = struct.unpack_from("<10I", page, thoff)
+    astart, aend = tbl[4], tbl[8]
+    live = set()
+    if astart < aend:
+        for i in range((aend - astart) // 4):
+            aa = thoff + astart + i * 4
+            if aa + 2 > len(page):
+                break
+            live.add(thoff + le16(page, aa))
+    for off in range(thoff, len(page) - 16, 4):
+        if off in live:
+            continue
+        try:
+            _rsz, ko, kl, _fl, vo, vl, _ = struct.unpack_from("<I6H", page, off)
+        except struct.error:
+            continue
+        # a type-0x40 backing row: key 0x10 past the header, 24-byte key type 0x40, backing value >= 0x68
+        if ko != 0x10 or not (0x18 <= kl < 0x40) or not (0x68 <= vl < 0x2000) or vo < 0x10:
+            continue
+        if off + ko + kl > len(page) or off + vo + vl > len(page):
+            continue
+        kd = page[off + ko:off + ko + kl]
+        if len(kd) < 0x18 or le16(kd, 0) != 0x40:
+            continue
+        out.append({"file_id": le64(kd, 0x08), "parent_oid": le64(kd, 0x10),
+                    "vd": bytes(page[off + vo:off + vo + vl])})
+    return out
+
 def _scan_trash_table(f, ps, cs, tr, obj_map):
     if 0xD not in obj_map: return []
     entries = []
@@ -6857,6 +6899,10 @@ def _slack_recover(f, ps, cs, tr, roots, obj_map, max_scan, log):
         _walk_btree_pages(f, ps, cs, tr, vlcns, visited, ptc)
     entries = []
     live_plcns = set()
+    t40_slack = {}    # (file_id, parent_oid) -> [backing value bytes]  (deleted non-res files' extent maps)
+    def _ingest_t40(data):
+        for r in _scan_page_slack_t40(data):
+            t40_slack.setdefault((r["file_id"], r["parent_oid"]), []).append(r["vd"])
     for head, plcns in ptc:
         live_plcns.add(head)
         data = b""
@@ -6868,6 +6914,7 @@ def _slack_recover(f, ps, cs, tr, roots, obj_map, max_scan, log):
                 ok = False; break
         if ok:
             entries += _scan_page_slack(data, head, "live-slack")
+            _ingest_t40(data)
     # orphan MSB+ pages (not referenced by the live tree)
     orphans = 0
     vol_clusters = (f.seek(0, 2) - ps) // cs
@@ -6882,15 +6929,83 @@ def _slack_recover(f, ps, cs, tr, roots, obj_map, max_scan, log):
             continue
         f.seek(ps + cl * cs); data = f.read(cs)
         ent = _scan_page_slack(data, cl, "orphan-slack")
+        _ingest_t40(data)          # a backing can survive on an orphan page with no surviving name row
         if ent:
             orphans += 1; entries += ent
     # Q6: resolve each recovered row's owning-table OID to the directory path it was deleted FROM.
     # build_oid_path_map covers live directories; an unmapped/zero OID stays blank (no invented path).
     oid_paths = build_oid_path_map(f, ps, cs, tr, obj_map)
+    # Feature A: group children of a DELETED directory. When a recovered row's owning-table OID is not a live
+    # directory, its parent directory was itself deleted -- that directory's page survives in slack with the
+    # child rows, but its OID is gone from the tree. The reliable, UNAMBIGUOUS fact is physical provenance: the
+    # remnant was recovered from that deleted directory's B+-tree page (OID = owning_table_oid, page+0x48). We
+    # anchor the path on that OID -- $DELETED/DIR_OID_0x<oid>/<child> -- and attach the deleted directory's NAME
+    # only as a BEST-EFFORT candidate list. We do NOT reconstruct a named ancestor chain: rename/move churn
+    # leaves MULTIPLE conflicting names for one OID in slack (26/110 OIDs on the churn corpus; verified against
+    # the fsactivity log -- elvis_dir_zulu_127761 was renamed to november_804548), so a single reconstructed
+    # name/path would be plausible-but-WRONG forensic evidence. Names annotate; they never assert the path.
+    _parent_names = {}    # deleted-dir OID -> set of candidate names seen in slack subdir entries
+    for e in entries:
+        vd = e.get("vd") or b""
+        if e.get("is_dir") and len(vd) >= 0x10 and e.get("name"):
+            sub_oid = le64(vd, 0x08)             # a directory entry stores the subdir's own OID at value+0x08
+            if sub_oid > 0x600:
+                _parent_names.setdefault(sub_oid, set()).add(e["name"])
     for e in entries:
         oto = e.get("owning_table_oid", 0)
-        e["owning_path"] = oid_paths.get(oto, "") if oto else ""
-    log(f"  Scanned {len(ptc)} live pages + {orphans} orphan pages with recoverable slack rows")
+        if not oto:
+            e["owning_path"] = ""
+        elif oto in oid_paths:
+            e["owning_path"] = oid_paths[oto]                  # Q6: live parent directory (resolved path)
+        else:                                                   # Feature A: parent directory is itself deleted
+            e["owning_path"] = f"$DELETED/DIR_OID_0x{oto:x}"
+            e["parent_deleted"] = True
+            e["parent_name_candidates"] = sorted(_parent_names.get(oto, ()))
+    # B2: bucket DELETED vs PRIOR-VERSION by the OWNING DIRECTORY, not a global name set. The old test
+    # (name in _get_current_files) wrongly called a file 'a prior version' whenever its name existed in ANY
+    # live directory -- disk-confirmed 10-17786 mis-buckets/image (winsider: 17786 genuine deletions hidden,
+    # e.g. duplicate asset names like Shield.png). A slack row is a PRIOR version of a STILL-LIVE file iff its
+    # owning directory is live AND still holds that exact name; otherwise it is genuinely DELETED. Only the
+    # directories actually referenced by a slack row are walked (a small subset, not every object) -- this also
+    # fixes the depth-limit misses of the recursive _get_current_files.
+    _live_by_dir = {}
+    for _oid in {e.get("owning_table_oid", 0) for e in entries} & set(obj_map):
+        _names = set()
+        try:
+            for _kd, _vd in walk_bplus(f, ps, cs, tr, obj_map[_oid]):
+                if len(_kd) > 4 and le16(_kd, 0) == 0x30:
+                    _names.add(_kd[4:].decode("utf-16-le", errors="replace").rstrip("\x00"))
+        except Exception:
+            pass
+        _live_by_dir[_oid] = _names
+    for e in entries:
+        oto = e.get("owning_table_oid", 0)
+        e["is_prior_version"] = bool(oto in _live_by_dir and e["name"] in _live_by_dir[oto])
+    # Feature C: join each recovered NON-RESIDENT name row to a type-0x40 backing recovered from slack, so a
+    # deleted non-resident file whose extent map lives in a SEPARATE backing (not inline in the name row) can
+    # be carved. A deleted file's backing is gone from the live tree (fetch_t40_backing would miss it) but its
+    # body persists in the same page slack. Match on (file_id @value+0x00, home-dir backref @value+0x08) +
+    # EXACT size (name value+0x38 == backing value+0x58, collision-safe). The backing's extents must parse to
+    # the full allocation (_parse_extents_from_type40 requires total_clusters == needed), else metadata_only.
+    # Carved bytes may be STALE (clusters possibly reused post-deletion) — flagged like the inline carve path.
+    joined = 0
+    for e in entries:
+        vd = e.get("vd") or b""
+        if e.get("resident") or len(vd) < 0x40:      # only SHORT non-resident name rows carry file_id@0x00
+            continue
+        key = (le64(vd, 0x00), le64(vd, 0x08))
+        nsize = le64(vd, 0x38)
+        for bvd in t40_slack.get(key, ()):
+            if len(bvd) < 0x68 or le64(bvd, 0x58) != nsize:
+                continue
+            info = _parse_extents_from_type40(bvd, cs, tr)
+            if info["extents"]:
+                e["t40_backing"] = bvd
+                e["t40_extent_count"] = len(info["extents"])
+                joined += 1
+                break
+    log(f"  Scanned {len(ptc)} live pages + {orphans} orphan pages with recoverable slack rows"
+        + (f"; {joined} non-resident file(s) matched a type-0x40 extent map in slack" if joined else ""))
     return entries
 
 def _scan_backup_copies(f, ps, cs, chkp_lcns):
@@ -7471,6 +7586,10 @@ _RECOVER_LABEL = {
     "metadata_only":      "metadata only (non-resident — file data is NOT in this remnant)",
     "fragment_only":      "fragment only (Trash-table key/value)",
 }
+# Feature C: a non-resident deleted file whose extents live in a SEPARATE type-0x40 backing (not inline in the
+# name row) — the backing was recovered from slack and joined by (file_id, home) + exact size in _slack_recover.
+_T40_CARVE_LABEL = (_RECOVER_LABEL["extent_backed"]
+                    + " [extent map from a type-0x40 backing recovered in slack — bytes may be stale]")
 
 def _extent_backed_carveable(vd):
     """B4: True only when a deleted extent-backed remnant can ACTUALLY be carved — i.e. its 0x1000 holder
@@ -7505,6 +7624,8 @@ def _deleted_recoverability(e):
     if not vd:
         return ("fragment_only", _RECOVER_LABEL["fragment_only"], None)
     if not e.get("resident"):                       # len(vd) <= 84 — non-resident, no data in the row
+        if e.get("t40_extent_count", 0) > 0:        # extents recovered from a type-0x40 backing in slack
+            return ("extent_backed", _T40_CARVE_LABEL, None)
         return ("metadata_only", _RECOVER_LABEL["metadata_only"], None)
     decoded = get_resident_data_content(vd)
     if decoded is not None:                         # truly resident: $DATA inline in the record
@@ -7522,7 +7643,11 @@ def _deleted_recoverability(e):
     if _current_stream_extent_backed(vd):
         if _extent_backed_carveable(vd):
             return ("extent_backed", _RECOVER_LABEL["extent_backed"], None)
+        if e.get("t40_extent_count", 0) > 0:                             # extents in a slack type-0x40 backing
+            return ("extent_backed", _T40_CARVE_LABEL, None)
         return ("metadata_only", _RECOVER_LABEL["metadata_only"], None)   # B4: extent map zeroed -> no carve
+    if e.get("t40_extent_count", 0) > 0:                                 # long value, extents in slack backing
+        return ("extent_backed", _T40_CARVE_LABEL, None)
     return ("metadata_only", _RECOVER_LABEL["metadata_only"], None)
 
 def _collision_free_path(path):
@@ -7536,39 +7661,57 @@ def _collision_free_path(path):
         i += 1
     return f"{path}.dup{i}"
 
-def _carve_extent_backed(f, ps_off, cs, tr, vd):
-    """Best-effort content carve for an EXTENT-BACKED (non-resident, F5) deleted remnant: read the current
-    stream's on-disk extents held inline in the row and reassemble. Returns (bytes, declared_size) or None.
+def _carve_extent_backed(f, ps_off, cs, tr, vd, t40_backing=None):
+    """Best-effort content carve for a NON-RESIDENT deleted remnant. Returns (bytes, declared_size) or None.
+    Two extent sources, in order: (1) the current stream's extents held INLINE in the name row (F5); (2) if
+    that is absent/empty, a type-0x40 BACKING recovered from slack (Feature C) — the common case for a deleted
+    file whose extent map lives in a separate record (gone from the live tree, but its body persists in slack).
 
     The bytes MAY BE STALE — the clusters can be reallocated after deletion; there is no allocation-freshness
     check, so callers must warn. Sparse files legitimately read short / zero-padded. Reuses the validated
-    snapshot extent format (parse_snapshot_data_entry) + cmd_extract's fvcn placement/trim (proven on
-    win11refs2tsnapshots arg.txt current stream = 'arg ument ation', extent-backed, byte-exact)."""
+    snapshot extent format (parse_snapshot_data_entry, inline) / _parse_extents_from_type40 (backing) +
+    cmd_extract's fvcn placement/trim (proven on win11refs2tsnapshots arg.txt current stream, byte-exact)."""
+    # (1) inline current-stream holder (sub_id 0x1000)
     holder = None
     for k, v in parse_resident_btree_rows(vd):
         if (len(k) >= 0x18 and k[12] == 0x80 and k[13] == 0x00 and le64(k, 0x10) == 0x1000
                 and len(v) >= 0x50 and le32(v, 4) == SNAP_DATA_DESC):
             holder = v
             break
-    if holder is None:
-        return None
-    stream_size, disk_alloc, exts = parse_snapshot_data_entry(holder)
-    if disk_alloc == 0 or not exts or stream_size <= 0:
-        return None
-    alloc = max(fv + run for fv, _vl, run in exts) * cs
-    if alloc > 256 * 1024 * 1024:          # safety cap for a best-effort carve
-        return None
-    buf = bytearray(alloc)
-    for fvcn, vlcn, run in sorted(exts, key=lambda x: x[0]):
-        for j in range(run):
-            try:
-                plcn = tr.tr(vlcn + j)
-            except Exception:
-                plcn = vlcn + j
-            f.seek(ps_off + plcn * cs)
-            off = (fvcn + j) * cs
-            buf[off:off + cs] = f.read(cs)
-    return (bytes(buf[:stream_size]), stream_size)
+    if holder is not None:
+        stream_size, disk_alloc, exts = parse_snapshot_data_entry(holder)
+        if disk_alloc > 0 and exts and stream_size > 0:
+            alloc = max(fv + run for fv, _vl, run in exts) * cs
+            if alloc <= 256 * 1024 * 1024:          # safety cap for a best-effort carve
+                buf = bytearray(alloc)
+                for fvcn, vlcn, run in sorted(exts, key=lambda x: x[0]):
+                    for j in range(run):
+                        try:
+                            plcn = tr.tr(vlcn + j)
+                        except Exception:
+                            plcn = vlcn + j
+                        f.seek(ps_off + plcn * cs)
+                        off = (fvcn + j) * cs
+                        buf[off:off + cs] = f.read(cs)
+                return (bytes(buf[:stream_size]), stream_size)
+    # (2) type-0x40 backing recovered from slack — extents already VLCN->PLCN translated by the parser.
+    if t40_backing is not None:
+        info = _parse_extents_from_type40(t40_backing, cs, tr)
+        exts = [x for x in info["extents"] if not x.get("integrity_checksum")]
+        stream_size = info["file_size"]
+        if exts and stream_size > 0:
+            alloc = max(x["file_vcn"] + x["clusters"] for x in exts) * cs
+            if alloc > 256 * 1024 * 1024:
+                return None
+            buf = bytearray(alloc)
+            for x in exts:
+                plcn, fvcn, run = x["plcn"], x["file_vcn"], x["clusters"]
+                for j in range(run):
+                    f.seek(ps_off + (plcn + j) * cs)
+                    o = (fvcn + j) * cs
+                    buf[o:o + cs] = f.read(cs)
+            return (bytes(buf[:stream_size]), stream_size)
+    return None
 
 def cmd_deleted(image, remaining, partition_start):
     # `--_from-export` is a private marker set by `export deleted` so the deprecation notice below is only
@@ -7621,7 +7764,7 @@ def cmd_deleted(image, remaining, partition_start):
         # --carve: best-effort reconstruct a NON-RESIDENT (extent-backed) deleted file from its inline
         # extent map. Bytes may be stale (clusters possibly reallocated) — hence the distinct .carved name.
         if carve and venum == "extent_backed" and not rows_only:
-            cres = _carve_extent_backed(f, ps, cs, tr, vd)
+            cres = _carve_extent_backed(f, ps, cs, tr, vd, e.get("t40_backing"))
             if cres:
                 cbytes, carved_size = cres
                 carved_len = len(cbytes)
@@ -7824,7 +7967,6 @@ def cmd_deleted(image, remaining, partition_start):
             print("── B+-tree Node Slack Scan (Method 5) ──")
             print("  Recovering deleted directory entries from metadata-page free space")
             print("  (ReFS deletion removes only the row's index slot; the row body persists).")
-            current_files = _get_current_files(f, ps, cs, tr, obj_map)
             raw = _slack_recover(f, ps, cs, tr, roots, obj_map, max_scan, print)
             # dedup on (name, create_time, is_dir); keep the longest recovered row
             dedup = {}
@@ -7835,8 +7977,9 @@ def cmd_deleted(image, remaining, partition_start):
             ent = list(dedup.values())
             if search_name:
                 ent = [e for e in ent if search_name.lower() in e["name"].lower()]
-            deleted = sorted([e for e in ent if e["name"] not in current_files], key=lambda e: e["name"])
-            prior = sorted([e for e in ent if e["name"] in current_files], key=lambda e: e["name"])
+            # B2: split by owner-aware is_prior_version (set in _slack_recover), not a global name set.
+            deleted = sorted([e for e in ent if not e.get("is_prior_version")], key=lambda e: e["name"])
+            prior = sorted([e for e in ent if e.get("is_prior_version")], key=lambda e: e["name"])
 
             def _export_slack(e, tag):
                 if not extract_dir or not e.get("vd"):
@@ -7853,7 +7996,7 @@ def cmd_deleted(image, remaining, partition_start):
             d_solid, d_partial = _conf_split(deleted)
             p_solid, p_partial = _conf_split(prior)
             if deleted:
-                print(f"\n  DELETED (name not in the live tree): {len(deleted)}  "
+                print(f"\n  DELETED (no longer listed in their owning directory): {len(deleted)}  "
                       f"[{len(d_solid)} with valid timestamps, {len(d_partial)} partial remnants]\n")
                 for e in d_solid:
                     kind = "DIR " if e.get("is_dir") else "FILE"
@@ -7864,6 +8007,17 @@ def cmd_deleted(image, remaining, partition_start):
                     # Q6: which directory the row was deleted FROM (owning-table OID -> path).
                     if e.get("owning_path"):
                         print(f"      Deleted from: {e['owning_path']}  (table {_hx(e.get('owning_table_oid', 0))})")
+                        # Feature A: the parent directory is itself deleted — annotate its recovered name(s) as a
+                        # BEST-EFFORT hint (never in the authoritative path; ambiguous under rename churn).
+                        if e.get("parent_deleted"):
+                            _cands = e.get("parent_name_candidates") or []
+                            if len(_cands) == 1:
+                                print(f"        parent directory is DELETED — recovered name (best-effort): {_cands[0]}")
+                            elif len(_cands) > 1:
+                                print(f"        parent directory is DELETED — name AMBIGUOUS ({len(_cands)} slack "
+                                      f"versions from rename/move churn): {', '.join(_cands)}")
+                            else:
+                                print(f"        parent directory is DELETED — its name did not survive in slack")
                     elif e.get("owning_table_oid"):
                         print(f"      Owning table: {_hx(e['owning_table_oid'])}  (path unresolved)")
                     if e.get("create_time"):
@@ -9712,10 +9866,9 @@ def main():
         # --max-scan. Rows carry the same schema as orphan/chkp rows so CSV/JSON output is unchanged.
         log(f"[{PROG}] Scanning B+-tree node slack for deleted rows...")
         try:
-            # Use the SAME live-name basis the `deleted` command uses (_get_current_files) so the two
-            # reconcile exactly — walk_directory_tree's deeper set would exclude a few more prior-versions
-            # and diverge from `deleted` on deep images.
-            live_names = _get_current_files(f, ps, cs, tr, obj_map)
+            # B2: both `deleted` and `files --deleted` now split on the owner-aware is_prior_version flag set
+            # inside _slack_recover (owning dir live AND still holds the name), so the two reconcile exactly and
+            # neither hides a genuine deletion whose name happens to exist in another directory.
             _raw_slack = _slack_recover(f, ps, cs, tr, roots, obj_map, args.max_scan, log)
             _dedup = {}
             for e in _raw_slack:
@@ -9724,7 +9877,7 @@ def main():
                     _dedup[k] = e
             slack_rows = []
             for e in _dedup.values():
-                if e["name"] in live_names:
+                if e.get("is_prior_version"):        # B2: owner-aware prior-version test (set in _slack_recover)
                     continue
                 fa = e.get("file_attrs", 0)
                 op = e.get("owning_path", "") or ""
