@@ -18,9 +18,9 @@ ReFS Deleted File Finder
 ── B+-tree Node Slack Scan (Method 5) ──
   Recovering deleted directory entries from metadata-page free space
   (ReFS deletion removes only the row's index slot; the row body persists).
-  Scanned 151 live pages + 0 orphan pages with recoverable slack rows; 12 non-resident file(s) matched a type-0x40 extent map in slack
+  Scanned 151 live pages (orphan-page scan skipped — recovery mode) with recoverable slack rows; 12 non-resident file(s) matched a type-0x40 extent map in slack
 
-  DELETED (no longer listed in their owning directory): 218  [218 with valid timestamps, 0 partial remnants]
+  DELETED (no live file with this name + creation time remains on the volume): 219  [219 with valid timestamps, 0 partial remnants]
 
     FILE alpha_output_778681.csv  (non-resident, live-slack @ cluster 62 off 0x378)
       Deleted from: /testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_report_888370  (table 0x715)
@@ -456,6 +456,11 @@ ReFS Deleted File Finder
       Deleted from: /testspecials/dir_oscar_738992  (table 0x738)
       Created:  2026-05-19 19:58:17 UTC
       Modified: 2026-01-01 19:57:30 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE romeo_kilo_561520.txt  (non-resident, live-slack @ cluster 70 off 0x1060)
+      Deleted from: /testspecials/dir_record_119518/dir_delta_826049/dir_index_888328  (table 0x724)
+      Created:  2026-05-19 19:57:56 UTC
+      Modified: 2026-05-19 19:58:12 UTC
       Recoverable: metadata only (non-resident — file data is NOT in this remnant)
     FILE symlink_beta_897418.lnk  (resident, live-slack @ cluster 76 off 0x960)
       Deleted from: /testspecials/dir_config_384571  (table 0x72b)
@@ -1113,7 +1118,7 @@ ReFS Deleted File Finder
       Modified: 2026-05-19 19:57:45 UTC
       Recoverable: metadata only (non-resident — file data is NOT in this remnant)
 
-  PRIOR VERSIONS of files still present (CoW slack remnants): 409  [409 with valid timestamps]
+  STILL PRESENT — a live file with this name + creation time exists (CoW remnants, and former locations of moved/renamed files): 408  [408 with valid timestamps]
     WPSettings.dat  (live-slack @ cluster 45 off 0x378) — FULL FILE recoverable (resident — 12 B stored inline in the record)
     alpha_alpha_560203.txt  (live-slack @ cluster 530 off 0x1c70) — metadata only (non-resident — file data is NOT in this remnant)
     alpha_audit_409219.ini  (live-slack @ cluster 79 off 0xfd8) — metadata only (non-resident — file data is NOT in this remnant)
@@ -1202,7 +1207,6 @@ ReFS Deleted File Finder
     romeo_cache_314788.log  (live-slack @ cluster 71 off 0x2010) — metadata only (non-resident — file data is NOT in this remnant)
     romeo_delta_145414.tmp  (live-slack @ cluster 527 off 0x2a40) — metadata only (non-resident — file data is NOT in this remnant)
     romeo_draft_937198.dat  (live-slack @ cluster 57 off 0x498) — metadata only (non-resident — file data is NOT in this remnant)
-    romeo_kilo_561520.txt  (live-slack @ cluster 70 off 0x1060) — metadata only (non-resident — file data is NOT in this remnant)
     romeo_november_711677.txt  (live-slack @ cluster 527 off 0x4c10) — metadata only (non-resident — file data is NOT in this remnant)
     romeo_temp_182346.md  (live-slack @ cluster 539 off 0x21c8) — metadata only (non-resident — file data is NOT in this remnant)
     sierra_archive_396584.csv  (live-slack @ cluster 514 off 0x4260) — metadata only (non-resident — file data is NOT in this remnant)
@@ -1528,13 +1532,15 @@ ReFS Deleted File Finder
         $SI (high confidence); 'partial remnants' are name fragments from a row whose
         body was partly overwritten — always corroborate before relying on one entry.
 ── Recovery methods ──
-  Ran: Trash table (0xD), checkpoint diff, B+-tree node-slack scan (deleted rows + recoverability).
-  Options: --no-slack (fast Trash+checkpoint only) · --scan-pages (also orphaned pages) ·
-           --search SUB (filter) · `export deleted DIR [--carve]` (write files out).
-  (Windows Recycle Bin is separate: see the `recyclebin` command.)
+  Mode: recovery.  Ran: Trash table (0xD), checkpoint diff, B+-tree node-slack scan (live pages only).
+  This is `recovery` (quick): live-page slack only. Run `deleted --full` to ALSO scan orphan
+  pages (the freed pages of deleted objects — more, but a full-volume scan) and carve non-resident content.
+  Fine-grained: --no-slack · --scan-pages · --orphans · --carve · --max-scan N · --search SUB · `export deleted DIR`.
+  Also: `deleted --orphans` adds a low-confidence tier for OID-Table objects unlinked from the tree.
+  Prior versions of files that still exist: `snapshots`.  Windows Recycle Bin: `recyclebin`.
 
-  DELETED files: 5 of 218 are RESIDENT with full content recoverable; 12 are non-resident (carve-able with --carve).
-  PRIOR versions of live files: 114 of 409 decode to a file.
+  DELETED files: 5 of 219 are RESIDENT with full content recoverable; 12 are non-resident (carve-able with --carve).
+  PRIOR versions of live files: 114 of 408 decode to a file.
   Restorability: a RESIDENT deleted file's FULL content is recoverable from the remnant
        (written as .recovered). A NON-RESIDENT file keeps its data in on-disk extents — if the
        extent map survives in the remnant ('extent_backed'), `export deleted --carve`
@@ -1542,4 +1548,5 @@ ReFS Deleted File Finder
        (name/size/timestamps). See the `export deleted` docs.
   Next: `export deleted <DIR>` writes each entry's raw .row (evidence) + a .recovered for
         resident files; add --carve to also reconstruct non-resident (extent-backed) files.
+  Recovery log: forefst_recovery_wininsiderrefs8gtest2_20260802-053543.txt
 

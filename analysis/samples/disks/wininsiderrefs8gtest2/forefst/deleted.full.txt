@@ -1,3 +1,5 @@
+# forefst wininsiderrefs8gtest2.raw deleted --full --max-scan 8000
+# ----------------------------------------------------------------------------
 ==============================================================================
 ReFS Deleted File Finder
 ==============================================================================
@@ -15,19 +17,10 @@ ReFS Deleted File Finder
   Previous checkpoint: VC=160
   Same top-level files in both (change may be in subdirectories or metadata)
 
-── Orphaned Page Scan ──
-  Current tree references 145 unique physical clusters
-  Scanning up to 50000 clusters for orphaned MSB+ pages...
-  Found 46 orphaned MSB+ leaf pages
-
-  Old versions of existing files (orphaned pages): 3
-    System Volume Information (cluster 49) — metadata only (non-resident — file data is NOT in this remnant)
-    testintegrity (cluster 49) — metadata only (non-resident — file data is NOT in this remnant)
-    testspecials (cluster 49) — metadata only (non-resident — file data is NOT in this remnant)
 ── B+-tree Node Slack Scan (Method 5) ──
   Recovering deleted directory entries from metadata-page free space
   (ReFS deletion removes only the row's index slot; the row body persists).
-  Scanned 151 live pages (orphan-page scan skipped — recovery mode) with recoverable slack rows; 12 non-resident file(s) matched a type-0x40 extent map in slack
+  Scanned 151 live pages + 0 orphan pages with recoverable slack rows; 12 non-resident file(s) matched a type-0x40 extent map in slack
 
   DELETED (no live file with this name + creation time remains on the volume): 219  [219 with valid timestamps, 0 partial remnants]
 
@@ -1541,15 +1534,15 @@ ReFS Deleted File Finder
         $SI (high confidence); 'partial remnants' are name fragments from a row whose
         body was partly overwritten — always corroborate before relying on one entry.
 ── Recovery methods ──
-  Mode: recovery.  Ran: Trash table (0xD), checkpoint diff, B+-tree node-slack scan (live pages only), orphaned-page scan.
-  This is `recovery` (quick): live-page slack only. Run `deleted --full` to ALSO scan orphan
-  pages (the freed pages of deleted objects — more, but a full-volume scan) and carve non-resident content.
+  Mode: full.  Ran: Trash table (0xD), checkpoint diff, B+-tree node-slack scan (live + orphan pages).
+  This is `--full` (complete): live + orphan-page slack + carve. `deleted` (no --full) is the quicker,
+  live-pages-only pass.
   Fine-grained: --no-slack · --scan-pages · --orphans · --carve · --max-scan N · --search SUB · `export deleted DIR`.
   Also: `deleted --orphans` adds a low-confidence tier for OID-Table objects unlinked from the tree.
   Prior versions of files that still exist: `snapshots`.  Windows Recycle Bin: `recyclebin`.
 
   DELETED files: 5 of 219 are RESIDENT with full content recoverable; 12 are non-resident (carve-able with --carve).
-  PRIOR versions of live files: 114 of 411 decode to a file.
+  PRIOR versions of live files: 114 of 408 decode to a file.
   Restorability: a RESIDENT deleted file's FULL content is recoverable from the remnant
        (written as .recovered). A NON-RESIDENT file keeps its data in on-disk extents — if the
        extent map survives in the remnant ('extent_backed'), `export deleted --carve`
@@ -1557,5 +1550,5 @@ ReFS Deleted File Finder
        (name/size/timestamps). See the `export deleted` docs.
   Next: `export deleted <DIR>` writes each entry's raw .row (evidence) + a .recovered for
         resident files; add --carve to also reconstruct non-resident (extent-backed) files.
-  Recovery log: forefst_recovery_wininsiderrefs8gtest2_20260802-053545.txt
+  Recovery log: forefst_recovery_wininsiderrefs8gtest2_20260802-053534.txt
 

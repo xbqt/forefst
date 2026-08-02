@@ -65,8 +65,10 @@ recovery succeeds on one image and fails on another.
 
 The recovery methods are numbered as on the [Deletion Recovery](deletion_recovery.md) page,
 where each is described in full: **M1** Trash Table · **M2** Checkpoint differential ·
-**M3** Orphan MSB+ page scan · **M4** Stream-snapshot reconstruction · **M5** B+-tree
-node-slack carve.
+**M3** Orphan-object scan (the opt-in `--orphans` tier) · **M4** Stream-snapshot reconstruction ·
+**M5** B+-tree node-slack carve. M5 runs by **default** over live pages and, with `deleted --full`,
+also over **orphan pages** (freed metadata pages) — where "old pages survive as orphan slack" below is
+recovered. Every remnant is classified by **file identity** (name + creation-time).
 
 | Artifact | Delete | Quick format | Upgrade v3.4→v3.14 | Clean unmount | Crash |
 |----------|--------|--------------|--------------------|---------------|-------|
@@ -158,11 +160,12 @@ Three differences change *how* a carve must be coded, not whether the artifact s
   "APPEARS UPGRADED" from the CHKP native-bit (0x080) plus the `$VolInfo` stamp.
 - **Snapshot prior-content (M4).** `forefst.py <image> snapshots --show` (and
   `--extract DIR`) reconstructs `$SNAPSHOT` prior versions byte-for-byte from a single image.
-- **Node-slack deleted-name / `$SI` carve (M5).** `forefst.py <image> deleted --slack`
-  (and `--extract DIR`) brute-walks free-region row headers in directory pages, decoding
-  name + MACB + attributes for deleted entries the live tree no longer indexes.
-- **Trash Table (M1) and orphan scan (M3).** Read OID 0x0D from the
-  [Object Table](../structures/object_table.md); the full procedure is on the
+- **Node-slack deleted-name / `$SI` carve (M5).** `forefst.py <image> deleted` (add `--full`
+  for orphan pages; `export deleted DIR` to write out) brute-walks free-region row headers in
+  directory pages, decoding name + MACB + attributes for deleted entries the live tree no longer
+  indexes, and classifies each by identity (deleted vs still-present).
+- **Trash Table (M1), checkpoint diff (M2), orphan-object scan (M3).** `deleted --trash` reads OID 0x0D;
+  `deleted --orphans` adds the low-confidence orphan-object tier; the full procedure is on the
   [Deletion Recovery](deletion_recovery.md) page.
 
 ## Cross-references

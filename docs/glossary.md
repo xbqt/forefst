@@ -179,7 +179,7 @@ Key terms used throughout the ReFS documentation.
 : Two or more directory names for one file object. All names share a single **FileId** and one set of data, but each name carries its **own** `$SI` (its own MACB timestamps) — the basis of the ReFS-specific per-name timestomp cross-check. Links are counted by the shared FileId, not the (always-1) `$SI` HardLinkCount field. See [Hard Links](concepts/hard_links.md).
 
 **Node slack**
-: The bytes of a B+-tree page **not** referenced by its live offset array — including the bodies of deleted rows, which ReFS unlinks from the array but does not scrub until a later CoW rewrite. The strongest deleted-directory-entry recovery source (`deleted --slack`, Method 5). See [Deletion Recovery](concepts/deletion_recovery.md).
+: The bytes of a B+-tree page **not** referenced by its live offset array — including the bodies of deleted rows, which ReFS unlinks from the array but does not scrub until a later CoW rewrite. The strongest deleted-directory-entry recovery source (`deleted`, Method 5; `--full` extends the scan to orphan pages). See [Deletion Recovery](concepts/deletion_recovery.md).
 
 **Orphan page / orphan OID**
 : Two deletion signals. An **orphan page** is an `MSB+` metadata page still on disk that the live tree no longer references. An **orphan OID** is an OID absent from the current Object Table between present ones — permanent-deletion evidence that survives even full page reuse. See [Deletion Recovery](concepts/deletion_recovery.md).

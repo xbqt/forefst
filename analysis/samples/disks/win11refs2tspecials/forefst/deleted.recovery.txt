@@ -1,3 +1,5 @@
+# forefst win11refs2tspecials.raw deleted --max-scan 8000
+# ----------------------------------------------------------------------------
 ==============================================================================
 ReFS Deleted File Finder
 ==============================================================================
@@ -2334,5 +2336,5 @@ ReFS Deleted File Finder
        (name/size/timestamps). See the `export deleted` docs.
   Next: `export deleted <DIR>` writes each entry's raw .row (evidence) + a .recovered for
         resident files; add --carve to also reconstruct non-resident (extent-backed) files.
-  Recovery log: forefst_recovery_win11refs2tspecials_20260802-053612.txt
+  Recovery log: forefst_recovery_win11refs2tspecials_20260802-053553.txt
 

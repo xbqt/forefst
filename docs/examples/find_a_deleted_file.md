@@ -18,42 +18,44 @@ IMG=deleted_file_test.raw   # a v3.14 ReFS test volume; file deleted via Explore
 
 ## Steps
 
-### Step 1 — The fast path: `forefst files --deleted` (Trash Table + orphan scan + checkpoint diff)
+### Step 1 — The fast metadata methods: Trash Table + checkpoint diff (`deleted --no-slack`)
 
 ```sh
-python3 forefst.py "$IMG" files --deleted
+python3 forefst.py "$IMG" deleted --no-slack
 ```
 
 ```
-[forefst] ReFS 3.14 | 19 objects | cluster_size=4096
-[forefst] Scanning Trash Table...
-[forefst] 0 trashed entries found
-[forefst] Walking directory tree...
-[forefst] 6 dirs, 4 files (4 resident, 0 hard-linked, 0 snapshots)
-[forefst] Scanning for orphan objects...
-[forefst] 0 orphan OIDs found in Object Table
-[forefst] Comparing checkpoint copies...
-[forefst] Comparing checkpoints: vclock 45 vs 46
-[forefst] 0 OIDs in older checkpoint only
-[forefst] Done. 10 entries (0 deleted) -> CSV (stdout)
+  ReFS version: 3.14
+  Cluster size: 0x1000
+  Checkpoints:  2 (VC: 46, 45)
+  Objects:      19
+
+── Trash Table (OID 0xD) ──
+  Empty (all deletions fully processed)
+
+── Checkpoint Comparison ──
+  Current checkpoint: VC=46
+  Previous checkpoint: VC=45
+  Same top-level files in both (change may be in subdirectories or metadata)
+
+── Recovery methods ──
+  Mode: recovery.  Ran: Trash table (0xD), checkpoint diff.
+  Slack scan SKIPPED (--no-slack). Run `deleted` (the default) to recover deleted rows.
 ```
 
-`--deleted` bundles three of the five methods, and on this clean image **all three come up empty —
+`--no-slack` runs only the two fast metadata methods, and on this clean image **both come up empty —
 honestly so**:
 
-- **Method 1 (Trash Table, OID 0x0D):** `0 trashed entries`. The deferred-deletion queue was already
- drained by `TrashCleanerWorkItemMethod` before unmount, so nothing is parked there. See
+- **Trash Table (OID 0x0D):** `Empty`. The deferred-deletion queue was already drained by
+ `TrashCleanerWorkItemMethod` before unmount, so nothing is parked there. See
  [Trash Table](../structures/trash_table.md).
-- **Method 3 (orphan OID scan):** `0 orphan OIDs`. No OID appears in a live Object-Table page that is
- absent from the current table — this *OID-level* scan only looks at the Object Table itself, not at
- carved free pages (that is Step 3 below). See [Object Table](../structures/object_table.md).
-- **Method 2 (checkpoint differential):** the two checkpoints decode to **vclock 45 vs 46** but
- `0 OIDs in older checkpoint only`. This reproduces finding FS_CHKP_RA_014 exactly: on a cleanly-unmounted
- volume both checkpoints resolve to the **same 13-root pointer list**, so the differential yields
- nothing. A genuine mid-transaction crash capture is required for this method to fire.
+- **Checkpoint differential:** the two checkpoints decode to **VC 46 vs 45** but resolve to the same
+ top-level pointer list. This reproduces finding FS_CHKP_RA_014 exactly: on a cleanly-unmounted volume
+ both checkpoints converge to the **same 13-root pointer list**, so the differential yields nothing. A
+ genuine mid-transaction crash capture is required for this method to fire.
 
-So `--deleted` reports `0 deleted` here. That is the correct answer for *these three methods* — it is
-**not** the end of the story.
+So the metadata-only pass reports nothing here. That is the correct answer for *these two methods* — it
+is **not** the end of the story: the default `deleted` run adds the B+-tree node-slack scan (Step 2).
 
 ### Step 2 — The strong method: B+-tree node slack (`forefst deleted`, Method 5)
 
@@ -104,12 +106,14 @@ reuses the space.
 - Each recovered row is a live type-0x30 filename entry decoded out of slack: a filename plus inline
  [`$STANDARD_INFORMATION`](../attributes/STANDARD_INFORMATION.md) carrying the MACB timestamps. The
  `cluster N off 0xNNNN` locator is exactly where the orphaned row body sits.
-- **DELETED vs PRIOR VERSIONS** is the load-bearing distinction, decided **per owning directory**: a
- *deleted* row is no longer listed in the directory it was recovered from (a real removal); a
- *prior-version* row is a CoW remnant of a file whose owning directory is still live **and still holds
- that name** (e.g. `WPSettings.dat`, `desktop.ini` here are live), so it is an old metadata snapshot, not
- a deletion. The test is per-directory on purpose — a common filename deleted from one folder is not
- masked just because another live folder happens to hold the same name.
+- **DELETED vs STILL-PRESENT** is the load-bearing distinction, decided by **file identity — name plus
+ creation-time**: a row is *deleted* only when no live file with that same name *and* creation-time exists
+ **anywhere** on the volume; otherwise it is *still present* — a CoW prior version (e.g. `WPSettings.dat`,
+ `desktop.ini` here are live), or, if the live file now sits in a different directory, a neutral **former
+ location** of a moved/renamed file. Creation-time is immutable across a move or rename, so it separates the
+ same file relocated from a different file that merely reuses the name — two unrelated `Shield.png` in
+ different folders are judged independently, and a common filename deleted from one folder is never masked by
+ an unrelated live copy elsewhere.
 - **Non-resident deleted files carve too.** The roll-up notes `5 non-resident (carve-able with --carve)`:
  for these the file's data is in separate extents, and the extent map survived in a type-0x40 backing
  record recovered from the same slack — `export deleted --carve` reconstructs them best-effort (the
@@ -157,8 +161,8 @@ not applicable here — for a real worked snapshot extraction use a v3.14 image 
 
 ## What this tells you
 
-- On a **cleanly-unmounted** ReFS volume the three "easy" methods (`forefst files --deleted`: Trash Table,
- orphan-OID, checkpoint diff) correctly return **nothing** — a drained trash queue and converged
+- On a **cleanly-unmounted** ReFS volume the two fast metadata methods (`deleted --no-slack`: Trash Table
+ + checkpoint diff) correctly return **nothing** — a drained trash queue and converged
  checkpoints are expected, not a parsing failure.
 - **B+-tree node slack (Method 5)** is the method that actually recovers deleted directory entries +
  their `$SI` timestamps on this image — 21 deleted rows, confidence-graded, with 3 partials flagged.

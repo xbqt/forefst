@@ -18,8 +18,11 @@ ReFS Deleted File Finder
   Same top-level files in both (change may be in subdirectories or metadata)
 
 ── Recovery methods ──
-  Ran: Trash table (0xD), checkpoint diff.
-  Slack scan SKIPPED (--no-slack). Run without it (the default) to recover deleted rows.
-  (Windows Recycle Bin is separate: see the `recyclebin` command.)
+  Mode: recovery.  Ran: Trash table (0xD), checkpoint diff.
+  Slack scan SKIPPED (--no-slack). Run `deleted` (the default) to recover deleted rows.
+  Fine-grained: --no-slack · --scan-pages · --orphans · --carve · --max-scan N · --search SUB · `export deleted DIR`.
+  Also: `deleted --orphans` adds a low-confidence tier for OID-Table objects unlinked from the tree.
+  Prior versions of files that still exist: `snapshots`.  Windows Recycle Bin: `recyclebin`.
 
+  Recovery log: forefst_recovery_win11refstestmftecmd_20260802-053516.txt
 

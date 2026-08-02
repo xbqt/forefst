@@ -1,3 +1,5 @@
+# forefst win11refstestmftecmd.raw deleted --full --max-scan 8000
+# ----------------------------------------------------------------------------
 ==============================================================================
 ReFS Deleted File Finder
 ==============================================================================
@@ -18,9 +20,9 @@ ReFS Deleted File Finder
 ── B+-tree Node Slack Scan (Method 5) ──
   Recovering deleted directory entries from metadata-page free space
   (ReFS deletion removes only the row's index slot; the row body persists).
-  Scanned 378 live pages (orphan-page scan skipped — recovery mode) with recoverable slack rows; 55 non-resident file(s) matched a type-0x40 extent map in slack
+  Scanned 378 live pages + 58 orphan pages with recoverable slack rows; 76 non-resident file(s) matched a type-0x40 extent map in slack
 
-  DELETED (no live file with this name + creation time remains on the volume): 355  [318 with valid timestamps, 37 partial remnants]
+  DELETED (no live file with this name + creation time remains on the volume): 364  [320 with valid timestamps, 44 partial remnants]
 
     FILE FVE2.{09cf57b8-9e6c-43d4-ae1f-0408882a397d}.1  (non-resident, live-slack @ cluster 512 off 0x2f08)
       Deleted from: /System Volume Information  (table 0x701)
@@ -70,6 +72,11 @@ ReFS Deleted File Finder
     DIR  dir_alpha_542871  (non-resident, live-slack @ cluster 1616 off 0x3788)
       Deleted from: /testintegrity/dir_romeo_348517  (table 0x81d)
       Created:  2026-05-23 07:53:50 UTC
+      Modified: 2026-05-23 07:53:51 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    DIR  dir_archive_665149  (non-resident, orphan-slack @ cluster 7216 off 0xa60)
+      Deleted from: /testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/dir_cache_820752  (table 0x83a)
+      Created:  2026-05-23 07:53:51 UTC
       Modified: 2026-05-23 07:53:51 UTC
       Recoverable: metadata only (non-resident — file data is NOT in this remnant)
     DIR  dir_archive_684726  (non-resident, live-slack @ cluster 14928 off 0xf48)
@@ -1418,6 +1425,11 @@ ReFS Deleted File Finder
       Created:  2026-05-23 07:53:47 UTC
       Modified: 2026-05-23 07:53:47 UTC
       Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE xbpt_symlink_tango_130881.lnk  (non-resident, orphan-slack @ cluster 7216 off 0x748)
+      Deleted from: /testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/dir_cache_820752  (table 0x83a)
+      Created:  2026-05-23 07:53:50 UTC
+      Modified: 2026-05-23 07:53:50 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
     FILE xbpt_symlink_uniform_337284.lnk  (non-resident, live-slack @ cluster 6176 off 0x1300)
       Deleted from: /testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/dir_cache_422839  (table 0x821)
       Created:  2026-05-23 07:53:48 UTC
@@ -1670,10 +1682,11 @@ ReFS Deleted File Finder
       Modified: 2026-05-23 07:38:48 UTC
       Recoverable: metadata only (non-resident — file data is NOT in this remnant)
 
-    + 37 partial remnants (name fragment only, no valid timestamps — corroborate before use):
+    + 44 partial remnants (name fragment only, no valid timestamps — corroborate before use):
       'elvis_dir_quebec_89697'  (live-slack c11804 o0x1fc0)
       'elvis_dir_sync_708268'  (live-slack c2064 o0x2fb0)
       'xbpt_df'  (live-slack c528 o0x220)
+      'xbpt_hardlink_c'  (orphan-slack c552 o0x270)
       'xbpt_j'  (live-slack c7188 o0x220)
       'xbpt_kj'  (live-slack c10788 o0x1d0)
       'xbpt_lima_m'  (live-slack c536 o0x170)
@@ -1683,27 +1696,26 @@ ReFS Deleted File Finder
       'xbpt_ov'  (live-slack c7188 o0x170)
       'xbpt_p'  (live-slack c8740 o0x178)
       'xbpt_qv'  (live-slack c11288 o0x210)
+      'xbpt_red'  (orphan-slack c7204 o0x120)
       'xbpt_rf'  (live-slack c6684 o0x1d8)
+      'xbpt_rp'  (orphan-slack c564 o0x120)
       'xbpt_s'  (live-slack c536 o0x120)
       'xbpt_sierra_c'  (live-slack c12832 o0x120)
       'xbpt_sj'  (live-slack c11292 o0x178)
       'xbpt_symlink_am'  (live-slack c532 o0x168)
       'xbpt_symlink_cache_46:'  (live-slack c7224 o0x120)
+      'xbpt_symlink_d'  (orphan-slack c552 o0x210)
       'xbpt_symlink_delta_507251.lnk'  (live-slack c11352 o0xfb0)
       'xbpt_symlink_g'  (live-slack c2608 o0x170)
       'xbpt_symlink_l'  (live-slack c2108 o0x1d8)
       'xbpt_symlink_mike_484005.lnk'  (live-slack c3096 o0x1f88)
+      'xbpt_symlink_rf'  (orphan-slack c7692 o0x210)
       'xbpt_symlink_t'  (live-slack c13352 o0x1c0)
       'xbpt_symlink_temp_803950.lnk'  (live-slack c108 o0x2fa0)
       'xbpt_symlink_ts'  (live-slack c13344 o0x180)
-      'xbpt_symlink_v'  (live-slack c14904 o0x178)
-      'xbpt_symlink_victo'  (live-slack c14900 o0xfc8)
-      'xbpt_t'  (live-slack c7188 o0x120)
-      'xbpt_tango_b'  (live-slack c15412 o0x178)
-      'xbpt_tb'  (live-slack c11292 o0x120)
-      … and 7 more
+      … and 14 more
 
-  STILL PRESENT — a live file with this name + creation time exists (CoW remnants, and former locations of moved/renamed files): 812  [812 with valid timestamps]
+  STILL PRESENT — a live file with this name + creation time exists (CoW remnants, and former locations of moved/renamed files): 890  [890 with valid timestamps]
     Change Journal  (live-slack @ cluster 13824 off 0x2e0) — metadata only (non-resident — file data is NOT in this remnant)
     FVE2.{8252fd17-a486-4ad4-b1ca-f4fe64d23218}  (live-slack @ cluster 512 off 0x2090) — FULL FILE recoverable (resident — 0 B stored inline in the record)
     FveDecryptedVolumeFolder  (live-slack @ cluster 512 off 0x1c60) — metadata only (non-resident — file data is NOT in this remnant)
@@ -1714,17 +1726,30 @@ ReFS Deleted File Finder
     dir_archive_332421  (live-slack @ cluster 6176 off 0x3198) — metadata only (non-resident — file data is NOT in this remnant)
     dir_audit_570908  (live-slack @ cluster 100 off 0x3cb8) — metadata only (non-resident — file data is NOT in this remnant)
     dir_audit_890453  (live-slack @ cluster 108 off 0x10b0) — metadata only (non-resident — file data is NOT in this remnant)  [former location — the live file is in a different directory]
+    dir_backup_983023  (orphan-slack @ cluster 556 off 0xe08) — metadata only (non-resident — file data is NOT in this remnant)
     dir_cache_496228  (live-slack @ cluster 12852 off 0x760) — metadata only (non-resident — file data is NOT in this remnant)
+    dir_config_158774  (orphan-slack @ cluster 5684 off 0x888) — metadata only (non-resident — file data is NOT in this remnant)
     dir_data_161769  (live-slack @ cluster 3116 off 0x1710) — metadata only (non-resident — file data is NOT in this remnant)
     dir_data_224525  (live-slack @ cluster 14372 off 0x2ac0) — metadata only (non-resident — file data is NOT in this remnant)  [former location — the live file is in a different directory]
+    dir_data_980105  (orphan-slack @ cluster 56 off 0xb10) — metadata only (non-resident — file data is NOT in this remnant)
     dir_draft_180033  (live-slack @ cluster 12352 off 0x1800) — metadata only (non-resident — file data is NOT in this remnant)
+    dir_draft_203180  (orphan-slack @ cluster 2056 off 0xbe8) — metadata only (non-resident — file data is NOT in this remnant)
+    dir_foxtrot_978242  (orphan-slack @ cluster 5160 off 0x408) — metadata only (non-resident — file data is NOT in this remnant)
     dir_gamma_191504  (live-slack @ cluster 2080 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)  [former location — the live file is in a different directory]
+    dir_gamma_404999  (orphan-slack @ cluster 120 off 0xd78) — metadata only (non-resident — file data is NOT in this remnant)
+    dir_index_318186  (orphan-slack @ cluster 5692 off 0x7f0) — metadata only (non-resident — file data is NOT in this remnant)
     dir_index_989425  (live-slack @ cluster 108 off 0x1140) — metadata only (non-resident — file data is NOT in this remnant)  [former location — the live file is in a different directory]
+    dir_india_641930  (orphan-slack @ cluster 560 off 0x6c0) — metadata only (non-resident — file data is NOT in this remnant)
+    dir_kilo_649443  (orphan-slack @ cluster 5676 off 0x428) — metadata only (non-resident — file data is NOT in this remnant)
     dir_kilo_704584  (live-slack @ cluster 100 off 0x2ef0) — metadata only (non-resident — file data is NOT in this remnant)
     dir_kilo_863699  (live-slack @ cluster 7756 off 0x188) — metadata only (non-resident — file data is NOT in this remnant)
+    dir_kilo_987907  (orphan-slack @ cluster 560 off 0x190) — metadata only (non-resident — file data is NOT in this remnant)
     dir_lima_762294  (live-slack @ cluster 3096 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)  [former location — the live file is in a different directory]
+    dir_log_989773  (orphan-slack @ cluster 556 off 0xd80) — metadata only (non-resident — file data is NOT in this remnant)
     dir_mike_190423  (live-slack @ cluster 7232 off 0x24a8) — metadata only (non-resident — file data is NOT in this remnant)
     dir_mike_674275  (live-slack @ cluster 14900 off 0x1ce8) — metadata only (non-resident — file data is NOT in this remnant)  [former location — the live file is in a different directory]
+    dir_mike_895211  (orphan-slack @ cluster 6704 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
+    dir_mike_981731  (orphan-slack @ cluster 2100 off 0xf08) — metadata only (non-resident — file data is NOT in this remnant)
     dir_november_183663  (live-slack @ cluster 3116 off 0x3c90) — metadata only (non-resident — file data is NOT in this remnant)
     dir_november_850849  (live-slack @ cluster 7232 off 0xca0) — metadata only (non-resident — file data is NOT in this remnant)
     dir_output_980353  (live-slack @ cluster 3096 off 0x408) — metadata only (non-resident — file data is NOT in this remnant)  [former location — the live file is in a different directory]
@@ -1732,9 +1757,13 @@ ReFS Deleted File Finder
     dir_papa_189433  (live-slack @ cluster 12348 off 0x3070) — metadata only (non-resident — file data is NOT in this remnant)
     dir_papa_234045  (live-slack @ cluster 7232 off 0x1548) — metadata only (non-resident — file data is NOT in this remnant)
     dir_papa_331610  (live-slack @ cluster 13344 off 0x1cc8) — metadata only (non-resident — file data is NOT in this remnant)
+    dir_quebec_504972  (orphan-slack @ cluster 120 off 0xbd8) — metadata only (non-resident — file data is NOT in this remnant)
+    dir_quebec_918931  (orphan-slack @ cluster 2056 off 0xc78) — metadata only (non-resident — file data is NOT in this remnant)
     dir_quebec_957455  (live-slack @ cluster 12348 off 0x888) — metadata only (non-resident — file data is NOT in this remnant)
     dir_record_370580  (live-slack @ cluster 108 off 0x11d0) — metadata only (non-resident — file data is NOT in this remnant)  [former location — the live file is in a different directory]
     dir_report_123351  (live-slack @ cluster 2108 off 0x3930) — metadata only (non-resident — file data is NOT in this remnant)
+    dir_romeo_230799  (orphan-slack @ cluster 7252 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
+    dir_romeo_714523  (orphan-slack @ cluster 56 off 0xc50) — metadata only (non-resident — file data is NOT in this remnant)
     dir_sierra_120452  (live-slack @ cluster 2608 off 0x420) — metadata only (non-resident — file data is NOT in this remnant)
     dir_sync_209686  (live-slack @ cluster 100 off 0x3d48) — metadata only (non-resident — file data is NOT in this remnant)
     dir_sync_673137  (live-slack @ cluster 2608 off 0x300) — metadata only (non-resident — file data is NOT in this remnant)
@@ -1746,6 +1775,7 @@ ReFS Deleted File Finder
     dir_uniform_998997  (live-slack @ cluster 14900 off 0x25d0) — metadata only (non-resident — file data is NOT in this remnant)  [former location — the live file is in a different directory]
     dir_victor_557108  (live-slack @ cluster 14380 off 0xef8) — metadata only (non-resident — file data is NOT in this remnant)  [former location — the live file is in a different directory]
     dir_zulu_274889  (live-slack @ cluster 7232 off 0x35e0) — metadata only (non-resident — file data is NOT in this remnant)
+    dir_zulu_409792  (orphan-slack @ cluster 5160 off 0x498) — metadata only (non-resident — file data is NOT in this remnant)
     dir_zulu_695240  (live-slack @ cluster 12852 off 0x2ed8) — metadata only (non-resident — file data is NOT in this remnant)
     elvis_dir_beta_984608  (live-slack @ cluster 1048 off 0x1ed8) — metadata only (non-resident — file data is NOT in this remnant)
     elvis_dir_beta_984608  (live-slack @ cluster 14884 off 0x3538) — metadata only (non-resident — file data is NOT in this remnant)
@@ -1777,6 +1807,7 @@ ReFS Deleted File Finder
     xbpt_archive_archive_804568.xml  (live-slack @ cluster 14900 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_archive_audit_104959.tmp  (live-slack @ cluster 7188 off 0x3c38) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_archive_audit_104959.tmp  (live-slack @ cluster 2580 off 0x4b8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_archive_beta_282319.lnk  (orphan-slack @ cluster 2056 off 0xd08) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_archive_draft_753371.cfg  (live-slack @ cluster 532 off 0x1d0) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_archive_gamma_782346.txt  (live-slack @ cluster 100 off 0x13a8) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`) [extent map from a type-0x40 backing recovered in slack — bytes may be stale]
     xbpt_archive_hotel_840184.log  (live-slack @ cluster 11356 off 0x2720) — metadata only (non-resident — file data is NOT in this remnant)
@@ -1816,6 +1847,7 @@ ReFS Deleted File Finder
     xbpt_backup_trace_904139.log  (live-slack @ cluster 5696 off 0xfb0) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_beta_archive_202282.json  (live-slack @ cluster 12832 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_beta_archive_202282.json  (live-slack @ cluster 4644 off 0x640) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
+    xbpt_beta_data_817933.dat  (orphan-slack @ cluster 6688 off 0x190) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_beta_echo_977425.bin  (live-slack @ cluster 9260 off 0x18e0) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)  [former location — the live file is in a different directory]
     xbpt_beta_index_476236.lnk  (live-slack @ cluster 1616 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_beta_mike_393018.xml  (live-slack @ cluster 2076 off 0xa70) — metadata only (non-resident — file data is NOT in this remnant)
@@ -1829,13 +1861,16 @@ ReFS Deleted File Finder
     xbpt_cache_alpha_695074.dat  (live-slack @ cluster 532 off 0xea8) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_cache_archive_833633.cfg  (live-slack @ cluster 1080 off 0x2ca8) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_cache_backup_597783.tmp  (live-slack @ cluster 12348 off 0x4f8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_cache_draft_476266.md  (orphan-slack @ cluster 120 off 0xc68) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_cache_echo_580272.md  (live-slack @ cluster 12352 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_cache_foxtrot_199130.bin  (orphan-slack @ cluster 7208 off 0xbe8) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_cache_index_408825.bin  (live-slack @ cluster 5648 off 0x21b0) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_cache_lima_454391.txt  (live-slack @ cluster 4644 off 0x32b8) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_cache_romeo_165745.csv  (live-slack @ cluster 2636 off 0x668) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_cache_romeo_952485.cfg  (live-slack @ cluster 3116 off 0x348) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_cache_sierra_236272.cfg  (live-slack @ cluster 13336 off 0x1538) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)  [former location — the live file is in a different directory]
     xbpt_cache_tango_141801.json  (live-slack @ cluster 12852 off 0xb10) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
+    xbpt_cache_tango_793769.lnk  (orphan-slack @ cluster 56 off 0xce0) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_cache_temp_298348.bak  (live-slack @ cluster 14364 off 0x2748) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_cache_temp_298348.bak  (live-slack @ cluster 9244 off 0x1c88) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_cache_uniform_131729.bin  (live-slack @ cluster 9792 off 0x2ef8) — metadata only (non-resident — file data is NOT in this remnant)
@@ -1863,6 +1898,7 @@ ReFS Deleted File Finder
     xbpt_data_romeo_144525.lnk  (live-slack @ cluster 10764 off 0x29e8) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_data_romeo_946788.bin  (live-slack @ cluster 13844 off 0x1bc8) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_data_romeo_946788.bin  (live-slack @ cluster 6684 off 0x21f8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_data_romeo_992013.json  (orphan-slack @ cluster 576 off 0x280) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`) [extent map from a type-0x40 backing recovered in slack — bytes may be stale]
     xbpt_data_trace_929053.ini  (live-slack @ cluster 12348 off 0x34e0) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`) [extent map from a type-0x40 backing recovered in slack — bytes may be stale]
     xbpt_data_yankee_741785.lnk  (live-slack @ cluster 8760 off 0x1000) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_delta_config_974533.bak  (live-slack @ cluster 104 off 0xd48) — metadata only (non-resident — file data is NOT in this remnant)
@@ -1902,6 +1938,7 @@ ReFS Deleted File Finder
     xbpt_echo_yankee_322941.dat  (live-slack @ cluster 544 off 0x1bf8) — FULL FILE recoverable (resident — 128 B stored inline in the record)
     xbpt_foxtrot_config_966558.log  (live-slack @ cluster 12836 off 0x2bb8) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_foxtrot_draft_521951.md  (live-slack @ cluster 532 off 0x1df8) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    xbpt_foxtrot_kilo_188200.bin  (orphan-slack @ cluster 120 off 0x528) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_foxtrot_log_666445.ini  (live-slack @ cluster 11332 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_foxtrot_mike_194179.bin  (live-slack @ cluster 8756 off 0xc18) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_foxtrot_record_100625.tmp  (live-slack @ cluster 112 off 0x748) — metadata only (non-resident — file data is NOT in this remnant)
@@ -1911,27 +1948,34 @@ ReFS Deleted File Finder
     xbpt_foxtrot_zulu_156856.csv  (live-slack @ cluster 4644 off 0x270) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_gamma_archive_952302.cfg  (live-slack @ cluster 8768 off 0x1c10) — FULL FILE recoverable (resident — 1754 B stored inline in the record)  [former location — the live file is in a different directory]
     xbpt_gamma_data_115091.json  (live-slack @ cluster 108 off 0x1770) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)  [former location — the live file is in a different directory]
+    xbpt_gamma_data_633866.json  (orphan-slack @ cluster 120 off 0x5d0) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_gamma_india_998655.txt  (live-slack @ cluster 13344 off 0x2970) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_gamma_lima_441465.tmp  (live-slack @ cluster 12352 off 0x2ff0) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_gamma_romeo_253136.bak  (live-slack @ cluster 1616 off 0x31c0) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_gamma_victor_852781.bak  (live-slack @ cluster 15384 off 0x38b0) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)  [former location — the live file is in a different directory]
     xbpt_hardlink_alpha_216580.lnk  (live-slack @ cluster 7756 off 0xa50) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_alpha_499266.log  (live-slack @ cluster 13344 off 0x1d58) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_alpha_736292.cfg  (orphan-slack @ cluster 1072 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_archive_434411.dat  (live-slack @ cluster 13336 off 0x630) — metadata only (non-resident — file data is NOT in this remnant)  [former location — the live file is in a different directory]
     xbpt_hardlink_archive_876283.xml  (live-slack @ cluster 6176 off 0x3cb0) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_audit_143059.ini  (live-slack @ cluster 8232 off 0x1a20) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_audit_219848.cfg  (live-slack @ cluster 13360 off 0x2e20) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_audit_219848.cfg  (live-slack @ cluster 1036 off 0x2e20) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_audit_962379.lnk  (live-slack @ cluster 12348 off 0x1e98) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_backup_104228.log  (orphan-slack @ cluster 556 off 0xf40) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_backup_226307.bak  (live-slack @ cluster 532 off 0x1978) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_backup_305417.lnk  (live-slack @ cluster 14372 off 0x3d8) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`) [extent map from a type-0x40 backing recovered in slack — bytes may be stale]  [former location — the live file is in a different directory]
     xbpt_hardlink_backup_461389.lnk  (live-slack @ cluster 2608 off 0x250) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_backup_502262.bin  (orphan-slack @ cluster 116 off 0xbb8) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`) [extent map from a type-0x40 backing recovered in slack — bytes may be stale]
     xbpt_hardlink_backup_571101.md  (live-slack @ cluster 9768 off 0x610) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_backup_574189.cfg  (live-slack @ cluster 9768 off 0x560) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`) [extent map from a type-0x40 backing recovered in slack — bytes may be stale]
     xbpt_hardlink_backup_642335.log  (live-slack @ cluster 100 off 0x5e0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_backup_893100.txt  (orphan-slack @ cluster 576 off 0x328) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_backup_932249.lnk  (live-slack @ cluster 1616 off 0x1260) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_beta_222943.txt  (orphan-slack @ cluster 560 off 0x340) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_beta_226735.lnk  (live-slack @ cluster 12348 off 0x1fe8) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_beta_369805.lnk  (live-slack @ cluster 100 off 0x3c10) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_beta_861174.lnk  (orphan-slack @ cluster 120 off 0xe08) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_cache_210050.md  (live-slack @ cluster 7224 off 0x6d0) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_cache_319594.md  (live-slack @ cluster 6176 off 0x21c8) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_cache_448049.lnk  (live-slack @ cluster 12348 off 0x5a0) — metadata only (non-resident — file data is NOT in this remnant)
@@ -1946,12 +1990,21 @@ ReFS Deleted File Finder
     xbpt_hardlink_draft_744338.cfg  (live-slack @ cluster 100 off 0x2e48) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_draft_751357.json  (live-slack @ cluster 10764 off 0x2140) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_echo_387599.ini  (live-slack @ cluster 9260 off 0x23d0) — metadata only (non-resident — file data is NOT in this remnant)  [former location — the live file is in a different directory]
+    xbpt_hardlink_foxtrot_275487.lnk  (orphan-slack @ cluster 5676 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_foxtrot_415497.bin  (live-slack @ cluster 108 off 0x1ad0) — metadata only (non-resident — file data is NOT in this remnant)  [former location — the live file is in a different directory]
+    xbpt_hardlink_foxtrot_433719.lnk  (orphan-slack @ cluster 5692 off 0x880) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_foxtrot_442208.json  (live-slack @ cluster 7224 off 0x578) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_hotel_245682.lnk  (live-slack @ cluster 8232 off 0x3208) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_hotel_381329.lnk  (orphan-slack @ cluster 5164 off 0xe0) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_hotel_593914.json  (live-slack @ cluster 12852 off 0x448) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_index_847909.txt  (orphan-slack @ cluster 56 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_index_906427.json  (orphan-slack @ cluster 560 off 0xe0) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_india_124696.lnk  (live-slack @ cluster 532 off 0x3890) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_india_193722.bak  (orphan-slack @ cluster 568 off 0x530) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_india_408587.lnk  (orphan-slack @ cluster 560 off 0x488) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_india_723262.lnk  (live-slack @ cluster 3116 off 0x2870) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_india_900150.json  (orphan-slack @ cluster 6700 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_kilo_263456.dat  (orphan-slack @ cluster 1040 off 0x150) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`) [extent map from a type-0x40 backing recovered in slack — bytes may be stale]
     xbpt_hardlink_kilo_269719.lnk  (live-slack @ cluster 15416 off 0x408) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_kilo_340963.cfg  (live-slack @ cluster 3664 off 0x2570) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_kilo_790796.xml  (live-slack @ cluster 13344 off 0x1628) — metadata only (non-resident — file data is NOT in this remnant)
@@ -1963,39 +2016,55 @@ ReFS Deleted File Finder
     xbpt_hardlink_log_259220.txt  (live-slack @ cluster 532 off 0x14a0) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_log_676623.md  (live-slack @ cluster 3664 off 0xda8) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_log_697310.log  (live-slack @ cluster 14928 off 0x2998) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_mike_245933.lnk  (orphan-slack @ cluster 5692 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_mike_348424.lnk  (live-slack @ cluster 12352 off 0x748) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_mike_468165.csv  (live-slack @ cluster 14900 off 0xe78) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`) [extent map from a type-0x40 backing recovered in slack — bytes may be stale]  [former location — the live file is in a different directory]
     xbpt_hardlink_mike_993950.bak  (live-slack @ cluster 7232 off 0xbf8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_november_153518.lnk  (orphan-slack @ cluster 560 off 0x290) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_november_234157.lnk  (live-slack @ cluster 3664 off 0x3970) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_oscar_665622.lnk  (live-slack @ cluster 6176 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_output_156664.bin  (orphan-slack @ cluster 5692 off 0xd00) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_output_491036.md  (live-slack @ cluster 7232 off 0xb50) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_output_952583.xml  (live-slack @ cluster 14904 off 0x3560) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_papa_112044.lnk  (orphan-slack @ cluster 5164 off 0x268) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_papa_554391.lnk  (live-slack @ cluster 7224 off 0x31b0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_quebec_388490.lnk  (orphan-slack @ cluster 572 off 0x2a8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_quebec_490116.lnk  (orphan-slack @ cluster 576 off 0xe0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_quebec_884679.bin  (orphan-slack @ cluster 120 off 0x728) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_record_480520.txt  (live-slack @ cluster 100 off 0x3dd8) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`) [extent map from a type-0x40 backing recovered in slack — bytes may be stale]
     xbpt_hardlink_report_469908.log  (live-slack @ cluster 14900 off 0xca0) — metadata only (non-resident — file data is NOT in this remnant)  [former location — the live file is in a different directory]
+    xbpt_hardlink_report_668008.txt  (orphan-slack @ cluster 1040 off 0xe88) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_report_789047.json  (orphan-slack @ cluster 1040 off 0xdd8) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_romeo_125439.log  (live-slack @ cluster 14928 off 0x3990) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_romeo_196672.cfg  (live-slack @ cluster 108 off 0x1b80) — metadata only (non-resident — file data is NOT in this remnant)  [former location — the live file is in a different directory]
     xbpt_hardlink_romeo_328197.dat  (live-slack @ cluster 12348 off 0x368) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_romeo_515378.txt  (live-slack @ cluster 108 off 0x1c28) — metadata only (non-resident — file data is NOT in this remnant)  [former location — the live file is in a different directory]
     xbpt_hardlink_romeo_921263.lnk  (live-slack @ cluster 7224 off 0x628) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_romeo_974385.lnk  (live-slack @ cluster 2108 off 0x2170) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_sierra_715194.tmp  (orphan-slack @ cluster 6688 off 0x270) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_sierra_998780.lnk  (live-slack @ cluster 12852 off 0x4f8) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_sync_448917.bak  (live-slack @ cluster 2608 off 0x3020) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_sync_608132.xml  (orphan-slack @ cluster 1068 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_sync_719534.log  (live-slack @ cluster 532 off 0x37e8) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_tango_294525.log  (live-slack @ cluster 14900 off 0x24b8) — metadata only (non-resident — file data is NOT in this remnant)  [former location — the live file is in a different directory]
     xbpt_hardlink_tango_845190.ini  (live-slack @ cluster 100 off 0x1f8) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_temp_237505.json  (live-slack @ cluster 6176 off 0x17c8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_temp_854113.lnk  (orphan-slack @ cluster 1608 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_trace_249765.cfg  (live-slack @ cluster 12352 off 0x2488) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_trace_449625.lnk  (live-slack @ cluster 3664 off 0x2618) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_trace_683620.txt  (live-slack @ cluster 108 off 0x1d78) — metadata only (non-resident — file data is NOT in this remnant)  [former location — the live file is in a different directory]
     xbpt_hardlink_trace_839812.md  (live-slack @ cluster 12348 off 0x26d8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_uniform_288185.lnk  (orphan-slack @ cluster 576 off 0x190) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_victor_875568.json  (live-slack @ cluster 6176 off 0xdf8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_whiskey_338079.json  (orphan-slack @ cluster 5684 off 0x7d8) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_whiskey_641860.dat  (live-slack @ cluster 9768 off 0x150) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`) [extent map from a type-0x40 backing recovered in slack — bytes may be stale]
     xbpt_hardlink_whiskey_741231.dat  (live-slack @ cluster 14904 off 0x3610) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_whiskey_772507.lnk  (live-slack @ cluster 15928 off 0x1e50) — metadata only (non-resident — file data is NOT in this remnant)  [former location — the live file is in a different directory]
     xbpt_hardlink_whiskey_941698.lnk  (live-slack @ cluster 2080 off 0x408) — metadata only (non-resident — file data is NOT in this remnant)  [former location — the live file is in a different directory]
+    xbpt_hardlink_whiskey_944822.lnk  (orphan-slack @ cluster 572 off 0x438) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hardlink_yankee_108900.bak  (live-slack @ cluster 3664 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
-    xbpt_hardlink_yankee_232283.json  (live-slack @ cluster 2108 off 0x39c0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_yankee_131550.lnk  (orphan-slack @ cluster 60 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_hardlink_yankee_232283.json  (live-slack @ cluster 2108 off 0x39c0) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`) [extent map from a type-0x40 backing recovered in slack — bytes may be stale]
     xbpt_hardlink_yankee_895795.lnk  (live-slack @ cluster 532 off 0xa88) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hotel_archive_586981.bin  (live-slack @ cluster 13344 off 0x16d0) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hotel_backup_235558.xml  (live-slack @ cluster 13336 off 0x1280) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)  [former location — the live file is in a different directory]
@@ -2045,6 +2114,7 @@ ReFS Deleted File Finder
     xbpt_india_temp_254875.bak  (live-slack @ cluster 15400 off 0x1e80) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_india_temp_254875.bak  (live-slack @ cluster 10776 off 0x1be0) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_india_whiskey_159747.csv  (live-slack @ cluster 8740 off 0x28d8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_india_yankee_623909.dat  (orphan-slack @ cluster 120 off 0x880) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`) [extent map from a type-0x40 backing recovered in slack — bytes may be stale]
     xbpt_kilo_beta_246643.bin  (live-slack @ cluster 11792 off 0x26c0) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_kilo_config_292054.json  (live-slack @ cluster 12832 off 0xf68) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_kilo_config_292054.json  (live-slack @ cluster 4644 off 0xbb0) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
@@ -2063,6 +2133,7 @@ ReFS Deleted File Finder
     xbpt_large_99mb_report_414178.tmp  (live-slack @ cluster 7196 off 0x2658) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_lima_audit_873256.log  (live-slack @ cluster 3116 off 0x600) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_lima_delta_391972.ini  (live-slack @ cluster 6176 off 0x2d10) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_lima_draft_563667.bin  (orphan-slack @ cluster 560 off 0x3e8) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_lima_echo_432966.xml  (live-slack @ cluster 15928 off 0x2670) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)  [former location — the live file is in a different directory]
     xbpt_lima_lima_890070.dat  (live-slack @ cluster 11292 off 0x1ae0) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_lima_lima_890070.dat  (live-slack @ cluster 536 off 0x1ae0) — metadata only (non-resident — file data is NOT in this remnant)
@@ -2085,6 +2156,7 @@ ReFS Deleted File Finder
     xbpt_log_cache_206425.lnk  (live-slack @ cluster 12348 off 0x1f8) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_log_foxtrot_796125.ini  (live-slack @ cluster 72 off 0x410) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_log_foxtrot_796125.ini  (live-slack @ cluster 84 off 0x410) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_log_gamma_299767.xml  (orphan-slack @ cluster 572 off 0x398) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_log_india_171227.csv  (live-slack @ cluster 8768 off 0x2c90) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`) [extent map from a type-0x40 backing recovered in slack — bytes may be stale]  [former location — the live file is in a different directory]
     xbpt_log_output_542121.csv  (live-slack @ cluster 13368 off 0xdb0) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_log_output_579275.dat  (live-slack @ cluster 10788 off 0x970) — metadata only (non-resident — file data is NOT in this remnant)
@@ -2132,7 +2204,7 @@ ReFS Deleted File Finder
     xbpt_november_record_124675.bak  (live-slack @ cluster 7200 off 0x1e8) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_november_report_153874.txt  (live-slack @ cluster 15416 off 0x838) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_november_sierra_312346.xml  (live-slack @ cluster 7200 off 0xaa0) — metadata only (non-resident — file data is NOT in this remnant)
-    xbpt_november_tango_774662.json  (live-slack @ cluster 12348 off 0x7d8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_november_tango_774662.json  (live-slack @ cluster 12348 off 0x7d8) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`) [extent map from a type-0x40 backing recovered in slack — bytes may be stale]
     xbpt_november_tango_858538.bak  (live-slack @ cluster 11356 off 0x1e48) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_november_trace_141137.log  (live-slack @ cluster 6712 off 0x2160) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_november_yankee_663510.csv  (live-slack @ cluster 9244 off 0xff8) — metadata only (non-resident — file data is NOT in this remnant)
@@ -2218,7 +2290,9 @@ ReFS Deleted File Finder
     xbpt_sierra_beta_228555.dat  (live-slack @ cluster 4644 off 0x8f8) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_sierra_data_271533.bin  (live-slack @ cluster 12832 off 0x2238) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_sierra_data_271533.bin  (live-slack @ cluster 4644 off 0xe78) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_sierra_echo_709659.md  (orphan-slack @ cluster 7708 off 0x6c0) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)  [former location — the live file is in a different directory]
     xbpt_sierra_echo_921063.xml  (live-slack @ cluster 528 off 0x37e0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_sierra_gamma_615567.ini  (orphan-slack @ cluster 7708 off 0x408) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)  [former location — the live file is in a different directory]
     xbpt_sierra_kilo_206137.json  (live-slack @ cluster 7188 off 0x778) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_sierra_kilo_206137.json  (live-slack @ cluster 2580 off 0x16a0) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_sierra_mike_430189.csv  (live-slack @ cluster 5184 off 0x428) — metadata only (non-resident — file data is NOT in this remnant)
@@ -2302,6 +2376,7 @@ ReFS Deleted File Finder
     xbpt_symlink_kilo_195702.lnk  (live-slack @ cluster 10792 off 0x3f8) — metadata only (non-resident — file data is NOT in this remnant)  [former location — the live file is in a different directory]
     xbpt_symlink_kilo_273575.lnk  (live-slack @ cluster 10792 off 0x9f0) — FULL FILE recoverable (resident — 0 B stored inline in the record)  [former location — the live file is in a different directory]
     xbpt_symlink_kilo_516699.lnk  (live-slack @ cluster 2108 off 0xb88) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    xbpt_symlink_kilo_719573.lnk  (orphan-slack @ cluster 560 off 0x830) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_symlink_kilo_800244.lnk  (live-slack @ cluster 5200 off 0x12d8) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_symlink_kilo_843440.lnk  (live-slack @ cluster 14916 off 0x21b0) — FULL FILE recoverable (resident — 0 B stored inline in the record)
     xbpt_symlink_kilo_905448.lnk  (live-slack @ cluster 6720 off 0xb38) — metadata only (non-resident — file data is NOT in this remnant)
@@ -2324,9 +2399,11 @@ ReFS Deleted File Finder
     xbpt_symlink_mike_735170.lnk  (live-slack @ cluster 7224 off 0x7b8) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_symlink_november_194298.lnk  (live-slack @ cluster 8208 off 0x2e58) — FULL FILE recoverable (resident — 0 B stored inline in the record)
     xbpt_symlink_november_206311.lnk  (live-slack @ cluster 13344 off 0x498) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    xbpt_symlink_oscar_222464.lnk  (orphan-slack @ cluster 5164 off 0x508) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_symlink_output_486781.lnk  (live-slack @ cluster 15932 off 0x2108) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_symlink_output_582325.lnk  (live-slack @ cluster 7756 off 0x14d8) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_symlink_output_811700.lnk  (live-slack @ cluster 11324 off 0x8d0) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    xbpt_symlink_output_836054.lnk  (orphan-slack @ cluster 6168 off 0x528) — FULL FILE recoverable (resident — 0 B stored inline in the record)
     xbpt_symlink_output_868068.lnk  (live-slack @ cluster 8752 off 0x2b70) — FULL FILE recoverable (resident — 0 B stored inline in the record)
     xbpt_symlink_output_894924.lnk  (live-slack @ cluster 108 off 0x720) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_symlink_output_917945.lnk  (live-slack @ cluster 3116 off 0x1008) — FULL FILE recoverable (resident — 0 B stored inline in the record)
@@ -2341,7 +2418,9 @@ ReFS Deleted File Finder
     xbpt_symlink_quebec_738449.lnk  (live-slack @ cluster 3120 off 0x10f0) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_symlink_quebec_866630.lnk  (live-slack @ cluster 7224 off 0x2950) — FULL FILE recoverable (resident — 0 B stored inline in the record)
     xbpt_symlink_quebec_918421.lnk  (live-slack @ cluster 15932 off 0x17c8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_symlink_quebec_955650.lnk  (orphan-slack @ cluster 572 off 0x190) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_symlink_record_206894.lnk  (live-slack @ cluster 1548 off 0x1ed8) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    xbpt_symlink_record_218215.lnk  (orphan-slack @ cluster 7724 off 0x590) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_symlink_record_262426.lnk  (live-slack @ cluster 2108 off 0x3210) — FULL FILE recoverable (resident — 0 B stored inline in the record)
     xbpt_symlink_record_315928.lnk  (live-slack @ cluster 1616 off 0x2458) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_symlink_record_461797.lnk  (live-slack @ cluster 2636 off 0x150) — metadata only (non-resident — file data is NOT in this remnant)
@@ -2353,6 +2432,7 @@ ReFS Deleted File Finder
     xbpt_symlink_report_408917.lnk  (live-slack @ cluster 1080 off 0x2738) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_symlink_report_936926.lnk  (live-slack @ cluster 4124 off 0xa20) — FULL FILE recoverable (resident — 0 B stored inline in the record)
     xbpt_symlink_report_950976.lnk  (live-slack @ cluster 532 off 0x2498) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    xbpt_symlink_report_958160.lnk  (orphan-slack @ cluster 7216 off 0x1c0) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_symlink_romeo_103509.lnk  (live-slack @ cluster 13352 off 0x498) — FULL FILE recoverable (resident — 0 B stored inline in the record)
     xbpt_symlink_romeo_153764.lnk  (live-slack @ cluster 2604 off 0x2100) — FULL FILE recoverable (resident — 0 B stored inline in the record)
     xbpt_symlink_romeo_247909.lnk  (live-slack @ cluster 7756 off 0x258) — metadata only (non-resident — file data is NOT in this remnant)
@@ -2369,11 +2449,14 @@ ReFS Deleted File Finder
     xbpt_symlink_sierra_709734.lnk  (live-slack @ cluster 1572 off 0x15c0) — FULL FILE recoverable (resident — 0 B stored inline in the record)
     xbpt_symlink_sierra_906226.lnk  (live-slack @ cluster 3120 off 0x800) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_symlink_sync_121160.lnk  (live-slack @ cluster 7232 off 0x25a8) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    xbpt_symlink_sync_229547.lnk  (orphan-slack @ cluster 560 off 0x8d8) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_symlink_sync_464280.lnk  (live-slack @ cluster 10792 off 0x698) — FULL FILE recoverable (resident — 0 B stored inline in the record)  [former location — the live file is in a different directory]
     xbpt_symlink_sync_706535.lnk  (live-slack @ cluster 7232 off 0x1d88) — FULL FILE recoverable (resident — 0 B stored inline in the record)
     xbpt_symlink_tango_260298.lnk  (live-slack @ cluster 588 off 0x1088) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_symlink_tango_611211.lnk  (live-slack @ cluster 4112 off 0x1d18) — FULL FILE recoverable (resident — 0 B stored inline in the record)
     xbpt_symlink_tango_904910.lnk  (live-slack @ cluster 7224 off 0x1538) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    xbpt_symlink_temp_742877.lnk  (orphan-slack @ cluster 5164 off 0x9a0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_symlink_temp_803950.lnk  (orphan-slack @ cluster 6168 off 0x128) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_symlink_trace_129311.lnk  (live-slack @ cluster 13344 off 0x2fd8) — FULL FILE recoverable (resident — 0 B stored inline in the record)
     xbpt_symlink_trace_352938.lnk  (live-slack @ cluster 1548 off 0xb38) — FULL FILE recoverable (resident — 0 B stored inline in the record)
     xbpt_symlink_trace_964692.lnk  (live-slack @ cluster 7232 off 0x738) — FULL FILE recoverable (resident — 0 B stored inline in the record)
@@ -2389,6 +2472,7 @@ ReFS Deleted File Finder
     xbpt_symlink_victor_316100.lnk  (live-slack @ cluster 14892 off 0x1358) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_symlink_victor_617552.lnk  (live-slack @ cluster 7232 off 0x2ca0) — FULL FILE recoverable (resident — 0 B stored inline in the record)
     xbpt_symlink_victor_897277.lnk  (live-slack @ cluster 3600 off 0x1028) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    xbpt_symlink_victor_900252.lnk  (orphan-slack @ cluster 6688 off 0x390) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_symlink_whiskey_148952.lnk  (live-slack @ cluster 15416 off 0x2c38) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_symlink_whiskey_422331.lnk  (live-slack @ cluster 2108 off 0x2290) — FULL FILE recoverable (resident — 0 B stored inline in the record)
     xbpt_symlink_whiskey_434761.lnk  (live-slack @ cluster 9768 off 0x1970) — metadata only (non-resident — file data is NOT in this remnant)
@@ -2406,6 +2490,7 @@ ReFS Deleted File Finder
     xbpt_symlink_zulu_651233.lnk  (live-slack @ cluster 4164 off 0x758) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_symlink_zulu_785869.lnk  (live-slack @ cluster 2108 off 0x1a90) — FULL FILE recoverable (resident — 0 B stored inline in the record)
     xbpt_symlink_zulu_947795.lnk  (live-slack @ cluster 2596 off 0xa18) — FULL FILE recoverable (resident — 0 B stored inline in the record)
+    xbpt_sync_data_279000.lnk  (orphan-slack @ cluster 584 off 0xc70) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_sync_index_513821.bin  (live-slack @ cluster 10304 off 0x828) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_sync_index_585016.csv  (live-slack @ cluster 12852 off 0x860) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_sync_kilo_590293.bak  (live-slack @ cluster 2640 off 0x748) — metadata only (non-resident — file data is NOT in this remnant)
@@ -2420,6 +2505,7 @@ ReFS Deleted File Finder
     xbpt_tango_echo_291736.csv  (live-slack @ cluster 528 off 0xd68) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`) [extent map from a type-0x40 backing recovered in slack — bytes may be stale]
     xbpt_tango_echo_339305.txt  (live-slack @ cluster 4164 off 0x1898) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)  [former location — the live file is in a different directory]
     xbpt_tango_hotel_747257.cfg  (live-slack @ cluster 13352 off 0xbd0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_tango_lima_130282.dat  (orphan-slack @ cluster 560 off 0x750) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`) [extent map from a type-0x40 backing recovered in slack — bytes may be stale]
     xbpt_tango_record_232127.csv  (live-slack @ cluster 1056 off 0x4a8) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)  [former location — the live file is in a different directory]
     xbpt_tango_record_968896.md  (live-slack @ cluster 1616 off 0x3818) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_tango_victor_844323.json  (live-slack @ cluster 8716 off 0x2178) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)  [former location — the live file is in a different directory]
@@ -2447,6 +2533,7 @@ ReFS Deleted File Finder
     xbpt_trace_audit_194295.json  (live-slack @ cluster 3664 off 0x2030) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_trace_cache_917768.txt  (live-slack @ cluster 12348 off 0x450) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`) [extent map from a type-0x40 backing recovered in slack — bytes may be stale]
     xbpt_trace_config_794136.tmp  (live-slack @ cluster 13844 off 0x938) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_trace_delta_746981.csv  (orphan-slack @ cluster 572 off 0xc20) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_trace_foxtrot_828686.bin  (live-slack @ cluster 14948 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_trace_foxtrot_950877.dat  (live-slack @ cluster 2608 off 0x9b8) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_trace_gamma_472483.cfg  (live-slack @ cluster 14364 off 0x960) — metadata only (non-resident — file data is NOT in this remnant)
@@ -2488,14 +2575,17 @@ ReFS Deleted File Finder
     xbpt_yankee_draft_816830.dat  (live-slack @ cluster 3084 off 0x2b58) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_yankee_echo_729349.tmp  (live-slack @ cluster 2068 off 0x13e0) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_yankee_hotel_977615.json  (live-slack @ cluster 2608 off 0x3d28) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_yankee_output_556619.ini  (orphan-slack @ cluster 6688 off 0xc80) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_yankee_output_781405.csv  (live-slack @ cluster 13844 off 0xfd8) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_yankee_record_478613.cfg  (live-slack @ cluster 10792 off 0x2a20) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)  [former location — the live file is in a different directory]
     xbpt_yankee_report_288078.log  (live-slack @ cluster 5656 off 0x1b8) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_yankee_report_288078.log  (live-slack @ cluster 1056 off 0x1440) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)  [former location — the live file is in a different directory]
     xbpt_yankee_report_685069.xml  (live-slack @ cluster 7232 off 0x3670) — FULL FILE recoverable (resident — 128 B stored inline in the record)
     xbpt_yankee_tango_103961.bin  (live-slack @ cluster 1048 off 0x2918) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_yankee_temp_658090.lnk  (orphan-slack @ cluster 2056 off 0x758) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_yankee_victor_114004.ini  (live-slack @ cluster 528 off 0x3888) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_yankee_victor_249801.ini  (live-slack @ cluster 10304 off 0x1718) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_zulu_archive_509329.ini  (orphan-slack @ cluster 60 off 0x428) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_zulu_audit_805568.ini  (live-slack @ cluster 14364 off 0x20c0) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_zulu_audit_805568.ini  (live-slack @ cluster 9244 off 0x1600) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_zulu_config_585450.ini  (live-slack @ cluster 15408 off 0xa28) — metadata only (non-resident — file data is NOT in this remnant)
@@ -2521,15 +2611,15 @@ ReFS Deleted File Finder
         $SI (high confidence); 'partial remnants' are name fragments from a row whose
         body was partly overwritten — always corroborate before relying on one entry.
 ── Recovery methods ──
-  Mode: recovery.  Ran: Trash table (0xD), checkpoint diff, B+-tree node-slack scan (live pages only).
-  This is `recovery` (quick): live-page slack only. Run `deleted --full` to ALSO scan orphan
-  pages (the freed pages of deleted objects — more, but a full-volume scan) and carve non-resident content.
+  Mode: full.  Ran: Trash table (0xD), checkpoint diff, B+-tree node-slack scan (live + orphan pages).
+  This is `--full` (complete): live + orphan-page slack + carve. `deleted` (no --full) is the quicker,
+  live-pages-only pass.
   Fine-grained: --no-slack · --scan-pages · --orphans · --carve · --max-scan N · --search SUB · `export deleted DIR`.
   Also: `deleted --orphans` adds a low-confidence tier for OID-Table objects unlinked from the tree.
   Prior versions of files that still exist: `snapshots`.  Windows Recycle Bin: `recyclebin`.
 
-  DELETED files: 6 of 355 are RESIDENT with full content recoverable; 42 are non-resident (carve-able with --carve).
-  PRIOR versions of live files: 117 of 812 decode to a file.
+  DELETED files: 6 of 364 are RESIDENT with full content recoverable; 42 are non-resident (carve-able with --carve).
+  PRIOR versions of live files: 118 of 890 decode to a file.
   Restorability: a RESIDENT deleted file's FULL content is recoverable from the remnant
        (written as .recovered). A NON-RESIDENT file keeps its data in on-disk extents — if the
        extent map survives in the remnant ('extent_backed'), `export deleted --carve`
@@ -2537,5 +2627,5 @@ ReFS Deleted File Finder
        (name/size/timestamps). See the `export deleted` docs.
   Next: `export deleted <DIR>` writes each entry's raw .row (evidence) + a .recovered for
         resident files; add --carve to also reconstruct non-resident (extent-backed) files.
-  Recovery log: forefst_recovery_win11refstestmftecmd_20260802-053526.txt
+  Recovery log: forefst_recovery_win11refstestmftecmd_20260802-053517.txt
 

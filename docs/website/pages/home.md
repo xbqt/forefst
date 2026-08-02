@@ -60,12 +60,15 @@ What matters when you sit down in front of a ReFS volume — each point links to
   twin — a back-dated name stands out against its siblings: a timestomp signal NTFS can't offer. See
   [Artifact Timeline](artifact_timeline.md) and [Timestomp Detection](timestomp_detection.md).
 - **Recover what survives — and prove what's gone.** Copy-on-write leaves superseded rows at stale
-  clusters, and five methods (Trash table, checkpoint differencing, orphan-page scan, stream-snapshot
-  reconstruction, B+-tree node-slack carving) recover what the volume hasn't reused — realistically, not a
-  guaranteed "undelete everything," though the [`$SNAPSHOT`](snapshots_versioning.md) stream is a
-  *deterministic* prior-content path. And because Object IDs are **never reused**, a gap in the sequence is
-  durable evidence that an object existed and was deleted — even after every byte it touched is overwritten.
-  See [Deletion Recovery](deletion_recovery.md) and [What Survives](what_survives.md).
+  clusters, and the `deleted` command recovers what the volume hasn't reused through **two simple modes**
+  (a quick default and a complete `--full` pass) spanning five methods — Trash table, checkpoint
+  differencing, orphan scan, stream-snapshot reconstruction, and B+-tree node-slack carving. Every remnant is
+  classified by **file identity** (name + creation-time), so a moved or renamed file is never mistaken for a
+  deletion. This is realistic recovery, not a guaranteed "undelete everything," though the
+  [`$SNAPSHOT`](snapshots_versioning.md) stream is a *deterministic* prior-content path. And because Object IDs
+  are **never reused**, a gap in the sequence is durable evidence that an object existed and was deleted — even
+  after every byte it touched is overwritten. See [Deletion Recovery](deletion_recovery.md) and
+  [What Survives](what_survives.md).
 - **Mine the ReFS-specific artifacts.** Reparse points (symlinks, junctions, mount points), **WSL / Linux
   metadata** and device nodes, alternate data streams, extended attributes, hard links, and `$RECYCLE.BIN`
   entries all decode to real evidence. See [Reparse Points](reparse_points.md),

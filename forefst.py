@@ -44,7 +44,7 @@ Usage:
   python3 forefst.py <image> fastsummary          # quick volume summary (no directory walk)
   python3 forefst.py <image> summary              # full summary with file statistics
   python3 forefst.py <image> summary --json       # summary as JSON
-  python3 forefst.py <image> --deleted            # include deleted files (trash + orphans + chkp diff)
+  python3 forefst.py <image> deleted              # recover deleted files (deleted --full for the complete scan)
   python3 forefst.py <image> --partition-start 0  # override partition offset
   python3 forefst.py <image> --cow-before <earlier_image>  # forward CoW version recovery
 
@@ -210,7 +210,7 @@ def validate_image(path, die_fn=None):
 
 # ─── Constants ────────────────────────────────────────────────────────
 PROG = "forefst"
-VERSION = "1.0.0"
+VERSION = "1.2.0"
 # Non-resident directory entries have a short value (OID + timestamps + attrs + size).
 # Resident entries (small files) embed full $SI + data inline and are longer.
 NON_RESIDENT_MAX_VALUE = 84
@@ -675,249 +675,6 @@ def build_security_map(f, ps, cs, tr, obj_map):
             group_str, _ = parse_sid(sd_data, off_group)
         sd_map[sec_id] = (owner_str, group_str)
     return sd_map
-
-# ─── Trash Table ─────────────────────────────────────────────────────
-def build_trash_set(f, ps, cs, tr, obj_map):
-    """Get set of OIDs in the Trash Table (OID 0xD)."""
-    if 0xD not in obj_map:
-        return set()
-    vlcns = obj_map[0xD]
-    try:
-        rows = walk_bplus(f, ps, cs, tr, vlcns)
-    except Exception:
-        return set()
-    trashed = set()
-    for kd, vd in rows:
-        if len(kd) >= 16:
-            trashed.add(le64(kd, 8))
-        elif len(kd) >= 8:
-            trashed.add(le64(kd, 0))
-    return trashed
-
-# ─── Orphan Object Detection ─────────────────────────────────────────
-def find_orphan_objects(f, ps, cs, tr, obj_map, referenced_oids, log_fn=None):
-    """Find OIDs in the Object Table that are not referenced from the directory tree.
-
-    These are likely recently deleted files whose Object Table entries
-    have not yet been reclaimed by the garbage collector. For each orphan,
-    attempts to read its B+ tree to recover filename and timestamps.
-    """
-    # System OIDs to exclude (known tables, not user files)
-    SYSTEM_OIDS = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
-                   0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x20, 0x21, 0x22,
-                   0x30, 0x500, 0x501, 0x520, 0x530, 0x540, 0x541, 0x600}
-    orphan_oids = set(obj_map.keys()) - referenced_oids - SYSTEM_OIDS
-    # Also exclude very low OIDs (internal system tables)
-    orphan_oids = {o for o in orphan_oids if o > 0x600}
-
-    if log_fn:
-        log_fn(f"[{PROG}] {len(orphan_oids)} orphan OIDs found in Object Table")
-
-    results = []
-    for oid in sorted(orphan_oids):
-        vlcns = obj_map.get(oid)
-        if not vlcns:
-            continue
-        try:
-            rows = walk_bplus(f, ps, cs, tr, vlcns)
-        except Exception:
-            continue
-
-        # Try to recover file metadata from the orphan's B+ tree
-        name = None
-        si_data = {}
-        for kd, vd in rows:
-            if len(kd) < 2:
-                continue
-            attr_type = le16(kd, 0)
-            if attr_type == 0x10 and len(vd) >= 0x60 and not si_data:
-                si_data = {
-                    "create_time": le64(vd, 0x28),
-                    "modify_time": le64(vd, 0x30),
-                    "change_time": le64(vd, 0x38),
-                    "access_time": le64(vd, 0x40),
-                    "file_attrs": le32(vd, 0x48),
-                    "security_id": le64(vd, 0x50),
-                    # usn = LastUsn ($SI+0x40 / value+0x68); value+0x58 ($SI+0x30) is unpopulated. E30/E45.
-                    "usn": le64(vd, 0x68) if len(vd) >= 0x70 else 0,
-                }
-            elif attr_type == 0x30 and len(kd) > 4 and name is None:
-                try:
-                    name = kd[4:].decode("utf-16-le").rstrip("\x00")
-                except UnicodeDecodeError:
-                    pass
-
-        if not name and not si_data:
-            continue
-
-        fa = si_data.get("file_attrs", 0)
-        # E7: an orphan OID is in the Object Table, so it is a DIRECTORY (#327: non-resident files have
-        # no own OID). Its B+-tree holds its CHILDREN's type-0x30 rows, so the recovered `name` is a
-        # child, not the directory itself — label the row by the directory's OID (not the child name),
-        # keep the recovered child as a note, and derive is_dir structurally (the masked/absent attrs
-        # bit reads False for these). Validated on win11refs2tmillionsofactionsv2 (3 orphan dirs).
-        entry = {
-            "path": f"$ORPHAN/DIR_OID_0x{oid:x}",
-            "parent_path": "$ORPHAN",
-            "parent_oid": 0,
-            "name": f"DIR_OID_0x{oid:x}",
-            "recovered_child": name or "",
-            "oid": oid,
-            "is_resident": False,
-            "is_dir": True,
-            "is_deleted": True,
-            "deletion_source": "orphan",
-            "create_time": si_data.get("create_time", 0),
-            "modify_time": si_data.get("modify_time", 0),
-            "change_time": si_data.get("change_time", 0),
-            "access_time": si_data.get("access_time", 0),
-            "file_attrs": fa,
-            "internal_flags": si_data.get("internal_flags", 0),
-            "security_id": si_data.get("security_id", 0),
-            "usn": si_data.get("usn", 0),
-            "file_size": 0,
-            "is_encrypted": bool(fa & 0x4000),
-            "is_compressed": bool(fa & 0x0800),
-            "has_integrity": bool(fa & 0x8000),
-            "has_ea": bool(fa & 0x00040000),
-            "has_reparse": bool(fa & 0x0400),
-            "has_ads": False, "ads_names": "",
-            "reparse_target": "",
-            "snapshot_count": 0,
-        }
-        results.append(entry)
-    return results
-
-# ─── Checkpoint Comparison for Deleted Files ──────────────────────────
-def find_chkp_diff_deleted(f, ps, cs, chkp_lcns, current_obj_map, log_fn=None):
-    """Compare both CHKP copies to find files present in older but absent from current tree.
-
-    ReFS maintains two checkpoints (A/B). The older one represents the previous
-    transaction state. Files deleted in the last transaction appear in the older
-    tree but not the current one.
-    """
-    # Parse both checkpoints
-    chkps = []
-    for lcn in chkp_lcns:
-        try:
-            vc, flags, roots = parse_chkp(f, ps, cs, lcn)
-            chkps.append((vc, flags, roots, lcn))
-        except Exception:
-            continue
-    if len(chkps) < 2:
-        return []
-
-    # Sort by vclock: [0]=older, [1]=newer
-    chkps.sort(key=lambda x: x[0])
-    older_vc, older_flags, older_roots, _ = chkps[0]
-    newer_vc, _, _, _ = chkps[1]
-
-    if older_vc == newer_vc:
-        return []  # Same checkpoint, no diff
-
-    if log_fn:
-        log_fn(f"[{PROG}] Comparing checkpoints: vclock {older_vc} vs {newer_vc}")
-
-    # Build container table from the OLDER checkpoint — select by Table-ID 0x0B, not index 7 (#337)
-    try:
-        ct_vlcns = _select_ct_root(f, ps, cs, older_roots)
-        ct_page = b""
-        for l in ct_vlcns: f.seek(ps + l * cs); ct_page += f.read(cs)
-        ct_map_raw = _parse_ct_page(ct_page, f, ps, cs)
-        ct_map = {k: v[0] for k, v in ct_map_raw.items()}
-        f.seek(ps); bs = f.read(512)
-        bpc = le64(bs, 0x40) if le64(bs, 0x40) != 0 else 0x4000000
-        cs_val = le32(bs, 0x20) * le32(bs, 0x24)
-        cpc = bpc // cs_val
-        old_tr = Translator(ct_map, cpc)
-    except Exception:
-        return []
-
-    # Build object map from older checkpoint
-    try:
-        ot_vlcns = older_roots[0] if len(older_roots) > 0 else []
-        old_obj_map = build_object_map(f, ps, cs, old_tr, ot_vlcns)
-    except Exception:
-        return []
-
-    # E15: the former `old_files = _collect_dir_entries(... old tree ...)` walk was DEAD (filled, never
-    # read — deletions are identified purely by the OID-set difference below). Removed the full extra
-    # recursive tree walk and the unused `current_dir_oids` parameter.
-
-    # The current tree's names come from the main walk; deleted files are identified purely by the
-    # OID set difference below (the former current_files collection here was computed and never read).
-    # Files whose OID is in old_obj_map but NOT in current_obj_map were deleted.
-    old_only_oids = set(old_obj_map.keys()) - set(current_obj_map.keys())
-    # Exclude system OIDs
-    old_only_oids = {o for o in old_only_oids if o > 0x600}
-
-    if log_fn:
-        log_fn(f"[{PROG}] {len(old_only_oids)} OIDs in older checkpoint only")
-
-    results = []
-    for oid in sorted(old_only_oids):
-        vlcns = old_obj_map.get(oid)
-        if not vlcns:
-            continue
-        try:
-            rows = walk_bplus(f, ps, cs, old_tr, vlcns)
-        except Exception:
-            continue
-
-        name = None
-        si_data = {}
-        for kd, vd in rows:
-            if len(kd) < 2: continue
-            attr_type = le16(kd, 0)
-            if attr_type == 0x10 and len(vd) >= 0x60 and not si_data:
-                si_data = {
-                    "create_time": le64(vd, 0x28), "modify_time": le64(vd, 0x30),
-                    "change_time": le64(vd, 0x38), "access_time": le64(vd, 0x40),
-                    "file_attrs": le32(vd, 0x48), "security_id": le64(vd, 0x50),
-                    # usn = LastUsn ($SI+0x40 / value+0x68); value+0x58 unpopulated. E30/E45.
-                    "usn": le64(vd, 0x68) if len(vd) >= 0x70 else 0,
-                }
-            elif attr_type == 0x30 and len(kd) > 4 and name is None:
-                try: name = kd[4:].decode("utf-16-le").rstrip("\x00")
-                except UnicodeDecodeError: pass
-
-        if not name and not si_data:
-            continue
-
-        fa = si_data.get("file_attrs", 0)
-        entry = {
-            # E7: Object Table OID => directory (#327); label by the dir OID, keep the child as a note.
-            "path": f"$DELETED_PREV_CHKP/DIR_OID_0x{oid:x}",
-            "parent_path": "$DELETED_PREV_CHKP",
-            "parent_oid": 0,
-            "name": f"DIR_OID_0x{oid:x}",
-            "recovered_child": name or "",
-            "oid": oid,
-            "is_resident": False,
-            "is_dir": True,
-            "is_deleted": True,
-            "deletion_source": "chkp_diff",
-            "create_time": si_data.get("create_time", 0),
-            "modify_time": si_data.get("modify_time", 0),
-            "change_time": si_data.get("change_time", 0),
-            "access_time": si_data.get("access_time", 0),
-            "file_attrs": fa,
-            "internal_flags": 0,
-            "security_id": si_data.get("security_id", 0),
-            "usn": si_data.get("usn", 0),
-            "file_size": 0,
-            "is_encrypted": bool(fa & 0x4000),
-            "is_compressed": bool(fa & 0x0800),
-            "has_integrity": bool(fa & 0x8000),
-            "has_ea": bool(fa & 0x00040000),
-            "has_reparse": bool(fa & 0x0400),
-            "has_ads": False, "ads_names": "",
-            "reparse_target": "",
-            "snapshot_count": 0,
-        }
-        results.append(entry)
-    return results
-
 
 # ─── Forward CoW Version Recovery (cross-image comparison) ───────────
 def cow_recovery(f_after, ps_a, cs_a, tr_a, obj_map_a,
@@ -4100,9 +3857,8 @@ def _print_file_detail(r, sd_map, version_str, raw_value=None):
                         print(f"    {ea['name']:<22} {len(v):>4}B  {hexs}")
     print(f"  ReFS version:       {version_str}")
 
-def cmd_search(f, ps, cs, tr, obj_map, vmaj, vmin, pattern, regex_mode=False,
-               include_deleted=False, trash_set=None, max_results=0):
-    """Search for files/directories by name pattern."""
+def cmd_search(f, ps, cs, tr, obj_map, vmaj, vmin, pattern, regex_mode=False, max_results=0):
+    """Search for files/directories by name pattern (live tree only; deleted objects → the `deleted` command)."""
     import re
     if regex_mode:
         try:
@@ -4114,13 +3870,10 @@ def cmd_search(f, ps, cs, tr, obj_map, vmaj, vmin, pattern, regex_mode=False,
         pat_lower = pattern.lower()
         match_fn = lambda name: pat_lower in name.lower()
 
-    results = walk_directory_tree(f, ps, cs, tr, obj_map, 0x600, 100, False,
-                                  trash_set or set())
+    results = walk_directory_tree(f, ps, cs, tr, obj_map, 0x600, 100, False, set())
     matches = []
     for r in results:
         if not match_fn(r["name"]):
-            continue
-        if r.get("is_deleted") and not include_deleted:
             continue
         matches.append({
             "oid": f"0x{r['oid']:x}" if r["oid"] else ("(resident)" if r.get("is_resident") else "(non-res)"),
@@ -6889,8 +6642,89 @@ def _scan_trash_table(f, ps, cs, tr, obj_map):
         entries.append(entry)
     return entries
 
-def _slack_recover(f, ps, cs, tr, roots, obj_map, max_scan, log):
-    """Scan B+-tree node slack across every LIVE metadata page plus orphan MSB+ pages."""
+def find_orphan_objects(f, ps, cs, tr, obj_map, referenced_oids, log_fn=None):
+    """Find OIDs present in the Object Table but NOT reachable from the directory tree — a complementary
+    deletion signal (an object still parked in the OT after its tree link was removed, before GC reclaims it).
+
+    Each orphan OID is a DIRECTORY (non-resident files have no own OID; #327/E7), so its B+-tree holds its
+    CHILDREN's rows: the recovered `name` is a child, the row is labelled by the directory's OID. This is a
+    LOW-volume, LOW-confidence method — see the `--orphans` tier, which identity-filters the output. Captures
+    the child's create_time so the caller can drop orphans whose child is still LIVE (a prior/still-referenced
+    structure), never mislabelling a live file as deleted."""
+    SYSTEM_OIDS = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
+                   0x10, 0x20, 0x21, 0x22, 0x30, 0x500, 0x501, 0x520, 0x530, 0x540, 0x541, 0x600}
+    orphan_oids = {o for o in (set(obj_map.keys()) - referenced_oids - SYSTEM_OIDS) if o > 0x600}
+    if log_fn:
+        log_fn(f"[{PROG}] {len(orphan_oids)} orphan OIDs found in Object Table")
+    results = []
+    for oid in sorted(orphan_oids):
+        vlcns = obj_map.get(oid)
+        if not vlcns:
+            continue
+        try:
+            rows = walk_bplus(f, ps, cs, tr, vlcns)
+        except Exception:
+            continue
+        name = None; child_ct = 0; si_data = {}
+        for kd, vd in rows:
+            if len(kd) < 2:
+                continue
+            attr_type = le16(kd, 0)
+            if attr_type == 0x10 and len(vd) >= 0x60 and not si_data:
+                si_data = {
+                    "create_time": le64(vd, 0x28), "modify_time": le64(vd, 0x30),
+                    "change_time": le64(vd, 0x38), "access_time": le64(vd, 0x40),
+                    "file_attrs": le32(vd, 0x48), "security_id": le64(vd, 0x50),
+                    "usn": le64(vd, 0x68) if len(vd) >= 0x70 else 0,
+                }
+            elif attr_type == 0x30 and len(kd) > 4 and name is None:
+                try:
+                    name = kd[4:].decode("utf-16-le").rstrip("\x00")
+                    child_ct = _decode_dir_row_value(vd).get("create_time", 0)
+                except UnicodeDecodeError:
+                    pass
+        if not name and not si_data:
+            continue
+        fa = si_data.get("file_attrs", 0)
+        results.append({
+            "path": f"$ORPHAN/DIR_OID_0x{oid:x}", "parent_path": "$ORPHAN", "parent_oid": 0,
+            "name": f"DIR_OID_0x{oid:x}", "recovered_child": name or "", "recovered_child_create_time": child_ct,
+            "oid": oid, "is_resident": False, "is_dir": True, "is_deleted": True, "deletion_source": "orphan",
+            "create_time": si_data.get("create_time", 0), "modify_time": si_data.get("modify_time", 0),
+            "change_time": si_data.get("change_time", 0), "access_time": si_data.get("access_time", 0),
+            "file_attrs": fa, "internal_flags": 0, "security_id": si_data.get("security_id", 0),
+            "usn": si_data.get("usn", 0), "file_size": 0,
+            "is_encrypted": bool(fa & 0x4000), "is_compressed": bool(fa & 0x0800),
+            "has_integrity": bool(fa & 0x8000), "has_ea": bool(fa & 0x00040000),
+            "has_reparse": bool(fa & 0x0400), "has_ads": False, "ads_names": "",
+            "reparse_target": "", "snapshot_count": 0,
+        })
+    return results
+
+
+def _build_live_identity(f, ps, cs, tr, obj_map):
+    """Map every LIVE type-0x30 row to its identity: {(name, create_time) -> set(owning dir OIDs)}.
+
+    Walks the FULL object map (not depth-limited from root), so it is the authoritative "does a live file with
+    this exact identity exist, and where" index. Shared by the deleted-vs-still-present classifier (in
+    `_slack_recover`) and the `--orphans` tier's identity filter, so both agree and the walk runs once."""
+    live_identity = {}
+    for _oid, _vl in obj_map.items():
+        try:
+            for _kd, _vd in walk_bplus(f, ps, cs, tr, _vl):
+                if len(_kd) > 4 and le16(_kd, 0) == 0x30:
+                    _nm = _kd[4:].decode("utf-16-le", errors="replace").rstrip("\x00")
+                    live_identity.setdefault((_nm, _decode_dir_row_value(_vd).get("create_time", 0)), set()).add(_oid)
+        except Exception:
+            pass
+    return live_identity
+
+
+def _slack_recover(f, ps, cs, tr, roots, obj_map, max_scan, log, scan_orphans=True, live_identity=None):
+    """Scan B+-tree node slack. Always scans every LIVE metadata page (cheap — those pages are already read
+    by the tree walk). When scan_orphans is True it ALSO linearly scans the volume (bounded by max_scan) for
+    orphan MSB+ pages — the freed pages of deleted objects — which is the slow half but where the majority of
+    older deletions live. `recovery` mode passes scan_orphans=False (live pages only); `full` passes True."""
     visited = set(); ptc = []
     for idx, rv in enumerate(roots):
         if rv:
@@ -6915,23 +6749,24 @@ def _slack_recover(f, ps, cs, tr, roots, obj_map, max_scan, log):
         if ok:
             entries += _scan_page_slack(data, head, "live-slack")
             _ingest_t40(data)
-    # orphan MSB+ pages (not referenced by the live tree)
+    # orphan MSB+ pages (not referenced by the live tree) — the slow half, skipped in `recovery` mode
     orphans = 0
-    vol_clusters = (f.seek(0, 2) - ps) // cs
-    for cl in range(min(vol_clusters, max_scan)):
-        if cl in live_plcns:
-            continue
-        try:
-            f.seek(ps + cl * cs); sig = f.read(4)
-        except (OSError, OverflowError):
-            continue
-        if sig != b"MSB+":
-            continue
-        f.seek(ps + cl * cs); data = f.read(cs)
-        ent = _scan_page_slack(data, cl, "orphan-slack")
-        _ingest_t40(data)          # a backing can survive on an orphan page with no surviving name row
-        if ent:
-            orphans += 1; entries += ent
+    if scan_orphans:
+        vol_clusters = (f.seek(0, 2) - ps) // cs
+        for cl in range(min(vol_clusters, max_scan)):
+            if cl in live_plcns:
+                continue
+            try:
+                f.seek(ps + cl * cs); sig = f.read(4)
+            except (OSError, OverflowError):
+                continue
+            if sig != b"MSB+":
+                continue
+            f.seek(ps + cl * cs); data = f.read(cs)
+            ent = _scan_page_slack(data, cl, "orphan-slack")
+            _ingest_t40(data)          # a backing can survive on an orphan page with no surviving name row
+            if ent:
+                orphans += 1; entries += ent
     # Q6: resolve each recovered row's owning-table OID to the directory path it was deleted FROM.
     # build_oid_path_map covers live directories; an unmapped/zero OID stays blank (no invented path).
     oid_paths = build_oid_path_map(f, ps, cs, tr, obj_map)
@@ -6961,26 +6796,27 @@ def _slack_recover(f, ps, cs, tr, roots, obj_map, max_scan, log):
             e["owning_path"] = f"$DELETED/DIR_OID_0x{oto:x}"
             e["parent_deleted"] = True
             e["parent_name_candidates"] = sorted(_parent_names.get(oto, ()))
-    # B2: bucket DELETED vs PRIOR-VERSION by the OWNING DIRECTORY, not a global name set. The old test
-    # (name in _get_current_files) wrongly called a file 'a prior version' whenever its name existed in ANY
-    # live directory -- disk-confirmed 10-17786 mis-buckets/image (winsider: 17786 genuine deletions hidden,
-    # e.g. duplicate asset names like Shield.png). A slack row is a PRIOR version of a STILL-LIVE file iff its
-    # owning directory is live AND still holds that exact name; otherwise it is genuinely DELETED. Only the
-    # directories actually referenced by a slack row are walked (a small subset, not every object) -- this also
-    # fixes the depth-limit misses of the recursive _get_current_files.
-    _live_by_dir = {}
-    for _oid in {e.get("owning_table_oid", 0) for e in entries} & set(obj_map):
-        _names = set()
-        try:
-            for _kd, _vd in walk_bplus(f, ps, cs, tr, obj_map[_oid]):
-                if len(_kd) > 4 and le16(_kd, 0) == 0x30:
-                    _names.add(_kd[4:].decode("utf-16-le", errors="replace").rstrip("\x00"))
-        except Exception:
-            pass
-        _live_by_dir[_oid] = _names
+    # DELETED vs STILL-PRESENT by FILE IDENTITY (name + create_time), not by directory alone. A file that still
+    # exists ANYWHERE on the volume — including one that was moved or renamed out of the directory a remnant was
+    # found in — is NOT a deletion. create_time is preserved across move/rename, so it separates the SAME file
+    # relocated from a DIFFERENT file that merely shares the name (a plain name test mis-buckets those — e.g.
+    # two unrelated Shield.png). A remnant whose identity is live NOWHERE is a genuine deletion — including an
+    # original deleted after being COPIED (the copy gets a NEW create_time, so the deleted original still
+    # resolves as recoverable). Stay NEUTRAL: is_prior_version only records "a live file with this exact identity
+    # exists"; where the remnant was found vs where that file now lives (live_location_oid) is left for the
+    # analyst — the tool does not label it move / rename / copy. This is also mode-stable (identity is global),
+    # so `recovery` (live pages) is always a subset of `--full` (live + orphan pages).
+    # (name, create_time) -> live dir OIDs holding that identity. Reuse a caller-supplied map (built once in
+    # cmd_deleted and shared with the --orphans filter) or build it here.
+    _live_identity = live_identity if live_identity is not None else _build_live_identity(f, ps, cs, tr, obj_map)
     for e in entries:
-        oto = e.get("owning_table_oid", 0)
-        e["is_prior_version"] = bool(oto in _live_by_dir and e["name"] in _live_by_dir[oto])
+        _dirs = _live_identity.get((e["name"], e.get("create_time", 0)))
+        e["is_prior_version"] = _dirs is not None            # a live file with this identity exists (not deleted)
+        if _dirs is not None and e.get("owning_table_oid", 0) not in _dirs:
+            # Neutral: the remnant is in a directory the file no longer occupies but the identity lives elsewhere
+            # (a move / rename / copy — the tool does not interpret which). A same-dir match is a CoW prior version.
+            e["former_location"] = True
+            e["live_location_oid"] = next(iter(_dirs))
     # Feature C: join each recovered NON-RESIDENT name row to a type-0x40 backing recovered from slack, so a
     # deleted non-resident file whose extent map lives in a SEPARATE backing (not inline in the name row) can
     # be carved. A deleted file's backing is gone from the live tree (fetch_t40_backing would miss it) but its
@@ -7004,7 +6840,9 @@ def _slack_recover(f, ps, cs, tr, roots, obj_map, max_scan, log):
                 e["t40_extent_count"] = len(info["extents"])
                 joined += 1
                 break
-    log(f"  Scanned {len(ptc)} live pages + {orphans} orphan pages with recoverable slack rows"
+    log(f"  Scanned {len(ptc)} live pages"
+        + (f" + {orphans} orphan pages" if scan_orphans else " (orphan-page scan skipped — recovery mode)")
+        + " with recoverable slack rows"
         + (f"; {joined} non-resident file(s) matched a type-0x40 extent map in slack" if joined else ""))
     return entries
 
@@ -7713,32 +7551,89 @@ def _carve_extent_backed(f, ps_off, cs, tr, vd, t40_backing=None):
             return (bytes(buf[:stream_size]), stream_size)
     return None
 
+def _write_recovery_log(path, image, vmaj, vmin, mode, methods, max_scan, deleted, present, extract_dir,
+                        orphans=None):
+    """Write a forensic RECOVERY-RUN log — an audit trail of what was recovered and how: image, mode, methods,
+    and the per-entry deleted-vs-still-present split (with each remnant's source page and, for still-present
+    rows, whether the live file sits in a different directory). `orphans` (optional) logs the low-confidence
+    --orphans tier. Returns the path written, or None on failure."""
+    import datetime
+    def _from(e):
+        return e.get("owning_path") or (f"0x{e.get('owning_table_oid', 0):x}" if e.get("owning_table_oid") else "?")
+    out = ["=" * 78, f"{PROG} recovery log (v{VERSION})", "=" * 78,
+           f"Image:        {image}", f"ReFS version: {vmaj}.{vmin}",
+           f"Run (UTC):    {datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None).isoformat(timespec='seconds')}Z",
+           f"Mode:         {mode}", f"Methods:      {methods}", f"Max-scan:     {max_scan}"]
+    if extract_dir:
+        out.append(f"Exported to:  {extract_dir}")
+    out += ["", f"DELETED — no live file with this name + creation time remains ({len(deleted)}):"]
+    for e in deleted:
+        kind = "DIR " if e.get("is_dir") else "FILE"
+        _locs = e.get("all_owning_paths") or [_from(e)]
+        _lp = _locs[0] if len(_locs) <= 1 else f"{len(_locs)} directories: " + "; ".join(_locs)
+        out.append(f"  {kind} {e['name']}  | deleted from {_lp} | {e.get('tag')} @cluster {e.get('plcn')} | "
+                   f"{_deleted_recoverability(e)[1]}")
+        if e.get("create_time"):
+            out.append(f"        created {_filetime_to_str(e['create_time'])}  "
+                       f"modified {_filetime_to_str(e.get('modify_time', 0))}")
+    out += ["", f"STILL PRESENT — a live file with this identity exists ({len(present)}):"]
+    for e in present:
+        note = " [former location — live file in a different directory]" if e.get("former_location") \
+               else " [CoW prior-version, same directory]"
+        out.append(f"  {e['name']}  | remnant in {_from(e)} | {e.get('tag')} @cluster {e.get('plcn')}{note}")
+    if orphans:
+        out += ["", f"ORPHAN OBJECTS — Object-Table OIDs unlinked from the tree (LOW confidence, --orphans) "
+                    f"({len(orphans)}):"]
+        for e in orphans:
+            _c = f"recovered child: {e['recovered_child']}" if e.get("recovered_child") else "no child name survived"
+            out.append(f"  {e['name']}  (dir @ OID 0x{e.get('oid', 0):x})  | {_c}"
+                       + (f"  created {_filetime_to_str(e['create_time'])}" if e.get("create_time") else ""))
+    out += ["", "Note: 'recoverable' = the bytes or extent map are PRESENT in the remnant, not that they are",
+            "un-overwritten. Carved non-resident content may be stale. Slack recovery is image-dependent.",
+            "ORPHAN OBJECTS are a low-confidence complementary signal (OT entry pending GC) — corroborate before use."]
+    try:
+        with open(path, "w", encoding="utf-8") as fh:
+            fh.write("\n".join(out) + "\n")
+        return path
+    except OSError:
+        return None
+
 def cmd_deleted(image, remaining, partition_start):
     # `--_from-export` is a private marker set by `export deleted` so the deprecation notice below is only
     # shown for a DIRECT `deleted --extract` call. Strip it before _parse_args (which rejects unknown flags).
     from_export = "--_from-export" in remaining
     remaining = [x for x in remaining if x != "--_from-export"]
-    args = _parse_args(remaining, flags=["--trash", "--scan-pages", "--slack", "--no-slack",
-                                         "--rows-only", "--content-only", "--carve"],
-                       valued=["--search", "--max-scan", "--extract"])
+    args = _parse_args(remaining, flags=["--trash", "--scan-pages", "--full", "--no-slack", "--slack",
+                                         "--rows-only", "--content-only", "--carve", "--orphans"],
+                       valued=["--search", "--max-scan", "--extract", "--log"])
+    # `--slack` is a silent no-op kept only for back-compat (the slack scan is the default `recovery` mode);
+    # it is intentionally undocumented. Use `--full` for the complete scan, `--no-slack` to skip slack.
     search_name = args["search"]
     extract_dir = args["extract"]
     rows_only = args["rows_only"]
     content_only = args["content_only"]
-    carve = args["carve"]
+    # Two modes (simple front for the fine-grained flags below): the default `recovery` mode scans only the
+    # live-page slack (quick); `--full` (fullrecovery) also scans orphan pages and, on export, carves
+    # extent-backed non-resident files. The per-method flags still override for power users.
+    full_mode = args["full"]
+    carve = args["carve"] or full_mode
     if rows_only and content_only:
         die("--rows-only and --content-only are mutually exclusive")
     max_scan = _int_arg(args["max_scan"], "--max-scan") if args["max_scan"] else 50000
-    # The B+-tree node-slack scan now runs BY DEFAULT (it is where deleted rows + recoverability live);
+    # The B+-tree node-slack scan runs BY DEFAULT (it is where deleted rows + recoverability live);
     # --no-slack skips it for a fast Trash+checkpoint pass, and --trash returns after the Trash table only.
     do_slack = not args["no_slack"] and not args["trash"]
     do_scan_pages = args["scan_pages"]
+    do_orphans = args["orphans"] and not args["trash"]   # opt-in low-confidence OT-orphan directory tier
+    scan_orphans = full_mode          # recovery = live-page slack only; --full adds the orphan-page slack scan
     # Accumulators shared by the scan + slack extraction paths (one manifest per run). Two verdict buckets
     # so the roll-up (and the .recovered files export writes) reconcile by category: deleted files vs prior
     # versions of files still present. _rc counts the entries whose inline content actually decodes.
     _manifest = []
     _view_verdicts = []     # deleted files (scan `deleted` + slack d_solid + slack d_partial)
     _prior_verdicts = []    # prior versions of LIVE files (scan still_present + slack p_solid)
+    _log_deleted, _log_present = [], []   # captured for the recovery log written at the end of the run
+    _log_orphans = []                     # opt-in --orphans tier (OT-orphan directory OIDs), for the log
 
     def _emit(base, e, name, source, tag):
         """Write BOTH the raw remnant (.row) AND, when the row is resident and its inline $DATA decodes,
@@ -7963,23 +7858,36 @@ def cmd_deleted(image, remaining, partition_start):
                 msg = f"matching '{search_name}'" if search_name else "in scanned area"
                 print(f"  No deleted file entries found {msg}")
 
+        # Build the live-identity index ONCE (name+create_time -> live dir OIDs) and share it between the slack
+        # classifier and the --orphans filter, so the O(objects) walk runs a single time and both agree.
+        live_ident = _build_live_identity(f, ps, cs, tr, obj_map) if (do_slack or do_orphans) else None
+
         if do_slack:
             print("── B+-tree Node Slack Scan (Method 5) ──")
             print("  Recovering deleted directory entries from metadata-page free space")
             print("  (ReFS deletion removes only the row's index slot; the row body persists).")
-            raw = _slack_recover(f, ps, cs, tr, roots, obj_map, max_scan, print)
-            # dedup on (name, create_time, is_dir); keep the longest recovered row
-            dedup = {}
+            raw = _slack_recover(f, ps, cs, tr, roots, obj_map, max_scan, print,
+                                 scan_orphans=scan_orphans, live_identity=live_ident)
+            # dedup on (name, create_time, is_dir) — recover each identity ONCE (keep the longest row) — but
+            # remember EVERY directory that identity was recovered from, so the log can list all locations a
+            # file was deleted from (identical files deleted from several dirs => one recovered file, all dirs logged).
+            dedup = {}; _all_locs = {}
             for e in raw:
                 k = (e["name"], e.get("create_time", 0), e.get("is_dir", False))
+                _op = e.get("owning_path") or (f"0x{e.get('owning_table_oid', 0):x}" if e.get("owning_table_oid") else "")
+                if _op:
+                    _all_locs.setdefault(k, set()).add(_op)
                 if k not in dedup or len(e["vd"]) > len(dedup[k]["vd"]):
                     dedup[k] = e
+            for _k, _e in dedup.items():
+                _e["all_owning_paths"] = sorted(_all_locs.get(_k, ()))
             ent = list(dedup.values())
             if search_name:
                 ent = [e for e in ent if search_name.lower() in e["name"].lower()]
             # B2: split by owner-aware is_prior_version (set in _slack_recover), not a global name set.
             deleted = sorted([e for e in ent if not e.get("is_prior_version")], key=lambda e: e["name"])
             prior = sorted([e for e in ent if e.get("is_prior_version")], key=lambda e: e["name"])
+            _log_deleted, _log_present = deleted, prior   # captured for the recovery log
 
             def _export_slack(e, tag):
                 if not extract_dir or not e.get("vd"):
@@ -7996,7 +7904,7 @@ def cmd_deleted(image, remaining, partition_start):
             d_solid, d_partial = _conf_split(deleted)
             p_solid, p_partial = _conf_split(prior)
             if deleted:
-                print(f"\n  DELETED (no longer listed in their owning directory): {len(deleted)}  "
+                print(f"\n  DELETED (no live file with this name + creation time remains on the volume): {len(deleted)}  "
                       f"[{len(d_solid)} with valid timestamps, {len(d_partial)} partial remnants]\n")
                 for e in d_solid:
                     kind = "DIR " if e.get("is_dir") else "FILE"
@@ -8007,6 +7915,12 @@ def cmd_deleted(image, remaining, partition_start):
                     # Q6: which directory the row was deleted FROM (owning-table OID -> path).
                     if e.get("owning_path"):
                         print(f"      Deleted from: {e['owning_path']}  (table {_hx(e.get('owning_table_oid', 0))})")
+                        # Recover-once/log-all: an identical file deleted from several directories is recovered
+                        # once; note the extra locations here, list them all in the recovery log.
+                        _locs = e.get("all_owning_paths") or []
+                        if len(_locs) > 1:
+                            print(f"      Also deleted from {len(_locs) - 1} other "
+                                  f"director{'y' if len(_locs) == 2 else 'ies'} (see recovery log)")
                         # Feature A: the parent directory is itself deleted — annotate its recovered name(s) as a
                         # BEST-EFFORT hint (never in the authoritative path; ambiguous under rename churn).
                         if e.get("parent_deleted"):
@@ -8039,12 +7953,15 @@ def cmd_deleted(image, remaining, partition_start):
                         _view_verdicts.append(_deleted_recoverability(e)[0])
                         _export_slack(e, "del-partial")
             if prior:
-                print(f"\n  PRIOR VERSIONS of files still present (CoW slack remnants): {len(prior)}  "
-                      f"[{len(p_solid)} with valid timestamps]")
+                print(f"\n  STILL PRESENT — a live file with this name + creation time exists (CoW remnants, and "
+                      f"former locations of moved/renamed files): {len(prior)}  [{len(p_solid)} with valid timestamps]")
                 for e in p_solid:
                     _venum, _vlabel, _ = _deleted_recoverability(e)
                     _prior_verdicts.append(_venum)
-                    print(f"    {e['name']}  ({e['tag']} @ cluster {e['plcn']} off {_hx(e['page_off'])}) — {_vlabel}")
+                    # Neutral note: the remnant is in a DIFFERENT directory than where the live file now sits
+                    # (a move/rename/copy — the tool does not interpret which; the recovery log has both paths).
+                    _note = "  [former location — the live file is in a different directory]" if e.get("former_location") else ""
+                    print(f"    {e['name']}  ({e['tag']} @ cluster {e['plcn']} off {_hx(e['page_off'])}) — {_vlabel}{_note}")
                     _export_slack(e, "prior")
             if not deleted and not prior:
                 print("  No recoverable type-0x30 rows found in slack"
@@ -8053,18 +7970,65 @@ def cmd_deleted(image, remaining, partition_start):
             print("        $SI (high confidence); 'partial remnants' are name fragments from a row whose")
             print("        body was partly overwritten — always corroborate before relying on one entry.")
 
-        # Methods note: reflect the current defaults (slack runs by default) + how to change scope.
+        # Opt-in ORPHAN-OBJECT tier (--orphans, LOW CONFIDENCE): OIDs still parked in the Object Table but
+        # unreachable from the directory tree — a complementary deletion signal (an object left in the OT after
+        # its tree link was removed, before GC reclaims it). Identity-filtered against the shared live map: an
+        # orphan whose recovered child is still LIVE (a prior/still-referenced structure) is dropped, so a live
+        # file is never mislabelled deleted. Low volume by nature; genuine deleted dirs usually recover more
+        # fully via the slack scan above.
+        if do_orphans:
+            print("\n── Orphan-Object Scan (Object Table \\ directory tree) — LOW CONFIDENCE (opt-in) ──")
+            _ref = {r["oid"] for r in walk_directory_tree(f, ps, cs, tr, obj_map, 0x600, 1000, True, set())
+                    if r.get("oid")}
+            _orph = find_orphan_objects(f, ps, cs, tr, obj_map, _ref, print)
+            _kept, _dropped_live = [], 0
+            for e in _orph:
+                _ch, _cct = e.get("recovered_child"), e.get("recovered_child_create_time", 0)
+                if _ch and (_ch, _cct) in live_ident:
+                    _dropped_live += 1          # child still live => prior / still-referenced, not a deletion
+                    continue
+                _kept.append(e)
+            if search_name:
+                _kept = [e for e in _kept
+                         if search_name.lower() in (e.get("recovered_child", "") or "").lower()
+                         or search_name.lower() in e["name"].lower()]
+            _log_orphans = _kept
+            _drop_note = f"  ({_dropped_live} candidate(s) dropped — child still live)" if _dropped_live else ""
+            if _kept:
+                print(f"  {len(_kept)} orphan directory object(s) in the Object Table but unlinked from the "
+                      f"tree{_drop_note}:")
+                for e in _kept:
+                    _c = (f"recovered child: {e['recovered_child']}" if e.get("recovered_child")
+                          else "(no child name survived)")
+                    print(f"    {e['name']}  (dir @ OID 0x{e['oid']:x})  {_c}")
+                    if e.get("create_time"):
+                        print(f"      Created:  {_filetime_to_str(e['create_time'])}")
+                print("  NOTE: LOW confidence — an OID parked in the Object Table pending GC. Corroborate before")
+                print("        use; genuine deleted directories usually recover more fully via the slack scan above.")
+            else:
+                print(f"  No orphan objects found{_drop_note}.")
+
+        # Methods footer: name the mode, list what ran, and point at the other mode + the sibling commands.
         print("── Recovery methods ──")
+        _mode = "full" if full_mode else "recovery"
         _ran = ["Trash table (0xD)", "checkpoint diff"]
-        if do_slack:      _ran.append("B+-tree node-slack scan (deleted rows + recoverability)")
+        if do_slack:      _ran.append("B+-tree node-slack scan"
+                                      + (" (live + orphan pages)" if scan_orphans else " (live pages only)"))
         if do_scan_pages: _ran.append("orphaned-page scan")
-        print(f"  Ran: {', '.join(_ran)}.")
-        if do_slack:
-            print("  Options: --no-slack (fast Trash+checkpoint only) · --scan-pages (also orphaned pages) ·")
-            print("           --search SUB (filter) · `export deleted DIR [--carve]` (write files out).")
+        if do_orphans:    _ran.append("orphan-object scan (low confidence)")
+        print(f"  Mode: {_mode}.  Ran: {', '.join(_ran)}.")
+        if do_slack and not full_mode:
+            print("  This is `recovery` (quick): live-page slack only. Run `deleted --full` to ALSO scan orphan")
+            print("  pages (the freed pages of deleted objects — more, but a full-volume scan) and carve non-resident content.")
+        elif full_mode:
+            print("  This is `--full` (complete): live + orphan-page slack + carve. `deleted` (no --full) is the quicker,")
+            print("  live-pages-only pass.")
         else:
-            print("  Slack scan SKIPPED (--no-slack). Run without it (the default) to recover deleted rows.")
-        print("  (Windows Recycle Bin is separate: see the `recyclebin` command.)")
+            print("  Slack scan SKIPPED (--no-slack). Run `deleted` (the default) to recover deleted rows.")
+        print("  Fine-grained: --no-slack · --scan-pages · --orphans · --carve · --max-scan N · --search SUB · `export deleted DIR`.")
+        if not do_orphans:
+            print("  Also: `deleted --orphans` adds a low-confidence tier for OID-Table objects unlinked from the tree.")
+        print("  Prior versions of files that still exist: `snapshots`.  Windows Recycle Bin: `recyclebin`.")
         print()
 
         # Recoverability roll-up, split by category so it reconciles with the files `export deleted` writes.
@@ -8086,6 +8050,21 @@ def cmd_deleted(image, remaining, partition_start):
                 print("  Next: `export deleted <DIR>` writes each entry's raw .row (evidence) + a .recovered for")
                 print("        resident files; add --carve to also reconstruct non-resident (extent-backed) files.")
         _write_manifest()
+
+        # Recovery log — a forensic audit trail of this run (always generated when a recovery is performed).
+        import datetime as _dt
+        _logmode = "full" if full_mode else ("no-slack" if not do_slack else "recovery")
+        if args["log"]:
+            _lp = args["log"]
+        elif extract_dir:
+            _lp = os.path.join(extract_dir, "recovery_log.txt")
+        else:
+            _b = os.path.basename(image).rsplit(".", 1)[0]
+            _lp = f"forefst_recovery_{_b}_{_dt.datetime.now().strftime('%Y%m%d-%H%M%S')}.txt"
+        _written = _write_recovery_log(_lp, image, vmaj, vmin, _logmode, ", ".join(_ran), max_scan,
+                                       _log_deleted, _log_present, extract_dir, orphans=_log_orphans)
+        if _written:
+            print(f"  Recovery log: {_written}")
 
         print()
         return 0
@@ -8956,7 +8935,7 @@ FORENSIC_SUBCOMMANDS = {
     "security":  "Security descriptors / ACLs per object (-v/--files/--json/--audit/--sid/--file)",
     "specials":  "Special-attribute files — ads/reparse/wsl/hardlink/sparse/encrypted/compressed/integrity/ea/snapshot (specials [type|all])",
     "reparse":   "Reparse points — symlinks/junctions/WSL + the reparse index (-v/--index/--json/--tag/--file)",
-    "deleted":   "Deleted-file VIEW + recoverability verdict — slack scan runs by default (--no-slack/--trash/--scan-pages; write with `export deleted`)",
+    "deleted":   "Deleted-file VIEW + recoverability verdict — `recovery` mode by default; `--full` for the complete scan (write with `export deleted`)",
     "recyclebin": "Decode $RECYCLE.BIN $I metadata — original path, deletion time, size, $R payload (--json)",
     "snapshots": "Stream snapshots (CoW versions) — list / preview / extract (-v/--json/--show/--extract)",
     "integrity": "Verify metadata-page checksums (-v/--checksums/--fullchecksums)",
@@ -8974,12 +8953,12 @@ FORENSIC_HANDLERS = {"usn": cmd_usn, "mlog": cmd_mlog, "timeline": cmd_timeline,
 # EA-derived lx_mode. Output stays forefst's normal files CSV/JSON, just the matching rows.
 # `files --filter <type>` predicates. The 10 types that also exist as `specials <type>` DELEGATE to the
 # single SPECIALS_TYPES definition (via _SPECIALS_BY_NAME) so the two commands can never drift apart (D2);
-# the 3 view-only types (directory/resident/deleted) have no `specials` equivalent and live here.
+# the 2 view-only types (directory/resident) have no `specials` equivalent and live here. Deleted files are
+# not part of the live `files` listing — use the `deleted` command.
 FILE_FILTERS = {name: pred for name, _desc, pred in SPECIALS_TYPES}
 FILE_FILTERS.update({
     "directory":  lambda r: bool(r.get("is_dir")),
     "resident":   lambda r: bool(r.get("is_resident")),
-    "deleted":    lambda r: bool(r.get("is_deleted")),
 })
 VERSION_NOTE = ("Validated on ReFS 3.14 (24H2). All versions 3.4-3.14 parse, but some enriched fields "
                 "(e.g. non-resident symlink targets) may be incomplete on 3.4-3.10.")
@@ -9027,7 +9006,7 @@ FIELD_PROVENANCE = {
         "value+0x50 bit31) is UNCONFIRMED (0/31,678 set in the corpus; no sparse non-resident file exists to "
         "positively test it). Emitting it would risk a false forensic signal.",
         "structure_reference § DATA value+0x50 (finding #307, marked UNCONFIRMED)"),
-    "TimestompFlags / deleted --slack (confidence tier)": (
+    "TimestompFlags / deleted (slack confidence tier)": (
         "CONDITIONAL",
         "These commands already print an explicit HIGH/MEDIUM/LOW (timestomp) or high/medium/partial "
         "(slack) confidence per row — read that column; a lower tier means fewer independent sources agreed.",
@@ -9069,8 +9048,7 @@ CMD_HELP = {
            ("-o, --output FILE", "write to FILE instead of stdout"),
            ("--full-path-column", "append a FullPath column (ParentPath/FileName) to the CSV"),
            ("--filter CATEGORY", "keep only one category: reparse, encrypted, compressed, integrity, ea,"),
-           ("", "ads, wsl, sparse, snapshot, directory, resident, deleted, hardlink"),
-           ("--deleted", "also recover deleted files (Trash + orphans + checkpoint diff)"),
+           ("", "ads, wsl, sparse, snapshot, directory, resident, hardlink"),
            ("--cow-before IMAGE", "recover prior CoW versions by diffing against an earlier image"),
            ("--timestomp", "add the TimestompFlags column ($SI heuristic; corroborate with `timestomp`)"),
            ("--depth N", "max directory recursion depth (default 100)"),
@@ -9078,7 +9056,7 @@ CMD_HELP = {
   "ex": [("files -o listing.csv", "full CSV file listing to a file"),
          ("files --filter hardlink", "only entries with more than one hard link"),
          ("files --filter ea --json", "non-resident & resident EA-bearing files as JSON"),
-         ("files --deleted --body -o timeline.body", "bodyfile incl. recovered deleted files (mactime)")],
+         ("files --body -o timeline.body", "bodyfile of the live tree (mactime); deleted files → `deleted`")],
  },
  "summary": {
   "tag": "Full volume triage report (identity + integrity + content census)",
@@ -9113,12 +9091,11 @@ CMD_HELP = {
            "--regex for a Python regex against the basename). Prints a table by default."],
   "opts": [("PATTERN", "(positional) the name substring, or regex with --regex"),
            ("--regex", "treat PATTERN as a case-insensitive regular expression"),
-           ("--deleted", "also include Trash-table (OID 0xD) objects (matches marked [DEL]); use the `deleted` command for full orphan/checkpoint recovery"),
            ("--json | --jsonl", "emit matches as JSON / JSON Lines"),
            ("-q, --quiet", "suppress stderr progress")],
   "ex": [("search report", "names containing 'report'"),
          ("search '^link\\d+_to' --regex", "regex on the basename"),
-         ("search secret --deleted", "include deleted/Trash objects")],
+         ("deleted --search secret", "search deleted objects → use the `deleted` command")],
  },
  "details": {
   "tag": "All attributes for ONE object — files by /path, directory/system objects by /path or 0xOID",
@@ -9249,27 +9226,41 @@ CMD_HELP = {
  },
  "deleted": {
   "tag": "Deleted-file VIEW + recoverability verdict (writing = `export deleted`)",
-  "desc": ["Read-only view of deleted entries. BY DEFAULT it runs the Trash table (0xD) + checkpoint diff +",
-           "the B+-tree node-slack scan (deleted rows still in tree free space), bounded by --max-scan.",
-           "--no-slack skips the slack scan for a fast metadata-only pass; --trash returns after the Trash",
-           "table. Each entry carries a RECOVERABLE verdict: 'FULL FILE recoverable' (RESIDENT — content is",
-           "inline in the record) / 'extent_backed' (NON-RESIDENT — data is in on-disk extents; the extent MAP",
-           "survives, so `export deleted --carve` can reconstruct it best-effort) / 'metadata only' (only",
-           "name/size/timestamps survive). Slack rows also show the directory they were deleted FROM. To WRITE",
-           "files out, use `export deleted DIR`. 'recoverable' means present & decodable, NOT un-overwritten."],
-  "opts": [("--no-slack", "skip the slack scan (fast: Trash table + checkpoint diff only)"),
+  "desc": ["Read-only view of deleted entries with a recoverability verdict. TWO MODES:",
+           "  • `deleted`         — RECOVERY (default): Trash table (0xD) + checkpoint diff + the LIVE-page",
+           "                        B+-tree node-slack scan. Quick — reads only pages the tree walk already",
+           "                        touched. Recovers the common in-tree deletions.",
+           "  • `deleted --full`  — FULL recovery: ALSO scans orphan pages (the freed pages of deleted objects —",
+           "                        a full-volume scan, bounded by --max-scan) and, on export, carves",
+           "                        non-resident content. Finds more (the older/orphaned deletions), slower.",
+           "Each entry carries a RECOVERABLE verdict: 'FULL FILE recoverable' (RESIDENT — content inline in the",
+           "record) / 'extent_backed' (NON-RESIDENT — data is in on-disk extents whose MAP survives, so",
+           "`export deleted --carve` reconstructs it best-effort) / 'metadata only' (name/size/timestamps only).",
+           "Each row shows the directory it was deleted FROM. Prior versions of files that still exist →",
+           "`snapshots`; Windows Recycle Bin → `recyclebin`. To WRITE files out, use `export deleted DIR`.",
+           "Every run writes a RECOVERY LOG (audit trail: image, mode, methods ran, and the DELETED-vs-",
+           "STILL-PRESENT split with each remnant's source page) — control the path with --log.",
+           "'recoverable' means present & decodable, NOT un-overwritten."],
+  "opts": [("--full", "FULL recovery: also scan orphan pages + carve non-resident content (vs the quick default)"),
+           ("--no-slack", "skip the slack scan entirely (Trash table + checkpoint diff only — fast, metadata)"),
            ("--trash", "only the Trash table, then return (fastest)"),
-           ("--scan-pages", "ALSO scan orphaned metadata pages (slower)"),
-           ("--slack", "run the slack scan (already the default; kept for symmetry)"),
-           ("--carve", "with `export deleted`: also reconstruct NON-RESIDENT files best-effort — the resulting "
-                       ".carved bytes are the MOST likely to be stale (clusters may be reused); .recovered "
-                       "(resident, in-metadata) is more reliable"),
+           ("--scan-pages", "additionally run the orphaned-page scan (a distinct, rarely-productive method)"),
+           ("--orphans", "add a LOW-CONFIDENCE tier: Object-Table OIDs unlinked from the tree (identity-filtered; "
+                         "opt-in). Low volume; genuine deleted dirs usually recover more fully via the slack scan"),
+           ("--carve", "with `export deleted`: reconstruct NON-RESIDENT files best-effort (on by default under "
+                       "--full). The .carved bytes are the MOST likely to be stale (clusters may be reused); "
+                       ".recovered (resident, in-metadata) is more reliable"),
            ("--search SUB", "filter recovered entries by name substring"),
-           ("--max-scan N", "max clusters to scan (default 50000)"),
+           ("--max-scan N", "max clusters for the orphan-page scan under --full (default 50000)"),
+           ("--rows-only", "with `export deleted`: write only the raw .row remnant (skip .recovered/.carved)"),
+           ("--content-only", "with `export deleted`: write only decoded content (skip the raw .row)"),
+           ("--log PATH", "write the forensic recovery-run log here (default: <export-dir>/recovery_log.txt, "
+                          "else ./forefst_recovery_<img>_<ts>.txt)"),
            ("--extract DIR", "DEPRECATED — use `export deleted DIR` (same result: .row + .recovered [+ .carved])")],
-  "ex": [("deleted", "Trash + checkpoint + slack scan (default) with recoverability verdicts"),
-         ("deleted --no-slack", "fast: Trash table + checkpoint diff only"),
+  "ex": [("deleted", "RECOVERY (default): Trash + checkpoint + live-page slack, with recoverability verdicts"),
+         ("deleted --full", "FULL: also scan orphan pages + carve — the complete pass"),
          ("deleted --trash", "fastest: Trash-only check"),
+         ("export deleted OUT --full", "write every recovered file (.row/.recovered/.carved) with the full scan"),
          ("deleted --search report", "only deleted entries named like 'report'")],
  },
  "recyclebin": {
@@ -9555,10 +9546,6 @@ def main():
                     help="search: treat PATTERN as a regular expression")
     ap.add_argument("--filter", default=None, metavar="CATEGORY",
                     help="files: subset by attribute category — " + "/".join(FILE_FILTERS))
-    ap.add_argument("--deleted", action="store_true",
-                    help="files/search: include deleted files (Trash + orphans + checkpoint diff + B+-tree slack)")
-    ap.add_argument("--max-scan", type=int, default=50000,
-                    help="files --deleted: max clusters for the B+-tree slack scan (default 50000)")
     ap.add_argument("--timestomp", action="store_true",
                     help="files: add the TimestompFlags column — a $SI-only HEURISTIC (investigative "
                          "information, NOT proof); the `timestomp` subcommand adds the authoritative USN + "
@@ -9792,11 +9779,10 @@ def main():
         if not pattern:
             die("search: provide a PATTERN (forefst <image> search PATTERN)")
         log(f"[{PROG}] Searching for \"{pattern}\"...")
-        trash_set = set()
-        if args.deleted:
-            trash_set = build_trash_set(f, ps, cs, tr, obj_map)
+        # Deleted/Trash objects are surfaced by the `deleted` command (use `deleted --search PATTERN`);
+        # `search` covers the live tree only.
         matches = cmd_search(f, ps, cs, tr, obj_map, vmaj, vmin, pattern,
-                             regex_mode=args.regex, include_deleted=args.deleted, trash_set=trash_set)
+                             regex_mode=args.regex)
         if isinstance(matches, dict) and "error" in matches:
             print(matches["error"], file=sys.stderr)
             f.close()
@@ -9817,12 +9803,9 @@ def main():
     sd_map = build_security_map(f, ps, cs, tr, obj_map)
     log(f"[{PROG}] {len(sd_map)} security descriptors loaded")
 
-    # Build trash set
+    # Deleted-file recovery lives solely in the `deleted` command; the files listing walks the LIVE tree
+    # only (no Trash/orphan/checkpoint/slack scan). trash_set stays empty.
     trash_set = set()
-    if args.deleted:
-        log(f"[{PROG}] Scanning Trash Table...")
-        trash_set = build_trash_set(f, ps, cs, tr, obj_map)
-        log(f"[{PROG}] {len(trash_set)} trashed entries found")
 
     # Walk directory tree
     log(f"[{PROG}] Walking directory tree...")
@@ -9836,71 +9819,6 @@ def main():
     nsnapshots = sum(r.get("snapshot_count", 0) for r in results)
     nhard = sum(1 for r in results if r.get("hard_link_count", 1) > 1)
     log(f"[{PROG}] {ndirs} dirs, {nfiles} files ({nresident} resident, {nhard} hard-linked, {nsnapshots} snapshots)")
-
-    # Deleted file detection: orphans + checkpoint diff
-    if args.deleted:
-        referenced_oids = {r["oid"] for r in results if r["oid"]}
-        referenced_oids.add(0x600)  # Root dir
-
-        # Orphan detection
-        log(f"[{PROG}] Scanning for orphan objects...")
-        orphans = find_orphan_objects(f, ps, cs, tr, obj_map, referenced_oids, log)
-        if orphans:
-            log(f"[{PROG}] {len(orphans)} deleted files recovered from orphan objects")
-            results.extend(orphans)
-
-        # Checkpoint comparison
-        log(f"[{PROG}] Comparing checkpoint copies...")
-        try:
-            chkp_deleted = find_chkp_diff_deleted(f, ps, cs, chkp_lcns, obj_map, log)
-            if chkp_deleted:
-                log(f"[{PROG}] {len(chkp_deleted)} deleted files found via checkpoint diff")
-                results.extend(chkp_deleted)
-        except Exception as e:
-            log(f"[{PROG}] Checkpoint comparison failed: {e}")
-
-        # Q5 defect 2 fix: also run the B+-tree node-slack scan (the same engine `deleted` runs by default),
-        # so the files view's IsDeleted/DeletionSource are consistent with the `deleted` command instead of
-        # blind to slack-recovered deletions. Only DELETED rows (name not in the live tree) are added, as
-        # deletion_source="slack"; prior-version remnants of still-present files are excluded. Bounded by
-        # --max-scan. Rows carry the same schema as orphan/chkp rows so CSV/JSON output is unchanged.
-        log(f"[{PROG}] Scanning B+-tree node slack for deleted rows...")
-        try:
-            # B2: both `deleted` and `files --deleted` now split on the owner-aware is_prior_version flag set
-            # inside _slack_recover (owning dir live AND still holds the name), so the two reconcile exactly and
-            # neither hides a genuine deletion whose name happens to exist in another directory.
-            _raw_slack = _slack_recover(f, ps, cs, tr, roots, obj_map, args.max_scan, log)
-            _dedup = {}
-            for e in _raw_slack:
-                k = (e["name"], e.get("create_time", 0), e.get("is_dir", False))
-                if k not in _dedup or len(e.get("vd", b"")) > len(_dedup[k].get("vd", b"")):
-                    _dedup[k] = e
-            slack_rows = []
-            for e in _dedup.values():
-                if e.get("is_prior_version"):        # B2: owner-aware prior-version test (set in _slack_recover)
-                    continue
-                fa = e.get("file_attrs", 0)
-                op = e.get("owning_path", "") or ""
-                _, vlabel, _ = _deleted_recoverability(e)
-                slack_rows.append({
-                    "path": (op + "/" + e["name"]).lstrip("/") if op else e["name"],
-                    "parent_path": op, "parent_oid": e.get("owning_table_oid", 0), "name": e["name"],
-                    "recovered_child": "", "oid": 0,
-                    "is_resident": bool(e.get("resident")), "is_dir": bool(e.get("is_dir")),
-                    "is_deleted": True, "deletion_source": "slack",
-                    "create_time": e.get("create_time", 0), "modify_time": e.get("modify_time", 0),
-                    "change_time": e.get("change_time", 0), "access_time": e.get("access_time", 0),
-                    "file_attrs": fa, "internal_flags": 0, "security_id": 0, "usn": 0, "file_size": 0,
-                    "is_encrypted": bool(fa & 0x4000), "is_compressed": bool(fa & 0x0800),
-                    "has_integrity": bool(fa & 0x8000), "has_ea": bool(fa & 0x00040000),
-                    "has_reparse": bool(fa & 0x0400), "has_ads": False, "ads_names": "",
-                    "reparse_target": "", "snapshot_count": 0, "recovery_verdict": vlabel,
-                })
-            if slack_rows:
-                log(f"[{PROG}] {len(slack_rows)} deleted files recovered from B+-tree slack")
-                results.extend(slack_rows)
-        except Exception as e:
-            log(f"[{PROG}] Slack scan failed: {e}")
 
     # Forward CoW version recovery (cross-image comparison)
     if args.cow_before:

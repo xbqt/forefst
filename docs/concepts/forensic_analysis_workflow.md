@@ -150,11 +150,11 @@ missing OID between two present ones proves a create-then-delete — a stronger 
 NTFS's reusable MFT records.
 
 ```
-python3 forefst.py <image> deleted --slack --scan-pages   # Methods 5 + 3 (+ trash, diff)
-python3 forefst.py <image> deleted --slack --extract DIR  # write recovered rows
+python3 forefst.py <image> deleted                        # recovery (default): trash + diff + live-page slack
+python3 forefst.py <image> deleted --full                 # complete: also orphan-page scan + carve
+python3 forefst.py <image> export deleted DIR             # write recovered .row + .recovered content
 python3 forefst.py <image> snapshots -v                   # Method 4: list $SNAPSHOT streams
-python3 forefst.py <image> files --deleted -o deleted.csv      # deleted entries in the file listing
-python3 forefst.py <image> files --cow-before earlier.raw      # forward CoW version recovery (two images)
+python3 forefst.py <image> files --cow-before earlier.raw # forward CoW version recovery (two images)
 ```
 
 ### Step 6 — Build the timeline
@@ -242,7 +242,7 @@ The "common" three CHKP values are not exhaustive (see step 2).
 | 2 Classify | `refsanalysis.py <image> summary` / `chkp -vv` |
 | 3 Bootstrap | `refsanalysis.py <image> chkp` / `containers` / `objects` |
 | 4 Enumerate | `forefst.py <image>` / `refsanalysis.py <image> files -v` |
-| 5 Recover | `forefst.py <image> deleted --slack --scan-pages` / `snapshots -v` |
+| 5 Recover | `forefst.py <image> deleted` (add `--full` for the complete scan) / `snapshots -v` |
 | 6 Timeline | `forefst.py <image> timeline --csv > timeline.csv` |
 | 7 Tamper | `forefst.py <image> timestomp` / `integrity --fullchecksums` |
 

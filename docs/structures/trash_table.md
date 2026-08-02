@@ -1,10 +1,10 @@
 # Trash Table
 
-The Trash Table (OID 0x0D, schema 0xe0d0) is an asynchronous deletion queue. When a **directory** is deleted, its OID is reparented into this table for deferred background cleanup rather than being freed immediately (files carry no OID of their own, so they are not reparented here). Because a deleted directory's B+-tree still holds its children's records, the table is a promising on-disk lead for recovering recently deleted content on ReFS.
+The Trash Table (OID 0x0D, schema 0xe0d0) is an asynchronous deletion queue. When a **non-resident file or a directory** is deleted, its object OID is reparented into this table for deferred background cleanup rather than being freed immediately. A **resident** file — whose data is inline in its parent directory row, with no object of its own — has nothing to reparent, so it is deleted in a single transaction and never enters this queue (see [Resident file bypass](#resident-file-bypass) below). Because a deleted directory's B+-tree still holds its children's records, the table is a promising on-disk lead for recovering recently deleted content on ReFS.
 
 ## Key format — 16 bytes
 
-The key contains the reparented OID of the deleted **directory**. The table holds keys only; the object's data and metadata stay in place and remain reachable through the [Object Table](object_table.md) until the background cleaner runs.
+The key contains the reparented OID of the deleted **directory or non-resident file**. The table holds keys only; the object's data and metadata stay in place and remain reachable through the [Object Table](object_table.md) until the background cleaner runs.
 
 | Offset | Size | Field | Description |
 |--------|------|-------|-------------|
@@ -34,7 +34,7 @@ On a live or crash-captured volume, the Trash Table may contain entries for rece
 - Data extents (still allocated, not yet freed)
 - All metadata (timestamps, attributes, security descriptors)
 
-This is one of three ReFS deleted-file recovery paths, the other two being checkpoint differential comparison and an orphan-page scan of the Object Table.
+The Trash table is one of the ReFS deleted-file recovery methods (`deleted --trash` reads it directly); the primary method is the B+-tree node-slack scan, with checkpoint differential and an opt-in orphan-object scan alongside. See [Deletion Recovery](../concepts/deletion_recovery.md) for the full set and the two recovery modes.
 
 ## Version presence
 
