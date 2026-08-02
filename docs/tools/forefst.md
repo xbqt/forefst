@@ -26,7 +26,7 @@ forefst.py disk.raw files -o listing.csv              # … to a file
 forefst.py disk.raw files --json                      # JSON array
 forefst.py disk.raw files --body -o timeline.body     # body file for mactime
 forefst.py disk.raw files --filter ea                 # only EA-bearing files
-forefst.py disk.raw files --deleted                   # include recovered deleted files
+forefst.py disk.raw deleted                           # recover deleted files (deleted --full = complete)
 forefst.py disk.raw summary                           # full volume triage report
 forefst.py disk.raw search "*.docx"                   # find files by name
 forefst.py disk.raw details /dir/file.txt             # everything about one file
@@ -48,16 +48,17 @@ Walks the directory B+-tree from the root object (OID `0x600`) and emits one enr
 | `--json` / `--jsonl` / `--body` | output format instead of CSV (mutually exclusive) |
 | `-o, --output FILE` | write to FILE instead of stdout |
 | `--filter CATEGORY` | keep only one [attribute category](#files---filter-categories) |
-| `--deleted` | also recover deleted files (Trash + orphans + checkpoint diff) |
 | `--cow-before IMAGE` | recover prior CoW versions by diffing against an earlier image |
 | `--timestomp` | add the `TimestompFlags` column ($SI heuristic) |
 | `--depth N` | max directory recursion depth (default 100) |
+
+The `files` listing covers the **live** tree only. Deleted files are recovered by the separate [`deleted`](#deleted--recover-deleted-files) command.
 
 ```
 forefst.py disk.raw files -o listing.csv              # full CSV listing
 forefst.py disk.raw files --filter hardlink           # only multi-link files
 forefst.py disk.raw files --filter ea --json          # EA-bearing files as JSON
-forefst.py disk.raw files --deleted --body -o t.body  # body file incl. deleted
+forefst.py disk.raw files --body -o t.body            # body file (live tree); deleted → `deleted`
 ```
 
 ### `summary` — full volume triage report
@@ -84,13 +85,14 @@ Case-insensitive substring match on the name across the whole tree; add `--regex
 |--------|-------------|
 | `PATTERN` | (positional) name substring, or regex with `--regex` |
 | `--regex` | treat PATTERN as a case-insensitive regular expression |
-| `--deleted` | also search recovered deleted objects (matches marked `[DEL]`) |
 | `--json` / `--jsonl` | emit matches as JSON / JSON Lines |
+
+`search` covers the live tree; to search deleted objects use [`deleted --search PATTERN`](#deleted--recover-deleted-files).
 
 ```
 forefst.py disk.raw search report                     # names containing "report"
 forefst.py disk.raw search '^link\d+_to' --regex      # regex on the basename
-forefst.py disk.raw search secret --deleted           # include deleted objects
+forefst.py disk.raw deleted --search secret           # search deleted objects
 ```
 
 ### `details` — all attributes for ONE object
@@ -503,13 +505,19 @@ MD5|name|inode|mode_as_string|UID|GID|size|atime|mtime|ctime|crtime
 
 ## Deleted File Detection
 
-Three complementary methods, enabled with `--deleted` (on `files` and `search`):
+Deleted files are recovered by the dedicated [`deleted`](#deleted--recover-deleted-files) command (the `files` and `search` listings cover the **live** tree only). It has two modes:
 
-1. **Trash Table** (OID `0x0D`): names removed but storage not yet reclaimed. Fast and reliable.
-2. **Orphan Objects**: OIDs present in the Object Table but unreachable from the directory tree.
-3. **Checkpoint Diff**: OIDs in the older checkpoint's Object Table but absent from the current one — deleted in the most recent transaction batch.
+- **`deleted`** — recovery (default): Trash Table (OID `0x0D`) + checkpoint diff + the live-page B+-tree node-slack scan. Quick.
+- **`deleted --full`** — the complete pass: also scans orphan pages (the freed pages of deleted objects) and carves non-resident content.
 
-The `deleted` subcommand adds two further opt-in methods (orphaned-page scan, B+-tree node-slack scan), shows a **recoverability verdict** per entry (whether the content is present in the remnant and decodes), and pairs with `export deleted` to write the recovered `.row` evidence + the decoded `.recovered` content.
+Each remnant is classified by **file identity** — a remnant is *deleted* only when no live file shares its
+**name and creation-time** anywhere on the volume; otherwise it is a still-present CoW prior version, or a neutral
+*former location* of a moved/renamed file. Identical files deleted from several directories are recovered once,
+with every location recorded in the log. Each entry carries a **recoverability verdict** (whether the content is
+present in the remnant and decodes). Every run writes a **recovery log** (audit trail; path via `--log`).
+`deleted` pairs with `export deleted DIR` to write each recovered `.row` evidence remnant + the decoded
+`.recovered` content (`--carve` also reconstructs non-resident files best-effort). `deleted --orphans` adds a
+low-confidence tier for Object-Table objects unlinked from the tree.
 
 ## CoW Version Recovery
 

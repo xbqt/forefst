@@ -214,7 +214,7 @@ structure.
 refsanalysis.py <image> chkp                          # File System: CHKP + 13 roots (boot/supb for VBR/SUPB)
 refsanalysis.py <image> containers                    # File System: Container Table / translation
 forefst.py <image> snapshots --show / --extract  # Application/Content: CoW prior-version bytes
-forefst.py <image> deleted --slack               # File Name: node-slack deleted-name recovery
+forefst.py <image> deleted                       # File Name: node-slack deleted-name recovery (--full = complete)
 forefst.py <image> mlog                               # Application: redo records
 ```
 

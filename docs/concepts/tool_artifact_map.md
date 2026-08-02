@@ -45,8 +45,8 @@ timeline entry looks wrong, drop to the inspector on that object and read the by
 | Reparse points (symlinks / junctions / WSL) | `forefst.py IMG reparse` · `… reparse --index` · `forefst.py IMG files` (ReparseTarget column) | $REPARSE_POINT data (schema 0x170 / 0x1C0); ReparseTag at $SI 0x54; OID 0x540 index | [reparse points](../structures/reparse_points.md), [$REPARSE_POINT](../attributes/REPARSE_POINT.md) |
 | Extended attributes / WSL metadata | `refsanalysis.py IMG attributes --filter wsl` · `forefst.py IMG files --filter ea` | EA sub-records, LX* metadata, $EFS stream | [attributes](attributes.md), [$EA_INFORMATION](../attributes/EA_INFORMATION.md), [$EFS](../attributes/EFS.md) |
 | Stream snapshots vs ADS | `forefst.py IMG snapshots -v` · `… snapshots --show/--extract` · `forefst.py IMG files` (HasAds column) | Type-0xB0 sub-records: snapshot vs ADS (inline) | [$SNAPSHOT](../attributes/SNAPSHOT.md), [copy-on-write](copy_on_write.md) |
-| Deleted files — trash / orphan / chkp-diff | `forefst.py IMG files --deleted` · `forefst.py IMG deleted --scan-pages` | Trash Table (OID 0x0D), orphan MSB+ pages, two-CHKP diff | [Trash Table](../structures/trash_table.md), [deletion recovery](deletion_recovery.md) |
-| Deleted directory names from node slack | `forefst.py IMG deleted --slack` · `… --extract DIR` | Stale type-0x30 rows in B+-tree node free region (offset slot freed, body persists) | [deletion recovery](deletion_recovery.md), [B+-tree node](../structures/btree_node.md) |
+| Deleted files — trash / diff / slack | `forefst.py IMG deleted` · `forefst.py IMG deleted --full` | Trash Table (OID 0x0D), two-CHKP diff, B+-tree node slack (live + orphan pages) | [Trash Table](../structures/trash_table.md), [deletion recovery](deletion_recovery.md) |
+| Deleted directory names from node slack | `forefst.py IMG deleted` · `forefst.py IMG export deleted DIR` | Stale type-0x30 rows in B+-tree node free region (offset slot freed, body persists) | [deletion recovery](deletion_recovery.md), [B+-tree node](../structures/btree_node.md) |
 | CoW prior-version recovery (two images) | `forefst.py IMG files --cow-before EARLIER.raw` | Object-Table OIDs whose metadata-page LCN changed → old page at stale LCN | [copy-on-write](copy_on_write.md), [Object Table](../structures/object_table.md) |
 | Durable log (MLog) transactions | `forefst.py IMG mlog --parse` · `… --csv` · `… --stats` | LogCore four-layer records; redo opcode at `_SmsRedoRecord + 0x04` | [MLog](../structures/mlog.md) |
 | USN change journal | `forefst.py IMG usn --stats` · `… --csv` | OID 0x520 `$J` stream → USN_RECORD_V3 (128-bit FileIDs); $Max at schema 0x1F0 | [USN journal](../structures/usn_journal.md) |
@@ -82,10 +82,10 @@ A handful of behaviors decide whether a command returns the artifact you expect:
 - **The lister populates the SID / owner / ADS / reparse / snapshot columns in every CSV.** The inspector
   subcommands (`security`, `reparse`, `snapshots`) decode the same artifacts in depth, so the CSV columns and
   the inspectors agree; use an inspector for the full descriptor / target detail behind a column.
-- **Deleted-data coverage is layered, not single-shot.** The trash / orphan / checkpoint-diff path
-  (`--deleted`) recovers objects that are *referenced but unlinked*. Node-slack recovery (`deleted --slack`)
-  recovers *names whose offset slot was freed but whose row body still persists* in a B+-tree node's free
-  region — a class the live-tree iterators of both tools otherwise skip entirely. CoW prior-version recovery
+- **Deleted-data coverage is layered, not single-shot.** The `deleted` command's trash / checkpoint-diff path
+  recovers objects that are *referenced but unlinked*. Node-slack recovery (the default `deleted` scan, extended
+  by `deleted --full`) recovers *names whose offset slot was freed but whose row body still persists* in a
+  B+-tree node's free region — a class the live-tree iterators of both tools otherwise skip entirely. CoW prior-version recovery
   (`--cow-before`) needs a *second, earlier* image (or a dirty volume): after a clean unmount both
   checkpoints point at the same roots, so a single clean image yields no prior whole-tree state. The
   [deletion recovery](deletion_recovery.md) and [copy-on-write](copy_on_write.md) pages explain why each

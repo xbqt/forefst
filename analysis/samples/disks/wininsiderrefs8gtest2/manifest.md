@@ -24,7 +24,9 @@ Regenerate with `analysis/tools/analysis_scripts/gen_samples.sh`. Image path sho
 | `snapshots.txt` | `forefst wininsiderrefs8gtest2.raw snapshots` |
 | `snapshots.v.txt` | `forefst wininsiderrefs8gtest2.raw snapshots -v` |
 | `deleted.txt` | `forefst wininsiderrefs8gtest2.raw deleted --no-slack` |
-| `deleted.slack.txt` | `forefst wininsiderrefs8gtest2.raw deleted --max-scan 8000` |
+| `deleted.recovery.txt` | `forefst wininsiderrefs8gtest2.raw deleted --max-scan 8000` |
+| `deleted.full.txt` | `forefst wininsiderrefs8gtest2.raw deleted --full --max-scan 8000` |
+| `deleted.orphans.txt` | `forefst wininsiderrefs8gtest2.raw deleted --orphans --max-scan 8000` |
 | `recyclebin.txt` | `forefst wininsiderrefs8gtest2.raw recyclebin` |
 | `timeline.csv` | `forefst wininsiderrefs8gtest2.raw timeline --csv` |
 | `timeline.txt` | `forefst wininsiderrefs8gtest2.raw timeline --limit 200` |

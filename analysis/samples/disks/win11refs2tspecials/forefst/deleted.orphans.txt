@@ -1,3 +1,5 @@
+# forefst win11refs2tspecials.raw deleted --orphans --max-scan 8000
+# ----------------------------------------------------------------------------
 ==============================================================================
 ReFS Deleted File Finder
 ==============================================================================
@@ -2317,12 +2319,15 @@ ReFS Deleted File Finder
   NOTE: slack rows are unindexed remnants. 'with valid timestamps' rows decode a full
         $SI (high confidence); 'partial remnants' are name fragments from a row whose
         body was partly overwritten — always corroborate before relying on one entry.
+
+── Orphan-Object Scan (Object Table \ directory tree) — LOW CONFIDENCE (opt-in) ──
+[forefst] 0 orphan OIDs found in Object Table
+  No orphan objects found.
 ── Recovery methods ──
-  Mode: recovery.  Ran: Trash table (0xD), checkpoint diff, B+-tree node-slack scan (live pages only).
+  Mode: recovery.  Ran: Trash table (0xD), checkpoint diff, B+-tree node-slack scan (live pages only), orphan-object scan (low confidence).
   This is `recovery` (quick): live-page slack only. Run `deleted --full` to ALSO scan orphan
   pages (the freed pages of deleted objects — more, but a full-volume scan) and carve non-resident content.
   Fine-grained: --no-slack · --scan-pages · --orphans · --carve · --max-scan N · --search SUB · `export deleted DIR`.
-  Also: `deleted --orphans` adds a low-confidence tier for OID-Table objects unlinked from the tree.
   Prior versions of files that still exist: `snapshots`.  Windows Recycle Bin: `recyclebin`.
 
   DELETED files: 16 of 349 are RESIDENT with full content recoverable; 61 are non-resident (carve-able with --carve).
@@ -2334,5 +2339,5 @@ ReFS Deleted File Finder
        (name/size/timestamps). See the `export deleted` docs.
   Next: `export deleted <DIR>` writes each entry's raw .row (evidence) + a .recovered for
         resident files; add --carve to also reconstruct non-resident (extent-backed) files.
-  Recovery log: forefst_recovery_win11refs2tspecials_20260802-053612.txt
+  Recovery log: forefst_recovery_win11refs2tspecials_20260802-053556.txt
 
