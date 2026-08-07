@@ -21,7 +21,8 @@ is a fixed 24-byte entry.
 |-------|---------|
 | 0x180040 | Standard data-run extent (variable run_length) |
 | 0x180050 | Data-run with bit 0x10 set; the 0x10 bit is **not** run cardinality (meaning unresolved, candidate integrity/checksum-stride bit) |
-| 0x1c00d0 | Integrity checksum-page entry (always run_length 1; 32-byte stride: 24-byte entry + 8-byte CRC suffix) |
+| 0x180060 / 0x180064 | **Sparse hole** (bit 0x20 set): the entry has `VLCN == 0` and its run is a zero-filled hole — never read from disk (see below) |
+| 0x1c00d0 | Integrity checksum entry (always run_length 1; 32-byte stride = 24-byte entry + 8-byte element `[CRC32-C : 4][reserved : 4]`, CRC32-C Castagnoli poly `0x82f63b78` over the 4 KiB cluster) |
 
 Run cardinality is carried explicitly by the Run length field at extent+0x14, not by the flag bits:
 both 0x180040 and 0x180050 appear with single-cluster and multi-cluster runs. The exact meaning of the
@@ -117,14 +118,23 @@ VLCN→PLCN translation formula is E2-confirmed in the `CmsVolumeContainer` cont
 on disk across the corpus.
 
 The extent-flag meanings are raw-disk verified: 0x180040 is the standard data run, 0x1c00d0 the
-integrity checksum-page entry (32-byte stride, run_length 1), and the 0x180050 vs 0x180040 distinction
+integrity checksum entry (32-byte stride, run_length 1), and the 0x180050 vs 0x180040 distinction
 (bit 0x10) is *not* run cardinality — both flags occur with single- and multi-cluster runs. Every
 non-resident file resolves via the single 24-byte extent stride (raw-disk verified; sampled single-extent
 files content-match); the 16-byte region at the descriptor is the embedded $DATA sub-record header.
 Snapshot/CoW DATA uses the identical 24-byte extent format (E2: same
 `CmsStream::LookupAllocation` routine; RD content-recovery confirmed).
 
+The 0x1c00d0 integrity entry's 8-byte element is CRC32-C (Castagnoli, poly `0x82f63b78`) of the 4 KiB
+cluster: confirmed in the driver (E2) — the `crc32c_4096` kernels via `ComputeOneChecksum` (which uses the
+4096-byte path only when the span is one cluster) — and on disk (RD), 886 checksummed clusters recomputed
+across three integrity volumes with 0 mismatches (a cross-algorithm control ruled out plain CRC-32 and CRC64).
+The sparse-hole entry (`VLCN == 0`, flags bit 0x20) is raw-disk verified: `VLCN 0 → PLCN 0` is the boot
+region on every volume, so a zero VLCN is a hole, zero-filled and never read (213 records across 18 images,
+v3.9–v3.14, 4K and 64K).
+
 Findings: **MD_DATA_RA_001** (24-byte extent entry), **MD_DATA_RA_007** (integrity-stride flags),
+**MD_DATA_RA_013** (inline CRC32-C element, poly 0x82f63b78), **MD_DATA_RA_014** (sparse VLCN==0 hole),
 **MD_DATA_RA_002** (single-extent shortcut retracted), **MD_DATA_RA_009** (MI $DATA sub-record),
 **MD_SNAP_RA_003** / **CT_DRNT_RA_001** (snapshot extents reuse the format), **MD_DATA_RA_011** (version-count
 field). See [how this was verified](../methodology.md) to trace these to the exact images and measurements

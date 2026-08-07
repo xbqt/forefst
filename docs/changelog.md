@@ -1,5 +1,30 @@
 # Changelog
 
+## v1.3.0 — 2026-08-06 — non-resident extraction, integrity verification, sparse-aware recovery
+
+**`extract` now recovers non-resident files whose extent map is stored inline in the directory record — the
+common case on ReFS 3.14 — verifies their per-cluster integrity checksums, and correctly handles sparse holes.
+Validated corpus-wide (v3.4 / v3.14 / Insider, 2 GB–15 TB): no size mismatches, and snapshot/data output is
+byte-identical to the previous release wherever it already worked.**
+
+- **Inline-extent non-resident files extract.** A non-resident file often keeps its extent map *inline* in the
+  directory value (the file lists as `IsResident=False`). `extract` now reassembles these directly — reading each
+  extent's clusters and stitching them in file order — so ~45–79 % of 3.14 files that previously had to fall back
+  to `dataruns` now extract in one step. Reassembly stops (and says so) only for the rare oversized/overflow
+  extent table; nothing wrong is ever written.
+- **Per-cluster CRC32-C integrity verification.** On an integrity-stream file (3.14, 4 KiB clusters), each cluster
+  carries an inline CRC32-C checksum. `extract` recomputes and checks every one and reports
+  `integrity: N/N clusters CRC32-C-verified`; a mismatch (on-disk corruption or tampering) is flagged prominently
+  with the offending cluster and stored-vs-actual CRC — the bytes are still written. Disable with
+  `--no-verify-integrity`. (SHA-256 and 64 KiB-cluster volumes store checksums out of line and are reported as
+  such rather than verified inline.)
+- **Sparse holes are zero-filled.** A hole in a file's extent map (a sparse region) is now reconstructed as zeros
+  rather than read from disk, so recovered and carved files are byte-correct for sparse files, and the snapshot,
+  CoW, and deleted-file carve paths share the same sparse-aware, integrity-aware extent decoder.
+- **Full-path `extract` is direct.** Addressing a file by an absolute `/path` resolves it component-by-component
+  from the root with no depth limit (a bare name is still searched across the tree); extracting a deep file by its
+  full path is now instant.
+
 ## v1.2.0 — 2026-08-02 — deletion/recovery overhaul
 
 **Deleted-file recovery is now organised into two simple modes and classified by file identity. Corpus-validated
