@@ -4,11 +4,17 @@ Every persistent ReFS **directory or system table** carries a 64-bit **Object ID
 (OID)** that the [Object Table](../structures/object_table.md) maps to that object's own B+-tree.
 **A file, by contrast, has no OID of its own** — it lives inside its parent directory's tree, identified
 by that directory's OID together with the per-directory child ordinal described next.
-A separate, much weaker identifier — the per-directory **child ordinal** (`NextFileId`, surfaced as
-the lower half of the 128-bit FileId in USN journal records) — names a child *within one directory*
-and is **reused per directory**. Knowing which identifier is which, and which one is safe to trust,
-is the difference between correctly reconstructing an object's identity and splicing artifacts onto
-the wrong file. The OID is the reliable join key; the ordinal is a trap if used alone.
+A companion identifier — the per-directory **child ordinal** (`NextFileId`, surfaced as the lower half
+of the 128-bit FileId in USN journal records) — names a child *within one directory*. It is
+**per-directory scoped**: the same ordinal value recurs under different parents, so on its own it is not
+a volume-wide identity. But **within a directory it is monotonic and never re-used after a deletion** — a
+deleted file's ordinal is never reassigned to a later file — so the *full* 128-bit FileId, `(directory OID,
+ordinal)`, is a **stable** reference for tracking one file over time. (For a **hard-linked** file, which
+carries several names, resolving *which object* a name belongs to also uses a size check — see
+[hard links](hard_links.md).) Knowing which identifier is which, and which
+one is safe to trust, is the difference between correctly reconstructing an object's identity and
+splicing artifacts onto the wrong file. The OID is the reliable join key; the **bare** ordinal is a trap
+only when used *without* its directory OID.
 
 ## Two identity spaces
 
@@ -36,7 +42,10 @@ the counter in the parent directory's in-memory SCB (at SCB+0x1b8 on Win11 v3.14
 Insider) before persisting it. The ordinal is a
 small, near-contiguous integer starting from 2 (0 and 1 are reserved), and it is **local to one
 directory**. Two children of two different directories routinely carry the same ordinal value, so an
-ordinal on its own says nothing about which file it belongs to.
+ordinal on its own says nothing about which file it belongs to. The counter is **increment-only**: a
+deleted child's ordinal is never handed out again — it stays a permanent gap — so within a directory the
+ordinal permanently belongs to the file that first received it, and a deleted file's ordinal is never
+reassigned to a later file.
 
 **Where they meet — the 128-bit USN FileId.** [USN journal](../structures/usn_journal.md) V3 records
 carry a 16-byte FileId at record offset 0x08 whose two halves combine both identity spaces:
@@ -52,9 +61,12 @@ carry a 16-byte FileId at record offset 0x08 whose two halves combine both ident
 ```
 
 The upper half is the *directory's* OID, which is volume-unique; the lower half is the child ordinal,
-which is directory-local. The FileId therefore identifies a child *relative to its home directory* —
-it is globally unique only because the directory OID qualifies it. The lower half alone is never a
-volume-wide file identity.
+which is directory-local. The FileId therefore identifies a child *relative to its home directory* — it
+is globally unique only because the directory OID qualifies it. The lower half alone is never a
+volume-wide file identity. And because the ordinal is never re-used within its directory, the full FileId
+is **stable over time**: a deleted file's FileId is never reassigned, so a USN record that references a
+FileId points to the same file across the whole journal — the pair `(directory OID, ordinal)` is a
+dependable key for correlating journal activity to one file.
 
 ## Reconstructing one identity by joining on the OID
 
@@ -173,7 +185,18 @@ The child-ordinal mechanism is confirmed in the driver (E2): `RefsMoveFile` incr
 directory's `NextFileId` and stamps the new child's ordinal (finding MD_SI_RA_008; the field lives at $SI+0x58,
 finding MD_SI_RA_010, MD_SI_RA_008). The `version < 0x30b` persist gate that zeroes the own-row on native v3.14 is
 decompiled (E2) and disk-confirmed (finding MD_SI_RA_010, MD_SI_RA_008). The 128-bit USN FileId split (upper = table
-OID, lower = directory-local ordinal) is from the USN record layout (RD). The
+OID, lower = directory-local ordinal) is from the USN record layout (RD). The ordinal's
+**increment-only, never-reused-after-deletion** property is decoded in the driver (E2): `RefsMoveFile`
+advances the parent directory's counter with a literal increment — `NextFileId = NextFileId + 1` (a single
+`+ 1` on the in-memory `IndexSCB+0x1b8`) — then stamps the new child with the assigned value and persists it
+via `RefsPersistNextFileId`; `RefsGetNextFileIdFromObjectTable` reads it back from the persisted object
+record; and deletion (`RefsDeleteFileId2` / `RefsQueueTriageForDeadFileId`) removes only the child's
+FileId-resolution (type-0x20) entry. **No code path decrements the counter or keeps a free-list of released
+ordinals**, so a deleted ordinal is never re-issued. This is confirmed on disk (RD: across 3,661 file
+references in three journal-rich images no reference is ever created after being deleted, with direct
+delete-then-fresh-ordinal demonstrations) — finding MD_USN_RA_005. It makes the reference **temporally
+stable** (a deleted file's reference is never re-handed-out); it is *not* on its own a spatial object key —
+hard-link object identity is resolved by `(owner-dir, file_id)` size-match (finding FN_LINK_002). The
 hard-link size-match resolution is grounded in the driver and re-measured across the corpus
 (finding FN_LINK_002). The Object Table value-format split (legacy 200/208 B vs
 compact 80/88 B) is disk-decoded (RD).

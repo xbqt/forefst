@@ -37,12 +37,14 @@ it does not silently refuse them.
 | Component | Size | Meaning |
 |-----------|------|---------|
 | Upper 8 bytes | u64 | B+-tree table OID (directory's Object Table OID) |
-| Lower 8 bytes | u64 | Sequential entry index within directory (monotonically increasing, never reused) |
+| Lower 8 bytes | u64 | Per-directory entry ordinal — monotonically allocated, **never reused after deletion** (a deleted ordinal stays a permanent gap) |
 
 The upper 8 bytes identify which directory's B+-tree contains this entry; the lower 8 bytes identify
 the specific entry within that tree. This makes a USN record directly resolvable to a
-[B+-tree node](btree_node.md) location without a separate lookup table (see
-[Object IDs & File IDs](../concepts/object_ids_fileids.md)).
+[B+-tree node](btree_node.md) location without a separate lookup table. Because the ordinal is never
+re-used within its directory, the full 128-bit File ID is **stable over time** — a deleted file's File ID
+is never reassigned to a later file, so a USN record referencing a File ID points to the same file across
+the whole journal (see [Object IDs & File IDs](../concepts/object_ids_fileids.md)).
 
 ## Reason codes
 
