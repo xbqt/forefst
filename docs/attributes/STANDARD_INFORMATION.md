@@ -85,7 +85,10 @@ own-row holds `NextFileId = max(child ordinal)`, and each resident child's `$SI+
 ordinal. `RefsMoveFile` (the unified create/rename/link path) increments the parent directory's
 NextFileId and stamps the child. It is persisted to the own-row only when version < 0x30b (v3.11) — so on
 native v3.14 the own-row reads 0 while the object-record payload carries it. A fresh directory starts at
-1 (0/1 reserved); child ordinals are near-contiguous from 2. It is **not** a per-write counter.
+1 (0/1 reserved); child ordinals are near-contiguous from 2. The counter is **increment-only — a deleted
+child's ordinal is never re-used** (it stays a permanent gap), so a file's reference `(directory OID,
+ordinal)` is **stable over time** — never reassigned to a later file — which USN correlation relies on. It
+is **not** a per-write counter.
 
 ## The two "0x90"s — `$SI` is not `$I30_INDEX`
 
