@@ -7,7 +7,7 @@ Everything needed to reproduce and audit the structural analysis behind `forefst
 
 | Path | What it holds |
 |------|---------------|
-| [`reference_table.csv`](reference_table.csv) | The central claim register — 409 structural claims, each with a raw-disk verification status and an evidence level. **This is the live reference.** |
+| [`reference_table.csv`](reference_table.csv) | The central claim register — 434 structural claims, each with a raw-disk verification status and an evidence level. **This is the live reference.** |
 | [`reports/`](reports/) | Verification scripts (`verify_docs_static.py`, `verify_docs_tools.py`, `verify_tool_tables.py`), their result files, and the per-claim audit harness under [`reports/audit/`](reports/audit/) (claim specs, proof index, per-claim dossiers, validation matrices). |
 | [`lab/`](lab/) | VM setup, ReFS disk-generation procedure, and the `Generate-FSActivity.ps1` activity generator + baseline replay file. |
 | [`samples/`](samples/) | Example `forefst`/`refsanalysis` output captured against corpus images, plus [`samples/corpus/`](samples/corpus/) — per-structure output across versions/checksums/upgrade. |

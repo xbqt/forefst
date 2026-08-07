@@ -142,9 +142,9 @@ from mounting.
 
 ## Checksums outside the Merkle tree
 
-The four-level Merkle model above is **not** the complete integrity picture. Two further checksum
-families exist in parallel, neither stored in B+-tree page references, and a forensic verifier that only
-implements the Merkle tree will silently skip both.
+The four-level Merkle model above is **not** the complete integrity picture. Three further checksum
+families exist in parallel, none stored in B+-tree page references, and a forensic verifier that only
+implements the Merkle tree will silently skip them.
 
 ### MLog log-record checksum (XOR-fold)
 
@@ -166,9 +166,20 @@ per-unit length array, and each decompressed unit is verified by
 `volume+0xdd8 + (type × 8)` before use. This reuses the volume's CRC64/SHA-256 machinery but keys it
 per compression unit rather than per page.
 
+### Integrity-stream per-cluster checksums (data files)
+
+When a file is placed on an **integrity stream** (`fsutil`/Storage Spaces integrity, or `Set-FileIntegrity`),
+ReFS checksums its *data* clusters too — separately from metadata. On a 4 KiB-cluster CRC32-C volume this checksum
+lives **inline in the file's own extent map**: each checksummed cluster becomes a single-cluster extent (flag
+`0x1C00D0`) immediately followed by an 8-byte element holding the cluster's checksum —
+`[CRC32-C : 4 bytes][reserved : 4 bytes]`. The algorithm is **CRC32-C** (Castagnoli, `0x82F63B78`) over the full
+4096-byte cluster. `extract` recomputes and verifies each one as it recovers the file, and flags any mismatch as
+corruption or tampering. SHA-256 and 64 KiB-cluster volumes keep their data checksums out of line (a 32-byte
+SHA-256 cannot fit the inline slot), so there is nothing to verify inline on those.
+
 > The full integrity surface is therefore: **Merkle tree** (VBR → SUPB → CHKP → B+-tree pages) **+ MLog
-> record XOR-folds + container-compression per-unit checksums.** A complete verifier must handle all
-> three.
+> record XOR-folds + container-compression per-unit checksums + integrity-stream per-cluster CRC32-C.** A
+> complete verifier must handle all four.
 
 ## Verification flow at mount time
 

@@ -43,8 +43,11 @@ pair used by Windows symlinks:
 | 0x00 | 4 | Flags / version (u32) | WSL version flags |
 | 0x04 | var | Target path | UTF-8 Linux-style path, no NUL terminator (length = ReparseDataLength − 4) |
 
-This tag is defined but has not been observed on disk: WSL `ln -s` on a DrvFs `-o metadata` mount
-produces a *Windows* `IO_REPARSE_TAG_SYMLINK` (0xA000000C) instead.
+WSL writes a *Windows* `IO_REPARSE_TAG_SYMLINK` (0xA000000C) when the link target is representable as a
+Windows path (a relative name that resolves), and a *Linux* `LX_SYMLINK` (0xA000001D) when it is not — an
+absolute Linux path (`ln -s /etc/passwd`) or an ext4 symlink copied with `cp -a`. In the Linux form the
+version field is `2` and the UTF-8 target begins at buffer+0x0C (data+0x04), with `ReparseDataLength = 4 +
+len(target)`.
 
 ## Driver functions
 

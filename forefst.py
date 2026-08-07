@@ -210,7 +210,7 @@ def validate_image(path, die_fn=None):
 
 # ─── Constants ────────────────────────────────────────────────────────
 PROG = "forefst"
-VERSION = "1.2.0"
+VERSION = "1.3.0"
 # Non-resident directory entries have a short value (OID + timestamps + attrs + size).
 # Resident entries (small files) embed full $SI + data inline and are longer.
 NON_RESIDENT_MAX_VALUE = 84
@@ -1381,15 +1381,99 @@ def count_snapshots_from_btree(f, ps, cs, tr, vlcns):
 # The CURRENT version is data_sub_id 0x1000. Same 24-byte extent format as type-0x40.
 SNAP_DATA_DESC = 0x10028
 
+# Inline per-cluster integrity checksum (structure_reference §C.6 / MD_DATA_RA_007; Phase-2 spec 2026-08-06,
+# static+disk confirmed). On a v3.14 4K-cluster CRC32-C integrity stream, a checksummed cluster is its own
+# run==1 extent carrying flag 0x1C00D0, immediately followed by an 8-byte element = [CRC32-C(cluster):le32@+0]
+# [reserved:le32@+4] (32-byte stride). CRC32-C = Castagnoli, reflected poly 0x82F63B78; unit = one 4096-byte
+# cluster. SHA-256 / 64K-cluster / v3.4 volumes carry NO inline element (checksums are out-of-line or absent).
+INTEGRITY_EXTENT_FLAG = 0x1C00D0
+_INTEGRITY_UNSET = 0xABBAFFFE          # driver's unset / match-all placeholder — an unwritten checksum, not a mismatch
+_CRC32C_TABLE = None
 
-def parse_snapshot_data_entry(v):
+
+def _crc32c(data):
+    """CRC32-C (Castagnoli), reflected poly 0x82F63B78, init/final 0xFFFFFFFF. Canonical check:
+    _crc32c(b'123456789') == 0xE3069283. (NOT zlib.crc32, which is CRC-32/ISO-HDLC.)"""
+    global _CRC32C_TABLE
+    if _CRC32C_TABLE is None:
+        t = []
+        for n in range(256):
+            c = n
+            for _ in range(8):
+                c = (c >> 1) ^ (0x82F63B78 & -(c & 1))
+            t.append(c & 0xFFFFFFFF)
+        _CRC32C_TABLE = t
+    crc = 0xFFFFFFFF
+    for b in data:
+        crc = (crc >> 8) ^ _CRC32C_TABLE[(crc ^ b) & 0xFF]
+    return crc ^ 0xFFFFFFFF
+
+
+def _volume_ncl(f, ps_off, cs):
+    """Volume cluster count (clusters after the partition offset) — the plausibility bound for a decoded VLCN."""
+    _p = f.tell(); f.seek(0, 2); n = (f.tell() - ps_off) // cs; f.seek(_p)
+    return n
+
+
+def _decode_inline_extents(v, ncl, max_fvcn=None):
+    """Single source of truth for decoding the inline 24-byte extent records inside a 0x10028 holder.
+    VALIDATED-GREEDY: after each real extent the next one sits at +24, OR at +32 when an 8-byte integrity
+    CRC32-C element is interleaved (integrity streams) — pick whichever validates. Returns
+    [(file_vcn, vlcn, run_length)] sorted by file_vcn; stops at the first record that cannot be validated
+    (the caller applies any coverage gate). `ncl` (volume cluster count) bounds plausibility; `max_fvcn`
+    optionally tightens the file_vcn bound (recover path passes size_cl). A record with `vlcn == 0` is a SPARSE
+    HOLE (VLCN 0 -> PLCN 0 = the boot region on every volume, so cluster 0 is never real file data; the flags
+    carry bit 0x20) — it is KEPT in the list and reassembly zero-fills it; it is never disk-read. Byte-identical
+    to the legacy fixed-24-stride decode when NO checksums are interleaved (proven on all corpus holders) but
+    correct when they are. (structure_reference §C.6; Phase-0 SPEC 2026-08-02, disk-verified.)"""
+    if len(v) < 0x50:
+        return []
+    ihdr = le32(v, 0)
+    if ihdr + 0x18 > len(v):
+        return []
+    ecount = le32(v, ihdr + 0x14)
+    fvcn_bound = max_fvcn if max_fvcn is not None else ncl
+
+    def _ext(off):
+        if off < 0 or off + 24 > len(v):
+            return None
+        vlcn = le64(v, off); run = le32(v, off + 0x14); fvcn = le32(v, off + 0x0C)
+        if 0 < run <= ncl and fvcn < fvcn_bound and (vlcn == 0 or 0 < vlcn < ncl):
+            return (fvcn, vlcn, run)    # vlcn==0 -> sparse hole (zero-filled by reassembly)
+        return None
+
+    exts = []; pos = ihdr + 0x28
+    for i in range(ecount):
+        rec = _ext(pos)
+        if rec is None:
+            break
+        exts.append(rec)
+        if i == ecount - 1:
+            break
+        if _ext(pos + 24) is not None:
+            pos += 24
+        elif _ext(pos + 32) is not None:
+            pos += 32                       # skip the interleaved 8-byte integrity CRC32-C element
+        else:
+            pos += 24
+    exts.sort(key=lambda e: e[0])
+    return exts
+
+
+def parse_snapshot_data_entry(v, ncl=None):
     """Parse an embedded type-0x80 DATA entry -> (stream_size, disk_alloc, extents)
-    where extents = [(file_vcn, vlcn, run_length), ...] sorted by file_vcn."""
+    where extents = [(file_vcn, vlcn, run_length), ...] sorted by file_vcn.
+    When `ncl` (volume cluster count) is given, the extent list is decoded integrity-robustly via
+    `_decode_inline_extents` (skips interleaved CRC32-C checksums). When ncl is None the LEGACY fixed-24-stride
+    decode is used (100% back-compatible for any caller that lacks a volume cluster count — e.g. the no-`f`
+    predicate `_extent_backed_carveable`)."""
     if len(v) < 0x50:
         return (0, 0, [])
-    ihdr = le32(v, 0)
     stream_size = le64(v, 0x38)
     disk_alloc = le64(v, 0x48)
+    if ncl is not None:
+        return (stream_size, disk_alloc, _decode_inline_extents(v, ncl))
+    ihdr = le32(v, 0)
     exts = []
     if ihdr + 0x18 <= len(v):
         ecount = le32(v, ihdr + 0x14)
@@ -1410,11 +1494,12 @@ def recover_cow_current_content(f, ps_off, cs, tr, vd):
     if the current stream has its OWN allocation (disk_alloc>0 / own extents) this returns None (that is the
     F5 large-non-resident / possibly-sparse case, deferred to `dataruns`). Verified on win11refs2tsnapshots
     (test.txt current 5B == snapshot 0x1004; lasttest.txt 201B == 0x1002)."""
+    ncl = _volume_ncl(f, ps_off, cs)       # integrity-robust extent decode (skip interleaved CRC32-C)
     holders = {}   # sub_id -> (stream_size, disk_alloc, extents)
     for k, v in parse_resident_btree_rows(vd):
         if (len(k) >= 0x18 and k[12] == 0x80 and k[13] == 0x00
                 and len(v) >= 0x50 and le32(v, 4) == SNAP_DATA_DESC):
-            holders[le64(k, 0x10)] = parse_snapshot_data_entry(v)
+            holders[le64(k, 0x10)] = parse_snapshot_data_entry(v, ncl)
     cur = holders.get(0x1000)
     if cur is None:
         return None
@@ -1446,11 +1531,135 @@ def recover_cow_current_content(f, ps_off, cs, tr, vd):
     return bytes(buf[:cur_size])
 
 
+def _recover_inline_extent_content(f, ps, cs, tr, vd):
+    """Reassemble the LIVE content of a NON-RESIDENT file whose CURRENT $DATA stream (sub_id 0x1000) holds its
+    extent map INLINE in a 0x10028 holder — the F5 'extent-backed' case (disk_alloc>0) that
+    `recover_cow_current_content` deliberately defers. Returns the bytes (trimmed to stream_size), or None to
+    DEFER (never wrong output). SAFE by a coverage gate: reassemble only when the decoded extents account for
+    EVERY allocated cluster exactly once and start within the file — otherwise defer (large/overflow holders with
+    a different extent-table format, or any decode anomaly). Sparse-aware: holes (alloc < size) are zero-filled.
+    Integrity-stream CRC32-C checksums interleaved BETWEEN extents (8-byte element) are skipped by validated
+    decode (the next real extent sits at +24 or +32). SEPARATE from the snapshot path (`parse_snapshot_data_entry`)
+    which is left byte-identical. (structure_reference §C.6; Phase-0 SPEC 2026-08-02, disk-verified.)"""
+    v = None
+    for k, hv in parse_resident_btree_rows(vd):
+        if (len(k) >= 0x18 and k[12] == 0x80 and k[13] == 0x00
+                and len(hv) >= 0x50 and le32(hv, 4) == SNAP_DATA_DESC and le64(k, 0x10) == 0x1000):
+            v = hv; break
+    if v is None:
+        return None
+    ihdr = le32(v, 0)
+    if ihdr + 0x18 > len(v):
+        return None
+    ecount = le32(v, ihdr + 0x14)
+    stream_size = le64(v, 0x38)
+    alloc_cl = le64(v, 0x48) // cs
+    if stream_size == 0:
+        return b""
+    if alloc_cl <= 0 or ecount <= 0:
+        return None
+    if stream_size > 4 * 1024 * 1024 * 1024:        # 4 GiB safety cap (matches the extent-extract path)
+        return None
+    size_cl = (stream_size + cs - 1) // cs
+    ncl = _volume_ncl(f, ps, cs)            # volume cluster count (plausibility bound)
+
+    # validated-greedy decode (shared with the snapshot/carve paths); size_cl tightens the file_vcn bound.
+    exts = _decode_inline_extents(v, ncl, max_fvcn=size_cl)
+
+    # COVERAGE GATE (the safety guarantee): every allocated cluster accounted for, exactly once, within the file.
+    covered = set()
+    for fv, _vl, run in exts:
+        for j in range(run):
+            covered.add(fv + j)
+    if sum(run for _fv, _vl, run in exts) != alloc_cl or len(covered) != alloc_cl:
+        return None
+    if any(fv + run > size_cl for fv, _vl, run in exts):
+        return None
+
+    buf = bytearray(stream_size)            # holes stay zero (sparse)
+    for fv, vlcn, run in exts:
+        if vlcn == 0:
+            continue                        # sparse hole -> leave zero-filled (never read PLCN 0 / boot region)
+        for j in range(run):
+            off = (fv + j) * cs
+            if off >= stream_size:
+                continue
+            try:
+                plcn = tr.tr(vlcn + j) if tr else (vlcn + j)
+            except Exception:
+                return None
+            f.seek(ps + plcn * cs)
+            chunk = f.read(cs)
+            n = min(cs, stream_size - off)
+            if len(chunk) < n:
+                return None
+            buf[off:off + n] = chunk[:n]
+    return bytes(buf[:stream_size])
+
+
+def _verify_inline_integrity(f, ps, cs, tr, vd):
+    """Verify a NON-RESIDENT file's INLINE per-cluster CRC32-C integrity checksums (the 0x1000 / 0x10028 holder).
+    Each checksummed cluster is a run==1 extent with flag 0x1C00D0, immediately followed by an 8-byte element
+    whose le32@+0 == CRC32-C(that 4096-byte cluster). Reads each checksummed cluster and recomputes CRC32-C.
+
+    Returns None when the file carries NO inline element (SHA-256 / 64K-cluster / non-integrity / v3.4 / the
+    large-overflow or complex holder formats) — i.e. nothing inline to verify. Otherwise returns
+    {'checked': int, 'ok': int, 'unset': int, 'bad': [(file_vcn, vlcn, plcn, stored_crc, actual_crc), ...],
+     'bad_count': int}. Never raises: a read error on a cluster is skipped (not counted). Purely on-disk read-only
+    (the stored checksum is the ground truth; a mismatch is genuine corruption/tampering, surfaced non-fatally).
+    (structure_reference §C.6; Phase-2 spec 2026-08-06, poly 0x82F63B78, static+disk confirmed on 391/391 clusters.)"""
+    v = None
+    for k, hv in parse_resident_btree_rows(vd):
+        if (len(k) >= 0x18 and k[12] == 0x80 and k[13] == 0x00
+                and len(hv) >= 0x50 and le32(hv, 4) == SNAP_DATA_DESC and le64(k, 0x10) == 0x1000):
+            v = hv; break
+    if v is None:
+        return None
+    ihdr = le32(v, 0)
+    if ihdr + 0x18 > len(v):
+        return None
+    ecount = le32(v, ihdr + 0x14)
+    ncl = _volume_ncl(f, ps, cs)
+    res = {"checked": 0, "ok": 0, "unset": 0, "bad": [], "bad_count": 0}
+    inline = False
+    pos = ihdr + 0x28
+    for _i in range(ecount):
+        if pos + 24 > len(v):
+            break
+        vlcn = le64(v, pos); run = le32(v, pos + 0x14); fvcn = le32(v, pos + 0x0C); flag = le32(v, pos + 8)
+        if not (0 < run <= ncl and (vlcn == 0 or 0 < vlcn < ncl)):
+            break
+        checksummed = (flag == INTEGRITY_EXTENT_FLAG and run == 1)
+        if checksummed and vlcn > 0 and pos + 32 <= len(v):
+            inline = True
+            stored = le32(v, pos + 24)                 # element[+0] = CRC32-C(cluster); element[+4] reserved (ignore)
+            if stored == _INTEGRITY_UNSET:
+                res["unset"] += 1
+            else:
+                try:
+                    plcn = tr.tr(vlcn) if tr else vlcn
+                    f.seek(ps + plcn * cs); data = f.read(cs)
+                except Exception:
+                    data = b""
+                if len(data) == cs:
+                    res["checked"] += 1
+                    actual = _crc32c(data)
+                    if actual == stored:
+                        res["ok"] += 1
+                    else:
+                        res["bad_count"] += 1
+                        if len(res["bad"]) < 64:
+                            res["bad"].append((fvcn, vlcn, plcn, stored, actual))
+        pos += 32 if checksummed else 24               # checksummed extent has a 32-byte stride (24 + 8-byte element)
+    return res if inline else None
+
+
 def recover_snapshot_streams(f, ps_off, cs, tr, vd):
     """Recover snapshot + current stream content from a resident type-0x30 row.
     Returns a list of {name, sub_id, stream_size, ts, content|None, inline, n_extents}.
     content is None when inline (disk_alloc==0; bytes live in the main 0x30 body) or
     when the referenced DATA entry is absent. The current file version is sub_id 0x1000."""
+    ncl = _volume_ncl(f, ps_off, cs)       # integrity-robust extent decode (skip interleaved CRC32-C)
     snaps = []   # (name, sub_id, stream_size, ts)
     data = {}    # sub_id -> (stream_size, disk_alloc, extents)
     for k, v in parse_resident_btree_rows(vd):
@@ -1470,7 +1679,7 @@ def recover_snapshot_streams(f, ps_off, cs, tr, vd):
                     name = k[0x10:].hex()
             snaps.append((name, sub_id, le64(v, 0x20), le64(v, 0x4C)))
         elif typ == 0x80 and len(v) >= 0x50 and le32(v, 4) == SNAP_DATA_DESC:
-            data[le64(k, 0x10)] = parse_snapshot_data_entry(v)
+            data[le64(k, 0x10)] = parse_snapshot_data_entry(v, ncl)
 
     def _read_extents(stream_size, exts):
         buf = b""
@@ -5446,6 +5655,8 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
             "cow_content": (recover_cow_current_content(f, ps, cs, tr, vd)
                             if get_resident_data_content(vd) is None
                             and not _current_stream_extent_backed(vd) else None),
+            # raw type-0x30 value — lets `extract` reassemble an extent_backed file's inline 0x10028 extents.
+            "raw_value": bytes(vd),
         }
         results.append(entry)
     return results
@@ -5760,11 +5971,14 @@ def cmd_timestomp(image, remaining, partition_start):
         f.close()
 
 def cmd_extract(image, remaining, partition_start):
-    args = _parse_args(remaining, valued=["--oid", "--depth", "--path", "-o", "--output"])
+    args = _parse_args(remaining, flags=["--no-verify-integrity"],
+                       valued=["--oid", "--depth", "--path", "-o", "--output"])
     # accept a bare name, an absolute /dir/file path, or --path (symmetric with `details`)
     filename = args["path"] or (args["_rest"][0] if args["_rest"] else None)
     start_oid = _int_arg(args["oid"], "--oid", 0) if args["oid"] else 0x600
-    max_depth = _int_arg(args["depth"], "--depth") if args["depth"] else 3
+    # Default bare-name search depth = 100 (parity with the `search` command), not 3 — a bare name is found at
+    # any real tree depth. A full PATH does not use this at all (it resolves directly; see below). `--depth` overrides.
+    max_depth = _int_arg(args["depth"], "--depth") if args["depth"] else 100
     outp = args["o"] or args["output"]
 
     def _emit(data):
@@ -5817,17 +6031,35 @@ def cmd_extract(image, remaining, partition_start):
                                 child_path = f"{path}/{child_name}" if path else child_name
                                 process_dir(child_oid, child_path, depth - 1)
 
-        process_dir(start_oid, "", max_depth)
-
-        # strip a leading slash so an absolute /dir/file path matches the stored relative path; match on
-        # a component boundary ("/"+fn) so "file.txt" no longer also matches "myfile.txt".
-        fn = filename.lstrip("/")
         target = None
-        for info in all_results:
-            p = info.get("path", "")
-            if info["name"] == fn or p == fn or p.endswith("/" + fn):
-                target = info
-                break
+        # Fast path: a PATH (has a separator, or came via --path) is resolved DIRECTLY — component by component
+        # from the root — so there is NO depth limit and no full-tree walk (O(path length)). A full path therefore
+        # always finds its file at any depth. Gated on no explicit --oid (which scopes a bare-name search instead).
+        # Falls back to the name walk below if resolve_path can't resolve it (e.g. a bare name passed to --path
+        # that lives in a subdirectory) — so nothing that used to resolve stops resolving.
+        is_path = (not args["oid"]) and (args["path"] is not None or "/" in filename or "\\" in filename)
+        if is_path:
+            _poid, _pkd, _pvd = resolve_path(f, ps, cs, tr, obj_map, filename)
+            if _pkd is not None and _poid in obj_map:
+                _exact = _pkd[4:].decode("utf-16-le", errors="replace").rstrip("\x00")
+                for info in _analyze_dir_extents(f, ps, cs, tr, obj_map, _poid):
+                    if info["name"] == _exact:
+                        info["path"] = filename.lstrip("/")
+                        target = info
+                        break
+
+        # Bare name (or a path resolve_path could not resolve, or an --oid-scoped search): walk from start_oid to
+        # max_depth (default 100) and match by name or path-suffix. `--depth` bounds ONLY this search.
+        if target is None:
+            process_dir(start_oid, "", max_depth)
+            # strip a leading slash so an absolute /dir/file path matches the stored relative path; match on
+            # a component boundary ("/"+fn) so "file.txt" no longer also matches "myfile.txt".
+            fn = filename.lstrip("/")
+            for info in all_results:
+                p = info.get("path", "")
+                if info["name"] == fn or p == fn or p.endswith("/" + fn):
+                    target = info
+                    break
 
         if not target:
             die(f"file '{filename}' not found")
@@ -5887,12 +6119,44 @@ def cmd_extract(image, remaining, partition_start):
                 return 0
             # Fell through: the $DATA is not a plain inline stream.
             if target.get("extent_backed"):
-                # Non-resident file whose extent list is held inline in the directory value (0x10028 holder) —
-                # consistent with `files` reporting IsResident=False. Reassembly from the inline holder is not
-                # yet wired (esp. sparse files); point the examiner at the extent map.
+                # Non-resident file whose extent map is held INLINE in the directory value (0x10028 holder;
+                # `files` reports IsResident=False). Reassemble from those inline extents (validated decode +
+                # coverage gate; sparse-aware; integrity CRC32-C checksums skipped). Returns None to DEFER only
+                # when the extents don't fully+cleanly cover the allocation (large/overflow holders) — then we
+                # keep the honest "not supported" message rather than emit anything wrong.
+                _ic = _recover_inline_extent_content(f, ps, cs, tr, target.get("raw_value", b""))
+                if _ic is not None:
+                    fsz = target.get("file_size", 0)
+                    print(f"Extracting '{target['name']}' ({len(_ic)} bytes — non-resident, inline extent map):",
+                          file=sys.stderr)
+                    if target.get("file_attrs", 0) & 0x4000:
+                        print(f"[{PROG}] WARNING: '{target['name']}' is EFS-encrypted — the extracted bytes are "
+                              f"CIPHERTEXT (plaintext needs the user's key; see docs/attributes/EFS.md).", file=sys.stderr)
+                    if len(_ic) != fsz:
+                        print(f"[{PROG}] WARNING: reassembled {len(_ic)} bytes but $DATA size is {fsz} — verify.",
+                              file=sys.stderr)
+                    if not args["no_verify_integrity"]:
+                        _iv = _verify_inline_integrity(f, ps, cs, tr, target.get("raw_value", b""))
+                        if _iv is not None:                 # the file carries inline CRC32-C integrity checksums
+                            if _iv["bad_count"] == 0:
+                                _extra = f", {_iv['unset']} unset" if _iv["unset"] else ""
+                                print(f"[{PROG}] integrity: {_iv['ok']}/{_iv['checked']} clusters CRC32-C-verified"
+                                      f"{_extra}.", file=sys.stderr)
+                            else:
+                                print(f"[{PROG}] WARNING: INTEGRITY MISMATCH — {_iv['bad_count']} of "
+                                      f"{_iv['checked']} checksummed clusters FAILED CRC32-C (possible corruption/"
+                                      f"tampering; bytes still extracted):", file=sys.stderr)
+                                for _fv, _vl, _pl, _st, _ac in _iv["bad"][:8]:
+                                    print(f"[{PROG}]   file_vcn={_fv} vlcn={_vl} plcn={_pl} "
+                                          f"stored=0x{_st:08x} actual=0x{_ac:08x}", file=sys.stderr)
+                                if _iv["bad_count"] > 8:
+                                    print(f"[{PROG}]   ... and {_iv['bad_count'] - 8} more", file=sys.stderr)
+                    _emit(_ic)
+                    return 0
                 print(f"File '{target['name']}' is NON-RESIDENT — its $DATA is stored in on-disk extents held "
-                      f"inline in the directory value ({target.get('file_size',0)} bytes). Reassembly from the "
-                      f"inline extent-list is not yet supported; use `dataruns` for the extent map.", file=sys.stderr)
+                      f"inline in the directory value ({target.get('file_size',0)} bytes). The inline extent map "
+                      f"could not be fully decoded here (large/overflow holder); use `dataruns` for the map.",
+                      file=sys.stderr)
                 return 1
             # A CoW'd / snapshotted resident file keeps its live bytes in a 0x10028 holder.
             print(f"File '{target['name']}' is resident but its $DATA is not a plain inline stream "
@@ -7517,12 +7781,14 @@ def _carve_extent_backed(f, ps_off, cs, tr, vd, t40_backing=None):
             holder = v
             break
     if holder is not None:
-        stream_size, disk_alloc, exts = parse_snapshot_data_entry(holder)
+        stream_size, disk_alloc, exts = parse_snapshot_data_entry(holder, _volume_ncl(f, ps_off, cs))
         if disk_alloc > 0 and exts and stream_size > 0:
             alloc = max(fv + run for fv, _vl, run in exts) * cs
             if alloc <= 256 * 1024 * 1024:          # safety cap for a best-effort carve
                 buf = bytearray(alloc)
                 for fvcn, vlcn, run in sorted(exts, key=lambda x: x[0]):
+                    if vlcn == 0:
+                        continue                    # sparse hole -> leave zero-filled (never read boot region)
                     for j in range(run):
                         try:
                             plcn = tr.tr(vlcn + j)
@@ -8931,7 +9197,7 @@ FORENSIC_SUBCOMMANDS = {
     "mlog":      "MLog (durable log) parser — redo records and transactions (-v/--parse/--stats/--json/--raw-scan/--info)",
     "timeline":  "Super-timeline — merge USN + MLog + $SI MACB, sorted by time (--csv/--no-si/--file/--oid/--limit/--source/--depth)",
     "timestomp": "Timestamp-anomaly detection — $SI MACB vs USN, flags back-dating (--all/--json/--csv/--min/--margin-days/--depth)",
-    "extract":   "Extract a file's content to stdout by path (--oid = directory to search within, not the file; --depth)",
+    "extract":   "Extract a file's content to stdout — by full path (direct, any depth) or bare name (first match; --oid/--depth scope the name search)",
     "security":  "Security descriptors / ACLs per object (-v/--files/--json/--audit/--sid/--file)",
     "specials":  "Special-attribute files — ads/reparse/wsl/hardlink/sparse/encrypted/compressed/integrity/ea/snapshot (specials [type|all])",
     "reparse":   "Reparse points — symlinks/junctions/WSL + the reparse index (-v/--index/--json/--tag/--file)",
@@ -9185,16 +9451,23 @@ CMD_HELP = {
  "extract": {
   "tag": "Extract a file's content (or one ADS) to stdout",
   "desc": ["Recovers a file's bytes and writes them to stdout (redirect to a file): non-resident files from",
-           "their extents, RESIDENT files from their inline $DATA, and CoW resident files unmodified since a",
-           "snapshot from the shared latest-snapshot blocks. Address by bare name, absolute /path, or --path;",
-           "use name:stream for an inline ADS. (Large sparse/extent-backed files: use `dataruns` for the map.)"],
-  "opts": [("filename | /path", "(positional) the file to extract"),
-           ("--path P", "address the file by path (symmetric with details)"),
-           ("--oid O", "re-root the search at object O (0x hex or decimal)"),
-           ("--depth N", "max recursion depth for locating the file (default 3)")],
-  "ex": [("extract /specials/gamma.bak > out.bak", "carve a file by absolute path"),
+           "their extents (inline or separate), RESIDENT files from their inline $DATA, and CoW resident files",
+           "unmodified since a snapshot from the shared latest-snapshot blocks. Address by bare name, absolute",
+           "/path, or --path; use name:stream for an inline ADS. (Large overflow extent maps: use `dataruns`.)",
+           "A full PATH is resolved directly (component by component from the root) — no depth limit, so a file",
+           "at any depth is found instantly. A BARE NAME is searched across the tree (to --depth) and the FIRST",
+           "match is extracted — pass the full path to pick a specific file when the name is not unique.",
+           "On integrity-stream files (v3.14, 4K clusters, CRC32-C) each cluster's stored CRC32-C is verified",
+           "against the recovered bytes and reported; a mismatch (corruption/tampering) is flagged but the",
+           "bytes are still written (disable with --no-verify-integrity)."],
+  "opts": [("filename | /path", "(positional) the file to extract (full path = direct, no depth limit)"),
+           ("--path P", "address the file by path (symmetric with details; resolved directly, no depth limit)"),
+           ("--oid O", "re-root a BARE-NAME search at object O (0x hex or decimal)"),
+           ("--depth N", "max depth for a BARE-NAME search (default 100; a full path ignores this)"),
+           ("--no-verify-integrity", "skip the per-cluster CRC32-C integrity check on integrity-stream files")],
+  "ex": [("extract /specials/gamma.bak > out.bak", "carve a file by absolute path (any depth)"),
          ("extract report.dat:hidden_6247 > s.bin", "extract one inline ADS"),
-         ("extract deep.log --oid 0x73c --depth 5", "scope the search to a subtree")],
+         ("extract deep.log --oid 0x73c", "scope a bare-name search to a subtree")],
  },
  "security": {
   "tag": "Security descriptors / ACLs per object",

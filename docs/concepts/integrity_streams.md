@@ -45,13 +45,16 @@ for example, reads `0x8020` (integrity 0x8000 ORed with archive 0x20).
 
 Two distinct stores hold the actual checksum data, and neither is the per-file roster:
 
-- **Per-block data checksums.** With integrity enabled, the driver computes **CRC32 per data block** — note
-  CRC32, *not* the CRC64 used for metadata page references. The selected checksum type is also reflected in
-  the file's `$DATA` stream summary: the **stream-flags `u32` at `val+0x38`** uses its low byte to select the
-  algorithm (0x02 = CRC, 0x04 = SHA-256), with **bit 0x10000 = integrity**. This selector tracks the
-  *volume's* checksum configuration (0x02 on None/CRC64 volumes, 0x04 on SHA-256 volumes), so it follows the
-  format choice rather than identifying individual files — see [`$DATA`](../attributes/DATA.md) for the
-  stream-summary layout.
+- **Per-cluster data checksums.** With integrity enabled, the driver checksums each data cluster with the
+  volume's data-checksum algorithm — **CRC32-C** (Castagnoli, poly `0x82f63b78`, 4 bytes) on 4 KiB-cluster
+  volumes, CRC64 (8 bytes) on 64 KiB-cluster volumes, SHA-256 (32 bytes) on SHA-256 volumes. On a 4 KiB
+  CRC32-C volume the checksum is stored **inline in the file's own extent map**: each checksummed cluster is a
+  `run==1` extent (flag `0x1c00d0`) immediately followed by an 8-byte element — `[CRC32-C : 4][reserved : 4]`
+  (`forefst extract` recomputes and verifies each one). The selected type is also reflected in the file's
+  `$DATA` stream summary: the **stream-flags `u32` at `val+0x38`** low byte selects the algorithm (0x02 = CRC,
+  0x04 = SHA-256), with **bit 0x10000 = integrity**. This selector tracks the *volume's* checksum configuration
+  (0x02 on None/CRC64 volumes, 0x04 on SHA-256 volumes), so it follows the format choice rather than identifying
+  individual files — see [`$DATA`](../attributes/DATA.md) for the stream-summary layout.
 - **Integrity State Table (root #11, schema 0xe080).** A **volume-level** B+-tree (`CmsIntegrityState`) that
   tracks integrity-stream coverage by LCN range, reusing the same row format as the
   [allocator tables](../structures/allocators.md). It is present on **every** volume regardless of whether
@@ -59,11 +62,11 @@ Two distinct stores hold the actual checksum data, and neither is the per-file r
   volume. See [Integrity State Table](../structures/integrity_state.md) for the byte layout. It is *not* a
   per-file lookup — per-file status lives only in the 0x8000 attribute bit.
 
-The block checksums themselves are reached through the ordinary
-[page-reference](../structures/page_references.md) / Merkle machinery, but note the orthogonality: the
-page-reference checksum-type byte (cktype 0x01/0x02/0x04) governs **metadata** verification and is entirely
-separate from whether a file's *data* is an integrity stream. See
-[Checksum Architecture](checksum_architecture.md) for the metadata side of the same coin.
+The per-cluster data checksums above live **inline in the file's extent map**, separate from the metadata
+Merkle tree — note the orthogonality: the [page-reference](../structures/page_references.md) checksum-type
+byte (cktype 0x01/0x02/0x04) governs **metadata** verification and is entirely separate from whether a file's
+*data* is an integrity stream. See [Checksum Architecture](checksum_architecture.md) for the metadata side of
+the same coin.
 
 ## Two places that hold no per-file integrity signal
 
@@ -83,7 +86,7 @@ Both of the structures below look like plausible per-file integrity rosters and 
 
 The integrity marker hands the analyst two distinct capabilities. First, it is the authoritative
 per-file answer to "was this checksum-protected?" — a single bit, read per file. Second, because an
-integrity stream carries a per-block CRC32 over its content, a stored-vs-recomputed mismatch on an
+integrity stream carries a per-cluster CRC32-C over its content, a stored-vs-recomputed mismatch on an
 integrity-marked file is strong evidence the data was altered out-of-band: an offline edit, bit-rot, or a
 write that bypassed the driver. On a *non*-integrity file there is no per-block data checksum at all, so
 content tampering leaves no equivalent on-disk trace — the presence of the 0x8000 marker is what makes
@@ -99,17 +102,20 @@ By contrast, the `$SI+0x24` internal-flags word — the field one might wrongly 
 no signal at all on older volumes regardless of correctness. The `$SI+0x20` bit 0x8000 marker works on every
 version.
 
-Finally, the per-file data-block integrity checksum is **CRC32** and is independent of the volume *metadata*
-checksum type (None / CRC64 / SHA-256). The metadata type is fixed at format and reported through VBR offset
-0x2A and the checkpoint flags (see [Checksum Architecture](checksum_architecture.md)); the per-file data CRC32
-is a separate mechanism layered on top.
+Finally, whether a file is an integrity stream is a **per-file** choice (the 0x8000 bit), but the **algorithm**
+its data checksums use is **volume-wide** and tracks the volume's checksum type and cluster size — CRC32-C
+(4 bytes) on 4 KiB-cluster volumes, CRC64 (8 bytes) on 64 KiB, SHA-256 (32 bytes) on SHA-256 volumes — the same
+configuration set at format and reported through VBR offset 0x2A and the checkpoint flags (see
+[Checksum Architecture](checksum_architecture.md)). The data checksums are a **separate store** (inline in the
+file's extent map) from the metadata page-reference checksums, not a separate algorithm independent of the
+volume's choice.
 
 ## Reading the marker with the tools
 
 The integrity marker is read directly from the `$SI` attribute word surfaced by the file-enumeration path of
 `forefst.py` / `refsanalysis.py` — test `file_attrs & 0x8000`. Do not confuse this with
 `forefst.py integrity --checksums`, which exercises the page-reference *metadata* checksum machinery
-(CRC64, not the per-file data CRC32) and verifies root-table metadata — a separate mechanism from per-file
+(CRC64, not the per-file data CRC32-C) and verifies root-table metadata — a separate mechanism from per-file
 integrity streams.
 
 ## Cross-references
@@ -117,7 +123,7 @@ integrity streams.
 - [Integrity State Table](../structures/integrity_state.md) — root #11 byte layout, the volume-level tracker (not a per-file roster)
 - [$STANDARD_INFORMATION](../attributes/STANDARD_INFORMATION.md) — the `$SI+0x20` attribute word holding the 0x8000 marker, and the corrected `$SI+0x24` internal flags that do *not*
 - [$DATA](../attributes/DATA.md) — the stream summary whose `val+0x38` flags carry the checksum-type / integrity selector
-- [Checksum Architecture](checksum_architecture.md) — the metadata CRC64 / SHA-256 page references, distinct from per-file data CRC32
+- [Checksum Architecture](checksum_architecture.md) — the metadata CRC64 / SHA-256 page references, distinct from per-file data CRC32-C
 - [Page References](../structures/page_references.md) — the Merkle-tree checksum carriers and the cktype byte
 - [Allocators](../structures/allocators.md) — the row format the Integrity State Table reuses
 - [Redundancy](redundancy.md) — the mirror / parity self-healing that integrity checksums enable
@@ -132,8 +138,14 @@ and reflects it to `$SI+0x20`, and `RefsComputeStandardInformationInternalFromFc
 the per-range checksum bitmap. On the raw-disk corpus (RD), the 0x8000 attribute bit was set on every
 integrity file across the two v3.14 integrity images (the only integrity images in the corpus), while the
 `$SI+0x24` bit 0 was set on none of them, and
-the Integrity State Table's single whole-volume row was invariant across checksum configurations. Findings:
+the Integrity State Table's single whole-volume row was invariant across checksum configurations.
+
+The per-cluster **data** checksum algorithm is CRC32-C (Castagnoli, poly `0x82f63b78`), confirmed in the
+driver (E2): the `crc32c_4096` kernels reached via `ComputeOneChecksum` (which takes the 4096-byte path only
+for a one-cluster span), and recomputed on the raw-disk corpus (RD) — 886 inline checksummed clusters across
+three v3.14 integrity volumes with 0 mismatches, a cross-algorithm control ruling out plain CRC-32 and CRC64. Findings:
 **MD_INTG_RA_001** (the integrity-bit marker), **CT_INTS_001** (Integrity State Table invariance), **MD_DATA_RA_010** (the
-`$DATA` stream-flags selector), **GN_PREF_002** (metadata vs data checksum distinction), **CT_INTS_002** (inheritance not
+`$DATA` stream-flags selector), **MD_DATA_RA_013** (inline per-cluster CRC32-C element),
+**GN_PREF_002** (metadata vs data checksum distinction), **CT_INTS_002** (inheritance not
 cleared on disable). See [how this was verified](../methodology.md) to trace these to the exact images and
 measurements in `analysis/`.

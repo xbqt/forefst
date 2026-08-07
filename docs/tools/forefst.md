@@ -220,19 +220,31 @@ forefst.py disk.raw timestomp --csv suspects.csv --min MEDIUM
 
 ### `extract` — extract a file's content (or one ADS)
 
-Recovers a file's bytes and writes them to stdout (redirect to a file): **non-resident** files from their extents, **resident** files from their inline `$DATA`, and **CoW resident files unmodified since a snapshot** from the blocks they share with the latest snapshot. Address by bare name, absolute `/path`, or `--path`; use `name:stream` to pull an ADS (a small ADS from its inline bytes, or a large ≥2 KB ADS reassembled from its on-disk extents). (A large sparse / inline-extent-list file is reported non-resident — use `dataruns` for its extent map; a modified-CoW file's prior versions are in `snapshots --extract`.)
+Recovers a file's bytes and writes them to stdout (redirect to a file): **non-resident** files from their extents — whether the extent map is held **inline** in the directory record (the common 3.14 case, listed as `IsResident=False`) or in a separate record — **resident** files from their inline `$DATA`, and **CoW resident files unmodified since a snapshot** from the blocks they share with the latest snapshot. Address by bare name, absolute `/path`, or `--path`; use `name:stream` to pull an ADS (a small ADS from its inline bytes, or a large ≥2 KB ADS reassembled from its on-disk extents). Only a rare oversized/overflow extent table falls back to `dataruns`; a modified-CoW file's prior versions are in `snapshots --extract`.
+
+**Sparse holes** in a file's extent map are reconstructed as zeros (never read from disk). **Integrity streams**
+(3.14, 4 KiB clusters, CRC32-C) are verified as they are recovered: each cluster's stored CRC32-C is recomputed
+and `extract` reports `integrity: N/N clusters CRC32-C-verified`. A mismatch — on-disk corruption or tampering —
+is flagged prominently with the offending cluster and stored-vs-actual CRC, and the bytes are still written; pass
+`--no-verify-integrity` to skip the check. (SHA-256 and 64 KiB-cluster volumes keep checksums out of line, so
+there is nothing to verify inline.)
+
+Addressing by a full `/path` resolves it directly from the root (no depth limit); a **bare name** is searched
+across the tree (to `--depth`) and the first match is extracted — pass the full path to pick a specific file when
+the name is not unique.
 
 | Option | Description |
 |--------|-------------|
-| `filename` / `/path` | (positional) the file to extract |
-| `--path P` | address the file by path (symmetric with `details`) |
-| `--oid O` | re-root the search at object O |
-| `--depth N` | max recursion depth for locating the file (default 3) |
+| `filename` / `/path` | (positional) the file to extract (full path = direct, no depth limit) |
+| `--path P` | address the file by path (symmetric with `details`; resolved directly) |
+| `--oid O` | re-root a **bare-name** search at object O |
+| `--depth N` | max depth for a **bare-name** search (default 100; a full path ignores this) |
+| `--no-verify-integrity` | skip the per-cluster CRC32-C check on integrity-stream files |
 
 ```
-forefst.py disk.raw extract /specials/gamma.bak > out.bak   # carve by absolute path
+forefst.py disk.raw extract /specials/gamma.bak > out.bak   # carve by absolute path (any depth, direct)
 forefst.py disk.raw extract report.dat:hidden_6247 > s.bin  # extract one inline ADS
-forefst.py disk.raw extract deep.log --oid 0x73c --depth 5  # scope to a subtree
+forefst.py disk.raw extract deep.log --oid 0x73c            # scope a bare-name search to a subtree
 ```
 
 ### `security` — security descriptors / ACLs
