@@ -48,8 +48,8 @@ Key terms used throughout the ReFS documentation.
 **OID** (Object Identifier)
 : A 64-bit, monotonically increasing, never-reused identifier for every **directory and system object** on the volume (files have none — a file is named by a 128-bit FileId of home-directory OID + per-directory child ordinal). Allocated from a counter; lower OID = earlier creation.
 
-**FileId** (128-bit, USN V3)
-: The 16-byte file identifier carried in USN V3 records. Upper 64 bits = the **home directory's OID** (volume-unique); lower 64 bits = the **child ordinal** (`NextFileId`, a per-directory counter that is reused across directories). It identifies a child *relative to its home directory* — the lower half alone is not a volume-wide identity. See [Object IDs and FileIds](concepts/object_ids_fileids.md).
+**FileId / FileRef** (128-bit file reference)
+: The identity of a file, which has no OID of its own. `FileRef = (HomeOid, FileId)`: the upper 64 bits are the **HomeOid** — the OID of the directory the file was *created in* (volume-unique) — and the lower 64 bits are the **FileId** ordinal (`NextFileId`, a per-directory counter that recurs across directories, so it is not a volume-wide identity on its own). It is the 16-byte reference carried in USN V3 records, and it is **frozen for the life of the object**: a rename or a move to another directory changes the file's name and parent, never its FileRef. `forefst.py` surfaces it as the `FileRef` / `HomeOid` / `FileId` columns. See [File IDs](concepts/file_ids.md).
 
 **FCB** (File Control Block)
 : Per-file driver state in kernel memory. Not an on-disk structure.

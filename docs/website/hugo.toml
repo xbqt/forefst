@@ -12,14 +12,16 @@ enableEmoji = true
   description = "Forensic structural reference for the Resilient File System (ReFS), versions 3.4 through 3.14."
   author = "Baptiste Bonnet"
   keywords = "forefst, ReFS, Resilient File System, ReFS forensics, ReFS forensics analysis tool, ReFS 3.14, file system forensics, DFIR, digital forensics, NTFS vs ReFS, ReFS on-disk format"
-  tagline = "Forensic structural reference for ReFS 3.4–3.14"
+  tagline = "ReFS forensics — the Resilient File System on-disk format, decoded (3.4–3.14)"
   github = "https://github.com/xbqt/forefst"        # the public source repo
   github_tree = "https://github.com/xbqt/forefst/tree/main"   # link a directory
   github_blob = "https://github.com/xbqt/forefst/blob/main"   # link a file
   defaultTheme = "light"                            # light | dark
   # Footer coverage stamp — bump when the regression harness is re-run against a newer build.
-  coverage_note = "Validated against ReFS 3.4–3.14 · latest tested build 26100.8521 (24H2)"
-  tool_version = "1.0.0"                            # footer version stamp — bump at each release
+  coverage_note = "Validated against ReFS 3.4–3.14"
+  latest_build = "26100.8521 (24H2)"          # shown once, on the About page (not in the per-page footer)
+  tool_version = "1.3.0"                            # footer version stamp — bump at each release
+  build_date = "14.08.2026"                            # last docs generation (DD.MM.YYYY) — stamped by build.py
 
 [markup]
   [markup.goldmark.renderer]

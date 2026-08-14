@@ -11,6 +11,7 @@ output → byte-level reasoning → cross-references, so an analyst can follow a
 | [find_a_deleted_file.md](find_a_deleted_file.md) | Run the deletion-recovery methods (Trash Table, orphan scan, OID density, CoW prior-content) on one image |
 | [detect_timestomping.md](detect_timestomping.md) | Cross `$SI` change-time vs USN journal vs volume-creation bound to flag a tampered timestamp |
 | [read_a_hard_link_group.md](read_a_hard_link_group.md) | Resolve every name of one physical object via the home-backref + child-ordinal + content fingerprint |
+| [track_a_file_across_moves.md](track_a_file_across_moves.md) | Follow one file through a rename and a cross-directory move — the FileRef `(HomeOid, FileId)` stays fixed while name and parent change |
 | [identify_native_vs_upgraded.md](identify_native_vs_upgraded.md) | Classify volume state from CHKP flags (0x002 / 0x602 / 0x682) and the immutable VBR format-time fields |
 
 ## Raw tool dumps

@@ -9,4 +9,4 @@ OID          Parent       Type          Size  Res  Modified             Path
 (resident)   0x73c        File          12 B  Yes  2026-05-16 17:27:58  testsnapshots/testads.txt
 (resident)   0x73c        File           5 B  Yes  2026-05-16 17:19:37  testsnapshots/testxyz.txt
 
-6 matches. Use --oid <OID> for full detail.
+6 matches. Use `details <path>` (or `details --id HomeOid:FileId`) for full detail.

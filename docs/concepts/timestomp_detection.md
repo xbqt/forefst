@@ -1,5 +1,7 @@
 # Timestomping Detection
 
+> **Experimental / informational.** Timestomp detection here is a corroborative aid, not a verdict. Its strongest intrinsic signal (`CHANGE_LATE`) is defeated by a native-API or raw-disk stomp that also sets the change time; `ROUND_TIMESTAMPS` is a weak, LOW-only signal that ordinary driver packages and archive extraction produce too; and every flag needs confirmation against the USN journal or a file's hard-link siblings before you conclude tampering. Treat the output as leads to verify, not proof.
+
 Timestomping — back-dating a file's timestamps to hide when it was really created or written — is a
 standard anti-forensic move, and the technique an analyst reaches for first does not exist on ReFS.
 NTFS exposes it by comparing the two timestamp sets every file carries, the
@@ -87,6 +89,7 @@ and a different way to be wrong.
 | **PRE_FORMAT** | Created precedes the **volume** creation time — impossible for a file genuinely created here | intrinsic + volume | strong\* |
 | **FUTURE** | Created after the volume's last metadata write | intrinsic + volume | medium\* |
 | **CREATE_GT_MODIFY** | Created after last write | intrinsic | weak\* |
+| **ROUND_TIMESTAMPS** | both Created **and** Modified land on a whole second (`.0000000` sub-second) — a set date is one cause, but VirtIO/QEMU driver packages and archive extraction also produce whole-second stamps | intrinsic ($SI only) | **LOW only** — never rises above LOW, never upgrades another tier |
 
 \* `PRE_FORMAT`, `FUTURE`, `CREATE_GT_MODIFY` — and `CHANGE_LATE` — also fire on a
 **creation-time-preserving copy** (robocopy `/COPY:T`, a backup restore) or a legitimate late rename or
@@ -109,10 +112,15 @@ The tool collapses the signal set into one of three verdicts:
   (`CHANGE_LATE` + `PRE_FORMAT`); **or** the journal alone confirms it.
 - **MEDIUM** — one solid intrinsic signal (`CHANGE_LATE` or `PRE_FORMAT`) with no journal to confirm it,
   so a creation-preserving copy cannot be ruled out.
-- **LOW** — a weak or common signal alone (`FUTURE`, `CREATE_GT_MODIFY`).
+- **LOW** — a weak or common signal alone (`FUTURE`, `CREATE_GT_MODIFY`, `ROUND_TIMESTAMPS`).
 
 The journal's presence is the dividing line between HIGH and MEDIUM: without it, even a strong intrinsic
 inconsistency stays one explanation short of confirmation.
+
+`ROUND_TIMESTAMPS` is capped at LOW by design. Whole-second Created **and** Modified stamps are *suggestive* of
+a deliberately set date, but they are **not proof**: VirtIO/QEMU driver packages and archive extraction also
+write whole-second times, so the signal never rises above LOW and never upgrades another tier's verdict.
+Corroborate it with the USN journal or a hard-link MACB comparison before relying on it.
 
 ## What does not work as a substitute
 
@@ -126,7 +134,10 @@ Two tempting shortcuts do not hold up and should not be treated as primary signa
   own-rows (the ordinal moved into the object-record payload at v3.11), so it cannot be a general anchor.
 - **A zero sub-second fraction** (whole-second times, the low 100 ns part = 0) is sometimes left by
   timestomp tools that write second-granularity values, but it is entirely tool-dependent — a tool that
-  copies full-resolution FILETIMEs leaves no such fingerprint, so it is unreliable on its own.
+  copies full-resolution FILETIMEs leaves no such fingerprint, and VirtIO/QEMU driver packages and archive
+  extraction produce whole-second stamps on ordinary files. The tool surfaces it as the `ROUND_TIMESTAMPS`
+  signal but caps it at **LOW** for exactly this reason: it is a lead to corroborate (with the USN journal or
+  a hard-link MACB comparison), never a primary signal on its own.
 
 ## How the tool is wired
 
@@ -150,9 +161,16 @@ forefst.py <image> timestomp --margin-days N # anomaly margin (default 1 day)
 The `--margin-days` value is the slack the intrinsic comparisons allow before calling a gap suspicious,
 which keeps ordinary clock skew and sub-day operation latency from generating noise.
 
+The two USN-based signals correlate a file to its journal records by **File ID** — the FileRef
+`(HomeOid, ordinal)`, not the path. Because the File ID is unchanged by a rename or a cross-directory move,
+a file that was renamed or relocated after creation is still matched to its true `FILE_CREATE` record, so
+`USN_CREATE_MISMATCH` and `USN_BASIC_INFO_CHANGE` are not defeated by an intervening move — a stomp cannot
+be hidden simply by moving the file afterward. See [File IDs](file_ids.md).
+
 ## Cross-references
 
 - [$STANDARD_INFORMATION](../attributes/STANDARD_INFORMATION.md) — the per-name timestamp set ReFS carries (B/M/C/A at 0x00/0x08/0x10/0x18) that every intrinsic signal reads
+- [File IDs](file_ids.md) — the FileRef that ties a file to its journal records across renames and moves, so a stomp can't be hidden by relocating the file
 - [Hard Links](hard_links.md) — why each name of a file carries its own `$SI` copy, so their MACB can diverge under a name-scoped stomp (the `HARDLINK_MACB_MISMATCH` basis)
 - [USN Journal](../structures/usn_journal.md) — the append-only record whose `BASIC_INFO_CHANGE` (reason 0x8000) and `FILE_CREATE` entries are the authoritative anchors
 - [Artifact Timeline](artifact_timeline.md) — how the MACB times feed a unified event timeline

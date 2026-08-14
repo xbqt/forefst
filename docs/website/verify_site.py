@@ -109,6 +109,9 @@ def check_page(gen_path, src_path, pub, gen=None, src=None):
                      (r'\berrata\s+E-?\d{2,}\b', 'errata'),
                      (r'\bErratum\s+E-?\d+\b', 'erratum'),
                      (r'\bE-\d{2,}\b', 'errata E-NN'),
+                     # a BARE errata id, E10–E999 no leading zero (catches the "(FN_LINK_003 / E59)" ->
+                     # "(/ E59)" half-strip). Excludes E01–E09 (EnCase image format) and single-digit grades.
+                     (r'\bE[1-9]\d\d?\b', 'errata E-NN (bare)'),
                      (r'\$CBW4|\bCBW4\b', '$CBW4 back-reference'),
                      (r'\bGrades are E1\b', 'grade legend'),
                      (r'\bevidence levels?\b', 'evidence-level jargon'),

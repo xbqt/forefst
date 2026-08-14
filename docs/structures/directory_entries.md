@@ -129,7 +129,7 @@ Directories also use this layout (key_flags 0x02) and are identified by the dire
 | Offset | Size | Field | Description |
 |--------|------|-------|-------------|
 | 0x00 | 8 | Child ordinal (u64) | Per-directory child ordinal (= the NextFileId ordinal of `$SI+0x58`). Shared by all hard-link names of one file; it is reused per directory and collides across sibling dirs under a shared home, so it is **not a globally-unique FileId**. Also indexes the type-0x40 extent descriptor. See [Hard links](#hard-links). |
-| 0x08 | 8 | Home-dir backref (u64) | OID of the directory the file was first created in. Identical for every entry in/under a home dir. |
+| 0x08 | 8 | Home-dir backref (u64) | OID of the directory the file was **first created in** — not necessarily its current parent. Frozen for the life of the object: it is unchanged by a rename or a move to another directory, and is shared by every hard-link name of the file. Together with value+0x00 it is the file's `(HomeOid, FileId)` identity (see [File IDs](../concepts/file_ids.md)). |
 | 0x10 | 8 | Creation time | FILETIME |
 | 0x18 | 8 | Modification time | FILETIME |
 | 0x20 | 8 | Metadata change time | FILETIME |
@@ -138,6 +138,18 @@ Directories also use this layout (key_flags 0x02) and are identified by the dire
 | 0x38 | 8 | File size (u64) | Logical content length |
 | 0x40 | 4 | File attributes (u32) | Win32 flags + ReFS extensions (dir bit 0x10000000) |
 | 0x44 | 4 / 12 | Padding | Zero; 4 bytes on v3.4--v3.9 (total 72), 12 bytes on v3.10+ (total 84) |
+
+### Relocated files — the entry moves, the identity does not
+
+When a file is moved to another directory, ReFS relocates this type-0x30 entry into the **new** parent's
+B+-tree, but the object's data/metadata (its type-0x40 backing) **stays in the creation directory's** tree.
+The entry's `value+0x00` ordinal and `value+0x08` home-backref are copied unchanged, so a moved file is
+recognisable on disk as one whose `value+0x08` differs from the directory it now sits in. For example, on a
+real Win11 volume the file `Generate-FSActivity.ps1` was created in directory OID 0x9586 and later moved
+under OID 0x9e25 (`\tools`); on disk its entry sits in 0x9e25 but still carries `value+0x08 = 0x9586` and
+its ordinal `value+0x00 = 3`, and its type-0x40 backing is found in 0x9586, not 0x9e25. The same
+`value+0x08 != containing directory` shape also arises for a hard-link name placed in a second directory
+(told apart from a move by the derived link count — see below).
 
 ## Critical layout differences
 

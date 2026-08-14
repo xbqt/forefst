@@ -3,6 +3,8 @@ title: "ReFS Reference"
 description: "The most complete public forensic reference for Microsoft's Resilient File System (ReFS) 3.4–3.14 — the on-disk format decoded byte by byte, with two open-source tools (forefst) to parse a raw volume."
 ---
 
+<p align="center"><img src="https://xbpt.gitlab.io/images/forefst.png" alt="forefst" width="340"></p>
+
 A structural and forensic reference for Microsoft's **Resilient File System (ReFS)**, versions
 **3.4 through 3.14** — what ReFS actually writes to disk, decoded byte by byte, with two open-source
 [tools](https://github.com/xbqt/forefst) that read a raw volume with no dependencies. Public ReFS forensic
@@ -27,9 +29,10 @@ A handful of ideas explain most of what ReFS writes to disk:
   crash-consistent and self-healing. See [Copy-on-Write](copy_on_write.md).
 - **Objects and the Object Table.** Directories and system tables are objects with a **64-bit Object ID
   that is monotonic and never reused** (the closest thing ReFS has to an inode); **files have none** — a
-  file lives as rows inside its directory's tree, named by a FileId (its home directory's OID + a
-  per-directory child ordinal). The **Object Table** maps each ID to its on-disk location — ReFS's
-  `$MFT`-equivalent. See [Object Table](object_table.md).
+  file lives as rows inside its directory's tree, identified instead by a **File ID**: its home
+  directory's OID plus a per-directory birth ordinal, **frozen at creation** so it stays the same even when
+  the file is renamed or moved to another directory. The **Object Table** maps each Object ID to its on-disk
+  location — ReFS's `$MFT`-equivalent. See [Object Table](object_table.md) and [File IDs](file_ids.md).
 - **Two-level virtual addressing.** A file's data is described by *extents* (VCN → **VLCN**), and a
   separate **Container Table** translates those virtual clusters to physical ones (VLCN → **PLCN**).
   Almost every address on the volume is virtual and resolved through it. See
@@ -53,11 +56,12 @@ adding TPM attestation. See [Version Evolution](version_evolution.md).
 
 What matters when you sit down in front of a ReFS volume — each point links to the detail:
 
-- **Reconstruct the timeline — and catch tampering.** Every file carries a `$SI` **MACB** set, reinforced
-  by two independent logs: the **USN V3** change journal and the redo-only **MLog** transaction log, which
-  `forefst` decodes into concrete create / write / rename / move / delete actions and merges into one
-  super-timeline. And because a hard-linked file keeps **one `$SI` per name** — ReFS has no `$FILE_NAME`
-  twin — a back-dated name stands out against its siblings: a timestomp signal NTFS can't offer. See
+- **Reconstruct the timeline — and surface tampering.** Every file carries a `$SI` **MACB** set,
+  corroborated by two independent logs: the **USN V3** change journal and the redo-only **MLog** transaction
+  log, which `forefst` decodes into concrete create / write / rename / move / delete actions and merges into
+  one super-timeline. And because a hard-linked file keeps **one `$SI` per name** — ReFS has no `$FILE_NAME`
+  twin — a back-dated name stands out against its siblings and against the change journal. These
+  reconstructions are corroborative signals, not an authoritative log. See
   [Artifact Timeline](artifact_timeline.md) and [Timestomp Detection](timestomp_detection.md).
 - **Recover what survives — and prove what's gone.** Copy-on-write leaves superseded rows at stale
   clusters, and the `deleted` command recovers what the volume hasn't reused through **two simple modes**
@@ -97,7 +101,7 @@ same image.
 Think of it as MFTECmd for ReFS: point it at an image and get analyst-ready output. It can:
 
 - **List every file and directory** with full metadata — MACB timestamps, sizes, attributes, owner/group
-  **SID**, hard-link names, reparse targets, alternate data streams — as a **38-column CSV**, a **Sleuthkit
+  **SID**, hard-link names, reparse targets, alternate data streams — as a **39-column CSV**, a **Sleuthkit
   body file** (for mactime / super-timelines), or **JSON**.
 - **Recover deleted files** by five independent methods (Trash table, checkpoint differencing, orphan-page
   scan, stream-snapshot reconstruction, B+-tree node-slack carving), plus **prior versions** of existing
@@ -111,9 +115,8 @@ Think of it as MFTECmd for ReFS: point it at an image and get analyst-ready outp
   snapshots**, and **`$RECYCLE.BIN`** items; and **verify integrity-stream checksums**.
 
 Every capability is a subcommand — `forefst.py <image> --list` shows them all. And every field it prints
-traces to a graded-evidence claim register; `--provenance` marks the ones that rest on inference rather
-than on facts confirmed in both the decompiled driver and the disk — so the output is auditable, not a
-black box.
+traces to a graded-evidence claim register, distinguishing what rests on inference from what is confirmed
+in both the decompiled driver and the disk — so the output is auditable, not a black box.
 
 ### [refsanalysis.py](refsanalysis.md) — the structure analyser
 
@@ -133,7 +136,7 @@ curl -L -O https://github.com/xbqt/forefst/raw/main/analysis/samples/disks/win11
 zstd -d win11refs2tsnapshots.raw.zst
 
 python3 forefst.py win11refs2tsnapshots.raw summary        # volume overview: version, size, counts, upgrade state
-python3 forefst.py win11refs2tsnapshots.raw -o files.csv   # full 38-column listing, opens straight in Timeline Explorer
+python3 forefst.py win11refs2tsnapshots.raw -o files.csv   # full 39-column listing, opens straight in Timeline Explorer
 python3 forefst.py win11refs2tsnapshots.raw mlog --parse   # decode the transaction log into user actions
 ```
 

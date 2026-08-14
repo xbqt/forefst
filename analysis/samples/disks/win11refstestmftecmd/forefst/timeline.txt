@@ -3,7 +3,8 @@
 ==============================================================================
 ReFS Super-Timeline — win11refstestmftecmd.raw
 ==============================================================================
-  Sources merged: USN=6805  MLog=1322  $SI-MACB=6976  (joined by OID, sorted by time)
+  Sources merged: USN=6805  MLog=1322  $SI-MACB=6976  (time-sorted; correlated by name/path —
+                  a file has no OID: $SI shows OID —, USN the home-dir OID, MLog the target OID)
   Caveat: USN and $SI carry exact FILETIMEs. MLog has NO wall-clock time — an MLog row's time is
           the affected object's embedded $SI birth (approximate; for a RENAME/MOVE it is the object
           birth, not the op time). MLog times that predate the volume are undated + marked.

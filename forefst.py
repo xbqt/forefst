@@ -211,6 +211,11 @@ def validate_image(path, die_fn=None):
 # ─── Constants ────────────────────────────────────────────────────────
 PROG = "forefst"
 VERSION = "1.3.0"
+# Phase 3 (4.D): directory walks default to FULL depth (no artificial cap); `--depth N` overrides. The real
+# recursion depth equals the actual directory nesting (ReFS trees are shallow — tens of levels), so this
+# constant is never the binding limit; it just means "don't truncate". main() also raises the interpreter
+# recursion limit as a safety margin for unusually deep trees.
+DEFAULT_DEPTH = 1000000
 # Non-resident directory entries have a short value (OID + timestamps + attrs + size).
 # Resident entries (small files) embed full $SI + data inline and are longer.
 NON_RESIDENT_MAX_VALUE = 84
@@ -2861,6 +2866,10 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
     results = []
     visited = set()
     t40_content = {}     # (owner_dir_oid, file_id) -> has_real_content (alloc>0 or size>0); alloc=0 stubs map to False
+    t40_links = {}       # F-1 hardening: (owner_dir_oid, file_id) -> set of (parent_oid, name.lower()) from the
+                         # backing's embedded type-0x39 hard-link back-pointers = the object's AUTHORITATIVE name
+                         # list; used only as a fallback when a name's cached size (value+0x38) is stale and
+                         # defeats the size-match grouping below.
     nonres_files = []    # non-resident file entries, grouped into hard-link sets in post-processing
 
     # Reparse existence-index (OID 0x540): {(owner_oid, file_id): tag}. Key = marker(0x80000001)@0,
@@ -2936,6 +2945,31 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
                     # processing so HasEA / FileAttributes / --filter ea are correct for non-resident files.
                     _bfa = le32(vd, 0x48) if len(vd) >= 0x4C else 0
                     t40_content[(oid, le64(kd, 0x08))] = (_a, _s, _u, _j, _sid, _if, _tag, _tgt, _bfa)
+                    # F-1 hardening: decode the backing's embedded type-0x39 hard-link back-pointers — one
+                    # per name, each `(parent-dir OID @sub-value+0x08, name UTF-16LE @sub-value+0x18)`. This
+                    # is the object's own authoritative list of its names (what the driver counts links from);
+                    # it lets the grouping below reattach a hard-link name whose cached size is stale. Only
+                    # parse when the value is large enough to hold sub-records (skips the common single-stream
+                    # backing). Layout verified on winsider (0x9d84,2): parents 0x9da4/0x9d84.
+                    if len(vd) > 0x88:
+                        _lset = None
+                        try:
+                            _subrows = parse_resident_btree_rows(vd)
+                        except Exception:
+                            _subrows = ()
+                        for _sk, _sv in _subrows:
+                            if len(_sk) > 12 and _sk[12] == 0x39 and len(_sv) >= 0x1A:
+                                try:
+                                    _lp = le64(_sv, 0x08)
+                                    _ln = _sv[0x18:].decode("utf-16-le", "ignore").rstrip("\x00")
+                                except Exception:
+                                    continue
+                                if _ln:
+                                    if _lset is None:
+                                        _lset = set()
+                                    _lset.add((_lp, _ln.lower()))
+                        if _lset:
+                            t40_links[(oid, le64(kd, 0x08))] = _lset
                 continue
             if attr_type != 0x30: continue
 
@@ -3140,8 +3174,20 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
             sig = ("obj", home, fid, 0); rec = rem
         elif S == 0 and loc is not None and loc[1] == 0:
             sig = ("obj", P, fid, 0); rec = loc
-        else:                                              # no size-matching stream -> not a confident member
-            sig = ("solo", e["path"], i); rec = None
+        else:                                              # no size-matching stream: try the 0x39 fallback
+            # F-1 hardening: a STALE `value+0x38` (e.g. 0 on a non-primary hard-link name — the SplashScreen
+            # case) defeats the size-match above. Fall back to the object's authoritative name list: if the
+            # home- (or local-) owned (owner, file_id) backing's embedded type-0x39 back-pointers name THIS
+            # (parent_oid, name), it is a genuine name of that one object, so group it with that backing's
+            # (owner, file_id). The 0x39 set is on-disk ground truth (the driver's own link list), so this can
+            # only reattach a backing-confirmed name — it CANNOT over-merge distinct files.
+            _lk = (P, (e.get("name", "") or "").lower())
+            if rem is not None and _lk in t40_links.get((home, fid), ()):
+                sig = ("obj", home, fid); rec = rem
+            elif loc is not None and _lk in t40_links.get((P, fid), ()):
+                sig = ("obj", P, fid); rec = loc
+            else:                                          # not a confident member -> solo, count 1
+                sig = ("solo", e["path"], i); rec = None
         # Per-file USN (#327): the file's LastUsn is in its OWN resolved backing record (val+0x68 =
         # $SI+0x40), NOT the home directory's $SI. RD-proven 245/245 vs fsutil + 593/0 five-image;
         # static RefsComputeStandardInformationFromFcb maps $SI+0x40 <- FCB+0xe0 (per-file cursor).
@@ -3157,6 +3203,14 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
                 if rec[5]: e["internal_flags"] = rec[5]
             # H3: AllocatedSize = the resolved stream's alloc (val+0x60), read verbatim.
             e["allocated_size"] = rec[0]
+            # F-1 hardening: report the OBJECT's size for a resolved member. This is a strict NO-OP for a
+            # size-matched name (its value+0x38 already equals the backing size == rec[1]); it fires ONLY for
+            # a hard-link name reattached via the 0x39 fallback whose cached value+0x38 was STALE (e.g. the
+            # size-0 SplashScreen case), correcting it to the object's real size so the row is internally
+            # consistent (FileSize == AllocatedSize) and the per-name summary total counts it like every other
+            # hard-link name rather than under-counting the stale one.
+            if len(rec) >= 2 and rec[1] != e.get("file_size", 0):
+                e["file_size"] = rec[1]
             # Fix: the EA bit (0x40000) is in the backing's file_attrs (+0x48), NOT the type-0x30
             # pointer (+0x40) this entry was parsed from. OR it in so HasEA / FileAttributes / --filter
             # ea are correct for non-resident files. (Only the EA bit — the rare Archive-bit diff is left.)
@@ -3196,7 +3250,7 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
     return results
 
 
-def fs_content_summary(f, ps, cs, tr, obj_map, plus=True, depth=100):
+def fs_content_summary(f, ps, cs, tr, obj_map, plus=True, depth=DEFAULT_DEPTH):
     """Single source of truth for the file-system-content counts shown by `summary` in BOTH forefst and
     refsanalysis (refsanalysis calls this, it does NOT re-implement the walk). Walks the tree ONCE from
     root (enriched) and returns (counts, results). `counts` holds RAW values (each caller formats):
@@ -3256,23 +3310,36 @@ def annotate_timestomp(results, f, ps, cs, tr, obj_map, margin=TS_MARGIN_100NS):
     return results
 
 # ─── Output formatters ───────────────────────────────────────────────
-# H3 (2026-06-29): GroupSid, AllocatedSize, ReparseTag added immediately BEFORE RefsVersion
-# (kept last) so column indices 0..27 are unchanged — every existing positional CSV consumer
-# (RefsVersion via [-1], SnapshotCount@26) keeps working with no edit.
-# N4 (2026-07-03): RecoveredChild added the same way (before RefsVersion, still [-1]) — it carries the
-# recovered type-0x30 child name of a deleted-directory orphan (find_orphan_objects/chkp-diff/cow), which
-# was captured but previously dropped from every output; empty for all non-orphan rows.
+# Column order is defined once in CSV_COLUMNS and emitted via a per-row dict (_csv_fields), so header and row
+# can never drift and positional indices are NOT load-bearing — reference columns by NAME. RecoveredChild
+# carries the recovered type-0x30 child name of a deleted-directory orphan (find_orphan_objects/chkp-diff/cow);
+# empty for all non-orphan rows.
+# Identity columns lead: OID (0 for files — ReFS files have no own OID), FileRef (the stable 128-bit file
+# reference = HomeOid:FileId, == the USN FileReferenceNumber), then HomeOid (owner dir = the FileId "home",
+# constant across a file's hard-link names) and FileId (per-home ordinal), then the name and its namespace
+# parent (ParentOID/ParentPath — differ from HomeOid for hard-links & recycle-bin/deleted entries), then
+# FullPath (now a standard column). The remaining columns keep their prior order.
 CSV_COLUMNS = [
-    "OID", "ParentOID", "ParentPath", "FileName", "Extension",
+    "OID", "FileRef", "HomeOid", "FileId", "FileName",
+    "ParentOID", "ParentPath", "FullPath", "Extension",
     "FileSize", "IsDirectory", "IsDeleted", "DeletionSource", "IsResident",
     "Created", "Modified", "Changed", "Accessed",
     "FileAttributes", "SecurityId", "OwnerSid", "USN",
     "HasAds", "AdsNames", "IsEncrypted", "IsCompressed",
     "HasIntegrity", "HasEA", "ReparseTarget",
-    "HardLinkCount", "SnapshotCount", "TimestompFlags",
+    "HardLinkCount", "HardLinkNames", "SnapshotCount", "TimestompFlags",
     "GroupSid", "AllocatedSize", "ReparseTag", "RecoveredChild",
-    "HardLinkNames", "FileId", "HomeOid", "IsSparse", "InternalFlags", "RefsVersion",
+    "IsSparse", "InternalFlags",
+    # RefsVersion (a per-row constant) removed 2026-08-09 — the ReFS version is a volume property, shown by
+    # `summary`/`details`/`usn --info` and the stderr open-log, not repeated on every file row.
 ]
+
+def _file_ref(r):
+    """Stable 128-bit file reference HomeOid:FileId (== the USN FileReferenceNumber). Empty when the row
+    has no file identity (e.g. a directory, which is addressed by its own OID instead)."""
+    if r.get("file_id") and r.get("home_oid"):
+        return f"0x{r['home_oid']:x}:0x{r['file_id']:x}"
+    return ""
 
 def _sid_display(sid):
     """Render a SID as 'Name (SID)', or the bare SID if no friendly name, or '' if empty.
@@ -3287,63 +3354,68 @@ def _full_path(r):
     pp = r.get("parent_path", "")
     return f"{pp}/{r['name']}" if pp and pp != "." else r["name"]
 
-def emit_csv(results, sd_map, version_str, out, full_path=False):
-    writer = csv.writer(out)
-    # F11: --full-path-column appends FullPath at the END so the default 0..RefsVersion indices stay stable.
-    writer.writerow(CSV_COLUMNS + (["FullPath"] if full_path else []))
-    for r in results:
-        oid = r["oid"]
-        sec_id = r.get("security_id", 0)
-        owner_sid, group_sid = sd_map.get(sec_id, ("", "")) if sec_id else ("", "")
-        rtag = r.get("reparse_tag_value", 0)
+def _csv_fields(r, sd_map, version_str):
+    """Build the CSV cell values keyed by column name, so the row can be emitted in CSV_COLUMNS order
+    without header/row drift (F11+2.C)."""
+    oid = r["oid"]
+    sec_id = r.get("security_id", 0)
+    owner_sid, group_sid = sd_map.get(sec_id, ("", "")) if sec_id else ("", "")
+    rtag = r.get("reparse_tag_value", 0)
+    _file = not r.get("is_resident") and not r.get("is_dir")   # hard-link/name gate (non-resident files)
+    return {
+        # Identity (lead columns) — OID is 0/empty for files; FileRef=HomeOid:FileId is the stable 128-bit ref.
+        "OID": f"0x{oid:x}" if oid else "",
+        "FileRef": _file_ref(r),
+        "HomeOid": f"0x{r['home_oid']:x}" if r.get("home_oid") else "",
+        "FileId": f"0x{r['file_id']:x}" if r.get("file_id") else "",
+        "FileName": r["name"],
+        "ParentOID": f"0x{r['parent_oid']:x}" if r.get("parent_oid") else "",
+        "ParentPath": r.get("parent_path", ""),
+        "FullPath": _full_path(r),
+        "Extension": ext_from_name(r["name"]),
+        "FileSize": r.get("file_size", 0),
+        "IsDirectory": r["is_dir"],
+        "IsDeleted": r.get("is_deleted", False),
+        "DeletionSource": r.get("deletion_source", ""),
+        "IsResident": r.get("is_resident", False),
+        "Created": filetime_to_iso(r.get("create_time", 0)),
+        "Modified": filetime_to_iso(r.get("modify_time", 0)),
+        "Changed": filetime_to_iso(r.get("change_time", 0)),
+        "Accessed": filetime_to_iso(r.get("access_time", 0)),
+        "FileAttributes": attrs_to_str(r.get("file_attrs", 0)),
+        "SecurityId": sec_id if sec_id else "",
+        "OwnerSid": _sid_display(owner_sid),
+        "USN": r.get("usn", 0) if r.get("usn", 0) else "",
+        "HasAds": r.get("has_ads", False),
+        "AdsNames": r.get("ads_names", ""),
+        "IsEncrypted": r.get("is_encrypted", False),
+        "IsCompressed": r.get("is_compressed", False),
+        "HasIntegrity": r.get("has_integrity", False),
+        "HasEA": r.get("has_ea", False),
+        "ReparseTarget": r.get("reparse_target", ""),
+        "HardLinkCount": r.get("hard_link_count", 1) if _file else "",
+        "SnapshotCount": r.get("snapshot_count", 0) if r.get("snapshot_count", 0) > 0 else "",
+        "TimestompFlags": r.get("timestomp_flags", ""),
+        "GroupSid": _sid_display(group_sid),
+        "AllocatedSize": "" if r.get("allocated_size") is None else r.get("allocated_size"),
+        "ReparseTag": reparse_tag_str(rtag) if rtag else "",
+        "RecoveredChild": r.get("recovered_child", ""),
+        # Q5: hard-link names (;-joined), same gate as HardLinkCount (non-resident files only).
+        "HardLinkNames": ";".join(r.get("hard_link_names") or []) if _file else "",
+        # F5: sparse from $SI FileAttributes bit FILE_ATTRIBUTE_SPARSE_FILE (0x200) — the definitive signal.
+        "IsSparse": bool(r.get("file_attrs", 0) & 0x200),
+        # Q3: $SI InternalFlags (only confidently-named bits, e.g. 0x01 DeleteDisposition) — blank otherwise.
+        "InternalFlags": internal_flags_str(r.get("internal_flags", 0)),
+    }
 
-        row = [
-            f"0x{oid:x}" if oid else "",
-            f"0x{r['parent_oid']:x}" if r.get("parent_oid") else "",
-            r.get("parent_path", ""),
-            r["name"],
-            ext_from_name(r["name"]),
-            r.get("file_size", 0),
-            r["is_dir"],
-            r.get("is_deleted", False),
-            r.get("deletion_source", ""),
-            r.get("is_resident", False),
-            filetime_to_iso(r.get("create_time", 0)),
-            filetime_to_iso(r.get("modify_time", 0)),
-            filetime_to_iso(r.get("change_time", 0)),
-            filetime_to_iso(r.get("access_time", 0)),
-            attrs_to_str(r.get("file_attrs", 0)),
-            sec_id if sec_id else "",
-            _sid_display(owner_sid),
-            r.get("usn", 0) if r.get("usn", 0) else "",
-            r.get("has_ads", False),
-            r.get("ads_names", ""),
-            r.get("is_encrypted", False),
-            r.get("is_compressed", False),
-            r.get("has_integrity", False),
-            r.get("has_ea", False),
-            r.get("reparse_target", ""),
-            r.get("hard_link_count", 1) if not r.get("is_resident") and not r.get("is_dir") else "",
-            r.get("snapshot_count", 0) if r.get("snapshot_count", 0) > 0 else "",
-            r.get("timestomp_flags", ""),
-            _sid_display(group_sid),
-            "" if r.get("allocated_size") is None else r.get("allocated_size"),
-            reparse_tag_str(rtag) if rtag else "",
-            r.get("recovered_child", ""),
-            # Q5: hard-link names (;-joined), same gate as HardLinkCount (non-resident files only).
-            ";".join(r.get("hard_link_names") or []) if not r.get("is_resident") and not r.get("is_dir") else "",
-            # Q2: file_id (low 64 of the USN 128-bit FileID) + home_oid (high 64) — makes files<->usn joinable.
-            f"0x{r['file_id']:x}" if r.get("file_id") else "",
-            f"0x{r['home_oid']:x}" if r.get("home_oid") else "",
-            # F5: sparse from $SI FileAttributes bit FILE_ATTRIBUTE_SPARSE_FILE (0x200) — the definitive signal.
-            bool(r.get("file_attrs", 0) & 0x200),
-            # Q3: $SI InternalFlags (only confidently-named bits, e.g. 0x01 DeleteDisposition) — blank otherwise.
-            internal_flags_str(r.get("internal_flags", 0)),
-            version_str,
-        ]
-        if full_path:
-            row.append(_full_path(r))
-        writer.writerow(row)
+def emit_csv(results, sd_map, version_str, out, full_path=False):
+    # `full_path` is accepted for back-compat (the old --full-path-column flag) but is now a no-op: FullPath
+    # is a standard column. Building a dict keyed by column name guarantees header/row stay aligned.
+    writer = csv.writer(out)
+    writer.writerow(CSV_COLUMNS)
+    for r in results:
+        d = _csv_fields(r, sd_map, version_str)
+        writer.writerow([d[c] for c in CSV_COLUMNS])
 
 def emit_body(results, out):
     for r in results:
@@ -3378,11 +3450,17 @@ def _build_record(r, sd_map, version_str):
     sec_id = r.get("security_id", 0)
     owner_sid, group_sid = sd_map.get(sec_id, ("", "")) if sec_id else ("", "")
     rtag = r.get("reparse_tag_value", 0)
+    _fr = _file_ref(r)
     return {
+        # Identity (lead) — mirrors the CSV column order; oid is null for files, file_ref=HomeOid:FileId.
         "oid": f"0x{oid:x}" if oid else None,
+        "file_ref": _fr or None,
+        "home_oid": f"0x{r['home_oid']:x}" if r.get("home_oid") else None,
+        "file_id": f"0x{r['file_id']:x}" if r.get("file_id") else None,
+        "file_name": r["name"],
         "parent_oid": f"0x{r['parent_oid']:x}" if r.get("parent_oid") else None,
         "parent_path": r.get("parent_path", ""),
-        "file_name": r["name"],
+        "full_path": _full_path(r),
         "extension": ext_from_name(r["name"]),
         "file_size": r.get("file_size", 0),
         "is_directory": r["is_dir"],
@@ -3412,14 +3490,11 @@ def _build_record(r, sd_map, version_str):
         "allocated_size": r.get("allocated_size"),
         "reparse_tag": reparse_tag_str(rtag) if rtag else None,
         "recovered_child": r.get("recovered_child", "") or None,
-        # Q2: join keys — file_id (low 64) + home_oid (high 64) reconstruct the USN 128-bit FileID.
-        "file_id": f"0x{r['file_id']:x}" if r.get("file_id") else None,
-        "home_oid": f"0x{r['home_oid']:x}" if r.get("home_oid") else None,
         # F5: FILE_ATTRIBUTE_SPARSE_FILE (0x200) from $SI FileAttributes.
         "is_sparse": bool(r.get("file_attrs", 0) & 0x200),
         # Q3: $SI InternalFlags (confidently-named bits only, e.g. DeleteDisposition).
         "internal_flags": internal_flags_str(r.get("internal_flags", 0)) or None,
-        "refs_version": version_str,
+        # refs_version removed 2026-08-09 (per-row constant) — volume version is in summary/details/usn --info.
     }
 
 def emit_json(results, sd_map, version_str, out):
@@ -3548,6 +3623,9 @@ def cmd_fastsummary(f, ps, cs, tr, roots, obj_map, vmaj, vmin, chkp_lcns,
         "containers_mapped": root_counts.get(7, 0),
         "objects": len(obj_map),
         "vbr_sha256": vbr_sha, "supb_sha256": supb_sha, "chkp_sha256": chkp_sha,
+        # Bootstrap redundancy inventory (VBR primary+backup, checkpoint pair, SUPB copies) with addresses +
+        # validity — the same scan `integrity` uses, surfaced so `summary` shows where the backups are.
+        "bootstrap_backups": _scan_backup_copies(f, ps, cs, chkp_lcns),
         "root_table_rows": {_ROOT_LABELS[i]: root_counts.get(i, 0)
                             for i in range(min(13, len(roots)))},
     }
@@ -3640,7 +3718,7 @@ def cmd_fastsummary(f, ps, cs, tr, roots, obj_map, vmaj, vmin, chkp_lcns,
               f"incomplete (corrupt/truncated container table).", file=sys.stderr)
     return summary
 
-def _print_fastsummary(summary, plus_mode=False):
+def _print_fastsummary(summary, plus_mode=False, is_summary=False):
     hs = _human_size
     w = 78
     print("=" * w)
@@ -3658,13 +3736,42 @@ def _print_fastsummary(summary, plus_mode=False):
     print(f"  Checksum:           {summary['checksum']}")
     print()
     print("-" * w)
-    print("Hashes")
+    print("Bootstrap structures  (address + validity; SHA-256 on the next line)")
     print("-" * w)
-    print(f"  VBR SHA-256:        {summary['vbr_sha256']}")
-    print(f"  SUPB SHA-256:       {summary['supb_sha256']}")
-    print(f"  CHKP SHA-256:       {summary['chkp_sha256']}")
+    # Every redundant copy (VBR primary+backup, both checkpoints, primary+backup SUPB) with its address,
+    # validity/identical check, AND its own SHA-256 — so all six-plus hashes are shown (1summary-2a) and no
+    # line exceeds the report width (1summary-1: the 64-hex hash sits on its own indented line).
+    bk = summary.get("bootstrap_backups") or {}
+    _cs = summary.get("cluster_size", 0) or 0
+    def _bs(label, addr, status, sha):
+        print(f"  {label:<16} {addr}" + (f"  — {status}" if status else ""))
+        if sha:
+            print(f"      {sha}")
+    v = bk.get("vbr") or {}
+    _bs("VBR primary", "LBA 0 (offset 0x0)",
+        "checksum OK" if v.get("primary_cksum_ok") else ("sig OK" if v.get("primary_ok") else "BAD"),
+        summary.get("vbr_sha256"))
+    vb = v.get("backup")
+    if vb and vb.get("present"):
+        _bs("VBR backup", f"LBA {vb['lba']} (off {vb['lba']*512:#x})",
+            ("= primary" if vb.get("matches_primary") else "DIFFERS")
+            + (", cksum ok" if vb.get("cksum_ok") else ""), vb.get("sha256"))
+    elif vb is not None:
+        _bs("VBR backup", f"LBA {vb.get('lba','?')}", "MISSING/unreadable", None)
+    _supb = bk.get("supb", [])
+    for s in _supb:
+        _sha = summary.get("supb_sha256") if s.get("role") == "PRIMARY" else s.get("sha256")
+        _bs(f"SUPB {s.get('role','?').lower()}", f"LCN {s.get('lcn',0):#x} (offset {s.get('lcn',0)*_cs:#x})",
+            "SUPB sig OK" if s.get("ok") else "sig?", _sha)
+    if len(_supb) < 2:
+        print("  (warning: fewer than 2 SUPB copies located)")
+    for rec in bk.get("checkpoints", []):
+        _sha = summary.get("chkp_sha256") if rec.get("role") == "PRIMARY" else rec.get("sha256")
+        _st = ("valid" if (rec.get("sig_ok") and rec.get("roots_ok")) else "INVALID") \
+              + (f", vclock={rec['vc']}" if rec.get("vc") is not None else "")
+        _bs(f"CHKP {rec.get('role','?').lower()}", f"LCN {rec['lcn']:#x} (offset {rec['lcn']*_cs:#x})", _st, _sha)
     if "image_sha256" in summary:
-        print(f"  Image SHA-256:      {summary['image_sha256']}")
+        _bs("Image", "(full disk)", "", summary["image_sha256"])
     print()
     print("-" * w)
     print("Checkpoint")
@@ -3698,7 +3805,7 @@ def _print_fastsummary(summary, plus_mode=False):
         if vstate == "UPGRADED":
             print(f"  Volume state:       ⚠ APPEARS UPGRADED (formatted {summary.get('upgraded_from','?')}, now running v{summary['refs_version']})")
             for r in summary.get("upgrade_evidence", []):
-                print(f"                        • {r}")
+                print(f"      • {r}")   # 6-space indent keeps the evidence bullets within the 78-col width
         elif vstate:
             print(f"  Volume state:       {vstate}")
         print(f"  Security descs:     {summary.get('security_descriptors', 0)}")
@@ -3707,7 +3814,7 @@ def _print_fastsummary(summary, plus_mode=False):
         if "containers_used" in summary:
             print(f"  Containers used:    {summary['containers_used']} / {summary['containers_mapped']}"
                   f" ({summary['utilization_pct']}%)")
-            print(f"  Free space (est):   {summary['free_space_est']}")
+            print(f"  Free space (est):   {summary['free_space_est']}  (container-map estimate — coarse)")
         fm = summary.get("fs_metadata", {})
         print(f"  FS Metadata rows:   {fm.get('rows', 0)}")
         print(f"  USN Journal:        {'Active' if fm.get('usn_journal') else 'Inactive'}")
@@ -3715,11 +3822,11 @@ def _print_fastsummary(summary, plus_mode=False):
             print(f"  USN Journal ID:     0x{summary['usn_journal_id']:016x}")
 
     print()
-    if plus_mode:
+    if plus_mode and not is_summary:
         print(f"For complete file statistics, use the `summary` subcommand (full directory walk)")
 
 def _print_summary(summary, fast_data, plus_mode=False):
-    _print_fastsummary(fast_data, plus_mode=plus_mode)
+    _print_fastsummary(fast_data, plus_mode=plus_mode, is_summary=True)
     w = 78
     print()
     print("-" * w)
@@ -3739,7 +3846,7 @@ def _print_summary(summary, fast_data, plus_mode=False):
         print(f"  ADS entries:        {summary.get('ads_entries', 0)}")
     print()
     if plus_mode:
-        print(f"Tip: the `fastsummary` subcommand gives quick volume metadata without a directory walk")
+        print(f"Tip: `fastsummary` = quick volume metadata (no directory walk).")
 
 # ─── OID detail + search ─────────────────────────────────────────────
 _ATTR_NAMES = {
@@ -3987,8 +4094,22 @@ def _print_file_detail(r, sd_map, version_str, raw_value=None):
     _eas, _packed = extract_eas_from_value(raw_value) if raw_value is not None else (None, None)
     _has_ea = _eas is not None
     print(f"  OID:                {('0x%x' % oid) if oid else '(resident/non-resident file — no own OID)'}")
+    _fref = _file_ref(r)
+    if _fref:
+        print(f"  FileRef:            {_fref}   (HomeOid:FileId, the stable file reference)")
     print(f"  Parent OID:         {('0x%x' % r['parent_oid']) if r.get('parent_oid') else ''}")
     print(f"  Parent path:        {r.get('parent_path', '')}")
+    # Relocation signal (F-1): a file whose HOME (creation dir, value+0x08) differs from its current parent
+    # was either moved out of its creation directory (single name) or hard-linked into another directory
+    # (>1 name) — told apart by the hard-link count. HomeOid is frozen at creation; the parent is the
+    # current namespace.
+    _home = r.get("home_oid") or 0
+    _par = r.get("parent_oid") or 0
+    if not r.get("is_dir") and _home and _par and _home != _par:
+        if (r.get("hard_link_count", 1) or 1) > 1:
+            print(f"  Home directory:     0x{_home:x}   hard-link name — created here, not in 0x{_par:x}")
+        else:
+            print(f"  Home directory:     0x{_home:x}   ⚠ moved: created here, now under parent 0x{_par:x}")
     print(f"  Name:               {r.get('name', '')}")
     print(f"  Extension:          {ext_from_name(r.get('name', ''))}")
     print(f"  Is directory:       {r.get('is_dir', False)}")
@@ -4066,8 +4187,10 @@ def _print_file_detail(r, sd_map, version_str, raw_value=None):
                         print(f"    {ea['name']:<22} {len(v):>4}B  {hexs}")
     print(f"  ReFS version:       {version_str}")
 
-def cmd_search(f, ps, cs, tr, obj_map, vmaj, vmin, pattern, regex_mode=False, max_results=0):
-    """Search for files/directories by name pattern (live tree only; deleted objects → the `deleted` command)."""
+def cmd_search(f, ps, cs, tr, obj_map, vmaj, vmin, pattern, regex_mode=False, max_results=0, filter_cat=None):
+    """Search for files/directories by name pattern (live tree only; deleted objects → the `deleted` command).
+    `filter_cat` (§5) restricts matches to one attribute category (same as `files --filter`); it enriches the
+    walk (slower) so the category predicates have the fields they need."""
     import re
     if regex_mode:
         try:
@@ -4079,10 +4202,15 @@ def cmd_search(f, ps, cs, tr, obj_map, vmaj, vmin, pattern, regex_mode=False, ma
         pat_lower = pattern.lower()
         match_fn = lambda name: pat_lower in name.lower()
 
-    results = walk_directory_tree(f, ps, cs, tr, obj_map, 0x600, 100, False, set())
+    # Enrich only when a category filter is requested (the category predicates need has_ads/reparse/… ) —
+    # a plain name search stays fast (enrich=False). Full depth by default (4.D).
+    _pred = FILE_FILTERS[filter_cat] if filter_cat else None
+    results = walk_directory_tree(f, ps, cs, tr, obj_map, 0x600, DEFAULT_DEPTH, bool(filter_cat), set())
     matches = []
     for r in results:
         if not match_fn(r["name"]):
+            continue
+        if _pred is not None and not _pred(r):
             continue
         matches.append({
             "oid": f"0x{r['oid']:x}" if r["oid"] else ("(resident)" if r.get("is_resident") else "(non-res)"),
@@ -4116,7 +4244,10 @@ def _print_search(matches, pattern):
         del_mark = " [DEL]" if m.get("is_deleted") else ""
         mod = (m.get("modified") or "")[:19]
         print(f"{m['oid']:<12} {m['parent_oid']:<12} {m['type']:<5} {size_str:>12} {res:>4}  {mod:<19}  {m['path']}{del_mark}")
-    print(f"\n{len(matches)} matches. Use --oid <OID> for full detail.")
+    n = len(matches)
+    # A FILE has no own OID (OID 0), so `--oid` addresses only directories — point at `details <path>` (works
+    # for files too) / `details --id HomeOid:FileId` for the unambiguous reference.
+    print(f"\n{n} match{'es' if n != 1 else ''}. Use `details <path>` (or `details --id HomeOid:FileId`) for full detail.")
 
 # ─── Bootstrap ────────────────────────────────────────────────────────
 def bootstrap(image_path, partition_start=None):
@@ -4243,6 +4374,90 @@ def _check_unknown_flags(remaining, known_flags, valued_flags=()):
         if a.startswith("-") and a != "-" and a not in known_flags:
             die(f"unknown option: {a}")     # a bare "-" is the stdout/stdin sentinel, not an unknown flag
         i += 1
+
+# ── Phase-2 standardized data output (--csv/--json/--jsonl [FILE]) ────────────────────────────────
+# One convention for every data-listing command: a bare `--csv`/`--json`/`--jsonl` writes to stdout; the
+# same flag followed by a path writes that file and prints a one-line record count. Mutually exclusive.
+_OUT_FMT_FLAGS = ("--csv", "--json", "--jsonl", "--body")
+
+def _extract_output_fmt(remaining, allow=("--csv", "--json", "--jsonl")):
+    """Pull an output-format selector out of `remaining` (so the caller's own parser never sees it or its
+    optional FILE value). Returns (fmt, dest, cleaned_remaining): fmt in csv/json/jsonl/body or None; dest is
+    the FILE path, or '-' for stdout. A second, different format flag is an error."""
+    fmt = None; dest = "-"; out = []; i = 0
+    while i < len(remaining):
+        a = remaining[i]
+        if a in allow:
+            newfmt = a.lstrip("-")
+            if fmt and fmt != newfmt:
+                die(f"choose one output format: --{fmt} or --{newfmt}")
+            fmt = newfmt
+            if i + 1 < len(remaining) and not remaining[i + 1].startswith("-"):
+                dest = remaining[i + 1]; i += 2
+            else:
+                i += 1
+            continue
+        out.append(a); i += 1
+    return fmt, dest, out
+
+def _emit_records(records, columns, fmt, dest, label="records"):
+    """Write `records` (list of dicts) as csv/json/jsonl to stdout (dest='-'/None) or a FILE. On a FILE write,
+    print 'Wrote N <label> to <file>'. `columns` is the ordered key list used for CSV (and CSV only)."""
+    import csv as _csv
+    to_file = dest not in (None, "-")
+    out = open(dest, "w", newline="", encoding="utf-8") if to_file else sys.stdout
+    try:
+        if fmt == "csv":
+            w = _csv.writer(out)
+            w.writerow(columns)
+            for r in records:
+                w.writerow([r.get(c, "") for c in columns])
+        elif fmt == "json":
+            json.dump(records, out, indent=2, ensure_ascii=False)
+            out.write("\n")
+        elif fmt == "jsonl":
+            for r in records:
+                out.write(json.dumps(r, ensure_ascii=False) + "\n")
+        else:
+            die(f"unsupported output format: {fmt}")
+    finally:
+        if to_file:
+            out.close()
+    if to_file:
+        print("Wrote %d %s to %s" % (len(records), label, dest))
+
+def _native_fmt_dest(args):
+    """Resolve (fmt, dest) for the native commands (files/summary/search/details) from their argparse args.
+    fmt in csv/json/jsonl/body. dest = None (stdout) or a FILE path. `--json/--jsonl/--csv [FILE]` win (bare =
+    stdout; +FILE = that file); a bare format flag with `-o FILE` writes to FILE; else default CSV to -o/stdout."""
+    o = getattr(args, "output", None)
+    def _d(v): return o if (v == "-" and o) else (None if v == "-" else v)
+    if getattr(args, "json", None)  is not None: return "json",  _d(args.json)
+    if getattr(args, "jsonl", None) is not None: return "jsonl", _d(args.jsonl)
+    if getattr(args, "csv", None)   is not None: return "csv",   _d(args.csv)
+    if getattr(args, "body", False):             return "body",  o
+    return "csv", o
+
+def _native_out(dest):
+    """Open a text stream for the native emitters: a FILE (dest set) or stdout. Returns (stream, close?)."""
+    if dest:
+        return open(dest, "w", newline="", encoding="utf-8"), True
+    import io as _io
+    return _io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", newline=""), False
+
+def _emit_json_obj(obj, dest, label="report"):
+    """Write a single curated JSON object (for report-style commands whose output is not a flat record list)
+    to stdout (dest='-'/None) or a FILE. Prints 'Wrote <label> to FILE' on a file write."""
+    to_file = dest not in (None, "-")
+    out = open(dest, "w", encoding="utf-8") if to_file else sys.stdout
+    try:
+        json.dump(obj, out, indent=2, ensure_ascii=False, default=str)
+        out.write("\n")
+    finally:
+        if to_file:
+            out.close()
+    if to_file:
+        print("Wrote %s to %s" % (label, dest))
 
 _USN_FILE_ATTR_SHORT = {
     0x0001: "R", 0x0002: "H", 0x0004: "S", 0x0010: "D",
@@ -4416,7 +4631,7 @@ def cmd_mlog(image, remaining, partition_start):
     import csv as _csv
 
     _check_unknown_flags(remaining,
-                         {"-v", "--verbose", "--parse", "--stats", "--json", "--raw-scan", "--info"}, {"--csv"})
+                         {"-v", "--verbose", "--parse", "--stats", "--raw-scan", "--info"}, {"--csv", "--json"})
     verbose = "-v" in remaining or "--verbose" in remaining
     do_parse = "--parse" in remaining
     do_stats = "--stats" in remaining
@@ -4424,10 +4639,12 @@ def cmd_mlog(image, remaining, partition_start):
     do_raw = "--raw-scan" in remaining
     do_info = "--info" in remaining
     csv_arg = None
+    json_arg = "-"      # --json to stdout, or to a FILE if `--json FILE` (Phase 2)
     for i, a in enumerate(remaining):
         if a == "--csv":
             csv_arg = remaining[i + 1] if i + 1 < len(remaining) and not remaining[i + 1].startswith("-") else "-"
-            break
+        elif a == "--json":
+            json_arg = remaining[i + 1] if i + 1 < len(remaining) and not remaining[i + 1].startswith("-") else "-"
 
     try:
         f, ps, cs, tr, roots, obj_map, vmaj, vmin, _ = bootstrap(image, partition_start)
@@ -4474,7 +4691,7 @@ def cmd_mlog(image, remaining, partition_start):
                 def _write_csv(out):
                     w = _csv.writer(out)
                     w.writerow(["seq", "timestamp", "action", "path", "name", "oid",
-                                "opcodes", "record_count", "plcn", "image"])
+                                "opcodes", "record_count", "plcn"])
                     for i, txn in enumerate(txns, 1):
                         t = _mlog_resolve_txn(txn, oid_paths)
                         if t["ts_str"]:
@@ -4482,7 +4699,7 @@ def cmd_mlog(image, remaining, partition_start):
                         w.writerow([
                             i, t["ts_str"], t["action"], t["path"], t["name"],
                             "0x%x" % t["oid"] if t["oid"] else "",
-                            t["ops_str"], len(t["recs"]), t["plcn"], img_name,
+                            t["ops_str"], len(t["recs"]), t["plcn"],
                         ])
                 if csv_arg == "-":
                     _write_csv(sys.stdout)
@@ -4578,7 +4795,7 @@ def cmd_mlog(image, remaining, partition_start):
             for p in pages:
                 t = p["type"]
                 output["data_area"]["page_types"][t] = output["data_area"]["page_types"].get(t, 0) + 1
-            print(_json.dumps(output, indent=2, default=str))
+            _emit_json_obj(output, json_arg, "%d redo records" % len(records))
             return 0
 
         # Default: control + data summary + records
@@ -4597,7 +4814,7 @@ def cmd_mlog(image, remaining, partition_start):
         else:
             print("  Control PLCN:      0x%x" % ctrl.get("plcn", 0))
             print("  Signature:         %s" % ctrl.get("signature", "?"))
-            print("  Format magic:      0x%08x (per-volume const, NOT a CRC — E42/#343; differs after a reformat)" % ctrl.get("format_magic", 0))
+            print("  Format magic:      0x%08x (per-volume format/log-instance constant; changes after a reformat)" % ctrl.get("format_magic", 0))
             print("  Version:           %s" % ctrl.get("version", "?"))
             print("  Sector size:       0x%x" % ctrl.get("sector_size", 0))
             print("  UUID:              %s" % ctrl.get("uuid", "?"))
@@ -4668,7 +4885,15 @@ def cmd_mlog(image, remaining, partition_start):
             txn_starts = sum(1 for r in records if r["txn_start"])
             txn_commits = sum(1 for r in records if r["txn_commit"])
             print("  Transaction starts: %d" % txn_starts)
-            print("  Transaction commits: %d" % txn_commits)
+            print("  Transaction commits: %d  (commit is marked at the checkpoint/LogCore layer, not by a"
+                  % txn_commits)
+            print("                          per-redo-record flag — this is 0 on every volume, healthy or not;")
+            print("                          do NOT read starts>commits as 'uncommitted work')")
+            print()
+            print("  The MLog is the volume's DURABLE TRANSACTION LOG. Operations logged here may not yet be")
+            print("  checkpointed into the committed on-disk tree, so `files`/`summary` (which read the committed")
+            print("  tree) can omit recent operations that appear here; a fully-checkpointed log can conversely be")
+            print("  near-empty while the tree is complete. Cross-check pending activity with `mlog --parse`.")
             print()
             if verbose:
                 print("  %4s  %6s  %-40s  %10s  %6s  %5s" % (
@@ -4716,7 +4941,7 @@ def cmd_mlog(image, remaining, partition_start):
                 if len(hdrs) > 64:
                     print("  … %d more" % (len(hdrs) - 64))
                 magics = sorted(set(h["format_magic"] for h in hdrs))
-                print("  format_magic (per-volume const, NOT a CRC — E42): %s" %
+                print("  format_magic (per-volume format/log-instance constant): %s" %
                       ", ".join("0x%08x" % m for m in magics))
                 print()
 
@@ -4760,16 +4985,25 @@ def cmd_mlog(image, remaining, partition_start):
 def cmd_usn(image, remaining, partition_start):
     import csv as _csv
 
-    _check_unknown_flags(remaining, {"-v", "--verbose", "--stats", "--json", "--info"}, {"--csv"})
+    _check_unknown_flags(remaining, {"-v", "--verbose", "--stats", "--info", "--list"}, {"--csv", "--json"})
     verbose = "-v" in remaining or "--verbose" in remaining
     do_stats = "--stats" in remaining
     do_json = "--json" in remaining
     do_info = "--info" in remaining
+    do_list = "--list" in remaining
     csv_arg = None
+    json_arg = "-"      # --json writes to stdout, or to a FILE if `--json FILE` (Phase 2)
     for i, a in enumerate(remaining):
         if a == "--csv":
             csv_arg = remaining[i + 1] if i + 1 < len(remaining) and not remaining[i + 1].startswith("-") else "-"
-            break
+        elif a == "--json":
+            json_arg = remaining[i + 1] if i + 1 < len(remaining) and not remaining[i + 1].startswith("-") else "-"
+
+    # Phase 3 §5: bare `usn` shows the STATS SUMMARY (mirrors `mlog`) — dumping every record (often tens of
+    # thousands of lines) is not a useful default. `usn --list` (or `-v`) prints the on-screen record list;
+    # `usn --csv/--json [FILE]` exports the records.
+    if not (do_info or do_stats or do_json or csv_arg is not None or do_list or verbose):
+        do_stats = True
 
     try:
         f, ps, cs, tr, roots, obj_map, vmaj, vmin, _ = bootstrap(image, partition_start)
@@ -4798,6 +5032,38 @@ def cmd_usn(image, remaining, partition_start):
         journal_meta = parse_usn_journal_metadata(streams, f, ps, cs)
 
         oid_paths = build_oid_path_map(f, ps, cs, tr, obj_map)
+
+        def _usn_stats():
+            """Activity summary — bare `usn`, `usn --stats`, and (2usn-7) alongside a `--csv/--json FILE` export."""
+            print("=" * 78)
+            print("USN Journal Statistics (%d records)" % len(records))
+            print("=" * 78); print()
+            if not records:
+                print("  (no records)"); return
+            reason_counts = {}; file_counts = {}; dir_set = set(); ts_min = ts_max = None
+            for r in records:
+                for bit, name in sorted(USN_REASON_FLAGS.items()):
+                    if r.reason & bit:
+                        reason_counts[name] = reason_counts.get(name, 0) + 1
+                file_counts[r.filename] = file_counts.get(r.filename, 0) + 1
+                dir_set.add(r.parent_oid)
+                if r.timestamp > 0:
+                    ts_min = r.timestamp if ts_min is None else min(ts_min, r.timestamp)
+                    ts_max = r.timestamp if ts_max is None else max(ts_max, r.timestamp)
+            print("  Reason code distribution:")
+            for name, cnt in sorted(reason_counts.items(), key=lambda x: -x[1]):
+                print("    %-30s %5d" % (name, cnt))
+            print()
+            print("  Top files by record count:")
+            for name, cnt in sorted(file_counts.items(), key=lambda x: -x[1])[:15]:
+                print("    %-40s %5d" % (name, cnt))
+            print()
+            print("  Unique filenames:    %d" % len(file_counts))
+            print("  Unique parent dirs:  %d" % len(dir_set))
+            print("  USN range:           %d — %d" % (min(r.usn for r in records), max(r.usn for r in records)))
+            if ts_min and ts_max:
+                print("  Time range:          %s" % _usn_filetime_short(ts_min))
+                print("                    to %s" % _usn_filetime_short(ts_max))
 
         if do_info:
             print("=" * W)
@@ -4862,6 +5128,11 @@ def cmd_usn(image, remaining, partition_start):
             ]:
                 print("    0x%02X    %-4d  %s" % (off, sz, name))
             print()
+            print("  Note: ReFS leaves Source info (0x3C) and Security ID (0x40) = 0 in every USN record")
+            print("        (not populated by the filesystem), and the parent file-ID ordinal is 0 by")
+            print("        construction (a parent is a directory, addressed as OID:0). In the --csv/--json")
+            print("        output these three fields are placed last; they carry no per-record signal.")
+            print()
             print("  Reason codes:")
             for bit in sorted(USN_REASON_FLAGS.keys()):
                 print("    0x%08x  %s" % (bit, USN_REASON_FLAGS[bit]))
@@ -4871,22 +5142,32 @@ def cmd_usn(image, remaining, partition_start):
         if csv_arg is not None:
             def _write_csv(out):
                 w = _csv.writer(out)
+                # security_id / source_info / parent_idx are LAST: ReFS does not populate SourceInfo(0x3C)
+                # or SecurityId(0x40) in USN records (both structurally 0), and the parent file-ID ordinal
+                # is 0 by construction (a parent is a directory, addressed as OID:0). Kept for completeness.
+                # Identity: home_oid = the reference OID (the containing directory for a FILE, the object's
+                # OWN OID for a DIRECTORY); file_id = the per-home ordinal (0 ⇔ a directory self-reference).
+                # file_ref = home_oid:file_id is the 128-bit USN FileReferenceNumber (== files.FileRef).
+                # security_id / source_info / parent_idx are LAST (all structurally 0 on ReFS; a parent is a
+                # directory, addressed as OID:0).
+                # 'version' (constant USN_RECORD_V3 = 3.0) removed 2026-08-09 — shown once by `usn --info`,
+                # not repeated per row.
                 w.writerow(["usn", "timestamp", "reason_hex", "reason", "filename",
-                            "file_oid", "file_idx", "parent_oid", "parent_idx", "path",
-                            "attrs_hex", "attrs", "security_id", "source_info",
-                            "record_length", "version"])
+                            "entry_type", "file_ref", "home_oid", "file_id", "parent_oid", "path",
+                            "attrs_hex", "attrs", "record_length",
+                            "security_id", "source_info", "parent_idx"])
                 for r in records:
                     parent_path = _usn_resolve_path(r.parent_oid, oid_paths)
                     full_path = "%s/%s" % (parent_path, r.filename) if parent_path and parent_path != "/" else r.filename
                     w.writerow([
                         r.usn, _usn_filetime_iso(r.timestamp),
                         "0x%08x" % r.reason, usn_reason_to_short(r.reason),
-                        r.filename, "0x%x" % r.file_oid, "0x%x" % r.file_idx,
-                        "0x%x" % r.parent_oid, "0x%x" % r.parent_idx,
-                        full_path, "0x%08x" % r.file_attrs,
-                        _usn_attrs_short(r.file_attrs), r.security_id,
-                        "0x%08x" % r.source_info, r.record_length,
-                        "%d.%d" % (r.major_version, r.minor_version),
+                        r.filename, "dir" if r.file_idx == 0 else "file",
+                        "0x%x:0x%x" % (r.file_oid, r.file_idx),
+                        "0x%x" % r.file_oid, "0x%x" % r.file_idx,
+                        "0x%x" % r.parent_oid, full_path, "0x%08x" % r.file_attrs,
+                        _usn_attrs_short(r.file_attrs), r.record_length,
+                        r.security_id, "0x%08x" % r.source_info, "0x%x" % r.parent_idx,
                     ])
             if csv_arg == "-":
                 _write_csv(sys.stdout)
@@ -4894,6 +5175,8 @@ def cmd_usn(image, remaining, partition_start):
                 with open(csv_arg, "w", newline="") as cf:
                     _write_csv(cf)
                 print("Wrote %d records to %s" % (len(records), csv_arg))
+                print()
+                _usn_stats()   # 2usn-7: activity summary alongside a file export
             return 0
 
         if do_json:
@@ -4904,72 +5187,45 @@ def cmd_usn(image, remaining, partition_start):
                 entries.append({
                     "usn": r.usn, "timestamp": _usn_filetime_iso(r.timestamp),
                     "reason": r.reason, "reason_text": usn_reason_to_short(r.reason),
-                    "filename": r.filename, "file_oid": r.file_oid,
-                    "file_idx": r.file_idx, "parent_oid": r.parent_oid,
-                    "parent_idx": r.parent_idx,
+                    "filename": r.filename,
+                    "entry_type": "dir" if r.file_idx == 0 else "file",
+                    "file_ref": "0x%x:0x%x" % (r.file_oid, r.file_idx),
+                    "home_oid": r.file_oid, "file_id": r.file_idx, "parent_oid": r.parent_oid,
                     "path": "%s/%s" % (parent_path, r.filename) if parent_path and parent_path != "/" else r.filename,
-                    "file_attrs": r.file_attrs, "security_id": r.security_id,
-                    "source_info": r.source_info, "record_length": r.record_length,
-                    "version": "%d.%d" % (r.major_version, r.minor_version),
+                    "file_attrs": r.file_attrs, "record_length": r.record_length,
+                    # ReFS-unpopulated / structural (always 0) — kept last for completeness:
+                    "security_id": r.security_id, "source_info": r.source_info,
+                    "parent_idx": r.parent_idx,
                 })
             obj = {"journal": journal_meta, "record_count": len(entries), "records": entries}
-            print(_json.dumps(obj, indent=2))
+            _emit_json_obj(obj, json_arg, "%d USN records" % len(entries))
+            if json_arg and json_arg != "-":
+                print()
+                _usn_stats()   # 2usn-7: activity summary alongside a file export
             return 0
 
         if do_stats:
-            print("=" * W)
-            print("USN Journal Statistics (%d records)" % len(records))
-            print("=" * W)
-            print()
-            if not records:
-                print("  (no records)")
-            else:
-                reason_counts = {}
-                file_counts = {}
-                dir_set = set()
-                ts_min = ts_max = None
-                for r in records:
-                    for bit, name in sorted(USN_REASON_FLAGS.items()):
-                        if r.reason & bit:
-                            reason_counts[name] = reason_counts.get(name, 0) + 1
-                    file_counts[r.filename] = file_counts.get(r.filename, 0) + 1
-                    dir_set.add(r.parent_oid)
-                    if r.timestamp > 0:
-                        if ts_min is None or r.timestamp < ts_min:
-                            ts_min = r.timestamp
-                        if ts_max is None or r.timestamp > ts_max:
-                            ts_max = r.timestamp
-                print("  Reason code distribution:")
-                for name, cnt in sorted(reason_counts.items(), key=lambda x: -x[1]):
-                    print("    %-30s %5d" % (name, cnt))
+            _usn_stats()
+            if records:
                 print()
-                print("  Top files by record count:")
-                for name, cnt in sorted(file_counts.items(), key=lambda x: -x[1])[:15]:
-                    print("    %-40s %5d" % (name, cnt))
-                print()
-                print("  Unique filenames:    %d" % len(file_counts))
-                print("  Unique parent dirs:  %d" % len(dir_set))
-                print("  USN range:           %d — %d" % (
-                    min(r.usn for r in records), max(r.usn for r in records)))
-                if ts_min and ts_max:
-                    print("  Time range:          %s" % _usn_filetime_short(ts_min))
-                    print("                    to %s" % _usn_filetime_short(ts_max))
-                print()
+                print("  See the records:  `usn --list` (on screen) · `usn --csv/--json [FILE]` (export) · "
+                      "`usn --info` (journal health)")
             return 0
 
-        # Default: list mode
+        # Record list (usn --list, or -v for the verbose form; formerly the bare-usn default)
         print("=" * W)
         print("USN Journal Records (%d entries)" % len(records))
         print("=" * W)
+        print("  --stats for the reason/activity summary · --info for journal health · --csv/--json [FILE] for records")
         print()
         for r in records:
             parent_path = _usn_resolve_path(r.parent_oid, oid_paths)
             print("  USN %-10d %s" % (r.usn, r.filename))
             print("    Time:    %s" % _usn_filetime_short(r.timestamp))
             print("    Reason:  %s (0x%08x)" % (usn_reason_to_str(r.reason), r.reason))
-            print("    FileID:  %04x:%016x" % (r.file_oid, r.file_idx))
-            print("    Parent:  %04x:%016x  -> %s" % (
-                r.parent_oid, r.parent_idx, parent_path))
+            print("    FileRef: 0x%x:0x%x  (%s)" % (
+                r.file_oid, r.file_idx, "directory" if r.file_idx == 0 else "file"))
+            print("    Parent:  0x%x  -> %s" % (r.parent_oid, parent_path))
             print("    Attrs:   %s" % _usn_attrs_short(r.file_attrs))
             if r.source_info:
                 src_parts = []
@@ -4993,11 +5249,13 @@ def cmd_usn(image, remaining, partition_start):
         f.close()
 
 def cmd_timeline(image, remaining, partition_start):
-    import csv as _csv
-    args = _parse_args(remaining, flags=["--csv", "--no-si", "--fast"],
+    # Phase-2: --csv/--json/--jsonl [FILE] (stdout if no FILE). Pulled out before the command's own parser.
+    out_fmt, out_dest, remaining = _extract_output_fmt(remaining)
+    args = _parse_args(remaining, flags=["--no-si", "--fast", "-v", "--verbose"],
                        valued=["--file", "--oid", "--limit", "--source", "--depth"])
     skip_si = args["no_si"] or args["fast"]   # --fast is a friendly alias for --no-si
-    si_depth = _int_arg(args["depth"], "--depth") if args["depth"] else 12
+    verbose = args["v"] or args["verbose"]    # -v: show the FULL name/path (no truncation)
+    si_depth = _int_arg(args["depth"], "--depth") if args["depth"] else DEFAULT_DEPTH
     name_filter = args["file"].lower() if args["file"] else None
     oid_filter = _int_arg(args["oid"], "--oid", 0) if args["oid"] else None
     limit = _int_arg(args["limit"], "--limit") if args["limit"] else 0
@@ -5081,19 +5339,21 @@ def cmd_timeline(image, remaining, partition_start):
         if limit:
             events = events[:limit]
 
-        if args["csv"]:
-            w = _csv.writer(sys.stdout)
-            w.writerow(["timestamp_utc", "source", "oid", "name", "event"])
-            for ts, src, oid, nm, det in events:
-                w.writerow([_filetime_to_str(ts), src, "0x%x" % oid if oid else "", nm, det])
+        if out_fmt:
+            cols = ["timestamp_utc", "source", "oid", "name", "event"]
+            recs = [{"timestamp_utc": _filetime_to_str(ts), "source": src,
+                     "oid": "0x%x" % oid if oid else "", "name": nm, "event": det}
+                    for ts, src, oid, nm, det in events]
+            _emit_records(recs, cols, out_fmt, out_dest, "events")
             return 0
 
         W = 78
         print("=" * W)
         print("ReFS Super-Timeline — %s" % os.path.basename(image))
         print("=" * W)
-        print("  Sources merged: USN=%d  MLog=%d  $SI-MACB=%d  (joined by OID, sorted by time)" % (
+        print("  Sources merged: USN=%d  MLog=%d  $SI-MACB=%d  (time-sorted; correlated by name/path —" % (
             counts["USN"], counts["MLog"], counts["$SI"]))
+        print("                  a file has no OID: $SI shows OID —, USN the home-dir OID, MLog the target OID)")
         if skip_si:
             print("  MODE: --fast — $SI MACB walk skipped; change-journals only (USN + MLog).")
         elif len(obj_map) > 8000:
@@ -5110,7 +5370,7 @@ def cmd_timeline(image, remaining, partition_start):
         print("  %-23s  %-5s  %-10s  %-26s  %s" % ("Timestamp (UTC)", "Src", "OID", "Name/Path", "Event"))
         print("  %s" % ("-" * (W - 2)))
         for ts, src, oid, nm, det in events:
-            tn = (nm[:24] + "…") if nm and len(nm) > 25 else (nm or "")
+            tn = (nm or "") if verbose else ((nm[:24] + "…") if nm and len(nm) > 25 else (nm or ""))
             print("  %-23s  %-5s  %-10s  %-26s  %s" % (
                 _filetime_to_str(ts) if ts else "(undated)", src,
                 "0x%x" % oid if oid else "—", tn, det))
@@ -5769,13 +6029,19 @@ def cmd_timestomp(image, remaining, partition_start):
         the true creation time to compare against $SI.
     Confidence tiers HIGH/MEDIUM/LOW reflect how many independent sources agree."""
     import csv as _csv
-    args = _parse_args(remaining, flags=["--all", "--json"], valued=["--csv", "--min", "--margin-days", "--depth"])
-    do_json = args["json"]
+    # Phase 2: standardized --csv/--json [FILE] (bare = stdout). Pulled out before the command's own parser.
+    out_fmt, out_dest, remaining = _extract_output_fmt(remaining, allow=("--csv", "--json"))
+    args = _parse_args(remaining, flags=["--all"], valued=["--min", "--margin-days", "--depth"])
+    do_json = (out_fmt == "json")
     show_all = args["all"]
-    min_conf = (args["min"] or "LOW").upper()
+    # Phase 3 (§5 timestomp): the default screen view shows HIGH-confidence rows only (the authoritative
+    # ones); lower tiers are revealed with `--min MEDIUM`/`--min LOW`. CSV/JSON keep ALL tiers unless --min
+    # is given explicitly, so an export is complete.
+    _explicit_min = args["min"] is not None
+    min_conf = (args["min"] or "HIGH").upper()
     margin = int(args["margin_days"]) * 24 * 3600 * 10**7 if args["margin_days"] else TS_MARGIN_100NS
-    max_depth = _int_arg(args["depth"], "--depth") if args["depth"] else 20
-    csv_arg = args["csv"] if args["csv"] is not None else None
+    max_depth = _int_arg(args["depth"], "--depth") if args["depth"] else DEFAULT_DEPTH
+    csv_arg = out_dest if out_fmt == "csv" else None
     rank = {"HIGH": 3, "MEDIUM": 2, "LOW": 1, "NONE": 0}
 
     try:
@@ -5861,6 +6127,12 @@ def cmd_timestomp(image, remaining, partition_start):
                     if min(abs(ct - u) for u in cts) > margin:
                         evidence.append("USN_CREATE_MISMATCH")
                         usn_conf = True
+            # 1.C: whole-second (.0000000) Created AND Modified = a WEAK "tool-set date" hint. Corpus-measured
+            # (30 imgs/134k files) it also fires on legit driver-package / archive-extracted files, so it is a
+            # LOW signal ONLY — it never rises above LOW on its own and never upgrades another tier.
+            round_ts = (_ft_valid(ct) and ct % 10_000_000 == 0 and _ft_valid(mt) and mt % 10_000_000 == 0)
+            if round_ts:
+                evidence.append("ROUND_TIMESTAMPS")
             intrinsic = any(x in flags for x in ("CHANGE_LATE", "PRE_FORMAT", "CREATE_GT_MODIFY", "FUTURE"))
             # Tiering: independent-source agreement = higher confidence.
             if (usn_conf or hl_conf) and intrinsic:
@@ -5875,6 +6147,8 @@ def cmd_timestomp(image, remaining, partition_start):
                 tier = "MEDIUM"        # one solid signal (benign-copy caveat applies)
             elif intrinsic:
                 tier = "LOW"           # FUTURE / CREATE_GT_MODIFY alone (weak, copy-plausible)
+            elif round_ts:
+                tier = "LOW"           # 1.C: whole-second Created+Modified alone — weak (also legit driver/archive)
             else:
                 tier = "NONE"
             return tier, evidence
@@ -5885,7 +6159,7 @@ def cmd_timestomp(image, remaining, partition_start):
             if tier == "NONE" and not show_all:
                 continue
             rows.append({
-                "path": r["path"], "oid": _hx(r["oid"]) if r.get("oid") else ("(resident)" if r.get("resident") else "(non-res)"),
+                "path": r["path"], "storage": _hx(r["oid"]) if r.get("oid") else ("(resident)" if r.get("resident") else "(non-res)"),
                 "tier": tier, "signals": evidence,
                 "created": _filetime_to_str(r.get("create_time", 0)).replace(" UTC", ""),
                 "modified": _filetime_to_str(r.get("modify_time", 0)).replace(" UTC", ""),
@@ -5897,30 +6171,32 @@ def cmd_timestomp(image, remaining, partition_start):
         flagged = [x for x in rows if x["tier"] != "NONE"]
         suspects = [x for x in flagged if rank[x["tier"]] >= rank.get(min_conf, 1)]
         counts = {t: sum(1 for x in flagged if x["tier"] == t) for t in ("HIGH", "MEDIUM", "LOW")}
+        # CSV/JSON export ALL flagged tiers by default (complete artifact); a screen view defaults to HIGH.
+        export_rows = suspects if _explicit_min else flagged
 
         if csv_arg is not None:
             def _w(out):
                 w = _csv.writer(out)
-                w.writerow(["path", "oid", "confidence", "signals", "created", "modified", "changed", "accessed"])
-                for x in (rows if show_all else suspects):
-                    w.writerow([x["path"], x["oid"], x["tier"], "|".join(x["signals"]),
+                w.writerow(["path", "storage", "confidence", "signals", "created", "modified", "changed", "accessed"])
+                for x in (rows if show_all else export_rows):
+                    w.writerow([x["path"], x["storage"], x["tier"], "|".join(x["signals"]),
                                 x["created"], x["modified"], x["changed"], x["accessed"]])
             if csv_arg == "-":
                 _w(sys.stdout)
             else:
                 with open(csv_arg, "w", newline="") as out:
                     _w(out)
-                print(f"Wrote {len(suspects)} rows to {csv_arg}")
+                print(f"Wrote {len(rows if show_all else export_rows)} rows to {csv_arg}")
             return 0
 
         if do_json:
-            print(json.dumps({
+            _emit_json_obj({
                 "image": os.path.basename(image), "refs_version": f"{vmaj}.{vmin}",
                 "volume_create": _filetime_to_str(vol_create).replace(" UTC", ""),
                 "volume_modify": _filetime_to_str(vol_modify).replace(" UTC", ""),
                 "journal_present": journal, "files_examined": len(files),
-                "counts": counts, "suspects": suspects if not show_all else rows,
-            }, indent=2))
+                "counts": counts, "suspects": rows if show_all else export_rows,
+            }, out_dest, "timestomp report")
             return 0
 
         W = 78
@@ -5941,7 +6217,12 @@ def cmd_timestomp(image, remaining, partition_start):
         print("  intrinsic; LOW = a weak/single hint.")
         print()
         if not suspects and not show_all:
-            print("  No timestamp anomalies at or above the requested confidence.")
+            hidden = counts["MEDIUM"] + counts["LOW"] if min_conf == "HIGH" else 0
+            if hidden:
+                print(f"  No HIGH-confidence timestamp anomalies. {hidden} lower-tier row(s) exist "
+                      f"(MEDIUM {counts['MEDIUM']} / LOW {counts['LOW']}) — `--min MEDIUM` or `--min LOW` to see them.")
+            else:
+                print("  No timestamp anomalies at or above the requested confidence.")
             return 0
         _AUTH_SIGS = {"USN_BASIC_INFO_CHANGE", "USN_CREATE_MISMATCH", "HARDLINK_MACB_MISMATCH"}
         print(f"  {'Conf':<6} {'Basis':<13} {'Claimed birth':<21} {'Last real write':<21} Path")
@@ -5951,6 +6232,10 @@ def cmd_timestomp(image, remaining, partition_start):
             basis = "journal/link" if any(s in _AUTH_SIGS for s in sigs) else "intrinsic"
             print(f"  {x['tier']:<6} {basis:<13} {x['created']:<21} {x['changed']:<21} {x['path']}")
             print(f"  {'':<6} signals: {', '.join(sigs) or '(none)'}")
+        if not show_all and min_conf == "HIGH" and (counts["MEDIUM"] or counts["LOW"]):
+            print()
+            print(f"  ({counts['MEDIUM']} MEDIUM + {counts['LOW']} LOW row(s) hidden — `--min MEDIUM` / `--min LOW` "
+                  f"to show; CSV/JSON already include every tier.)")
         print()
         print("  Signal legend  (AUTHORITATIVE = independent evidence · HEURISTIC = suggestive $SI-only):")
         print("    [AUTHORITATIVE]")
@@ -5964,21 +6249,45 @@ def cmd_timestomp(image, remaining, partition_start):
         print("                             can't reach change-time) — defeated by a native-API/raw-disk stomp")
         print("      PRE_FORMAT / FUTURE    created before the volume existed / after its last write")
         print("      CREATE_GT_MODIFY       created after last write")
+        print("      ROUND_TIMESTAMPS       created AND modified are whole-second (.0000000) — a tool often sets a")
+        print("                             date with no sub-second time; LOW only (driver packages / archive")
+        print("                             extraction also produce whole-second times)")
         print("  Note: the intrinsic signals also fire on legitimate creation-time-preserving copies")
         print("  (robocopy /COPY:T, restore), so an intrinsic-only HIGH is not proof — corroborate.")
         return 0
     finally:
         f.close()
 
+def _parse_id_ref(id_str):
+    """Parse a `--id HomeOid:FileId` reference (e.g. 0x3069:0x2) into (home_oid, file_id) ints (4.F). Both
+    parts accept 0x-hex or decimal. Dies on a malformed reference."""
+    if ":" not in id_str:
+        die(f"--id must be HomeOid:FileId (e.g. 0x3069:0x2), got {id_str!r}")
+    a, b = id_str.split(":", 1)
+    try:
+        return int(a, 0), int(b, 0)
+    except ValueError:
+        die(f"--id: bad reference {id_str!r} — expected HomeOid:FileId (hex or decimal)")
+
+def _resolve_id_entry(f, ps, cs, tr, obj_map, home_oid, file_id):
+    """Resolve the USN 128-bit reference (home_oid, file_id) to its walked entry (with full 'path'), or None.
+    Matches file_id within the referenced home directory (home_oid); file_id==0 is a directory self-reference
+    (the object's own OID == home_oid). This addresses a file WITHOUT a path (recycle-bin/$-name/duplicates)."""
+    for e in walk_directory_tree(f, ps, cs, tr, obj_map, 0x600, DEFAULT_DEPTH, True, set()):
+        if e.get("file_id") == file_id and (e.get("home_oid") == home_oid or e.get("parent_oid") == home_oid):
+            return e
+    return None
+
 def cmd_extract(image, remaining, partition_start):
     args = _parse_args(remaining, flags=["--no-verify-integrity"],
-                       valued=["--oid", "--depth", "--path", "-o", "--output"])
-    # accept a bare name, an absolute /dir/file path, or --path (symmetric with `details`)
+                       valued=["--oid", "--depth", "--path", "--id", "-o", "--output"])
+    # accept a bare name, an absolute /dir/file path, --path, or --id HomeOid:FileId (symmetric with `details`)
+    id_arg = args["id"]
     filename = args["path"] or (args["_rest"][0] if args["_rest"] else None)
     start_oid = _int_arg(args["oid"], "--oid", 0) if args["oid"] else 0x600
     # Default bare-name search depth = 100 (parity with the `search` command), not 3 — a bare name is found at
     # any real tree depth. A full PATH does not use this at all (it resolves directly; see below). `--depth` overrides.
-    max_depth = _int_arg(args["depth"], "--depth") if args["depth"] else 100
+    max_depth = _int_arg(args["depth"], "--depth") if args["depth"] else DEFAULT_DEPTH
     outp = args["o"] or args["output"]
 
     def _emit(data):
@@ -5993,11 +6302,11 @@ def cmd_extract(image, remaining, partition_start):
                 print(f"[{PROG}] ({len(data)} bytes to stdout — add `-o FILE` to save to a file)",
                       file=sys.stderr)
 
-    if not filename:
-        die("extract requires a filename argument")
+    if not filename and not id_arg:
+        die("extract requires a filename, a /path, or --id HomeOid:FileId")
 
     stream_name = None
-    if ":" in filename:
+    if filename and ":" in filename:
         parts = filename.rsplit(":", 1)
         if parts[1]:
             filename, stream_name = parts[0], parts[1]
@@ -6008,6 +6317,15 @@ def cmd_extract(image, remaining, partition_start):
         die(str(e))
 
     try:
+        if id_arg:
+            # 4.F: resolve the file by its (home_oid, file_id) reference to a full path, then extract normally.
+            home_oid, file_id = _parse_id_ref(id_arg)
+            if file_id == 0:
+                die(f"extract: --id {id_arg} refers to a DIRECTORY (file_id 0) — directories have no content")
+            ent = _resolve_id_entry(f, ps, cs, tr, obj_map, home_oid, file_id)
+            if ent is None:
+                die(f"extract: no file found for --id {id_arg} (home_oid:file_id)")
+            filename = ent["path"]; args["path"] = ent["path"]; start_oid = 0x600
         if start_oid not in obj_map:
             die(f"OID {_hx(start_oid)} not found in Object Table")
 
@@ -6260,7 +6578,8 @@ def cmd_recyclebin(image, remaining, partition_start):
     """F8: decode $RECYCLE.BIN $I metadata files -> original path + deletion time + size, and whether the
     $R payload survives. The $I is a small resident file, so its bytes come from the same inline-$DATA path
     as `extract`."""
-    args = _parse_args(remaining, flags=["--json"])
+    out_fmt, out_dest, remaining = _extract_output_fmt(remaining)
+    _parse_args(remaining)   # reject any stray flags
     try:
         f, ps, cs, tr, roots, obj_map, vmaj, vmin, chkp_lcns = bootstrap(image, partition_start)
     except (ValueError, OSError) as e:
@@ -6276,13 +6595,15 @@ def cmd_recyclebin(image, remaining, partition_start):
         if recycle_oid is not None:
             _walk_recycle(f, ps, cs, tr, obj_map, recycle_oid, "", 8, recs)
 
-        if args["json"]:
+        if out_fmt:
+            cols = ["sid", "i_file", "r_file", "r_present", "decoded",
+                    "original_path", "deletion_time", "size"]
             out = [{"sid": r["sid"], "i_file": r["i_name"], "r_file": r["r_name"],
                     "r_present": r["r_present"], "decoded": r["meta"] is not None,
                     "original_path": r["meta"]["original_path"] if r["meta"] else None,
                     "deletion_time": filetime_to_iso(r["meta"]["deletion_time"]) if r["meta"] else None,
                     "size": r["meta"]["size"] if r["meta"] else None} for r in recs]
-            print(json.dumps(out, indent=2, ensure_ascii=False)); return 0
+            _emit_records(out, cols, out_fmt, out_dest, "recycled items"); return 0
 
         print("=" * 78)
         print(f"ReFS $RECYCLE.BIN — deleted-to-recycle-bin items ({os.path.basename(image)})")
@@ -6303,12 +6624,15 @@ def cmd_recyclebin(image, remaining, partition_start):
                 print(f"    ($I content could not be decoded from a plain inline record)")
             print(f"    Payload ({r['r_name']}): {'present' if r['r_present'] else 'MISSING (metadata only)'}")
         print(f"\n  {len(recs)} recycled item(s).")
+        if recs:
+            print(f"  Recover the $R payloads with:  forefst {os.path.basename(image)} export recyclebin <DIR>")
         return 0
     finally:
         f.close()
 
 def cmd_security(image, remaining, partition_start):
-    args = _parse_args(remaining, flags=["-v", "--verbose", "--files", "--json", "--audit"], valued=["--sid", "--file"])
+    out_fmt, out_dest, remaining = _extract_output_fmt(remaining, allow=("--json",))
+    args = _parse_args(remaining, flags=["-v", "--verbose", "--files", "--audit"], valued=["--sid", "--file"])
     verbose = args["v"] or args["verbose"]
 
     try:
@@ -6340,7 +6664,7 @@ def cmd_security(image, remaining, partition_start):
                           f"!= computed {_hx(sd.get('computed_hash',0))}")
             return 0 if not failures else 2
 
-        if args["json"]:
+        if out_fmt:
             output = {"security_descriptors": [{k: v for k, v in sd.items() if k != "raw"} for sd in descriptors]}
             if args["files"] or args["file"]:
                 files = _walk_dir_files_with_sid(f, ps, cs, tr, obj_map, 0x600, "", 0, 10)
@@ -6348,7 +6672,7 @@ def cmd_security(image, remaining, partition_start):
                     fl = args["file"].lower()
                     files = [fe for fe in files if fl in fe["name"].lower()]
                 output["file_mappings"] = files
-            print(json.dumps(output, indent=2, default=str))
+            _emit_json_obj(output, out_dest, "%d security descriptors" % len(descriptors))
             return 0
 
         print("=" * 78)
@@ -7133,6 +7457,7 @@ def _scan_backup_copies(f, ps, cs, chkp_lcns):
                 "lba": blba,
                 "present": bv_ok,
                 "matches_primary": bv == pv,
+                "sha256": hashlib.sha256(bv).hexdigest() if bv_ok else None,
                 "cksum_ok": bv_ok and _vbr_checksum(bv, le16(bv, 0x14)) == le16(bv, 0x16),
                 # the backup boot sector is NOT rewritten on upgrade, so it preserves the original
                 # (pre-upgrade) ReFS version — a forensic record of the volume's birth version
@@ -7151,6 +7476,7 @@ def _scan_backup_copies(f, ps, cs, chkp_lcns):
             f.seek(ps + cl * cs); raw = f.read(4 * cs)
             rec["sig_ok"] = raw[:4] == b"CHKP"
             if rec["sig_ok"]:
+                rec["sha256"] = hashlib.sha256(raw).hexdigest()
                 rec["vc"] = le64(raw, 0x10)
                 try:
                     _vc, _fl, roots = _forefst_parse_chkp(f, ps, cs, cl)
@@ -7166,15 +7492,17 @@ def _scan_backup_copies(f, ps, cs, chkp_lcns):
         rec["role"] = ("PRIMARY" if rec.get("vc") == best_vc and best_vc >= 0 else "backup")
 
     # --- Secondary SUPB copies (primary @ SUPB_LCN; copies sit near the partition end) ---
-    out["supb"].append({"lcn": SUPB_LCN, "role": "PRIMARY",
-                        "ok": (f.seek(ps + SUPB_LCN * cs), f.read(4))[1] == b"SUPB"})
+    f.seek(ps + SUPB_LCN * cs); _psupb = f.read(cs)
+    out["supb"].append({"lcn": SUPB_LCN, "role": "PRIMARY", "ok": _psupb[:4] == b"SUPB",
+                        "sha256": hashlib.sha256(_psupb).hexdigest() if _psupb[:4] == b"SUPB" else None})
     if total_sectors > 1:
         end_lcn = (total_sectors * 512) // cs
         for lcn in range(max(0, end_lcn - 64), end_lcn):
             try:
-                f.seek(ps + lcn * cs)
-                if f.read(4) == b"SUPB":
-                    out["supb"].append({"lcn": lcn, "role": "backup", "ok": True})
+                f.seek(ps + lcn * cs); _s = f.read(cs)
+                if _s[:4] == b"SUPB":
+                    out["supb"].append({"lcn": lcn, "role": "backup", "ok": True,
+                                        "sha256": hashlib.sha256(_s).hexdigest()})
             except (OSError, OverflowError):
                 break
     return out
@@ -7343,6 +7671,13 @@ def _verify_page_checksums(f, ps, cs, tr, chk, dl, root_count, max_pages=300000,
         if pg[:4] != b"MSB+":
             return
         st["pages"] += 1
+        # 5integrity-2: locate a mismatched page physically — VLCN, its PLCN (post container
+        # translation), the container id it lives in, and the on-image byte offset. Computed only
+        # on a mismatch (rare) so it adds no per-page cost / no extra translator miss-counting.
+        def _loc():
+            if use_tr is not None:
+                return use_tr.tr(slots[0]), (slots[0] >> use_tr.shift)
+            return slots[0], None                     # physical LCN (CT roots) — no container map
         if cktype == 2:
             stored = le64(rec, 0x28)
             calc = refs_crc64(pg)
@@ -7350,7 +7685,8 @@ def _verify_page_checksums(f, ps, cs, tr, chk, dl, root_count, max_pages=300000,
                 st["crc64_ok"] += 1
             else:
                 st["crc64_bad"] += 1
-                st["mismatches"].append((slots[0], "CRC64", _hx(stored), _hx(calc)))
+                _plcn, _cont = _loc()
+                st["mismatches"].append((slots[0], _plcn, _cont, "CRC64", _hx(stored), _hx(calc)))
         elif cktype == 4 and len(rec) >= 0x48:
             stored = rec[0x28:0x48]
             calc = hashlib.sha256(pg).digest()
@@ -7358,7 +7694,8 @@ def _verify_page_checksums(f, ps, cs, tr, chk, dl, root_count, max_pages=300000,
                 st["sha_ok"] += 1
             else:
                 st["sha_bad"] += 1
-                st["mismatches"].append((slots[0], "SHA256", stored.hex()[:16], calc.hex()[:16]))
+                _plcn, _cont = _loc()
+                st["mismatches"].append((slots[0], _plcn, _cont, "SHA256", stored.hex()[:16], calc.hex()[:16]))
         else:
             st["none"] += 1
         th = 0x50 + le32(pg, 0x50)
@@ -7488,10 +7825,32 @@ def _specials_print_type(typ, files):
             print(f"    {_specials_path(r)}{extra}")
     return len(rows)
 
+def _special_record(r, typ):
+    """One flat record for a special-attribute entry (for --csv/--jsonl). `detail` is the type's key datum."""
+    if typ == "ads":
+        detail = r.get("ads_names", "") or ""
+    elif typ in ("reparse", "wsl"):
+        detail = r.get("reparse_target", "") or (reparse_tag_str(r.get("reparse_tag_value", 0))
+                                                 if r.get("reparse_tag_value") else "")
+    elif typ == "hardlink":
+        detail = ";".join(r.get("hard_link_names") or [])
+    elif typ == "sparse":
+        detail = "logical=%s allocated=%s" % (r.get("file_size", 0), r.get("allocated_size") or 0)
+    elif typ == "snapshot":
+        detail = "snapshots=%d" % r.get("snapshot_count", 0)
+    else:
+        detail = ""
+    return {"type": typ, "path": _specials_path(r),
+            "home_oid": "0x%x" % r["home_oid"] if r.get("home_oid") else "",
+            "file_id": "0x%x" % r["file_id"] if r.get("file_id") else "",
+            "is_dir": bool(r.get("is_dir")), "detail": detail}
+
 def cmd_specials(image, remaining, partition_start):
     """Q1: list files carrying a special attribute. No arg = a count summary of every type;
-    `specials <type>` = that type's list; `specials all` = every type sectioned. --json for machine output."""
-    args = _parse_args(remaining, flags=["--json"])
+    `specials <type>` = that type's list; `specials all` = every type sectioned. --csv/--json/--jsonl [FILE]
+    for machine output."""
+    out_fmt, out_dest, remaining = _extract_output_fmt(remaining)
+    args = _parse_args(remaining)
     sub = args["_rest"][0].lower() if args["_rest"] else None
     if sub is not None and sub != "all" and sub not in _SPECIALS_BY_NAME:
         die(f"specials: unknown type {sub!r}. Types: {', '.join(t[0] for t in SPECIALS_TYPES)} (or 'all')")
@@ -7500,15 +7859,27 @@ def cmd_specials(image, remaining, partition_start):
     except (ValueError, OSError) as e:
         die(str(e))
     try:
-        results = walk_directory_tree(f, ps, cs, tr, obj_map, 0x600, 100, True, set())
-        files = [r for r in results if not r.get("is_dir")]
-        counts = {t[0]: sum(1 for r in files if t[2](r)) for t in SPECIALS_TYPES}
-        if args["json"]:
+        results = walk_directory_tree(f, ps, cs, tr, obj_map, 0x600, DEFAULT_DEPTH, True, set())
+        # Run every specials predicate over the SAME full object set `files --filter` sees (files AND
+        # directories). Directories legitimately carry special attributes — reparse (junctions / dir
+        # symlinks), integrity streams, EAs — and must be enumerated. Dropping them here silently
+        # undercounted those types vs `files --filter` (e.g. 78 dir junctions on a real Windows volume,
+        # dir integrity/EA). File-only predicates (e.g. hardlink) already self-guard on `not is_dir`.
+        objs = results
+        counts = {t[0]: sum(1 for r in objs if t[2](r)) for t in SPECIALS_TYPES}
+        if out_fmt == "json":
             if sub is None:
-                print(json.dumps({"image": os.path.basename(image), "counts": counts}, indent=2)); return 0
+                _emit_json_obj({"image": os.path.basename(image), "counts": counts}, out_dest, "special-attribute counts"); return 0
             types = [t[0] for t in SPECIALS_TYPES] if sub == "all" else [sub]
-            out = {t: [_specials_path(r) for r in files if _SPECIALS_BY_NAME[t][2](r)] for t in types}
-            print(json.dumps({"image": os.path.basename(image), "specials": out}, indent=2)); return 0
+            out = {t: [_specials_path(r) for r in objs if _SPECIALS_BY_NAME[t][2](r)] for t in types}
+            _emit_json_obj({"image": os.path.basename(image), "specials": out}, out_dest, "special-attribute lists"); return 0
+        if out_fmt in ("csv", "jsonl"):
+            # Flat records: one per (type, matching entry). A single type → just that type; else every type.
+            types = [t[0] for t in SPECIALS_TYPES] if (sub is None or sub == "all") else [sub]
+            recs = [_special_record(r, t) for t in types for r in objs if _SPECIALS_BY_NAME[t][2](r)]
+            _emit_records(recs, ["type", "path", "home_oid", "file_id", "is_dir", "detail"],
+                          out_fmt, out_dest, "special-attribute entries")
+            return 0
         if sub is None:                       # summary
             print("=" * 70)
             print(f"ReFS special-attribute inventory — {os.path.basename(image)} (ReFS {vmaj}.{vmin})")
@@ -7518,18 +7889,23 @@ def cmd_specials(image, remaining, partition_start):
             for typ, desc, _p in SPECIALS_TYPES:
                 print(f"  {typ:<12} {counts[typ]:>7}   {desc}")
             print("  " + "-" * 60)
-            distinct = sum(1 for r in files if any(t[2](r) for t in SPECIALS_TYPES))
-            print(f"  {distinct} distinct files carry >=1 special attribute.")
-            print("  (per-type counts OVERLAP — one file can be several types at once, so the")
+            distinct = sum(1 for r in objs if any(t[2](r) for t in SPECIALS_TYPES))
+            print(f"  {distinct} distinct objects carry >=1 special attribute.")
+            print("  (per-type counts OVERLAP — one object can be several types at once, so the")
             print("   rows above sum to more than this de-duplicated total.)")
             print("  Deep ops: reparse --index · snapshots --extract · dataruns · export ads \"file:stream\"")
             return 0
         for typ in ([t[0] for t in SPECIALS_TYPES] if sub == "all" else [sub]):
             print(f"\n── {typ}  ({counts[typ]}) — {_SPECIALS_BY_NAME[typ][1]} ──")
-            _specials_print_type(typ, files)
+            _specials_print_type(typ, objs)
         return 0
     finally:
         f.close()
+
+def cmd_ads(image, remaining, partition_start):
+    """List every named data stream (ADS) on the volume — a top-level shortcut for `specials ads` (reuses that
+    path; no duplicate logic). Supports --csv/--json/--jsonl [FILE]; extract with `export ads "<file>:<stream>"`."""
+    return cmd_specials(image, ["ads"] + list(remaining), partition_start)
 
 def cmd_reparse(image, remaining, partition_start):
     args = _parse_args(remaining, flags=["-v", "--verbose", "--index", "--json"], valued=["--tag", "--file"])
@@ -8317,20 +8693,23 @@ def cmd_deleted(image, remaining, partition_start):
                 print("        resident files; add --carve to also reconstruct non-resident (extent-backed) files.")
         _write_manifest()
 
-        # Recovery log — a forensic audit trail of this run (always generated when a recovery is performed).
-        import datetime as _dt
-        _logmode = "full" if full_mode else ("no-slack" if not do_slack else "recovery")
-        if args["log"]:
-            _lp = args["log"]
-        elif extract_dir:
-            _lp = os.path.join(extract_dir, "recovery_log.txt")
-        else:
-            _b = os.path.basename(image).rsplit(".", 1)[0]
-            _lp = f"forefst_recovery_{_b}_{_dt.datetime.now().strftime('%Y%m%d-%H%M%S')}.txt"
-        _written = _write_recovery_log(_lp, image, vmaj, vmin, _logmode, ", ".join(_ran), max_scan,
-                                       _log_deleted, _log_present, extract_dir, orphans=_log_orphans)
-        if _written:
-            print(f"  Recovery log: {_written}")
+        # Recovery log — a forensic audit trail, written ONLY when something is actually exported/recovered
+        # (`export deleted` / `deleted --extract` / -o sets extract_dir) or when the user explicitly asks
+        # for one (--log). A plain VIEW recovers nothing, so it must not litter the CWD with a log file.
+        if extract_dir or args["log"]:
+            import datetime as _dt
+            _logmode = "full" if full_mode else ("no-slack" if not do_slack else "recovery")
+            if args["log"]:
+                _lp = args["log"]
+            elif extract_dir:
+                _lp = os.path.join(extract_dir, "recovery_log.txt")
+            else:
+                _b = os.path.basename(image).rsplit(".", 1)[0]
+                _lp = f"forefst_recovery_{_b}_{_dt.datetime.now().strftime('%Y%m%d-%H%M%S')}.txt"
+            _written = _write_recovery_log(_lp, image, vmaj, vmin, _logmode, ", ".join(_ran), max_scan,
+                                           _log_deleted, _log_present, extract_dir, orphans=_log_orphans)
+            if _written:
+                print(f"  Recovery log: {_written}")
 
         print()
         return 0
@@ -8339,13 +8718,14 @@ def cmd_deleted(image, remaining, partition_start):
         f.close()
 
 def cmd_snapshots(image, remaining, partition_start):
-    args = _parse_args(remaining, flags=["-v", "--verbose", "--json", "--show"],
+    out_fmt, out_dest, remaining = _extract_output_fmt(remaining, allow=("--json",))
+    args = _parse_args(remaining, flags=["-v", "--verbose", "--show"],
                        valued=["--file", "--depth", "--extract", "--snapshot"])
     verbose = args["v"] or args["verbose"]
     do_show = args["show"]
     extract_dir = args["extract"]
     snap_sel = args["snapshot"]              # select ONE version: name substring, or 1-based index number
-    max_depth = _int_arg(args["depth"], "--depth") if args["depth"] else 10
+    max_depth = _int_arg(args["depth"], "--depth") if args["depth"] else DEFAULT_DEPTH
 
     try:
         f, ps, cs, tr, roots, obj_map, vmaj, vmin, chkp_lcns = bootstrap(image, partition_start)
@@ -8366,7 +8746,7 @@ def cmd_snapshots(image, remaining, partition_start):
         total_true = sum(len(r["snapshots"]) for r in true_snap_results)
         total_ads = sum(len(r["snapshots"]) for r in ads_results)
 
-        if args["json"]:
+        if out_fmt:
             json_out = {
                 "image": image, "refs_version": f"{vmaj}.{vmin}", "cluster_size": cs,
                 "files_with_snapshots": len(true_snap_results), "total_snapshots": total_true,
@@ -8385,7 +8765,7 @@ def cmd_snapshots(image, remaining, partition_start):
                     if ct: sentry["creation_time"] = _filetime_to_str(ct)
                     fentry["snapshots"].append(sentry)
                 json_out["files"].append(fentry)
-            print(json.dumps(json_out, indent=2)); return 0
+            _emit_json_obj(json_out, out_dest, "%d snapshot-bearing files" % len(true_snap_results)); return 0
 
         print("=" * 78)
         print("ReFS Stream Snapshot Analysis")
@@ -8493,6 +8873,9 @@ def cmd_snapshots(image, remaining, partition_start):
         f.close()
 
 def cmd_integrity(image, remaining, partition_start):
+    # integrity is a multi-section diagnostic REPORT, not a record list — only --json applies (a structured
+    # report object); --csv/--jsonl are not offered. The human text is captured and replaced by the object.
+    out_fmt, out_dest, remaining = _extract_output_fmt(remaining, allow=("--json",))
     args = _parse_args(remaining, flags=["-v", "--verbose", "--checksums", "--fullchecksums"],
                        valued=["--scan-range", "--max-pages"])
     verbose = args["v"] or args["verbose"]
@@ -8506,7 +8889,11 @@ def cmd_integrity(image, remaining, partition_start):
     except (ValueError, OSError) as e:
         die(str(e))
 
+    _saved_stdout = sys.stdout
     try:
+        if out_fmt:                         # capture the human report; we emit a JSON object instead
+            import io as _io
+            sys.stdout = _io.StringIO()
         # Get volume sig and VC from CHKP
         best_vc = 0; best_volsig = 0; chk_type = 0; best_chk = None
         for cl in chkp_lcns:
@@ -8614,8 +9001,11 @@ def cmd_integrity(image, remaining, partition_start):
                       f"rerun with --max-pages N for full fidelity")
             if tot_bad:
                 print(f"  *** {tot_bad} CHECKSUM MISMATCH(ES) — page content altered/corrupt ***")
-                for s0, kind, stored, calc in ck_stats["mismatches"][:20]:
-                    print(f"    LCN {_hx(s0)} [{kind}]: stored {stored} != computed {calc}")
+                print(f"    {'VLCN':>12}  {'container':>9}  {'PLCN':>12}  {'byte offset':>14}  check   stored != computed")
+                for s0, plcn, cont, kind, stored, calc in ck_stats["mismatches"][:20]:
+                    coff = ps + plcn * cs
+                    cstr = _hx(cont) if cont is not None else "physical"
+                    print(f"    {_hx(s0):>12}  {cstr:>9}  {_hx(plcn):>12}  {_hx(coff):>14}  {kind:<6}  {stored} != {calc}")
             else:
                 print(f"  VERDICT: all {tot_ok} checksummed pages VERIFIED — no tampering/corruption")
             print()
@@ -8657,8 +9047,10 @@ def cmd_integrity(image, remaining, partition_start):
             if rec["role"] == "backup" and status != "valid":
                 backup_warn.append(f"backup checkpoint @ {_hx(rec['lcn'])} invalid")
         n_supb = len(bk["supb"])
-        supb_lcns = ", ".join(_hx(s["lcn"]) for s in bk["supb"])
-        print(f"  Superblock copies:       {n_supb} (LCN {supb_lcns})")
+        print(f"  Superblock copies:       {n_supb}")
+        for s in bk["supb"]:
+            _sok = "SUPB sig OK" if s.get("ok") else "sig?"
+            print(f"      [{s.get('role','?'):7}] LCN {_hx(s['lcn'])} (offset {_hx(s['lcn'] * cs)}) — {_sok}")
         if n_supb < 2:
             backup_warn.append("fewer than 2 SUPB copies located")
         print()
@@ -8696,9 +9088,29 @@ def cmd_integrity(image, remaining, partition_start):
                 print(f"  LCN {_hx(d['lcn']):<10} {sig_s:<5} {status}")
 
         # Scriptable exit status: 2 = integrity failure (structural and/or checksum), 0 = clean.
-        return 2 if (has_fail or ck_bad) else 0
+        _rc = 2 if (has_fail or ck_bad) else 0
+        if out_fmt:
+            sys.stdout = _saved_stdout
+            _report_obj = {
+                "image": os.path.basename(image),
+                "refs_version": f"{vmaj}.{vmin}",
+                "cluster_size": cs,
+                "checksum_type": chk_types.get(chk_type, f"Unknown({chk_type})"),
+                "checkpoint_vc": best_vc,
+                "volume_sig": best_volsig,
+                "container_map_entries": ct_entries,
+                "page_statistics": {k: v for k, v in report.items() if k not in ("issues", "page_details")},
+                "checksum_verification": ck_stats,
+                "redundancy": {"backup_copies": bk, "warnings": backup_warn},
+                "issues": [{"severity": s, "lcn": l, "message": m} for s, l, m in report["issues"]],
+                "verdict": verdict,
+                "clean": not (has_fail or ck_bad),
+            }
+            _emit_json_obj(_report_obj, out_dest, "integrity report")
+        return _rc
 
     finally:
+        sys.stdout = _saved_stdout      # restore even if the body raised while capturing
         f.close()
 
 def cmd_export_metadata(image, remaining, partition_start):
@@ -8708,9 +9120,11 @@ def cmd_export_metadata(image, remaining, partition_start):
     import hashlib, json as _json
     args = _parse_args(remaining, flags=[],
                        valued=["-o", "--out", "--what", "--btree-mode", "--max-scan"])
-    outdir = args["o"] or args["out"]
+    # 3.C convention: bulk exports take a positional DIR (like export resident-all/recyclebin/deleted);
+    # -o/--out kept as a back-compat alias.
+    outdir = args["o"] or args["out"] or (args["_rest"][0] if args["_rest"] else None)
     if not outdir:
-        die("export requires -o OUTDIR")
+        die("export metadata requires an output directory: `export metadata OUTDIR`")
     what = set((args["what"] or "all").lower().replace(" ", "").split(","))
     def want(x): return "all" in what or x in what
     btree_mode = (args["btree_mode"] or "packed").lower()
@@ -8878,10 +9292,11 @@ def cmd_export_metadata(image, remaining, partition_start):
         f.close()
 
 def cmd_dataruns(image, remaining, partition_start):
+    out_fmt, out_dest, remaining = _extract_output_fmt(remaining)
     args = _parse_args(remaining, flags=["-v", "--verbose"], valued=["--oid", "--depth"])
     verbose = args["v"] or args["verbose"]
     start_oid = _int_arg(args["oid"], "--oid", 0) if args["oid"] else 0x600
-    max_depth = _int_arg(args["depth"], "--depth") if args["depth"] else 3
+    max_depth = _int_arg(args["depth"], "--depth") if args["depth"] else DEFAULT_DEPTH
 
     try:
         f, ps, cs, tr, roots, obj_map, vmaj, vmin, chkp_lcns = bootstrap(image, partition_start)
@@ -8889,15 +9304,16 @@ def cmd_dataruns(image, remaining, partition_start):
         die(str(e))
 
     try:
-        print("=" * 78)
-        print("ReFS File Data Extent Analysis")
-        print("=" * 78)
-        print(f"  Image:        {image}")
-        print(f"  ReFS version: {vmaj}.{vmin}")
-        print(f"  Cluster size: {_hx(cs)} ({cs} bytes)")
-        print(f"  Containers:   {len(tr.map) if tr else 0}")
-        print(f"  Start OID:    {_hx(start_oid)}")
-        print()
+        if not out_fmt:
+            print("=" * 78)
+            print("ReFS File Data Extent Analysis")
+            print("=" * 78)
+            print(f"  Image:        {image}")
+            print(f"  ReFS version: {vmaj}.{vmin}")
+            print(f"  Cluster size: {_hx(cs)} ({cs} bytes)")
+            print(f"  Containers:   {len(tr.map) if tr else 0}")
+            print(f"  Start OID:    {_hx(start_oid)}")
+            print()
 
         if start_oid not in obj_map:
             die(f"OID {_hx(start_oid)} not found in Object Table")
@@ -8935,6 +9351,25 @@ def cmd_dataruns(image, remaining, partition_start):
                                 process_dir(child_oid, child_path, depth - 1)
 
         process_dir(start_oid, "", max_depth)
+
+        if out_fmt:
+            cols = ["path", "storage", "file_size", "extent_count", "clusters", "extents"]
+            recs = []
+            for info in all_results:
+                runs = info.get("extents") or []
+                recs.append({
+                    "path": info["path"],
+                    "storage": info["storage"],
+                    "file_size": info.get("file_size", 0),
+                    "extent_count": len(runs),
+                    "clusters": sum(e["clusters"] for e in runs),
+                    "extents": ";".join("fvcn=%d,VLCN=%s,PLCN=%s,clu=%d" % (
+                        e["file_vcn"], _hx(e["vlcn"]), _hx(e["plcn"]), e["clusters"]) for e in runs),
+                    "runs": [{"file_vcn": e["file_vcn"], "vlcn": e["vlcn"], "plcn": e["plcn"],
+                              "clusters": e["clusters"], "disk_offset": e["disk_offset"]} for e in runs],
+                })
+            _emit_records(recs, cols, out_fmt, out_dest, "files")
+            return 0
 
         print(f"  Summary:")
         print(f"    Total files analyzed:   {total_files}")
@@ -8999,6 +9434,11 @@ HIDDEN_SUBCOMMANDS = {
 SUBCOMMAND_ALIASES = {
     "find": "search",       # friendlier name for the name search
     "snapshot": "snapshots", # singular convenience alias for the analysis command (distinct from `export snapshot`)
+    # Phase 3 (4.B): silent singular/plural conveniences — the canonical spellings keep working.
+    "file": "files",
+    "special": "specials",
+    "datarun": "dataruns",
+    "recycle": "recyclebin",
 }
 # ─── Export umbrella (Q8 + the user's "export command" idea) — one home for "get data out" ────────
 def _safe_relpath(path):
@@ -9015,7 +9455,7 @@ def cmd_export_resident(image, remaining, partition_start):
     if not out_dir:
         die("export resident-all requires an output directory")
     start_oid = _int_arg(args["oid"], "--oid", 0) if args["oid"] else 0x600
-    max_depth = _int_arg(args["depth"], "--depth") if args["depth"] else 8
+    max_depth = _int_arg(args["depth"], "--depth") if args["depth"] else DEFAULT_DEPTH
     try:
         f, ps, cs, tr, roots, obj_map, vmaj, vmin, chkp_lcns = bootstrap(image, partition_start)
     except (ValueError, OSError) as e:
@@ -9153,6 +9593,10 @@ def cmd_export(image, remaining, partition_start):
     resident-all [dir] · snapshots [dir] · deleted [dir] · recyclebin [dir] · metadata [-o dir]. A bulk
     subverb with NO directory auto-creates a timestamped one; `extract …` = `export file`; bare `export -o
     DIR` = `export metadata`; `snapshot`/`prior-versions` alias `snapshots`."""
+    # §5: accept a leading `--<verb>` as a flag-equivalent of the positional subverb (e.g. `export --recyclebin
+    # DIR` == `export recyclebin DIR`).
+    if remaining and remaining[0].startswith("--") and remaining[0][2:] in _EXPORT_SUBVERBS:
+        remaining = [remaining[0][2:]] + remaining[1:]
     if remaining and remaining[0] in _EXPORT_SUBVERBS:
         what, rest = remaining[0], remaining[1:]
         if what in ("file", "ads"):
@@ -9188,6 +9632,10 @@ def cmd_export(image, remaining, partition_start):
             return cmd_snapshots(image, ["--extract", out_dir] + passthrough, partition_start)
         if what == "deleted":
             return cmd_deleted(image, ["--extract", out_dir, "--_from-export"] + passthrough, partition_start)
+    # Help-on-empty (4.C): a bare `export` (nothing to do) shows its help instead of erroring.
+    if not remaining:
+        _render_cmd_help("export")
+        return 0
     # no recognized subverb (or a bare -o …) => the metadata bundle (back-compat with the old `export`)
     return cmd_export_metadata(image, remaining, partition_start)
 
@@ -9199,7 +9647,8 @@ FORENSIC_SUBCOMMANDS = {
     "timestomp": "Timestamp-anomaly detection — $SI MACB vs USN, flags back-dating (--all/--json/--csv/--min/--margin-days/--depth)",
     "extract":   "Extract a file's content to stdout — by full path (direct, any depth) or bare name (first match; --oid/--depth scope the name search)",
     "security":  "Security descriptors / ACLs per object (-v/--files/--json/--audit/--sid/--file)",
-    "specials":  "Special-attribute files — ads/reparse/wsl/hardlink/sparse/encrypted/compressed/integrity/ea/snapshot (specials [type|all])",
+    "specials":  "Special-attribute files — ads/reparse/wsl/hardlink/sparse/encrypted/compressed/integrity/ea/snapshot (specials [type|all]; --csv/--json/--jsonl)",
+    "ads":       "Named data streams (ADS) across the volume — shortcut for `specials ads` (--csv/--json/--jsonl; extract via export ads)",
     "reparse":   "Reparse points — symlinks/junctions/WSL + the reparse index (-v/--index/--json/--tag/--file)",
     "deleted":   "Deleted-file VIEW + recoverability verdict — `recovery` mode by default; `--full` for the complete scan (write with `export deleted`)",
     "recyclebin": "Decode $RECYCLE.BIN $I metadata — original path, deletion time, size, $R payload (--json)",
@@ -9211,16 +9660,18 @@ FORENSIC_SUBCOMMANDS = {
 FORENSIC_HANDLERS = {"usn": cmd_usn, "mlog": cmd_mlog, "timeline": cmd_timeline,
                      "timestomp": cmd_timestomp, "extract": cmd_extract, "security": cmd_security,
                      "reparse": cmd_reparse, "deleted": cmd_deleted, "snapshots": cmd_snapshots,
-                     "recyclebin": cmd_recyclebin, "specials": cmd_specials,
+                     "recyclebin": cmd_recyclebin, "specials": cmd_specials, "ads": cmd_ads,
                      "integrity": cmd_integrity, "export": cmd_export, "dataruns": cmd_dataruns}
 
 # F13: `files --filter <category>` subsets the listing by attribute category (folds in / retires the
 # old `attributes` command). Field-based and EA-SAFE — WSL is detected via the reparse tag, NOT the
 # EA-derived lx_mode. Output stays forefst's normal files CSV/JSON, just the matching rows.
 # `files --filter <type>` predicates. The 10 types that also exist as `specials <type>` DELEGATE to the
-# single SPECIALS_TYPES definition (via _SPECIALS_BY_NAME) so the two commands can never drift apart (D2);
-# the 2 view-only types (directory/resident) have no `specials` equivalent and live here. Deleted files are
-# not part of the live `files` listing — use the `deleted` command.
+# single SPECIALS_TYPES definition (via _SPECIALS_BY_NAME) so the two commands share one predicate (D2).
+# For the counts to match, BOTH must apply that predicate over the SAME row set — the full walked tree,
+# files AND directories (cmd_specials must NOT pre-filter directories, or dir-carried reparse/integrity/EA
+# would silently drop out). The 2 view-only types (directory/resident) have no `specials` equivalent and
+# live here. Deleted files are not part of the live `files` listing — use the `deleted` command.
 FILE_FILTERS = {name: pred for name, _desc, pred in SPECIALS_TYPES}
 FILE_FILTERS.update({
     "directory":  lambda r: bool(r.get("is_dir")),
@@ -9308,16 +9759,21 @@ CMD_HELP = {
   "desc": ["Walks the directory B+-tree from the root object (OID 0x600) and emits one row per file/",
            "directory: timestamps, attributes, owner+group SID, ADS, EA, reparse, integrity,",
            "compression, encryption, hard-link names & counts, snapshot counts, USN, allocated size,",
-           "FileId/HomeOid join keys, IsSparse. The ReFS equivalent of an MFT listing/bodyfile. Default",
-           "output is a 38-column CSV (OID..RefsVersion)."],
-  "opts": [("--json | --jsonl | --body", "output format instead of CSV (mutually exclusive)"),
-           ("-o, --output FILE", "write to FILE instead of stdout"),
-           ("--full-path-column", "append a FullPath column (ParentPath/FileName) to the CSV"),
+           "IsSparse. Leads with the identity columns: OID (0 for files — ReFS files have no own OID),",
+           "FileRef (=HomeOid:FileId, the stable 128-bit file reference == the USN FileReferenceNumber),",
+           "HomeOid (the owner directory = the FileId 'home', constant across a file's hard-link names),",
+           "FileId, FileName, then ParentOID/ParentPath (the namespace of THIS name — differs from HomeOid",
+           "for hard-links & recycle-bin/deleted entries) and FullPath. The ReFS equivalent of an MFT",
+           "listing/bodyfile. Default output is a 39-column CSV (OID..InternalFlags)."],
+  "opts": [("--csv | --json | --jsonl [FILE]", "machine output (default CSV); bare → stdout, +FILE → write & print a count"),
+           ("--body", "bodyfile (mactime) output instead of CSV; combine with -o FILE for the path"),
+           ("-o, --output FILE", "output file (alias for --csv FILE; also the --body target)"),
+           ("--full-path-column", "(deprecated no-op — FullPath is now a standard column)"),
            ("--filter CATEGORY", "keep only one category: reparse, encrypted, compressed, integrity, ea,"),
            ("", "ads, wsl, sparse, snapshot, directory, resident, hardlink"),
            ("--cow-before IMAGE", "recover prior CoW versions by diffing against an earlier image"),
            ("--timestomp", "add the TimestompFlags column ($SI heuristic; corroborate with `timestomp`)"),
-           ("--depth N", "max directory recursion depth (default 100)"),
+           ("--depth N", "cap directory recursion depth (default: full)"),
            ("-q, --quiet", "suppress stderr progress")],
   "ex": [("files -o listing.csv", "full CSV file listing to a file"),
          ("files --filter hardlink", "only entries with more than one hard link"),
@@ -9331,9 +9787,9 @@ CMD_HELP = {
            "root-table row counts, USN-journal status + UsnJournalId, then a full directory walk for",
            "file/dir/resident counts, total size, MACB extremes, and encrypted/integrity/compressed/",
            "hard-link/snapshot/ADS tallies. Extended-by-default."],
-  "opts": [("--json", "emit one JSON object instead of the text report"),
+  "opts": [("--json [FILE]", "emit one JSON object instead of the text report (bare → stdout, +FILE → write & count)"),
            ("--hash-image", "also SHA-256 the whole image (chain-of-custody; streams the image)"),
-           ("--depth N", "max recursion depth for the content census (default 100)"),
+           ("--depth N", "cap the content-census recursion depth (default: full — the whole tree)"),
            ("-q, --quiet", "suppress stderr progress")],
   "ex": [("summary", "full text triage report"),
          ("summary --json", "same data as one JSON object for jq/pipelines"),
@@ -9344,7 +9800,7 @@ CMD_HELP = {
   "desc": ["Everything `summary` reports about volume identity, layout, root-table counts and anchoring",
            "hashes, but WITHOUT the directory walk — so it returns in seconds on large images. Use it",
            "to triage before committing to a full `files`/`summary` pass."],
-  "opts": [("--json", "emit one JSON object instead of the text report"),
+  "opts": [("--json [FILE]", "emit one JSON object instead of the text report (bare → stdout, +FILE → write & count)"),
            ("--hash-image", "also SHA-256 the whole image"),
            ("-q, --quiet", "suppress stderr progress")],
   "ex": [("fastsummary", "fast volume profile"),
@@ -9357,7 +9813,9 @@ CMD_HELP = {
            "--regex for a Python regex against the basename). Prints a table by default."],
   "opts": [("PATTERN", "(positional) the name substring, or regex with --regex"),
            ("--regex", "treat PATTERN as a case-insensitive regular expression"),
-           ("--json | --jsonl", "emit matches as JSON / JSON Lines"),
+           ("--filter CATEGORY", "restrict matches to one attribute category (same set as `files --filter`: "
+                                 "reparse/ads/encrypted/…) — enriches the walk"),
+           ("--csv | --json | --jsonl [FILE]", "emit matches as CSV / JSON / JSON Lines (bare → stdout, +FILE → write & count)"),
            ("-q, --quiet", "suppress stderr progress")],
   "ex": [("search report", "names containing 'report'"),
          ("search '^link\\d+_to' --regex", "regex on the basename"),
@@ -9371,20 +9829,26 @@ CMD_HELP = {
   "opts": [("/path", "(positional) e.g. /dir/file.txt — a leading slash means path"),
            ("0xOID", "(positional) e.g. 0x705 — a 0x prefix means OID"),
            ("--path P / --oid O", "explicit addressing (same as the positional forms)"),
-           ("--json", "emit the full record as JSON")],
+           ("--id HomeOid:FileId", "address by reference (e.g. 0x760:0xc; :0x0 = a directory) — no path needed"),
+           ("--json [FILE]", "emit the full record as JSON (bare → stdout, +FILE → write & count)")],
   "ex": [("details /wsltests/lxsymlink", "inspect a reparse/WSL file by path"),
          ("details 0x705", "inspect a directory object by OID"),
          ("details /dir/file.txt --json", "machine-readable full record")],
  },
  "usn": {
   "tag": "USN (Change) Journal — file change records",
-  "desc": ["Parses the $UsnJrnl:$J change journal: per-record USN, timestamp, reason flags, resolved",
-           "file name and FileID. Use --info for journal health, --stats for an activity summary."],
-  "opts": [("-v, --verbose", "add RecLen/Version/StreamOffset per record (list mode)"),
+  "desc": ["Parses the $UsnJrnl:$J change journal: per-record USN, timestamp, reason flags, resolved name,",
+           "and the file reference FileRef = home_oid:file_id (== files.FileRef; home_oid is the containing",
+           "directory for a file / the object's own OID for a directory, file_id the per-home ordinal).",
+           "entry_type is dir when file_id==0 (a directory self-reference) else file. Directories DO get USN",
+           "records. Bare `usn` shows the activity SUMMARY (like `mlog`); `usn --list` prints the on-screen",
+           "record list; --csv/--json export the records; --info shows journal health."],
+  "opts": [("--list", "print the on-screen per-record list (formerly the bare-usn default)"),
+           ("-v, --verbose", "with --list: add RecLen/Version/StreamOffset per record"),
            ("--info", "journal metadata instead of records ($J extents, $Max, record count)"),
-           ("--stats", "activity summary: reason-code distribution, busiest files, time range"),
-           ("--csv FILE", "export all records to a 16-column CSV"),
-           ("--json", "emit {journal, record_count, records[]}")],
+           ("--stats", "activity summary (this is also what bare `usn` shows)"),
+           ("--csv/--json [FILE]", "machine output to stdout or FILE; CSV cols incl. entry_type/file_ref/"
+                                   "home_oid/file_id (security_id/source_info/parent_idx are 0, kept last)")],
   "ex": [("usn", "list every change record"),
          ("usn --info", "journal layout & health"),
          ("usn --stats", "reason-code & busiest-file summary"),
@@ -9400,7 +9864,10 @@ CMD_HELP = {
            "removal is ENTRY_REMOVE, and a reparent record that can't be resolved to move-or-rename is",
            "REPARENT. Actions are grouped into file operations (CREATE/WRITE/RENAME/MOVE/DELETE) vs the",
            "low-level B+-tree/metadata records that accompany them. -v prints each redo record with its",
-           "opcode, target OID and PLCN+offset so every field is verifiable against the raw disk bytes."],
+           "opcode, target OID and PLCN+offset so every field is verifiable against the raw disk bytes.",
+           "NOTE: this is the DURABLE LOG — operations here may not yet be checkpointed into the committed",
+           "tree, so `files`/`summary` can omit recent activity shown here (and vice-versa). The per-record",
+           "'commit' flag is 0 on every volume (commit is a checkpoint/LogCore fact, not a redo-record flag)."],
   "opts": [("-v, --verbose", "byte-level proof: each redo record as opcode/name/target_oid/@PLCN+offset/key"),
            ("--parse", "reconstruct concrete actions (CREATE/WRITE/RENAME/MOVE/DELETE + low-level groups)"),
            ("--stats", "opcode-frequency section"),
@@ -9414,37 +9881,47 @@ CMD_HELP = {
          ("mlog --csv mlog_txns.csv", "export the action timeline")],
  },
  "timeline": {
-  "tag": "Super-timeline — merge USN + MLog + $SI MACB, time-sorted",
-  "desc": ["Merges three event sources (USN journal, MLog transactions, $SI MACB timestamps) into one",
+  "tag": "Super-timeline (experimental) — merge USN + MLog + $SI MACB, time-sorted",
+  "desc": ["EXPERIMENTAL / informational: a corroborative reconstruction, not an authoritative log — the",
+           "correlation is heuristic (identity/name + time) and coverage depends on which journals are active",
+           "(USN is off by default; the MLog is a shallow circular buffer). Cross-check leads against the",
+           "underlying artifacts rather than treating this as a standalone source of truth.",
+           "Merges three event sources (USN journal, MLog transactions, $SI MACB timestamps) into one",
            "chronological timeline. --fast/--no-si skips the slow per-file $SI walk (USN+MLog only)."],
   "opts": [("--fast / --no-si", "skip the $SI MACB walk (USN + MLog only — much faster)"),
-           ("--csv", "emit CSV to stdout (timestamp_utc,source,oid,name,event)"),
+           ("-v, --verbose", "show the FULL name/path per event (no truncation)"),
+           ("--csv/--json/--jsonl [FILE]", "machine output (timestamp_utc,source,oid,name,event); to stdout, "
+                                           "or to FILE (prints a record count)"),
            ("--source S", "keep only one source: USN / MLOG / SI"),
            ("--file SUB", "keep events whose name/path contains SUB"),
            ("--oid O", "keep only events for object O (0x hex or decimal)"),
            ("--limit N", "keep only the first N events after filtering+sorting"),
-           ("--depth N", "max recursion depth for the $SI walk (default 12)")],
+           ("--depth N", "cap the $SI-walk recursion depth (default: full)")],
   "ex": [("timeline --fast --limit 50", "first 50 USN+MLog events (quick)"),
          ("timeline --csv > timeline.csv", "full super-timeline as CSV"),
          ("timeline --file hello.txt", "all events touching hello.txt"),
          ("timeline --source USN --oid 0x701", "one object's USN history")],
  },
  "timestomp": {
-  "tag": "Timestamp-anomaly detection — investigative info, not proof",
+  "tag": "Timestamp-anomaly detection — experimental/informational, not proof",
   "desc": ["Flags timestamps that LOOK anomalous (investigative INFORMATION, NOT proof of tampering). Each",
            "row shows a BASIS: an AUTHORITATIVE signal (USN journal FILE_CREATE / BASIC_INFO_CHANGE, or the",
            "ReFS-native HARDLINK_MACB_MISMATCH where two names of one file have divergent Created — only the",
            "back-dated name is flagged, the sibling keeps the true birth) vs a HEURISTIC $SI-only signal",
            "(CHANGE_LATE / PRE_FORMAT / CREATE_GT_MODIFY / FUTURE) that also fires on legitimate timestamp-",
            "preserving copies. Tiers HIGH/MEDIUM/LOW by how many independent sources agree. The `files",
-           "--timestomp` column shows only the $SI heuristic; this subcommand adds the authoritative checks."],
+           "--timestomp` column shows only the $SI heuristic; this subcommand adds the authoritative checks.",
+           "The screen view defaults to HIGH-confidence rows; --min reveals lower tiers; CSV/JSON keep ALL",
+           "tiers unless --min is given. ROUND_TIMESTAMPS (whole-second created+modified) is a LOW-only hint."],
   "opts": [("--all", "include every file, even those with no anomaly (NONE tier)"),
-           ("--min LEVEL", "minimum confidence to report: HIGH | MEDIUM | LOW (default LOW)"),
-           ("--margin-days N", "comparison tolerance in days (default 1)"),
-           ("--csv FILE", "write CSV (use '-' for stdout)"),
-           ("--json", "emit a JSON report to stdout"),
-           ("--depth N", "max recursion depth (default 20)")],
-  "ex": [("timestomp", "list all flagged files (LOW and up)"),
+           ("--min LEVEL", "lowest confidence to show on screen: HIGH | MEDIUM | LOW (default HIGH; CSV/JSON "
+                           "export every tier unless this is set)"),
+           ("--margin-days N", "tolerance (days) when comparing two timestamps before calling a difference an "
+                               "anomaly (default 1). Larger N = fewer flags (fewer false positives, may miss "
+                               "small back-dates); smaller N = more sensitive."),
+           ("--csv/--json [FILE]", "machine output to stdout or FILE (every tier)"),
+           ("--depth N", "max recursion depth (default: full)")],
+  "ex": [("timestomp", "HIGH-confidence suspects (add --min LOW for all)"),
          ("timestomp --min HIGH", "high-confidence suspects only"),
          ("timestomp --csv suspects.csv --min MEDIUM", "export medium+ suspects")],
  },
@@ -9462,8 +9939,10 @@ CMD_HELP = {
            "bytes are still written (disable with --no-verify-integrity)."],
   "opts": [("filename | /path", "(positional) the file to extract (full path = direct, no depth limit)"),
            ("--path P", "address the file by path (symmetric with details; resolved directly, no depth limit)"),
+           ("--id HomeOid:FileId", "address the file by its reference (e.g. 0x760:0xc) — no path needed "
+                                   "(recycle-bin/$-name/duplicates); == the usn FileRef"),
            ("--oid O", "re-root a BARE-NAME search at object O (0x hex or decimal)"),
-           ("--depth N", "max depth for a BARE-NAME search (default 100; a full path ignores this)"),
+           ("--depth N", "max depth for a BARE-NAME search (default: full; a full path ignores this)"),
            ("--no-verify-integrity", "skip the per-cluster CRC32-C integrity check on integrity-stream files")],
   "ex": [("extract /specials/gamma.bak > out.bak", "carve a file by absolute path (any depth)"),
          ("extract report.dat:hidden_6247 > s.bin", "extract one inline ADS"),
@@ -9472,12 +9951,14 @@ CMD_HELP = {
  "security": {
   "tag": "Security descriptors / ACLs per object",
   "desc": ["Lists each security descriptor (owner, group, control flags, DACL/SACL ACEs). --files maps",
-           "every file to its SecurityId+owner; --audit recomputes the $Secure hash to detect tampering."],
+           "every file to its SecurityId+owner; --audit recomputes each descriptor's stored self-hash (the",
+           "hash ReFS keeps in the $Secure/security table) and flags any mismatch — i.e. a security descriptor",
+           "whose bytes were altered on disk without the hash being updated (tampering)."],
   "opts": [("-v, --verbose", "include the raw SD hex dump (list / --sid mode)"),
            ("--files", "map every file/dir to its SecurityId and owning SID"),
            ("--file SUB", "like --files, filtered to names containing SUB"),
            ("--sid ID", "print only the descriptor for SecurityId ID (0x hex or decimal)"),
-           ("--audit", "tamper check: recompute each SD's content hash"),
+           ("--audit", "tamper check: recompute each descriptor's stored self-hash; flag any mismatch"),
            ("--json", "machine-readable output")],
   "ex": [("security", "list all security descriptors"),
          ("security --files", "map files to owners"),
@@ -9511,8 +9992,9 @@ CMD_HELP = {
            "`export deleted --carve` reconstructs it best-effort) / 'metadata only' (name/size/timestamps only).",
            "Each row shows the directory it was deleted FROM. Prior versions of files that still exist →",
            "`snapshots`; Windows Recycle Bin → `recyclebin`. To WRITE files out, use `export deleted DIR`.",
-           "Every run writes a RECOVERY LOG (audit trail: image, mode, methods ran, and the DELETED-vs-",
-           "STILL-PRESENT split with each remnant's source page) — control the path with --log.",
+           "A RECOVERY LOG (audit trail: image, mode, methods ran, and the DELETED-vs-STILL-PRESENT split",
+           "with each remnant's source page) is written when you EXPORT (`export deleted DIR` -> the dir) or",
+           "when you ask for one with --log PATH; a plain view does not write a log.",
            "'recoverable' means present & decodable, NOT un-overwritten."],
   "opts": [("--full", "FULL recovery: also scan orphan pages + carve non-resident content (vs the quick default)"),
            ("--no-slack", "skip the slack scan entirely (Trash table + checkpoint diff only — fast, metadata)"),
@@ -9527,8 +10009,8 @@ CMD_HELP = {
            ("--max-scan N", "max clusters for the orphan-page scan under --full (default 50000)"),
            ("--rows-only", "with `export deleted`: write only the raw .row remnant (skip .recovered/.carved)"),
            ("--content-only", "with `export deleted`: write only decoded content (skip the raw .row)"),
-           ("--log PATH", "write the forensic recovery-run log here (default: <export-dir>/recovery_log.txt, "
-                          "else ./forefst_recovery_<img>_<ts>.txt)"),
+           ("--log PATH", "write the forensic recovery-run log here — also forces a log on a plain view "
+                          "(when exporting, the default is <export-dir>/recovery_log.txt)"),
            ("--extract DIR", "DEPRECATED — use `export deleted DIR` (same result: .row + .recovered [+ .carved])")],
   "ex": [("deleted", "RECOVERY (default): Trash + checkpoint + live-page slack, with recoverability verdicts"),
          ("deleted --full", "FULL: also scan orphan pages + carve — the complete pass"),
@@ -9541,7 +10023,7 @@ CMD_HELP = {
   "desc": ["Walks $RECYCLE.BIN/<SID>/ and decodes each $I metadata file — the original full path, deletion",
            "time, and logical size of a recycled item — and reports whether its $R payload still survives.",
            "Filesystem-agnostic Windows format ($I header 1=Vista-8.1, 2=Win10/11)."],
-  "opts": [("--json", "machine-readable output")],
+  "opts": [("--csv/--json/--jsonl [FILE]", "machine output (one record per recycled item); to stdout or FILE")],
   "ex": [("recyclebin", "list every recycled item with its original path + deletion time"),
          ("recyclebin --json", "same, as JSON")],
  },
@@ -9549,16 +10031,26 @@ CMD_HELP = {
   "tag": "Special-attribute files — one discoverable home for every special type",
   "desc": ["Lists files carrying a special attribute. No argument prints a COUNT SUMMARY of every type;",
            "`specials <type>` prints that type's list with type-specific columns; `specials all` prints every",
-           "section. Types: ads, reparse, wsl, hardlink, sparse, encrypted, compressed, integrity, ea, snapshot.",
+           "section. Types (alphabetical): ads, compressed, ea, encrypted, hardlink, integrity, reparse, snapshot, sparse, wsl.",
            "This is the discovery/list layer — for deep ops use reparse --index / snapshots --extract /",
            "dataruns / export ads. (Equivalent to `files --filter <type>`, which also still works.)"],
-  "opts": [("<type>", "one of: ads reparse wsl hardlink sparse encrypted compressed integrity ea snapshot"),
+  "opts": [("<type>", "ads · compressed · ea · encrypted · hardlink · integrity · reparse · snapshot · sparse · wsl"),
            ("all", "print every type's list, sectioned"),
-           ("--json", "machine-readable output (counts, or per-type file lists)")],
+           ("--csv/--json/--jsonl [FILE]", "machine output (json: counts/per-type lists; csv/jsonl: flat "
+                                           "type/path/home_oid/file_id/detail records) to stdout or FILE")],
   "ex": [("specials", "count summary of every special type"),
          ("specials ads", "every named data stream + its host file"),
          ("specials hardlink", "hard-link groups (all names of each multi-linked file)"),
          ("specials sparse", "sparse files with logical vs allocated size")],
+ },
+ "ads": {
+  "tag": "Named data streams (ADS) across the volume",
+  "desc": ["Lists every named data stream (Alternate Data Stream) on the volume and its host file — a top-level",
+           "shortcut for `specials ads` (same code). Extract one with `export ads \"<file>:<stream>\"`."],
+  "opts": [("--csv/--json/--jsonl [FILE]", "machine output (type/path/home_oid/file_id/detail) to stdout or FILE")],
+  "ex": [("ads", "list every ADS + its host file"),
+         ("ads --csv ads.csv", "export the ADS inventory to CSV"),
+         ("export ads \"notes.txt:secret\"", "extract one stream's bytes")],
  },
  "export": {
   "tag": "Get data out — one home for every extraction path",
@@ -9593,7 +10085,7 @@ CMD_HELP = {
            ("--show", "recover & preview each snapshot's prior CoW content"),
            ("--file SUB", "only files whose path contains SUB (a fuller path disambiguates same-named files)"),
            ("--snapshot SEL", "only ONE version: a 1-based [N] index, or part of a version name"),
-           ("--depth N", "max recursion depth (default 10)"),
+           ("--depth N", "cap recursion depth (default: full)"),
            ("--extract DIR", "write each recovered version into DIR"),
            ("--json", "machine-readable inventory")],
   "ex": [("snapshots", "list files with snapshots"),
@@ -9607,6 +10099,7 @@ CMD_HELP = {
   "desc": ["Structural audit of metadata pages. By default a fast verdict; --checksums verifies the",
            "system root tables, --fullchecksums extends to every object B-tree (CRC64 or SHA-256)."],
   "opts": [("-v, --verbose", "per-page details (capped 200)"),
+           ("--json [FILE]", "emit the full report as a structured JSON object (to stdout or FILE)"),
            ("--checksums", "verify the system root tables' checksums"),
            ("--fullchecksums", "verify every object B-tree (implies --checksums)"),
            ("--scan-range A-B", "raw mode: inspect each LCN in the range standalone"),
@@ -9620,8 +10113,10 @@ CMD_HELP = {
   "desc": ["Maps non-resident files to their on-disk extents (data-runs). Default lists extent-backed",
            "files; -v adds resident/no-extent files and every decoded run (fvcn/lcn/length)."],
   "opts": [("-v, --verbose", "include resident/no-extent files and every decoded run"),
+           ("--csv/--json/--jsonl [FILE]", "machine output (one record per file; JSON keeps the structured "
+                                           "run list); to stdout or FILE (prints a count)"),
            ("--oid O", "start at object O (0x hex or decimal; default 0x600)"),
-           ("--depth N", "max recursion depth (default 3)")],
+           ("--depth N", "cap recursion depth (default: full)")],
   "ex": [("dataruns", "map extent-backed files under the root"),
          ("dataruns -v --depth 5", "full per-file run dump, deeper"),
          ("dataruns --oid 0x705 -v", "scope to one directory subtree")],
@@ -9709,6 +10204,9 @@ def _help_requested(toks):
     return False
 
 def main():
+    # Full-depth walks (4.D): raise the interpreter recursion limit as a safety margin so a genuinely deep
+    # directory tree cannot RecursionError (real trees are shallow; this is never hit in practice).
+    sys.setrecursionlimit(max(sys.getrecursionlimit(), 40000))
     _ALL_CMDS = set(SUBCOMMANDS) | set(HIDDEN_SUBCOMMANDS) | set(FORENSIC_SUBCOMMANDS)
     # Resolve a command-token alias (e.g. `find` -> `search`) to canonical BEFORE any dispatch/help, so all
     # downstream (help, argparse, forensic routing) sees the real name. The alias applies to the subcommand
@@ -9756,15 +10254,18 @@ def main():
         print("forensic subcommands:")
         for _k, _v in FORENSIC_SUBCOMMANDS.items():
             print(f"  {_k:13} {_v}")
-        print("\n  --provenance   list which emitted fields are NOT 100% certain (with citations)")
+        # --provenance DISABLED (2026-08-07): its citations reference internal-only artifacts
+        # (errata E##, structure_reference §, finding #) that a downloaded user cannot resolve.
+        # Kept in code (_print_field_provenance / FIELD_PROVENANCE) but not exposed on the CLI.
+        # print("\n  --provenance   list which emitted fields are NOT 100% certain (with citations)")
         print(f"\n{VERSION_NOTE}")
         return
 
-    # `forefst --provenance`: list which emitted fields are NOT 100% certain (needs no image;
-    # changes no other output). The honesty layer for uncertain output values.
-    if len(sys.argv) >= 2 and sys.argv[1] in ("--provenance", "--provenance-notes"):
-        _print_field_provenance()
-        return
+    # `forefst --provenance`: DISABLED (2026-08-07). See note above; the honesty-layer code is
+    # retained (_print_field_provenance) but the CLI entry point is commented out for now.
+    # if len(sys.argv) >= 2 and sys.argv[1] in ("--provenance", "--provenance-notes"):
+    #     _print_field_provenance()
+    #     return
 
     # Delegated forensic subcommands: parse like refsanalysis (raw remaining args + own flags),
     # since they use options argparse doesn't model (--parse/--raw-scan/--no-si/--source/...).
@@ -9800,21 +10301,30 @@ def main():
     ap.add_argument("--version", action="version", version=f"forefst.py v{VERSION} — ReFS forensic file lister")
     ap.add_argument("image", help="Path to disk image")
     ap.add_argument("command", nargs="?", choices=list(SUBCOMMANDS) + list(HIDDEN_SUBCOMMANDS), default=None,
-                    help="subcommand (default: files); run `forefst --list` to see all")
+                    help="subcommand (default: summary); run `forefst --list` to see all")
     ap.add_argument("target", nargs="?", default=None,
                     help="search PATTERN, or details /path | 0xOID")
-    ap.add_argument("-o", "--output", help="Output file (default: stdout)")
+    ap.add_argument("-o", "--output", help="Output file (default: stdout); or use --csv/--json/--jsonl FILE")
     ap.add_argument("--body", action="store_true", help="files: body-file output (default CSV)")
     ap.add_argument("--full-path-column", action="store_true",
-                    help="files CSV: append a FullPath column (ParentPath/FileName)")
-    ap.add_argument("--json", action="store_true", help="JSON output (pretty-printed array)")
-    ap.add_argument("--jsonl", action="store_true", help="JSON Lines output (one object per line)")
+                    help="(deprecated no-op — FullPath is now a standard files CSV column)")
+    # --csv/--json/--jsonl now accept an OPTIONAL FILE (bare = stdout, `--json FILE` = write file + count),
+    # standardizing files/summary/search/details with the forensic commands. Put the search/details TARGET
+    # BEFORE these flags (`search foo --json`), so the pattern isn't consumed as the format's FILE.
+    ap.add_argument("--csv", nargs="?", const="-", default=None, metavar="FILE",
+                    help="CSV output to stdout, or to FILE")
+    ap.add_argument("--json", nargs="?", const="-", default=None, metavar="FILE",
+                    help="JSON output (array) to stdout, or to FILE")
+    ap.add_argument("--jsonl", nargs="?", const="-", default=None, metavar="FILE",
+                    help="JSON Lines output to stdout, or to FILE")
     ap.add_argument("--hash-image", action="store_true",
                     help="summary: include SHA-256 hash of the full disk image")
     ap.add_argument("--oid", type=lambda x: int(x, 0), default=None,
                     help="details: address the object by OID (e.g. 0x705)")
     ap.add_argument("--path", default=None,
                     help="details: address the object by path (e.g. /dir/file.txt)")
+    ap.add_argument("--id", default=None,
+                    help="details/export: address a file by its reference HomeOid:FileId (e.g. 0x3069:0x2)")
     ap.add_argument("--regex", action="store_true",
                     help="search: treat PATTERN as a regular expression")
     ap.add_argument("--filter", default=None, metavar="CATEGORY",
@@ -9823,7 +10333,7 @@ def main():
                     help="files: add the TimestompFlags column — a $SI-only HEURISTIC (investigative "
                          "information, NOT proof); the `timestomp` subcommand adds the authoritative USN + "
                          "hard-link cross-checks and a per-row basis.")
-    ap.add_argument("--depth", type=int, default=100, help="Max directory recursion depth")
+    ap.add_argument("--depth", type=int, default=DEFAULT_DEPTH, help="Max directory recursion depth (default: full)")
     ap.add_argument("--partition-start", type=lambda x: int(x, 0), default=None,
                     help="Override partition start offset in bytes")
     ap.add_argument("--cow-before", metavar="IMAGE",
@@ -9835,7 +10345,9 @@ def main():
     ap.add_argument("-q", "--quiet", action="store_true", help="Suppress progress to stderr")
     args = ap.parse_args()
     if args.command is None:
-        args.command = "files"
+        # Phase 3 (4.A): a bare `forefst <image>` gives the volume SUMMARY (orientation first); run
+        # `forefst <image> files` for the full CSV listing.
+        args.command = "summary"
 
     def log(msg):
         if not args.quiet:
@@ -9845,10 +10357,10 @@ def main():
         print(f"{PROG}: error: {msg}", file=sys.stderr)
         sys.exit(1)
 
-    # Output format mutual exclusion
-    fmt_count = sum([args.body, args.json, args.jsonl])
+    # Output format mutual exclusion (--csv/--json/--jsonl accept an optional FILE, so they are None-or-str)
+    fmt_count = (1 if args.body else 0) + sum(1 for v in (args.csv, args.json, args.jsonl) if v is not None)
     if fmt_count > 1:
-        die("--body, --json, and --jsonl are mutually exclusive")
+        die("--csv, --json, --jsonl and --body are mutually exclusive")
 
     # Input validation
     if not os.path.exists(args.image):
@@ -9870,10 +10382,15 @@ def main():
     if (args.oid is not None or args.path) and args.command != "details":
         die("--oid/--path are only valid with the 'details' subcommand")
     if args.filter is not None:
-        if args.command != "files":
-            die("--filter is only valid with the 'files' subcommand")
+        if args.command not in ("files", "search"):
+            die("--filter is only valid with the 'files' or 'search' subcommand")
         if args.filter not in FILE_FILTERS:
             die(f"--filter: unknown category {args.filter!r}. Choices: {', '.join(sorted(FILE_FILTERS))}")
+
+    # Help-on-empty (4.C): a bare `details` (no target/OID/path/id) shows its help instead of opening the image.
+    if args.command == "details" and args.target is None and args.oid is None and not args.path and not args.id:
+        _render_cmd_help("details")
+        return
 
     # Bootstrap
     log(f"[{PROG}] Opening {os.path.basename(args.image)}...")
@@ -9907,8 +10424,8 @@ def main():
         fast_data = cmd_fastsummary(f, ps, cs, tr, roots, obj_map, vmaj, vmin, chkp_lcns,
                                      args.image, plus_mode=is_plus, hash_image=args.hash_image, log_fn=log)
         if is_fast:
-            if args.json:
-                print(json.dumps(fast_data, indent=2, ensure_ascii=False))
+            if args.json is not None:
+                _emit_json_obj(fast_data, _native_fmt_dest(args)[1], "fast summary")
             else:
                 _print_fastsummary(fast_data, plus_mode=is_plus)
             f.close()
@@ -9943,21 +10460,33 @@ def main():
             fast_data["usn_journal_id"] = max(_jids, key=_jids.get)
         combined = {**fast_data, **walk_summary}
         combined["summary_mode"] = "summary-plus" if is_plus else "summary"
-        if args.json:
-            print(json.dumps(combined, indent=2, ensure_ascii=False))
+        if args.json is not None:
+            _emit_json_obj(combined, _native_fmt_dest(args)[1], "summary")
         else:
             _print_summary(walk_summary, fast_data, plus_mode=is_plus)
         f.close()
         return
 
-    # details subcommand — inspect ONE object by OID or path
+    # details subcommand — inspect ONE object by OID, path, or reference (--id HomeOid:FileId)
     if args.command == "details":
         det_oid, det_path = None, None
         if args.oid is not None and args.path:
             die("details: use --oid OR --path, not both")
         if args.target is not None and (args.oid is not None or args.path):
             die("details: give a target OR --oid/--path, not both")
-        if args.oid is not None:
+        if args.id is not None:
+            # 4.F: address a file by its reference. file_id==0 ⇒ a directory self-reference (its own OID).
+            if args.oid is not None or args.path or args.target is not None:
+                die("details: use --id alone (not with a target/OID/path)")
+            _hoid, _fid = _parse_id_ref(args.id)
+            if _fid == 0:
+                det_oid = _hoid
+            else:
+                _ent = _resolve_id_entry(f, ps, cs, tr, obj_map, _hoid, _fid)
+                if _ent is None:
+                    print(f"no object for --id {args.id}", file=sys.stderr); f.close(); sys.exit(1)
+                det_path = _ent["path"]
+        elif args.oid is not None:
             det_oid = args.oid
         elif args.path:
             det_path = args.path
@@ -10023,7 +10552,7 @@ def main():
                     _ifl = internal_flags_str(match.get("internal_flags", 0))
                     if _ifl:
                         rec["internal_flags"] = _ifl
-                    print(json.dumps(rec, indent=2, ensure_ascii=False))
+                    _emit_json_obj(rec, _native_fmt_dest(args)[1], "record")
                 else:
                     _print_file_detail(match, sd_map, version_str, raw_value=ea_src)
                 f.close()
@@ -10039,8 +10568,8 @@ def main():
             print(f"Error reading OID 0x{det_oid:x}: {detail['error']}", file=sys.stderr)
             f.close()
             sys.exit(1)
-        if args.json:
-            print(json.dumps(detail, indent=2, ensure_ascii=False))
+        if args.json is not None:
+            _emit_json_obj(detail, _native_fmt_dest(args)[1], "detail")
         else:
             _print_oid_detail(detail)
         f.close()
@@ -10055,16 +10584,15 @@ def main():
         # Deleted/Trash objects are surfaced by the `deleted` command (use `deleted --search PATTERN`);
         # `search` covers the live tree only.
         matches = cmd_search(f, ps, cs, tr, obj_map, vmaj, vmin, pattern,
-                             regex_mode=args.regex)
+                             regex_mode=args.regex, filter_cat=args.filter)
         if isinstance(matches, dict) and "error" in matches:
             print(matches["error"], file=sys.stderr)
             f.close()
             sys.exit(1)
-        if args.json:
-            print(json.dumps(matches, indent=2, ensure_ascii=False))
-        elif args.jsonl:
-            for m in matches:
-                print(json.dumps(m, ensure_ascii=False))
+        _sfmt, _sdest = _native_fmt_dest(args)
+        if args.json is not None or args.jsonl is not None or args.csv is not None:
+            _scols = ["oid", "parent_oid", "type", "file_size", "is_resident", "modified", "path", "is_deleted"]
+            _emit_records(matches, _scols, _sfmt, _sdest or "-", "matches")
         else:
             _print_search(matches, pattern)
         f.close()
@@ -10124,33 +10652,39 @@ def main():
         results = [r for r in results if _pred(r)]
         log(f"[{PROG}] --filter {args.filter}: {len(results)} matching entries")
 
-    # Output
-    if args.output:
-        out = open(args.output, "w", newline="", encoding="utf-8")
-    else:
-        out = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", newline="")
-
+    # Output — --csv/--json/--jsonl [FILE] (bare=stdout), --body, or -o; resolved uniformly.
+    fmt, dest = _native_fmt_dest(args)
+    out, _close = _native_out(dest)
     try:
-        if args.body:
+        if fmt == "body":
             emit_body(results, out)
-            fmt = "body"
-        elif args.json:
+        elif fmt == "json":
             emit_json(results, sd_map, version_str, out)
-            fmt = "JSON"
-        elif args.jsonl:
+        elif fmt == "jsonl":
             emit_jsonl(results, sd_map, version_str, out)
-            fmt = "JSONL"
         else:
             emit_csv(results, sd_map, version_str, out, full_path=args.full_path_column)
-            fmt = "CSV"
     finally:
-        if args.output:
+        if _close:
             out.close()
         f.close()
 
     ndeleted = sum(1 for r in results if r.get("is_deleted"))
-    dest = args.output if args.output else "(stdout)"
-    log(f"[{PROG}] Done. {len(results)} entries ({ndeleted} deleted) -> {fmt} {dest}")
+    if dest:
+        print(f"Wrote {len(results)} entries to {dest}")
+    log(f"[{PROG}] Done. {len(results)} entries ({ndeleted} deleted) -> {fmt.upper()} {dest or '(stdout)'}")
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except BrokenPipeError:
+        # A downstream reader closed the pipe early (e.g. `| head`, or `| more` then `q`). Redirect stdout to
+        # devnull so the interpreter's flush-on-exit does not raise a second BrokenPipeError + traceback.
+        try:
+            devnull = os.open(os.devnull, os.O_WRONLY)
+            os.dup2(devnull, sys.stdout.fileno())
+        except Exception:
+            pass
+        sys.exit(0)
+    except KeyboardInterrupt:
+        sys.exit(130)

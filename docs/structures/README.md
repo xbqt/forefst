@@ -76,7 +76,7 @@ The reserved OIDs below 0x700 — including the **FS Metadata directory (OID 0x5
 Change Journal — are cataloged in [System OIDs](system_oids.md). The Logfile Info table (OIDs 0x09/0x0A,
 schema 0xe090, MLog metadata) is covered by [MLog](mlog.md). The forensic relevance of each table is
 developed in the concept pages: allocation in [Space Allocation](../concepts/allocation_space_mgmt.md),
-identity in [Object IDs and FileIds](../concepts/object_ids_fileids.md) and
+identity in [Object IDs](../concepts/object_ids.md) and [File IDs](../concepts/file_ids.md) and
 [OID Allocation](../concepts/oid_allocation.md), block sharing in [Deduplication](../concepts/deduplication.md),
 and per-file checksums in [Integrity Streams](../concepts/integrity_streams.md).
 

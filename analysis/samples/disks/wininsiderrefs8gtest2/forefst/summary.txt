@@ -15,11 +15,22 @@ ReFS Volume Fast Extended Summary
   Checksum:           SHA-256
 
 ------------------------------------------------------------------------------
-Hashes
+Bootstrap structures  (address + validity; SHA-256 on the next line)
 ------------------------------------------------------------------------------
-  VBR SHA-256:        ae4fee4b0bf7d973a0ceffc9d5fbf7b0a69d38740b560a44cc6084c64b1fae72
-  SUPB SHA-256:       4e456243e25316f916e54b8d6342afa28bd31b1431aba62f99ab647691d6cd22
-  CHKP SHA-256:       86401c7abebf1062f11eaaa4bfb4d4d0ab325528234b74df4ee6ef45e0822bd1
+  VBR primary      LBA 0 (offset 0x0)  — checksum OK
+      ae4fee4b0bf7d973a0ceffc9d5fbf7b0a69d38740b560a44cc6084c64b1fae72
+  VBR backup       LBA 16646143 (off 0x1fbfffe00)  — = primary, cksum ok
+      ae4fee4b0bf7d973a0ceffc9d5fbf7b0a69d38740b560a44cc6084c64b1fae72
+  SUPB primary     LCN 0x1e (offset 0x1e0000)  — SUPB sig OK
+      4e456243e25316f916e54b8d6342afa28bd31b1431aba62f99ab647691d6cd22
+  SUPB backup      LCN 0x1fbfd (offset 0x1fbfd0000)  — SUPB sig OK
+      131805bffa5173e4ce645832b41cf8d2214a27276d3ddab9b561085c89906216
+  SUPB backup      LCN 0x1fbfe (offset 0x1fbfe0000)  — SUPB sig OK
+      06f9c8be96753f5373cdeae6bdf65ef8303d3f9fb6ab7f7ef25d534893ffa9e4
+  CHKP backup      LCN 0x538 (offset 0x5380000)  — valid, vclock=160
+      fa84d5691301ba4f9353429de7ad62f2bed55df4cb615d43a8bb5a6d122c6361
+  CHKP primary     LCN 0x3d15 (offset 0x3d150000)  — valid, vclock=161
+      86401c7abebf1062f11eaaa4bfb4d4d0ab325528234b74df4ee6ef45e0822bd1
 
 ------------------------------------------------------------------------------
 Checkpoint
@@ -58,30 +69,29 @@ Volume Detail
   Volume created:     2026-05-19 19:56:46.8989928
   Volume modified:    2026-05-19 19:56:47.3896445
   Volume state:       ⚠ APPEARS UPGRADED (formatted v3.14, now running v3.14)
-                        • format-time v3.14 ≠ driver v3.15 ($VOLUME_INFORMATION stamp)
+      • format-time v3.14 ≠ driver v3.15 ($VOLUME_INFORMATION stamp)
   Security descs:     7
   Reparse index:      173 entries
   Trash table:        0 entries
   Containers used:    126 / 127 (99.2%)
-  Free space (est):   64.0 MB
+  Free space (est):   64.0 MB  (container-map estimate — coarse)
   FS Metadata rows:   1
   USN Journal:        Inactive
 
-For complete file statistics, use the `summary` subcommand (full directory walk)
 
 ------------------------------------------------------------------------------
 File System Content (from directory walk)
 ------------------------------------------------------------------------------
   Directories:        118
   Files:              776 (126 resident)
-  Total file size:    822.5 MB
+  Total file size:    822.2 MB
   Oldest timestamp:   2021-05-18 07:16:04.9990009
   Newest timestamp:   2026-05-19 20:00:58.3654380
   Encrypted files:    0
   Integrity files:    0
   Compressed files:   0
-  Hard links (extra): 144
+  Hard links (extra): 155
   Snapshots:          0
   ADS entries:        35
 
-Tip: the `fastsummary` subcommand gives quick volume metadata without a directory walk
+Tip: `fastsummary` = quick volume metadata (no directory walk).

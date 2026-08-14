@@ -23,7 +23,7 @@ A handful of ideas recur on almost every page; carry them before opening any sin
 - **Layouts are versioned.** Structure sizes and `$SI` layout change by ReFS version, checksum mode, and
   cluster size, so you must establish the version *first* ([Version Detection](version_detection.md)).
 - **Identity is monotonic.** OIDs are never reused, so a gap in the sequence is permanent evidence of a
-  past deletion ([OID Allocation](oid_allocation.md), [Object IDs and FileIds](object_ids_fileids.md)).
+  past deletion ([OID Allocation](oid_allocation.md), [Object IDs](object_ids.md)).
 
 ## 2. How these pages are organized
 
@@ -45,7 +45,7 @@ A path that matches an actual investigation rather than the alphabet:
    → [Architecture](architecture.md). Know the version and how to reach any table before parsing.
 2. **Fix the addressing.** [Cluster and Page Size](cluster_page_size.md) and
    [Virtual Addressing](virtual_addressing.md) — so every later cluster number resolves correctly.
-3. **Read the metadata.** [Attributes](attributes.md), [Object IDs and FileIds](object_ids_fileids.md),
+3. **Read the metadata.** [Attributes](attributes.md), [Object IDs](object_ids.md), [File IDs](file_ids.md),
    [Resident vs Non-Resident Storage](resident_storage.md) — what a file's record holds and where its
    content is.
 4. **Build the timeline.** [Artifact Timeline](artifact_timeline.md) and
@@ -109,7 +109,8 @@ cares.
 | Page | What it is / why it matters |
 |------|------------------------------|
 | [Attributes](attributes.md) | The two-layer attribute model: row types and the embedded sub-record chain |
-| [Object IDs and FileIds](object_ids_fileids.md) | The cross-table join key — OID vs the per-directory ordinal |
+| [Object IDs](object_ids.md) | The volume-wide 64-bit directory identity — the reliable cross-table join key |
+| [File IDs](file_ids.md) | How a file is identified: the FileRef = creation-directory OID + per-directory ordinal |
 | [OID Allocation](oid_allocation.md) | The monotonic counter; why gaps are permanent deletion evidence |
 
 ### Copy-on-write, recovery & survivability

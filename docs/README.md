@@ -40,7 +40,8 @@ Reverse engineering documentation for the Resilient File System (ReFS), covering
 | [Artifact Timeline](concepts/artifact_timeline.md) | Timestamp sources and super-timeline construction |
 | [Transactions / Crash Consistency](concepts/transactions_crash_consistency.md) | Redo-only MLog + checkpoint atomicity |
 | [Redundancy](concepts/redundancy.md) | Boot-sector, superblock, checkpoint copies |
-| [Object IDs and FileIds](concepts/object_ids_fileids.md) | The cross-table join key; OID vs per-directory ordinal |
+| [Object IDs](concepts/object_ids.md) | The volume-wide 64-bit directory identity — the reliable cross-table join key |
+| [File IDs](concepts/file_ids.md) | How a file (which has no OID) is identified: the FileRef = creation directory + ordinal |
 | [OID Allocation](concepts/oid_allocation.md) | Monotonic counter, gaps as deletion evidence |
 | [Space Allocation](concepts/allocation_space_mgmt.md) | Three-tier bitmap allocator (Medium / Container / Small) |
 | [Compression](concepts/compression.md) | Per-container 24H2 volume compression |

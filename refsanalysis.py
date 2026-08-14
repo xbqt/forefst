@@ -48,6 +48,7 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 from forefst import (
+    DEFAULT_DEPTH,
     FILE_ATTR_FLAGS, SUPB_LCN, Translator, _is_snapshot_value, _parse_ads_from_value, _select_ct_root, attrs_to_str,
     bootstrap, count_snapshots_in_resident, find_refs_partition, fs_content_summary, get_object_si,
     get_resident_file_size, gpt_partition_detail, le16, le32, le64,
@@ -2465,9 +2466,15 @@ def _apply_backing_ea(results, idx):
             r["has_ea"] = True
 
 
-def _walk_dir_tree(f, ps, cs, tr, obj_map, oid, path, depth, max_depth, results):
+def _walk_dir_tree(f, ps, cs, tr, obj_map, oid, path, depth, max_depth, results, _visited=None):
     """Recursively walk directory tree, collecting entries."""
     if oid not in obj_map: return
+    # Cycle guard: a directory's child_oid pointing back at an ancestor (a corrupt/crafted tree) would
+    # otherwise recurse forever now that the default depth is full (DEFAULT_DEPTH). Well-formed trees never
+    # revisit an OID, so this never drops a legitimate entry.
+    if _visited is None: _visited = set()
+    if oid in _visited: return
+    _visited.add(oid)
     try: entries = _parse_dir_entries(f, ps, cs, tr, obj_map[oid])
     except Exception: return
     for entry in entries:
@@ -2479,7 +2486,7 @@ def _walk_dir_tree(f, ps, cs, tr, obj_map, oid, path, depth, max_depth, results)
         })
         if entry["is_dir"] and depth < max_depth and entry["child_oid"] in obj_map:
             _walk_dir_tree(f, ps, cs, tr, obj_map, entry["child_oid"],
-                           child_path, depth + 1, max_depth, results)
+                           child_path, depth + 1, max_depth, results, _visited)
 
 
 def _parse_extended_attributes(data):
@@ -2623,7 +2630,8 @@ _DATA_DESCRIPTOR = 0x000E0080
 def cmd_files(image, remaining, partition_start):
     args = _parse_args(remaining, flags=["-v"], valued=["--depth", "--oid"])
     verbose = args["v"]
-    max_depth = _int_arg(args["depth"], "--depth") if args["depth"] else 20
+    # Full-depth by default (matches forefst; --depth N overrides). Cycle-guarded + recursion limit raised.
+    max_depth = _int_arg(args["depth"], "--depth") if args["depth"] else DEFAULT_DEPTH
     start_oid = _int_arg(args["oid"], "--oid", 0) if args["oid"] else 0x600
 
     try:
@@ -2689,9 +2697,13 @@ def cmd_files(image, remaining, partition_start):
 #  ATTRIBUTES — File attribute deep dive
 # ═══════════════════════════════════════════════════════════════════════
 
-def _analyze_dir_attributes(f, ps, cs, tr, obj_map, oid, path, depth, max_depth, results, filt):
+def _analyze_dir_attributes(f, ps, cs, tr, obj_map, oid, path, depth, max_depth, results, filt, _visited=None):
     """Recursively analyze a directory's file attributes."""
     if depth > max_depth or oid not in obj_map: return
+    # Cycle guard (full-depth default): never revisit an OID; well-formed trees don't, so nothing is dropped.
+    if _visited is None: _visited = set()
+    if oid in _visited: return
+    _visited.add(oid)
     rows = walk_bplus(f, ps, cs, tr, obj_map[oid])
     for kd, vd in rows:
         if len(kd) < 4 or le16(kd, 0) != 0x30: continue
@@ -2711,7 +2723,7 @@ def _analyze_dir_attributes(f, ps, cs, tr, obj_map, oid, path, depth, max_depth,
             child_oid = attrs.get("child_oid", 0)
             if child_oid and child_oid in obj_map:
                 _analyze_dir_attributes(f, ps, cs, tr, obj_map, child_oid,
-                                        full_path, depth + 1, max_depth, results, filt)
+                                        full_path, depth + 1, max_depth, results, filt, _visited)
 
 
 
@@ -2720,7 +2732,8 @@ def cmd_attributes(image, remaining, partition_start):
     args = _parse_args(remaining, flags=["-v"], valued=["--oid", "--depth", "--filter"])
     verbose = args["v"]
     start_oid = _int_arg(args["oid"], "--oid", 0) if args["oid"] else 0x600
-    max_depth = _int_arg(args["depth"], "--depth") if args["depth"] else 10
+    # Full-depth by default (matches forefst; --depth N overrides). Cycle-guarded + recursion limit raised.
+    max_depth = _int_arg(args["depth"], "--depth") if args["depth"] else DEFAULT_DEPTH
     filt = args["filter"]
     if filt == "wsl":
         # C16: refsanalysis `--filter wsl` selects files carrying the WSL ownership/mode metadata EA
@@ -3050,6 +3063,15 @@ def cmd_details(image, remaining, partition_start):
             print(f"  Storage:        non-resident directory  (OID {_hx(info['oid'])}, own B+-tree)")
         else:
             print(f"  Storage:        non-resident file  (no OID of its own; data in out-of-line extents)")
+        # FileRef identity (matches forefst `details`): a non-resident file's stable reference is
+        # (home_oid = value+0x08, file_id = value+0x00). home_oid is the CREATION directory, frozen — so
+        # home_oid != current parent flags a relocated (moved) or cross-directory hard-linked name.
+        if not resident and not info.get("is_dir") and vd is not None and len(vd) >= 0x10:
+            _hb = le64(vd, 0x08); _fi = le64(vd, 0x00)
+            if _hb and _fi:
+                print(f"  FileRef:        0x{_hb:x}:0x{_fi:x}   (HomeOid:FileId, the stable file reference)")
+                if _hb != parent_oid:
+                    print(f"  Home directory: 0x{_hb:x}   created here; current parent 0x{parent_oid:x} (relocated/hard-linked)")
         print(f"  Parent OID:     {_hx(parent_oid)}")
         if "is_dir" in info and info["is_dir"]:
             print(f"  Type:           DIRECTORY")
@@ -3986,6 +4008,9 @@ def _render_cmd_help(cmd):
     print("\n  Global: --partition-start BYTES (override volume offset), --json (where supported).")
 
 def main():
+    # Full-depth default walks (cmd_files/cmd_attributes) can recurse as deep as a real directory tree; raise
+    # the limit well above any plausible depth (the walks are cycle-guarded, so this only covers genuine depth).
+    sys.setrecursionlimit(40000)
     _ALL_CMDS = set(_HANDLERS) | {"summary++"}
     _argv = sys.argv
     # ── help handling (before any dispatch) ──

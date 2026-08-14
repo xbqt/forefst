@@ -1,12 +1,5 @@
-# GitLab Pages — build the ReFS reference site and publish it at
-#   https://<your-username>.gitlab.io/forefst/
-#
-# This file lives in a GitLab project named `forefst` (separate from your blog project
-# `<username>.gitlab.io`), so it has its OWN pipeline — your blog's frequent rebuilds
-# never touch it, and this never touches your blog. The site is rebuilt on every push
-# (i.e. every change mirrored in from GitHub) and on a manual "Run pipeline".
-#
-# One thing to edit: set BASEURL below to your real Pages URL (username / project path).
+# GitLab Pages pipeline: build.py generates the Hugo content from the Markdown docs, Hugo renders the
+# ReFS reference site, and the result is published to GitLab Pages on every push and on a manual run.
 
 variables:
   BASEURL: "https://xbpt.gitlab.io/forefst/"      # <-- change `xbpt` (and `/forefst/`) if different

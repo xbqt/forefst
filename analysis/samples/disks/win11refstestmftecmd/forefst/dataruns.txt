@@ -10,10 +10,10 @@ ReFS File Data Extent Analysis
   Start OID:    0x600
 
   Summary:
-    Total files analyzed:   592
-    Resident (inline):      440
-    Non-resident (extents): 152
-    With decoded extents:   148
+    Total files analyzed:   1305
+    Resident (inline):      930
+    Non-resident (extents): 375
+    With decoded extents:   363
 
 ==============================================================================
 File Data Locations
@@ -54,6 +54,18 @@ File Data Locations
   EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_whiskey_delta_922359.tmp
             size=339532, attrs=Archive, extents=4, clusters=83
             created=2024-11-23 07:17:31
+  EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_cache_sync_352758.ini
+            size=208467, attrs=Archive, extents=2, clusters=51
+            created=2026-05-23 07:34:01
+  EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_audit_echo_178867.tmp
+            size=520031, attrs=Archive, extents=2, clusters=127
+            created=2026-01-01 07:16:17
+  EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_output_lima_215617.json
+            size=403765, attrs=Archive, extents=2, clusters=99
+            created=2026-05-23 07:33:59
+  EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/elvis_dir_oscar_874075/xbpt_delta_victor_412034.ini
+            size=209311, attrs=Archive, extents=2, clusters=52
+            created=2026-05-23 07:34:00
   EXTENT    test/elvis_dir_india_800575/xbpt_foxtrot_zulu_156856.csv
             size=130777, attrs=Archive, extents=2, clusters=32
             created=2026-05-23 07:34:02
@@ -90,12 +102,33 @@ File Data Locations
   EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_victor_tango_152379.bin
             size=505381, attrs=Archive, extents=2, clusters=124
             created=2026-05-23 07:34:01
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/elvis_dir_kilo_751807/xbpt_delta_zulu_595944.bak
+            size=100455, attrs=Archive, extents=4, clusters=25
+            created=2026-05-23 07:34:00
   EXTENT    test/elvis_dir_record_449015/xbpt_log_india_171227.csv
             size=189614, attrs=Archive, extents=2, clusters=47
             created=2026-05-23 07:33:59
   EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_index_draft_129088.bin
             size=159126, attrs=Archive, extents=2, clusters=39
             created=2026-05-23 07:34:02
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_mike_uniform_215836.txt
+            size=236094, attrs=Archive, extents=4, clusters=58
+            created=2026-05-23 07:33:58
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_romeo_output_531365.cfg
+            size=97673, attrs=Archive, extents=2, clusters=24
+            created=2022-08-02 07:16:28
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_zulu_hotel_433348.log
+            size=283500, attrs=Archive, extents=2, clusters=70
+            created=2026-05-23 07:34:00
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_cache_zulu_259753.dat
+            size=407804, attrs=Archive, extents=2, clusters=100
+            created=2026-03-01 07:16:07
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_delta_temp_981764.tmp
+            size=408171, attrs=Archive, extents=2, clusters=100
+            created=2023-08-26 07:16:12
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_audit_config_255291.dat
+            size=462545, attrs=Archive, extents=2, clusters=113
+            created=2021-10-19 07:16:21
   EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_draft_draft_797325.txt
             size=396015, attrs=Archive, extents=2, clusters=97
             created=2026-05-23 07:34:02
@@ -105,6 +138,33 @@ File Data Locations
   EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_victor_sync_949138.bak
             size=144033, attrs=Archive, extents=2, clusters=36
             created=2026-05-23 07:33:58
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_draft_beta_656043.txt
+            size=436357, attrs=Archive, extents=4, clusters=107
+            created=2026-05-23 07:33:58
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_record_delta_426347.json
+            size=364340, attrs=Archive, extents=4, clusters=89
+            created=2026-05-23 07:34:02
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_record_index_307951.json
+            size=415474, attrs=Archive, extents=2, clusters=102
+            created=2026-05-23 07:34:01
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_beta_cache_861983.json
+            size=308742, attrs=Archive, extents=2, clusters=76
+            created=2025-06-11 07:16:10
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_tango_mike_573093.dat
+            size=414625, attrs=Archive, extents=2, clusters=102
+            created=2026-05-23 07:33:58
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_hardlink_audit_219848.cfg
+            size=239973, attrs=Archive, extents=2, clusters=24
+            created=2026-05-23 07:33:58
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_report_audit_396522.txt
+            size=241654, attrs=Archive, extents=4, clusters=59
+            created=2021-09-29 07:16:41
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899/xbpt_config_record_746941.dat
+            size=73763, attrs=Archive, extents=2, clusters=19
+            created=2024-05-06 07:17:31
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_whiskey_835215/xbpt_alpha_romeo_974930.bin
+            size=478670, attrs=Archive, extents=2, clusters=117
+            created=2026-05-23 07:34:02
   EXTENT    test/elvis_dir_victor_783323/xbpt_report_quebec_867569.md
             size=540829, attrs=Archive, extents=4, clusters=133
             created=2025-05-12 07:17:04
@@ -147,6 +207,18 @@ File Data Locations
   EXTENT    test2/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_whiskey_delta_922359.tmp
             size=339532, attrs=Archive, extents=4, clusters=83
             created=2024-11-23 07:17:31
+  EXTENT    test2/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_cache_sync_352758.ini
+            size=208467, attrs=Archive, extents=2, clusters=51
+            created=2026-05-23 07:38:47
+  EXTENT    test2/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_audit_echo_178867.tmp
+            size=520031, attrs=Archive, extents=2, clusters=127
+            created=2026-01-01 07:16:17
+  EXTENT    test2/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_output_lima_215617.json
+            size=403765, attrs=Archive, extents=2, clusters=99
+            created=2026-05-23 07:38:45
+  EXTENT    test2/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/elvis_dir_oscar_874075/xbpt_delta_victor_412034.ini
+            size=209311, attrs=Archive, extents=2, clusters=52
+            created=2026-05-23 07:38:47
   EXTENT    test2/elvis_dir_india_800575/xbpt_foxtrot_zulu_156856.csv
             size=130777, attrs=Archive, extents=2, clusters=32
             created=2026-05-23 07:38:48
@@ -183,12 +255,33 @@ File Data Locations
   EXTENT    test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_victor_tango_152379.bin
             size=505381, attrs=Archive, extents=2, clusters=124
             created=2026-05-23 07:38:48
+  EXTENT    test2/elvis_dir_papa_805353/elvis_dir_november_478580/elvis_dir_kilo_751807/xbpt_delta_zulu_595944.bak
+            size=100455, attrs=Archive, extents=4, clusters=25
+            created=2026-05-23 07:38:47
   EXTENT    test2/elvis_dir_record_449015/xbpt_log_india_171227.csv
             size=189614, attrs=Archive, extents=2, clusters=47
             created=2026-05-23 07:38:45
   EXTENT    test2/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_index_draft_129088.bin
             size=159126, attrs=Archive, extents=2, clusters=39
             created=2026-05-23 07:38:48
+  EXTENT    test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_mike_uniform_215836.txt
+            size=236094, attrs=Archive, extents=4, clusters=58
+            created=2026-05-23 07:38:44
+  EXTENT    test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_romeo_output_531365.cfg
+            size=97673, attrs=Archive, extents=2, clusters=24
+            created=2022-08-02 07:16:28
+  EXTENT    test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_zulu_hotel_433348.log
+            size=283500, attrs=Archive, extents=2, clusters=70
+            created=2026-05-23 07:38:47
+  EXTENT    test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_cache_zulu_259753.dat
+            size=407804, attrs=Archive, extents=2, clusters=100
+            created=2026-03-01 07:16:07
+  EXTENT    test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_delta_temp_981764.tmp
+            size=408171, attrs=Archive, extents=2, clusters=100
+            created=2023-08-26 07:16:12
+  EXTENT    test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_audit_config_255291.dat
+            size=462545, attrs=Archive, extents=2, clusters=113
+            created=2021-10-19 07:16:21
   EXTENT    test2/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_draft_draft_797325.txt
             size=396015, attrs=Archive, extents=2, clusters=97
             created=2026-05-23 07:38:48
@@ -198,6 +291,33 @@ File Data Locations
   EXTENT    test2/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_victor_sync_949138.bak
             size=144033, attrs=Archive, extents=2, clusters=36
             created=2026-05-23 07:38:45
+  EXTENT    test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_draft_beta_656043.txt
+            size=436357, attrs=Archive, extents=4, clusters=107
+            created=2026-05-23 07:38:44
+  EXTENT    test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_record_delta_426347.json
+            size=364340, attrs=Archive, extents=4, clusters=89
+            created=2026-05-23 07:38:48
+  EXTENT    test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_record_index_307951.json
+            size=415474, attrs=Archive, extents=2, clusters=102
+            created=2026-05-23 07:38:47
+  EXTENT    test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_beta_cache_861983.json
+            size=308742, attrs=Archive, extents=2, clusters=76
+            created=2025-06-11 07:16:10
+  EXTENT    test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_tango_mike_573093.dat
+            size=414625, attrs=Archive, extents=2, clusters=102
+            created=2026-05-23 07:38:45
+  EXTENT    test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_hardlink_audit_219848.cfg
+            size=239973, attrs=Archive, extents=2, clusters=24
+            created=2026-05-23 07:38:44
+  EXTENT    test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_report_audit_396522.txt
+            size=241654, attrs=Archive, extents=4, clusters=59
+            created=2021-09-29 07:16:41
+  EXTENT    test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899/xbpt_config_record_746941.dat
+            size=73763, attrs=Archive, extents=2, clusters=19
+            created=2024-05-06 07:17:31
+  EXTENT    test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_whiskey_835215/xbpt_alpha_romeo_974930.bin
+            size=478670, attrs=Archive, extents=2, clusters=117
+            created=2026-05-23 07:38:49
   EXTENT    test2/elvis_dir_victor_783323/xbpt_report_quebec_867569.md
             size=540829, attrs=Archive, extents=4, clusters=133
             created=2025-05-12 07:17:04
@@ -252,12 +372,180 @@ File Data Locations
   EXTENT    testintegrity/dir_gamma_404999/dir_mike_845145/xbpt_hardlink_lima_581837.xml
             size=247899, attrs=Archive, extents=2, clusters=61
             created=2026-05-23 07:53:50
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/xbpt_hardlink_beta_447656.bak
+            size=169471, attrs=Archive, extents=2, clusters=42
+            created=2026-05-23 07:53:47
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/xbpt_hardlink_lima_190401.lnk
+            size=56558, attrs=Archive, extents=2, clusters=14
+            created=2026-05-23 07:53:48
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/xbpt_hardlink_whiskey_479738.lnk
+            size=56558, attrs=Archive, extents=2, clusters=14
+            created=2026-05-23 07:53:48
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/xbpt_quebec_delta_248335.log
+            size=128, attrs=Archive, extents=1, clusters=1
+            created=2026-05-23 07:53:49
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/xbpt_romeo_output_226175.xml
+            size=434031, attrs=Archive, extents=2, clusters=106
+            created=2026-05-23 07:53:48
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/xbpt_alpha_output_553478.tmp
+            size=249195, attrs=Archive, extents=2, clusters=61
+            created=2026-05-23 07:53:47
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/xbpt_hardlink_beta_746968.tmp
+            size=507500, attrs=Archive, extents=2, clusters=124
+            created=2026-05-23 07:53:47
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/xbpt_papa_victor_738688.csv
+            size=471045, attrs=Archive, extents=2, clusters=116
+            created=2026-05-23 07:53:47
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/xbpt_record_cache_677917.dat
+            size=456337, attrs=Archive, extents=2, clusters=112
+            created=2024-05-21 07:48:14
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/dir_output_967830/xbpt_mike_quebec_466194.json
+            size=126243, attrs=Archive, extents=2, clusters=31
+            created=2026-05-23 07:53:51
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/dir_zulu_312953/xbpt_backup_sync_933420.md
+            size=377402, attrs=Archive, extents=2, clusters=93
+            created=2026-05-23 07:53:51
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/dir_zulu_312953/xbpt_hardlink_tango_212500.json
+            size=254576, attrs=Archive, extents=2, clusters=63
+            created=2026-04-18 07:48:17
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/dir_zulu_312953/xbpt_hardlink_temp_276244.md
+            size=377402, attrs=Archive, extents=2, clusters=93
+            created=2026-05-23 07:53:51
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_cache_foxtrot_199130.bin
+            size=139725, attrs=Archive, extents=2, clusters=35
+            created=2021-07-21 07:48:20
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_hardlink_archive_340877.ini
+            size=21292, attrs=Archive, extents=2, clusters=6
+            created=2026-05-23 07:53:47
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_hardlink_mike_286763.json
+            size=176095, attrs=Archive, extents=2, clusters=43
+            created=2026-05-23 07:53:49
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_hardlink_whiskey_830132.log
+            size=114623, attrs=Archive, extents=2, clusters=28
+            created=2026-05-23 07:53:50
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_index_uniform_742905.csv
+            size=128, attrs=Archive, extents=1, clusters=1
+            created=2026-05-23 07:53:53
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_india_sierra_627062.bak
+            size=169471, attrs=Archive, extents=2, clusters=42
+            created=2026-05-23 07:53:47
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_oscar_342854/xbpt_hardlink_yankee_651452.csv
+            size=471045, attrs=Archive, extents=2, clusters=116
+            created=2026-05-23 07:53:47
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_oscar_342854/dir_archive_860003/xbpt_foxtrot_trace_228877.md
+            size=128461, attrs=Archive, extents=2, clusters=32
+            created=2026-05-23 07:53:50
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_oscar_342854/dir_archive_860003/xbpt_hardlink_backup_502262.bin
+            size=226728, attrs=Archive, extents=2, clusters=56
+            created=2022-04-18 07:50:12
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_oscar_342854/dir_archive_860003/xbpt_hardlink_hotel_593914.json
+            size=425160, attrs=Archive, extents=2, clusters=114
+            created=2026-05-23 07:53:47
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_oscar_342854/dir_archive_860003/xbpt_mike_gamma_283220.cfg
+            size=21290, attrs=Archive, extents=2, clusters=6
+            created=2026-05-23 07:53:48
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_oscar_342854/dir_archive_860003/dir_cache_496228/xbpt_november_draft_998387.lnk
+            size=139725, attrs=Archive, extents=2, clusters=35
+            created=2026-05-23 07:53:50
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_oscar_342854/dir_archive_860003/dir_zulu_695240/xbpt_hardlink_sync_608132.xml
+            size=128, attrs=Archive, extents=1, clusters=1
+            created=2026-05-23 07:53:52
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/xbpt_hardlink_beta_501725.dat
+            size=456337, attrs=Archive, extents=2, clusters=112
+            created=2024-05-21 07:48:14
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/xbpt_hardlink_temp_636663.tmp
+            size=150416, attrs=Archive, extents=2, clusters=37
+            created=2026-05-23 07:53:48
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/xbpt_hardlink_yankee_522047.bak
+            size=354328, attrs=Archive, extents=2, clusters=87
+            created=2022-07-05 07:48:05
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_backup_240201/xbpt_hardlink_india_494642.txt
+            size=358779, attrs=Archive, extents=2, clusters=88
+            created=2026-05-23 07:53:48
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_backup_240201/dir_draft_203180/dir_zulu_409792/xbpt_archive_kilo_975189.xml
+            size=128, attrs=Archive, extents=1, clusters=1
+            created=2026-05-23 07:53:52
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_backup_240201/dir_draft_203180/dir_zulu_409792/xbpt_data_romeo_992013.json
+            size=176095, attrs=Archive, extents=2, clusters=43
+            created=2023-02-21 07:48:51
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_backup_240201/dir_draft_203180/dir_zulu_409792/xbpt_hardlink_backup_893100.txt
+            size=332780, attrs=Archive, extents=2, clusters=82
+            created=2026-05-23 07:53:50
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_backup_240201/dir_draft_203180/dir_zulu_409792/xbpt_papa_romeo_633083.bak
+            size=150451, attrs=Archive, extents=2, clusters=37
+            created=2026-05-23 07:53:48
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_output_168415/xbpt_hardlink_india_900150.json
+            size=84213, attrs=Archive, extents=2, clusters=21
+            created=2026-05-23 07:53:49
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_sync_430576/xbpt_hardlink_draft_442857.bin
+            size=207996, attrs=Archive, extents=2, clusters=51
+            created=2026-05-23 07:53:48
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_sync_430576/xbpt_hardlink_gamma_309164.dat
+            size=252652, attrs=Archive, extents=4, clusters=62
+            created=2023-01-05 07:48:06
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_cache_backup_597783.tmp
+            size=507500, attrs=Archive, extents=2, clusters=124
+            created=2026-05-23 07:53:47
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_data_trace_929053.ini
+            size=7170, attrs=Archive, extents=2, clusters=2
+            created=2026-05-23 07:53:52
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_hardlink_mike_495558.bak
+            size=150451, attrs=Archive, extents=2, clusters=37
+            created=2022-01-16 07:49:30
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_hardlink_romeo_328197.dat
+            size=236953, attrs=Archive, extents=2, clusters=58
+            created=2026-05-23 07:53:48
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_hardlink_trace_352790.tmp
+            size=26174, attrs=Archive, extents=2, clusters=7
+            created=2026-05-23 07:53:47
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_hardlink_trace_839812.md
+            size=128461, attrs=Archive, extents=2, clusters=32
+            created=2026-05-23 07:53:50
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_hotel_draft_936205.md
+            size=317645, attrs=Archive, extents=2, clusters=78
+            created=2026-05-23 07:53:49
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_november_tango_774662.json
+            size=251298, attrs=Archive, extents=2, clusters=62
+            created=2026-05-23 07:53:48
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_trace_cache_917768.txt
+            size=385339, attrs=Archive, extents=4, clusters=95
+            created=2024-07-02 07:49:01
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_papa_189433/xbpt_data_whiskey_285684.bak
+            size=354328, attrs=Archive, extents=2, clusters=87
+            created=2022-07-05 07:48:05
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_papa_189433/xbpt_hardlink_beta_609618.bak
+            size=150451, attrs=Archive, extents=2, clusters=37
+            created=2022-01-16 07:49:30
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/xbpt_hardlink_kilo_793854.bin
+            size=207996, attrs=Archive, extents=2, clusters=51
+            created=2026-05-23 07:53:48
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/dir_victor_956392/xbpt_hardlink_trace_249765.cfg
+            size=336544, attrs=Archive, extents=2, clusters=95
+            created=2023-02-26 07:47:56
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/dir_victor_956392/xbpt_victor_romeo_168253.bin
+            size=226728, attrs=Archive, extents=2, clusters=56
+            created=2026-05-23 07:53:48
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/dir_victor_956392/dir_draft_180033/xbpt_hardlink_zulu_678748.log
+            size=114623, attrs=Archive, extents=2, clusters=28
+            created=2026-05-23 07:53:50
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/dir_victor_956392/dir_draft_180033/xbpt_kilo_uniform_474029.bak
+            size=222105, attrs=Archive, extents=2, clusters=55
+            created=2026-05-23 07:53:50
+  EXTENT    testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/dir_victor_956392/dir_draft_180033/dir_november_688575/xbpt_hardlink_alpha_736292.cfg
+            size=6305, attrs=Archive, extents=2, clusters=2
+            created=2026-05-23 07:53:47
   EXTENT    testintegrity/dir_gamma_404999/dir_yankee_757223/xbpt_hardlink_oscar_345063.json
             size=510161, attrs=Archive, extents=2, clusters=125
+            created=2026-05-23 07:53:47
+  EXTENT    testintegrity/dir_gamma_404999/dir_yankee_757223/dir_gamma_962278/xbpt_hardlink_zulu_181027.cfg
+            size=6305, attrs=Archive, extents=2, clusters=2
             created=2026-05-23 07:53:47
   EXTENT    testintegrity/dir_log_989773/dir_beta_399822/xbpt_hardlink_whiskey_338079.json
             size=126243, attrs=Archive, extents=2, clusters=31
             created=2026-05-23 07:53:51
+  EXTENT    testintegrity/dir_log_989773/dir_gamma_610434/dir_romeo_230799/xbpt_hardlink_output_156664.bin
+            size=448844, attrs=Archive, extents=2, clusters=110
+            created=2026-05-23 07:53:49
   EXTENT    testintegrity/dir_quebec_504972/xbpt_hardlink_quebec_388490.lnk
             size=139725, attrs=Archive, extents=2, clusters=35
             created=2026-05-23 07:53:50
@@ -297,6 +585,27 @@ File Data Locations
   EXTENT    testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_whiskey_kilo_696933.md
             size=144095, attrs=Archive, extents=2, clusters=36
             created=2024-03-14 07:48:36
+  EXTENT    testintegrity/dir_romeo_348517/dir_alpha_208192/dir_november_114124/xbpt_hardlink_victor_401815.log
+            size=128, attrs=Archive, extents=1, clusters=1
+            created=2024-05-22 07:50:02
+  EXTENT    testintegrity/dir_romeo_348517/dir_alpha_208192/dir_tango_606500/dir_temp_180881/xbpt_hardlink_backup_244958.txt
+            size=358779, attrs=Archive, extents=2, clusters=88
+            created=2026-05-23 07:53:48
+  EXTENT    testintegrity/dir_romeo_348517/dir_alpha_208192/dir_tango_606500/dir_temp_180881/xbpt_hardlink_whiskey_212509.bak
+            size=139550, attrs=Archive, extents=4, clusters=35
+            created=2026-05-23 07:53:47
+  EXTENT    testintegrity/dir_romeo_348517/dir_alpha_208192/dir_tango_606500/dir_temp_180881/xbpt_report_kilo_319055.xml
+            size=128, attrs=Archive, extents=1, clusters=1
+            created=2026-05-23 07:53:51
+  EXTENT    testintegrity/dir_romeo_348517/dir_alpha_208192/dir_tango_606500/dir_temp_180881/dir_oscar_738913/xbpt_hardlink_cache_151636.ini
+            size=21292, attrs=Archive, extents=2, clusters=6
+            created=2026-05-23 07:53:47
+  EXTENT    testintegrity/dir_romeo_348517/dir_alpha_208192/dir_yankee_687993/xbpt_hardlink_trace_985961.cfg
+            size=21290, attrs=Archive, extents=2, clusters=6
+            created=2026-05-23 07:53:48
+  EXTENT    testintegrity/dir_romeo_348517/dir_alpha_208192/dir_yankee_687993/xbpt_hardlink_victor_889551.dat
+            size=252652, attrs=Archive, extents=4, clusters=62
+            created=2023-01-05 07:48:06
   EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_hardlink_beta_222943.txt
             size=339070, attrs=Archive, extents=4, clusters=95
             created=2024-07-02 07:49:01
@@ -312,6 +621,111 @@ File Data Locations
   EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_tango_lima_130282.dat
             size=252652, attrs=0x8000, extents=4, clusters=62
             created=2023-01-05 07:48:06
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/xbpt_cache_echo_101147.lnk
+            size=56558, attrs=Archive, extents=2, clusters=14
+            created=2026-05-23 07:53:48
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/xbpt_hardlink_kilo_270086.cfg
+            size=387957, attrs=Archive, extents=2, clusters=95
+            created=2023-02-26 07:47:56
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/xbpt_hardlink_yankee_831226.bak
+            size=150451, attrs=Archive, extents=2, clusters=37
+            created=2026-05-23 07:53:48
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/xbpt_index_oscar_734738.json
+            size=462873, attrs=Archive, extents=2, clusters=114
+            created=2026-05-23 07:53:47
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/xbpt_trace_quebec_577714.bin
+            size=207996, attrs=Archive, extents=2, clusters=51
+            created=2026-05-23 07:53:48
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/dir_cache_422839/xbpt_alpha_lima_798523.bin
+            size=448844, attrs=Archive, extents=2, clusters=110
+            created=2026-05-23 07:53:49
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/dir_cache_422839/xbpt_alpha_sierra_500102.cfg
+            size=21290, attrs=Archive, extents=2, clusters=6
+            created=2026-05-23 07:53:48
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/dir_cache_422839/xbpt_hardlink_archive_876283.xml
+            size=247899, attrs=Archive, extents=2, clusters=61
+            created=2026-05-23 07:53:50
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/dir_cache_422839/xbpt_hardlink_cache_319594.md
+            size=104953, attrs=Archive, extents=2, clusters=98
+            created=2026-05-23 07:53:48
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/dir_cache_422839/xbpt_hardlink_log_559872.xml
+            size=128, attrs=Archive, extents=1, clusters=1
+            created=2026-05-23 07:53:51
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/dir_cache_422839/xbpt_hardlink_temp_237505.json
+            size=425160, attrs=Archive, extents=2, clusters=114
+            created=2026-05-23 07:53:47
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/dir_cache_422839/xbpt_hardlink_victor_875568.json
+            size=425160, attrs=Archive, extents=2, clusters=114
+            created=2026-05-23 07:53:47
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/dir_cache_422839/xbpt_temp_papa_480015.cfg
+            size=6305, attrs=Archive, extents=2, clusters=2
+            created=2026-05-23 07:53:47
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/dir_cache_422839/dir_archive_332421/xbpt_hardlink_mike_725449.lnk
+            size=139725, attrs=Archive, extents=2, clusters=35
+            created=2026-05-23 07:53:50
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/dir_config_486765/xbpt_foxtrot_record_100625.tmp
+            size=90920, attrs=Archive, extents=2, clusters=23
+            created=2026-05-23 07:53:50
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/dir_config_486765/xbpt_sync_sync_492176.txt
+            size=332780, attrs=Archive, extents=2, clusters=82
+            created=2026-05-23 07:53:50
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_audit_mike_824257.log
+            size=27754, attrs=Archive, extents=2, clusters=7
+            created=2026-05-23 07:53:53
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_config_sierra_576269.md
+            size=398046, attrs=Archive, extents=2, clusters=98
+            created=2026-05-23 07:53:48
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_config_sync_869024.ini
+            size=21292, attrs=Archive, extents=2, clusters=6
+            created=2026-05-23 07:53:47
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_hardlink_archive_372677.json
+            size=420981, attrs=Archive, extents=2, clusters=103
+            created=2026-05-23 07:53:50
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_hardlink_echo_458183.bin
+            size=207996, attrs=Archive, extents=2, clusters=51
+            created=2026-05-23 07:53:48
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_hardlink_kilo_340963.cfg
+            size=6305, attrs=Archive, extents=2, clusters=2
+            created=2026-05-23 07:53:47
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_hardlink_log_676623.md
+            size=144095, attrs=Archive, extents=2, clusters=36
+            created=2026-05-23 07:53:47
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_hardlink_trace_582428.json
+            size=84213, attrs=Archive, extents=2, clusters=21
+            created=2026-05-23 07:53:49
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_hardlink_yankee_108900.bak
+            size=378414, attrs=Archive, extents=4, clusters=93
+            created=2026-05-23 07:53:47
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_hardlink_zulu_755897.dat
+            size=514719, attrs=Archive, extents=2, clusters=126
+            created=2026-05-23 07:53:47
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_log_alpha_992477.dat
+            size=412315, attrs=Archive, extents=2, clusters=101
+            created=2023-08-09 07:47:55
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_mike_beta_811261.tmp
+            size=150416, attrs=Archive, extents=2, clusters=37
+            created=2026-05-23 07:53:48
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_papa_archive_698796.log
+            size=114623, attrs=Archive, extents=2, clusters=28
+            created=2026-05-23 07:53:50
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_victor_yankee_759456.json
+            size=510161, attrs=Archive, extents=2, clusters=125
+            created=2026-05-23 07:53:47
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/dir_cache_820752/xbpt_beta_data_817933.dat
+            size=411146, attrs=Archive, extents=2, clusters=101
+            created=2026-05-23 07:53:48
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/dir_cache_820752/xbpt_hardlink_sierra_715194.tmp
+            size=90920, attrs=Archive, extents=2, clusters=23
+            created=2026-05-23 07:53:50
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/dir_cache_820752/xbpt_hardlink_tango_632919.dat
+            size=412315, attrs=Archive, extents=2, clusters=101
+            created=2023-08-09 07:47:55
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/dir_cache_820752/xbpt_sierra_log_522943.json
+            size=420981, attrs=Archive, extents=2, clusters=103
+            created=2026-05-23 07:53:50
+  EXTENT    testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/dir_cache_820752/dir_data_473414/xbpt_hardlink_cache_562624.bak
+            size=139550, attrs=Archive, extents=4, clusters=35
+            created=2026-05-23 07:53:47
   EXTENT    testintegrity/dir_tango_306249/xbpt_hardlink_backup_571101.md
             size=43263, attrs=Archive, extents=2, clusters=78
             created=2026-05-23 07:53:49
@@ -372,6 +786,72 @@ File Data Locations
   EXTENT    testspecials/dir_echo_260113/dir_november_183663/xbpt_hardlink_output_410019.bin
             size=345593, attrs=Archive, extents=2, clusters=85
             created=2026-05-23 07:44:19
+  EXTENT    testspecials/dir_echo_260113/dir_november_183663/dir_data_753513/xbpt_hardlink_yankee_145607.bin
+            size=206608, attrs=Archive, extents=2, clusters=51
+            created=2026-05-23 07:44:21
+  EXTENT    testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_backup_delta_269905.xml
+            size=448148, attrs=Archive, extents=6, clusters=112
+            created=2022-07-05 07:39:53
+  EXTENT    testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_draft_delta_690575.dat
+            size=83234, attrs=Archive, extents=2, clusters=21
+            created=2026-05-23 07:44:16
+  EXTENT    testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_hardlink_backup_371800.dat
+            size=83234, attrs=Archive, extents=2, clusters=21
+            created=2026-05-23 07:44:16
+  EXTENT    testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_hardlink_delta_451055.xml
+            size=448148, attrs=Archive, extents=6, clusters=112
+            created=2022-07-05 07:39:53
+  EXTENT    testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_hardlink_draft_275004.xml
+            size=455786, attrs=Archive, extents=6, clusters=112
+            created=2022-07-05 07:39:53
+  EXTENT    testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_hardlink_kilo_974260.md
+            size=342829, attrs=Archive, extents=2, clusters=84
+            created=2025-06-11 07:40:00
+  EXTENT    testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_hardlink_sync_621989.txt
+            size=355192, attrs=Archive, extents=2, clusters=87
+            created=2026-05-23 07:44:18
+  EXTENT    testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_output_trace_781037.json
+            size=145231, attrs=Archive, extents=2, clusters=36
+            created=2026-05-23 07:44:16
+  EXTENT    testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_yankee_record_478613.cfg
+            size=427387, attrs=Archive, extents=2, clusters=105
+            created=2026-05-23 07:44:22
+  EXTENT    testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/dir_draft_894936/xbpt_hardlink_draft_529909.cfg
+            size=345969, attrs=Archive, extents=2, clusters=85
+            created=2026-05-23 07:44:15
+  EXTENT    testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/dir_draft_894936/xbpt_hardlink_log_363834.cfg
+            size=110978, attrs=Archive, extents=2, clusters=28
+            created=2026-05-23 07:44:18
+  EXTENT    testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/dir_report_521909/xbpt_data_yankee_741785.lnk
+            size=37401, attrs=Archive, extents=2, clusters=10
+            created=2026-05-23 07:44:21
+  EXTENT    testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/dir_report_521909/xbpt_hotel_delta_989051.cfg
+            size=267822, attrs=Archive, extents=2, clusters=63
+            created=2026-05-23 07:44:21
+  EXTENT    testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/xbpt_delta_zulu_305217.xml
+            size=344112, attrs=Archive, extents=2, clusters=85
+            created=2026-05-23 07:44:20
+  EXTENT    testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/xbpt_hardlink_archive_898207.txt
+            size=355192, attrs=Archive, extents=2, clusters=87
+            created=2026-05-23 07:44:16
+  EXTENT    testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/xbpt_hardlink_backup_226307.bak
+            size=403328, attrs=Archive, extents=2, clusters=99
+            created=2026-05-23 07:44:18
+  EXTENT    testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/xbpt_hardlink_log_259220.txt
+            size=445206, attrs=Archive, extents=2, clusters=109
+            created=2026-05-23 07:44:18
+  EXTENT    testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/xbpt_hardlink_sync_719534.log
+            size=207836, attrs=Archive, extents=2, clusters=51
+            created=2026-05-23 07:44:16
+  EXTENT    testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/xbpt_mike_quebec_611385.bin
+            size=332143, attrs=Archive, extents=2, clusters=82
+            created=2026-05-23 07:44:18
+  EXTENT    testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/xbpt_papa_oscar_471922.csv
+            size=209371, attrs=Archive, extents=2, clusters=52
+            created=2026-05-23 07:44:19
+  EXTENT    testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/dir_delta_253532/xbpt_hardlink_index_847909.txt
+            size=355192, attrs=Archive, extents=2, clusters=87
+            created=2026-05-23 07:44:18
   EXTENT    testspecials/dir_mike_420327/xbpt_echo_archive_728530.md
             size=388977, attrs=Archive, extents=2, clusters=95
             created=2026-05-23 07:44:21
@@ -420,6 +900,15 @@ File Data Locations
   EXTENT    testspecials/dir_romeo_413583/dir_audit_570908/xbpt_hardlink_delta_399790.cfg
             size=497479, attrs=0x0, extents=2, clusters=122
             created=2026-05-23 07:44:16
+  EXTENT    testspecials/dir_romeo_413583/dir_audit_570908/dir_quebec_863524/xbpt_hardlink_config_636787.md
+            size=342829, attrs=Archive, extents=2, clusters=84
+            created=2025-06-11 07:40:00
+  EXTENT    testspecials/dir_romeo_413583/dir_audit_570908/dir_quebec_863524/xbpt_hardlink_lima_377434.txt
+            size=445206, attrs=Archive, extents=2, clusters=109
+            created=2026-05-23 07:44:18
+  EXTENT    testspecials/dir_romeo_413583/dir_audit_570908/dir_quebec_863524/xbpt_hardlink_victor_558191.dat
+            size=83234, attrs=Archive, extents=2, clusters=21
+            created=2026-05-23 07:44:16
   EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_delta_alpha_671390.log
             size=315729, attrs=Archive, extents=2, clusters=78
             created=2025-10-27 07:42:06
@@ -453,11 +942,167 @@ File Data Locations
   EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_zulu_backup_178692.md
             size=342829, attrs=Archive, extents=2, clusters=84
             created=2025-06-11 07:40:00
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_lima_509251/xbpt_hardlink_foxtrot_313066.cfg
+            size=345969, attrs=Archive, extents=2, clusters=85
+            created=2026-05-23 07:44:15
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_hardlink_alpha_499266.log
+            size=207836, attrs=Archive, extents=2, clusters=51
+            created=2026-05-23 07:44:16
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_hardlink_archive_353087.xml
+            size=448148, attrs=Archive, extents=6, clusters=112
+            created=2022-07-05 07:39:53
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_hardlink_data_733507.log
+            size=315729, attrs=Archive, extents=2, clusters=78
+            created=2025-10-27 07:42:06
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_hardlink_kilo_716878.csv
+            size=260959, attrs=Archive, extents=2, clusters=64
+            created=2026-05-23 07:44:21
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_hardlink_kilo_790796.xml
+            size=448148, attrs=Archive, extents=6, clusters=112
+            created=2022-07-05 07:39:53
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_hotel_archive_586981.bin
+            size=345593, attrs=Archive, extents=2, clusters=85
+            created=2026-05-23 07:44:19
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_record_lima_304830.dat
+            size=239817, attrs=Archive, extents=4, clusters=66
+            created=2026-05-23 07:44:18
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/dir_config_105863/xbpt_temp_sync_960157.csv
+            size=260959, attrs=Archive, extents=2, clusters=64
+            created=2026-05-23 07:44:21
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/dir_papa_331610/xbpt_hardlink_kilo_263456.dat
+            size=83234, attrs=Archive, extents=2, clusters=21
+            created=2026-05-23 07:44:16
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/dir_papa_331610/xbpt_hardlink_report_668008.txt
+            size=445206, attrs=Archive, extents=2, clusters=109
+            created=2026-05-23 07:44:18
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/dir_papa_331610/xbpt_hardlink_report_789047.json
+            size=257732, attrs=Archive, extents=4, clusters=63
+            created=2026-05-23 07:44:16
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_index_989425/xbpt_hardlink_beta_326646.cfg
+            size=345969, attrs=Archive, extents=2, clusters=85
+            created=2026-05-23 07:44:15
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_record_370580/xbpt_hardlink_lima_641178.cfg
+            size=257875, attrs=Archive, extents=2, clusters=63
+            created=2026-05-23 07:44:21
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_record_370580/xbpt_hardlink_mike_468165.csv
+            size=260959, attrs=Archive, extents=2, clusters=64
+            created=2026-05-23 07:44:21
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_record_370580/xbpt_hardlink_mike_993950.bak
+            size=164255, attrs=Archive, extents=2, clusters=41
+            created=2026-05-23 07:44:19
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_record_370580/xbpt_hardlink_report_469908.log
+            size=207836, attrs=Archive, extents=2, clusters=51
+            created=2026-05-23 07:44:16
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_record_370580/xbpt_hardlink_tango_294525.log
+            size=207836, attrs=Archive, extents=2, clusters=51
+            created=2026-05-23 07:44:16
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_record_370580/xbpt_romeo_uniform_218052.txt
+            size=377203, attrs=Archive, extents=2, clusters=93
+            created=2026-05-23 07:44:16
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_record_370580/dir_november_850849/xbpt_hardlink_cache_542871.txt
+            size=445206, attrs=Archive, extents=2, clusters=109
+            created=2026-05-23 07:44:18
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_report_123351/xbpt_hardlink_alpha_225373.cfg
+            size=497479, attrs=Archive, extents=2, clusters=122
+            created=2026-05-23 07:44:16
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_report_123351/xbpt_oscar_hotel_328301.txt
+            size=445206, attrs=Archive, extents=2, clusters=109
+            created=2026-05-23 07:44:18
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_report_123351/xbpt_whiskey_report_114009.xml
+            size=448148, attrs=Archive, extents=6, clusters=112
+            created=2022-07-05 07:39:53
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/xbpt_audit_romeo_148759.xml
+            size=333820, attrs=Archive, extents=6, clusters=84
+            created=2024-12-22 07:39:57
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/xbpt_hardlink_quebec_106843.xml
+            size=344112, attrs=Archive, extents=2, clusters=85
+            created=2026-05-23 07:44:20
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/xbpt_yankee_hotel_977615.json
+            size=257732, attrs=Archive, extents=4, clusters=63
+            created=2026-05-23 07:44:16
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_mike_981731/xbpt_echo_beta_386853.csv
+            size=390041, attrs=Archive, extents=2, clusters=96
+            created=2023-03-25 07:40:58
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_mike_981731/xbpt_hardlink_output_952583.xml
+            size=455786, attrs=Archive, extents=6, clusters=112
+            created=2022-07-05 07:39:53
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_mike_981731/xbpt_hardlink_whiskey_741231.dat
+            size=239817, attrs=Archive, extents=4, clusters=66
+            created=2026-05-23 07:44:18
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/xbpt_hardlink_archive_434411.dat
+            size=268743, attrs=Archive, extents=4, clusters=66
+            created=2026-05-23 07:44:18
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/xbpt_whiskey_foxtrot_384692.txt
+            size=355192, attrs=Archive, extents=2, clusters=87
+            created=2026-05-23 07:44:16
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/xbpt_hardlink_oscar_805467.xml
+            size=448148, attrs=Archive, extents=6, clusters=112
+            created=2022-07-05 07:39:53
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/xbpt_quebec_index_959677.ini
+            size=239637, attrs=Archive, extents=2, clusters=59
+            created=2026-05-23 07:44:16
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_cache_983199/xbpt_output_november_364279.txt
+            size=355192, attrs=Archive, extents=2, clusters=87
+            created=2026-05-23 07:44:18
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_gamma_421188/xbpt_hardlink_yankee_561458.bin
+            size=332143, attrs=Archive, extents=2, clusters=82
+            created=2026-05-23 07:44:18
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_gamma_421188/xbpt_trace_kilo_387263.ini
+            size=498517, attrs=Archive, extents=2, clusters=122
+            created=2023-07-08 07:39:50
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_gamma_421188/dir_uniform_641683/xbpt_hardlink_index_250732.log
+            size=207836, attrs=Archive, extents=2, clusters=51
+            created=2026-05-23 07:44:16
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_gamma_421188/dir_uniform_641683/xbpt_hardlink_log_899492.cfg
+            size=64776, attrs=Archive, extents=4, clusters=16
+            created=2026-05-23 07:44:16
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_gamma_421188/dir_uniform_641683/dir_echo_253572/xbpt_hardlink_kilo_305140.xml
+            size=104425, attrs=Archive, extents=2, clusters=26
+            created=2026-05-23 07:44:16
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_gamma_421188/dir_uniform_641683/dir_echo_253572/xbpt_hardlink_mike_998837.log
+            size=207836, attrs=Archive, extents=2, clusters=51
+            created=2026-05-23 07:44:16
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_oscar_946138/dir_gamma_942515/xbpt_whiskey_lima_187248.cfg
+            size=345969, attrs=Archive, extents=2, clusters=85
+            created=2026-05-23 07:44:15
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_whiskey_331028/xbpt_hardlink_november_930067.tmp
+            size=62488, attrs=Archive, extents=2, clusters=42
+            created=2026-05-23 07:44:16
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_whiskey_331028/xbpt_hardlink_sierra_611479.txt
+            size=355192, attrs=Archive, extents=2, clusters=87
+            created=2026-05-23 07:44:16
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_zulu_992329/xbpt_hardlink_whiskey_429484.dat
+            size=12975, attrs=Archive, extents=2, clusters=4
+            created=2021-11-15 07:39:56
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_sierra_120452/xbpt_hardlink_beta_122688.bin
+            size=166910, attrs=Archive, extents=2, clusters=41
+            created=2026-05-23 07:44:18
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_sierra_120452/xbpt_log_foxtrot_960602.cfg
+            size=110978, attrs=Archive, extents=2, clusters=28
+            created=2026-05-23 07:44:18
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_sierra_120452/xbpt_oscar_yankee_456045.json
+            size=260224, attrs=Archive, extents=2, clusters=64
+            created=2021-12-11 07:40:20
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_sierra_120452/xbpt_output_backup_280641.txt
+            size=355192, attrs=Archive, extents=2, clusters=87
+            created=2026-05-23 07:44:16
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_sierra_120452/xbpt_zulu_output_693850.cfg
+            size=267822, attrs=Archive, extents=2, clusters=66
+            created=2026-05-23 07:44:18
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_sync_673137/xbpt_hardlink_alpha_541257.log
+            size=166393, attrs=Archive, extents=4, clusters=41
+            created=2026-05-23 07:44:16
+  EXTENT    testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_sync_673137/xbpt_tango_backup_348569.xml
+            size=448148, attrs=Archive, extents=6, clusters=112
+            created=2022-07-05 07:39:53
   EXTENT    testspecials/dir_romeo_413583/dir_sync_209686/xbpt_hardlink_cache_210050.md
             size=388977, attrs=Archive, extents=2, clusters=95
             created=2026-05-23 07:44:21
   EXTENT    testspecials/dir_romeo_413583/dir_sync_209686/xbpt_hardlink_foxtrot_442208.json
             size=257732, attrs=Archive, extents=4, clusters=63
+            created=2026-05-23 07:44:16
+  EXTENT    testspecials/dir_romeo_413583/dir_tango_685681/dir_hotel_925133/xbpt_hardlink_papa_967483.txt
+            size=355192, attrs=Archive, extents=2, clusters=87
             created=2026-05-23 07:44:16
   EXTENT    testspecials/dir_romeo_413583/dir_uniform_134923/xbpt_hardlink_quebec_760102.xml
             size=448148, attrs=Archive, extents=4, clusters=110

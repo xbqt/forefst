@@ -111,7 +111,7 @@ type-0x40 [extent entries](../structures/extent_descriptors.md) (VCN→VLCN→PL
 is inline or extent-based — and the byte-layout difference that follows — is on
 [Resident vs Non-Resident Storage](resident_storage.md). User objects start at OID 0x701; system OIDs
 occupy 0x00–0x6FF (0x700 is the boundary, never assigned; the allocation rule is on
-[Object IDs and File IDs](object_ids_fileids.md)).
+[Object IDs](object_ids.md)).
 
 ```
 python3 forefst.py <image> files -o files.csv       # full file listing (CSV: SID, ADS, reparse, snapshots)
@@ -241,7 +241,7 @@ The "common" three CHKP values are not exhaustive (see step 2).
 | 1 Detect | `refsanalysis.py <image> boot -vv` |
 | 2 Classify | `refsanalysis.py <image> summary` / `chkp -vv` |
 | 3 Bootstrap | `refsanalysis.py <image> chkp` / `containers` / `objects` |
-| 4 Enumerate | `forefst.py <image>` / `refsanalysis.py <image> files -v` |
+| 4 Enumerate | `forefst.py <image> files` / `refsanalysis.py <image> files -v` |
 | 5 Recover | `forefst.py <image> deleted` (add `--full` for the complete scan) / `snapshots -v` |
 | 6 Timeline | `forefst.py <image> timeline --csv > timeline.csv` |
 | 7 Tamper | `forefst.py <image> timestomp` / `integrity --fullchecksums` |
@@ -260,7 +260,7 @@ MLog, USN `$J`, and the whole B+-tree forest) — the ReFS analogue of a raw `$M
 - [Copy-on-Write](copy_on_write.md) — why prior versions and orphan pages survive to be recovered
 - [Snapshots & Versioning](snapshots_versioning.md) — step 5 Method 4: deterministic prior-content reconstruction
 - [Resident vs Non-Resident Storage](resident_storage.md) — step 4: inline vs extent-based content
-- [Object IDs and File IDs](object_ids_fileids.md) — step 4: OID 0x701 boundary and the never-reused rule
+- [Object IDs](object_ids.md) — step 4: OID 0x701 boundary and the never-reused rule
 - [Hard Links](hard_links.md) — step 2: the capability gated on CHKP flag 0x0080
 - [Timestomp Detection](timestomp_detection.md) — step 7: the three tamper anchors
 - [VBR](../structures/vbr.md), [SUPB](../structures/supb.md), [Checkpoint (CHKP)](../structures/chkp.md),

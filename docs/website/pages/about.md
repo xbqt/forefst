@@ -1,15 +1,15 @@
 ---
 title: "About"
-description: "About forefst — an open-source forensic reference and toolset for Microsoft's Resilient File System (ReFS), grown from a 2026 master's thesis by Baptiste Bonnet."
+description: "About forefst — an open-source forensic reference and toolset for Microsoft's Resilient File System (ReFS), versions 3.4–3.14."
 ---
+
+<p align="center"><img src="https://xbpt.gitlab.io/images/forefst.png" alt="forefst" width="360"></p>
 
 # About this project
 
 This reference and its tools come from a master's thesis — *"Forensic analysis of the Resilient File
 System (ReFS) version 3.14"* (University of Mons, 2026). The aim was to bring public ReFS forensic
 knowledge up to the version shipping today and to give an analyst tooling they can actually run.
-
-*forefst and this reference are the work of **Baptiste Bonnet**.*
 
 ## Why it exists
 
@@ -30,6 +30,11 @@ The format was reconstructed from two independent directions, so that neither st
 - **Raw-disk analysis** of a controlled corpus of ReFS images generated in a lab across versions,
   cluster sizes, checksum types, and feature configurations — comparing what the driver code *says*
   with what actually lands on disk.
+
+## Coverage
+
+The reference and tools are validated against **ReFS 3.4 through 3.14**; the latest Windows build tested
+is **26100.8521 (24H2)**. All versions parse; the richest enrichment is on 3.10+ and 3.14.
 
 ## How it was verified
 
@@ -54,12 +59,14 @@ verified, and how to follow any one of them to its evidence.
 
 ## The tools
 
-- **[`forefst.py`](https://github.com/xbqt/forefst/blob/main/forefst.py)** — a forensic file lister,
-  the ReFS counterpart of MFTECmd for NTFS: CSV / body-file / JSON output, with deleted-file and
-  copy-on-write recovery.
+- **[`forefst.py`](https://github.com/xbqt/forefst/blob/main/forefst.py)** — the forensic tool, the
+  ReFS counterpart of MFTECmd for NTFS: a full file listing (CSV / body-file / JSON) plus deleted-file and
+  copy-on-write recovery, the USN and MLog journals, super-timelines, timestomp detection, security
+  descriptors, reparse points, and stream snapshots.
 - **[`refsanalysis.py`](https://github.com/xbqt/forefst/blob/main/refsanalysis.py)** — an interactive
-  structural analyser: boot / checkpoint / superblock, the B+-tree tables, security, reparse points,
-  the USN journal, the durable log, snapshots, timelines, and more.
+  structural analyser: it decodes one on-disk structure at a time — the boot sector, superblock, and
+  checkpoint; the object, schema, container, and parent-child tables; the upcase table — and includes a
+  boot-sector inspect/repair mode.
 
 Both are pure Python (3.7+ standard library, no dependencies) and read a raw image or volume. See the
 **[forefst.py](forefst.md)** and **[refsanalysis.py](refsanalysis.md)** pages for usage on this site, or **[the repository](https://github.com/xbqt/forefst)**
@@ -73,5 +80,8 @@ an equivalent image corpus all live in the source repository.
 {{< github-note >}}
 
 ---
+
+Written by **Baptiste Bonnet** and released under the GNU General Public License v3.0 or later — see
+[LICENSE](https://github.com/xbqt/forefst/blob/main/LICENSE).
 
 *This site uses [GoatCounter](https://www.goatcounter.com/) for anonymous, cookie-less visitor counts — no personal data, no cross-site tracking.*

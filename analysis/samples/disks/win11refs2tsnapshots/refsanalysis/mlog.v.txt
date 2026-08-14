@@ -8,7 +8,7 @@ MLog Control Area
 ==============================================================================
   Control PLCN:      0x31
   Signature:         MLog
-  Format magic:      0x3832ddbf (per-volume const, NOT a CRC — E42/#343; differs after a reformat)
+  Format magic:      0x3832ddbf (per-volume format/log-instance constant; changes after a reformat)
   Version:           1
   Sector size:       0x1000
   UUID:              9c6d6a27-cb84-45b7-9f7a-d56532ce5aea
@@ -33,7 +33,14 @@ Redo Records
 ==============================================================================
   Total records:      2808
   Transaction starts: 1344
-  Transaction commits: 0
+  Transaction commits: 0  (commit is marked at the checkpoint/LogCore layer, not by a
+                          per-redo-record flag — this is 0 on every volume, healthy or not;
+                          do NOT read starts>commits as 'uncommitted work')
+
+  The MLog is the volume's DURABLE TRANSACTION LOG. Operations logged here may not yet be
+  checkpointed into the committed on-disk tree, so `files`/`summary` (which read the committed
+  tree) can omit recent operations that appear here; a fully-checkpointed log can conversely be
+  near-empty while the tree is complete. Cross-check pending activity with `mlog --parse`.
 
      #  Opcode  Name                                             OID   Flags   Size
   ────  ──────  ────────────────────────────────────────  ──────────  ──────  ─────
@@ -2916,5 +2923,5 @@ LogCore Record Headers (2274 data records)
   0x00803f.00  0x0010000003f  0x0010000003e  0x895145e9     2  0x38
   0x008040.00  0x00100000040  0x0010000003f  0x06d84c83     2  0x38
   … 2210 more
-  format_magic (per-volume const, NOT a CRC — E42): 0x3832ddbf
+  format_magic (per-volume format/log-instance constant): 0x3832ddbf
 

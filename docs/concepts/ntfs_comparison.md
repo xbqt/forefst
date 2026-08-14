@@ -224,7 +224,7 @@ slot. ReFS Object IDs are 64-bit, monotonically increasing, and **never reused**
 gives the analyst two things NTFS does not: a strict creation ordering (a lower OID is always older), and
 **gaps in the OID sequence as direct evidence of past deletions**. The same monotonic counter underlies
 the [USN](../structures/usn_journal.md) 128-bit file IDs. See
-[Object IDs and File IDs](object_ids_fileids.md) for how OIDs are allocated and how to read deletion
+[Object IDs](object_ids.md) for how OIDs are allocated and how to read deletion
 gaps.
 
 ## What this means for an NTFS-trained tool
@@ -276,7 +276,7 @@ to. Concretely retired techniques:
   ~700-byte line
 - [Deletion Recovery](deletion_recovery.md) — recovering stale B+-tree rows, the ReFS analogue of
   MFT-record slack
-- [Object IDs and File IDs](object_ids_fileids.md) — monotonic 64-bit OIDs versus reusable MFT numbers
+- [Object IDs](object_ids.md) — monotonic 64-bit OIDs versus reusable MFT numbers
 - [Timestomping Detection](timestomp_detection.md) — the ReFS method that replaces the `$SI`/`$FN`
   cross-check
 - [Snapshots and Versioning](snapshots_versioning.md) — per-stream `$SNAPSHOT` versus volume VSS
