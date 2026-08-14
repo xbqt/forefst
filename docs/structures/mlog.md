@@ -363,6 +363,12 @@ There is no undo pass. Copy-on-write ensures uncommitted transactions never over
 
 ## Forensic value
 
+The MLog is the **durable transaction log** — the on-disk record of committed activity. It matters forensically
+because the committed metadata tree (what `files` and `summary` read) can **omit the most recent pending
+activity**: an operation that has been written to the log but not yet folded into a checkpoint is present in the
+MLog while it is still absent from the committed tree. Reading the MLog can therefore surface recent file
+operations that the tree listing does not yet show.
+
 - The MLog does **not** carry pre-images (unlike NTFS $LogFile), so it cannot directly reconstruct previous file states
 - Opcodes reveal what operations occurred (inserts, deletes, modifications)
 - The LSN range and record count indicate volume activity level

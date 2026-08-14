@@ -48,7 +48,7 @@ own commands: **stream snapshots** (`snapshots`, Method 4 below) and the **Windo
 | 5 — B+-tree node slack | metadata-page free space | recovery (live pages) / `--full` (+ orphan pages) | Deleted names, inline `$SI`, and carve-able non-resident extent maps — **the primary method** |
 | 4 — Stream snapshots | `$SNAPSHOT` (type 0xB0) | `snapshots` command | **Exact prior bytes** of files that still exist |
 
-Every method classifies its results by **file identity** and every run writes a **recovery log** — both covered
+Every method classifies its results by **file identity**, and an **export writes a recovery log** — both covered
 below.
 
 ## Method 1 — Trash Table recovery
@@ -173,14 +173,16 @@ holds multiple epochs and any single reconstructed name could be a pre-rename ar
 
 ## The recovery log
 
-Every `deleted` run writes a **recovery log** — a forensic audit trail of exactly what was recovered and how.
-It records the image, the ReFS version, the mode (`recovery` / `--full`), the methods that ran, and the full
-per-entry split: the **deleted** files (with each remnant's source page, recoverability verdict, and — for a
-file deleted from several directories — every location) and the **still-present** remnants (CoW prior versions
-and former locations). The path is chosen automatically — `--log PATH` to override, otherwise
-`<export-dir>/recovery_log.txt` alongside an `export deleted`, or a timestamped `forefst_recovery_<image>_<ts>.txt`
-in the working directory. The log is the primary record to cite in a report: it captures the classification
-reasoning (why each remnant was called deleted or still-present) that the on-screen view summarises.
+An **export** writes a **recovery log** — a forensic audit trail of exactly what was recovered and how. The log
+is produced only when you export (`export deleted`, `deleted --extract`, `deleted -o FILE`) or ask for one
+explicitly with `--log PATH`; a plain `deleted` **view never writes a log file**. When written, it records the
+image, the ReFS version, the mode (`recovery` / `--full`), the methods that ran, and the full per-entry split:
+the **deleted** files (with each remnant's source page, recoverability verdict, and — for a file deleted from
+several directories — every location) and the **still-present** remnants (CoW prior versions and former
+locations). The path is chosen automatically — `--log PATH` to override, otherwise `<export-dir>/recovery_log.txt`
+alongside an `export deleted`, or a timestamped `forefst_recovery_<image>_<ts>.txt` in the working directory. The
+log is the primary record to cite in a report: it captures the classification reasoning (why each remnant was
+called deleted or still-present) that the on-screen view summarises.
 
 ## What decides whether the bytes survive
 
@@ -223,7 +225,7 @@ about **62%** of old metadata pages remained valid:
 ## Deletion leaves a permanent fingerprint in the OID sequence
 
 Independent of whether any content survives, deletion leaves a permanent record in the object-id space.
-[Object IDs](object_ids_fileids.md) are 64-bit, monotonically increasing, and **never reused after
+[Object IDs](object_ids.md) are 64-bit, monotonically increasing, and **never reused after
 deletion** (user OIDs start at 0x701, set by `MsSetMinimumNewObjectId`; see
 [OID Allocation](oid_allocation.md)). A **gap in the OID sequence is therefore permanent evidence of a past
 deletion** — if 0x720, 0x721, and 0x723 exist but 0x722 does not, a **directory or system object** was created
@@ -283,7 +285,7 @@ coverage, never asserted.
 - [Object Table](../structures/object_table.md) — Method 3 orphan detection works against the live OID set
 - [System OIDs](../structures/system_oids.md) — OID 0x0D is the Trash Table
 - [Block Refcount table](../structures/block_refcount.md) — refcount `>= 2` is the "guaranteed survival" rule
-- [Object IDs and File IDs](object_ids_fileids.md) · [OID Allocation](oid_allocation.md) — why OID gaps are permanent deletion evidence
+- [Object IDs](object_ids.md) · [OID Allocation](oid_allocation.md) — why OID gaps are permanent deletion evidence
 - [What Survives](what_survives.md) — the broader inventory of recoverable artifacts on a ReFS volume
 - [NTFS vs ReFS](ntfs_comparison.md) — OID-gap evidence vs reusable MFT records; log-wrap vs CoW recovery windows
 - [MLog](../structures/mlog.md) — redo-only logging carries no pre-images, so it is not a direct prior-state source

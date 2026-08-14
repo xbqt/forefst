@@ -206,3 +206,10 @@ svg.diagram .dg-fill-surface{fill:var(--surface)}
   opacity:0;margin-left:.4rem;font-weight:400;color:var(--text-muted);text-decoration:none;transition:opacity .15s}
 .content h1:hover .heading-anchor,.content h2:hover .heading-anchor,.content h3:hover .heading-anchor,.content h4:hover .heading-anchor{opacity:.4}
 .content .heading-anchor:hover{opacity:.85;text-decoration:none}
+
+/* Page-local glossary term filter (layouts/_default/single.html) */
+.gloss-search-wrap{margin:.25rem 0 1.25rem;display:flex;align-items:center;gap:.6rem}
+.gloss-search-wrap #gloss-search{width:min(340px,100%);padding:.45rem .75rem;border:1px solid var(--border);
+  border-radius:var(--radius-sm);background:var(--bg);color:var(--text);font-size:.95rem}
+.gloss-search-wrap #gloss-search:focus{outline:none;border-color:var(--text-secondary)}
+.gloss-search-wrap #gloss-count{color:var(--text-secondary);font-size:.85rem}

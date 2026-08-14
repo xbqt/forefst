@@ -17,8 +17,8 @@ every analysed volume). Decoded on disk:
 |--------|------|-------|-------------|
 | 0x00 | 4 | Instance marker (u32) | 0x80000001 (single-instance) |
 | 0x04 | 4 | Reparse tag (u32) | `IO_REPARSE_TAG_*` value — the primary sort key. The tag multiset matches the on-disk reparse tags exactly |
-| 0x08 | 8 | Entry ordinal (u64) | A small per-entry ordinal (2–32 observed) — the low half of the reparse file's 128-bit file reference (its index within the containing directory). Driver: `[fcb+0x58]+0xf8`. |
-| 0x10 | 8 | Containing-directory OID (u64) | The OID of the directory that **contains** the reparse file — **not** the file's own OID (ReFS files have no own OID). Driver: `[fcb+0x58]+0x100`. Disk-verified: every index value at 0x10 matches a reparse file's parent-directory OID (262/262 across 13 images). |
+| 0x08 | 8 | Entry ordinal (u64) | A small per-entry ordinal (2–32 observed) — the low (`FileId`) half of the reparse file's 128-bit file reference. Driver: `[fcb+0x58]+0xf8`. |
+| 0x10 | 8 | Home (creation) directory OID (u64) | The OID of the directory the reparse file was **created in** — the home half of its [FileRef](../concepts/file_ids.md); ReFS files have no own OID. Driver: `[fcb+0x58]+0x100`. This is the *creation* directory, frozen: it equals the current parent for a file that has never been moved, and stays at the creation directory when the file is relocated. Disk-verified that every index row sits at its file's creation directory — 262/262 for never-moved files across 13 images, and, on 881 relocated reparse objects (home ≠ current parent), 881/881 indexed at the creation directory with none at the current parent. |
 
 Sorting by `(tag, …)` is what makes "enumerate all files with reparse tag X" an index range-scan rather
 than a tree walk.
@@ -61,6 +61,11 @@ len(target)`.
 
 ## Forensic notes
 
+- **Directories carry reparse points too.** Junctions and mount points are directory reparse points, and
+  ReFS treats them as first-class — a directory can equally carry an integrity stream or extended
+  attributes. The `specials reparse` subcommand enumerates both files *and* directories that hold a
+  reparse tag, reconciling with `files --filter reparse`; the two list the same set. (The same holds for
+  the `integrity` and `ea` categories, where directory-carried attributes are enumerated alongside files.)
 - ADS (alternate data streams) cannot be written to symlink files on ReFS.
 - The `ReparseTag` field at `$SI` offset 0x54 echoes the reparse tag for quick access without reading the
   full reparse data.
@@ -73,12 +78,15 @@ len(target)`.
 - [Schema Table](schema_table.md) — schemas 0x160, 0x170, 0x1C0
 - [System OIDs](system_oids.md) — OIDs 0x540 and 0x541
 - [Object Table](object_table.md) — OID resolution for the reparse-index tables
+- [File IDs](../concepts/file_ids.md) — the FileRef whose home half the index key's 0x10 field records
 - [$STANDARD_INFORMATION](../attributes/STANDARD_INFORMATION.md) — the reparse tag mirrored at `$SI+0x54`
 
 ## Evidence
 
 The 24-byte index key, the empty-value/pure-existence behavior, and the byte-identical 0x540 ↔ 0x541
-mirror are raw-disk decoded across the corpus (RD). The index identity (OIDs 0x540 / 0x541, schema 0x160,
+mirror are raw-disk decoded across the corpus (RD). That the key's 0x10 field is the **creation** directory
+OID (frozen when the file is relocated), not merely the current parent, is disk-proven on 881 relocated
+reparse objects — all indexed at their creation directory, none at their current parent. The index identity (OIDs 0x540 / 0x541, schema 0x160,
 durable-failover creation) and the driver functions are confirmed in the decompiled driver (E2):
 `InitializeReparseIndexTable` builds the pair with `MsCreateDurableFailoverTableObject`. See [how this was verified](../methodology.md) to trace these to the exact
 images and measurements in `analysis/`.

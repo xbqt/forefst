@@ -23,7 +23,7 @@ key — and only **two** values ever appear on disk:
 There is no third value. A census across the corpus finds `{0x01, 0x02}` and nothing else — in
 particular there is **no** `0x04 = directory` flag, despite older accounts. A directory is stored with
 key_flags **0x02** (it uses the same compact non-resident layout, pointing at its own per-directory
-B+-tree through an [object ID](object_ids_fileids.md)) and is told apart from a non-resident *file* only
+B+-tree through an [object ID](object_ids.md)) and is told apart from a non-resident *file* only
 by the **directory attribute bit `0x10000000`** in its file attributes at value+0x40. Reading key_flags
 alone cannot distinguish a directory from a non-resident file; the attribute bit is mandatory for that
 decision.
@@ -140,7 +140,7 @@ The file's entire content lives in the parent directory's B+-tree leaf row — a
   choosing a carving strategy
 - [Deletion Recovery](deletion_recovery.md) — why resident and non-resident deletes are different recovery
   problems
-- [Object IDs and File IDs](object_ids_fileids.md) — the OID a directory's key_flags-0x02 row points at
+- [Object IDs](object_ids.md) — the OID a directory's key_flags-0x02 row points at
 
 ## Evidence
 

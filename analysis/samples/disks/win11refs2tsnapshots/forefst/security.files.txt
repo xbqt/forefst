@@ -6,17 +6,16 @@ ReFS Security Descriptors
   Image:        win11refs2tsnapshots.raw
   ReFS version: 3.14
 
-  Files per owner SID (6 distinct SID(s)):
+  Files per owner SID (5 distinct SID(s)):
     SecurityId       Files   Owner
   ----------------------------------------------------------------------------
-    0x1348ee884        267   BUILTIN\Administrators (S-1-5-32-544)
+    0x1348ee884        268   BUILTIN\Administrators (S-1-5-32-544)
     0x120005b20         33   BUILTIN\Administrators (S-1-5-32-544)
-    0x0                  1   (unknown)
     0x10a9f9562          1   BUILTIN\Administrators (S-1-5-32-544)
     0x10aa39b62          1   BUILTIN\Administrators (S-1-5-32-544)
     0x123d306f5          1   SYSTEM (S-1-5-18)
   ----------------------------------------------------------------------------
-    Total: 304 files across 6 owner SID(s)
+    Total: 304 files across 5 owner SID(s)
 
   Name                                     Type   SecurityId     Owner
   ----------------------------------------------------------------------------
@@ -185,7 +184,7 @@ ReFS Security Descriptors
   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_alpha_delta_830163.ini FILE   0x1348ee884    BUILTIN\Administrators (S-1-5-32-544)
   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_backup_draft_411674.log FILE   0x1348ee884    BUILTIN\Administrators (S-1-5-32-544)
   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_delta_cache_147912.bin FILE   0x1348ee884    BUILTIN\Administrators (S-1-5-32-544)
-  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_hardlink_audit_219848.cfg FILE   0x0            (unknown)
+  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_hardlink_audit_219848.cfg FILE   0x1348ee884    BUILTIN\Administrators (S-1-5-32-544)
   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_log_backup_939898.json FILE   0x1348ee884    BUILTIN\Administrators (S-1-5-32-544)
   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_report_audit_396522.txt FILE   0x1348ee884    BUILTIN\Administrators (S-1-5-32-544)
   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_symlink_gamma_582874.lnk FILE   0x1348ee884    BUILTIN\Administrators (S-1-5-32-544)

@@ -2,4 +2,62 @@
 <article>
   {{ .Content }}
 </article>
+{{ if eq .Title "Glossary" }}
+{{/* Page-local glossary filter: searches the TERMS only (the bold headword + its expansion), not the
+     definitions. Inserted just under the Glossary heading. Handles both the definition-list (<dt>/<dd>)
+     and the paragraph (<p><strong>term</strong> : definition) renderings. */}}
+<script>
+(function () {
+  var art = document.querySelector('article'); if (!art) return;
+  var h1 = art.querySelector('h1');
+  var wrap = document.createElement('div');
+  wrap.className = 'gloss-search-wrap';
+  wrap.innerHTML = '<input id="gloss-search" type="search" placeholder="Filter terms…" ' +
+                   'aria-label="Filter glossary terms" autocomplete="off"><span id="gloss-count"></span>';
+  if (h1 && h1.parentNode) h1.parentNode.insertBefore(wrap, h1.nextSibling);
+  else art.insertBefore(wrap, art.firstChild);
+  var input = document.getElementById('gloss-search');
+
+  // Build (term, nodes-to-toggle) pairs — term text excludes the definition.
+  var entries = [];
+  var dts = art.querySelectorAll('dt');
+  if (dts.length) {
+    dts.forEach(function (dt) {
+      var dd = dt.nextElementSibling;
+      entries.push({ t: dt.textContent, n: dd && dd.tagName === 'DD' ? [dt, dd] : [dt] });
+    });
+  } else {
+    art.querySelectorAll('p').forEach(function (p) {
+      var s = p.firstElementChild;
+      if (s && s.tagName === 'STRONG') {
+        var full = p.textContent, i = full.indexOf(':');
+        entries.push({ t: i > 0 ? full.slice(0, i) : full, n: [p] });
+      }
+    });
+  }
+  var headers = [].slice.call(art.querySelectorAll('h2, h3'));
+
+  function filter() {
+    var q = input.value.trim().toLowerCase(), shown = 0;
+    entries.forEach(function (e) {
+      var hit = !q || e.t.toLowerCase().indexOf(q) >= 0;
+      e.n.forEach(function (x) { x.style.display = hit ? '' : 'none'; });
+      if (hit) shown++;
+    });
+    // Hide a section header whose entries are all filtered out.
+    headers.forEach(function (h) {
+      var vis = false, el = h.nextElementSibling;
+      while (el && !/^H[23]$/.test(el.tagName)) {
+        if (el.style.display !== 'none' && (el.tagName === 'P' || el.tagName === 'DL' || el.tagName === 'DT')) { vis = true; break; }
+        el = el.nextElementSibling;
+      }
+      h.style.display = (!q || vis) ? '' : 'none';
+    });
+    var c = document.getElementById('gloss-count');
+    if (c) c.textContent = q ? (shown + ' term' + (shown === 1 ? '' : 's')) : '';
+  }
+  input.addEventListener('input', filter);
+})();
+</script>
+{{ end }}
 {{ end }}

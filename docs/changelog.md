@@ -1,5 +1,32 @@
 # Changelog
 
+## Unreleased — file identity (FileRef), hard-link hardening, output & documentation consistency
+
+**The file-identity model made explicit and hardened, with the audit-driven output/consistency fixes shipped
+across the docs and both tools.**
+
+- **FileRef file identity.** `files`/`usn` lead with `FileRef = HomeOid:FileId` — the stable 128-bit reference,
+  identical to the USN FileReferenceNumber. `HomeOid` is the *creation* directory (frozen across rename and
+  move — proven on 1,858 real cross-directory moves), `FileId` the per-directory child ordinal. `details --id
+  HomeOid:FileId` addresses a file by identity independent of its path, and `details` now prints the FileRef and
+  a relocation note when the home directory differs from the current parent. The `files` CSV is **39 columns**
+  in identity-lead order (the per-row `RefsVersion` column was removed).
+- **Hard-link resolution hardened (type-0x39).** A hard-link name whose cached size is stale (e.g. a size-0
+  non-primary name) is reattached to its object through the backing's embedded type-0x39 back-pointers — the
+  driver's own authoritative name list — so it groups correctly instead of showing as a separate
+  `hard_link_count=1` row. No over-merge (verified corpus-wide; the anti-over-merge guard keys on the
+  `(HomeOid, FileId)` object identity).
+- **Output standardization.** `files`/`search`/`summary`/`details`/`fastsummary` take `--csv/--json/--jsonl
+  [FILE]` (bare → stdout, `+FILE` → write & print a count); `usn --stats` prints alongside a file export;
+  `integrity` mismatches show the container id + byte offset; `summary` gained a *Bootstrap structures* section;
+  directory walks default to **full depth**; bare `forefst <image>` prints the volume summary.
+- **refsanalysis consistency.** `files`/`attributes` default to full depth (cycle-guarded); `details` shows the
+  FileRef + relocation note. The two tools remain 0-divergence on the shared enrichment layer.
+- **Reference & documentation.** The FileRef identity is documented across the concept/structure pages (the
+  identity concept page split into **Object IDs** and **File IDs**), with the creation-anchored, move-invariant
+  identity proven on-disk; new reference findings and errata recorded; the whole documentation set reconciled to
+  the current tool behaviour.
+
 ## v1.3.0 — 2026-08-06 — non-resident extraction, integrity verification, sparse-aware recovery
 
 **`extract` now recovers non-resident files whose extent map is stored inline in the directory record — the

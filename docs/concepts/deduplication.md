@@ -23,6 +23,15 @@ empty B+-tree, but the table is only *populated* on a v3.14 volume that has had 
 volume that never enabled dedup, snapshots, or hard links, root #6 is present but empty — its presence is
 not by itself a dedup signal.
 
+**Sharing content is not sharing identity.** Deduplication (and block-cloning) make several *distinct*
+files — each with its own [FileRef](file_ids.md) `(HomeOid, ordinal)` and its own directory entry — point
+at the same physical clusters. A [hard link](hard_links.md) is the opposite: several *names* of **one**
+object, all sharing a single FileRef. So two directory entries that share a FileRef are hard-link names of
+one file, **never** a dedup pair, and two deduplicated files **never** share a FileRef. The refcount table
+sees only the block-level effect and cannot, on its own, say which mechanism raised a count — the flag bits
+and the files' identities are what separate them. (This distinction is why a rare pair of files that appear
+to share a `(HomeOid, ordinal)` is a hard link, not evidence that dedup ran.)
+
 Each tracked range is keyed by `Start LCN` (u64 @0x00) and `Cluster count` (u64 @0x08), and the cluster
 count is **0x400 (1,024 clusters)** — one `u16` array entry per cluster. The row's value carries a
 redundant copy of the start LCN and cluster count, an 8-byte modification stamp @0x10, a **`TotalRefCount`
@@ -116,6 +125,10 @@ output (composite `0x07b2`, flag bits `0x010 / 0x020 / 0x100`), without parsing 
   also tracks, and the strongest single-image content-recovery path
 - [Copy-on-Write](copy_on_write.md) — CoW orphans (`rc >= 2`, with a prior checkpoint still referencing
   the clusters) share this refcount machinery
+- [File IDs](file_ids.md) — why deduplicated files keep distinct FileRefs while hard-link names share one,
+  so a shared `(HomeOid, ordinal)` is never a dedup signal
+- [Hard Links](hard_links.md) — the identity-sharing mechanism that dedup (content-sharing) is often
+  confused with
 - [Compression](compression.md) — the paired 24H2 feature enabled alongside dedup (`DedupAndCompress`),
   tracked separately and per-container rather than per-cluster
 - [What survives](what_survives.md) — how refcount-protected blocks feed deleted-content survival

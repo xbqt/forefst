@@ -108,7 +108,7 @@ unlike NTFS, where MFT-record reuse can place a newer file in an older record nu
 
 **Pitfalls.** (1) The OID is a *volume-wide* identity; do not confuse it with the per-directory child
 ordinal (`NextFileId`, the lower half of the 128-bit FileId), which *is* reused per directory — see
-[object IDs and FileIds](object_ids_fileids.md). (2) `deleted_est` counts deleted *objects*, not deleted
+[object IDs](object_ids.md). (2) `deleted_est` counts deleted *objects*, not deleted
 *names*: a hard-linked file with multiple names is one OID, and a rename consumes no new OID. (3) OID
 0x600 (root) and all OIDs `<= 0x6FF` are system objects — exclude them from the density math by starting
 at 0x701. (4) Density gives a floor, not an exact count: a long run of sequential deletions at the high
@@ -130,7 +130,7 @@ record numbers cannot — see [NTFS comparison](ntfs_comparison.md) for the broa
 
 ## Cross-references
 
-- [Object IDs and FileIds](object_ids_fileids.md) — the volume-wide OID versus the per-directory
+- [Object IDs](object_ids.md) — the volume-wide OID versus the per-directory
   `NextFileId` ordinal; the distinction that pitfall (1) turns on
 - [Deletion and recovery](deletion_recovery.md) — what survives a delete; OID-density estimation is the
   one deletion signal that needs no surviving record

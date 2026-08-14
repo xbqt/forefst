@@ -15,11 +15,22 @@ ReFS Volume Fast Extended Summary
   Checksum:           CRC64
 
 ------------------------------------------------------------------------------
-Hashes
+Bootstrap structures  (address + validity; SHA-256 on the next line)
 ------------------------------------------------------------------------------
-  VBR SHA-256:        2291b5b0537de224b6276c04b16c71ab73ee93f093bdc9b4acc2f695e2e9403f
-  SUPB SHA-256:       85cb53e7d4b181d5b5af37061bb9f8413167b968f11ef59287f075433f80ad20
-  CHKP SHA-256:       2972908a619b3e5733b4d6385d5a94fa6722b04eccebcd31b56f9dc82e43f7f7
+  VBR primary      LBA 0 (offset 0x0)  — checksum OK
+      2291b5b0537de224b6276c04b16c71ab73ee93f093bdc9b4acc2f695e2e9403f
+  VBR backup       LBA 4294836223 (off 0x1fffbfffe00)  — = primary, cksum ok
+      2291b5b0537de224b6276c04b16c71ab73ee93f093bdc9b4acc2f695e2e9403f
+  SUPB primary     LCN 0x1e (offset 0x1e000)  — SUPB sig OK
+      85cb53e7d4b181d5b5af37061bb9f8413167b968f11ef59287f075433f80ad20
+  SUPB backup      LCN 0x1fffbffd (offset 0x1fffbffd000)  — SUPB sig OK
+      779acce44b55cc4ea944de330a74296ba2984a1ffa1034451c8f1c8f8cf1cc75
+  SUPB backup      LCN 0x1fffbffe (offset 0x1fffbffe000)  — SUPB sig OK
+      d976253829e7c5e681d3176e1565102325ea40527548fd45f7d3b957ff358df2
+  CHKP primary     LCN 0x51eb04 (offset 0x51eb04000)  — valid, vclock=265
+      2972908a619b3e5733b4d6385d5a94fa6722b04eccebcd31b56f9dc82e43f7f7
+  CHKP backup      LCN 0x3d702ac (offset 0x3d702ac000)  — valid, vclock=264
+      c9d410b58d365ea8e28793895936e41417961d045d4da1ca704fd65a4c61aa08
 
 ------------------------------------------------------------------------------
 Checkpoint
@@ -61,25 +72,24 @@ Volume Detail
   Reparse index:      3 entries
   Trash table:        0 entries
   Containers used:    32766 / 32767 (100.0%)
-  Free space (est):   64.0 MB
+  Free space (est):   64.0 MB  (container-map estimate — coarse)
   FS Metadata rows:   1
   USN Journal:        Inactive
 
-For complete file statistics, use the `summary` subcommand (full directory walk)
 
 ------------------------------------------------------------------------------
 File System Content (from directory walk)
 ------------------------------------------------------------------------------
   Directories:        34
   Files:              270 (12 resident)
-  Total file size:    432.8 MB
+  Total file size:    432.7 MB
   Oldest timestamp:   2021-05-18 07:16:04.9990009
   Newest timestamp:   2026-05-16 17:35:57.4899352
   Encrypted files:    0
   Integrity files:    0
   Compressed files:   0
-  Hard links (extra): 0
+  Hard links (extra): 1
   Snapshots:          10
   ADS entries:        3
 
-Tip: the `fastsummary` subcommand gives quick volume metadata without a directory walk
+Tip: `fastsummary` = quick volume metadata (no directory walk).

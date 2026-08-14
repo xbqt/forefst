@@ -244,146 +244,8 @@ ReFS Timestamp-Anomaly (Timestomp) Detection
          signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE
   HIGH   journal/link  2021-11-15 07:39:56   2026-05-23 07:44:18   testspecials/xbpt_uniform_beta_276130.dat
          signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  MEDIUM intrinsic     2026-01-01 07:16:17   2026-05-23 07:34:05   test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_audit_echo_178867.tmp
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2021-05-18 07:16:04   2026-05-23 07:34:03   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_backup_mike_407434.log
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2025-02-09 07:17:09   2026-05-23 07:34:05   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_hardlink_echo_387599.ini
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2025-04-02 07:16:24   2026-05-23 07:34:03   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_sierra_echo_921063.xml
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2025-04-01 07:16:26   2026-05-23 07:34:04   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_tango_echo_291736.csv
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2024-04-04 07:17:02   2026-05-23 07:34:06   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_delta_sierra_216359.bin
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2021-09-26 07:16:24   2026-05-23 07:34:04   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_delta_cache_147912.bin
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2021-09-29 07:16:41   2026-05-23 07:34:04   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_report_audit_396522.txt
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2026-02-23 07:17:05   2026-05-23 07:34:04   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_alpha_victor_250409.ini
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2024-12-12 07:16:57   2026-05-23 07:34:05   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_index_uniform_409576.json
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2024-10-16 07:17:27   2026-05-23 07:34:05   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_quebec_audit_121864.cfg
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2022-06-11 07:16:28   2026-05-23 07:34:04   test/elvis_dir_record_449015/xbpt_output_papa_412411.log
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2025-05-12 07:17:04   2026-05-23 07:34:06   test/elvis_dir_victor_783323/xbpt_report_quebec_867569.md
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2025-11-05 07:16:31   2026-05-23 07:34:05   test/xbpt_foxtrot_config_966558.log
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2026-01-01 07:16:17   2026-05-23 07:38:51   test2/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_audit_echo_178867.tmp
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2021-05-18 07:16:04   2026-05-23 07:38:49   test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_backup_mike_407434.log
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2025-02-09 07:17:09   2026-05-23 07:38:51   test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_hardlink_echo_387599.ini
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2025-04-02 07:16:24   2026-05-23 07:38:50   test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_sierra_echo_921063.xml
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2025-04-01 07:16:26   2026-05-23 07:38:51   test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_tango_echo_291736.csv
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2024-04-04 07:17:02   2026-05-23 07:38:52   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_delta_sierra_216359.bin
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2021-09-26 07:16:24   2026-05-23 07:38:50   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_delta_cache_147912.bin
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2021-09-29 07:16:41   2026-05-23 07:38:50   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_report_audit_396522.txt
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2026-02-23 07:17:05   2026-05-23 07:38:50   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_alpha_victor_250409.ini
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2024-12-12 07:16:57   2026-05-23 07:38:51   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_index_uniform_409576.json
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2024-10-16 07:17:27   2026-05-23 07:38:52   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_quebec_audit_121864.cfg
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2022-06-11 07:16:28   2026-05-23 07:38:50   test2/elvis_dir_record_449015/xbpt_output_papa_412411.log
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2025-05-12 07:17:04   2026-05-23 07:38:52   test2/elvis_dir_victor_783323/xbpt_report_quebec_867569.md
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2025-11-05 07:16:31   2026-05-23 07:38:52   test2/xbpt_foxtrot_config_966558.log
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2023-01-05 07:48:06   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_sync_430576/xbpt_hardlink_gamma_309164.dat
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2024-05-21 07:48:14   2026-05-23 07:53:53   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/xbpt_hardlink_beta_501725.dat
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2022-07-05 07:48:05   2026-05-23 07:53:51   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/xbpt_hardlink_yankee_522047.bak
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2022-07-05 07:48:05   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_papa_189433/xbpt_data_whiskey_285684.bak
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2023-02-26 07:47:56   2026-05-23 07:53:53   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/dir_victor_956392/xbpt_hardlink_trace_249765.cfg
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2024-07-02 07:49:01   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_trace_cache_917768.txt
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2021-07-21 07:48:20   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_cache_foxtrot_199130.bin
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2023-01-05 07:48:06   2026-05-23 07:53:52   testintegrity/dir_romeo_348517/dir_alpha_208192/dir_yankee_687993/xbpt_hardlink_victor_889551.dat
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2023-02-26 07:47:56   2026-05-23 07:53:53   testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/xbpt_hardlink_kilo_270086.cfg
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2023-08-09 07:47:55   2026-05-23 07:53:52   testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/dir_cache_820752/xbpt_hardlink_tango_632919.dat
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2023-01-05 07:48:06   2026-05-23 07:53:53   testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_tango_lima_130282.dat
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2023-01-05 07:48:06   2026-05-23 07:53:52   testintegrity/dir_tango_306249/xbpt_hardlink_whiskey_641860.dat
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2021-07-21 07:48:20   2026-05-23 07:53:51   testintegrity/xbpt_hardlink_quebec_884679.bin
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2022-07-05 07:39:53   2026-05-23 07:44:21   testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_backup_delta_269905.xml
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2022-07-05 07:39:53   2026-05-23 07:44:21   testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_hardlink_delta_451055.xml
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2022-07-05 07:39:53   2026-05-23 07:44:21   testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_hardlink_draft_275004.xml
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2025-06-11 07:40:00   2026-05-23 07:44:23   testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_hardlink_kilo_974260.md
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2021-11-15 07:39:56   2026-05-23 07:44:21   testspecials/dir_mike_420327/xbpt_hardlink_draft_104643.dat
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2025-06-11 07:40:00   2026-05-23 07:44:23   testspecials/dir_romeo_413583/dir_audit_570908/dir_quebec_863524/xbpt_hardlink_config_636787.md
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2022-07-05 07:39:53   2026-05-23 07:44:21   testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_hardlink_archive_353087.xml
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2022-07-05 07:39:53   2026-05-23 07:44:19   testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_hardlink_kilo_790796.xml
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2022-07-05 07:39:53   2026-05-23 07:44:18   testspecials/dir_romeo_413583/dir_kilo_704584/dir_report_123351/xbpt_whiskey_report_114009.xml
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2022-07-05 07:39:53   2026-05-23 07:44:22   testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_mike_981731/xbpt_hardlink_output_952583.xml
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2021-11-15 07:39:56   2026-05-23 07:44:21   testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_zulu_992329/xbpt_hardlink_whiskey_429484.dat
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2022-07-05 07:39:53   2026-05-23 07:44:18   testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/xbpt_hardlink_oscar_805467.xml
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2022-07-05 07:39:53   2026-05-23 07:44:19   testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_sync_673137/xbpt_tango_backup_348569.xml
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2024-12-22 07:39:57   2026-05-23 07:44:20   testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/xbpt_audit_romeo_148759.xml
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2023-12-31 07:39:56   2026-05-23 07:44:22   testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_hardlink_foxtrot_415497.bin
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2022-07-05 07:39:53   2026-05-23 07:44:19   testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_lima_trace_312755.xml
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2025-06-11 07:40:00   2026-05-23 07:44:19   testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_zulu_backup_178692.md
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2022-11-01 07:39:55   2026-05-23 07:44:19   testspecials/dir_romeo_413583/xbpt_hardlink_draft_744338.cfg
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2022-07-05 07:39:53   2026-05-23 07:44:19   testspecials/dir_romeo_413583/xbpt_hardlink_temp_924985.xml
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2024-12-22 07:39:57   2026-05-23 07:44:22   testspecials/xbpt_hardlink_archive_469036.xml
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2022-11-01 07:39:55   2026-05-23 07:44:21   testspecials/xbpt_mike_mike_872519.cfg
-         signals: PRE_FORMAT
-  LOW    intrinsic     2026-05-23 07:34:04   2026-05-23 07:34:05   test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_november_yankee_663510.csv
-         signals: CREATE_GT_MODIFY
-  LOW    intrinsic     2026-05-23 07:34:05   2026-05-23 07:34:02   test/elvis_dir_index_149423/xbpt_config_sync_830891.tmp
-         signals: CREATE_GT_MODIFY
-  LOW    intrinsic     2026-05-23 07:34:05   2026-05-23 07:34:02   test/elvis_dir_india_800575/xbpt_report_temp_854937.tmp
-         signals: CREATE_GT_MODIFY
-  LOW    intrinsic     2026-05-23 07:34:04   2026-05-23 07:34:01   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_trace_gamma_651618.dat
-         signals: CREATE_GT_MODIFY
-  LOW    intrinsic     2026-05-23 07:38:51   2026-05-23 07:38:51   test2/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_november_yankee_663510.csv
-         signals: CREATE_GT_MODIFY
-  LOW    intrinsic     2026-05-23 07:38:51   2026-05-23 07:38:48   test2/elvis_dir_index_149423/xbpt_config_sync_830891.tmp
-         signals: CREATE_GT_MODIFY
-  LOW    intrinsic     2026-05-23 07:38:51   2026-05-23 07:38:48   test2/elvis_dir_india_800575/xbpt_report_temp_854937.tmp
-         signals: CREATE_GT_MODIFY
-  LOW    intrinsic     2026-05-23 07:38:51   2026-05-23 07:38:48   test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_trace_gamma_651618.dat
-         signals: CREATE_GT_MODIFY
+
+  (62 MEDIUM + 8 LOW row(s) hidden — `--min MEDIUM` / `--min LOW` to show; CSV/JSON already include every tier.)
 
   Signal legend  (AUTHORITATIVE = independent evidence · HEURISTIC = suggestive $SI-only):
     [AUTHORITATIVE]
@@ -397,5 +259,8 @@ ReFS Timestamp-Anomaly (Timestomp) Detection
                              can't reach change-time) — defeated by a native-API/raw-disk stomp
       PRE_FORMAT / FUTURE    created before the volume existed / after its last write
       CREATE_GT_MODIFY       created after last write
+      ROUND_TIMESTAMPS       created AND modified are whole-second (.0000000) — a tool often sets a
+                             date with no sub-second time; LOW only (driver packages / archive
+                             extraction also produce whole-second times)
   Note: the intrinsic signals also fire on legitimate creation-time-preserving copies
   (robocopy /COPY:T, restore), so an intrinsic-only HIGH is not proof — corroborate.

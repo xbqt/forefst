@@ -6,7 +6,7 @@ ReFS forensic analysis tool. `forefst.py` is the MFTECmd-equivalent for ReFS —
 
 ```
 forefst.py <image> [subcommand] [options]
-forefst.py <image>                  # no subcommand → files (the default)
+forefst.py <image>                  # no subcommand → volume summary
 forefst.py <image> <cmd> --help     # detailed help + examples for one subcommand
 forefst.py <image> help <cmd>       # same targeted help — `help` as the subcommand token
 forefst.py <image> help             # the general overview (with an image loaded)
@@ -21,7 +21,8 @@ The subcommand token comes **after** the image path. Output formats `--json`, `-
 ## Quick Start
 
 ```
-forefst.py disk.raw                                   # CSV file listing to stdout
+forefst.py disk.raw                                   # volume summary (the default view)
+forefst.py disk.raw files                             # CSV file listing to stdout
 forefst.py disk.raw files -o listing.csv              # … to a file
 forefst.py disk.raw files --json                      # JSON array
 forefst.py disk.raw files --body -o timeline.body     # body file for mactime
@@ -39,20 +40,24 @@ forefst.py disk.raw security --audit                  # tamper-check security de
 
 ## Native subcommands
 
-### `files` — list files and directories (default)
+### `files` — list files and directories
 
-Walks the directory B+-tree from the root object (OID `0x600`) and emits one enriched row per file/directory. Default output is the 38-column CSV described [below](#csv-output-fields).
+Walks the directory B+-tree from the root object (OID `0x600`) and emits one enriched row per file/directory. Default output is the 39-column CSV described [below](#csv-output-fields).
 
 | Option | Description |
 |--------|-------------|
-| `--json` / `--jsonl` / `--body` | output format instead of CSV (mutually exclusive) |
-| `-o, --output FILE` | write to FILE instead of stdout |
+| `--csv [FILE]` / `--json [FILE]` / `--jsonl [FILE]` | machine output (default CSV); bare flag → stdout, `+FILE` → write & print a `Wrote N … to FILE` count |
+| `--body` | TSK/mactime body file instead of CSV |
+| `-o, --output FILE` | alias for `--csv FILE` (and the `--body` target) |
 | `--filter CATEGORY` | keep only one [attribute category](#files---filter-categories) |
 | `--cow-before IMAGE` | recover prior CoW versions by diffing against an earlier image |
 | `--timestomp` | add the `TimestompFlags` column ($SI heuristic) |
-| `--depth N` | max directory recursion depth (default 100) |
+| `-q, --quiet` | silence the progress lines on stderr |
+| `--depth N` | max directory recursion depth (default: the full tree) |
 
 The `files` listing covers the **live** tree only. Deleted files are recovered by the separate [`deleted`](#deleted--recover-deleted-files) command.
+
+> Running `forefst.py <image>` with no subcommand prints the volume **summary**, not this listing — use `files` for the CSV.
 
 ```
 forefst.py disk.raw files -o listing.csv              # full CSV listing
@@ -63,13 +68,13 @@ forefst.py disk.raw files --body -o t.body            # body file (live tree); d
 
 ### `summary` — full volume triage report
 
-Volume identity (version, GUID/label, cluster/container size, checksum type), anchoring VBR/SUPB/CHKP hashes, on-disk state (original / upgraded / native), the 13 root-table row counts, USN-journal status + UsnJournalId, then a full directory walk for file/dir/resident counts, total size, MACB extremes, and encrypted/integrity/compressed/hard-link/snapshot/ADS tallies. Extended by default.
+Volume identity (version, GUID/label, cluster/container size, checksum type); a **Bootstrap structures** section listing the VBR (primary + backup), SUPB (primary + 2 backups) and CHKP (primary + backup) — each with its address, validity, and its own SHA-256; on-disk state (original / upgraded / native); the 13 root-table row counts; USN-journal status + UsnJournalId; a coarse **Free space** figure (a container-map estimate, not the exact allocator-bitmap count); then a full directory walk for file/dir/resident counts, total size, MACB extremes, and encrypted/integrity/compressed/hard-link/snapshot/ADS tallies. Extended by default.
 
 | Option | Description |
 |--------|-------------|
 | `--json` | emit one JSON object instead of the text report |
 | `--hash-image` | also SHA-256 the whole image (chain-of-custody; streams the image) |
-| `--depth N` | max recursion depth for the content census (default 100) |
+| `--depth N` | max recursion depth for the content census (default: full — the whole tree) |
 
 ```
 forefst.py disk.raw summary                           # text triage report
@@ -85,9 +90,11 @@ Case-insensitive substring match on the name across the whole tree; add `--regex
 |--------|-------------|
 | `PATTERN` | (positional) name substring, or regex with `--regex` |
 | `--regex` | treat PATTERN as a case-insensitive regular expression |
-| `--json` / `--jsonl` | emit matches as JSON / JSON Lines |
+| `--csv [FILE]` / `--json [FILE]` / `--jsonl [FILE]` | machine output; bare flag → stdout, `+FILE` → write & print a `Wrote N … to FILE` count |
+| `--body` | TSK/mactime body file |
+| `-o, --output FILE` | alias for `--csv FILE` |
 
-`search` covers the live tree; to search deleted objects use [`deleted --search PATTERN`](#deleted--recover-deleted-files).
+`search` prints a match count for the pattern, then the rows; it covers the live tree — to search deleted objects use [`deleted --search PATTERN`](#deleted--recover-deleted-files).
 
 ```
 forefst.py disk.raw search report                     # names containing "report"
@@ -124,11 +131,11 @@ Parses `$UsnJrnl:$J`: per-record USN, timestamp, reason flags, resolved file nam
 | `-v, --verbose` | add RecLen/Version/StreamOffset per record |
 | `--info` | journal metadata instead of records ($J extents, $Max, record count) |
 | `--stats` | activity summary: reason-code distribution, busiest files, time range |
-| `--csv FILE` | export all records to a 16-column CSV |
+| `--csv FILE` | export all records to a 17-column CSV |
 | `--json` | emit `{journal, record_count, records[]}` |
 
 ```
-forefst.py disk.raw usn                                # list every change record
+forefst.py disk.raw usn                                # activity summary (bare usn; use --list for the record list)
 forefst.py disk.raw usn --info                         # journal layout & health
 forefst.py disk.raw usn --stats                        # activity summary
 forefst.py disk.raw usn --csv usn.csv                  # export to CSV
@@ -188,7 +195,7 @@ actually destroyed.
 | `--file SUB` | keep events whose name/path contains SUB |
 | `--oid O` | keep only events for object O (0x hex or decimal) |
 | `--limit N` | keep only the first N events after filtering/sorting |
-| `--depth N` | max recursion depth for the $SI walk (default 12) |
+| `--depth N` | max recursion depth for the $SI walk (default: full) |
 
 ```
 forefst.py disk.raw timeline --fast --limit 50         # quick USN+MLog timeline
@@ -204,16 +211,23 @@ Flags timestamp tampering by comparing intrinsic $SI MACB against USN-journal ev
 | Option | Description |
 |--------|-------------|
 | `--all` | include every file, even those with no anomaly |
-| `--min LEVEL` | minimum confidence to report: `HIGH` / `MEDIUM` / `LOW` (default LOW) |
+| `--min LEVEL` | lower the screen view's confidence floor: `HIGH` / `MEDIUM` / `LOW` (default: HIGH-only) |
 | `--margin-days N` | comparison tolerance in days (default 1) |
-| `--csv FILE` | write CSV (use `-` for stdout) |
-| `--json` | emit a JSON report to stdout |
-| `--depth N` | max recursion depth (default 20) |
+| `--csv [FILE]` / `--json [FILE]` | machine output (exports ALL tiers unless `--min` is explicit); `--csv -` → stdout |
+| `--depth N` | max recursion depth (default: full) |
+
+The default screen view shows **HIGH-confidence rows only**, with a trailer noting the lower-tier suspects; `--min
+MEDIUM`/`--min LOW` reveals them. The CSV/JSON exports include every tier unless you pass `--min`. Authoritative
+HIGH signals are `USN_BASIC_INFO_CHANGE`, `USN_CREATE_MISMATCH` and `HARDLINK_MACB_MISMATCH`; intrinsic signals
+are `CHANGE_LATE`, `PRE_FORMAT`, `FUTURE` and `CREATE_GT_MODIFY`. `ROUND_TIMESTAMPS` (whole-second `.0000000`
+Created + Modified) is a **LOW-only** signal that never rises above LOW and never upgrades another tier — whole-
+second stamps are also produced by driver packages (VirtIO/QEMU) and archive extraction, so round-ness suggests a
+set date but is not proof; corroborate with USN or hard-link evidence.
 
 ```
-forefst.py disk.raw timestomp                          # list all flagged files
-forefst.py disk.raw timestomp --min HIGH               # high-confidence suspects only
-forefst.py disk.raw timestomp --csv suspects.csv --min MEDIUM
+forefst.py disk.raw timestomp                          # HIGH-confidence suspects (default)
+forefst.py disk.raw timestomp --min MEDIUM             # reveal the MEDIUM tier too
+forefst.py disk.raw timestomp --csv suspects.csv       # export ALL tiers to CSV
 ```
 
 > The `files --timestomp` column is a quick $SI-only heuristic; the `timestomp` subcommand is the USN-corroborated analysis.
@@ -238,7 +252,7 @@ the name is not unique.
 | `filename` / `/path` | (positional) the file to extract (full path = direct, no depth limit) |
 | `--path P` | address the file by path (symmetric with `details`; resolved directly) |
 | `--oid O` | re-root a **bare-name** search at object O |
-| `--depth N` | max depth for a **bare-name** search (default 100; a full path ignores this) |
+| `--depth N` | max depth for a **bare-name** search (default: full; a full path ignores this) |
 | `--no-verify-integrity` | skip the per-cluster CRC32-C check on integrity-stream files |
 
 ```
@@ -373,7 +387,7 @@ Inventories files carrying **stream snapshots** — prior versions kept by ReFS'
 | `--show` | recover & preview each snapshot's prior CoW content |
 | `--file SUB` | only files whose path contains SUB (a fuller path disambiguates same-named files) |
 | `--snapshot SEL` | select only ONE version: a 1-based `[N]` index, or part of a version name |
-| `--depth N` | max recursion depth (default 10) |
+| `--depth N` | max recursion depth (default: full) |
 | `--extract DIR` | write each recovered version into DIR |
 | `--json` | machine-readable inventory |
 
@@ -442,7 +456,7 @@ Maps non-resident files to their on-disk extents. Default lists extent-backed fi
 |--------|-------------|
 | `-v, --verbose` | include resident/no-extent files and every decoded run |
 | `--oid O` | start at object O (default 0x600) |
-| `--depth N` | max recursion depth (default 3) |
+| `--depth N` | max recursion depth (default: full) |
 
 ```
 forefst.py disk.raw dataruns                           # map extent-backed files
@@ -454,56 +468,61 @@ forefst.py disk.raw dataruns --oid 0x705 -v            # scope to one subtree
 
 ## CSV Output Fields
 
-The `files` CSV has **38 columns**, one row per file/directory, in this order (matching `CSV_COLUMNS` in `forefst.py`):
+The `files` CSV has **39 columns**, one row per file/directory, in this order (matching `CSV_COLUMNS` in `forefst.py`):
 
 | # | Column | Description |
 |---|--------|-------------|
-| 0 | OID | Object Identifier (directories/objects; files emit empty — they have no own OID) |
-| 1 | ParentOID | Parent directory OID |
-| 2 | ParentPath | Path of the parent directory from root |
-| 3 | FileName | File or directory name |
-| 4 | Extension | File extension (lowercase) |
-| 5 | FileSize | Logical file size in bytes |
-| 6 | IsDirectory | `True` if the entry is a directory |
-| 7 | IsDeleted | `True` if recovered as deleted |
-| 8 | DeletionSource | Recovery method: `trash` / `orphan` / `chkp_diff` / `cow_modified` / `cow_deleted` |
-| 9 | IsResident | `True` if content is stored inline in the B+-tree |
-| 10 | Created | $SI creation timestamp |
-| 11 | Modified | $SI modification timestamp |
-| 12 | Changed | $SI metadata-change timestamp (MFT-equivalent) |
-| 13 | Accessed | $SI access timestamp |
-| 14 | FileAttributes | decoded Windows file-attribute flags |
-| 15 | SecurityId | ReFS security-descriptor ID |
-| 16 | OwnerSid | owner: friendly name + SID (e.g. `BUILTIN\Administrators (S-1-5-32-544)`) |
-| 17 | USN | Update Sequence Number (LastUsn) |
-| 18 | HasAds | alternate data stream present |
-| 19 | AdsNames | names of detected ADS |
-| 20 | IsEncrypted | EFS encryption flag |
-| 21 | IsCompressed | compression flag |
-| 22 | HasIntegrity | integrity-stream flag |
-| 23 | HasEA | Extended Attributes present (correct for non-resident files too) |
-| 24 | ReparseTarget | symlink/junction target |
-| 25 | HardLinkCount | number of names sharing the file's content |
-| 26 | SnapshotCount | number of stream snapshots |
-| 27 | TimestompFlags | timestomp heuristic flags (populated with `--timestomp`) |
-| 28 | GroupSid | group: friendly name + SID (from the security descriptor) |
-| 29 | AllocatedSize | on-disk allocated size (blank when unresolved) |
-| 30 | ReparseTag | `IO_REPARSE_TAG_* (0xTAG)` for reparse points |
-| 31 | RecoveredChild | child name recovered during deleted/orphan reconstruction (blank for normal rows) |
-| 32 | HardLinkNames | `;`-joined names sharing the file's content (non-resident files) |
-| 33 | FileId | per-directory child ordinal — the low 64 bits of the USN 128-bit FileID (join key) |
-| 34 | HomeOid | home-directory backref — the high 64 bits of the USN FileID (join key) |
-| 35 | IsSparse | `FILE_ATTRIBUTE_SPARSE_FILE` (0x200) set — corroborated by AllocatedSize < FileSize |
-| 36 | InternalFlags | `$SI` internal flags (e.g. `DeleteDisposition`); blank unless a confidently-named bit is set |
-| 37 | RefsVersion | volume ReFS version (always the last column) |
+| 0 | OID | own Object Identifier — a directory/object shows its OID; a **file emits `0`** (files have no own OID) |
+| 1 | FileRef | the stable 128-bit file reference `HomeOid:FileId` (== the USN `FileReferenceNumber`) |
+| 2 | HomeOid | the **creation** directory's OID (frozen at create — unchanged by move/rename) |
+| 3 | FileId | the per-directory child ordinal (low 64 bits of the FileID) — monotonic, never re-used |
+| 4 | FileName | File or directory name |
+| 5 | ParentOID | OID of the directory this **name currently lives in** (differs from HomeOid after a move/hard-link) |
+| 6 | ParentPath | Path of the parent directory from root |
+| 7 | FullPath | full path from root (ParentPath + FileName) |
+| 8 | Extension | File extension (lowercase) |
+| 9 | FileSize | Logical file size in bytes |
+| 10 | IsDirectory | `True` if the entry is a directory |
+| 11 | IsDeleted | `True` if recovered as deleted |
+| 12 | DeletionSource | Recovery method: `trash` / `orphan` / `chkp_diff` / `cow_modified` / `cow_deleted` |
+| 13 | IsResident | `True` if content is stored inline in the B+-tree |
+| 14 | Created | $SI creation timestamp |
+| 15 | Modified | $SI modification timestamp |
+| 16 | Changed | $SI metadata-change timestamp (MFT-equivalent) |
+| 17 | Accessed | $SI access timestamp |
+| 18 | FileAttributes | decoded Windows file-attribute flags |
+| 19 | SecurityId | ReFS security-descriptor ID |
+| 20 | OwnerSid | owner: friendly name + SID (e.g. `BUILTIN\Administrators (S-1-5-32-544)`) |
+| 21 | USN | Update Sequence Number (LastUsn) |
+| 22 | HasAds | alternate data stream present |
+| 23 | AdsNames | names of detected ADS |
+| 24 | IsEncrypted | EFS encryption flag |
+| 25 | IsCompressed | compression flag |
+| 26 | HasIntegrity | integrity-stream flag |
+| 27 | HasEA | Extended Attributes present (correct for non-resident files too) |
+| 28 | ReparseTarget | symlink/junction target |
+| 29 | HardLinkCount | number of names sharing the file's content |
+| 30 | HardLinkNames | `;`-joined names sharing the file's content |
+| 31 | SnapshotCount | number of stream snapshots |
+| 32 | TimestompFlags | timestomp heuristic flags (populated with `--timestomp`) |
+| 33 | GroupSid | group: friendly name + SID (from the security descriptor) |
+| 34 | AllocatedSize | on-disk allocated size (blank when unresolved) |
+| 35 | ReparseTag | `IO_REPARSE_TAG_* (0xTAG)` for reparse points |
+| 36 | RecoveredChild | child name recovered during deleted/orphan reconstruction (blank for normal rows) |
+| 37 | IsSparse | `FILE_ATTRIBUTE_SPARSE_FILE` (0x200) set — corroborated by AllocatedSize < FileSize |
+| 38 | InternalFlags | `$SI` internal flags (e.g. `DeleteDisposition`); blank unless a confidently-named bit is set |
 
-> Columns 0–27 keep stable indices; `GroupSid`, `AllocatedSize`, `ReparseTag`, `RecoveredChild`, `HardLinkNames`, `FileId`, `HomeOid`, `IsSparse` and `InternalFlags` were appended before `RefsVersion`, which remains last, so positional CSV consumers keyed on the early columns or the last column are unaffected. `FileId`+`HomeOid` reconstruct a record's USN 128-bit FileID, making the `files` and `usn` outputs joinable. `--full-path-column` appends one further `FullPath` column (ParentPath/FileName) **after** `RefsVersion`.
+> `FileRef` = `HomeOid:FileId` is the object's stable identity — it is the USN `FileReferenceNumber`, so the
+> `files` and `usn` outputs join directly on it. `HomeOid` (the creation directory) is frozen at create time,
+> while `ParentOID` follows the name to wherever it lives now; they differ for hard-links, moved files, and
+> recycle-bin entries. `--full-path-column` is a deprecated no-op alias (FullPath is a standard column).
 
 ### `files --filter` categories
 
-`files --filter <category>` keeps only the matching rows (output format unchanged). Field-based and EA-safe — `wsl` is detected via the reparse tag, not the EA-derived mode:
+`files --filter <category>` keeps only the matching rows (output format unchanged). The 12 categories are
+field-based and EA-safe — `wsl` is detected via the reparse tag, not the EA-derived mode:
 
-`reparse` · `encrypted` · `compressed` · `integrity` · `ea` · `ads` · `wsl` · `sparse` · `snapshot` · `directory` · `resident` · `deleted` · `hardlink`
+`reparse` · `encrypted` · `compressed` · `integrity` · `ea` · `ads` · `wsl` · `sparse` · `snapshot` · `directory` · `resident` · `hardlink`
 
 ## Body File Format
 

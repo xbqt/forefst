@@ -1,16 +1,6 @@
-# Mirror this repo to the GitLab `forefst` project on every change, so GitLab CI rebuilds
-# the site at https://<username>.gitlab.io/forefst/ automatically.
-#
-# One-time setup:
-#   1. Create a GitLab project named `forefst` under your account.
-#   2. In GitLab: Settings -> Access Tokens -> create a Project Access Token with the
-#      `write_repository` scope. Copy it.
-#   3. In THIS GitHub repo: Settings -> Secrets and variables -> Actions -> New secret
-#      named GITLAB_TOKEN, value = that token.
-#   4. Edit the GitLab URL below to your username/project (here: xbpt/forefst).
-#
-# After that, every push to this repo pushes it to GitLab, whose .gitlab-ci.yml rebuilds
-# the Pages site. Use the "Run workflow" button for a manual publish.
+# Mirrors this repository to its GitLab project so GitLab Pages rebuilds the documentation site on
+# every push to main. It pushes a clean, LFS-free source snapshot (the large sample disk images the
+# site does not use are dropped) so the GitLab pipeline builds without fetching LFS objects.
 
 name: Mirror to GitLab (forefst site)
 

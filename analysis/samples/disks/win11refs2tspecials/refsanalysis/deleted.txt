@@ -2334,5 +2334,4 @@ ReFS Deleted File Finder
        (name/size/timestamps). See the `export deleted` docs.
   Next: `export deleted <DIR>` writes each entry's raw .row (evidence) + a .recovered for
         resident files; add --carve to also reconstruct non-resident (extent-backed) files.
-  Recovery log: forefst_recovery_win11refs2tspecials_<TIMESTAMP>.txt
 

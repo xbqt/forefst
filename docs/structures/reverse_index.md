@@ -1,6 +1,6 @@
 # Reverse Index (Type 0x20)
 
-Type 0x20 is the per-**object** FileId-resolution index: rows keyed by a FileId (object reference / child index) that let the driver, given a file reference, recover either the object's **name** (Format A) or its **home-directory back-pointer** (Format B). It is not strictly a directory reverse index — the rows live in each index object's own B+-tree, created during normal file/dir creation and move.
+Type 0x20 is the per-**object** FileId-resolution index: rows keyed by a FileId (object reference / child index) that let the driver, given a file reference, recover either the object's **name** (Format A) or its **home-directory back-pointer** (Format B). It is not strictly a directory reverse index — the rows live in each index object's own B+-tree, created during normal file/dir creation and move. The home-directory back-pointer it stores is the same **creation-directory** anchor that forms the upper half of a file's [FileRef](../concepts/file_ids.md); a cross-directory move inserts a Format B row rather than re-homing the identity.
 
 ## Key format — 24 bytes
 
@@ -65,6 +65,7 @@ System OIDs 0x7 and 0x8 have a different type 0x20 format: 4-byte keys (`0x20000
 ## Cross-references
 
 - [Directory Entries](directory_entries.md) — the type 0x30 filename rows this index resolves back from a FileId
+- [File IDs](../concepts/file_ids.md) — the FileRef identity this index resolves, and why its home back-reference is the creation directory
 - [Object Table](object_table.md) — the back-ref parent OID in Format B resolves via the Object Table
 
 ## Evidence

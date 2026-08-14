@@ -70,7 +70,7 @@ CONCEPT_GROUPS = [
         "checksum_architecture.md", "integrity_streams.md", "redundancy.md",
     ]),
     ("Files, metadata & features", [
-        "object_ids_fileids.md", "oid_allocation.md", "attributes.md", "hard_links.md",
+        "object_ids.md", "file_ids.md", "oid_allocation.md", "attributes.md", "hard_links.md",
         "snapshots_versioning.md", "wsl_metadata.md", "compression.md", "deduplication.md",
         "tiering.md",
     ]),
@@ -271,6 +271,12 @@ def dejargon(text):
     s = re.sub(r'\bEvidence:\s*' + _GR + r'\b[^.\n]*\.', '', s)          # "Evidence: E2 (Foo)."
     # ", confirming/showing/proving <id>:" provenance tail -> drop (end the sentence)
     s = re.sub(r',\s*(?:confirming|showing|proving|demonstrating)\s+' + _IDLIST + r'\s*[:.]', '.', s)
+    # finding-id PAIRED WITH an erratum id — must run BEFORE the bare id-strip below, else the id is removed
+    # and the errata half leaks as "(/ E59)". Two shapes seen on reader pages:
+    #   "(**FN_LINK_003 / E59**)" / "(FN_LINK_003 / E59)"  -> drop the whole parenthetical
+    s = re.sub(r'\s*\(\s*\*{0,2}\s*' + ALPHA + r'\s*/\s*E-?\d{1,3}[a-z]?\s*\*{0,2}\s*\)', '', s)
+    #   "finding **FS_DEL_RA_005**, corrected by **E64**"  -> drop the whole provenance clause
+    s = re.sub(r'[;,]?\s*(?:finding\s+)?\*{0,2}' + ALPHA + r'\*{0,2}\s*,?\s*corrected by\s+\*{0,2}\s*E-?\d{1,3}[a-z]?\s*\*{0,2}', '', s, flags=re.I)
     # the scaffold word "finding(s)" DIRECTLY before an id -> drop it (keeps the verb: "reproduces finding X" -> "reproduces").
     # Only fires when an id follows, so a legitimate gerund ("finding one is…", "finding it on disk") is untouched.
     s = re.sub(r'\b[Ff]indings?\s+(?=\*{0,2}' + ALPHA + r')', '', s)
@@ -295,6 +301,8 @@ def dejargon(text):
     s = re.sub(r'\s*[—-]\s*(?:see\s+)?errata\s+E-?\d+\b', '', s)
     s = re.sub(r'\s*\(\s*(?:see\s+|finding\s+)?E-?\d{2,}\s*\)', '', s)
     s = re.sub(r'\s*[;,/]\s*(?:see\s+)?errata\s+E-?\d{2,}\b', '', s)
+    # "(erratum E58)" / "(errata E45–E50)" — a parenthetical whose whole content is an errata citation
+    s = re.sub(r'\s*\(\s*(?:see\s+)?errat(?:a|um)\s+E-?\d{1,3}[a-z]?(?:\s*[–—-]\s*E-?\d{1,3}[a-z]?)?\s*\)', '', s, flags=re.I)
     s = re.sub(r'\bopen question [A-Z]\d\b', 'an open question', s)
     # reader-facing provenance-framing phrases (the site hides the evidence-grade / finding-ID system)
     s = re.sub(r',\s*with their evidence levels and finding IDs,\s*', ' ', s)
@@ -432,7 +440,44 @@ def section_index_body(sec, extra=""):
     return f"{sec.capitalize()}.\n" + extra
 
 
+def _stamp_config():
+    """Keep the footer's version + generation date current WITHOUT a manual bump: read the tool's own
+    VERSION from forefst.py and stamp today's date into hugo.toml [params] (tool_version, build_date). Runs
+    on every build (locally and in CI, before Hugo), so the footer version always follows the tool."""
+    import datetime, re as _re
+    cfg = os.path.join(HERE, "hugo.toml")
+    # forefst.py sits at the repo root = the parent of the docs/ dir.
+    ver = None
+    for cand in (os.path.join(os.path.dirname(DOCS), "forefst.py"),
+                 os.path.join(HERE, "..", "..", "forefst.py")):
+        try:
+            with open(cand, encoding="utf-8") as fh:
+                m = _re.search(r'^VERSION\s*=\s*"([^"]+)"', fh.read(), _re.M)
+            if m:
+                ver = m.group(1); break
+        except OSError:
+            continue
+    if not os.path.isfile(cfg):
+        return
+    try:
+        txt = open(cfg, encoding="utf-8").read()
+    except OSError:
+        return
+    today = datetime.date.today().strftime("%d.%m.%Y")
+    if ver:
+        txt = _re.sub(r'(?m)^(\s*tool_version\s*=\s*)"[^"]*"(.*)$', rf'\g<1>"{ver}"\g<2>', txt)
+    if _re.search(r'(?m)^\s*build_date\s*=', txt):
+        txt = _re.sub(r'(?m)^(\s*build_date\s*=\s*)"[^"]*"(.*)$', rf'\g<1>"{today}"\g<2>', txt)
+    else:
+        txt = _re.sub(r'(?m)^(\s*tool_version\s*=.*)$',
+                      rf'\g<1>\n  build_date = "{today}"                            # last docs generation (DD.MM.YYYY) — stamped by build.py',
+                      txt, count=1)
+    open(cfg, "w", encoding="utf-8").write(txt)
+    print(f"stamped footer: forefst v{ver or '?'} ({today})")
+
+
 def build():
+    _stamp_config()
     if os.path.isdir(CONTENT):
         shutil.rmtree(CONTENT)
     os.makedirs(CONTENT)

@@ -90,42 +90,8 @@ ReFS Timestamp-Anomaly (Timestomp) Detection
          signals: CHANGE_LATE, PRE_FORMAT
   HIGH   intrinsic     2022-02-12 07:16:16   2026-05-16 16:51:55   test/xbpt_yankee_audit_433793.xml
          signals: CHANGE_LATE, PRE_FORMAT
-  MEDIUM intrinsic     2026-01-01 07:16:17   2026-05-16 16:52:01   test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_audit_echo_178867.tmp
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2021-05-18 07:16:04   2026-05-16 16:51:58   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_backup_mike_407434.log
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2025-02-09 07:17:09   2026-05-16 16:52:02   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_hardlink_echo_387599.ini
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2025-04-02 07:16:24   2026-05-16 16:51:59   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_sierra_echo_921063.xml
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2025-04-01 07:16:26   2026-05-16 16:52:01   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_tango_echo_291736.csv
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2024-04-04 07:17:02   2026-05-16 16:52:02   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_delta_sierra_216359.bin
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2021-09-26 07:16:24   2026-05-16 16:52:00   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_delta_cache_147912.bin
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2021-09-29 07:16:41   2026-05-16 16:52:00   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_report_audit_396522.txt
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2026-02-23 07:17:05   2026-05-16 16:52:00   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_alpha_victor_250409.ini
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2024-12-12 07:16:57   2026-05-16 16:52:02   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_index_uniform_409576.json
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2024-10-16 07:17:27   2026-05-16 16:52:02   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_quebec_audit_121864.cfg
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2022-06-11 07:16:28   2026-05-16 16:52:00   test/elvis_dir_record_449015/xbpt_output_papa_412411.log
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2025-05-12 07:17:04   2026-05-16 16:52:02   test/elvis_dir_victor_783323/xbpt_report_quebec_867569.md
-         signals: PRE_FORMAT
-  MEDIUM intrinsic     2025-11-05 07:16:31   2026-05-16 16:52:02   test/xbpt_foxtrot_config_966558.log
-         signals: PRE_FORMAT
-  LOW    intrinsic     2026-05-16 16:52:01   2026-05-16 16:52:02   test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_november_yankee_663510.csv
-         signals: CREATE_GT_MODIFY
-  LOW    intrinsic     2026-05-16 16:52:01   2026-05-16 16:51:56   test/elvis_dir_index_149423/xbpt_config_sync_830891.tmp
-         signals: CREATE_GT_MODIFY
-  LOW    intrinsic     2026-05-16 16:52:01   2026-05-16 16:51:56   test/elvis_dir_india_800575/xbpt_report_temp_854937.tmp
-         signals: CREATE_GT_MODIFY
-  LOW    intrinsic     2026-05-16 16:52:01   2026-05-16 16:51:56   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_trace_gamma_651618.dat
-         signals: CREATE_GT_MODIFY
+
+  (14 MEDIUM + 4 LOW row(s) hidden — `--min MEDIUM` / `--min LOW` to show; CSV/JSON already include every tier.)
 
   Signal legend  (AUTHORITATIVE = independent evidence · HEURISTIC = suggestive $SI-only):
     [AUTHORITATIVE]
@@ -139,5 +105,8 @@ ReFS Timestamp-Anomaly (Timestomp) Detection
                              can't reach change-time) — defeated by a native-API/raw-disk stomp
       PRE_FORMAT / FUTURE    created before the volume existed / after its last write
       CREATE_GT_MODIFY       created after last write
+      ROUND_TIMESTAMPS       created AND modified are whole-second (.0000000) — a tool often sets a
+                             date with no sub-second time; LOW only (driver packages / archive
+                             extraction also produce whole-second times)
   Note: the intrinsic signals also fire on legitimate creation-time-preserving copies
   (robocopy /COPY:T, restore), so an intrinsic-only HIGH is not proof — corroborate.

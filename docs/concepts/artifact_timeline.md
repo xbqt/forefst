@@ -1,5 +1,7 @@
 # Timestamp Sources and the Super-Timeline
 
+> **Experimental / informational.** The super-timeline correlates USN, MLog, and `$SI` events by identity/name and time — a corroborative reconstruction, not an authoritative log. Its reach depends on which journals are active (the USN journal is off by default; the MLog is a shallow circular buffer), and the correlation is heuristic. Use it to build and cross-check leads against the underlying artifacts, not as a standalone source of truth.
+
 Time is the spine of most filesystem investigations, and ReFS scatters it across five
 independent artifacts that an analyst has to read separately and then reconcile: the per-file
 `$SI` MACB times, the USN change journal, the MLog transaction log, the checkpoint virtual clock,
@@ -66,7 +68,7 @@ fixed floor underneath all of them.
 | **USN `$J` record** | Timestamp | record `0x30` | Wall-clock time the operation was journalled | FILETIME `u64` LE; record at `OID 0x520` "Change Journal" → `$J` stream |
 | **USN `$J` record** | Reason | record `0x38` | Which operation (bitmask) | `u32` LE; see reason codes below |
 | **USN `$J` record** | USN | record `0x28` | Virtual byte offset of this record in the journal (the file's `$SI`+0x40 LastUsn points here) | `u64` LE; monotone, never reused; can far exceed the live `$J` stream size since `$J` is a sliding window |
-| **USN `$J` record** | File ID / Parent ID | record `0x08` / `0x18` | 128-bit IDs (table OID ‖ entry index) | two `u128`; upper 8 = directory OID, lower 8 = entry ordinal |
+| **USN `$J` record** | File ID / Parent ID | record `0x08` / `0x18` | The file's fixed identity vs its current parent | two `u128`; **File ID** = `(HomeOid, ordinal)` — the creation directory OID + ordinal, unchanged by rename or move; **Parent ID** = the *current* parent, which changes on a move |
 | **MLog redo record** | Embedded `$SI` times | opcode-specific | FILETIMEs of the *operation being replayed* | FILETIME `u64` LE inside the `_SmsRedoRecord` value data (record+`0x38`+); **no dedicated header timestamp field** |
 | **CHKP** | Virtual clock | CHKP `0x60` (header copy `0x10`) | Monotone transaction-sequence counter (NOT wall clock) | `u64` LE; higher = newer checkpoint; allocator clock at `0x68` ≤ virtual clock |
 | **`$VOLUME_INFORMATION`** (`OID 0x500`, key 0x0520) | Volume creation | key value `0x90` | Volume format time — the hard lower bound | FILETIME `u64` LE; set at format, never rewritten. Modify time at `0xA0` (updated on mount) |
@@ -131,6 +133,15 @@ Each source contributes something the others cannot:
 
 In practice you join the three CSV exports (USN events, MLog times, per-file MACB) into one sortable
 super-timeline and anchor it with the volume-creation time from the volume summary.
+
+**Join on the File ID, not the path.** A file's identity — its FileRef `(HomeOid, ordinal)`, which is the
+USN File ID — is fixed across renames and cross-directory moves, while its path is not: a move changes the
+Parent ID and the name but leaves the File ID untouched (measured unchanged across 1,858 real moves).
+Correlating the USN, MLog, and `$SI` rows for one file on the **File ID** therefore follows it through every
+rename and relocation, where a path- or name-keyed join would split one file's history into several
+unrelated fragments — or, worse, merge two different files that happened to occupy the same path at
+different times. When a file has been moved, its `$SI` sits under the new path while older USN records name
+the old one; the File ID is what stitches them back together. See [File IDs](file_ids.md).
 
 ## Pitfalls that corrupt a ReFS timeline
 
@@ -219,6 +230,7 @@ super-timeline; anchor it with the volume-creation time from the `integrity` / v
 
 ## Cross-references
 
+- [File IDs](file_ids.md) — the FileRef `(HomeOid, ordinal)` that stays fixed across rename and move, the correct key for correlating a file's events over time
 - [$STANDARD_INFORMATION](../attributes/STANDARD_INFORMATION.md) — the four `$SI` MACB FILETIMEs and the non-timestamp `$SI+0x40` LastUsn / `$SI+0x48` UsnJournalId fields these reads come from
 - [Timestomping detection](timestomp_detection.md) — the signal/tier model that consumes every source on this page
 - [USN journal](../structures/usn_journal.md) — the `USN_RECORD_V3` layout, reason codes, and `$J` storage behind the event-log column

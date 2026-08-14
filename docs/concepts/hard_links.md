@@ -89,6 +89,19 @@ different-size files can sit at the same home OID under the same ordinal, and a 
 `(home, ordinal, size, ctime, mtime)` either false-merges them or false-splits them. Only resolving each
 name to the candidate stream whose 0x40 size equals the name's own size keeps colliding files distinct.
 
+### The authoritative name list lives in the backing
+
+The size match reconstructs the grouping from the *names'* side, but ReFS also stores the answer directly.
+A hard-linked file's single type-0x40 backing embeds **one type-0x39 back-pointer per name**, each carrying
+that name's parent-directory OID and the name string. These back-pointers are the object's own record of
+every path that points at it — the ground truth `RefsConvertToStandardInfoLinkCount` derives its count from.
+They matter because a name's cached size (`value+0x38`) is a *per-name* copy that ReFS does **not** keep in
+lockstep across the names: one name can carry a stale size — the `alloc=0` stub's 0 is the common case, but
+any old value occurs — and that stale size is the one situation where a size-match join under-groups (the
+name resolves to no candidate and is counted as a solo file). It is still one object, and its 0x39
+back-pointers still list every name. All of a file's names share the single FileRef `(HomeOid, FileId)`
+(see [File IDs](file_ids.md)); the back-pointers enumerate the names behind that one shared identity.
+
 ## Forensic implications
 
 - **The `$SI+0x70` field is a decoy.** It is present only in resident (key flags `0x01`) values and is
@@ -161,6 +174,8 @@ field rather than reading any `$SI` field directly.
 
 ## Cross-references
 
+- [File IDs](file_ids.md) — the FileRef `(HomeOid, FileId)` every name of a hard-linked file shares, and
+  why `HomeOid != current parent` marks a relocated *or* hard-linked-elsewhere name
 - [Directory Entries](../structures/directory_entries.md) — the type-0x30 key/value layout; the
   non-resident value carries the child ordinal (`+0x00`) and home backref (`+0x08`) the join depends on
 - [Standard Information](../attributes/STANDARD_INFORMATION.md) — the `$SI+0x70` "HardLinkCount" decoy

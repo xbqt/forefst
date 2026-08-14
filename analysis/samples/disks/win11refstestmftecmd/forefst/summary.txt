@@ -15,11 +15,22 @@ ReFS Volume Fast Extended Summary
   Checksum:           CRC64
 
 ------------------------------------------------------------------------------
-Hashes
+Bootstrap structures  (address + validity; SHA-256 on the next line)
 ------------------------------------------------------------------------------
-  VBR SHA-256:        93e5df98b114527d4dd38ac0d92f031cb8594559b1572e00d835b41fe82c5ca0
-  SUPB SHA-256:       b6e9c6ccaafb96547a67b33b403f9a1fc6f5182458a76cb5a3fb42c62418adbf
-  CHKP SHA-256:       7c0085fd7770ce621df1c35c62f1ab3ee633303b04d38812a1b796093c2aef3a
+  VBR primary      LBA 0 (offset 0x0)  — checksum OK
+      93e5df98b114527d4dd38ac0d92f031cb8594559b1572e00d835b41fe82c5ca0
+  VBR backup       LBA 8257535 (off 0xfbfffe00)  — = primary, cksum ok
+      93e5df98b114527d4dd38ac0d92f031cb8594559b1572e00d835b41fe82c5ca0
+  SUPB primary     LCN 0x1e (offset 0x1e000)  — SUPB sig OK
+      b6e9c6ccaafb96547a67b33b403f9a1fc6f5182458a76cb5a3fb42c62418adbf
+  SUPB backup      LCN 0xfbffd (offset 0xfbffd000)  — SUPB sig OK
+      ca8aeb74f86d84d2cec10e4007db6d1aa76d530707c8bba36267537726d53c03
+  SUPB backup      LCN 0xfbffe (offset 0xfbffe000)  — SUPB sig OK
+      0a6bfc2f4f0771b85e6b7a95a5029b1f788e231e785d8ebfadfed59bfb821bb7
+  CHKP backup      LCN 0x2874 (offset 0x2874000)  — valid, vclock=616
+      fabe1c3f8d8fee799ce64abc79fd7c57556b4d7a89a7fe9eee2d25827e46fba2
+  CHKP primary     LCN 0x1e3f4 (offset 0x1e3f4000)  — valid, vclock=617
+      7c0085fd7770ce621df1c35c62f1ab3ee633303b04d38812a1b796093c2aef3a
 
 ------------------------------------------------------------------------------
 Checkpoint
@@ -61,12 +72,11 @@ Volume Detail
   Reparse index:      330 entries
   Trash table:        0 entries
   Containers used:    62 / 63 (98.4%)
-  Free space (est):   64.0 MB
+  Free space (est):   64.0 MB  (container-map estimate — coarse)
   FS Metadata rows:   3
   USN Journal:        Active
   USN Journal ID:     0x01dcea86b624a787
 
-For complete file statistics, use the `summary` subcommand (full directory walk)
 
 ------------------------------------------------------------------------------
 File System Content (from directory walk)
@@ -79,8 +89,8 @@ File System Content (from directory walk)
   Encrypted files:    0
   Integrity files:    559
   Compressed files:   0
-  Hard links (extra): 256
+  Hard links (extra): 282
   Snapshots:          0
   ADS entries:        84
 
-Tip: the `fastsummary` subcommand gives quick volume metadata without a directory walk
+Tip: `fastsummary` = quick volume metadata (no directory walk).

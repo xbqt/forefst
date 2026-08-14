@@ -21,12 +21,12 @@ it does not silently refuse them.
 | 0x04 | 2 | Major version (u16) | 3 on every ReFS record (the 128-bit File ID requires the V3 layout). The parser decodes with V3 offsets and *tolerates* a stray V2/V4 — a non-ReFS/corrupt input — with a one-time note rather than refusing it (see above) |
 | 0x06 | 2 | Minor version (u16) | Always 0 |
 | 0x08 | 16 | File ID (u128) | See 128-bit File ID structure below |
-| 0x18 | 16 | Parent file ID (u128) | Same format |
+| 0x18 | 16 | Parent file ID (u128) | Same format, but this is the **current** parent directory's reference. Unlike the File ID at 0x08 — the file's fixed identity — this tracks where the name currently lives, so it **changes when the file is moved** to another directory. Its ordinal (lower 8 bytes) is always **0**: a directory is addressed as `OID:0`, so the parent reference reduces to the parent directory's own OID. |
 | 0x28 | 8 | USN (u64) | The record's own USN = its **virtual byte offset** in the journal (monotonic, never reused; can far exceed the live `$J` stream size because `$J` is a sliding window). A file's `$SI+0x40` LastUsn points at this value for its most recent record. |
 | 0x30 | 8 | Timestamp (FILETIME) | 100 ns ticks since 1601-01-01 |
 | 0x38 | 4 | Reason (u32) | See Reason codes below |
-| 0x3C | 4 | Source info (u32) | — |
-| 0x40 | 4 | Security ID (u32) | — |
+| 0x3C | 4 | Source info (u32) | Structurally **0** in every ReFS record (the source-info mechanism is unused on ReFS) |
+| 0x40 | 4 | Security ID (u32) | Structurally **0** in every ReFS record (the record carries no SecurityId) |
 | 0x44 | 4 | File attributes (u32) | Current WIN32_FILE_ATTRIBUTE flags |
 | 0x48 | 2 | File name length (u16) | In bytes |
 | 0x4A | 2 | File name offset (u16) | Offset from record start |
@@ -36,15 +36,21 @@ it does not silently refuse them.
 
 | Component | Size | Meaning |
 |-----------|------|---------|
-| Upper 8 bytes | u64 | B+-tree table OID (directory's Object Table OID) |
+| Upper 8 bytes | u64 | The **creation (home) directory's** Object Table OID — the directory the file was born in, frozen for the life of the object |
 | Lower 8 bytes | u64 | Per-directory entry ordinal — monotonically allocated, **never reused after deletion** (a deleted ordinal stays a permanent gap) |
 
-The upper 8 bytes identify which directory's B+-tree contains this entry; the lower 8 bytes identify
-the specific entry within that tree. This makes a USN record directly resolvable to a
-[B+-tree node](btree_node.md) location without a separate lookup table. Because the ordinal is never
-re-used within its directory, the full 128-bit File ID is **stable over time** — a deleted file's File ID
-is never reassigned to a later file, so a USN record referencing a File ID points to the same file across
-the whole journal (see [Object IDs & File IDs](../concepts/object_ids_fileids.md)).
+This File ID is exactly the `(HomeOid, ordinal)` FileRef described in [File IDs](../concepts/file_ids.md).
+The upper 8 bytes name the directory whose B+-tree holds the file's object (its type-0x40 backing), and the
+lower 8 bytes identify that object within the tree, so a USN record resolves to a
+[B+-tree node](btree_node.md) location without a separate lookup table.
+
+The File ID is **stable in two senses**. It is *temporally* stable — the ordinal is never re-used within
+its directory, so a deleted file's File ID is never reassigned to a later file. It is also *spatially*
+stable — **renaming or moving a file does not change its File ID.** The upper half is the *creation*
+directory, not the current parent, so when a file is moved the File ID (0x08) stays fixed while the Parent
+file ID (0x18) changes to the new directory. Across 1,858 real cross-directory moves in the corpus, the
+File ID was unchanged in every case. A USN record therefore points to the same file across the whole
+journal, through any number of renames and moves.
 
 ## Reason codes
 
@@ -83,6 +89,8 @@ The reason-code combination, not just the individual flag, is the forensic signa
 
 | Operation | USN signature |
 |-----------|---------------|
+| Rename (same directory) | RENAME_OLD_NAME (0x1000) + RENAME_NEW_NAME (0x2000); same File ID **and** same Parent file ID, only the name differs |
+| Move (to another directory) | RENAME_OLD_NAME + RENAME_NEW_NAME; **same File ID**, but the **Parent file ID changes** (old directory → new directory) — the file's identity is preserved, only its location moves |
 | Sparse flag set | Basic info change (0x8000); file attributes change from 0x20 to 0x220 |
 | EFS encrypt/decrypt | Transient `EFS0.LOG` in system directory (OID 0x701); reason 0x40000 |
 | $RECYCLE.BIN creation | Created on demand at first Explorer deletion |
@@ -130,23 +138,57 @@ Available via `forefst.py <image> usn`:
 
 | Mode | Description |
 |------|-------------|
-| Default | Record listing with reason codes and file names |
-| `--csv [FILE]` | Export as CSV |
-| `--json` | Machine-readable JSON output |
-| `--stats` | Reason code frequency distribution |
-| `--info` | Journal metadata, extent layout, format reference |
+| Default | An activity **summary** (record count, reason-code distribution, time span) |
+| `--list` (or `-v`) | The on-screen record list with reason codes and file names |
+| `--csv [FILE]` | Export as CSV (a file export also prints the summary stats) |
+| `--json [FILE]` | Machine-readable JSON output |
+
+Every ReFS journal record is version **3.0** (the 128-bit File ID requires the V3 layout), so the export
+carries no version column.
+
+### CSV / JSON columns
+
+The `--csv` and `--json` exports share one field set (17 columns, in this order):
+
+| # | Column | Meaning |
+|---|--------|---------|
+| 1 | `usn` | The record's own USN (virtual byte offset in the journal) |
+| 2 | `timestamp` | Record time (FILETIME rendered as a date) |
+| 3 | `reason_hex` | Raw reason bitmask |
+| 4 | `reason` | Decoded reason flag names |
+| 5 | `filename` | The file or directory name |
+| 6 | `entry_type` | `dir` when `file_id == 0` (a directory self-reference), else `file` |
+| 7 | `file_ref` | `home_oid:file_id` — the same value as `files.FileRef` |
+| 8 | `home_oid` | The containing/creation directory for a file; the object's **own** OID for a directory |
+| 9 | `file_id` | The entry ordinal (lower half of the File ID); `0` for a directory |
+| 10 | `parent_oid` | The current parent directory's OID |
+| 11 | `path` | The resolved path for the record's file |
+| 12 | `attrs_hex` | Raw file-attribute bitmask |
+| 13 | `attrs` | Decoded attribute names |
+| 14 | `record_length` | The on-disk record length |
+| 15 | `security_id` | Structurally 0 on ReFS (see the layout above) |
+| 16 | `source_info` | Structurally 0 on ReFS |
+| 17 | `parent_idx` | Structurally 0 on ReFS (a parent is a directory addressed as `OID:0`) |
+
+Directories **do** get USN records: a directory self-reference has `file_id == 0`, which is why
+`entry_type` reads `dir`. The `security_id`, `source_info`, and `parent_idx` columns are placed last
+because they are structurally 0 on every ReFS record and are retained only for completeness.
 
 ## Cross-references
 
 - [Directory Entries](directory_entries.md) — per-file LastUsn at resident value offset **0x68**; value+0x58 holds FileSize; UsnJournalId at 0x70
 - [$STANDARD_INFORMATION](../attributes/STANDARD_INFORMATION.md) — per-file LastUsn at **$SI+0x40**, UsnJournalId at $SI+0x48 ($SI+0x30 is an unpopulated slot)
 - [System OIDs](system_oids.md) — OID 0x520 hosts the Change Journal file entry
-- [Object IDs & File IDs](../concepts/object_ids_fileids.md) — how the 128-bit File ID maps to a B+-tree location
+- [File IDs](../concepts/file_ids.md) — how the 128-bit File ID maps to a B+-tree location
 
 ## Evidence
 
-The `USN_RECORD_V3` layout, the 128-bit File ID split (upper = table OID, lower = entry index), and
-the reason-code catalog are raw-disk decoded across the corpus (RD). The record length range and the
+The `USN_RECORD_V3` layout, the 128-bit File ID split (upper = the creation/home directory OID, lower =
+entry ordinal), and the reason-code catalog are raw-disk decoded across the corpus (RD). That the upper
+half is the *creation* directory and is **frozen across rename and move** — while the Parent file ID at
+0x18 tracks the current parent — is disk-proven on 1,858 cross-directory `RENAME_OLD_NAME`/`RENAME_NEW_NAME`
+pairs across nine v3.14 volumes (File ID unchanged in every case) and corroborated in the driver
+(`RefsMoveFile` migrates only the FileId-resolution index, never the stored reference). The record length range and the
 `pad8` rule are measured corpus-wide (driver minimum 80 (0x50), observed 80–312 B, 8-byte aligned). The
 USN ↔ `$SI+0x40` LastUsn link is both decompiled (E2) and disk-proven — every sampled file's LastUsn
 resolved to a `$J` record naming that file. Journal activation, the OID 0x520 Change Journal entry,

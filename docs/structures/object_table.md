@@ -84,6 +84,8 @@ The Object Table has a failover pair: root #0 (table ID 0x02) and root #5 (table
 ## Cross-references
 
 - [Checkpoint (CHKP)](chkp.md) -- roots #0 and #5 point to the Object Table
+- [Object IDs](../concepts/object_ids.md) -- what the OID is, why its order is chronological evidence, and why a directory keeps its OID when moved
+- [File IDs](../concepts/file_ids.md) -- how a file (which has no OID) is identified; its home half is a directory OID from this table
 - [Schema Table](schema_table.md) -- schema 0xe030 defines key comparison for this table
 - [Parent-Child Table](parent_child_table.md) -- encodes directory hierarchy relationships
 - [System OIDs](system_oids.md) -- the 13 known system OIDs and their roles

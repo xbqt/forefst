@@ -77,6 +77,22 @@ it. When you edit a page:
 - One directory = one `README.md` index; add your page's row when you create it. Use
   [`KNOWLEDGE_MAP.md`](KNOWLEDGE_MAP.md) to find where a topic already lives before adding a new page.
 
+## Keeping the docs in sync with the tools
+
+The reference (this documentation and the website) and the tools must not drift. **When a change alters a
+command's output** — a new or renamed column, a changed default, a new flag, a different default subcommand —
+update the docs in the *same* change:
+
+1. Fix the affected `tools/` and any structure/concept page so every documented flag, default, and column
+   matches the tool's real behaviour (the tool is the source of truth — run it and compare).
+2. Run the site gates: `python3 docs/website/build.py` (rebuilds the site and fails on any leak/artifact) and
+   the link checker; both must pass with zero broken links.
+3. If a captured sample's output changed, regenerate the sample bundles and confirm the diff is legitimate.
+4. Keep the reference counts current (the claim-register size, errata count, column count) wherever they are
+   quoted, and check that no page still cites the old value.
+
+A tool change that leaves the docs stale is an incomplete change.
+
 ## Where things live
 
 | Kind | Directory |

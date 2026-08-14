@@ -1,3 +1,5 @@
+<p align="center"><img src="https://xbpt.gitlab.io/images/forefst.png" alt="forefst" width="360"></p>
+
 # forefst — forensic ReFS analysis
 
 **Forensic tools and byte-level structural documentation for Microsoft's Resilient File System (ReFS), versions 3.4 through 3.14.**
@@ -13,23 +15,24 @@ All versions 3.4–3.14 parse; some enriched fields are version-dependent, with 
 
 Why *forefst*? Because of *forensic* and Re*FS*. And also because ReFS is all about B+-trees. And finally because, I think, the more forest on the planet, the better.
 
-Originally built for my master's thesis (*"Forensic analysis of the Resilient File System (ReFS) version 3.14"*, University of Mons, 2026), the project now reaches well beyond its original academic scope. This is its first public release.
+Originally built for my master's thesis (*"Forensic analysis of the Resilient File System (ReFS) version 3.14"*, University of Mons, 2026), the project now reaches well beyond its original academic scope.
 
 I hope it's useful — please feel free to open an issue with feedback or corrections.
 
-## What's novel here
+## What's new here
 
 **The tool itself, first of all.** ReFS is fourteen years old, and — as far as I know — an open-source forensic tool for it has never really existed. The open tools I'm aware of (libfsrefs, pyrefs, the Sleuth Kit extension from Prade et al.'s work, journal parsers such as ARIN) each cover only a slice — an early version, a single artifact, or the format as it stood at 3.4 — and everything that opens a *current* volume is commercial and closed, a file list you cannot audit. So, as far as I can tell, forefst is the first tool anyone can download, read line by line, and point at a modern ReFS volume for the complete forensic job — listing, timelines, both journals, deleted files, prior versions, content extraction, security descriptors. And refsanalysis is the companion none of its predecessors shipped: the structure-level lab that keeps all of it re-testable when Microsoft moves the format again — which is how earlier efforts have tended to fall behind.
 
-**The knowledge, second.** The last public map of the format is the 3.4 analysis, and ReFS has moved a long way since: page references shrank from 104 to 48 bytes (72 with SHA-256), v3.14 reaches its thirteen roots through an indirect list, a native-format marker and a version echo now record the volume's own history, the redo-opcode set grew from 29 to 44, `$SI` gained eight bytes, and whole features — stream snapshots, Dev Drive — postdate everything in the literature. The documentation here carries the byte-level record from 3.4 to 3.14, and revisits the 3.4-era ground on the way: the Container Table rows that could only be partially decoded in 2019 are fully mapped, the checkpoint comparison that earlier work set aside is implemented (with an honest negative result: after a clean unmount, both checkpoints decode to the same tree), and the attribute set — barely sketched in the literature — gets a byte-level page each. All of it sits in the 435-claim register with graded evidence.
+**The knowledge, second.** The last public map of the format is the 3.4 analysis, and ReFS has moved a long way since: page references shrank from 104 to 48 bytes (72 with SHA-256), v3.14 reaches its thirteen roots through an indirect list, a native-format marker and a version echo now record the volume's own history, the redo-opcode set grew from 29 to 44, `$SI` gained eight bytes, and whole features — stream snapshots, Dev Drive — postdate everything in the literature. The documentation here carries the byte-level record from 3.4 to 3.14, and revisits the 3.4-era ground on the way: the Container Table rows that could only be partially decoded in 2019 are fully mapped, the checkpoint comparison that earlier work set aside is implemented (with an honest negative result: after a clean unmount, both checkpoints decode to the same tree), and the attribute set — barely sketched in the literature — gets a byte-level page each. All of it sits in the 437-claim register with graded evidence.
 
-**And a few capabilities have no equivalent even in the mature NTFS toolchain** — they are what make forefst a *forensic* tool rather than a parser:
+**Concrete forensic signals, third.** Mapping the format is not the end in itself; it surfaced specific, verifiable signals an analyst can act on — each grounded in the byte-level analysis and traceable to graded evidence:
 
-- **User actions reconstructed from the transaction log.** `mlog --parse` decodes the durable log into concrete operations — CREATE, WRITE, RENAME, MOVE, DELETE — with deliberately conservative semantics: a RENAME is told apart from a MOVE by comparing parent-directory OIDs, and a DELETE is reported only when the object's own table is destroyed, not on the bare row removal a rename also produces. The open NTFS world never had a maintained `$LogFile` parser; this is the closest thing to one for ReFS.
-- **A timestomp signal NTFS cannot offer.** ReFS keeps no `$FILE_NAME` timestamp twin — but a hard-linked file carries one `$SI` set *per name*, so a back-dated name stands out against its siblings and against the change journal, flagging the tampered name specifically and independently of the log.
-- **Deletion evidence that cannot be erased.** Object IDs are monotonic and never reused, so a gap in the OID sequence is durable evidence that a **directory or system object** once existed and was deleted — it survives even a complete overwrite of every byte that object ever touched. The caveat: **files have no Object ID of their own** (only directories and system objects do), so this signal tracks deleted **directories/objects**, not individual files — a deleted file leaves no OID gap (look instead to orphaned directory trees, the USN journal, and copy-on-write remnants). Even so, NTFS can't offer this at all: MFT records are recycled and erase their own evidence over time.
+- **A file identity that survives moves.** Every file carries a 128-bit File ID — the object ID of the directory it was *created* in, plus a per-directory birth ordinal — frozen at creation: it does not change when the file is renamed or moved to another directory (proven on-disk across 1,858 cross-directory moves). `files` and `usn` share it, and `details --id HomeOid:FileId` addresses a file by it, independent of any path.
+- **User actions reconstructed from the transaction log.** `mlog --parse` decodes the durable log into concrete operations — CREATE, WRITE, RENAME, MOVE, DELETE — with deliberately conservative semantics: a RENAME is told apart from a MOVE by comparing parent-directory OIDs, and a DELETE is reported only when the object's own table is destroyed, not on the bare row removal a rename also produces.
+- **A per-name timestomp signal.** ReFS keeps no `$FILE_NAME` timestamp twin, but a hard-linked file carries one `$SI` set *per name* — so a back-dated name stands out against its siblings and against the change journal, flagging the tampered name specifically and independently of the log.
+- **Durable deletion evidence for directories and system objects.** Object IDs are monotonic and never reused, so a gap in the OID sequence is durable evidence that a directory or system object once existed and was deleted — it survives even a complete overwrite of every byte that object ever touched. The honest limit: files have no Object ID of their own (only directories and system objects do), so this signal tracks deleted directories/objects, not individual files — a deleted file leaves no OID gap (look instead to orphaned directory trees, the USN journal, and copy-on-write remnants).
 - **Provenance of the medium itself.** `summary` classifies a volume as original, upgraded, or native, from an on-disk marker an upgrade can never set — a permanent signature of the volume's history, with real capability consequences (POSIX unlink and hard links require the native format).
-- **A parser that discloses its own uncertainty.** `--provenance` marks the output fields that rest on structural inference rather than on facts confirmed in both the decompiled driver and the disk bytes. Every emitted field traces to graded evidence in the claim register — so *"how do you know this column is right?"* has a written answer.
+- **A parser whose every field is auditable.** Each emitted value is either confirmed in both the decompiled driver and the disk bytes, or marked as structural inference — and every one traces to graded evidence in the claim register, so *"how do you know this column is right?"* has a written answer.
 
 Each is documented in depth under [docs/concepts/](docs/concepts/).
 
@@ -41,7 +44,7 @@ The only requirement is **Python 3.7+** — standard library only: no `pip insta
 # Everything forefst can do, one line each
 python3 forefst.py --list
 
-# Full forensic file listing -> 38-column CSV
+# Full forensic file listing -> 39-column CSV
 python3 forefst.py disk.raw -o files.csv
 
 # One-line volume overview (version, size, counts, upgrade state)
@@ -74,7 +77,7 @@ One structural difference comes first, because it reframes the whole workflow: *
 
 | To… | NTFS (typical workflow) | ReFS (forefst) |
 |---|---|---|
-| Per-file metadata → CSV / body / JSON | `$MFT` parser | `files` — 38 columns, Timeline Explorer-ready |
+| Per-file metadata → CSV / body / JSON | `$MFT` parser | `files` — 39 columns, Timeline Explorer-ready |
 | Change journal | `$UsnJrnl:$J` (+ `$MFT` for paths) | `usn` — names and FileIDs resolve from the volume itself |
 | Transaction log → user actions | `$LogFile` (no maintained open parser) | `mlog --parse` → CREATE / WRITE / RENAME / MOVE / DELETE |
 | Timestomp detection | `$SI` vs `$FN`, sub-second zeros | `timestomp` — USN corroboration + hard-link `$SI` divergence (ReFS has no `$FILE_NAME` twin) |
@@ -103,15 +106,15 @@ forefst/
 ├── refsanalysis.py           # structure / lab tool — decode one on-disk structure at a time
 ├── docs/                     # standalone ReFS structural reference
 │   ├── structures/           #   25 byte-level on-disk layouts
-│   ├── concepts/             #   33 forensic concepts & mechanisms
+│   ├── concepts/             #   34 forensic concepts & mechanisms
 │   ├── attributes/           #   11 per-attribute pages
-│   ├── examples/             #   5 worked walkthroughs (real tool output)
+│   ├── examples/             #   6 worked walkthroughs (real tool output)
 │   ├── tools/                #   tool usage documentation
 │   ├── website/              #   Hugo site generator — publishes this reference as a static site
 │   ├── methodology.md        #   how every claim was verified
 │   └── KNOWLEDGE_MAP.md      #   topic -> authoritative-source index
 └── analysis/                 # lab materials + verification harness (the tools don't depend on it)
-    ├── reference_table.csv   #   the live claim register (435 findings)
+    ├── reference_table.csv   #   the live claim register (437 findings)
     ├── lab/                  #   VM setup, disk generation, activity generator + baseline
     ├── samples/              #   captured tool output + samples/corpus/ + sample disks
     └── reports/              #   verification scripts, results, per-claim audit/ harness
@@ -139,7 +142,7 @@ The same reference is published as a static website, generated from `docs/` by t
 | Resolve symlinks / junctions / WSL reparse points | `forefst.py disk.raw reparse -v` |
 | Decode `$RECYCLE.BIN` (`$I` metadata + `$R` payload) | `forefst.py disk.raw recyclebin` |
 | Extract one file's content, or dump all its attributes | `forefst.py disk.raw extract /path` · `details /path` |
-| See which emitted fields are **not** 100% certain | `forefst.py disk.raw --provenance` |
+| Address a file by its stable identity, independent of path | `forefst.py disk.raw details --id HomeOid:FileId` |
 
 ### Example — deleted-file recovery
 
@@ -153,20 +156,11 @@ $ python3 forefst.py disk.raw deleted
       Recoverable:  metadata only (non-resident — file data is not in this remnant)
 ```
 
-ReFS deletion recovery has **five methods** — the Trash table, a checkpoint differential, an orphan-page scan, stream-snapshot reconstruction, and a B+-tree node-slack scan. The `deleted` command runs three of them by default (Trash, checkpoint diff, node-slack); `--scan-pages` adds the orphan scan, and stream-snapshot reconstruction — the one exact-content path — is exposed separately as `snapshots`, because it also recovers prior versions of files that still exist. Each recovered entry is tagged with a **recoverability verdict**: *full file* (resident content is inline in the record), *extent-backed* (non-resident data whose extent map survives, so `export deleted --carve` can reconstruct it), or *metadata only*. `export deleted DIR` writes the recoverable ones out.
+ReFS deletion recovery has **five methods** — the Trash table, a checkpoint differential, an orphan-page scan, stream-snapshot reconstruction, and a B+-tree node-slack scan. The `deleted` command runs three of them in its quick default (Trash, checkpoint diff, node-slack); the complete **`--full`** mode adds the orphan-page scan and, on export, carves non-resident content. Stream-snapshot reconstruction — the one exact-content path — is exposed separately as `snapshots`, because it also recovers prior versions of files that still exist. Each recovered entry is tagged with a **recoverability verdict**: *full file* (resident content is inline in the record), *extent-backed* (non-resident data whose extent map survives, so `export deleted --carve` can reconstruct it), or *metadata only*. `export deleted DIR` writes the recoverable ones out.
 
 ## refsanalysis.py — the analysis tool
 
-Where `forefst.py` answers *"what happened on this volume?"*, `refsanalysis.py` answers *"what does this structure look like?"* — it decodes one on-disk structure at a time. It is the companion for learning the format, validating the forensic tool, and adapting to new ReFS builds.
-
-| Category | Subcommands |
-|----------|-------------|
-| Quick analysis | `summary`, `summary++`, `all` |
-| File-system content | `files`, `attributes`, `details` |
-| Structures | `boot`, `supb`, `chkp`, `objects`, `schema`, `parentchild`, `containers`, `upcase`, `oid30` |
-| Boot-sector repair | `bootedit` (VBR inspect / export / repair) |
-
-Run `python3 refsanalysis.py <image> --list` for the full set with per-command options.
+Where `forefst.py` answers *"what happened on this volume?"*, `refsanalysis.py` answers *"what does this structure look like?"* — it decodes one on-disk structure at a time: the boot chain (`boot`, `supb`, `chkp`), the B+-tree system tables (`objects`, `schema`, `containers`, `parentchild`, …), file-system content (`files`, `attributes`, `details`), quick volume overviews (`summary`, `summary++`, `all`), and boot-sector inspection/repair (`bootedit`). It is the companion for learning the format, validating the forensic tool, and adapting to new ReFS builds. Run `python3 refsanalysis.py <image> --list` for the full set with per-command options.
 
 ## How it was built
 
@@ -186,7 +180,7 @@ Behind the tools is a full reverse-engineering of the ReFS on-disk format — th
 
 The complete index — every structure, attribute, and concept — is in **[docs/](docs/README.md)**.
 
-**How it was verified.** Every claim lives in a live register — [`analysis/reference_table.csv`](analysis/reference_table.csv), **435 structural claims** across ReFS 3.4–3.14 — and carries an **evidence level**: **E1** (binary string literal), **E2** (PDB symbol / decompiled code), **E3** (structural inference), **RD** (parsed from a 110+ volume raw-disk corpus, decompiled against 4 `refs.sys` builds). A byte-level claim is accepted only when the decompiled driver and the raw disk agree (`E2+RD`). The method, the evidence model, and a worked example are in **[docs/methodology.md](docs/methodology.md)**; everything needed to reproduce it ships under `analysis/` (`lab/`, `samples/`, `reports/`) — point the scripts at your own corpus via `REFS_DISKS` / `REFS_CORPUS`.
+**How it was verified.** Every claim lives in a live register — [`analysis/reference_table.csv`](analysis/reference_table.csv), **437 structural claims** across ReFS 3.4–3.14 — and carries an **evidence level**: **E1** (binary string literal), **E2** (PDB symbol / decompiled code), **E3** (structural inference), **RD** (parsed from a 110+ volume raw-disk corpus, decompiled against 4 `refs.sys` builds). A byte-level claim is accepted only when the decompiled driver and the raw disk agree (`E2+RD`). The method, the evidence model, and a worked example are in **[docs/methodology.md](docs/methodology.md)**; everything needed to reproduce it ships under `analysis/` (`lab/`, `samples/`, `reports/`) — point the scripts at your own corpus via `REFS_DISKS` / `REFS_CORPUS`.
 
 ## License
 
