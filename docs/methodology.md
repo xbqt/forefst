@@ -61,7 +61,7 @@ Load-bearing claims prefer **E2 + RD** — confirmed in both the code and the by
 
 ## 5. The claim register — `reference_table.csv`
 
-Every claim is one row in **`analysis/reference_table.csv`** (437 rows), keyed by a stable **finding ID**
+Every claim is one row in **`analysis/reference_table.csv`** (438 rows), keyed by a stable **finding ID**
 of the form `<CATEGORY>_<STRUCTURE>[_RA|_SA]_<NNN>` (e.g. `FS_CHKP_RA_001`, `MD_SI_RA_015`,
 `GN_ALLC_SA_001`). The categories map to Carrier's five data categories (`FS` file system, `CT` content,
 `MD` metadata, `FN` file name, `AP` application), plus `GN` for general/cross-cutting findings; `RA` marks a raw-disk-anchored finding,
@@ -117,7 +117,7 @@ chain — all of it ships in `analysis/`:
    commands used). The byte-level layout itself is the corresponding **`structures/`** page.
 
 The audited core (409 findings) carries the full chain through step 4; a smaller set of post-thesis
-findings (rows 410–437) is recorded in the register (step 1) with its measurement in the dated reports
+findings (rows 410–438) is recorded in the register (step 1) with its measurement in the dated reports
 (step 5). Either way, every finding ID resolves to a claim, its evidence grade, and the measurement behind
 it — without that detail cluttering the description page.
 

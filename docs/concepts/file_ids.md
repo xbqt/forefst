@@ -86,6 +86,38 @@ is exactly why a tool can still read the file's true size and content after the 
 the durable owner and the reason a relocated file is recognisable at all: its `HomeOid` still names the
 directory it was born in.
 
+## Move, copy, rename, hard link — and what each does to storage
+
+Four everyday operations are easy to confuse, but they leave very different marks. This was measured directly
+on a controlled before/after pair (a small file created, then moved, renamed, copied, and hard-linked, with the
+disk captured on each side):
+
+| Operation | FileRef (HomeOid : ordinal) | Current parent | Storage |
+|---|---|---|---|
+| **Same-directory rename** | unchanged | unchanged | **stays resident** (only the name changes) |
+| **Cross-directory move** | unchanged (home stays the creation dir) | changes | **becomes non-resident** |
+| **Hard link** (new name elsewhere) | unchanged — the new name shares it | the new name's parent | **becomes non-resident** (one object, several names) |
+| **Copy** | **new** FileRef, homed in the destination | destination | a brand-new object (independent) |
+
+The surprising row is the move. A **cross-directory move converts a small resident file into a non-resident
+one**, and it never turns back. The reason is structural: a file that lives in more than one place — a moved
+file (name here, object still in its birth directory) or a hard-linked file (several names) — needs a slot that
+records its frozen creation-directory home. Only the **non-resident** directory-entry layout has that slot; the
+resident layout does not. So the moment a file is moved or hard-linked, ReFS must store it in the non-resident
+form, and there is no operation that converts it back to resident.
+
+Two practical consequences:
+
+- **A resident file has always lived in one place.** Its `HomeOid` equals its current parent, because any move
+  would have made it non-resident. So `HomeOid != parent` only ever appears on **non-resident** files.
+- **Copy is not move.** A copied file is a new object with its own FileRef; only a move (or rename, or hard
+  link) preserves the original identity. Correlating history by FileRef therefore follows the *same* file through
+  moves and renames, while treating a copy as the separate object it represents.
+
+The per-directory ordinal is handed out by a simple counter (`NextFileId`) that only ever counts up: a deleted
+file's ordinal is never given to a later file, even after thousands of deletions — so ordinals are a permanent,
+gap-leaving record of creation order within a directory.
+
 ## Where the FileRef appears
 
 The same `(HomeOid, FileId)` identity threads through every structure that has to name a file, and all of

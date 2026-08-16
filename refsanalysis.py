@@ -59,7 +59,7 @@ from forefst import (
 )
 
 PROG = "refsanalysis"
-VERSION = "1.3.0"
+VERSION = "1.4.0"
 
 
 
@@ -461,7 +461,9 @@ def cmd_summary(image, remaining, partition_start, plus_mode=False):
         oldest = _c["oldest_ft"] or None; newest = _c["newest_ft"] or None
         ext = ({"encrypted": _c["encrypted_files"], "integrity": _c["integrity_files"],
                 "compressed": _c["compressed_files"], "reparse": _c["reparse_files"],
-                "hardlinks": _c["hardlink_extra"]} if plus_mode else None)
+                "hardlinks": _c["hardlink_extra"], "hardlink_names": _c["hardlink_names"],
+                "hardlink_groups": _c["hardlink_groups"], "snapshots": _c["snapshots"],
+                "snapshot_files": _c["snapshot_files"], "ads": _c["ads_entries"]} if plus_mode else None)
 
         # Security descriptor count
         sec_count = 0
@@ -573,12 +575,18 @@ def cmd_summary(image, remaining, partition_start, plus_mode=False):
                 summary["free_space_est"] = hs((ct_size - used) * bpc)
 
             # Extended file attribute counts
+            summary["non_resident_files"] = nfiles - nresident   # D1: resident + non-resident = files
             if ext is not None:
                 summary["encrypted_files"] = ext["encrypted"]
                 summary["integrity_files"] = ext["integrity"]
                 summary["compressed_files"] = ext["compressed"]
                 summary["reparse_files"] = ext["reparse"]
                 summary["hardlink_extra"] = ext["hardlinks"]
+                summary["hardlink_names"] = ext["hardlink_names"]
+                summary["hardlink_groups"] = ext["hardlink_groups"]
+                summary["snapshots"] = ext["snapshots"]
+                summary["snapshot_files"] = ext["snapshot_files"]
+                summary["ads_entries"] = ext["ads"]
 
             # Symlink count from reparse index (tag at key offset 4)
             symlink_count = 0
@@ -635,7 +643,7 @@ def cmd_summary(image, remaining, partition_start, plus_mode=False):
         print("File System Content")
         print("-" * w)
         print(f"  Directories:        {summary['directories']}")
-        print(f"  Files:              {summary['files']} ({summary['resident_files']} resident)")
+        print(f"  Files:              {summary['files']} ({summary['resident_files']} resident + {summary.get('non_resident_files', 0)} non-resident)")
         print(f"  Total file size:    {summary['total_file_size']}")
         print(f"  Security descs:     {summary['security_descriptors']}")
         print(f"  Oldest timestamp:   {summary['oldest_timestamp']}")
@@ -686,17 +694,16 @@ def cmd_summary(image, remaining, partition_start, plus_mode=False):
             print("-" * w)
             print(f"  Reparse index:      {summary.get('reparse_index_entries', 0)} entries")
             print(f"  Symlinks:           {summary.get('symlinks', 0)}")
-            print(f"  Snapshots:          {summary.get('snapshots', 0)}")
-            print(f"  ADS entries:        {summary.get('ads_entries', 0)}")
-            print(f"  Hard links (extra): {summary.get('hardlink_extra', 0)}")
+            print(f"  Snapshot versions:  {summary.get('snapshots', 0)} (across {summary.get('snapshot_files', 0)} files)")
+            print(f"  ADS host files:     {summary.get('ads_entries', 0)}")
+            print(f"  Hard-linked:        {summary.get('hardlink_groups', 0)} files sharing {summary.get('hardlink_names', 0)} names")
             print(f"  Encrypted files:    {summary.get('encrypted_files', 0)}")
-            print(f"  Integrity files:    {summary.get('integrity_files', 0)}")
+            print(f"  Integrity objects:  {summary.get('integrity_files', 0)}")
             print(f"  Compressed files:   {summary.get('compressed_files', 0)}")
             print(f"  Trash table:        {summary.get('trash_table_entries', 0)} entries")
             if "containers_used" in summary:
                 print(f"  Containers used:    {summary['containers_used']} / {summary['containers_mapped']}"
-                      f" ({summary['utilization_pct']}%)")
-                print(f"  Free space (est):   {summary['free_space_est']}")
+                      f" ({summary['utilization_pct']}%)")   # B6: dropped the "Free space (est)" line (never real free space)
 
         return 0
 

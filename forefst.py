@@ -210,7 +210,7 @@ def validate_image(path, die_fn=None):
 
 # ─── Constants ────────────────────────────────────────────────────────
 PROG = "forefst"
-VERSION = "1.3.0"
+VERSION = "1.4.0"
 # Phase 3 (4.D): directory walks default to FULL depth (no artificial cap); `--depth N` overrides. The real
 # recursion depth equals the actual directory nesting (ReFS trees are shallow — tens of levels), so this
 # constant is never the binding limit; it just means "don't truncate". main() also raises the interpreter
@@ -678,7 +678,23 @@ def build_security_map(f, ps, cs, tr, obj_map):
         group_str = ""
         if 0 < off_group < len(sd_data):
             group_str, _ = parse_sid(sd_data, off_group)
-        sd_map[sec_id] = (owner_str, group_str)
+        # DACLSummary (P6): a compact per-SecurityId ACE list — the DACL is at SD+0x10 when the control word
+        # (SD+0x02) has SE_DACL_PRESENT (0x0004). Reuses the `security` command's _parse_acl; capped for width.
+        dacl_sum = ""
+        try:
+            if le16(sd_data, 2) & 0x0004:
+                aces = _parse_acl(sd_data, le32(sd_data, 0x10))
+                parts = []
+                for a in aces[:6]:
+                    who = a.get("sid_name") or a.get("sid") or "?"
+                    typ = a.get("type", "").replace("ACCESS_", "").replace("SYSTEM_", "")
+                    rights = a.get("mask_str") or ""
+                    parts.append(f"{typ}:{who}:{rights}" if rights else f"{typ}:{who}")
+                if parts:
+                    dacl_sum = f"{len(aces)} ACE(s): " + " | ".join(parts) + (" | …" if len(aces) > 6 else "")
+        except Exception:
+            dacl_sum = ""
+        sd_map[sec_id] = (owner_str, group_str, dacl_sum)
     return sd_map
 
 # ─── Forward CoW Version Recovery (cross-image comparison) ───────────
@@ -1056,13 +1072,28 @@ def _is_snapshot_value(vd):
     return len(vd) >= 0x14 and le16(vd, 0x10) == 2
 
 
+def _snapshot_meta(vd):
+    """(name, sub_id, ts) for each true snapshot 0xB0 sub-record in a resident value — the single source for
+    both the count and the names. Name = the snapshotted stream name (0xB0 key bytes @+0x10, UTF-16LE);
+    sub_id = value+0x44 (the data sub-id); ctime = value+0x4C. Same predicate as before (le16@+0x10 == 2)."""
+    out = []
+    for kd, vd_row in parse_resident_btree_rows(vd):
+        if not (_is_b0_snapshot_key(kd) and _is_snapshot_value(vd_row)):
+            continue
+        name = ""
+        if len(kd) > 0x10:
+            try:
+                name = kd[0x10:].decode("utf-16-le").rstrip("\x00")
+            except Exception:
+                name = kd[0x10:].hex()
+        sub_id = le32(vd_row, 0x44) if len(vd_row) >= 0x48 else 0
+        ts = le64(vd_row, 0x4C) if len(vd_row) >= 0x54 else 0
+        out.append((name, sub_id, ts))
+    return out
+
 def count_snapshots_in_resident(vd):
     """Count true snapshot entries within a resident directory entry value."""
-    count = 0
-    for kd, vd_row in parse_resident_btree_rows(vd):
-        if _is_b0_snapshot_key(kd) and _is_snapshot_value(vd_row):
-            count += 1
-    return count
+    return len(_snapshot_meta(vd))
 
 
 # ─── Resident file-size extraction ───────────────────────────────────
@@ -1901,6 +1932,39 @@ def refs_crc64(data):
     for b in data:
         crc = _REFS_CRC64_TBL[(crc ^ b) & 0xFF] ^ (crc >> 8)
     return (crc ^ 0xFFFFFFFFFFFFFFFF) & 0xFFFFFFFFFFFFFFFF
+
+_CKNAME = {0: "none", 1: "CRC32-C", 2: "CRC64", 4: "SHA-256"}
+def _verify_self_checksum(blk, cluster_size):
+    """B3: RECOMPUTE and match a SUPB/CHKP self-checksum (not just the signature). Returns
+    (ok: bool|None, ckname). None => no self-descriptor / cktype 0 (nothing to verify). The self-descriptor
+    (LcnWithChecksum) sits within the first cluster: byte@+0x23==8, cktype@+0x22, digest_len@+0x24, stored
+    digest@+0x28; the descriptor region is zeroed and the checksum covers exactly one cluster (algorithm from
+    CmsVolume::ComputeOrVerifySelfChecksumBlock; proven on the corpus by verify_self_checksum.py)."""
+    import hashlib as _h, struct as _st
+    desc = ck = dl = None
+    for off in range(0x40, min(len(blk), 0x400) - 0x30):
+        if blk[off + 0x23] != 0x08:            continue
+        c = blk[off + 0x22]
+        if c not in (0, 1, 2, 4):              continue
+        d = le32(blk, off + 0x24)
+        if d not in (0, 4, 8, 32):             continue
+        if off + 0x28 + d > len(blk):          continue
+        desc, ck, dl = off, c, d
+        break
+    if desc is None:            return (None, "-")
+    if ck == 0 or dl == 0:      return (None, "none")
+    stored = bytes(blk[desc + 0x28: desc + 0x28 + dl])
+    for dz in (0x2c, 0x30, 0x48, 0x68, 0x80):  # descriptor-zeroing window candidates
+        if desc + dz > cluster_size:           continue
+        b = bytearray(blk[:cluster_size])
+        b[desc:desc + dz] = b"\x00" * dz
+        if   ck == 1: calc = _st.pack("<I", _crc32c(bytes(b)))
+        elif ck == 2: calc = _st.pack("<Q", refs_crc64(bytes(b)))
+        elif ck == 4: calc = _h.sha256(bytes(b)).digest()
+        else:         calc = b""
+        if calc == stored:
+            return (True, _CKNAME.get(ck, "?"))
+    return (False, _CKNAME.get(ck, "?"))
 # The MLog log block (one LogCore record) is ALWAYS 4 KiB, independent of the
 # volume cluster size. On a 64 KiB-cluster volume each data-area cluster holds
 # 16 of these 4 KiB log blocks (verified RD; see docs/structures/mlog.md).
@@ -3038,6 +3102,12 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
                 entry["oid"] = 0  # No separate OID for resident files
                 entry["is_resident"] = True
                 entry["is_dir"] = False
+                # A resident file has a FileRef too: home == parent (a resident file can never have been
+                # relocated — a cross-directory move forces non-residency, E70 / FS_MOVE_RA_001), and its
+                # ordinal is at value+0x80 ($SI+0x58 NextFileId). This fills HomeOID/FileID/FileRef for
+                # resident files, which were previously left blank.
+                entry["home_oid"] = oid
+                entry["file_id"] = le64(vd, 0x80) if len(vd) >= 0x88 else 0
                 if len(vd) >= 0x60:
                     entry["create_time"] = le64(vd, 0x28)
                     entry["modify_time"] = le64(vd, 0x30)
@@ -3121,7 +3191,10 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
             # entry, so this resident path is complete (same corpus proof as ADS above). A non-resident file
             # carries no embedded snapshot record; the former oid-gated non-resident branch was dead (removed).
             if entry["is_resident"] and len(vd) > 0x60:
-                entry["snapshot_count"] = count_snapshots_in_resident(vd)
+                _snaps = _snapshot_meta(vd)
+                entry["snapshot_count"] = len(_snaps)
+                if _snaps:   # SnapshotNames: the ;-joined snapshotted stream names (blank name → its sub-id)
+                    entry["snapshot_names"] = ";".join(n or f"0x{sid:x}" for n, sid, _ts in _snaps)
 
             # F5: a "long value" file we parsed + enriched via the inline path above is actually NON-RESIDENT
             # when its CURRENT $DATA stream is extent-backed (on disk, not inline). ADS/reparse/snapshot were
@@ -3264,6 +3337,7 @@ def fs_content_summary(f, ps, cs, tr, obj_map, plus=True, depth=DEFAULT_DEPTH):
         "resident_files": sum(1 for r in results if r.get("is_resident")),
         "total_file_size_bytes": sum(r.get("file_size", 0) for r in results),
     }
+    counts["non_resident_files"] = counts["files"] - counts["resident_files"]   # D1: resident + non-resident = files
     times = [t for r in results for t in (r.get("create_time", 0), r.get("modify_time", 0)) if t and t > 0]
     counts["oldest_ft"] = min(times) if times else 0
     counts["newest_ft"] = max(times) if times else 0
@@ -3274,9 +3348,14 @@ def fs_content_summary(f, ps, cs, tr, obj_map, plus=True, depth=DEFAULT_DEPTH):
         counts["reparse_files"] = sum(1 for r in results if r.get("has_reparse"))
         _hl = [r for r in results if r.get("hard_link_count", 1) > 1]
         _hl_groups = {tuple(sorted(r.get("hard_link_names") or [f"oid:{r.get('oid')}"])) for r in _hl}
+        # B7/D2: three distinct, self-describing hard-link metrics (names = rows with >1 name; groups =
+        # distinct files; extra = names - groups). Printed together so they never look contradictory.
+        counts["hardlink_names"] = len(_hl)
+        counts["hardlink_groups"] = len(_hl_groups)
         counts["hardlink_extra"] = len(_hl) - len(_hl_groups)
-        counts["snapshots"] = sum(r.get("snapshot_count", 0) for r in results)
-        counts["ads_entries"] = sum(1 for r in results if r.get("has_ads"))
+        counts["snapshots"] = sum(r.get("snapshot_count", 0) for r in results)          # prior-version rows
+        counts["snapshot_files"] = sum(1 for r in results if r.get("snapshot_count", 0) > 0)  # objects
+        counts["ads_entries"] = sum(1 for r in results if r.get("has_ads"))             # host objects
     return counts, results
 
 
@@ -3320,18 +3399,20 @@ def annotate_timestomp(results, f, ps, cs, tr, obj_map, margin=TS_MARGIN_100NS):
 # parent (ParentOID/ParentPath — differ from HomeOid for hard-links & recycle-bin/deleted entries), then
 # FullPath (now a standard column). The remaining columns keep their prior order.
 CSV_COLUMNS = [
-    "OID", "FileRef", "HomeOid", "FileId", "FileName",
-    "ParentOID", "ParentPath", "FullPath", "Extension",
-    "FileSize", "IsDirectory", "IsDeleted", "DeletionSource", "IsResident",
+    "OID", "FileName", "FullPath", "FileSize", "Extension",
+    "ParentPath", "ParentOID",
     "Created", "Modified", "Changed", "Accessed",
-    "FileAttributes", "SecurityId", "OwnerSid", "USN",
-    "HasAds", "AdsNames", "IsEncrypted", "IsCompressed",
-    "HasIntegrity", "HasEA", "ReparseTarget",
-    "HardLinkCount", "HardLinkNames", "SnapshotCount", "TimestompFlags",
-    "GroupSid", "AllocatedSize", "ReparseTag", "RecoveredChild",
-    "IsSparse", "InternalFlags",
-    # RefsVersion (a per-row constant) removed 2026-08-09 — the ReFS version is a volume property, shown by
-    # `summary`/`details`/`usn --info` and the stderr open-log, not repeated on every file row.
+    "FileRef", "CreationDir", "HomeOID", "FileID", "USN",
+    "FileAttributes", "SecurityId", "OwnerSid", "GroupSid", "DACLSummary",
+    "HasADS", "ADSNames", "IsResident", "IsDirectory",
+    "IsEncrypted", "IsCompressed", "HasIntegrity", "HasEA",
+    "HardLinkCount", "HardLinkNames", "SnapshotCount", "SnapshotNames",
+    "ReparseTag", "ReparseTarget", "IsSparse", "AllocatedSize",
+    "InternalFlags", "IsMoved", "TimestompFlags",
+    # P6 (2026-08-16): reordered + renamed (HomeOid→HomeOID, FileId→FileID, HasAds→HasADS, AdsNames→ADSNames);
+    # NEW CreationDir (resolved HomeOID path), DACLSummary, IsMoved; the 3 recovery columns (IsDeleted/
+    # DeletionSource/RecoveredChild) were dropped from `files` (always blank without deleted-recovery — that
+    # lives in the `deleted` command). SnapshotNames deferred to a follow-up. RefsVersion removed 2026-08-09.
 ]
 
 def _file_ref(r):
@@ -3354,67 +3435,89 @@ def _full_path(r):
     pp = r.get("parent_path", "")
     return f"{pp}/{r['name']}" if pp and pp != "." else r["name"]
 
-def _csv_fields(r, sd_map, version_str):
+def _is_moved(r):
+    """IsMoved (P6): the file currently sits in a directory other than the one it was created in. Detectable
+    only for non-resident files (a moved file is always non-resident, E70) and never for a hard link (hlc>1)
+    — those have a name outside their creation dir by design, not a move. Directories excluded."""
+    if r.get("is_dir") or r.get("is_resident"):
+        return False
+    home, par = r.get("home_oid") or 0, r.get("parent_oid") or 0
+    return bool(home and par and home != par and (r.get("hard_link_count", 1) or 1) <= 1)
+
+def _csv_fields(r, sd_map, version_str, oid2path=None):
     """Build the CSV cell values keyed by column name, so the row can be emitted in CSV_COLUMNS order
-    without header/row drift (F11+2.C)."""
+    without header/row drift (F11+2.C). `oid2path` (OID→FullPath, built from the walk) resolves CreationDir."""
     oid = r["oid"]
     sec_id = r.get("security_id", 0)
-    owner_sid, group_sid = sd_map.get(sec_id, ("", "")) if sec_id else ("", "")
+    _sd = (sd_map.get(sec_id) or ("", "", "")) if sec_id else ("", "", "")
+    owner_sid, group_sid, dacl_summary = _sd[0], _sd[1], _sd[2]
     rtag = r.get("reparse_tag_value", 0)
     _file = not r.get("is_resident") and not r.get("is_dir")   # hard-link/name gate (non-resident files)
+    _home = r.get("home_oid") or 0
+    creation_dir = (oid2path.get(_home, "") if (oid2path and _home) else "")
     return {
-        # Identity (lead columns) — OID is 0/empty for files; FileRef=HomeOid:FileId is the stable 128-bit ref.
+        # Identity: OID is 0/empty for files; FileRef=HomeOID:FileID is the stable 128-bit ref; CreationDir is
+        # the resolved path of HomeOID (the directory the file was created in).
         "OID": f"0x{oid:x}" if oid else "",
-        "FileRef": _file_ref(r),
-        "HomeOid": f"0x{r['home_oid']:x}" if r.get("home_oid") else "",
-        "FileId": f"0x{r['file_id']:x}" if r.get("file_id") else "",
         "FileName": r["name"],
-        "ParentOID": f"0x{r['parent_oid']:x}" if r.get("parent_oid") else "",
-        "ParentPath": r.get("parent_path", ""),
         "FullPath": _full_path(r),
-        "Extension": ext_from_name(r["name"]),
         "FileSize": r.get("file_size", 0),
-        "IsDirectory": r["is_dir"],
-        "IsDeleted": r.get("is_deleted", False),
-        "DeletionSource": r.get("deletion_source", ""),
-        "IsResident": r.get("is_resident", False),
+        "Extension": ext_from_name(r["name"]),
+        "ParentPath": r.get("parent_path", ""),
+        "ParentOID": f"0x{r['parent_oid']:x}" if r.get("parent_oid") else "",
         "Created": filetime_to_iso(r.get("create_time", 0)),
         "Modified": filetime_to_iso(r.get("modify_time", 0)),
         "Changed": filetime_to_iso(r.get("change_time", 0)),
         "Accessed": filetime_to_iso(r.get("access_time", 0)),
+        "FileRef": _file_ref(r),
+        "CreationDir": creation_dir,
+        "HomeOID": f"0x{r['home_oid']:x}" if r.get("home_oid") else "",
+        "FileID": f"0x{r['file_id']:x}" if r.get("file_id") else "",
+        "USN": r.get("usn", 0) if r.get("usn", 0) else "",
         "FileAttributes": attrs_to_str(r.get("file_attrs", 0)),
         "SecurityId": sec_id if sec_id else "",
         "OwnerSid": _sid_display(owner_sid),
-        "USN": r.get("usn", 0) if r.get("usn", 0) else "",
-        "HasAds": r.get("has_ads", False),
-        "AdsNames": r.get("ads_names", ""),
+        "GroupSid": _sid_display(group_sid),
+        "DACLSummary": dacl_summary,
+        "HasADS": r.get("has_ads", False),
+        "ADSNames": r.get("ads_names", ""),
+        "IsResident": r.get("is_resident", False),
+        "IsDirectory": r["is_dir"],
         "IsEncrypted": r.get("is_encrypted", False),
         "IsCompressed": r.get("is_compressed", False),
         "HasIntegrity": r.get("has_integrity", False),
         "HasEA": r.get("has_ea", False),
-        "ReparseTarget": r.get("reparse_target", ""),
         "HardLinkCount": r.get("hard_link_count", 1) if _file else "",
-        "SnapshotCount": r.get("snapshot_count", 0) if r.get("snapshot_count", 0) > 0 else "",
-        "TimestompFlags": r.get("timestomp_flags", ""),
-        "GroupSid": _sid_display(group_sid),
-        "AllocatedSize": "" if r.get("allocated_size") is None else r.get("allocated_size"),
-        "ReparseTag": reparse_tag_str(rtag) if rtag else "",
-        "RecoveredChild": r.get("recovered_child", ""),
         # Q5: hard-link names (;-joined), same gate as HardLinkCount (non-resident files only).
         "HardLinkNames": ";".join(r.get("hard_link_names") or []) if _file else "",
+        "SnapshotCount": r.get("snapshot_count", 0) if r.get("snapshot_count", 0) > 0 else "",
+        "SnapshotNames": r.get("snapshot_names", "") if r.get("snapshot_count", 0) > 0 else "",
+        "ReparseTag": reparse_tag_str(rtag) if rtag else "",
+        "ReparseTarget": r.get("reparse_target", ""),
         # F5: sparse from $SI FileAttributes bit FILE_ATTRIBUTE_SPARSE_FILE (0x200) — the definitive signal.
         "IsSparse": bool(r.get("file_attrs", 0) & 0x200),
+        "AllocatedSize": "" if r.get("allocated_size") is None else r.get("allocated_size"),
         # Q3: $SI InternalFlags (only confidently-named bits, e.g. 0x01 DeleteDisposition) — blank otherwise.
         "InternalFlags": internal_flags_str(r.get("internal_flags", 0)),
+        "IsMoved": _is_moved(r),
+        "TimestompFlags": r.get("timestomp_flags", ""),
     }
+
+def _build_oid2path(results):
+    """OID → FullPath for directories, to resolve CreationDir from a row's HomeOID. Root (OID 0x600) maps to
+    '' (the volume root) so a root-created file resolves too."""
+    m = {r["oid"]: _full_path(r) for r in results if r.get("is_dir") and r.get("oid")}
+    m.setdefault(0x600, "")
+    return m
 
 def emit_csv(results, sd_map, version_str, out, full_path=False):
     # `full_path` is accepted for back-compat (the old --full-path-column flag) but is now a no-op: FullPath
     # is a standard column. Building a dict keyed by column name guarantees header/row stay aligned.
     writer = csv.writer(out)
     writer.writerow(CSV_COLUMNS)
+    oid2path = _build_oid2path(results)                  # P6: for CreationDir (resolve HomeOID → path)
     for r in results:
-        d = _csv_fields(r, sd_map, version_str)
+        d = _csv_fields(r, sd_map, version_str, oid2path)
         writer.writerow([d[c] for c in CSV_COLUMNS])
 
 def emit_body(results, out):
@@ -3445,18 +3548,23 @@ def _sid_display_or_none(sid):
     nm = sid_name(sid)
     return f"{nm} ({sid})" if nm else sid
 
-def _build_record(r, sd_map, version_str):
+def _build_record(r, sd_map, version_str, oid2path=None):
     oid = r["oid"]
     sec_id = r.get("security_id", 0)
-    owner_sid, group_sid = sd_map.get(sec_id, ("", "")) if sec_id else ("", "")
+    _sd = (sd_map.get(sec_id) or ("", "", "")) if sec_id else ("", "", "")
+    owner_sid, group_sid, dacl_summary = _sd[0], _sd[1], _sd[2]
     rtag = r.get("reparse_tag_value", 0)
     _fr = _file_ref(r)
+    _home = r.get("home_oid") or 0
+    creation_dir = (oid2path.get(_home, "") if (oid2path and _home) else "") or None
     return {
-        # Identity (lead) — mirrors the CSV column order; oid is null for files, file_ref=HomeOid:FileId.
+        # Identity (lead) — mirrors the CSV; oid is null for files, file_ref=HomeOID:FileID, creation_dir = the
+        # resolved HomeOID path. (JSON keys are snake_case by convention; the recovery fields live in `deleted`.)
         "oid": f"0x{oid:x}" if oid else None,
         "file_ref": _fr or None,
         "home_oid": f"0x{r['home_oid']:x}" if r.get("home_oid") else None,
         "file_id": f"0x{r['file_id']:x}" if r.get("file_id") else None,
+        "creation_dir": creation_dir,
         "file_name": r["name"],
         "parent_oid": f"0x{r['parent_oid']:x}" if r.get("parent_oid") else None,
         "parent_path": r.get("parent_path", ""),
@@ -3464,8 +3572,7 @@ def _build_record(r, sd_map, version_str):
         "extension": ext_from_name(r["name"]),
         "file_size": r.get("file_size", 0),
         "is_directory": r["is_dir"],
-        "is_deleted": r.get("is_deleted", False),
-        "deletion_source": r.get("deletion_source", ""),
+        "is_moved": _is_moved(r),
         "is_resident": r.get("is_resident", False),
         "created": filetime_to_iso(r.get("create_time", 0)),
         "modified": filetime_to_iso(r.get("modify_time", 0)),
@@ -3485,11 +3592,12 @@ def _build_record(r, sd_map, version_str):
         "hard_link_count": r.get("hard_link_count", 1) if not r.get("is_resident") and not r.get("is_dir") else None,
         "hard_link_names": r.get("hard_link_names") or None,
         "snapshot_count": r.get("snapshot_count", 0) if r.get("snapshot_count", 0) > 0 else None,
+        "snapshot_names": (r.get("snapshot_names") or None) if r.get("snapshot_count", 0) > 0 else None,
         "timestomp_flags": r.get("timestomp_flags", "") or None,
         "group_sid": _sid_display_or_none(group_sid),
+        "dacl_summary": dacl_summary or None,
         "allocated_size": r.get("allocated_size"),
         "reparse_tag": reparse_tag_str(rtag) if rtag else None,
-        "recovered_child": r.get("recovered_child", "") or None,
         # F5: FILE_ATTRIBUTE_SPARSE_FILE (0x200) from $SI FileAttributes.
         "is_sparse": bool(r.get("file_attrs", 0) & 0x200),
         # Q3: $SI InternalFlags (confidently-named bits only, e.g. DeleteDisposition).
@@ -3498,13 +3606,15 @@ def _build_record(r, sd_map, version_str):
     }
 
 def emit_json(results, sd_map, version_str, out):
-    records = [_build_record(r, sd_map, version_str) for r in results]
+    oid2path = _build_oid2path(results)                  # for creation_dir (resolve home_oid → path)
+    records = [_build_record(r, sd_map, version_str, oid2path) for r in results]
     json.dump(records, out, indent=2, ensure_ascii=False)
     out.write("\n")
 
 def emit_jsonl(results, sd_map, version_str, out):
+    oid2path = _build_oid2path(results)
     for r in results:
-        out.write(json.dumps(_build_record(r, sd_map, version_str), ensure_ascii=False))
+        out.write(json.dumps(_build_record(r, sd_map, version_str, oid2path), ensure_ascii=False))
         out.write("\n")
 
 # ─── Summary helpers ──────────────────────────────────────────────────
@@ -3646,21 +3756,33 @@ def cmd_fastsummary(f, ps, cs, tr, roots, obj_map, vmaj, vmin, chkp_lcns,
         drv_mn = vol_detail.get("drv_minor") if vol_detail else None
         reasons = []
         from_ver = None
+        driver_note = None
         if vmin >= 10 and not native_bit:
             # native bit is set only on natively-formatted v3.10+, so its absence ⇒ formatted pre-v3.10.
             reasons.append("CHKP native-format bit 0x080 is clear on a v3.10+ volume")
             from_ver = "pre-v3.10 (v3.4–v3.9)"
         if isinstance(vol_mn, int) and isinstance(drv_mn, int) and vol_mn != drv_mn:
-            # the $VolInfo version stamp usually tracks the current driver after upgrade, but if it lags,
-            # it gives the exact original minor.
-            reasons.append("format-time v3.%d ≠ driver v3.%d ($VOLUME_INFORMATION stamp)" % (vol_mn, drv_mn))
-            from_ver = "v3.%d" % min(vol_mn, drv_mn)
+            if native_bit:
+                # B10: a natively-formatted volume (native-format marker 0x080 set) whose driver stamp is newer
+                # than its format-time version — e.g. an Insider v3.15 driver on a v3.14 volume. The CHKP
+                # native marker is authoritative; this is NOT an upgrade, so it is an informational note, not
+                # upgrade evidence. (RD: winsider/wininsider flags 0x2682, 0x080 set, GUID@0x48 populated.)
+                driver_note = ("driver v3.%d is newer than the format-time v3.%d "
+                               "(natively formatted — not an upgrade)" % (drv_mn, vol_mn))
+            else:
+                # native bit clear AND versions differ ⇒ corroborates a genuine cross-version upgrade; the
+                # $VolInfo stamp usually tracks the current driver after upgrade, but if it lags it gives the
+                # exact original minor.
+                reasons.append("format-time v3.%d ≠ driver v3.%d ($VOLUME_INFORMATION stamp)" % (vol_mn, drv_mn))
+                from_ver = "v3.%d" % min(vol_mn, drv_mn)
         if reasons:
             summary["volume_state"] = "UPGRADED"
             summary["upgrade_evidence"] = reasons
             summary["upgraded_from"] = from_ver or "an earlier version"
         else:
             summary["volume_state"] = "NATIVE v%s" % summary["refs_version"]
+            if driver_note:
+                summary["driver_note"] = driver_note
 
         # Security descriptor count
         sec_count = 0
@@ -3736,7 +3858,7 @@ def _print_fastsummary(summary, plus_mode=False, is_summary=False):
     print(f"  Checksum:           {summary['checksum']}")
     print()
     print("-" * w)
-    print("Bootstrap structures  (address + validity; SHA-256 on the next line)")
+    print("Bootstrap structures")
     print("-" * w)
     # Every redundant copy (VBR primary+backup, both checkpoints, primary+backup SUPB) with its address,
     # validity/identical check, AND its own SHA-256 — so all six-plus hashes are shown (1summary-2a) and no
@@ -3755,20 +3877,27 @@ def _print_fastsummary(summary, plus_mode=False, is_summary=False):
     if vb and vb.get("present"):
         _bs("VBR backup", f"LBA {vb['lba']} (off {vb['lba']*512:#x})",
             ("= primary" if vb.get("matches_primary") else "DIFFERS")
-            + (", cksum ok" if vb.get("cksum_ok") else ""), vb.get("sha256"))
+            + (", checksum OK" if vb.get("cksum_ok") else ""), vb.get("sha256"))
     elif vb is not None:
         _bs("VBR backup", f"LBA {vb.get('lba','?')}", "MISSING/unreadable", None)
     _supb = bk.get("supb", [])
     for s in _supb:
         _sha = summary.get("supb_sha256") if s.get("role") == "PRIMARY" else s.get("sha256")
+        _st = "checksum OK" if s.get("cksum_ok") else ("signature OK" if s.get("ok") else "BAD")
         _bs(f"SUPB {s.get('role','?').lower()}", f"LCN {s.get('lcn',0):#x} (offset {s.get('lcn',0)*_cs:#x})",
-            "SUPB sig OK" if s.get("ok") else "sig?", _sha)
-    if len(_supb) < 2:
+            _st, _sha)
+    if len([s for s in _supb if s.get("ok")]) >= 2:
+        # B1: the SUPB copies hash differently by design — each stores its own LCN (page header + self-descriptor)
+        # and its own self-checksum; the payload (GUID, checkpoint refs, generation) is identical.
+        print("      note: the SUPB copies hash differently by design (each carries its own LCN + self-checksum);")
+        print("            their payload is identical — redundancy, not divergence.")
+    elif len(_supb) < 2:
         print("  (warning: fewer than 2 SUPB copies located)")
     for rec in bk.get("checkpoints", []):
         _sha = summary.get("chkp_sha256") if rec.get("role") == "PRIMARY" else rec.get("sha256")
-        _st = ("valid" if (rec.get("sig_ok") and rec.get("roots_ok")) else "INVALID") \
-              + (f", vclock={rec['vc']}" if rec.get("vc") is not None else "")
+        _cok = "checksum OK" if rec.get("cksum_ok") else ("signature OK" if rec.get("sig_ok") else "BAD")
+        _st = _cok + (f", vclock={rec['vc']}" if rec.get("vc") is not None else "") \
+              + ("" if rec.get("roots_ok") else " (roots unreadable)")
         _bs(f"CHKP {rec.get('role','?').lower()}", f"LCN {rec['lcn']:#x} (offset {rec['lcn']*_cs:#x})", _st, _sha)
     if "image_sha256" in summary:
         _bs("Image", "(full disk)", "", summary["image_sha256"])
@@ -3808,15 +3937,19 @@ def _print_fastsummary(summary, plus_mode=False, is_summary=False):
                 print(f"      • {r}")   # 6-space indent keeps the evidence bullets within the 78-col width
         elif vstate:
             print(f"  Volume state:       {vstate}")
+            if summary.get("driver_note"):
+                print(f"      • {summary['driver_note']}")   # B10: Insider (newer driver, native format) note
         print(f"  Security descs:     {summary.get('security_descriptors', 0)}")
         print(f"  Reparse index:      {summary.get('reparse_index_entries', 0)} entries")
         print(f"  Trash table:        {summary.get('trash_table_entries', 0)} entries")
         if "containers_used" in summary:
             print(f"  Containers used:    {summary['containers_used']} / {summary['containers_mapped']}"
-                  f" ({summary['utilization_pct']}%)")
-            print(f"  Free space (est):   {summary['free_space_est']}  (container-map estimate — coarse)")
-        fm = summary.get("fs_metadata", {})
-        print(f"  FS Metadata rows:   {fm.get('rows', 0)}")
+                  f" ({summary['utilization_pct']}%)")   # B6: dropped the "Free space (est)" line — it was
+            #   structurally always one container (the Container Allocator, PLCN 0), never real free space.
+        fm = summary.get("fs_metadata", {})               # B8: show the FS-Metadata directory's child count
+        _kids = fm.get("children", [])                    #   (0x520 = ReFS's $Extend analogue), not raw B+-tree rows
+        _kidstr = (" (" + ", ".join(_kids) + ")") if _kids else ""
+        print(f"  FS Metadata:        {len(_kids)} children{_kidstr}  [{fm.get('rows', 0)} rows]")
         print(f"  USN Journal:        {'Active' if fm.get('usn_journal') else 'Inactive'}")
         if "usn_journal_id" in summary:
             print(f"  USN Journal ID:     0x{summary['usn_journal_id']:016x}")
@@ -3833,17 +3966,17 @@ def _print_summary(summary, fast_data, plus_mode=False):
     print("File System Content (from directory walk)")
     print("-" * w)
     print(f"  Directories:        {summary['directories']}")
-    print(f"  Files:              {summary['files']} ({summary['resident_files']} resident)")
+    print(f"  Files:              {summary['files']} ({summary['resident_files']} resident + {summary.get('non_resident_files', 0)} non-resident)")
     print(f"  Total file size:    {summary['total_file_size']}")
     print(f"  Oldest timestamp:   {summary['oldest_timestamp']}")
     print(f"  Newest timestamp:   {summary['newest_timestamp']}")
     if plus_mode:
         print(f"  Encrypted files:    {summary.get('encrypted_files', 0)}")
-        print(f"  Integrity files:    {summary.get('integrity_files', 0)}")
+        print(f"  Integrity objects:  {summary.get('integrity_files', 0)}")
         print(f"  Compressed files:   {summary.get('compressed_files', 0)}")
-        print(f"  Hard links (extra): {summary.get('hardlink_extra', 0)}")
-        print(f"  Snapshots:          {summary.get('snapshots', 0)}")
-        print(f"  ADS entries:        {summary.get('ads_entries', 0)}")
+        print(f"  Hard-linked:        {summary.get('hardlink_groups', 0)} files sharing {summary.get('hardlink_names', 0)} names")
+        print(f"  Snapshot versions:  {summary.get('snapshots', 0)} (across {summary.get('snapshot_files', 0)} files)")
+        print(f"  ADS host files:     {summary.get('ads_entries', 0)}")
     print()
     if plus_mode:
         print(f"Tip: `fastsummary` = quick volume metadata (no directory walk).")
@@ -4084,7 +4217,8 @@ def _print_file_detail(r, sd_map, version_str, raw_value=None):
     print("=" * w)
     oid = r.get("oid", 0)
     sec = r.get("security_id", 0)
-    owner, group = sd_map.get(sec, ("", "")) if sec else ("", "")
+    _sd = (sd_map.get(sec) or ("", "", "")) if sec else ("", "", "")
+    owner, group = _sd[0], _sd[1]
     fa = r.get("file_attrs", 0)
     al = r.get("allocated_size")
     rtag = r.get("reparse_tag_value", 0)
@@ -4319,6 +4453,22 @@ def die(msg):
     print(f"{PROG}: error: {msg}", file=sys.stderr)
     sys.exit(1)
 
+def _looks_text(b, sample=8192):
+    """Conservative text sniff for the C1 stdout-newline: no NUL byte and decodes as UTF-8."""
+    chunk = b[:sample]
+    if b"\x00" in chunk:
+        return False
+    try:
+        chunk.decode("utf-8")
+        return True
+    except UnicodeDecodeError:
+        return False
+
+def _check_out(dest):
+    """A2: fail friendly (not a traceback) when an output path is an existing directory."""
+    if dest and os.path.isdir(dest):
+        die(f"output path {dest!r} is a directory — give a FILE path (e.g. {os.path.join(dest, 'out')})")
+
 def _filetime_to_str(ft):
     if ft == 0 or ft == 0xFFFFFFFFFFFFFFFF: return "(none)"
     try:
@@ -4405,6 +4555,7 @@ def _emit_records(records, columns, fmt, dest, label="records"):
     print 'Wrote N <label> to <file>'. `columns` is the ordered key list used for CSV (and CSV only)."""
     import csv as _csv
     to_file = dest not in (None, "-")
+    if to_file: _check_out(dest)
     out = open(dest, "w", newline="", encoding="utf-8") if to_file else sys.stdout
     try:
         if fmt == "csv":
@@ -4441,6 +4592,7 @@ def _native_fmt_dest(args):
 def _native_out(dest):
     """Open a text stream for the native emitters: a FILE (dest set) or stdout. Returns (stream, close?)."""
     if dest:
+        _check_out(dest)
         return open(dest, "w", newline="", encoding="utf-8"), True
     import io as _io
     return _io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", newline=""), False
@@ -4449,6 +4601,7 @@ def _emit_json_obj(obj, dest, label="report"):
     """Write a single curated JSON object (for report-style commands whose output is not a flat record list)
     to stdout (dest='-'/None) or a FILE. Prints 'Wrote <label> to FILE' on a file write."""
     to_file = dest not in (None, "-")
+    if to_file: _check_out(dest)
     out = open(dest, "w", encoding="utf-8") if to_file else sys.stdout
     try:
         json.dump(obj, out, indent=2, ensure_ascii=False, default=str)
@@ -6293,11 +6446,21 @@ def cmd_extract(image, remaining, partition_start):
     def _emit(data):
         # Q2 UX: -o FILE saves the bytes; otherwise write to stdout and hint how to save.
         if outp:
-            with open(outp, "wb") as _fh:
-                _fh.write(data)
+            if os.path.isdir(outp):                                  # A2: friendly error, not a traceback
+                _base = os.path.basename((stream_name or filename or "output").rstrip(":")) or "output"
+                die(f"-o {outp!r} is a directory — give a FILE path (e.g. {os.path.join(outp, _base)})")
+            try:
+                with open(outp, "wb") as _fh:
+                    _fh.write(data)
+            except OSError as _e:
+                die(f"could not write {outp!r}: {_e}")
             print(f"[{PROG}] wrote {len(data)} bytes to {outp}", file=sys.stderr)
         else:
             sys.stdout.buffer.write(data)
+            # C1: text payload to a TTY -> add a trailing newline so the shell prompt starts on its own line.
+            # stdout-only (never -o FILE), gated on isatty + a text sniff so a redirect/pipe of binary stays byte-exact.
+            if data and sys.stdout.isatty() and not data.endswith(b"\n") and _looks_text(data):
+                sys.stdout.buffer.write(b"\n")
             if data:
                 print(f"[{PROG}] ({len(data)} bytes to stdout — add `-o FILE` to save to a file)",
                       file=sys.stderr)
@@ -7478,6 +7641,7 @@ def _scan_backup_copies(f, ps, cs, chkp_lcns):
             if rec["sig_ok"]:
                 rec["sha256"] = hashlib.sha256(raw).hexdigest()
                 rec["vc"] = le64(raw, 0x10)
+                rec["cksum_ok"], rec["ckname"] = _verify_self_checksum(raw, cs)   # B3
                 try:
                     _vc, _fl, roots = _forefst_parse_chkp(f, ps, cs, cl)
                     rec["roots_ok"] = bool(roots) and any(roots)
@@ -7489,11 +7653,15 @@ def _scan_backup_copies(f, ps, cs, chkp_lcns):
             rec["error"] = True
         out["checkpoints"].append(rec)
     for rec in out["checkpoints"]:
-        rec["role"] = ("PRIMARY" if rec.get("vc") == best_vc and best_vc >= 0 else "backup")
+        # B5: the older checkpoint slot is the SECONDARY (previous consistent state / rollback target),
+        # not a "backup" — the two CHKP slots are symmetric alternating (ping-pong) slots.
+        rec["role"] = ("PRIMARY" if rec.get("vc") == best_vc and best_vc >= 0 else "secondary")
 
     # --- Secondary SUPB copies (primary @ SUPB_LCN; copies sit near the partition end) ---
     f.seek(ps + SUPB_LCN * cs); _psupb = f.read(cs)
+    _pck = _verify_self_checksum(_psupb, cs) if _psupb[:4] == b"SUPB" else (None, "-")
     out["supb"].append({"lcn": SUPB_LCN, "role": "PRIMARY", "ok": _psupb[:4] == b"SUPB",
+                        "cksum_ok": _pck[0], "ckname": _pck[1],
                         "sha256": hashlib.sha256(_psupb).hexdigest() if _psupb[:4] == b"SUPB" else None})
     if total_sectors > 1:
         end_lcn = (total_sectors * 512) // cs
@@ -7501,7 +7669,9 @@ def _scan_backup_copies(f, ps, cs, chkp_lcns):
             try:
                 f.seek(ps + lcn * cs); _s = f.read(cs)
                 if _s[:4] == b"SUPB":
+                    _bck = _verify_self_checksum(_s, cs)
                     out["supb"].append({"lcn": lcn, "role": "backup", "ok": True,
+                                        "cksum_ok": _bck[0], "ckname": _bck[1],
                                         "sha256": hashlib.sha256(_s).hexdigest()})
             except (OSError, OverflowError):
                 break
@@ -8193,6 +8363,35 @@ def _carve_extent_backed(f, ps_off, cs, tr, vd, t40_backing=None):
             return (bytes(buf[:stream_size]), stream_size)
     return None
 
+DELETED_CSV_COLUMNS = ["FileName", "IsDirectory", "RecoverySource", "RecoveredFrom",
+                       "Recoverability", "Created", "Modified", "RecoveredChild", "Cluster"]
+
+def _deleted_rows(deleted, orphans):
+    """Build the `deleted` command's output rows (dicts keyed by DELETED_CSV_COLUMNS) — one per truly-deleted
+    entry — from the SAME lists + helpers as the text report (_deleted_recoverability, _filetime_to_str). Fields
+    that did not survive the deletion are blank; RecoverySource is the recovery method (trash / checkpoint diff /
+    node-slack / orphan). Emitted as csv/json/jsonl through the shared _emit_records (consistent with `files`)."""
+    def _from(e):
+        locs = e.get("all_owning_paths") or []
+        if not locs:
+            p = e.get("owning_path") or (f"0x{e.get('owning_table_oid', 0):x}" if e.get("owning_table_oid") else "")
+            locs = [p] if p else []
+        return ";".join(locs)
+    def _ts(t): return _filetime_to_str(t) if t else ""
+    rows = []
+    for e in deleted:
+        rows.append({"FileName": e.get("name", ""), "IsDirectory": bool(e.get("is_dir")),
+                     "RecoverySource": e.get("tag", ""), "RecoveredFrom": _from(e),
+                     "Recoverability": _deleted_recoverability(e)[1], "Created": _ts(e.get("create_time", 0)),
+                     "Modified": _ts(e.get("modify_time", 0)), "RecoveredChild": e.get("recovered_child", ""),
+                     "Cluster": e.get("plcn", "")})
+    for e in (orphans or []):
+        rows.append({"FileName": e.get("name", ""), "IsDirectory": True, "RecoverySource": "orphan",
+                     "RecoveredFrom": f"0x{e.get('oid', 0):x}" if e.get("oid") else "",
+                     "Recoverability": "metadata only", "Created": _ts(e.get("create_time", 0)), "Modified": "",
+                     "RecoveredChild": e.get("recovered_child", ""), "Cluster": ""})
+    return rows
+
 def _write_recovery_log(path, image, vmaj, vmin, mode, methods, max_scan, deleted, present, extract_dir,
                         orphans=None):
     """Write a forensic RECOVERY-RUN log — an audit trail of what was recovered and how: image, mode, methods,
@@ -8247,7 +8446,7 @@ def cmd_deleted(image, remaining, partition_start):
     remaining = [x for x in remaining if x != "--_from-export"]
     args = _parse_args(remaining, flags=["--trash", "--scan-pages", "--full", "--no-slack", "--slack",
                                          "--rows-only", "--content-only", "--carve", "--orphans"],
-                       valued=["--search", "--max-scan", "--extract", "--log"])
+                       valued=["--search", "--max-scan", "--extract", "--log", "--csv", "--json", "--jsonl"])
     # `--slack` is a silent no-op kept only for back-compat (the slack scan is the default `recovery` mode);
     # it is intentionally undocumented. Use `--full` for the complete scan, `--no-slack` to skip slack.
     search_name = args["search"]
@@ -8667,7 +8866,7 @@ def cmd_deleted(image, remaining, partition_start):
             print("  live-pages-only pass.")
         else:
             print("  Slack scan SKIPPED (--no-slack). Run `deleted` (the default) to recover deleted rows.")
-        print("  Fine-grained: --no-slack · --scan-pages · --orphans · --carve · --max-scan N · --search SUB · `export deleted DIR`.")
+        print("  Fine-grained: --no-slack · --scan-pages · --orphans · --carve · --max-scan N · --search SUB · --csv/--json/--jsonl FILE · `export deleted DIR`.")
         if not do_orphans:
             print("  Also: `deleted --orphans` adds a low-confidence tier for OID-Table objects unlinked from the tree.")
         print("  Prior versions of files that still exist: `snapshots`.  Windows Recycle Bin: `recyclebin`.")
@@ -8710,6 +8909,13 @@ def cmd_deleted(image, remaining, partition_start):
                                            _log_deleted, _log_present, extract_dir, orphans=_log_orphans)
             if _written:
                 print(f"  Recovery log: {_written}")
+
+        # Machine-readable export (item 4) — csv/json/jsonl, consistent with the other commands and compatible
+        # with every recovery flag (it runs on the finalized _log_deleted/_log_orphans, whatever tiers ran).
+        _ofmt = "json" if args["json"] else ("jsonl" if args["jsonl"] else ("csv" if args["csv"] else None))
+        if _ofmt:
+            _emit_records(_deleted_rows(_log_deleted, _log_orphans), DELETED_CSV_COLUMNS,
+                          _ofmt, args[_ofmt], label="deleted entries")
 
         print()
         return 0
@@ -9041,15 +9247,16 @@ def cmd_integrity(image, remaining, partition_start):
             print(f"  Boot sector (backup):    LBA {v['backup'].get('lba','?')} — MISSING/unreadable")
             backup_warn.append("backup boot sector missing")
         for rec in bk["checkpoints"]:
-            vc = rec.get("vc"); status = "valid" if (rec["sig_ok"] and rec["roots_ok"]) else "INVALID"
-            print(f"  Checkpoint [{rec['role']:7}]:   LCN {_hx(rec['lcn'])} — {status}"
+            vc = rec.get("vc")
+            status = "checksum OK" if rec.get("cksum_ok") else ("valid" if (rec["sig_ok"] and rec["roots_ok"]) else "INVALID")
+            print(f"  Checkpoint [{rec['role']:9}]:   LCN {_hx(rec['lcn'])} — {status}"
                   + (f", vclock={vc}" if vc is not None else ""))
-            if rec["role"] == "backup" and status != "valid":
-                backup_warn.append(f"backup checkpoint @ {_hx(rec['lcn'])} invalid")
+            if rec["role"] == "secondary" and not rec.get("cksum_ok"):   # B5: the older slot is the secondary
+                backup_warn.append(f"secondary checkpoint @ {_hx(rec['lcn'])} invalid")
         n_supb = len(bk["supb"])
         print(f"  Superblock copies:       {n_supb}")
         for s in bk["supb"]:
-            _sok = "SUPB sig OK" if s.get("ok") else "sig?"
+            _sok = "checksum OK" if s.get("cksum_ok") else ("signature OK" if s.get("ok") else "BAD")
             print(f"      [{s.get('role','?'):7}] LCN {_hx(s['lcn'])} (offset {_hx(s['lcn'] * cs)}) — {_sok}")
         if n_supb < 2:
             backup_warn.append("fewer than 2 SUPB copies located")
@@ -9565,6 +9772,7 @@ def cmd_export_reparse(image, remaining, partition_start):
     inner = ["--json"] if args["json"] else []
     fmt = "JSON" if args["json"] else "text"
     if outp:
+        _check_out(outp)
         with open(outp, "w") as fh:
             _old = sys.stdout
             sys.stdout = fh
@@ -10009,6 +10217,9 @@ CMD_HELP = {
            ("--max-scan N", "max clusters for the orphan-page scan under --full (default 50000)"),
            ("--rows-only", "with `export deleted`: write only the raw .row remnant (skip .recovered/.carved)"),
            ("--content-only", "with `export deleted`: write only decoded content (skip the raw .row)"),
+           ("--csv/--json/--jsonl FILE", "write the deleted entries to a machine-readable file — columns "
+                          "FileName, IsDirectory, RecoverySource, RecoveredFrom, Recoverability, Created, "
+                          "Modified, RecoveredChild, Cluster; composes with any recovery flag"),
            ("--log PATH", "write the forensic recovery-run log here — also forces a log on a plain view "
                           "(when exporting, the default is <export-dir>/recovery_log.txt)"),
            ("--extract DIR", "DEPRECATED — use `export deleted DIR` (same result: .row + .recovered [+ .carved])")],
@@ -10393,7 +10604,7 @@ def main():
         return
 
     # Bootstrap
-    log(f"[{PROG}] Opening {os.path.basename(args.image)}...")
+    log(f"[{PROG} v{VERSION}] Opening {os.path.basename(args.image)}...")   # A1: version on the first line
     try:
         f, ps, cs, tr, roots, obj_map, vmaj, vmin, chkp_lcns = bootstrap(args.image, args.partition_start)
     except ValueError as e:
@@ -10442,12 +10653,16 @@ def main():
             "oldest_timestamp": filetime_to_iso(counts["oldest_ft"]) if counts["oldest_ft"] else "(none)",
             "newest_timestamp": filetime_to_iso(counts["newest_ft"]) if counts["newest_ft"] else "(none)",
         }
+        walk_summary["non_resident_files"] = counts["non_resident_files"]
         if is_plus:
             walk_summary["encrypted_files"] = counts["encrypted_files"]
             walk_summary["integrity_files"] = counts["integrity_files"]
             walk_summary["compressed_files"] = counts["compressed_files"]
             walk_summary["hardlink_extra"] = counts["hardlink_extra"]
+            walk_summary["hardlink_names"] = counts["hardlink_names"]
+            walk_summary["hardlink_groups"] = counts["hardlink_groups"]
             walk_summary["snapshots"] = counts["snapshots"]
+            walk_summary["snapshot_files"] = counts["snapshot_files"]
             walk_summary["ads_entries"] = counts["ads_entries"]
         # UsnJournalId: the volume-constant journal epoch carried by every file's $SI val+0x70
         # (reliable, unlike the $Max stream). Take the most common non-zero value.
@@ -10616,10 +10831,19 @@ def main():
         annotate_timestomp(results, f, ps, cs, tr, obj_map)
     ndirs = sum(1 for r in results if r["is_dir"])
     nfiles = sum(1 for r in results if not r["is_dir"])
-    nresident = sum(1 for r in results if r.get("is_resident"))
-    nsnapshots = sum(r.get("snapshot_count", 0) for r in results)
-    nhard = sum(1 for r in results if r.get("hard_link_count", 1) > 1)
-    log(f"[{PROG}] {ndirs} dirs, {nfiles} files ({nresident} resident, {nhard} hard-linked, {nsnapshots} snapshots)")
+    nresident = sum(1 for r in results if not r["is_dir"] and r.get("is_resident"))
+    nnonres = nfiles - nresident
+    # D1: the file partition (resident + non-resident = files). The hard-link/special counts go on their own
+    # line below so nothing looks like a partition it isn't.
+    log(f"[{PROG}] {ndirs} dirs, {nfiles} files ({nresident} resident + {nnonres} non-resident)")
+    # Special-file categories — SAME predicates as `specials` (A3 consistency), so the counts always agree.
+    _spc = {name: sum(1 for r in results if pred(r)) for name, _d, pred in SPECIALS_TYPES}
+    _hlg = len({tuple(sorted(r.get("hard_link_names") or [f"oid:{r.get('oid')}"]))
+                for r in results if r.get("hard_link_count", 1) > 1})
+    log(f"[{PROG}] hard-linked: {_hlg} files sharing {_spc['hardlink']} names · ADS: {_spc['ads']}"
+        f" · reparse: {_spc['reparse']} · WSL: {_spc['wsl']} · sparse: {_spc['sparse']}"
+        f" · encrypted: {_spc['encrypted']} · compressed: {_spc['compressed']}"
+        f" · integrity: {_spc['integrity']} · EA: {_spc['ea']} · snapshots: {_spc['snapshot']}")
 
     # Forward CoW version recovery (cross-image comparison)
     if args.cow_before:

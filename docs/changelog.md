@@ -1,16 +1,36 @@
 # Changelog
 
-## Unreleased — file identity (FileRef), hard-link hardening, output & documentation consistency
+## v1.4.0 — 2026-08-16 — file identity completed, move/residency consolidation, output consistency + usability
 
-**The file-identity model made explicit and hardened, with the audit-driven output/consistency fixes shipped
-across the docs and both tools.**
+**The file-identity model completed for resident files and proven end-to-end for moves, a batch of
+usability/correctness fixes from real testing, and consistent machine-readable output across the tools.**
 
-- **FileRef file identity.** `files`/`usn` lead with `FileRef = HomeOid:FileId` — the stable 128-bit reference,
-  identical to the USN FileReferenceNumber. `HomeOid` is the *creation* directory (frozen across rename and
-  move — proven on 1,858 real cross-directory moves), `FileId` the per-directory child ordinal. `details --id
-  HomeOid:FileId` addresses a file by identity independent of its path, and `details` now prints the FileRef and
-  a relocation note when the home directory differs from the current parent. The `files` CSV is **39 columns**
-  in identity-lead order (the per-row `RefsVersion` column was removed).
+- **File identity completed.** `files`/`usn` lead with `FileRef = HomeOID:FileID` (the stable 128-bit
+  reference, identical to the USN FileReferenceNumber) — now populated for **resident files too** (home ==
+  parent, ordinal at the resident record's `$SI+0x58`). New `files` columns: **`CreationDir`** (the resolved
+  path of HomeOID), **`IsMoved`** (the file currently sits outside its creation directory), **`DACLSummary`**
+  (a compact per-descriptor ACE list), and **`SnapshotNames`** (the per-version labels). The CSV is now **40
+  columns**, reordered, with `HomeOid→HomeOID`/`FileId→FileID`/`HasAds→HasADS`/`AdsNames→ADSNames`; the always-
+  blank recovery columns moved out of `files` to the `deleted` command.
+- **Move → non-residency, proven.** A controlled before/after experiment confirmed on disk that a
+  cross-directory move converts a resident file to **non-resident** (a one-way ratchet — only the non-resident
+  layout carries the frozen creation-directory home); a same-directory rename stays resident, a copy is a new
+  object, and the per-directory ordinal is never reused after deletion. Recorded as a new reference finding +
+  erratum; the concept/structure docs gained the move/copy/rename/hard-link storage model.
+- **Bootstrap section reworked.** `summary` now verifies the SUPB/CHKP **self-checksums** (CRC32-C / CRC64 /
+  SHA-256) and reports a truthful "checksum OK", labels the older checkpoint slot **secondary** (not "backup"),
+  and notes that the three SUPB copies hash differently by design (identical payload).
+- **Volume-state, version banner, and labels.** The Insider case (native format written by a newer driver) is
+  no longer mislabelled "upgraded"; every run's first line shows the tool version; the `files`/`summary` lines
+  now read `resident + non-resident` with a consistent, all-categories special-file line and a self-explaining
+  `Hard-linked: G files sharing K names`; the misleading "free space" estimate was dropped and `FS Metadata`
+  now shows its children.
+- **`deleted` machine-readable output.** `deleted --csv/--json/--jsonl FILE` exports the recovered entries
+  (composes with every recovery flag); `-o DIR` and other output paths now fail with a clean message instead of
+  a traceback; extracted text to a terminal gets a trailing newline.
+- **FileRef basics (from the prior identity work).** `details --id HomeOID:FileID` addresses a file by identity
+  independent of its path; `details` prints the FileRef + a relocation note; hard-link names with stale cached
+  sizes are reattached via the backing's type-0x39 back-pointers (no over-merge, keyed on `(HomeOID, FileID)`).
 - **Hard-link resolution hardened (type-0x39).** A hard-link name whose cached size is stale (e.g. a size-0
   non-primary name) is reattached to its object through the backing's embedded type-0x39 back-pointers — the
   driver's own authoritative name list — so it groups correctly instead of showing as a separate

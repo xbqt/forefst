@@ -2529,7 +2529,7 @@ ReFS Deleted File Finder
   Mode: recovery.  Ran: Trash table (0xD), checkpoint diff, B+-tree node-slack scan (live pages only), orphaned-page scan.
   This is `recovery` (quick): live-page slack only. Run `deleted --full` to ALSO scan orphan
   pages (the freed pages of deleted objects — more, but a full-volume scan) and carve non-resident content.
-  Fine-grained: --no-slack · --scan-pages · --orphans · --carve · --max-scan N · --search SUB · `export deleted DIR`.
+  Fine-grained: --no-slack · --scan-pages · --orphans · --carve · --max-scan N · --search SUB · --csv/--json/--jsonl FILE · `export deleted DIR`.
   Also: `deleted --orphans` adds a low-confidence tier for OID-Table objects unlinked from the tree.
   Prior versions of files that still exist: `snapshots`.  Windows Recycle Bin: `recyclebin`.
 

@@ -42,7 +42,7 @@ forefst.py disk.raw security --audit                  # tamper-check security de
 
 ### `files` — list files and directories
 
-Walks the directory B+-tree from the root object (OID `0x600`) and emits one enriched row per file/directory. Default output is the 39-column CSV described [below](#csv-output-fields).
+Walks the directory B+-tree from the root object (OID `0x600`) and emits one enriched row per file/directory. Default output is the 40-column CSV described [below](#csv-output-fields).
 
 | Option | Description |
 |--------|-------------|
@@ -468,54 +468,57 @@ forefst.py disk.raw dataruns --oid 0x705 -v            # scope to one subtree
 
 ## CSV Output Fields
 
-The `files` CSV has **39 columns**, one row per file/directory, in this order (matching `CSV_COLUMNS` in `forefst.py`):
+The `files` CSV has **40 columns**, one row per file/directory, in this order (matching `CSV_COLUMNS` in `forefst.py`):
 
 | # | Column | Description |
 |---|--------|-------------|
-| 0 | OID | own Object Identifier — a directory/object shows its OID; a **file emits `0`** (files have no own OID) |
-| 1 | FileRef | the stable 128-bit file reference `HomeOid:FileId` (== the USN `FileReferenceNumber`) |
-| 2 | HomeOid | the **creation** directory's OID (frozen at create — unchanged by move/rename) |
-| 3 | FileId | the per-directory child ordinal (low 64 bits of the FileID) — monotonic, never re-used |
-| 4 | FileName | File or directory name |
-| 5 | ParentOID | OID of the directory this **name currently lives in** (differs from HomeOid after a move/hard-link) |
-| 6 | ParentPath | Path of the parent directory from root |
-| 7 | FullPath | full path from root (ParentPath + FileName) |
-| 8 | Extension | File extension (lowercase) |
-| 9 | FileSize | Logical file size in bytes |
-| 10 | IsDirectory | `True` if the entry is a directory |
-| 11 | IsDeleted | `True` if recovered as deleted |
-| 12 | DeletionSource | Recovery method: `trash` / `orphan` / `chkp_diff` / `cow_modified` / `cow_deleted` |
-| 13 | IsResident | `True` if content is stored inline in the B+-tree |
-| 14 | Created | $SI creation timestamp |
-| 15 | Modified | $SI modification timestamp |
-| 16 | Changed | $SI metadata-change timestamp (MFT-equivalent) |
-| 17 | Accessed | $SI access timestamp |
-| 18 | FileAttributes | decoded Windows file-attribute flags |
-| 19 | SecurityId | ReFS security-descriptor ID |
-| 20 | OwnerSid | owner: friendly name + SID (e.g. `BUILTIN\Administrators (S-1-5-32-544)`) |
-| 21 | USN | Update Sequence Number (LastUsn) |
-| 22 | HasAds | alternate data stream present |
-| 23 | AdsNames | names of detected ADS |
-| 24 | IsEncrypted | EFS encryption flag |
-| 25 | IsCompressed | compression flag |
-| 26 | HasIntegrity | integrity-stream flag |
-| 27 | HasEA | Extended Attributes present (correct for non-resident files too) |
-| 28 | ReparseTarget | symlink/junction target |
-| 29 | HardLinkCount | number of names sharing the file's content |
-| 30 | HardLinkNames | `;`-joined names sharing the file's content |
-| 31 | SnapshotCount | number of stream snapshots |
-| 32 | TimestompFlags | timestomp heuristic flags (populated with `--timestomp`) |
-| 33 | GroupSid | group: friendly name + SID (from the security descriptor) |
-| 34 | AllocatedSize | on-disk allocated size (blank when unresolved) |
-| 35 | ReparseTag | `IO_REPARSE_TAG_* (0xTAG)` for reparse points |
-| 36 | RecoveredChild | child name recovered during deleted/orphan reconstruction (blank for normal rows) |
-| 37 | IsSparse | `FILE_ATTRIBUTE_SPARSE_FILE` (0x200) set — corroborated by AllocatedSize < FileSize |
+| 1 | OID | own Object Identifier — a directory/object shows its OID; a **file emits blank** (files have no own OID) |
+| 2 | FileName | file or directory name |
+| 3 | FullPath | full path from root (ParentPath + FileName) |
+| 4 | FileSize | logical file size in bytes |
+| 5 | Extension | file extension (lowercase) |
+| 6 | ParentPath | path of the directory this **name currently lives in** |
+| 7 | ParentOID | OID of that current parent (differs from HomeOID after a move/hard-link) |
+| 8 | Created | $SI creation timestamp |
+| 9 | Modified | $SI modification timestamp |
+| 10 | Changed | $SI metadata-change timestamp (MFT-equivalent) |
+| 11 | Accessed | $SI access timestamp |
+| 12 | FileRef | the stable 128-bit file reference `HomeOID:FileID` (== the USN `FileReferenceNumber`) — populated for **resident files too** |
+| 13 | CreationDir | resolved path of HomeOID (the directory the file was **created** in) |
+| 14 | HomeOID | the **creation** directory's OID (frozen at create — unchanged by move/rename) |
+| 15 | FileID | the per-directory child ordinal (low 64 bits) — monotonic, never re-used after deletion |
+| 16 | USN | Update Sequence Number (LastUsn) |
+| 17 | FileAttributes | decoded Windows file-attribute flags |
+| 18 | SecurityId | ReFS security-descriptor ID |
+| 19 | OwnerSid | owner: friendly name + SID (e.g. `BUILTIN\Administrators (S-1-5-32-544)`) |
+| 20 | GroupSid | group: friendly name + SID (from the security descriptor) |
+| 21 | DACLSummary | compact per-descriptor ACE list (`N ACE(s): ALLOWED:Owner:FULL_CONTROL \| …`); the full DACL is in `security` |
+| 22 | HasADS | alternate data stream present |
+| 23 | ADSNames | names of detected ADS |
+| 24 | IsResident | `True` if content is stored inline in the B+-tree |
+| 25 | IsDirectory | `True` if the entry is a directory |
+| 26 | IsEncrypted | EFS encryption flag |
+| 27 | IsCompressed | compression flag |
+| 28 | HasIntegrity | integrity-stream flag |
+| 29 | HasEA | Extended Attributes present (correct for non-resident files too) |
+| 30 | HardLinkCount | number of names sharing the file's content (non-resident files) |
+| 31 | HardLinkNames | `;`-joined names sharing the content |
+| 32 | SnapshotCount | number of stream snapshots |
+| 33 | SnapshotNames | `;`-joined snapshot version labels (e.g. `v3;v2;v1`) |
+| 34 | ReparseTag | `IO_REPARSE_TAG_* (0xTAG)` for reparse points |
+| 35 | ReparseTarget | symlink/junction target |
+| 36 | IsSparse | `FILE_ATTRIBUTE_SPARSE_FILE` (0x200) set — corroborated by AllocatedSize < FileSize |
+| 37 | AllocatedSize | on-disk allocated size (blank when unresolved) |
 | 38 | InternalFlags | `$SI` internal flags (e.g. `DeleteDisposition`); blank unless a confidently-named bit is set |
+| 39 | IsMoved | `True` when the file currently sits **outside its creation directory** (HomeOID ≠ ParentOID, single name) — a genuine move (always a non-resident file; blank for hard-links and resident files) |
+| 40 | TimestompFlags | timestomp heuristic flags (populated with `--timestomp`) |
 
-> `FileRef` = `HomeOid:FileId` is the object's stable identity — it is the USN `FileReferenceNumber`, so the
-> `files` and `usn` outputs join directly on it. `HomeOid` (the creation directory) is frozen at create time,
-> while `ParentOID` follows the name to wherever it lives now; they differ for hard-links, moved files, and
-> recycle-bin entries. `--full-path-column` is a deprecated no-op alias (FullPath is a standard column).
+> `FileRef` = `HomeOID:FileID` is the object's stable identity — it is the USN `FileReferenceNumber`, so the
+> `files` and `usn` outputs join directly on it. `HomeOID` (the creation directory) is frozen at create time,
+> while `ParentOID` follows the name to wherever it lives now; they differ for hard-links and moved files
+> (`IsMoved`). `CreationDir` resolves HomeOID to a path. Deleted/recovered entries are **not** in `files` — the
+> `deleted` command reports them (with `--csv`/`--json`/`--jsonl`). `--full-path-column` is a deprecated no-op
+> alias (FullPath is a standard column).
 
 ### `files --filter` categories
 
