@@ -41,8 +41,8 @@ version, so a parser must know the version first.
 | Offset | Size | Field | Description |
 |--------|------|-------|-------------|
 | 0x58 | 8 | NextFileId ordinal | the directory child-creation ordinal; persisted to the own-row only when version < 0x30b (v3.11), so **0 on native v3.14 own-rows** while resident files stay populated. See [NextFileId ordinal](#nextfileid-ordinal) |
-| 0x60 | 8 | ExternalFileId_2 | cross-volume file-identity word; 0 on native v3.7+, non-zero only as upgrade carryover |
-| 0x68 | 8 | ExternalFileId_3 | source parent-directory OID; 0 on native v3.7+, non-zero only as upgrade carryover |
+| 0x60 | 8 | ExternalFileId_2 | cross-volume file-identity word; 0 on native v3.7+, non-zero only as upgrade carryover. A same-volume move does **not** set it (the driver checks the origin *volume*, not the directory) — a moved file's home is carried by its non-resident directory entry, not here |
+| 0x68 | 8 | ExternalFileId_3 | source parent-directory OID; 0 on native v3.7+, non-zero only as upgrade carryover; a same-volume move leaves it 0 |
 | 0x70 | 4 | HardLinkCount | read from FCB+0xb4; **always 1 on disk** (hard links promote to non-resident, counted by the shared FileId — §J). On a **non-resident** own-row it reads 0 and is re-sourced from the resident FCB — do not treat 0 as corruption |
 | 0x74 | 8 | NextStreamSetId | per-file next-stream-set-ID allocator, base 0xF000; non-zero only on a file owning an extra stream set |
 

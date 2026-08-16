@@ -151,6 +151,15 @@ its ordinal `value+0x00 = 3`, and its type-0x40 backing is found in 0x9586, not 
 `value+0x08 != containing directory` shape also arises for a hard-link name placed in a second directory
 (told apart from a move by the derived link count — see below).
 
+This is also *why* a relocated file always appears in the non-resident layout. The frozen creation-directory
+home is carried by `value+0x08`, and only this non-resident value has that field — the resident value
+(key_flags 0x01) does not. So a small file that was resident becomes **non-resident** the moment it is moved (or
+hard-linked), and it never reverts: the move re-homes the name and, because the identity must be stored
+somewhere, the object takes the non-resident form for good. A file still in the resident layout has therefore
+never been relocated — its home always equals its current parent. (Measured directly on a controlled
+before/after move: a 16-byte resident file was non-resident after a cross-directory move, with `value+0x08`
+still pointing at its creation directory.)
+
 ## Critical layout differences
 
 Timestamps and most fields are at **different offsets** between resident and non-resident entries:

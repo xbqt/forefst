@@ -50,6 +50,15 @@ resident, else convert to non-resident` — where `0x30b` is the packed encoding
 applies to the **data/allocation portion**, not to the total row size, so the small fixed metadata header
 does not count against it.
 
+**Size is not the only trigger. A move or a hard link also forces non-residency — regardless of size.** When a
+file is moved to another directory (or gains a second name through a hard link), it must record the directory it
+was *created* in, and only the non-resident directory-entry layout has a field for that home reference. So even a
+tiny file that was comfortably resident becomes **non-resident the instant it is moved or hard-linked**, and it
+never converts back — there is no resident-again path. A file still stored resident has therefore never been
+moved: its home directory is always its current parent. (Confirmed on a controlled before/after move: a 16-byte
+resident file was non-resident after a single cross-directory move.) See
+[File IDs](file_ids.md) for what the move preserves (the identity) and what it changes (the location).
+
 The practical effect is a sharp behavioural split between Windows generations. On a v3.4 volume the
 128 KiB cap is larger than almost any ordinary file, so content stays resident as a matter of course; on a
 v3.14 volume the 2 KiB threshold is crossed by anything but the smallest files, so non-resident storage is

@@ -30,12 +30,12 @@ Redundancy / Backup Copies
 ------------------------------------------------------------------------------
   Boot sector (primary):   LBA 0 — OK
   Boot sector (backup):    LBA 4294836223 — present, identical to primary, checksum OK
-  Checkpoint [PRIMARY]:   LCN 0x51eb04 — valid, vclock=265
-  Checkpoint [backup ]:   LCN 0x3d702ac — valid, vclock=264
+  Checkpoint [PRIMARY  ]:   LCN 0x51eb04 — checksum OK, vclock=265
+  Checkpoint [secondary]:   LCN 0x3d702ac — checksum OK, vclock=264
   Superblock copies:       3
-      [PRIMARY] LCN 0x1e (offset 0x1e000) — SUPB sig OK
-      [backup ] LCN 0x1fffbffd (offset 0x1fffbffd000) — SUPB sig OK
-      [backup ] LCN 0x1fffbffe (offset 0x1fffbffe000) — SUPB sig OK
+      [PRIMARY] LCN 0x1e (offset 0x1e000) — checksum OK
+      [backup ] LCN 0x1fffbffd (offset 0x1fffbffd000) — checksum OK
+      [backup ] LCN 0x1fffbffe (offset 0x1fffbffe000) — checksum OK
 
 ------------------------------------------------------------------------------
 Verdict: PASS — all metadata pages structurally valid (run --checksums / --fullchecksums to verify CRC64/SHA-256)

@@ -22,7 +22,7 @@ Checkpoint
 File System Content
 ------------------------------------------------------------------------------
   Directories:        237
-  Files:              1507 (273 resident)
+  Files:              1507 (273 resident + 1234 non-resident)
   Total file size:    1.4 GB
   Security descs:     15
   Oldest timestamp:   2021-05-18 07:16:04 UTC
@@ -66,12 +66,11 @@ Extended Metrics
 ------------------------------------------------------------------------------
   Reparse index:      330 entries
   Symlinks:           330
-  Snapshots:          0
-  ADS entries:        84
-  Hard links (extra): 282
+  Snapshot versions:  0 (across 0 files)
+  ADS host files:     84
+  Hard-linked:        168 files sharing 450 names
   Encrypted files:    0
-  Integrity files:    559
+  Integrity objects:  559
   Compressed files:   0
   Trash table:        0 entries
   Containers used:    62 / 63 (98.4%)
-  Free space (est):   64.0 MB

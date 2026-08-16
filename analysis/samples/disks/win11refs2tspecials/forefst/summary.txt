@@ -15,21 +15,23 @@ ReFS Volume Fast Extended Summary
   Checksum:           CRC64
 
 ------------------------------------------------------------------------------
-Bootstrap structures  (address + validity; SHA-256 on the next line)
+Bootstrap structures
 ------------------------------------------------------------------------------
   VBR primary      LBA 0 (offset 0x0)  — checksum OK
       538e65189e94bb78f61ba3b9571892ae92472ea79e0fc22517b94eb468ee5cfc
-  VBR backup       LBA 4294836223 (off 0x1fffbfffe00)  — = primary, cksum ok
+  VBR backup       LBA 4294836223 (off 0x1fffbfffe00)  — = primary, checksum OK
       538e65189e94bb78f61ba3b9571892ae92472ea79e0fc22517b94eb468ee5cfc
-  SUPB primary     LCN 0x1e (offset 0x1e000)  — SUPB sig OK
+  SUPB primary     LCN 0x1e (offset 0x1e000)  — checksum OK
       426bea8d9c9985153b6cc1972378911c48da7bca4a58798d62add921c3bedcea
-  SUPB backup      LCN 0x1fffbffd (offset 0x1fffbffd000)  — SUPB sig OK
+  SUPB backup      LCN 0x1fffbffd (offset 0x1fffbffd000)  — checksum OK
       fcba90bad550ea0e0f959a6d4920598742d5c8eab68502b38c943c38d14a21ca
-  SUPB backup      LCN 0x1fffbffe (offset 0x1fffbffe000)  — SUPB sig OK
+  SUPB backup      LCN 0x1fffbffe (offset 0x1fffbffe000)  — checksum OK
       e15bd94a50d1dffccdcb8f047b2af7c4c2f86c4eac470b7c6f35ddb359bb4e99
-  CHKP backup      LCN 0x51eb04 (offset 0x51eb04000)  — valid, vclock=366
+      note: the SUPB copies hash differently by design (each carries its own LCN + self-checksum);
+            their payload is identical — redundancy, not divergence.
+  CHKP secondary   LCN 0x51eb04 (offset 0x51eb04000)  — checksum OK, vclock=366
       298d2fe54bf302a62b8a133fd33bfa482258b49f06fcaae059d3286dda6e29ff
-  CHKP primary     LCN 0x3d702ac (offset 0x3d702ac000)  — valid, vclock=367
+  CHKP primary     LCN 0x3d702ac (offset 0x3d702ac000)  — checksum OK, vclock=367
       89d861f193751a65e9e1a9571d67103397383dbb1a3a32ae0a3eab3b288b33dc
 
 ------------------------------------------------------------------------------
@@ -72,8 +74,7 @@ Volume Detail
   Reparse index:      344 entries
   Trash table:        0 entries
   Containers used:    32766 / 32767 (100.0%)
-  Free space (est):   64.0 MB  (container-map estimate — coarse)
-  FS Metadata rows:   1
+  FS Metadata:        0 children  [1 rows]
   USN Journal:        Inactive
 
 
@@ -81,15 +82,15 @@ Volume Detail
 File System Content (from directory walk)
 ------------------------------------------------------------------------------
   Directories:        217
-  Files:              1333 (257 resident)
+  Files:              1333 (257 resident + 1076 non-resident)
   Total file size:    568.0 MB
   Oldest timestamp:   2021-05-18 07:16:04.9990009
   Newest timestamp:   2026-05-16 16:41:35.0548102
   Encrypted files:    0
-  Integrity files:    0
+  Integrity objects:  0
   Compressed files:   0
-  Hard links (extra): 350
-  Snapshots:          0
-  ADS entries:        76
+  Hard-linked:        180 files sharing 530 names
+  Snapshot versions:  0 (across 0 files)
+  ADS host files:     76
 
 Tip: `fastsummary` = quick volume metadata (no directory walk).

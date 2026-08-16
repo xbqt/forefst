@@ -23,7 +23,7 @@ I hope it's useful — please feel free to open an issue with feedback or correc
 
 **The tool itself, first of all.** ReFS is fourteen years old, and — as far as I know — an open-source forensic tool for it has never really existed. The open tools I'm aware of (libfsrefs, pyrefs, the Sleuth Kit extension from Prade et al.'s work, journal parsers such as ARIN) each cover only a slice — an early version, a single artifact, or the format as it stood at 3.4 — and everything that opens a *current* volume is commercial and closed, a file list you cannot audit. So, as far as I can tell, forefst is the first tool anyone can download, read line by line, and point at a modern ReFS volume for the complete forensic job — listing, timelines, both journals, deleted files, prior versions, content extraction, security descriptors. And refsanalysis is the companion none of its predecessors shipped: the structure-level lab that keeps all of it re-testable when Microsoft moves the format again — which is how earlier efforts have tended to fall behind.
 
-**The knowledge, second.** The last public map of the format is the 3.4 analysis, and ReFS has moved a long way since: page references shrank from 104 to 48 bytes (72 with SHA-256), v3.14 reaches its thirteen roots through an indirect list, a native-format marker and a version echo now record the volume's own history, the redo-opcode set grew from 29 to 44, `$SI` gained eight bytes, and whole features — stream snapshots, Dev Drive — postdate everything in the literature. The documentation here carries the byte-level record from 3.4 to 3.14, and revisits the 3.4-era ground on the way: the Container Table rows that could only be partially decoded in 2019 are fully mapped, the checkpoint comparison that earlier work set aside is implemented (with an honest negative result: after a clean unmount, both checkpoints decode to the same tree), and the attribute set — barely sketched in the literature — gets a byte-level page each. All of it sits in the 437-claim register with graded evidence.
+**The knowledge, second.** The last public map of the format is the 3.4 analysis, and ReFS has moved a long way since: page references shrank from 104 to 48 bytes (72 with SHA-256), v3.14 reaches its thirteen roots through an indirect list, a native-format marker and a version echo now record the volume's own history, the redo-opcode set grew from 29 to 44, `$SI` gained eight bytes, and whole features — stream snapshots, Dev Drive — postdate everything in the literature. The documentation here carries the byte-level record from 3.4 to 3.14, and revisits the 3.4-era ground on the way: the Container Table rows that could only be partially decoded in 2019 are fully mapped, the checkpoint comparison that earlier work set aside is implemented (with an honest negative result: after a clean unmount, both checkpoints decode to the same tree), and the attribute set — barely sketched in the literature — gets a byte-level page each. All of it sits in the 438-claim register with graded evidence.
 
 **Concrete forensic signals, third.** Mapping the format is not the end in itself; it surfaced specific, verifiable signals an analyst can act on — each grounded in the byte-level analysis and traceable to graded evidence:
 
@@ -44,7 +44,7 @@ The only requirement is **Python 3.7+** — standard library only: no `pip insta
 # Everything forefst can do, one line each
 python3 forefst.py --list
 
-# Full forensic file listing -> 39-column CSV
+# Full forensic file listing -> 40-column CSV
 python3 forefst.py disk.raw -o files.csv
 
 # One-line volume overview (version, size, counts, upgrade state)
@@ -114,7 +114,7 @@ forefst/
 │   ├── methodology.md        #   how every claim was verified
 │   └── KNOWLEDGE_MAP.md      #   topic -> authoritative-source index
 └── analysis/                 # lab materials + verification harness (the tools don't depend on it)
-    ├── reference_table.csv   #   the live claim register (437 findings)
+    ├── reference_table.csv   #   the live claim register (438 findings)
     ├── lab/                  #   VM setup, disk generation, activity generator + baseline
     ├── samples/              #   captured tool output + samples/corpus/ + sample disks
     └── reports/              #   verification scripts, results, per-claim audit/ harness
@@ -180,7 +180,7 @@ Behind the tools is a full reverse-engineering of the ReFS on-disk format — th
 
 The complete index — every structure, attribute, and concept — is in **[docs/](docs/README.md)**.
 
-**How it was verified.** Every claim lives in a live register — [`analysis/reference_table.csv`](analysis/reference_table.csv), **437 structural claims** across ReFS 3.4–3.14 — and carries an **evidence level**: **E1** (binary string literal), **E2** (PDB symbol / decompiled code), **E3** (structural inference), **RD** (parsed from a 110+ volume raw-disk corpus, decompiled against 4 `refs.sys` builds). A byte-level claim is accepted only when the decompiled driver and the raw disk agree (`E2+RD`). The method, the evidence model, and a worked example are in **[docs/methodology.md](docs/methodology.md)**; everything needed to reproduce it ships under `analysis/` (`lab/`, `samples/`, `reports/`) — point the scripts at your own corpus via `REFS_DISKS` / `REFS_CORPUS`.
+**How it was verified.** Every claim lives in a live register — [`analysis/reference_table.csv`](analysis/reference_table.csv), **438 structural claims** across ReFS 3.4–3.14 — and carries an **evidence level**: **E1** (binary string literal), **E2** (PDB symbol / decompiled code), **E3** (structural inference), **RD** (parsed from a 110+ volume raw-disk corpus, decompiled against 4 `refs.sys` builds). A byte-level claim is accepted only when the decompiled driver and the raw disk agree (`E2+RD`). The method, the evidence model, and a worked example are in **[docs/methodology.md](docs/methodology.md)**; everything needed to reproduce it ships under `analysis/` (`lab/`, `samples/`, `reports/`) — point the scripts at your own corpus via `REFS_DISKS` / `REFS_CORPUS`.
 
 ## License
 

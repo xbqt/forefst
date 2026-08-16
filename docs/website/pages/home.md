@@ -101,7 +101,7 @@ same image.
 Think of it as MFTECmd for ReFS: point it at an image and get analyst-ready output. It can:
 
 - **List every file and directory** with full metadata — MACB timestamps, sizes, attributes, owner/group
-  **SID**, hard-link names, reparse targets, alternate data streams — as a **39-column CSV**, a **Sleuthkit
+  **SID**, hard-link names, reparse targets, alternate data streams — as a **40-column CSV**, a **Sleuthkit
   body file** (for mactime / super-timelines), or **JSON**.
 - **Recover deleted files** by five independent methods (Trash table, checkpoint differencing, orphan-page
   scan, stream-snapshot reconstruction, B+-tree node-slack carving), plus **prior versions** of existing
@@ -136,7 +136,7 @@ curl -L -O https://github.com/xbqt/forefst/raw/main/analysis/samples/disks/win11
 zstd -d win11refs2tsnapshots.raw.zst
 
 python3 forefst.py win11refs2tsnapshots.raw summary        # volume overview: version, size, counts, upgrade state
-python3 forefst.py win11refs2tsnapshots.raw -o files.csv   # full 39-column listing, opens straight in Timeline Explorer
+python3 forefst.py win11refs2tsnapshots.raw -o files.csv   # full 40-column listing, opens straight in Timeline Explorer
 python3 forefst.py win11refs2tsnapshots.raw mlog --parse   # decode the transaction log into user actions
 ```
 

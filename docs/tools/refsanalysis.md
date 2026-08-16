@@ -79,7 +79,7 @@ refsanalysis.py disk.raw all > structure_dump.txt       # run every structure to
 | `attributes` | Per-file attribute deep-dive: decoded flags (TitleCase, space-pipe-space separated, e.g. `Archive | Encrypted`), internal flags, timestamps, EFS/reparse/WSL. `-v` decodes the Extended-Attributes block ($LXMOD/$LXUID/…). `--filter {encrypted,wsl,reparse,snapshot}` narrows results. `--depth N` defaults to FULL. | `attributes --filter wsl` · `attributes -v --filter reparse` |
 | `details` | Full record for ANY file by **path**: timestamps, attributes, SecurityId, the `FileRef HomeOid:FileId`, and — for resident files — inline sub-records ($DATA, ADS, snapshots, $EA, reparse). For a non-resident file it adds a relocation note when the creation directory (HomeOid) differs from the current parent. Files have no Object-Table OID of their own — address them by path. `--json` for structured output. | `details /hello.txt` · `details /dir/big.bin --json` |
 
-> forefst's `files`/`details` subcommands are the forensic-grade equivalents (39-column CSV/JSON, owner+group SID, hard-link names+counts, snapshot counts, reparse targets, FileRef/FileId/HomeOid join keys, IsSparse). refsanalysis keeps a lighter, human-readable lab view.
+> forefst's `files`/`details` subcommands are the forensic-grade equivalents (40-column CSV/JSON, owner+group SID, hard-link names+counts, snapshot counts, reparse targets, FileRef/FileId/HomeOid join keys, IsSparse). refsanalysis keeps a lighter, human-readable lab view.
 
 ### Structure analysis
 
