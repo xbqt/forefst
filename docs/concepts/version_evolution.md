@@ -93,9 +93,9 @@ inline. Three more attribute schemas appear, including the EFS encryption stream
 | Removed | Legacy schemas 0xe070, 0xe0e0; legacy attribute schemas 0x004, 0x006 |
 
 Two flags distinguish v3.14 from v3.10 in the [checkpoint](../structures/chkp.md): 0x0200 selects
-indirect root storage (the checkpoint holds a pointer to a separate root-list page instead of 13 inline
-[page references](../structures/page_references.md) at CHKP+0x94), and 0x0400 means CRC64 is being
-*enforced* on read, not merely declared. The retirement of the 0x004 and 0x006 legacy attribute schemas
+indirect root storage (CHKP+0x94 holds an in-page offset to a root-list region within the *same*
+checkpoint page, instead of 13 inline [page references](../structures/page_references.md)), and 0x0400
+means CRC64 is being *enforced* on read, not merely declared. The retirement of the 0x004 and 0x006 legacy attribute schemas
 is why a freshly formatted v3.14 volume has a smaller schema table than its predecessors even though it
 gained new attributes.
 

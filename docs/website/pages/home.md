@@ -11,9 +11,6 @@ is commercial and closed. This is the open alternative: the most complete public
 format through 3.14, and a tool you can download, read line by line, and point at a modern ReFS volume for
 the full forensic job.
 
-**New to ReFS?** Start with **[ReFS Forensics 101](forensics_101.md)** — the whole picture on one page: what
-a ReFS volume looks like, what survives deletion, and what to look for — with links into the detail below.
-
 ## How a ReFS volume is organised
 
 ReFS is Microsoft's **resilient, self-healing** file system — it first shipped with **Windows Server 2012**

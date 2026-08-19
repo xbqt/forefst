@@ -46,10 +46,6 @@ enableEmoji = true
 # Top navigation (stable regardless of how the .md files are reorganised).
 # The "ReFS Forensics Reference" brand on the left is the link home, so there is no separate Home item.
 [[menu.main]]
-  name = "ReFS 101"
-  pageRef = "/forensics_101"
-  weight = 1
-[[menu.main]]
   name = "Concepts"
   pageRef = "/concepts"
   weight = 2

@@ -549,8 +549,9 @@ def build():
         write(os.path.join(CONTENT, "glossary.md"), text)
 
     # Home + About (site-only Markdown)
-    for src, dst in [("home.md", "_index.md"), ("about.md", "about.md"), ("verification.md", "verification.md"),
-                     ("forensics_101.md", "forensics_101.md")]:
+    # NOTE: pages/forensics_101.md is intentionally kept in the repo but NOT published yet (no copy here,
+    # no nav entry, no inbound link). Re-add it to this list + a menu entry in hugo.toml to publish it.
+    for src, dst in [("home.md", "_index.md"), ("about.md", "about.md"), ("verification.md", "verification.md")]:
         p = os.path.join(PAGES, src)
         if os.path.isfile(p):
             shutil.copyfile(p, os.path.join(CONTENT, dst))
