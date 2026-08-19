@@ -11,7 +11,7 @@
     {{ partial "toc.html" . }}
   </div>
   <footer class="page-footer">
-    {{ with site.Params.github }}<a href="{{ . }}">Source &amp; tools on GitHub</a> · {{ end }}Generated from the project documentation · ReFS Reference forefst v{{ site.Params.tool_version }}{{ with site.Params.build_date }} ({{ . }}){{ end }}{{ with site.Params.coverage_note }} · <span class="footer-coverage">{{ . }}</span>{{ end }}
+    {{ with site.Params.github }}<a href="{{ . }}">Source &amp; tools on GitHub</a> · {{ end }}Generated from the project documentation · {{ site.Title }} · forefst v{{ site.Params.tool_version }}{{ with site.Params.build_date }} ({{ . }}){{ end }}{{ with site.Params.coverage_note }} · <span class="footer-coverage">{{ . }}</span>{{ end }}
   </footer>
   <script>window.SEARCH_INDEX = "{{ "index.json" | relURL }}";</script>
   <script src="{{ "js/theme.js" | relURL }}"></script>

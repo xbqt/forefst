@@ -144,6 +144,7 @@ pre code{background:none;border:none;padding:0;font-size:.82rem}
 .card .c-desc{font-size:.85rem;color:var(--text-secondary);line-height:1.45}
 
 .hero{padding:2rem 0 1rem}
+.hero .hero-logo{display:block;width:400px;max-width:100%;height:auto;margin:0 0 1rem}
 .hero h1{font-size:2.4rem;margin:0 0 .3em}
 .hero .tagline{font-size:1.15rem;color:var(--text-secondary);max-width:60ch}
 .callout{background:var(--accent-bg);border:1px solid var(--accent-light);border-radius:var(--radius-md);padding:1rem 1.2rem;margin:1.2rem 0}
@@ -194,12 +195,12 @@ svg.diagram .dg-arrowhead{fill:var(--text-secondary)}
 svg.diagram .dg-dash{stroke:var(--accent);stroke-width:1.5;stroke-dasharray:5 4;fill:none}
 svg.diagram .dg-fill-surface{fill:var(--surface)}
 
-/* ===== Section index tables ===== */
-.content .index-table{font-size:.9rem}
-.content .index-table td.it-name{white-space:nowrap;font-weight:600;vertical-align:top}
-.content .index-table td.it-name a{color:var(--accent)}
-.content .index-table td.it-desc{color:var(--text-secondary);line-height:1.45}
-.content .index-table tr:hover{background:var(--bg-alt)}
+/* ===== Section index list (name on its own line, description below) ===== */
+.content .index-list{margin:.5rem 0 1.75rem}
+.content .index-item{padding:.6rem 0;border-bottom:1px solid var(--border)}
+.content .index-item:last-child{border-bottom:none}
+.content .index-item .ii-name{display:inline-block;font-weight:600;color:var(--accent);font-size:1rem}
+.content .index-item .ii-desc{margin:.2rem 0 0;color:var(--text-secondary);line-height:1.5;font-size:.9rem}
 
 /* heading anchor: hidden until the heading is hovered */
 .content h1 .heading-anchor,.content h2 .heading-anchor,.content h3 .heading-anchor,.content h4 .heading-anchor{

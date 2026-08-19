@@ -1,13 +1,11 @@
 {{- /* expects a slice of pages */ -}}
-<table class="index-table">
-  <tbody>
+<div class="index-list">
   {{- range . -}}
     {{- if eq .Kind "page" -}}
-    <tr>
-      <td class="it-name"><a href="{{ .RelPermalink }}">{{ .Title }}</a></td>
-      <td class="it-desc">{{ .Summary | plainify | truncate 170 }}</td>
-    </tr>
+    <div class="index-item">
+      <a class="ii-name" href="{{ .RelPermalink }}">{{ .Title }}</a>
+      <p class="ii-desc">{{ with .Description }}{{ . }}{{ else }}{{ .Summary | plainify | truncate 200 }}{{ end }}</p>
+    </div>
     {{- end -}}
   {{- end -}}
-  </tbody>
-</table>
+</div>

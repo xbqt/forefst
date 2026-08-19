@@ -1,10 +1,11 @@
-How ReFS works — the mechanisms behind the on-disk format, grouped from orientation to deep internals.
+How ReFS works — the mechanisms behind the on-disk format, from first principles to deep internals.
 
-**New to ReFS?** Start with **General** — [NTFS vs ReFS](ntfs_comparison.md), [Version Detection](version_detection.md),
-and [Version Evolution](version_evolution.md) give you the lay of the land.
-
-For a forensic investigation the load-bearing concepts are the bootstrap and addressing model
-([Bootstrap Chain](bootstrap_chain.md), [Virtual Addressing](virtual_addressing.md)), the copy-on-write
-update policy that makes history recoverable ([Copy-on-Write](copy_on_write.md)), and the recovery and
-timeline techniques ([Deletion Recovery](deletion_recovery.md), [Timestomping Detection](timestomp_detection.md),
-[What Survives](what_survives.md)).
+**Background & context** sets the scene: what a file system is, where ReFS sits in the Windows I/O path, and
+Carrier's five data categories that organise every artifact. **General** orients you to ReFS itself — how it
+differs from NTFS, how to read a volume's version, and the two-layer driver that produces everything on disk.
+**On-disk mechanics** is the load-bearing model: the bootstrap chain, virtual addressing, clusters and pages,
+resident vs non-resident storage, and the copy-on-write policy that makes history recoverable. **Integrity &
+redundancy** covers the checksums, integrity streams, and failover copies that detect and heal corruption.
+**Files, metadata & features** is object and file identity, attributes, hard links, stream snapshots, WSL
+metadata, compression, deduplication, and tiering. **Forensics & recovery** is the payoff — deletion recovery,
+what survives, timestomp detection, timeline reconstruction, and how the tools map to each artifact.

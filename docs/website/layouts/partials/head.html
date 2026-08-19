@@ -2,7 +2,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 {{ $desc := or .Description site.Params.description }}
 {{ $ogtitle := cond .IsHome site.Title .Title }}
-<title>{{ if .IsHome }}ReFS forensics &amp; on-disk format — {{ site.Title }} (v3.4–3.14){{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title>
+<title>{{ if .IsHome }}{{ site.Title }} — the Resilient File System on-disk format (v3.4–3.14){{ else }}{{ .Title }} · {{ site.Title }}{{ end }}</title>
 <meta name="description" content="{{ $desc }}">
 <meta name="keywords" content="{{ with .Params.keywords }}{{ . }}{{ else }}{{ site.Params.keywords }}{{ end }}">
 <meta name="author" content="{{ site.Params.author }}">
