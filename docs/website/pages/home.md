@@ -1,17 +1,18 @@
 ---
-title: "ReFS Reference"
+title: "ReFS Forensics Reference"
 description: "The most complete public forensic reference for Microsoft's Resilient File System (ReFS) 3.4–3.14 — the on-disk format decoded byte by byte, with two open-source tools (forefst) to parse a raw volume."
 ---
-
-<p align="center"><img src="https://xbpt.gitlab.io/images/forefst.png" alt="forefst" width="340"></p>
 
 A structural and forensic reference for Microsoft's **Resilient File System (ReFS)**, versions
 **3.4 through 3.14** — what ReFS actually writes to disk, decoded byte by byte, with two open-source
 [tools](https://github.com/xbqt/forefst) that read a raw volume with no dependencies. Public ReFS forensic
-documentation largely stopped at version **3.4 (2019)**, and almost everything that opens a *current* volume
+documentation largely stopped at version **3.4 (2019)**, and everything that opens a *current* volume
 is commercial and closed. This is the open alternative: the most complete public account of the on-disk
 format through 3.14, and a tool you can download, read line by line, and point at a modern ReFS volume for
 the full forensic job.
+
+**New to ReFS?** Start with **[ReFS Forensics 101](forensics_101.md)** — the whole picture on one page: what
+a ReFS volume looks like, what survives deletion, and what to look for — with links into the detail below.
 
 ## How a ReFS volume is organised
 
@@ -24,9 +25,15 @@ reached by a short bootstrap chain from the boot sector:
 
 A handful of ideas explain most of what ReFS writes to disk:
 
+- **A transactional B+-tree engine (Minstore).** Beneath the file-system layer, ReFS is a general-purpose
+  key-value store: every table — directories, the object map, security, containers, the allocators — is a
+  Minstore **B+-tree** of sorted rows on 16 KiB (or 64 KiB) pages. Model the tree and you can read any
+  metadata, whatever higher-level feature produced it. See [Architecture](architecture.md) and
+  [B+-tree Node](btree_node.md).
 - **Copy-on-write.** A metadata page is never overwritten in place — a modified copy is written to a new
   location and the pointers above it are rewritten up to the checkpoint. This is what makes the volume
-  crash-consistent and self-healing. See [Copy-on-Write](copy_on_write.md).
+  crash-consistent and self-healing, and it is why superseded data lingers to be recovered. See
+  [Copy-on-Write](copy_on_write.md).
 - **Objects and the Object Table.** Directories and system tables are objects with a **64-bit Object ID
   that is monotonic and never reused** (the closest thing ReFS has to an inode); **files have none** — a
   file lives as rows inside its directory's tree, identified instead by a **File ID**: its home
@@ -35,56 +42,26 @@ A handful of ideas explain most of what ReFS writes to disk:
   location — ReFS's `$MFT`-equivalent. See [Object Table](object_table.md) and [File IDs](file_ids.md).
 - **Two-level virtual addressing.** A file's data is described by *extents* (VCN → **VLCN**), and a
   separate **Container Table** translates those virtual clusters to physical ones (VLCN → **PLCN**).
-  Almost every address on the volume is virtual and resolved through it. See
-  [Virtual Addressing](virtual_addressing.md).
+  Almost every address on the volume is virtual and resolved through it — which is also what lets ReFS
+  relocate and tier data underneath a file. See [Virtual Addressing](virtual_addressing.md).
 - **Resident vs non-resident storage.** A small stream sits *inline* in its B+-tree row (resident); a
-  larger one lives in on-disk **extents** (non-resident). See [Resident Storage](resident_storage.md).
+  larger one lives in on-disk **extents** (non-resident). The resident threshold is far larger than NTFS's,
+  so whole files can hide inside a metadata row. See [Resident Storage](resident_storage.md).
 - **Checksums, integrity, and self-healing.** Every metadata page carries a checksum, and optional
   *integrity streams* checksum file data too. Core metadata is kept in **failover pairs**, so a mismatch
   is caught at mount and the good copy heals the bad one. See
   [Checksum Architecture](checksum_architecture.md) and [Redundancy](redundancy.md).
 - **A durable change record.** A **USN V3** change journal records per-file changes, and a redo-only
-  **MLog** transaction log makes every metadata update crash-safe. See [USN Journal](usn_journal.md) and
-  [MLog](mlog.md).
+  **MLog** transaction log makes every metadata update crash-safe — two independent histories to build a
+  timeline from. See [USN Journal](usn_journal.md) and [MLog](mlog.md).
+- **Shared and tiered blocks.** On top of the core, ReFS layers block cloning, deduplication, tiered
+  storage, and per-file **stream snapshots** — all built on clusters shared between files and tracked by a
+  reference-count table. See [Snapshots & Versioning](snapshots_versioning.md) and
+  [Deduplication](deduplication.md).
 
-On top of this ReFS layers block cloning, deduplication, tiered storage, and per-file **stream snapshots**.
 The format grew from **3.4** (Windows 10, 1803) to **3.14** (Windows 11, 24H2); the shipping releases are
 **not bootable**, and the Insider preview (build 29574) is the **first ReFS that can host a boot volume**,
 adding TPM attestation. See [Version Evolution](version_evolution.md).
-
-## For a forensic analyst
-
-What matters when you sit down in front of a ReFS volume — each point links to the detail:
-
-- **Reconstruct the timeline — and surface tampering.** Every file carries a `$SI` **MACB** set,
-  corroborated by two independent logs: the **USN V3** change journal and the redo-only **MLog** transaction
-  log, which `forefst` decodes into concrete create / write / rename / move / delete actions and merges into
-  one super-timeline. And because a hard-linked file keeps **one `$SI` per name** — ReFS has no `$FILE_NAME`
-  twin — a back-dated name stands out against its siblings and against the change journal. These
-  reconstructions are corroborative signals, not an authoritative log. See
-  [Artifact Timeline](artifact_timeline.md) and [Timestomp Detection](timestomp_detection.md).
-- **Recover what survives — and prove what's gone.** Copy-on-write leaves superseded rows at stale
-  clusters, and the `deleted` command recovers what the volume hasn't reused through **two simple modes**
-  (a quick default and a complete `--full` pass) spanning five methods — Trash table, checkpoint
-  differencing, orphan scan, stream-snapshot reconstruction, and B+-tree node-slack carving. Every remnant is
-  classified by **file identity** (name + creation-time), so a moved or renamed file is never mistaken for a
-  deletion. This is realistic recovery, not a guaranteed "undelete everything," though the
-  [`$SNAPSHOT`](snapshots_versioning.md) stream is a *deterministic* prior-content path. And because Object IDs
-  are **never reused**, a gap in the sequence is durable evidence that an object existed and was deleted — even
-  after every byte it touched is overwritten. See [Deletion Recovery](deletion_recovery.md) and
-  [What Survives](what_survives.md).
-- **Mine the ReFS-specific artifacts.** Reparse points (symlinks, junctions, mount points), **WSL / Linux
-  metadata** and device nodes, alternate data streams, extended attributes, hard links, and `$RECYCLE.BIN`
-  entries all decode to real evidence. See [Reparse Points](reparse_points.md),
-  [WSL Metadata](wsl_metadata.md), and [Hard Links](hard_links.md).
-- **Attribute the volume and its files.** Each file resolves to an owner and group **SID** and its
-  DACL/SACL from a single volume-wide security table; and a native v3.14, an upgraded v3.4→v3.14, and an
-  original v3.4 volume are told apart from an on-disk marker an upgrade can't fake — which matters for
-  dating and provenance. See [Security Descriptors](security_descriptors.md) and
-  [Version Detection](version_detection.md).
-- **Know what breaks your NTFS tools.** No `$MFT`, no 8.3 short names, no `$FILE_NAME` twin, two-level
-  addressing, and huge resident thresholds mean an NTFS reflex misses ReFS content entirely. See
-  [NTFS vs ReFS](ntfs_comparison.md).
 
 ## The tools
 

@@ -58,11 +58,14 @@ UNPUBLISHED = {"readme.md", "knowledge_map.md", "contributing.md", "changelog.md
 # group that lists it; a page listed nowhere falls into the LAST group. Order WITHIN a group follows
 # its file list here (emitted as the page `sort` key). Edit freely — this only drives site grouping.
 CONCEPT_GROUPS = [
+    ("Background & context", [
+        "file_systems.md", "windows_file_systems.md", "carrier_categories.md",
+    ]),
     ("General", [
-        "ntfs_comparison.md", "version_detection.md", "version_evolution.md", "driver_architecture.md",
+        "ntfs_comparison.md", "version_detection.md", "version_evolution.md", "architecture.md",
     ]),
     ("On-disk mechanics", [
-        "bootstrap_chain.md", "architecture.md", "virtual_addressing.md", "cluster_page_size.md",
+        "bootstrap_chain.md", "driver_architecture.md", "virtual_addressing.md", "cluster_page_size.md",
         "resident_storage.md", "copy_on_write.md", "allocation_space_mgmt.md",
         "transactions_crash_consistency.md",
     ]),
@@ -77,9 +80,6 @@ CONCEPT_GROUPS = [
     ("Forensics & recovery", [
         "deletion_recovery.md", "what_survives.md", "timestomp_detection.md", "artifact_timeline.md",
         "forensic_analysis_workflow.md", "tool_artifact_map.md",
-    ]),
-    ("Background & context", [
-        "file_systems.md", "windows_file_systems.md", "carrier_categories.md",
     ]),
 ]
 STRUCTURE_GROUPS = [
@@ -245,8 +245,6 @@ def dejargon(text):
     text = re.sub(r'\s*\bGrades are E1\b[\s\S]*?measured\)?;', '', text)
     text = re.sub(r'\s*\bGrades are E1\b[^.]*\.', '', text)
     text = re.sub(r'\.\s+the per-goal', r'. The per-goal', text)
-    # the glossary entry that *defines* the grade jargon — orphaned on the site -> drop it
-    text = re.sub(r'(?m)^##\s+Evidence and Method\s*\n+\*\*Evidence levels\*\*[^\n]*\n:[^\n]*\n?', '', text)
 
     masked, store = _mask_code(text)
     s = masked
@@ -330,6 +328,30 @@ def yaml_escape(s):        return s.replace('\\', '\\\\').replace('"', '\\"')
 def sort_key(title):       return re.sub(r"^[^0-9A-Za-z]+", "", title).lower()
 
 
+_MD_LINK = re.compile(r'\[([^\]]+)\]\([^)]*\)')
+
+def lead_description(body, limit=220):
+    """The page's first real prose paragraph after the H1, as PLAIN text — used for the section-index
+    row description AND the per-page <meta description>. Skips the H1, blockquote notes, images, tables,
+    lists, code fences, raw-HTML and shortcode blocks; flattens line wraps; strips inline markdown; and
+    truncates on a word boundary. Run on the already de-jargoned body, before diagram injection."""
+    for block in re.split(r'\n\s*\n', body):
+        b = block.strip()
+        if not b:
+            continue
+        if b.startswith(("#", ">", "|", "![", "```", "<", "{{")):
+            continue
+        if re.match(r'^([-*+]\s|\d+\.\s)', b):
+            continue
+        t = re.sub(r'\s+', ' ', b)                  # flatten the wrapped paragraph
+        t = _MD_LINK.sub(r'\1', t)                  # [text](url) -> text
+        t = t.replace('**', '').replace('`', '').replace('*', '').strip()
+        if len(t) <= limit:
+            return t
+        return t[:limit].rsplit(' ', 1)[0].rstrip(' ,;:—-') + '…'
+    return ""
+
+
 SECTION_DIRS = ("concepts", "structures", "attributes", "tools", "examples")
 
 def unwrap_unpublished_links(t):
@@ -408,10 +430,13 @@ def transform(src_path, group=None, weight=None, sort=None):
     raw = open(src_path, encoding="utf-8").read()
     body = dejargon(scrub_cbw4(unwrap_unpublished_links(strip_footer(raw))))
     body = _drop_empty_table_cols(body)
+    desc = lead_description(body)
     body = inject_diagram(body, os.path.basename(src_path))
     title = first_h1(body) or os.path.splitext(os.path.basename(src_path))[0].replace("_", " ").title()
     sort_val = sort if sort is not None else sort_key(title)
     fm = ['---', f'title: "{yaml_escape(title)}"', f'sort: "{yaml_escape(sort_val)}"']
+    if desc:
+        fm.append(f'description: "{yaml_escape(desc)}"')
     if group is not None:
         fm.append(f'group: "{yaml_escape(group)}"')
     if weight is not None:
@@ -524,7 +549,8 @@ def build():
         write(os.path.join(CONTENT, "glossary.md"), text)
 
     # Home + About (site-only Markdown)
-    for src, dst in [("home.md", "_index.md"), ("about.md", "about.md"), ("verification.md", "verification.md")]:
+    for src, dst in [("home.md", "_index.md"), ("about.md", "about.md"), ("verification.md", "verification.md"),
+                     ("forensics_101.md", "forensics_101.md")]:
         p = os.path.join(PAGES, src)
         if os.path.isfile(p):
             shutil.copyfile(p, os.path.join(CONTENT, dst))
