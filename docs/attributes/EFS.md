@@ -83,7 +83,7 @@ to target.
 
 ## Cross-references
 
-- [Attributes — Forensic Reference](README.md) — the attribute catalog and on-disk layout
+- [Attributes — Forensic Reference](../attributes/README.md) — the attribute catalog and on-disk layout
 - [Driver Interface](../concepts/driver_architecture.md) — the `cng.sys` import for EFS support
 
 ## Evidence

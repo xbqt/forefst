@@ -3845,7 +3845,7 @@ def _print_fastsummary(summary, plus_mode=False, is_summary=False):
     w = 78
     print("=" * w)
     print(f"ReFS Volume {'Fast ' if not plus_mode else 'Fast Extended '}Summary")
-    print("=" * w)
+    print("-" * w)   # 3summary: '=' above the title, '-' below
     print(f"  Image:              {summary['image']}")
     print(f"  Image size:         {hs(summary['image_size'])}")
     print(f"  ReFS version:       {summary['refs_version']}")
@@ -3870,9 +3870,30 @@ def _print_fastsummary(summary, plus_mode=False, is_summary=False):
         if sha:
             print(f"      {sha}")
     v = bk.get("vbr") or {}
+    _supb = bk.get("supb", [])
+    _chkps = bk.get("checkpoints", [])
+    def _supb_line(s):
+        _sha = summary.get("supb_sha256") if s.get("role") == "PRIMARY" else s.get("sha256")
+        _st = "checksum OK" if s.get("cksum_ok") else ("signature OK" if s.get("ok") else "BAD")
+        _bs(f"SUPB {s.get('role','?').lower()}", f"LCN {s.get('lcn',0):#x} (offset {s.get('lcn',0)*_cs:#x})",
+            _st, _sha)
+    def _chkp_line(rec):
+        _sha = summary.get("chkp_sha256") if rec.get("role") == "PRIMARY" else rec.get("sha256")
+        _cok = "checksum OK" if rec.get("cksum_ok") else ("signature OK" if rec.get("sig_ok") else "BAD")
+        _st = _cok + (f", vclock={rec['vc']}" if rec.get("vc") is not None else "") \
+              + ("" if rec.get("roots_ok") else " (roots unreadable)")
+        _bs(f"CHKP {rec.get('role','?').lower()}", f"LCN {rec['lcn']:#x} (offset {rec['lcn']*_cs:#x})", _st, _sha)
+
+    # 2summary: primary copies first, then a separator, then the backup copies (grouped by role, not by
+    # structure type). VBR primary is always at LBA 0.
     _bs("VBR primary", "LBA 0 (offset 0x0)",
         "checksum OK" if v.get("primary_cksum_ok") else ("sig OK" if v.get("primary_ok") else "BAD"),
         summary.get("vbr_sha256"))
+    for s in _supb:
+        if s.get("role") == "PRIMARY": _supb_line(s)
+    for rec in _chkps:
+        if rec.get("role") == "PRIMARY": _chkp_line(rec)
+    print("-" * w)
     vb = v.get("backup")
     if vb and vb.get("present"):
         _bs("VBR backup", f"LBA {vb['lba']} (off {vb['lba']*512:#x})",
@@ -3880,25 +3901,20 @@ def _print_fastsummary(summary, plus_mode=False, is_summary=False):
             + (", checksum OK" if vb.get("cksum_ok") else ""), vb.get("sha256"))
     elif vb is not None:
         _bs("VBR backup", f"LBA {vb.get('lba','?')}", "MISSING/unreadable", None)
-    _supb = bk.get("supb", [])
     for s in _supb:
-        _sha = summary.get("supb_sha256") if s.get("role") == "PRIMARY" else s.get("sha256")
-        _st = "checksum OK" if s.get("cksum_ok") else ("signature OK" if s.get("ok") else "BAD")
-        _bs(f"SUPB {s.get('role','?').lower()}", f"LCN {s.get('lcn',0):#x} (offset {s.get('lcn',0)*_cs:#x})",
-            _st, _sha)
+        if s.get("role") != "PRIMARY": _supb_line(s)
+    for rec in _chkps:
+        if rec.get("role") != "PRIMARY": _chkp_line(rec)
     if len([s for s in _supb if s.get("ok")]) >= 2:
-        # B1: the SUPB copies hash differently by design — each stores its own LCN (page header + self-descriptor)
-        # and its own self-checksum; the payload (GUID, checkpoint refs, generation) is identical.
-        print("      note: the SUPB copies hash differently by design (each carries its own LCN + self-checksum);")
-        print("            their payload is identical — redundancy, not divergence.")
+        # B1: the SUPB copies hash differently by design — each stores its own LCN (page header +
+        # self-descriptor) and its own self-checksum; the payload (GUID, checkpoint refs, generation) is
+        # identical. 4summary: re-wrapped so no line exceeds the report width; placed after the backups.
+        print()
+        print("note: the SUPB copies hash differently by design (each carries its own LCN +")
+        print("self-checksum); their payload is identical — redundancy, not divergence.")
     elif len(_supb) < 2:
+        print()
         print("  (warning: fewer than 2 SUPB copies located)")
-    for rec in bk.get("checkpoints", []):
-        _sha = summary.get("chkp_sha256") if rec.get("role") == "PRIMARY" else rec.get("sha256")
-        _cok = "checksum OK" if rec.get("cksum_ok") else ("signature OK" if rec.get("sig_ok") else "BAD")
-        _st = _cok + (f", vclock={rec['vc']}" if rec.get("vc") is not None else "") \
-              + ("" if rec.get("roots_ok") else " (roots unreadable)")
-        _bs(f"CHKP {rec.get('role','?').lower()}", f"LCN {rec['lcn']:#x} (offset {rec['lcn']*_cs:#x})", _st, _sha)
     if "image_sha256" in summary:
         _bs("Image", "(full disk)", "", summary["image_sha256"])
     print()
@@ -3912,7 +3928,8 @@ def _print_fastsummary(summary, plus_mode=False, is_summary=False):
             print(f"                        · {_line}")
     except (ValueError, TypeError):
         pass
-    print(f"  Containers mapped:  {summary['containers_mapped']}")
+    # 7summary: "Containers mapped" removed here — it duplicated the container count now shown once in
+    # Volume Detail (below).
     print()
     print("-" * w)
     print("Global Root Tables")
@@ -3942,14 +3959,27 @@ def _print_fastsummary(summary, plus_mode=False, is_summary=False):
         print(f"  Security descs:     {summary.get('security_descriptors', 0)}")
         print(f"  Reparse index:      {summary.get('reparse_index_entries', 0)} entries")
         print(f"  Trash table:        {summary.get('trash_table_entries', 0)} entries")
+        # 7summary: every 64 MB container is mapped by the Container Table; exactly one — the first
+        # (VLCN 0x8000) — has base PLCN 0, which is the boot region (physical cluster 0 = the VBR), not free
+        # space. So report the container count and name that one, instead of a misleading "used/%" (all
+        # containers are mapped). Disk-verified: cid 2 -> PLCN 0 -> ReFS VBR on every corpus image.
         if "containers_used" in summary:
-            print(f"  Containers used:    {summary['containers_used']} / {summary['containers_mapped']}"
-                  f" ({summary['utilization_pct']}%)")   # B6: dropped the "Free space (est)" line — it was
-            #   structurally always one container (the Container Allocator, PLCN 0), never real free space.
-        fm = summary.get("fs_metadata", {})               # B8: show the FS-Metadata directory's child count
-        _kids = fm.get("children", [])                    #   (0x520 = ReFS's $Extend analogue), not raw B+-tree rows
-        _kidstr = (" (" + ", ".join(_kids) + ")") if _kids else ""
-        print(f"  FS Metadata:        {len(_kids)} children{_kidstr}  [{fm.get('rows', 0)} rows]")
+            _bootnote = ("  (first maps to PLCN 0 = boot region)"
+                         if summary.get("containers_free") == 1 else "")
+            print(f"  Containers used:    {summary['containers_used']} / {summary['containers_mapped']}{_bootnote}")
+        # 8summary: FS Metadata = OID 0x520 (ReFS's $Extend analogue; holds the USN "Change Journal" when
+        # active). Show its named child entries, not the raw B+-tree row count — the lone row on an empty one
+        # is the directory's own record, which read as a confusing "[1 rows]".
+        fm = summary.get("fs_metadata", {})
+        _kids = fm.get("children", [])
+        if _kids:
+            _lbl = f"{len(_kids)} child{'ren' if len(_kids) != 1 else ''}"
+            _line = f"  FS Metadata:        {_lbl} ({', '.join(_kids)})"
+            if len(_line) > 78:          # names would overflow the report width — show the count only
+                _line = f"  FS Metadata:        {_lbl}"
+            print(_line)
+        else:
+            print(f"  FS Metadata:        no child entries")
         print(f"  USN Journal:        {'Active' if fm.get('usn_journal') else 'Inactive'}")
         if "usn_journal_id" in summary:
             print(f"  USN Journal ID:     0x{summary['usn_journal_id']:016x}")
@@ -3961,7 +3991,7 @@ def _print_fastsummary(summary, plus_mode=False, is_summary=False):
 def _print_summary(summary, fast_data, plus_mode=False):
     _print_fastsummary(fast_data, plus_mode=plus_mode, is_summary=True)
     w = 78
-    print()
+    # 4summary: _print_fastsummary already emits one trailing blank after Volume Detail — no second blank here.
     print("-" * w)
     print("File System Content (from directory walk)")
     print("-" * w)
@@ -3978,8 +4008,7 @@ def _print_summary(summary, fast_data, plus_mode=False):
         print(f"  Snapshot versions:  {summary.get('snapshots', 0)} (across {summary.get('snapshot_files', 0)} files)")
         print(f"  ADS host files:     {summary.get('ads_entries', 0)}")
     print()
-    if plus_mode:
-        print(f"Tip: `fastsummary` = quick volume metadata (no directory walk).")
+    # 1summary: the `fastsummary` tip is emitted at the TOP now (right after the "Walking directory tree" log).
 
 # ─── OID detail + search ─────────────────────────────────────────────
 _ATTR_NAMES = {
@@ -10631,7 +10660,7 @@ def main():
     if args.command in ("summary", "fastsummary"):
         is_fast = (args.command == "fastsummary")
         is_plus = True
-        log(f"[{PROG}] Running {'fast ' if is_fast else ''}summary++...")
+        log(f"[{PROG}] Running {'fast ' if is_fast else ''}summary...")
         fast_data = cmd_fastsummary(f, ps, cs, tr, roots, obj_map, vmaj, vmin, chkp_lcns,
                                      args.image, plus_mode=is_plus, hash_image=args.hash_image, log_fn=log)
         if is_fast:
@@ -10644,6 +10673,7 @@ def main():
 
         # Full summary: needs directory walk (enriched, so ADS/SecurityId/reparse counts are correct)
         log(f"[{PROG}] Walking directory tree for full summary...")
+        log("Tip: `fastsummary` = quick volume metadata (no directory walk).")   # 1summary: moved to the top
         counts, results = fs_content_summary(f, ps, cs, tr, obj_map, plus=is_plus, depth=args.depth)
         walk_summary = {
             "directories": counts["directories"], "files": counts["files"],
