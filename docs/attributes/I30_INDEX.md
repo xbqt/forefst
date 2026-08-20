@@ -55,7 +55,7 @@ The config region (`value[0x00:0x24]`) is identical everywhere; only the wrapper
 
 ## Cross-references
 
-- [Attributes — Forensic Reference](README.md) — the two-level attribute model
+- [Attributes — Forensic Reference](../attributes/README.md) — the two-level attribute model
 - [Directory Entries](../structures/directory_entries.md) — the directory B+-tree this template configures
 
 ## Evidence

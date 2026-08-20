@@ -2,7 +2,7 @@
 # ----------------------------------------------------------------------------
 ==============================================================================
 ReFS Volume Fast Extended Summary
-==============================================================================
+------------------------------------------------------------------------------
   Image:              win11refs2tsnapshots.raw
   Image size:         2.0 TB
   ReFS version:       3.14
@@ -19,20 +19,22 @@ Bootstrap structures
 ------------------------------------------------------------------------------
   VBR primary      LBA 0 (offset 0x0)  — checksum OK
       2291b5b0537de224b6276c04b16c71ab73ee93f093bdc9b4acc2f695e2e9403f
-  VBR backup       LBA 4294836223 (off 0x1fffbfffe00)  — = primary, checksum OK
-      2291b5b0537de224b6276c04b16c71ab73ee93f093bdc9b4acc2f695e2e9403f
   SUPB primary     LCN 0x1e (offset 0x1e000)  — checksum OK
       85cb53e7d4b181d5b5af37061bb9f8413167b968f11ef59287f075433f80ad20
+  CHKP primary     LCN 0x51eb04 (offset 0x51eb04000)  — checksum OK, vclock=265
+      2972908a619b3e5733b4d6385d5a94fa6722b04eccebcd31b56f9dc82e43f7f7
+------------------------------------------------------------------------------
+  VBR backup       LBA 4294836223 (off 0x1fffbfffe00)  — = primary, checksum OK
+      2291b5b0537de224b6276c04b16c71ab73ee93f093bdc9b4acc2f695e2e9403f
   SUPB backup      LCN 0x1fffbffd (offset 0x1fffbffd000)  — checksum OK
       779acce44b55cc4ea944de330a74296ba2984a1ffa1034451c8f1c8f8cf1cc75
   SUPB backup      LCN 0x1fffbffe (offset 0x1fffbffe000)  — checksum OK
       d976253829e7c5e681d3176e1565102325ea40527548fd45f7d3b957ff358df2
-      note: the SUPB copies hash differently by design (each carries its own LCN + self-checksum);
-            their payload is identical — redundancy, not divergence.
-  CHKP primary     LCN 0x51eb04 (offset 0x51eb04000)  — checksum OK, vclock=265
-      2972908a619b3e5733b4d6385d5a94fa6722b04eccebcd31b56f9dc82e43f7f7
   CHKP secondary   LCN 0x3d702ac (offset 0x3d702ac000)  — checksum OK, vclock=264
       c9d410b58d365ea8e28793895936e41417961d045d4da1ca704fd65a4c61aa08
+
+note: the SUPB copies hash differently by design (each carries its own LCN +
+self-checksum); their payload is identical — redundancy, not divergence.
 
 ------------------------------------------------------------------------------
 Checkpoint
@@ -43,7 +45,6 @@ Checkpoint
                         · 0x080 = native-Win11-format (v3.10+)
                         · 0x200 = indirect-root-list
                         · 0x400 = metadata-checksum (CRC64/SHA-256)
-  Containers mapped:  32767
 
 ------------------------------------------------------------------------------
 Global Root Tables
@@ -73,10 +74,9 @@ Volume Detail
   Security descs:     7
   Reparse index:      3 entries
   Trash table:        0 entries
-  Containers used:    32766 / 32767 (100.0%)
-  FS Metadata:        0 children  [1 rows]
+  Containers used:    32766 / 32767  (first maps to PLCN 0 = boot region)
+  FS Metadata:        no child entries
   USN Journal:        Inactive
-
 
 ------------------------------------------------------------------------------
 File System Content (from directory walk)
@@ -93,4 +93,3 @@ File System Content (from directory walk)
   Snapshot versions:  10 (across 5 files)
   ADS host files:     3
 
-Tip: `fastsummary` = quick volume metadata (no directory walk).

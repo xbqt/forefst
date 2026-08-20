@@ -119,7 +119,7 @@ treats either of {7,8} as a valid Container-Table root.
 Roots **7, 8, and 12** are the bootstrap exception: they store **real, physical LCNs** that are read
 directly, with no translation. Every other root stores a virtual LCN and is unreadable until the
 Container Table from roots 7/8 is loaded. (Whether the 13 references are stored inline at CHKP+0x94 or
-behind a pointer to a separate root-list page depends on a CHKP flag — the indirect mode appears from
+at an in-page offset to a root-list region within the same checkpoint page depends on a CHKP flag — the indirect mode appears from
 v3.14.)
 
 ## Step 5 — Container Table: the VLCN→PLCN map

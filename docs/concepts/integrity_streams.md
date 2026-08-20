@@ -136,7 +136,7 @@ and reflects it to `$SI+0x20`, and `RefsComputeStandardInformationInternalFromFc
 `CmsIntegrityState` class backs the Integrity State Table: `Initialize` reads root #11 at mount,
 `SetClearIntegrityState` sets/clears a stream's state, and `GetIntegrityStateTable` / `GetRangeBitmap` read
 the per-range checksum bitmap. On the raw-disk corpus (RD), the 0x8000 attribute bit was set on every
-integrity file across the two v3.14 integrity images (the only integrity images in the corpus), while the
+integrity file across the corpus's v3.14 integrity images, while the
 `$SI+0x24` bit 0 was set on none of them, and
 the Integrity State Table's single whole-volume row was invariant across checksum configurations.
 

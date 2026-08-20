@@ -39,7 +39,7 @@ python3 refsanalysis.py <image> boot -vv   # field-by-field VBR decode + checksu
 
 ### Step 2 — Classify version + native/upgraded state
 
-The version is a **parsing precondition, not a label** — the [`$SI`](../structures/object_table.md)
+The version is a **parsing precondition, not a label** — the [`$SI`](../attributes/STANDARD_INFORMATION.md)
 layout, the [page-reference](../structures/page_references.md) size, and the
 [Container Table](../structures/container_table.md) row size all change with it, so getting this wrong
 silently corrupts every later step. Read four fields:

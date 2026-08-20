@@ -25,7 +25,7 @@ metadata). The field breakdown below is the decoded form of that value.
 
 ## Observed values
 
-On baseline/quiescent images each volume holds a single row spanning the whole volume LCN range; a small minority (large Win10, 2 of 89 corpus images) instead show 3 rows, one of which covers a container with a modified integrity state. The block
+On baseline/quiescent images each volume holds a single row spanning the whole volume LCN range; a small minority — two large Win10 images — instead show 3 rows, one of which covers a container with a modified integrity state. The block
 count tracks the volume size (container count × clusters-per-container). The `State` and `Config`
 values are stable on quiescent single-row images (one large-Win10 image shows a container with a modified `State` 0x00013f6c and `Config` 0x00000118), including:
 
@@ -67,7 +67,7 @@ The class contracts modestly across versions rather than growing.
 
 Identity (root #11 / table ID 0x0F / schema 0xe080), the key/value row format, and the default
 `State` 0x0002ffff / `Config` 0x00000100 values (one large-Win10 image carries a container with modified `State` 0x00013f6c / `Config` 0x00000118) are raw-disk decoded (RD) across the corpus and
-corroborated in the driver (E2) via the `CmsIntegrityState` class. The single-row-per-volume result (87/89 images)
+corroborated in the driver (E2) via the `CmsIntegrityState` class. The single-row-per-volume result (one whole-volume row on every scanned image but those two)
 and the cross-configuration invariance on quiescent images (integrity on/off, SHA-256, CRC64) were re-confirmed by reading
 CHKP root #11 directly on v3.4 and v3.14 images. See [how this was verified](../methodology.md) to
 trace these to the exact images and measurements in `analysis/`.

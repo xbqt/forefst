@@ -51,6 +51,10 @@ as non-resident type-0x40 entries**:
 | ihdr+0x14 | extent count (u32) | number of 24-byte entries |
 | ihdr+0x28 | extent table | array of 24-byte extents |
 
+> One record, two views: this `$DATA` sub-record carries descriptor `0x000E0080` in its **key** (tabulated on
+> [Directory Entries](../structures/directory_entries.md)) and `0x00010028` at **value+0x04** — not two
+> different sub-records.
+
 Each 24-byte extent: `0x00` VLCN (needs Container-Table translation), `0x08` flags (0x180040 = standard
 data-run; 0x1c00d0 = integrity checksum-page entry, run_length 1; other variants),
 `0x0C` file_vcn, `0x14` run_length.
@@ -59,7 +63,7 @@ data-run; 0x1c00d0 = integrity checksum-page entry, run_length 1; other variants
 `file_vcn`** → **translate each VLCN → PLCN via the Container Table** → read `run_length` clusters per
 extent → concatenate → **trim to the stream size**. Tools: `forefst.py <image> snapshots --show`
 (preview) or `--extract DIR` (write files). See
-[Copy-on-Write](../concepts/copy_on_write.md#stream-snapshot-content-recovery) for the forensic framing.
+[Copy-on-Write](../concepts/copy_on_write.md#stream-snapshots-explicit-refcount-protected-history) for the forensic framing.
 
 ## ADS vs snapshot, and the attribute-flag bits
 
