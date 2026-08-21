@@ -28,9 +28,15 @@ versions, so a fact can be checked for where it appeared and how it changed:
 | `refs.sys` Win11 26100.8521 (24H2 servicing) | Win11 | v3.14 | 5,807 |
 | `refs.sys` Insider 29574 | Insider | v3.14+ | 6,430 |
 
-`refsutil.exe` (the Microsoft utility) was decompiled alongside as a cross-check on structure semantics.
-Static findings are graded **E1** (a string literal in the binary), **E2** (decompiled code or a PDB
-symbol), or **E3** (a structural inference the code supports but does not state outright).
+`refsutil.exe` (the Microsoft utility, Windows 10 17134 + Windows 11 26100) was decompiled alongside as a
+cross-check on structure semantics. Static findings are graded **E1** (a string literal in the binary),
+**E2** (decompiled code or a PDB symbol), or **E3** (a structural inference the code supports but does not
+state outright).
+
+Note the version coverage: Microsoft ships `refs.sys` in only **two on-disk eras — 3.4 and 3.14** — so those
+are the builds read statically. The intermediate on-disk versions (**3.7, 3.9, 3.10**) have no separate
+driver of their own; Windows produces them only by upgrading a volume, so they are validated **on disk
+only** (§3), not by static analysis.
 
 ## 3. Raw-disk analysis — the corpus
 
@@ -61,7 +67,7 @@ Load-bearing claims prefer **E2 + RD** — confirmed in both the code and the by
 
 ## 5. The claim register — `reference_table.csv`
 
-Every claim is one row in **`analysis/reference_table.csv`** (438 rows), keyed by a stable **finding ID**
+Every claim is one row in **`analysis/reference_table.csv`** (439 rows), keyed by a stable **finding ID**
 of the form `<CATEGORY>_<STRUCTURE>[_RA|_SA]_<NNN>` (e.g. `FS_CHKP_RA_001`, `MD_SI_RA_015`,
 `GN_ALLC_SA_001`). The categories map to Carrier's five data categories (`FS` file system, `CT` content,
 `MD` metadata, `FN` file name, `AP` application), plus `GN` for general/cross-cutting findings; `RA` marks a raw-disk-anchored finding,
@@ -117,7 +123,7 @@ chain — all of it ships in `analysis/`:
    commands used). The byte-level layout itself is the corresponding **`structures/`** page.
 
 The audited core (409 findings) carries the full chain through step 4; a smaller set of post-thesis
-findings (rows 410–438) is recorded in the register (step 1) with its measurement in the dated reports
+findings (rows 410–439) is recorded in the register (step 1) with its measurement in the dated reports
 (step 5). Either way, every finding ID resolves to a claim, its evidence grade, and the measurement behind
 it — without that detail cluttering the description page.
 

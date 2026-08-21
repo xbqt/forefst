@@ -19,11 +19,16 @@ Requiring both, across many images and several Windows builds, is what makes a c
 
 ## Where the facts come from
 
-- **The driver.** `refs.sys` decompiled across several Windows builds spanning ReFS 3.4 → 3.14 (plus an
-  Insider preview), with Microsoft's `refsutil` utility as a cross-check.
-- **A lab image corpus.** Over a hundred controlled ReFS volumes generated across versions, both cluster
-  sizes, and all three metadata-checksum modes — so any on-disk feature could be produced on demand and
-  then re-measured at scale.
+- **The driver — statically analysed.** `refs.sys` decompiled with its public PDB symbols on **four builds**:
+  Windows 10 1803 (ReFS **3.4**), Windows 11 24H2 26100 (ReFS **3.14**) and its 26100.8521 servicing update,
+  and an Insider build 29574 (**3.14+**) — plus Microsoft's `refsutil` (Windows 10 and Windows 11) as a
+  cross-check. Microsoft ships the driver in only these two on-disk eras (3.4 and 3.14); the intermediate
+  versions have no separate driver to read.
+- **A lab image corpus — disk-tested.** Over a hundred controlled ReFS volumes covering **every** on-disk
+  version — 3.4, 3.7, 3.9, 3.10 and 3.14, plus an Insider build — in both cluster sizes (4 KiB and 64 KiB) and
+  all three metadata-checksum modes (CRC32-C, CRC64, SHA-256), so any on-disk feature could be produced on
+  demand and re-measured at scale. The intermediate versions (3.7, 3.9, 3.10) are reached only by upgrading a
+  volume and are validated here **on disk** rather than by a separate driver.
 - **A central claim register.** Every fact is one row, carrying its finding ID, both checks, and an
   evidence grade.
 

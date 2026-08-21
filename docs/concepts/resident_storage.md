@@ -123,6 +123,21 @@ whose `$DATA` is extent-backed therefore reads non-resident. The long value stil
 [security ID](../structures/security_descriptors.md), size — read inline; only the residency verdict comes
 from the allocation.
 
+On **v3.4–v3.10 and upgraded** volumes this long-value-but-non-resident form is common, and the extent map is
+frequently held **inline inside the long value itself** rather than in a separate extent row: the file keeps a
+full resident-style metadata header while its bytes live in on-disk clusters listed within the same value. Two
+fixed fields carry the truth even when the inline metadata tree is too deep to walk directly — the true content
+size at **value+0x58** and the cluster-aligned on-disk allocation at **value+0x60** — and `forefst` uses them to
+report the file as non-resident and to decode the inline extent list. That list is a small B+-tree node, so even a
+**fragmented** file (many separate runs) decodes: `forefst` reads the node's row directory to enumerate the true
+data extents, skipping the coarse summary rows that a naive scan would double-count. `dataruns` and `extract`
+reassemble these files **byte-exact**. Every recovery is gated by a self-check — the extents must tile the file's
+clusters exactly once, with no gap or overlap — so a misread can never be written out as file content: if the check
+fails (for instance a file whose extent tree is large enough to spill onto separate metadata pages), `extract`
+stops with a clear message and recovers **no** bytes rather than partial or wrong ones. The same decoder and
+self-check apply to non-resident files that use a separate backing record instead of an inline one, so recovery is
+uniform across storage layouts.
+
 ## Raw example
 
 `forattributes/bla.txt` on a v3.14 4 KiB-cluster image holds the 7 bytes `hello\r\n`, stored **inline** in the directory record — it has no data clusters at all. The embedded `$DATA` sub-record, at offsets relative to the file record's value-data (`vd`):
