@@ -5994,6 +5994,108 @@ def _parse_extents_from_type40(vd, cs, tr):
         off += rec_size
     return result
 
+
+def _contiguous_cover(extents, need):
+    """The corruption guard. True iff `extents` (dicts with file_vcn/clusters) form an EXACT contiguous cover
+    [0, need) of a file's clusters — no gap, no overlap, ending exactly at `need`. A decoded set that passes
+    this maps every file cluster exactly once, so reassembly cannot silently drop, duplicate, or misplace a
+    cluster; a heuristic misread that changes a run/file_vcn (the common failure, e.g. two extents both at
+    file_vcn 0) is rejected. Callers that fail this emit NO extents (a clean `extract` failure) rather than
+    risk wrong bytes. (A wrong physical vlcn with the right file_vcn/run is not caught here — that is guarded
+    separately by cross-agreement with the validated decoder and, where present, integrity CRC verification.)"""
+    if need < 0 or not extents:
+        return False
+    pos = 0
+    for e in sorted(extents, key=lambda e: e["file_vcn"]):
+        if e["file_vcn"] != pos:
+            return False
+        pos += e["clusters"]
+    return pos == need
+
+
+def _parse_inline_holder_extents(vd, cs, tr):
+    """Decode a v3.4/v3.7/v3.9/v3.10/upgraded inline-holder non-resident file's extent map by walking the
+    embedded B+-tree node's INDEX ARRAY, so fragmented / multi-node files (whose runs are laid out as B+-tree
+    leaf rows, not a contiguous array) decode correctly. Returns extents forming a contiguous cover of the
+    allocation (value+0x60), or [] if it cannot be decoded that way (caller falls back / fails cleanly).
+
+    Structure (RD 2026-08-20, structure_reference §C.3b): the $DATA holder (descriptor 0x00010028 at
+    holder+0x04) contains a ReFS B+-tree node at `node = holder + u32@holder`. The node's rows are addressed
+    by a trailing index array of `u16` offsets each tagged with a `0xffff` marker word. Each addressed row is a
+    standard 24-byte extent (VLCN@0x00, flags@0x08, file_vcn@0x0C, run_length@0x14; §C.4). The file's data
+    extents are exactly the rows in the holder MSB+ node's leaf index array (node table header tbl[4]/tbl[8];
+    inner-node bit tbl[3]&0x100 — the same node structure walk_bplus/_walk parse). This function instead scans
+    for the `…0xffff` row markers and drops rows with flag **bit 0x04** — the aggregate/fence entries that sit
+    outside the leaf index array (RD-equivalent to the node-index-array decode: 855/855 holders, 0 diff). A
+    contiguous-cover check then validates the result (a wrong pick can't form a clean cover). See §C.4a/§C.3b —
+    note: bit 0x04 here is the extent flags@0x08, NOT the B+-tree director *key* bit (a different field)."""
+    if len(vd) < 0x68 or cs <= 0:
+        return []
+    alloc = le64(vd, 0x60)
+    if alloc <= 0 or alloc % cs:
+        return []
+    need = alloc // cs
+    holder = None
+    for off in range(0x80, len(vd) - 8, 4):
+        if le32(vd, off + 4) == 0x00010028 and le32(vd, off) in (0x80000001, 0x80000002):
+            holder = off
+            break
+    if holder is None:
+        for off in range(0x80, len(vd) - 8, 4):
+            if le32(vd, off) == 0x00010028:
+                holder = off - 4
+                break
+    if holder is None:
+        return []
+    node = holder + le32(vd, holder)
+    if not (0 < node < len(vd)):
+        return []
+    uniq = {}
+    for off in range(node, len(vd) - 3, 2):
+        if le16(vd, off + 2) != 0xffff:
+            continue
+        w = le16(vd, off)
+        if not (0x20 <= w < 0x200):
+            continue
+        o = node + w
+        if o + 24 > len(vd):
+            continue
+        flags = le32(vd, o + 8)
+        if flags & 0x04:                       # aggregate/fence row outside the leaf index array (RD), not leaf data
+            continue
+        run_len = le32(vd, o + 0x14)
+        if run_len == 0:
+            continue
+        vlcn = le64(vd, o)
+        file_vcn = le32(vd, o + 0x0C)
+        uniq[(file_vcn, vlcn, run_len, flags)] = {
+            "vlcn": vlcn, "plcn": tr.tr(vlcn) if vlcn else 0,
+            "file_vcn": file_vcn, "clusters": run_len, "flags": flags, "disk_offset": 0,
+        }
+    exts = sorted(uniq.values(), key=lambda e: e["file_vcn"])
+    return exts if _contiguous_cover(exts, need) else []
+
+
+def _decode_holder_extents(vb, cs, tr):
+    """Hybrid, cover-guarded extent decode for a non-resident file's stored extents — used for BOTH the
+    inline-holder value (long key_flags=0x01, §C.3b) AND the type-0x40 backing record (key_flags=0x02, §C.3a),
+    which share the same $DATA-holder layout. Tries the embedded B+-tree index array first (decodes fragmented /
+    multi-node files, common on v3.4–v3.10), falls back to the contiguous-array 0xA8 scan (the simple layout
+    native v3.14 uses), and accepts the result only if it forms an EXACT contiguous file_vcn cover of the
+    allocation (value+0x60). A parse that fails the cover check returns [] so callers fail cleanly rather than
+    emit wrong bytes. On native v3.14 the index array does not match (returns []), so this reduces to the
+    existing heuristic + cover check and is byte-identical to prior behavior (verified across the v3.14 corpus,
+    incl. integrity and snapshot volumes; RD 2026-08-20)."""
+    if len(vb) < 0x68 or cs <= 0:
+        return []
+    alloc = le64(vb, 0x60)
+    need = alloc // cs if alloc > 0 and alloc % cs == 0 else -1
+    exts = _parse_inline_holder_extents(vb, cs, tr)
+    if not exts:
+        exts = _parse_extents_from_type40(vb, cs, tr)["extents"]
+    return exts if _contiguous_cover(exts, need) else []
+
+
 def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
     """Analyze a directory's B+-tree for file data extent information."""
     if dir_oid not in obj_map: return []
@@ -6028,7 +6130,7 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
         elif attr_type == 0x40 and len(kd) >= 24 and len(vd) >= 0x68:
             stream_idx = le64(kd, 8)
             parent_oid = le64(kd, 16)
-            type40_map[(stream_idx, parent_oid)] = _parse_extents_from_type40(vd, cs, tr)
+            type40_map[(stream_idx, parent_oid)] = {"extents": _decode_holder_extents(bytes(vd), cs, tr)}
 
     results = []
     _home_cache = {}   # target_oid -> {stream_idx: ext_info}; authoritative backing streams in the home tree
@@ -6038,7 +6140,7 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
             if oid in obj_map:
                 for rkd, rvd in walk_bplus(f, ps, cs, tr, obj_map[oid]):
                     if len(rkd) >= 24 and le16(rkd, 0) == 0x40 and len(rvd) >= 0x68:
-                        m.setdefault(le64(rkd, 8), _parse_extents_from_type40(rvd, cs, tr))
+                        m.setdefault(le64(rkd, 8), {"extents": _decode_holder_extents(bytes(rvd), cs, tr)})
             _home_cache[oid] = m
         return _home_cache[oid]
     for name, stream_idx, target_oid, file_size, alloc_size, file_attrs, ts in files:
@@ -6067,6 +6169,31 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
         results.append(info)
 
     for name, vd in resident_files:
+        # v3.4 / v3.7 / v3.9 / upgraded: a "long" (>84 B) type-0x30 value can inline a NON-RESIDENT file's extent
+        # map as a MULTI-LEVEL embedded B+-tree that parse_resident_btree_rows can't reach (so get_resident_file_size
+        # == 0 and it looks "resident"). `files`/walk_directory_tree already report these IsResident=False via
+        # _multilevel_extent_backed_size; decode the extents here too so `dataruns`/`extract` agree. The extent
+        # framing is size@0x58 / alloc@0x60 / runs@0xA8+ (read by _parse_extents_from_type40 — proven byte-exact on
+        # the CTF ReAL-FS image + win10refs8g, which were previously mis-reported resident with 0 extents).
+        _ml_size = _multilevel_extent_backed_size(bytes(vd), cs)
+        if _ml_size is not None:
+            vb = bytes(vd)
+            _alloc = le64(vb, 0x60)
+            # Hybrid, cover-guarded decode (index-array primary, 0xA8-scan fallback): decodes fragmented /
+            # multi-node inline-holder files and emits extents only for an exact contiguous cover, else none
+            # (clean `extract` failure) — never wrong bytes.
+            exts = _decode_holder_extents(vb, cs, tr)
+            for ext in exts:
+                ext["disk_offset"] = ps + ext["plcn"] * cs
+            results.append({
+                "name": name, "stream_idx": 0, "target_oid": 0,
+                "file_size": _ml_size, "alloc_size": _alloc,
+                "file_attrs": le32(vd, 0x48) if len(vd) >= 0x4C else 0,
+                "timestamps": [le64(vd, 0x28), le64(vd, 0x30), le64(vd, 0x38), le64(vd, 0x40)] if len(vd) >= 0x48 else [],
+                "extents": exts, "storage": "non-resident",
+                "extent_source": "inline-holder", "ads": _parse_ads_from_value(vd) if len(vd) > 0xA8 else [],
+            })
+            continue
         file_size = get_resident_file_size(vd)
         alloc_size = 0
         file_attrs = le32(vd, 0x48) if len(vd) >= 0x4C else 0

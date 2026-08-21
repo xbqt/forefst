@@ -63,9 +63,10 @@ CONCEPT_GROUPS = [
     ]),
     ("General", [
         "ntfs_comparison.md", "version_detection.md", "version_evolution.md", "architecture.md",
+        "driver_architecture.md",
     ]),
     ("On-disk mechanics", [
-        "bootstrap_chain.md", "driver_architecture.md", "virtual_addressing.md", "cluster_page_size.md",
+        "bootstrap_chain.md", "virtual_addressing.md", "cluster_page_size.md",
         "resident_storage.md", "copy_on_write.md", "allocation_space_mgmt.md",
         "transactions_crash_consistency.md",
     ]),

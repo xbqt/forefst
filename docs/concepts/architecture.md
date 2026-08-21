@@ -1,4 +1,4 @@
-# ReFS Driver Architecture
+# Driver Architecture
 
 The single most useful fact for anyone parsing ReFS is that the driver is built in two layers, and only
 the lower one ever touches the disk. The upper layer speaks Windows filesystem semantics — files, names,
