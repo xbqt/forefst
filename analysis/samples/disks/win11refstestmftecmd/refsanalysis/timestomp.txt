@@ -6,7 +6,7 @@ ReFS Timestamp-Anomaly (Timestomp) Detection
   Volume modified: 2026-05-23 11:15:52
   USN journal:     present (authoritative cross-check ON)
   Files examined:  1507
-  Flagged:         184  (HIGH 114 / MEDIUM 62 / LOW 8)
+  Flagged:         184  (HIGH 116 / MEDIUM 60 / LOW 8)
 
   This flags timestamps that LOOK anomalous — it is investigative INFORMATION, not proof of
   tampering. Weigh the BASIS of each row: a journal/hardlink signal is authoritative; an
@@ -163,21 +163,25 @@ ReFS Timestamp-Anomaly (Timestomp) Detection
   HIGH   intrinsic     2026-04-18 07:48:17   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/dir_zulu_312953/xbpt_hardlink_tango_212500.json
          signals: CHANGE_LATE, PRE_FORMAT
   HIGH   journal/link  2024-05-21 07:48:14   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/xbpt_record_cache_677917.dat
-         signals: PRE_FORMAT, USN_CREATE_MISMATCH
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
   HIGH   journal/link  2022-04-18 07:50:12   2026-05-23 07:53:54   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_oscar_342854/dir_archive_860003/xbpt_hardlink_backup_502262.bin
          signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH
-  HIGH   intrinsic     2025-05-13 07:49:57   2026-05-23 07:53:53   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_report_930793/xbpt_output_temp_615727.cfg
-         signals: CHANGE_LATE, PRE_FORMAT
+  HIGH   journal/link  2025-05-13 07:49:57   2026-05-23 07:53:53   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_report_930793/xbpt_output_temp_615727.cfg
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
   HIGH   journal/link  2023-02-21 07:48:51   2026-05-23 07:53:51   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_backup_240201/dir_draft_203180/dir_zulu_409792/xbpt_data_romeo_992013.json
-         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH
-  HIGH   intrinsic     2023-01-31 07:49:20   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/xbpt_config_cache_208102.md
-         signals: CHANGE_LATE, PRE_FORMAT
+         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_CREATE_MISMATCH
+  HIGH   journal/link  2023-01-31 07:49:20   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/xbpt_config_cache_208102.md
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
   HIGH   journal/link  2022-01-16 07:49:30   2026-05-23 07:53:53   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_papa_189433/xbpt_hardlink_beta_609618.bak
          signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH
-  HIGH   intrinsic     2023-05-02 07:49:07   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/xbpt_zulu_index_584442.dat
-         signals: CHANGE_LATE, PRE_FORMAT
+  HIGH   journal/link  2023-05-02 07:49:07   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/xbpt_zulu_index_584442.dat
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
   HIGH   journal/link  2022-01-16 07:49:30   2026-05-23 07:53:53   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_hardlink_mike_495558.bak
          signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH
+  HIGH   journal/link  2024-07-02 07:49:01   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_trace_cache_917768.txt
+         signals: PRE_FORMAT, USN_CREATE_MISMATCH
+  HIGH   journal/link  2021-07-21 07:48:20   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_cache_foxtrot_199130.bin
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE
   HIGH   journal/link  2024-05-22 07:50:02   2026-05-23 07:53:53   testintegrity/dir_romeo_348517/dir_alpha_208192/dir_november_114124/xbpt_hardlink_victor_401815.log
          signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH
   HIGH   journal/link  2023-02-26 07:47:56   2026-05-23 07:53:49   testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_record_index_333773.cfg
@@ -186,18 +190,18 @@ ReFS Timestamp-Anomaly (Timestomp) Detection
          signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_CREATE_MISMATCH
   HIGH   journal/link  2023-08-09 07:47:55   2026-05-23 07:53:52   testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_log_alpha_992477.dat
          signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   intrinsic     2024-11-17 07:48:36   2026-05-23 07:53:50   testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_oscar_audit_617257.json
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2024-07-02 07:49:01   2026-05-23 07:53:51   testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_hardlink_beta_222943.txt
-         signals: CHANGE_LATE, PRE_FORMAT
+  HIGH   journal/link  2024-11-17 07:48:36   2026-05-23 07:53:50   testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_oscar_audit_617257.json
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
+  HIGH   journal/link  2024-07-02 07:49:01   2026-05-23 07:53:51   testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_hardlink_beta_222943.txt
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE
   HIGH   intrinsic     2026-04-18 07:48:17   2026-05-23 07:53:49   testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_hardlink_index_906427.json
          signals: CHANGE_LATE, PRE_FORMAT
   HIGH   journal/link  2025-05-28 07:50:04   2026-05-23 07:53:53   testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_hardlink_quebec_103258.csv
          signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH
   HIGH   journal/link  2022-01-16 07:49:30   2026-05-23 07:53:53   testintegrity/dir_romeo_348517/xbpt_hardlink_india_193722.bak
          signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH
-  HIGH   intrinsic     2022-05-22 07:48:52   2026-05-23 07:53:51   testintegrity/dir_romeo_348517/xbpt_tango_record_968896.md
-         signals: CHANGE_LATE, PRE_FORMAT
+  HIGH   journal/link  2022-05-22 07:48:52   2026-05-23 07:53:51   testintegrity/dir_romeo_348517/xbpt_tango_record_968896.md
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
   HIGH   journal/link  2021-07-21 07:48:20   2026-05-23 07:53:53   testintegrity/xbpt_foxtrot_kilo_188200.bin
          signals: PRE_FORMAT, USN_CREATE_MISMATCH
   HIGH   journal/link  2026-04-18 07:48:17   2026-05-23 07:53:53   testintegrity/xbpt_gamma_data_633866.json
@@ -205,13 +209,13 @@ ReFS Timestamp-Anomaly (Timestomp) Detection
   HIGH   intrinsic     2021-12-28 07:49:15   2026-05-23 07:53:53   testintegrity/xbpt_hardlink_backup_104228.log
          signals: CHANGE_LATE, PRE_FORMAT
   HIGH   journal/link  2025-03-09 07:48:01   2026-05-23 07:53:50   testintegrity/xbpt_index_victor_598659.bak
-         signals: PRE_FORMAT, USN_CREATE_MISMATCH
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
   HIGH   journal/link  2024-02-04 07:47:54   2026-05-23 07:53:49   testintegrity/xbpt_india_lima_261899.json
          signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH
   HIGH   journal/link  2023-01-05 07:48:06   2026-05-23 07:53:49   testintegrity/xbpt_india_yankee_623909.dat
-         signals: CHANGE_LATE, PRE_FORMAT, USN_CREATE_MISMATCH
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
   HIGH   journal/link  2021-12-28 07:49:15   2026-05-23 07:53:53   testintegrity/xbpt_uniform_kilo_835445.log
-         signals: PRE_FORMAT, USN_CREATE_MISMATCH
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
   HIGH   journal/link  2022-11-01 07:39:55   2026-05-23 07:44:19   testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/xbpt_archive_draft_753371.cfg
          signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
   HIGH   journal/link  2021-08-06 07:40:34   2026-05-23 07:44:20   testspecials/dir_echo_260113/xbpt_lima_audit_873256.log
@@ -245,7 +249,7 @@ ReFS Timestamp-Anomaly (Timestomp) Detection
   HIGH   journal/link  2021-11-15 07:39:56   2026-05-23 07:44:18   testspecials/xbpt_uniform_beta_276130.dat
          signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
 
-  (62 MEDIUM + 8 LOW row(s) hidden — `--min MEDIUM` / `--min LOW` to show; CSV/JSON already include every tier.)
+  (60 MEDIUM + 8 LOW row(s) hidden — `--min MEDIUM` / `--min LOW` to show; CSV/JSON already include every tier.)
 
   Signal legend  (AUTHORITATIVE = independent evidence · HEURISTIC = suggestive $SI-only):
     [AUTHORITATIVE]

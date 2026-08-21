@@ -19,18 +19,44 @@ Requiring both, across many images and several Windows builds, is what makes a c
 
 ## Where the facts come from
 
-- **The driver — statically analysed.** `refs.sys` decompiled with its public PDB symbols on **four builds**:
-  Windows 10 1803 (ReFS **3.4**), Windows 11 24H2 26100 (ReFS **3.14**) and its 26100.8521 servicing update,
-  and an Insider build 29574 (**3.14+**) — plus Microsoft's `refsutil` (Windows 10 and Windows 11) as a
-  cross-check. Microsoft ships the driver in only these two on-disk eras (3.4 and 3.14); the intermediate
-  versions have no separate driver to read.
-- **A lab image corpus — disk-tested.** Over a hundred controlled ReFS volumes covering **every** on-disk
-  version — 3.4, 3.7, 3.9, 3.10 and 3.14, plus an Insider build — in both cluster sizes (4 KiB and 64 KiB) and
-  all three metadata-checksum modes (CRC32-C, CRC64, SHA-256), so any on-disk feature could be produced on
-  demand and re-measured at scale. The intermediate versions (3.7, 3.9, 3.10) are reached only by upgrading a
-  volume and are validated here **on disk** rather than by a separate driver.
-- **A central claim register.** Every fact is one row, carrying its finding ID, both checks, and an
-  evidence grade.
+The facts rest on two bodies of evidence — the **driver**, read statically, and a **lab corpus of real
+volumes**, read byte by byte — plus a central register that records both checks for every claim.
+
+### Versions tested
+
+**Driver builds — read statically.** `refs.sys` decompiled with its public PDB symbols; Microsoft's `refsutil`
+(Windows 10 and Windows 11) was decompiled alongside as a cross-check.
+
+| `refs.sys` build | Windows | ReFS version |
+|------------------|---------|--------------|
+| 17134 | Windows 10 1803 | 3.4 |
+| 26100 | Windows 11 24H2 | 3.14 |
+| 26100.8521 (KB5089573) | Windows 11 24H2, servicing update | 3.14 |
+| 29574 | Windows Insider | 3.14+ |
+
+Microsoft ships the driver in only two on-disk eras — **3.4 and 3.14** — so those are the builds there are to
+read; the intermediate versions have no separate driver of their own.
+
+**On-disk versions — tested on real volumes.** A controlled corpus of 110+ parseable ReFS images.
+
+| ReFS version | First shipped in | In the corpus | Matching driver |
+|--------------|------------------|---------------|-----------------|
+| 3.4  | Windows 10 1803 (17134) | native format  | yes — 17134 |
+| 3.7  | Windows 11 21H2 (22000) | upgraded volume | disk only |
+| 3.9  | Windows 11 22H2 (22621) | upgraded volume | disk only |
+| 3.10 | Windows 11 23H2 (22631) | upgraded volume | disk only |
+| 3.14 | Windows 11 24H2 (26100) | native format  | yes — 26100 / 26100.8521 |
+| 3.14+ | Windows Insider (29574) | native format  | yes — 29574 |
+
+The intermediate versions (3.7, 3.9, 3.10) are reached only by **upgrading** a volume — Windows never writes
+them fresh — so they are validated on disk rather than by a separate driver. Across the corpus every version is
+exercised in **both cluster sizes** (4 KiB and 64 KiB) and **all three metadata-checksum modes** (CRC32-C,
+CRC64, SHA-256), with non-ReFS negative controls (NTFS / BitLocker / blank) to catch false positives.
+
+### The register
+
+Beyond those two bodies of evidence, a **central claim register** records every fact as one row — its finding
+ID, both checks, and an evidence grade — so any claim resolves to the code and the disk behind it.
 
 ## Confidence grades
 

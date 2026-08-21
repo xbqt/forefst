@@ -32,7 +32,7 @@ ReFS Deleted File Finder
       Also deleted from 1 other directory (see recovery log)
       Created:  2026-05-16 16:50:46 UTC
       Modified: 2026-05-16 16:50:46 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     FILE FVE2.{09cf57b8-9e6c-43d4-ae1f-0408882a397d}.10  (non-resident, live-slack @ cluster 528 off 0x38a0)
       Deleted from: /test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165  (table 0x731)
       Created:  2026-05-16 16:50:46 UTC
@@ -42,57 +42,57 @@ ReFS Deleted File Finder
       Deleted from: /System Volume Information  (table 0x701)
       Created:  2026-05-16 16:50:46 UTC
       Modified: 2026-05-16 16:50:46 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     FILE FVE2.{09cf57b8-9e6c-43d4-ae1f-0408882a397d}.3  (non-resident, live-slack @ cluster 15872 off 0x3918)
       Deleted from: /System Volume Information  (table 0x701)
       Created:  2026-05-16 16:50:46 UTC
       Modified: 2026-05-16 16:50:46 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     FILE FVE2.{24e6f0ae-6a00-4f73-984b-75ce9942852d}  (non-resident, live-slack @ cluster 15872 off 0x1818)
       Deleted from: /System Volume Information  (table 0x701)
       Created:  2026-05-16 16:50:46 UTC
       Modified: 2026-05-16 16:50:46 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     FILE FVE2.{93de4bce-e958-48b6-9fac-602d0294e5ef}.1  (non-resident, live-slack @ cluster 15872 off 0x2058)
       Deleted from: /System Volume Information  (table 0x701)
       Created:  2026-05-16 16:50:46 UTC
       Modified: 2026-05-16 16:50:46 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     FILE FVE2.{93de4bce-e958-48b6-9fac-602d0294e5ef}.2  (non-resident, live-slack @ cluster 15872 off 0x2478)
       Deleted from: /System Volume Information  (table 0x701)
       Created:  2026-05-16 16:50:46 UTC
       Modified: 2026-05-16 16:50:46 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     FILE FVE2.{aff97bac-a69b-45da-aba1-2cfbce434750}.2  (non-resident, live-slack @ cluster 15872 off 0x13f8)
       Deleted from: /System Volume Information  (table 0x701)
       Created:  2026-05-16 16:50:46 UTC
       Modified: 2026-05-16 16:50:46 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     FILE FVE2.{c9ca54a3-6983-46b7-8684-a7e5e23499e3}.1  (non-resident, live-slack @ cluster 15872 off 0x2cb8)
       Deleted from: /System Volume Information  (table 0x701)
       Created:  2026-05-16 16:50:46 UTC
       Modified: 2026-05-16 16:50:46 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     FILE FVE2.{c9ca54a3-6983-46b7-8684-a7e5e23499e3}.112  (non-resident, live-slack @ cluster 10784 off 0x410)
       Deleted from: /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_whiskey_835215  (table 0x734)
       Created:  2026-05-16 16:50:47 UTC
       Modified: 2026-05-16 16:50:47 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     FILE FVE2.{c9ca54a3-6983-46b7-8684-a7e5e23499e3}.113  (non-resident, live-slack @ cluster 10784 off 0x7a8)
       Deleted from: /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_whiskey_835215  (table 0x734)
       Created:  2026-05-16 16:50:47 UTC
       Modified: 2026-05-16 16:50:47 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     FILE FVE2.{c9ca54a3-6983-46b7-8684-a7e5e23499e3}.114  (non-resident, live-slack @ cluster 10784 off 0xb40)
       Deleted from: /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_whiskey_835215  (table 0x734)
       Created:  2026-05-16 16:50:47 UTC
       Modified: 2026-05-16 16:50:47 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     FILE FVE2.{c9ca54a3-6983-46b7-8684-a7e5e23499e3}.115  (non-resident, live-slack @ cluster 10784 off 0xed8)
       Deleted from: /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_whiskey_835215  (table 0x734)
       Created:  2026-05-16 16:50:47 UTC
       Modified: 2026-05-16 16:50:47 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     FILE FVE2.{c9ca54a3-6983-46b7-8684-a7e5e23499e3}.116  (non-resident, live-slack @ cluster 10784 off 0x2970)
       Deleted from: /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_whiskey_835215  (table 0x734)
       Created:  2026-05-16 16:50:47 UTC
@@ -122,7 +122,7 @@ ReFS Deleted File Finder
       Deleted from: /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_whiskey_835215  (table 0x734)
       Created:  2026-05-16 16:50:47 UTC
       Modified: 2026-05-16 16:50:47 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     FILE FVE2.{c9ca54a3-6983-46b7-8684-a7e5e23499e3}.121  (non-resident, live-slack @ cluster 10784 off 0x20d0)
       Deleted from: /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_whiskey_835215  (table 0x734)
       Created:  2026-05-16 16:50:47 UTC
@@ -152,12 +152,12 @@ ReFS Deleted File Finder
       Deleted from: /System Volume Information  (table 0x701)
       Created:  2026-05-16 16:50:46 UTC
       Modified: 2026-05-16 16:50:46 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     FILE FVE2.{da392a22-cae0-4f0f-9a30-b8830385d046}  (non-resident, live-slack @ cluster 15872 off 0x1c38)
       Deleted from: /System Volume Information  (table 0x701)
       Created:  2026-05-16 16:50:46 UTC
       Modified: 2026-05-16 16:50:46 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     DIR  elvis_dir_archive_998549  (non-resident, live-slack @ cluster 10780 off 0x2a90)
       Deleted from: /test/elvis_dir_victor_783323  (table 0x717)
       Created:  2026-05-16 16:51:59 UTC
@@ -267,7 +267,7 @@ ReFS Deleted File Finder
       Deleted from: /test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324  (table 0x730)
       Created:  2026-05-16 16:52:01 UTC
       Modified: 2025-04-01 07:16:26 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     FILE xbpt_backup_cache_301743.xml  (non-resident, live-slack @ cluster 5640 off 0x2850)
       Deleted from: /test  (table 0x702)
       Created:  2026-05-16 16:51:51 UTC
@@ -307,7 +307,7 @@ ReFS Deleted File Finder
       Deleted from: /test/elvis_dir_record_449015  (table 0x70f)
       Created:  2026-05-16 16:51:54 UTC
       Modified: 2026-05-16 16:51:54 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     FILE xbpt_data_gamma_192767.txt  (non-resident, live-slack @ cluster 5640 off 0x1b38)
       Deleted from: /test  (table 0x702)
       Created:  2026-05-16 16:51:51 UTC
@@ -337,7 +337,7 @@ ReFS Deleted File Finder
       Deleted from: /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148  (table 0x704)
       Created:  2026-05-16 16:51:51 UTC
       Modified: 2025-02-11 07:16:06 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     FILE xbpt_draft_cache_206712.txt  (non-resident, live-slack @ cluster 1056 off 0xcf8)
       Deleted from: /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083  (table 0x715)
       Created:  2026-05-16 16:51:54 UTC
@@ -347,12 +347,12 @@ ReFS Deleted File Finder
       Deleted from: /test/elvis_dir_record_449015  (table 0x70f)
       Created:  2026-05-16 16:51:55 UTC
       Modified: 2026-05-16 16:51:55 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     FILE xbpt_echo_foxtrot_782748.md  (non-resident, live-slack @ cluster 2572 off 0xa18)
       Deleted from: /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899  (table 0x708)
       Created:  2026-05-16 16:51:52 UTC
       Modified: 2026-05-16 16:51:53 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     FILE xbpt_echo_foxtrot_782748.md  (non-resident, live-slack @ cluster 2572 off 0x14d0)
       Deleted from: /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899  (table 0x708)
       Created:  2025-01-31 07:16:19 UTC
@@ -437,7 +437,7 @@ ReFS Deleted File Finder
       Deleted from: /test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608  (table 0x70d)
       Created:  2026-05-16 16:51:52 UTC
       Modified: 2021-10-05 07:16:06 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     FILE xbpt_papa_temp_918582.dat  (non-resident, live-slack @ cluster 7700 off 0x21c8)
       Deleted from: /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148  (table 0x704)
       Created:  2026-05-16 16:51:51 UTC
@@ -447,7 +447,7 @@ ReFS Deleted File Finder
       Deleted from: /test  (table 0x702)
       Created:  2026-05-16 16:51:51 UTC
       Modified: 2026-05-16 16:51:50 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     FILE xbpt_record_gamma_441485.log  (non-resident, live-slack @ cluster 5640 off 0x27a8)
       Deleted from: /test  (table 0x702)
       Created:  2021-05-18 07:16:04 UTC
@@ -487,7 +487,7 @@ ReFS Deleted File Finder
       Deleted from: /test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264  (table 0x712)
       Created:  2026-05-16 16:51:56 UTC
       Modified: 2026-05-16 16:51:56 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     FILE xbpt_uniform_hotel_294175.txt  (non-resident, live-slack @ cluster 7700 off 0x410)
       Deleted from: /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148  (table 0x704)
       Created:  2026-05-16 16:51:51 UTC
@@ -507,7 +507,7 @@ ReFS Deleted File Finder
       Deleted from: /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x703)
       Created:  2024-12-14 07:16:17 UTC
       Modified: 2026-05-16 16:51:54 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     FILE xbpt_victor_oscar_669232.csv  (non-resident, live-slack @ cluster 11796 off 0x378)
       Deleted from: /test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264  (table 0x712)
       Created:  2025-04-01 07:16:26 UTC
@@ -527,12 +527,12 @@ ReFS Deleted File Finder
       Deleted from: /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148  (table 0x704)
       Created:  2026-05-16 16:51:55 UTC
       Modified: 2026-05-16 16:51:55 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     FILE xbpt_yankee_india_647904.log  (non-resident, live-slack @ cluster 7700 off 0x2268)
       Deleted from: /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148  (table 0x704)
       Created:  2026-05-16 16:51:52 UTC
       Modified: 2026-05-16 16:51:52 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     FILE xbpt_yankee_kilo_634787.dat  (non-resident, live-slack @ cluster 7204 off 0x970)
       Deleted from: /test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608  (table 0x70d)
       Created:  2026-05-16 16:51:52 UTC
@@ -542,7 +542,7 @@ ReFS Deleted File Finder
       Deleted from: /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462  (table 0x703)
       Created:  2026-05-16 16:51:56 UTC
       Modified: 2026-05-16 16:51:56 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     FILE xbpt_yankee_mike_602825.log  (non-resident, live-slack @ cluster 6688 off 0xe10)
       Deleted from: /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790  (table 0x71a)
       Created:  2026-05-16 16:51:55 UTC
@@ -562,7 +562,7 @@ ReFS Deleted File Finder
       Deleted from: /test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264  (table 0x712)
       Created:  2026-05-16 16:51:56 UTC
       Modified: 2026-05-16 16:51:56 UTC
-      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+      Recoverable: metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     FILE xbpt_zulu_whiskey_391283.tmp  (non-resident, live-slack @ cluster 4120 off 0x718)
       Deleted from: /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398  (table 0x718)
       Created:  2024-11-23 07:17:31 UTC
@@ -622,37 +622,37 @@ ReFS Deleted File Finder
     xbpt_backup_mike_407434.log  (live-slack @ cluster 13848 off 0x1b38) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_beta_archive_448246.ini  (live-slack @ cluster 5648 off 0x3af0) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_beta_report_756229.csv  (live-slack @ cluster 11796 off 0x1b60) — metadata only (non-resident — file data is NOT in this remnant)
-    xbpt_beta_sierra_570651.json  (live-slack @ cluster 9216 off 0x2458) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_beta_sierra_570651.json  (live-slack @ cluster 9216 off 0x2458) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_cache_beta_265588.tmp  (live-slack @ cluster 6680 off 0x1b50) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
-    xbpt_cache_index_408825.bin  (live-slack @ cluster 3088 off 0x24f0) — metadata only (non-resident — file data is NOT in this remnant)
-    xbpt_cache_temp_298348.bak  (live-slack @ cluster 5644 off 0x2748) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_cache_index_408825.bin  (live-slack @ cluster 3088 off 0x24f0) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
+    xbpt_cache_temp_298348.bak  (live-slack @ cluster 5644 off 0x2748) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_config_beta_555315.bin  (live-slack @ cluster 6680 off 0x2ce0) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_config_india_582905.json  (live-slack @ cluster 6680 off 0x228) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
-    xbpt_data_config_437965.csv  (live-slack @ cluster 14368 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_data_config_437965.csv  (live-slack @ cluster 14368 off 0x378) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_data_romeo_946788.bin  (live-slack @ cluster 10780 off 0xb58) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_delta_cache_147912.bin  (live-slack @ cluster 3092 off 0xf90) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_delta_delta_676812.xml  (live-slack @ cluster 6688 off 0x1780) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_delta_log_234524.log  (live-slack @ cluster 10256 off 0x3a20) — FULL FILE recoverable (resident — 0 B stored inline in the record)
-    xbpt_delta_report_275249.dat  (live-slack @ cluster 13848 off 0x1be0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_delta_report_275249.dat  (live-slack @ cluster 13848 off 0x1be0) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_draft_beta_656043.txt  (live-slack @ cluster 6680 off 0xf88) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_draft_november_935526.json  (live-slack @ cluster 10780 off 0x2e10) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_draft_oscar_719333.tmp  (live-slack @ cluster 5648 off 0x2ee0) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_foxtrot_config_966558.log  (live-slack @ cluster 13324 off 0x2c48) — metadata only (non-resident — file data is NOT in this remnant)
-    xbpt_foxtrot_lima_318386.tmp  (live-slack @ cluster 6684 off 0x25f0) — metadata only (non-resident — file data is NOT in this remnant)
-    xbpt_gamma_victor_852781.bak  (live-slack @ cluster 4644 off 0x2fb8) — metadata only (non-resident — file data is NOT in this remnant)
-    xbpt_hotel_mike_996142.cfg  (live-slack @ cluster 14364 off 0xad0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_foxtrot_lima_318386.tmp  (live-slack @ cluster 6684 off 0x25f0) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
+    xbpt_gamma_victor_852781.bak  (live-slack @ cluster 4644 off 0x2fb8) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
+    xbpt_hotel_mike_996142.cfg  (live-slack @ cluster 14364 off 0xad0) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_hotel_sync_810225.ini  (live-slack @ cluster 6680 off 0x4e0) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_hotel_yankee_684408.cfg  (live-slack @ cluster 10780 off 0xe08) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_index_temp_198731.cfg  (live-slack @ cluster 6680 off 0x2728) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
-    xbpt_index_uniform_409576.json  (live-slack @ cluster 10796 off 0x2168) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_index_uniform_409576.json  (live-slack @ cluster 10796 off 0x2168) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_india_delta_132534.bak  (live-slack @ cluster 4116 off 0xa78) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_india_quebec_883273.bak  (live-slack @ cluster 10780 off 0x8a0) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_india_temp_254875.bak  (live-slack @ cluster 4120 off 0x458) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_india_whiskey_159747.csv  (live-slack @ cluster 6680 off 0x1e68) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_kilo_output_350111.log  (live-slack @ cluster 13848 off 0x1810) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
-    xbpt_large_14mb_foxtrot_773062.bak  (live-slack @ cluster 6684 off 0x2c28) — metadata only (non-resident — file data is NOT in this remnant)
-    xbpt_large_5mb_romeo_293003.dat  (live-slack @ cluster 14364 off 0x1430) — metadata only (non-resident — file data is NOT in this remnant)
-    xbpt_large_86mb_india_568540.txt  (live-slack @ cluster 10792 off 0x2728) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_large_14mb_foxtrot_773062.bak  (live-slack @ cluster 6684 off 0x2c28) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
+    xbpt_large_5mb_romeo_293003.dat  (live-slack @ cluster 14364 off 0x1430) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
+    xbpt_large_86mb_india_568540.txt  (live-slack @ cluster 10792 off 0x2728) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_lima_lima_890070.dat  (live-slack @ cluster 8208 off 0x3240) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_lima_oscar_843603.tmp  (live-slack @ cluster 8208 off 0x6c0) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_lima_temp_514782.csv  (live-slack @ cluster 13848 off 0x3400) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
@@ -661,20 +661,20 @@ ReFS Deleted File Finder
     xbpt_log_romeo_711888.cfg  (live-slack @ cluster 5644 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_log_whiskey_169575.dat  (live-slack @ cluster 6680 off 0x790) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_mike_oscar_154118.csv  (live-slack @ cluster 15380 off 0xc88) — metadata only (non-resident — file data is NOT in this remnant)
-    xbpt_mike_quebec_329740.dat  (live-slack @ cluster 7204 off 0x15f0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_mike_quebec_329740.dat  (live-slack @ cluster 7204 off 0x15f0) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_mike_tango_822153.dat  (live-slack @ cluster 8208 off 0x410) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_mike_trace_484217.ini  (live-slack @ cluster 5648 off 0xba8) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_mike_uniform_215836.txt  (live-slack @ cluster 5648 off 0x200) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_mike_uniform_966879.xml  (live-slack @ cluster 6680 off 0x2470) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
-    xbpt_november_cache_127869.dat  (live-slack @ cluster 11796 off 0x420) — metadata only (non-resident — file data is NOT in this remnant)
-    xbpt_november_hotel_509136.md  (live-slack @ cluster 15380 off 0x1410) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_november_cache_127869.dat  (live-slack @ cluster 11796 off 0x420) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
+    xbpt_november_hotel_509136.md  (live-slack @ cluster 15380 off 0x1410) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_oscar_delta_192166.ini  (live-slack @ cluster 10780 off 0x3418) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_oscar_foxtrot_635028.xml  (live-slack @ cluster 13848 off 0x1558) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_oscar_foxtrot_866936.json  (live-slack @ cluster 528 off 0xa08) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_oscar_report_193920.cfg  (live-slack @ cluster 6680 off 0x21b8) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_output_papa_412411.log  (live-slack @ cluster 4116 off 0x7c0) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_papa_archive_660135.txt  (live-slack @ cluster 528 off 0x15e8) — metadata only (non-resident — file data is NOT in this remnant)
-    xbpt_papa_victor_656146.log  (live-slack @ cluster 15380 off 0x1ff0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_papa_victor_656146.log  (live-slack @ cluster 15380 off 0x1ff0) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_quebec_audit_121864.cfg  (live-slack @ cluster 6680 off 0x3b30) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_record_delta_426347.json  (live-slack @ cluster 6680 off 0x12b8) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_record_index_307951.json  (live-slack @ cluster 6680 off 0x1a40) — metadata only (non-resident — file data is NOT in this remnant)
@@ -682,28 +682,28 @@ ReFS Deleted File Finder
     xbpt_romeo_output_531365.cfg  (live-slack @ cluster 5648 off 0x920) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`) [extent map from a type-0x40 backing recovered in slack — bytes may be stale]
     xbpt_romeo_quebec_189040.ini  (live-slack @ cluster 10780 off 0x1ea0) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_sierra_echo_921063.xml  (live-slack @ cluster 13848 off 0x3358) — metadata only (non-resident — file data is NOT in this remnant)
-    xbpt_sierra_kilo_206137.json  (live-slack @ cluster 4116 off 0x1070) — metadata only (non-resident — file data is NOT in this remnant)
-    xbpt_sierra_victor_685719.xml  (live-slack @ cluster 4116 off 0x2c10) — metadata only (non-resident — file data is NOT in this remnant)
-    xbpt_sync_echo_156375.ini  (live-slack @ cluster 5648 off 0x2888) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_sierra_kilo_206137.json  (live-slack @ cluster 4116 off 0x1070) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
+    xbpt_sierra_victor_685719.xml  (live-slack @ cluster 4116 off 0x2c10) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
+    xbpt_sync_echo_156375.ini  (live-slack @ cluster 5648 off 0x2888) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_tango_echo_291736.csv  (live-slack @ cluster 13848 off 0x5f0) — metadata only (non-resident — file data is NOT in this remnant)
-    xbpt_temp_backup_816270.cfg  (live-slack @ cluster 7196 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
-    xbpt_temp_data_294711.md  (live-slack @ cluster 15380 off 0x1a08) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_temp_backup_816270.cfg  (live-slack @ cluster 7196 off 0x378) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
+    xbpt_temp_data_294711.md  (live-slack @ cluster 15380 off 0x1a08) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_temp_echo_351548.json  (live-slack @ cluster 6680 off 0x1618) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
-    xbpt_temp_index_659152.xml  (live-slack @ cluster 8744 off 0xed8) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_temp_index_659152.xml  (live-slack @ cluster 8744 off 0xed8) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_temp_mike_134457.bak  (live-slack @ cluster 5648 off 0x1cb8) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_temp_sierra_130629.tmp  (live-slack @ cluster 13848 off 0xd90) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_trace_config_794136.tmp  (live-slack @ cluster 10780 off 0x1b40) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_trace_gamma_472483.cfg  (live-slack @ cluster 5644 off 0x960) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_trace_hotel_502150.xml  (live-slack @ cluster 10780 off 0x2498) — metadata only (non-resident — file data is NOT in this remnant)
-    xbpt_trace_report_848037.cfg  (live-slack @ cluster 10256 off 0x3428) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_trace_report_848037.cfg  (live-slack @ cluster 10256 off 0x3428) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_uniform_oscar_320878.log  (live-slack @ cluster 11788 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_uniform_record_153192.json  (live-slack @ cluster 4116 off 0x3810) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_yankee_output_781405.csv  (live-slack @ cluster 10780 off 0x5e8) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_yankee_tango_103961.bin  (live-slack @ cluster 5648 off 0x16c0) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_yankee_victor_114004.ini  (live-slack @ cluster 13848 off 0x36f8) — metadata only (non-resident — file data is NOT in this remnant)
-    xbpt_zulu_audit_805568.ini  (live-slack @ cluster 5644 off 0x20c0) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_zulu_audit_805568.ini  (live-slack @ cluster 5644 off 0x20c0) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_zulu_hotel_433348.log  (live-slack @ cluster 5648 off 0x9c8) — metadata only (non-resident — file data is NOT in this remnant)
-    xbpt_zulu_mike_340372.cfg  (live-slack @ cluster 11292 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
+    xbpt_zulu_mike_340372.cfg  (live-slack @ cluster 11292 off 0x378) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
 
   NOTE: slack rows are unindexed remnants. 'with valid timestamps' rows decode a full
         $SI (high confidence); 'partial remnants' are name fragments from a row whose
@@ -716,13 +716,12 @@ ReFS Deleted File Finder
   Also: `deleted --orphans` adds a low-confidence tier for OID-Table objects unlinked from the tree.
   Prior versions of files that still exist: `snapshots`.  Windows Recycle Bin: `recyclebin`.
 
-  DELETED files: 0 of 148 are RESIDENT with full content recoverable; 31 are non-resident (carve-able with --carve).
+  DELETED files: 0 of 148 are RESIDENT with full content recoverable; 59 are non-resident (carve-able with --carve).
   PRIOR versions of live files: 3 of 101 decode to a file.
-  Restorability: a RESIDENT deleted file's FULL content is recoverable from the remnant
-       (written as .recovered). A NON-RESIDENT file keeps its data in on-disk extents — if the
-       extent map survives in the remnant ('extent_backed'), `export deleted --carve`
-       reconstructs it best-effort (bytes may be stale); otherwise only METADATA survives
-       (name/size/timestamps). See the `export deleted` docs.
-  Next: `export deleted <DIR>` writes each entry's raw .row (evidence) + a .recovered for
-        resident files; add --carve to also reconstruct non-resident (extent-backed) files.
+  Restorability: a RESIDENT deleted file's FULL content is recovered exactly (content/<name>).
+       A NON-RESIDENT file keeps its data in on-disk extents — if the extent map survives
+       ('extent_backed'), --full/--carve reconstructs it best-effort (content/<name>.carved,
+       may be stale); otherwise only METADATA survives (name/size/timestamps).
+  Next: `export deleted <DIR>` writes a deleted_files.csv/.json index + the readable content
+        files (content/); add --full to carve non-resident files, --rows for the raw remnants.
 

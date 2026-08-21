@@ -210,7 +210,7 @@ def validate_image(path, die_fn=None):
 
 # ─── Constants ────────────────────────────────────────────────────────
 PROG = "forefst"
-VERSION = "1.4.0"
+VERSION = "1.5.0"
 # Phase 3 (4.D): directory walks default to FULL depth (no artificial cap); `--depth N` overrides. The real
 # recursion depth equals the actual directory nesting (ReFS trees are shallow — tens of levels), so this
 # constant is never the binding limit; it just means "don't truncate". main() also raises the interpreter
@@ -2825,27 +2825,28 @@ def parse_usn_journal_streams(vd, cs, tr):
     }
 
 
-def read_usn_j_stream(f_handle, ps, cs, extents, stream_size):
-    """Read USN $J data stream from disk following extent descriptors."""
+def read_usn_j_stream(f_handle, ps, cs, extents, stream_size=0):
+    """Read the USN $J data stream from disk following its extent descriptors.
+
+    The read length is the **allocated size** (Σ of the extents' clusters). The `$J` journal fills its
+    allocation — a bounded rolling log whose old records are overwritten in place — so the whole allocation
+    must be read. `stream_size` is NOT a real length: it comes from the value's $DATA sub-record **descriptor
+    `0x000E0080`** (= 917632), and capping the read at it truncated every journal larger than ~896 KB to its
+    first ~896 KB (fixed 2026-08-21 — it dropped ~97 % of a busy volume's records). The parameter is kept for
+    call-site compatibility but ignored. `parse_usn_records` validates each record, so the zero/slack tail of a
+    partially-filled journal is skipped and reading the full allocation is complete (corpus-verified: 0 duplicate
+    USNs, ~100 % of records carry a name)."""
     if not extents:
         return b""
-    total_clusters = sum(e["clusters"] for e in extents)
-    alloc_size = total_clusters * cs
-    if stream_size > alloc_size:   # N5: signal truncation (mirrors the extract short-read warning, E8)
-        print(f"[{PROG}] WARNING: USN $J stream declares {stream_size:,} bytes but only {alloc_size:,} are "
-              f"allocated in its extents; parsing the truncated journal (records beyond {alloc_size:,} unavailable)",
-              file=sys.stderr)
-    buf = bytearray(min(alloc_size, stream_size) if 0 < stream_size <= alloc_size else alloc_size)
+    alloc_size = sum(e["clusters"] for e in extents) * cs
+    buf = bytearray(alloc_size)
     for ext in extents:
         file_off = ext["file_vcn"] * cs
-        disk_off = ps + ext["plcn"] * cs
-        nbytes = ext["clusters"] * cs
-        read_end = min(file_off + nbytes, len(buf))
-        if file_off >= len(buf):
+        if file_off >= alloc_size:
             continue
-        to_read = read_end - file_off
-        f_handle.seek(disk_off)
-        data = f_handle.read(to_read)
+        nbytes = min(ext["clusters"] * cs, alloc_size - file_off)
+        f_handle.seek(ps + ext["plcn"] * cs)
+        data = f_handle.read(nbytes)
         buf[file_off:file_off + len(data)] = data
     return bytes(buf)
 
@@ -4237,9 +4238,11 @@ def _print_oid_detail(detail, path=None):
                     print(f"    Hex:              {ent['raw_hex']}")
 
 
-def _print_file_detail(r, sd_map, version_str, raw_value=None):
-    """Labeled detail view for one FILE resolved by path (F6). Mirrors the `files` field set,
-    plus (from raw_value, when resident) Extended Attributes / WSL Linux metadata / internal flags."""
+def _print_file_detail(r, sd_map, version_str, raw_value=None, oid2path=None):
+    """Labeled detail view for one FILE resolved by path (F6). A strict superset of the `files` field set
+    (so `details` never shows less than a `files` row), plus (from raw_value, when resident) Extended
+    Attributes / WSL Linux metadata / internal flags. `oid2path` (OID→path from the walk) resolves the
+    creation directory (HomeOID), matching the `files` CreationDir column."""
     w = 78
     print("=" * w)
     print(f"File Detail: {r.get('path', '')}")
@@ -4273,6 +4276,10 @@ def _print_file_detail(r, sd_map, version_str, raw_value=None):
             print(f"  Home directory:     0x{_home:x}   hard-link name — created here, not in 0x{_par:x}")
         else:
             print(f"  Home directory:     0x{_home:x}   ⚠ moved: created here, now under parent 0x{_par:x}")
+    if oid2path is not None and _home:
+        _cdir = oid2path.get(_home, "")
+        if _cdir:
+            print(f"  Creation dir:       {_cdir}")
     print(f"  Name:               {r.get('name', '')}")
     print(f"  Extension:          {ext_from_name(r.get('name', ''))}")
     print(f"  Is directory:       {r.get('is_dir', False)}")
@@ -4289,6 +4296,8 @@ def _print_file_detail(r, sd_map, version_str, raw_value=None):
     print(f"  Security ID:        {sec if sec else ''}")
     print(f"  Owner SID:          {_sid_display(owner)}")
     print(f"  Group SID:          {_sid_display(group)}")
+    if _sd[2]:
+        print(f"  DACL:               {_sd[2]}")
     print(f"  USN:                {r.get('usn', 0) or ''}")
     if r.get("has_ads"):
         _adsn = [n for n in str(r.get("ads_names", "")).split(";") if n]
@@ -4298,6 +4307,8 @@ def _print_file_detail(r, sd_map, version_str, raw_value=None):
             print(f"                        read one:  export ads \"{_pp}:{_nm}\"")
     flags = [n for n, k in (("Encrypted", "is_encrypted"), ("Compressed", "is_compressed"),
                             ("IntegrityStream", "has_integrity")) if r.get(k)]
+    if r.get("file_attrs", 0) & 0x200:            # FILE_ATTRIBUTE_SPARSE_FILE — matches files.IsSparse
+        flags.append("Sparse")
     if _has_ea or r.get("has_ea"):
         flags.append("EA")
     if flags:
@@ -4313,6 +4324,8 @@ def _print_file_detail(r, sd_map, version_str, raw_value=None):
                 print(f"                        {nm}")
     if r.get("snapshot_count", 0) > 0:
         print(f"  Snapshot count:     {r['snapshot_count']}   (preview: snapshots --file {r['name']} --show · extract: export snapshots DIR --file {r['name']})")
+        if r.get("snapshot_names"):
+            print(f"  Snapshot names:     {r['snapshot_names']}")
     if r.get("timestomp_flags"):
         print(f"  Timestomp flags:    {r['timestomp_flags']}")
     ifl = internal_flags_str(r.get("internal_flags", 0))
@@ -5262,10 +5275,10 @@ def cmd_usn(image, remaining, partition_start):
             print()
             print("  $J stream (data):")
             print("    Extents:        %d" % len(streams.get("j_extents", [])))
-            print("    Stream size:    %s bytes" % "{:,}".format(streams.get("j_stream_size", 0)))
             if streams.get("j_extents"):
                 total_cl = sum(e["clusters"] for e in streams["j_extents"])
-                print("    Total clusters: %d" % total_cl)
+                print("    Allocated size: %s bytes (%d clusters) — the journal's rolling window, read in full" %
+                      ("{:,}".format(total_cl * cs), total_cl))
                 for i, ext in enumerate(streams["j_extents"]):
                     print("    [%d] VLCN=0x%x PLCN=0x%x vcn=%d len=%d" % (
                         i, ext["vlcn"], ext["plcn"], ext["file_vcn"], ext["clusters"]))
@@ -8407,7 +8420,7 @@ def _extent_backed_carveable(vd):
             return bool(disk_alloc > 0 and exts and stream_size > 0)
     return False
 
-def _deleted_recoverability(e):
+def _deleted_recoverability(e, cs=None, tr=None):
     """Grade a recovered deleted row (from the scan / slack engines) by whether — and how — its FILE
     CONTENT is reconstructable. Returns (enum, human_label, decoded_or_None). Disk-free (view-time safe):
 
@@ -8452,7 +8465,19 @@ def _deleted_recoverability(e):
         return ("metadata_only", _RECOVER_LABEL["metadata_only"], None)   # B4: extent map zeroed -> no carve
     if e.get("t40_extent_count", 0) > 0:                                 # long value, extents in slack backing
         return ("extent_backed", _T40_CARVE_LABEL, None)
+    # v3.4 / v3.7 / v3.9 / upgraded: the extent map is inlined in this row as a MULTI-LEVEL embedded B+-tree that
+    # _current_stream_extent_backed (parse_resident_btree_rows, outer level only) can't reach — the same case
+    # cmd_extract/dataruns handle via the index-array walk (§C.3b, #640). Use _decode_holder_extents as the TRUE
+    # carve predicate (it is disk-free — tr.tr is a container-table lookup — and cover-guarded, so it returns
+    # extents only when the carve WILL yield an exact contiguous cover; native v3.14 returns [] here → unchanged).
+    if cs and tr and _decode_holder_extents(vd, cs, tr):
+        return ("extent_backed", _RECOVER_LABEL["extent_backed"], None)
     return ("metadata_only", _RECOVER_LABEL["metadata_only"], None)
+
+def _safe_filename(name):
+    """A filesystem-safe version of a recovered file's real name (used for content/<name>; provenance lives in
+    the index, not the filename). Collisions are handled by _collision_free_path."""
+    return ("".join(c if c.isalnum() or c in "._- " else "_" for c in (name or "")).strip() or "unnamed")[:120]
 
 def _collision_free_path(path):
     """Never clobber an existing file: on collision append .dup1/.dup2/… (user-selected overwrite policy).
@@ -8498,7 +8523,8 @@ def _carve_extent_backed(f, ps_off, cs, tr, vd, t40_backing=None):
                             plcn = vlcn + j
                         f.seek(ps_off + plcn * cs)
                         off = (fvcn + j) * cs
-                        buf[off:off + cs] = f.read(cs)
+                        chunk = f.read(cs)              # len(chunk)==cs on a normal read; a short/past-EOF read
+                        buf[off:off + len(chunk)] = chunk   # must NOT shrink buf (slice-assign len-safe) -> zero-pad
                 return (bytes(buf[:stream_size]), stream_size)
     # (2) type-0x40 backing recovered from slack — extents already VLCN->PLCN translated by the parser.
     if t40_backing is not None:
@@ -8515,14 +8541,54 @@ def _carve_extent_backed(f, ps_off, cs, tr, vd, t40_backing=None):
                 for j in range(run):
                     f.seek(ps_off + (plcn + j) * cs)
                     o = (fvcn + j) * cs
-                    buf[o:o + cs] = f.read(cs)
+                    chunk = f.read(cs)                  # len-safe assign (a past-EOF read must not shrink buf)
+                    buf[o:o + len(chunk)] = chunk
             return (bytes(buf[:stream_size]), stream_size)
+    # (3) inline-holder MULTI-LEVEL extent map (v3.4 / v3.7 / v3.9 / upgraded): the current stream's runs live in
+    # THIS row as an embedded B+-tree index array that step (1)'s parse_resident_btree_rows can't reach — the same
+    # case cmd_extract/dataruns decode via the cover-guarded index-array walk (§C.3b, #640). Byte-exact or [] (the
+    # cover guard rejects a partial/zeroed map), so a v3.4 deleted file's data is never emitted as wrong bytes.
+    exts = _decode_holder_extents(vd, cs, tr)
+    if exts and len(vd) >= 0x68:
+        stream_size = le64(vd, 0x58)                # inline-holder FileSize (alloc@0x60 already cover-checked)
+        alloc = max(x["file_vcn"] + x["clusters"] for x in exts) * cs
+        if stream_size > 0 and 0 < alloc <= 256 * 1024 * 1024:
+            buf = bytearray(alloc)
+            got = 0
+            for x in sorted(exts, key=lambda x: x["file_vcn"]):
+                if x.get("vlcn", x["plcn"]) == 0:
+                    continue                        # sparse hole -> leave zero-filled (never read boot region)
+                plcn, fvcn, run = x["plcn"], x["file_vcn"], x["clusters"]
+                for j in range(run):
+                    f.seek(ps_off + (plcn + j) * cs)
+                    chunk = f.read(cs)              # len-safe assign; count real bytes so a stale/out-of-volume
+                    got += len(chunk)               # map (plcn past EOF -> empty read) yields NO file, not a 0-byte
+                    o = (fvcn + j) * cs
+                    buf[o:o + len(chunk)] = chunk
+            if got:                                 # nothing readable (extent map points outside the volume) -> no carve
+                return (bytes(buf[:stream_size]), stream_size)
     return None
 
 DELETED_CSV_COLUMNS = ["FileName", "IsDirectory", "RecoverySource", "RecoveredFrom",
-                       "Recoverability", "Created", "Modified", "RecoveredChild", "Cluster"]
+                       "Recoverability", "Created", "Modified", "RecoveredChild", "Cluster",
+                       "FileAttributes", "Category", "Reliability", "ContentFile"]
 
-def _deleted_rows(deleted, orphans):
+# Reliability of the RECOVERED CONTENT (not "un-overwritten"): EXACT = a resident file's full content was inside
+# the metadata remnant; BEST-EFFORT = a non-resident file carved from a surviving extent MAP (clusters may have
+# been reused — verify); NONE = metadata only.
+_RELIABILITY = {"recoverable_inline": "EXACT", "extent_backed": "BEST-EFFORT",
+                "metadata_only": "NONE", "fragment_only": "NONE"}
+
+def _deleted_category(name):
+    """'system' = OS/BitLocker churn that floods the raw output (rotated `FVE2.{GUID}` / `FVE-*` metadata,
+    `$Txf*`); 'user' = everything else. The index tags it so an analyst (or `--no-system`) can set the noise
+    aside — on a typical volume most raw remnants are this system churn, not user deletions."""
+    n = (name or "").lstrip("$")
+    if n.startswith(("FVE2.", "FVE-")) or n in ("TxfLog", "Tops", "TxfLog.blf", "TxfLogContainer"):
+        return "system"
+    return "user"
+
+def _deleted_rows(deleted, orphans, cs=None, tr=None):
     """Build the `deleted` command's output rows (dicts keyed by DELETED_CSV_COLUMNS) — one per truly-deleted
     entry — from the SAME lists + helpers as the text report (_deleted_recoverability, _filetime_to_str). Fields
     that did not survive the deletion are blank; RecoverySource is the recovery method (trash / checkpoint diff /
@@ -8536,20 +8602,27 @@ def _deleted_rows(deleted, orphans):
     def _ts(t): return _filetime_to_str(t) if t else ""
     rows = []
     for e in deleted:
+        _rc = _deleted_recoverability(e, cs, tr)
         rows.append({"FileName": e.get("name", ""), "IsDirectory": bool(e.get("is_dir")),
                      "RecoverySource": e.get("tag", ""), "RecoveredFrom": _from(e),
-                     "Recoverability": _deleted_recoverability(e)[1], "Created": _ts(e.get("create_time", 0)),
+                     "Recoverability": _rc[1], "Created": _ts(e.get("create_time", 0)),
                      "Modified": _ts(e.get("modify_time", 0)), "RecoveredChild": e.get("recovered_child", ""),
-                     "Cluster": e.get("plcn", "")})
+                     "Cluster": e.get("plcn", ""),
+                     "FileAttributes": attrs_to_str(e.get("file_attrs", 0)) if e.get("file_attrs") else "",
+                     "Category": _deleted_category(e.get("name", "")),
+                     "Reliability": _RELIABILITY.get(_rc[0], "NONE"),
+                     "ContentFile": e.get("_content_file", "")})
     for e in (orphans or []):
         rows.append({"FileName": e.get("name", ""), "IsDirectory": True, "RecoverySource": "orphan",
                      "RecoveredFrom": f"0x{e.get('oid', 0):x}" if e.get("oid") else "",
                      "Recoverability": "metadata only", "Created": _ts(e.get("create_time", 0)), "Modified": "",
-                     "RecoveredChild": e.get("recovered_child", ""), "Cluster": ""})
+                     "RecoveredChild": e.get("recovered_child", ""), "Cluster": "",
+                     "FileAttributes": "", "Category": _deleted_category(e.get("name", "")),
+                     "Reliability": "NONE", "ContentFile": e.get("_content_file", "")})
     return rows
 
 def _write_recovery_log(path, image, vmaj, vmin, mode, methods, max_scan, deleted, present, extract_dir,
-                        orphans=None):
+                        orphans=None, cs=None, tr=None):
     """Write a forensic RECOVERY-RUN log — an audit trail of what was recovered and how: image, mode, methods,
     and the per-entry deleted-vs-still-present split (with each remnant's source page and, for still-present
     rows, whether the live file sits in a different directory). `orphans` (optional) logs the low-confidence
@@ -8569,7 +8642,7 @@ def _write_recovery_log(path, image, vmaj, vmin, mode, methods, max_scan, delete
         _locs = e.get("all_owning_paths") or [_from(e)]
         _lp = _locs[0] if len(_locs) <= 1 else f"{len(_locs)} directories: " + "; ".join(_locs)
         out.append(f"  {kind} {e['name']}  | deleted from {_lp} | {e.get('tag')} @cluster {e.get('plcn')} | "
-                   f"{_deleted_recoverability(e)[1]}")
+                   f"{_deleted_recoverability(e, cs, tr)[1]}")
         if e.get("create_time"):
             out.append(f"        created {_filetime_to_str(e['create_time'])}  "
                        f"modified {_filetime_to_str(e.get('modify_time', 0))}")
@@ -8601,7 +8674,8 @@ def cmd_deleted(image, remaining, partition_start):
     from_export = "--_from-export" in remaining
     remaining = [x for x in remaining if x != "--_from-export"]
     args = _parse_args(remaining, flags=["--trash", "--scan-pages", "--full", "--no-slack", "--slack",
-                                         "--rows-only", "--content-only", "--carve", "--orphans"],
+                                         "--rows-only", "--content-only", "--carve", "--orphans",
+                                         "--rows", "--no-system"],
                        valued=["--search", "--max-scan", "--extract", "--log", "--csv", "--json", "--jsonl"])
     # `--slack` is a silent no-op kept only for back-compat (the slack scan is the default `recovery` mode);
     # it is intentionally undocumented. Use `--full` for the complete scan, `--no-slack` to skip slack.
@@ -8609,6 +8683,13 @@ def cmd_deleted(image, remaining, partition_start):
     extract_dir = args["extract"]
     rows_only = args["rows_only"]
     content_only = args["content_only"]
+    # NEW output model (2026-08-21): `export deleted DIR` writes an INDEX (deleted_files.csv/.json — one row per
+    # entry) + only the readable CONTENT files (content/) + the recovery log; the raw .row remnants are written
+    # ONLY with --rows (or --rows-only). This replaces the old flood of one .row per entry. --no-system drops the
+    # OS/BitLocker FVE2 churn.
+    write_rows = args["rows"] or rows_only          # emit the raw .row remnants?
+    write_content = not rows_only                    # emit decoded/carved content?
+    no_system = args["no_system"]
     # Two modes (simple front for the fine-grained flags below): the default `recovery` mode scans only the
     # live-page slack (quick); `--full` (fullrecovery) also scans orphan pages and, on export, carves
     # extent-backed non-resident files. The per-method flags still override for power users.
@@ -8633,99 +8714,113 @@ def cmd_deleted(image, remaining, partition_start):
     _log_orphans = []                     # opt-in --orphans tier (OT-orphan directory OIDs), for the log
 
     def _emit(base, e, name, source, tag):
-        """Write BOTH the raw remnant (.row) AND, when the row is resident and its inline $DATA decodes,
-        the recovered content (.recovered) — the user-chosen default for `export deleted`. The raw .row is
-        preserved unless --content-only; the decoded .recovered is written unless --rows-only. Names never
-        clobber (auto .dupN). Every entry is stamped into the run manifest. `base` is the full path WITHOUT
-        extension; keeping it identical to the historical name means --rows-only reproduces byte-for-byte."""
+        """Write this entry's readable CONTENT and (only under --rows) its raw remnant; the decoded metadata
+        goes to the deleted_files.csv/.json INDEX (built at the end), NOT one file per entry.
+          • content/<name>          — a RESIDENT file's inline $DATA (byte-exact), or
+          • content/<name>.carved   — a NON-RESIDENT file reassembled from its extent map (best-effort; may be
+                                       stale) when --carve/--full is set. Never a 0-byte file.
+          • rows/<prov>.row         — the raw remnant bytes (evidence), only with --rows/--rows-only.
+        Real filenames (collision-suffixed .dupN); provenance (cluster/offset) lives in the index. Stamps
+        e['_content_file'] so the index can point at the exported content. `--no-system` skips OS/BitLocker
+        churn (FVE2.{…})."""
         vd = e.get("vd")
         if not extract_dir or not vd:
             return
+        if no_system and _deleted_category(name) == "system":
+            return
         os.makedirs(extract_dir, exist_ok=True)
-        venum, vlabel, decoded = _deleted_recoverability(e)
-        row_path = content_path = carved_path = None
+        venum, vlabel, decoded = _deleted_recoverability(e, cs, tr)
+        prov = os.path.basename(base)                    # historical provenance name (…_c<plcn>o<off>)
+        safe = _safe_filename(name)
+        content_path = carved_path = row_path = None
         carved_len = carved_size = None
-        if not content_only:
-            row_path = _collision_free_path(base + ".row")
-            with open(row_path, "wb") as of:
-                of.write(vd)
-        if decoded is not None and not rows_only:
-            content_path = _collision_free_path(base + ".recovered")
+        if write_content and decoded:                    # RESIDENT — non-empty inline content (byte-exact; a
+            cdir = os.path.join(extract_dir, "content"); os.makedirs(cdir, exist_ok=True)   # 0-byte file has
+            content_path = _collision_free_path(os.path.join(cdir, safe))                   # nothing to recover)
             with open(content_path, "wb") as of:
                 of.write(decoded)
-        # --carve: best-effort reconstruct a NON-RESIDENT (extent-backed) deleted file from its inline
-        # extent map. Bytes may be stale (clusters possibly reallocated) — hence the distinct .carved name.
-        if carve and venum == "extent_backed" and not rows_only:
+        elif write_content and carve and venum == "extent_backed":   # NON-RESIDENT — carve from the extent map
             cres = _carve_extent_backed(f, ps, cs, tr, vd, e.get("t40_backing"))
             if cres:
                 cbytes, carved_size = cres
                 carved_len = len(cbytes)
-                carved_path = _collision_free_path(base + ".carved")
+                cdir = os.path.join(extract_dir, "content"); os.makedirs(cdir, exist_ok=True)
+                carved_path = _collision_free_path(os.path.join(cdir, safe + ".carved"))
                 with open(carved_path, "wb") as of:
                     of.write(cbytes)
+        if write_rows:                                   # raw remnant (evidence) — opt-in
+            rdir = os.path.join(extract_dir, "rows"); os.makedirs(rdir, exist_ok=True)
+            row_path = _collision_free_path(os.path.join(rdir, prov + ".row"))
+            with open(row_path, "wb") as of:
+                of.write(vd)
+        cf = content_path or carved_path
+        e["_content_file"] = ("content/" + os.path.basename(cf)) if cf else ""
         _manifest.append({
-            "name": name, "source": source, "tag": e.get("tag", tag),
+            "name": name, "source": source, "tag": e.get("tag", tag), "category": _deleted_category(name),
             "plcn": e.get("plcn"), "page_off": e.get("page_off"),
             "is_resident": venum == "recoverable_inline", "confidence": e.get("confidence"),   # B5: from verdict
             "value_len": len(vd), "recoverable": venum, "verdict": vlabel,
-            "row_file": os.path.basename(row_path) if row_path else None,
-            "content_file": os.path.basename(content_path) if content_path else None,
+            "reliability": _RELIABILITY.get(venum, "NONE"),
+            "row_file": ("rows/" + os.path.basename(row_path)) if row_path else None,
+            "content_file": e["_content_file"] or None,
             "decoded_len": len(decoded) if decoded is not None else None,
-            "carved_file": os.path.basename(carved_path) if carved_path else None,
             "carved_len": carved_len, "carved_declared_size": carved_size,
         })
-        parts = []
-        if row_path:
-            parts.append(f"row {os.path.basename(row_path)} ({len(vd)} B)")
-        if content_path:
-            parts.append(f"content {os.path.basename(content_path)} ({len(decoded)} B, {venum})")
-        elif decoded is None and not content_only:
-            parts.append("no inline $DATA decoded — metadata-only (.row is the evidence)")
-        elif decoded is not None and rows_only:
-            parts.append("[--rows-only] decoded content withheld")
-        elif decoded is None and content_only:
-            parts.append("[--content-only] no inline content — nothing written")
-        if carved_path:
-            short = "  [SHORT/sparse — extents cover fewer bytes]" if (carved_len < carved_size) else ""
-            parts.append(f"CARVED {os.path.basename(carved_path)} ({carved_len}/{carved_size} B, "
-                         f"may be stale){short}")
-        elif carve and venum == "extent_backed":
-            parts.append("carve: no readable extents in remnant")
-        print("      → wrote " + " + ".join(parts) if parts else "      → (nothing to write)")
 
     def _write_manifest():
-        if extract_dir and _manifest:
-            mpath = os.path.join(extract_dir, "recovery_manifest.json")
-            n_rec = sum(1 for m in _manifest if m["recoverable"] == "recoverable_inline")
-            n_row = sum(1 for m in _manifest if m["row_file"])
-            n_content = sum(1 for m in _manifest if m["content_file"])
-            n_carved = sum(1 for m in _manifest if m.get("carved_file"))
-            with open(mpath, "w") as mf:
-                json.dump({"image": image, "entries": len(_manifest),
-                           "row_files": n_row, "recovered_files": n_content, "carved_files": n_carved,
-                           "recoverable_inline": n_rec,
-                           "trust_ranking": ("MOST reliable -> LEAST: (1) '.recovered' — a RESIDENT file's full "
-                                    "content is stored INSIDE the metadata remnant, so it is recovered intact. "
-                                    "(2) '.carved' — a NON-RESIDENT file has only an extent MAP in metadata; the "
-                                    "actual data clusters live elsewhere on the volume and may have been "
-                                    "reallocated/overwritten after deletion, so carved bytes are the MOST likely "
-                                    "to be stale. (3) metadata-only — no content recoverable at all. '.row' is the "
-                                    "raw evidence record, always exact."),
-                           "note": ("'.recovered' = full content of a RESIDENT deleted file, decoded from the "
-                                    "remnant. '.carved' = a NON-RESIDENT (extent-backed) file reassembled from "
-                                    "its inline extent map — BEST-EFFORT, the clusters may have been reallocated "
-                                    "(no freshness check); verify before relying on it. Neither guarantees the "
-                                    "bytes are un-overwritten. Short-value non-resident files stay metadata-only."),
-                           "records": _manifest}, mf, indent=2)
-            _cv = f" + {n_carved} .carved" if n_carved else ""
-            print(f"\n  Wrote {n_row} .row + {n_content} .recovered{_cv} "
-                  f"({len(_manifest)} entr{'y' if len(_manifest)==1 else 'ies'}) "
-                  f"+ recovery_manifest.json to {extract_dir}")
-            if n_carved:
-                print(f"  CAVEAT: the {n_carved} .carved file(s) are NON-RESIDENT — only their extent MAP was in "
-                      f"metadata;\n          their data clusters may have been reused since deletion, so .carved "
-                      f"bytes are the\n          most likely to be STALE. '.recovered' (resident, in-metadata) is "
-                      f"the more reliable class.")
+        if not (extract_dir and _manifest):
+            return
+        import csv as _csv
+        # (1) THE INDEX — one row per recovered entry (deleted_files.csv/.json). Replaces the old flood of one
+        #     .row file per entry: the analyst reads THIS to see what was deleted, how recoverable it is, and
+        #     which content file (if any) holds its bytes.
+        rows = _deleted_rows(_log_deleted, _log_orphans, cs, tr)
+        if no_system:
+            rows = [r for r in rows if r.get("Category") != "system"]
+        idx = os.path.join(extract_dir, "deleted_files.csv")
+        with open(idx, "w", newline="") as of:
+            w = _csv.writer(of); w.writerow(DELETED_CSV_COLUMNS)
+            for r in rows:
+                w.writerow([r.get(c, "") for c in DELETED_CSV_COLUMNS])
+        with open(os.path.join(extract_dir, "deleted_files.json"), "w") as of:
+            json.dump(rows, of, indent=2, default=str)
+        # (2) detailed run manifest (programmatic provenance / per-file record)
+        with open(os.path.join(extract_dir, "recovery_manifest.json"), "w") as mf:
+            json.dump({"image": image, "entries": len(_manifest),
+                       "note": ("content/<name> = a RESIDENT deleted file's content, decoded BYTE-EXACT from the "
+                                "metadata remnant. content/<name>.carved = a NON-RESIDENT file reassembled from a "
+                                "surviving extent MAP — BEST-EFFORT; its data clusters may have been reused since "
+                                "deletion (no freshness check), so verify. Entries with no content file are "
+                                "metadata-only. deleted_files.csv is the per-entry index; rows/ (only with --rows) "
+                                "holds the raw remnant bytes."),
+                       "records": _manifest}, mf, indent=2)
+        # (3) end-of-run CLI summary — what was recovered + where it went.
+        resident = sum(1 for m in _manifest if m["content_file"] and m["is_resident"])
+        carved   = sum(1 for m in _manifest if m["content_file"] and not m["is_resident"])
+        n_content = resident + carved
+        n_row = sum(1 for m in _manifest if m["row_file"])
+        n_sys = sum(1 for m in _manifest if m.get("category") == "system")
+        n_idx = len(rows)
+        print(f"\n  {n_idx} deleted entr{'y' if n_idx == 1 else 'ies'} indexed → {idx}  (+ .json)")
+        if n_content:
+            _st = f"; the {carved} carved are BEST-EFFORT (may be stale — verify)" if carved else ""
+            print(f"    Content recovered: {resident} resident (exact) + {carved} non-resident carved = "
+                  f"{n_content} file{'s' if n_content != 1 else ''} → {os.path.join(extract_dir, 'content')}/{_st}")
+        elif not write_content:
+            print("    Content: not written (--rows-only) — see rows/ for the raw remnants")
+        else:
+            print("    Content recovered: none (every entry is metadata-only — the data did not survive)")
+        print(f"    Recovery log → {os.path.join(extract_dir, 'recovery_log.txt')}")
+        if n_row:
+            print(f"    Raw remnants → {os.path.join(extract_dir, 'rows')}/  ({n_row} .row — see `help deleted` "
+                  f"for how to read them)")
+        if n_sys and not no_system:
+            print(f"    ({n_sys} indexed entr{'y is' if n_sys == 1 else 'ies are'} OS/BitLocker (FVE2) system "
+                  f"churn — add --no-system to hide.)")
+        _eb = sum(1 for m in _manifest if m["recoverable"] == "extent_backed" and not m["content_file"])
+        if not carve and _eb:
+            print(f"    {_eb} non-resident file(s) have a recoverable extent map — re-run with --full to carve "
+                  f"their content (best-effort).")
 
     try:
         f, ps, cs, tr, roots, obj_map, vmaj, vmin, chkp_lcns = bootstrap(image, partition_start)
@@ -8769,6 +8864,11 @@ def cmd_deleted(image, remaining, partition_start):
         print()
 
         if args["trash"]:
+            if extract_dir or args["csv"] or args["json"] or args["jsonl"]:
+                print("  NOTE: --trash is a quick Trash-table view and does not emit --csv/--json/--jsonl or export")
+                print("        (the Trash table holds raw key/value fragments, not recoverable files). Re-run")
+                print("        WITHOUT --trash for the decoded deleted list — e.g. `export deleted DIR` or")
+                print("        `deleted --csv FILE`.")
             return 0
 
         if len(checkpoints) > 1:
@@ -8835,7 +8935,7 @@ def cmd_deleted(image, remaining, partition_start):
                     print(f"\n  DELETED entries (not in current directory tree): {len(deleted)}\n")
                     for name, e in deleted:
                         kind = "DIR " if e.get("is_dir", False) else "FILE"
-                        _venum, _vlabel, _ = _deleted_recoverability(e)   # B5: header residency from the verdict, not len(vd)>84
+                        _venum, _vlabel, _ = _deleted_recoverability(e, cs, tr)   # B5: header residency from the verdict, not len(vd)>84
                         _hdr_res = "resident" if _venum == "recoverable_inline" else "non-resident"
                         print(f"    {kind} {name}  ({_hdr_res})")
                         if "create_time" in e: print(f"      Created:  {_filetime_to_str(e['create_time'])}")
@@ -8847,7 +8947,7 @@ def cmd_deleted(image, remaining, partition_start):
                 if still_present:
                     print(f"\n  Old versions of existing files (orphaned pages): {len(still_present)}")
                     for name, e in still_present:
-                        _venum, _vlabel, _ = _deleted_recoverability(e)
+                        _venum, _vlabel, _ = _deleted_recoverability(e, cs, tr)
                         _prior_verdicts.append(_venum)
                         print(f"    {name} (cluster {e['plcn']}) — {_vlabel}")
                         _export(name, e, "oldver")
@@ -8906,7 +9006,7 @@ def cmd_deleted(image, remaining, partition_start):
                 for e in d_solid:
                     kind = "DIR " if e.get("is_dir") else "FILE"
                     tsane = "" if e["confidence"] == "high" else "  [one timestamp only]"
-                    _hdr_res = "resident" if _deleted_recoverability(e)[0] == "recoverable_inline" else "non-resident"  # B5
+                    _hdr_res = "resident" if _deleted_recoverability(e, cs, tr)[0] == "recoverable_inline" else "non-resident"  # B5
                     print(f"    {kind} {e['name']}  ({_hdr_res}, "
                           f"{e['tag']} @ cluster {e['plcn']} off {_hx(e['page_off'])}){tsane}")
                     # Q6: which directory the row was deleted FROM (owning-table OID -> path).
@@ -8935,7 +9035,7 @@ def cmd_deleted(image, remaining, partition_start):
                         print(f"      Created:  {_filetime_to_str(e['create_time'])}")
                     if e.get("modify_time"):
                         print(f"      Modified: {_filetime_to_str(e['modify_time'])}")
-                    _venum, _vlabel, _ = _deleted_recoverability(e)
+                    _venum, _vlabel, _ = _deleted_recoverability(e, cs, tr)
                     _view_verdicts.append(_venum)
                     print(f"      Recoverable: {_vlabel}")
                     _export_slack(e, "del")
@@ -8947,13 +9047,13 @@ def cmd_deleted(image, remaining, partition_start):
                     if len(d_partial) > 30:
                         print(f"      … and {len(d_partial) - 30} more")
                     for e in d_partial:
-                        _view_verdicts.append(_deleted_recoverability(e)[0])
+                        _view_verdicts.append(_deleted_recoverability(e, cs, tr)[0])
                         _export_slack(e, "del-partial")
             if prior:
                 print(f"\n  STILL PRESENT — a live file with this name + creation time exists (CoW remnants, and "
                       f"former locations of moved/renamed files): {len(prior)}  [{len(p_solid)} with valid timestamps]")
                 for e in p_solid:
-                    _venum, _vlabel, _ = _deleted_recoverability(e)
+                    _venum, _vlabel, _ = _deleted_recoverability(e, cs, tr)
                     _prior_verdicts.append(_venum)
                     # Neutral note: the remnant is in a DIFFERENT directory than where the live file now sits
                     # (a move/rename/copy — the tool does not interpret which; the recovery log has both paths).
@@ -9038,14 +9138,13 @@ def cmd_deleted(image, remaining, partition_start):
             if _prior_verdicts:
                 print(f"  PRIOR versions of live files: {_rc(_prior_verdicts)} of {len(_prior_verdicts)} "
                       f"decode to a file.")
-            print("  Restorability: a RESIDENT deleted file's FULL content is recoverable from the remnant")
-            print("       (written as .recovered). A NON-RESIDENT file keeps its data in on-disk extents — if the")
-            print("       extent map survives in the remnant ('extent_backed'), `export deleted --carve`")
-            print("       reconstructs it best-effort (bytes may be stale); otherwise only METADATA survives")
-            print("       (name/size/timestamps). See the `export deleted` docs.")
+            print("  Restorability: a RESIDENT deleted file's FULL content is recovered exactly (content/<name>).")
+            print("       A NON-RESIDENT file keeps its data in on-disk extents — if the extent map survives")
+            print("       ('extent_backed'), --full/--carve reconstructs it best-effort (content/<name>.carved,")
+            print("       may be stale); otherwise only METADATA survives (name/size/timestamps).")
             if not extract_dir:
-                print("  Next: `export deleted <DIR>` writes each entry's raw .row (evidence) + a .recovered for")
-                print("        resident files; add --carve to also reconstruct non-resident (extent-backed) files.")
+                print("  Next: `export deleted <DIR>` writes a deleted_files.csv/.json index + the readable content")
+                print("        files (content/); add --full to carve non-resident files, --rows for the raw remnants.")
         _write_manifest()
 
         # Recovery log — a forensic audit trail, written ONLY when something is actually exported/recovered
@@ -9062,15 +9161,16 @@ def cmd_deleted(image, remaining, partition_start):
                 _b = os.path.basename(image).rsplit(".", 1)[0]
                 _lp = f"forefst_recovery_{_b}_{_dt.datetime.now().strftime('%Y%m%d-%H%M%S')}.txt"
             _written = _write_recovery_log(_lp, image, vmaj, vmin, _logmode, ", ".join(_ran), max_scan,
-                                           _log_deleted, _log_present, extract_dir, orphans=_log_orphans)
-            if _written:
+                                           _log_deleted, _log_present, extract_dir, orphans=_log_orphans,
+                                           cs=cs, tr=tr)
+            if _written and not (extract_dir and _manifest):   # export already reports the log in its summary
                 print(f"  Recovery log: {_written}")
 
         # Machine-readable export (item 4) — csv/json/jsonl, consistent with the other commands and compatible
         # with every recovery flag (it runs on the finalized _log_deleted/_log_orphans, whatever tiers ran).
         _ofmt = "json" if args["json"] else ("jsonl" if args["jsonl"] else ("csv" if args["csv"] else None))
         if _ofmt:
-            _emit_records(_deleted_rows(_log_deleted, _log_orphans), DELETED_CSV_COLUMNS,
+            _emit_records(_deleted_rows(_log_deleted, _log_orphans, cs, tr), DELETED_CSV_COLUMNS,
                           _ofmt, args[_ofmt], label="deleted entries")
 
         print()
@@ -10206,7 +10306,10 @@ CMD_HELP = {
            "directory for a file / the object's own OID for a directory, file_id the per-home ordinal).",
            "entry_type is dir when file_id==0 (a directory self-reference) else file. Directories DO get USN",
            "records. Bare `usn` shows the activity SUMMARY (like `mlog`); `usn --list` prints the on-screen",
-           "record list; --csv/--json export the records; --info shows journal health."],
+           "record list; --csv/--json export the records; --info shows journal health.",
+           "The whole journal is read: $J is a bounded rolling log that fills its allocation, so every",
+           "allocated extent is parsed (a file's `files`/`details` USN = its LastUsn, the byte offset of its",
+           "most recent record here — resolvable while that record is still inside the live window)."],
   "opts": [("--list", "print the on-screen per-record list (formerly the bare-usn default)"),
            ("-v, --verbose", "with --list: add RecLen/Version/StreamOffset per record"),
            ("--info", "journal metadata instead of records ($J extents, $Max, record count)"),
@@ -10355,34 +10458,44 @@ CMD_HELP = {
            "record) / 'extent_backed' (NON-RESIDENT — data is in on-disk extents whose MAP survives, so",
            "`export deleted --carve` reconstructs it best-effort) / 'metadata only' (name/size/timestamps only).",
            "Each row shows the directory it was deleted FROM. Prior versions of files that still exist →",
-           "`snapshots`; Windows Recycle Bin → `recyclebin`. To WRITE files out, use `export deleted DIR`.",
-           "A RECOVERY LOG (audit trail: image, mode, methods ran, and the DELETED-vs-STILL-PRESENT split",
-           "with each remnant's source page) is written when you EXPORT (`export deleted DIR` -> the dir) or",
-           "when you ask for one with --log PATH; a plain view does not write a log.",
+           "`snapshots`; Windows Recycle Bin → `recyclebin`.",
+           "`export deleted DIR` writes: (1) deleted_files.csv + .json — the INDEX, one row per entry (name,",
+           "recoverability, reliability, category, and the content file if any); (2) content/ — only the READABLE",
+           "files: content/<name> for a RESIDENT file (byte-exact) and, under --full/--carve, content/<name>.carved",
+           "for a NON-RESIDENT file (best-effort, may be stale); (3) recovery_log.txt — the forensic audit trail.",
+           "The raw remnant bytes go to rows/ ONLY with --rows: each rows/<name>_c<cluster>o<off>.row is the raw",
+           "recovered directory-entry value (name in the key; timestamps/attrs/size/extent-map at the $SI/index",
+           "offsets — inspect one with the `details` command or the structure docs). A plain view writes nothing.",
            "'recoverable' means present & decodable, NOT un-overwritten."],
   "opts": [("--full", "FULL recovery: also scan orphan pages + carve non-resident content (vs the quick default)"),
            ("--no-slack", "skip the slack scan entirely (Trash table + checkpoint diff only — fast, metadata)"),
-           ("--trash", "only the Trash table, then return (fastest)"),
+           ("--trash", "only the Trash table, then return (fastest; view only — no --csv/--json/export)"),
            ("--scan-pages", "additionally run the orphaned-page scan (a distinct, rarely-productive method)"),
            ("--orphans", "add a LOW-CONFIDENCE tier: Object-Table OIDs unlinked from the tree (identity-filtered; "
                          "opt-in). Low volume; genuine deleted dirs usually recover more fully via the slack scan"),
-           ("--carve", "with `export deleted`: reconstruct NON-RESIDENT files best-effort (on by default under "
-                       "--full). The .carved bytes are the MOST likely to be stale (clusters may be reused); "
-                       ".recovered (resident, in-metadata) is more reliable"),
+           ("--carve", "with `export deleted`: reconstruct NON-RESIDENT files best-effort into content/<name>.carved "
+                       "(on by default under --full). Best-effort — the data clusters may have been reused since "
+                       "deletion, so .carved may be stale (verify); the resident content/<name> is byte-exact"),
            ("--search SUB", "filter recovered entries by name substring"),
            ("--max-scan N", "max clusters for the orphan-page scan under --full (default 50000)"),
-           ("--rows-only", "with `export deleted`: write only the raw .row remnant (skip .recovered/.carved)"),
-           ("--content-only", "with `export deleted`: write only decoded content (skip the raw .row)"),
-           ("--csv/--json/--jsonl FILE", "write the deleted entries to a machine-readable file — columns "
-                          "FileName, IsDirectory, RecoverySource, RecoveredFrom, Recoverability, Created, "
-                          "Modified, RecoveredChild, Cluster; composes with any recovery flag"),
+           ("--rows", "with `export deleted`: ALSO write the raw remnant bytes to rows/ (OFF by default; provenance "
+                      "/ chain-of-custody — the exact recovered directory-entry bytes)"),
+           ("--no-system", "drop OS/BitLocker (`FVE2.{…}`) system churn from the index + export (focus on user files)"),
+           ("--rows-only", "with `export deleted`: write ONLY the raw remnants (rows/) + the index, skip content/"),
+           ("--content-only", "with `export deleted`: content + index only (this is now the DEFAULT; kept for scripts)"),
+           ("--csv/--json/--jsonl FILE", "write the deleted-entry index to a machine-readable file — columns "
+                          "FileName, IsDirectory, RecoverySource, RecoveredFrom, Recoverability, Created, Modified, "
+                          "RecoveredChild, Cluster, FileAttributes, Category, Reliability, ContentFile; composes "
+                          "with any recovery flag (same columns as the exported deleted_files.csv)"),
            ("--log PATH", "write the forensic recovery-run log here — also forces a log on a plain view "
                           "(when exporting, the default is <export-dir>/recovery_log.txt)"),
-           ("--extract DIR", "DEPRECATED — use `export deleted DIR` (same result: .row + .recovered [+ .carved])")],
+           ("--extract DIR", "DEPRECATED — use `export deleted DIR` (index + content/, and rows/ with --rows)")],
   "ex": [("deleted", "RECOVERY (default): Trash + checkpoint + live-page slack, with recoverability verdicts"),
          ("deleted --full", "FULL: also scan orphan pages + carve — the complete pass"),
          ("deleted --trash", "fastest: Trash-only check"),
-         ("export deleted OUT --full", "write every recovered file (.row/.recovered/.carved) with the full scan"),
+         ("export deleted OUT --full", "write deleted_files.csv/.json + content/ (resident exact + carved) — full scan"),
+         ("export deleted OUT --full --no-system", "same, but hide the BitLocker FVE2 churn (user files only)"),
+         ("export deleted OUT --rows", "also keep the raw remnant bytes in rows/ (provenance)"),
          ("deleted --search report", "only deleted entries named like 'report'")],
  },
  "recyclebin": {
@@ -10897,6 +11010,7 @@ def main():
                 if match is None:
                     print(f"path not found: {det_path}", file=sys.stderr); f.close(); sys.exit(1)
                 sd_map = build_security_map(f, ps, cs, tr, obj_map)
+                oid2path = _build_oid2path(results)   # CreationDir (HomeOID → path), same as `files`
                 # EA source: the resident value carries the embedded $EA sub-records directly; a
                 # non-resident file's EAs are in its type-0x40 backing (fetched by home/parent + file_id).
                 if match.get("is_resident"):
@@ -10906,7 +11020,7 @@ def main():
                     ea_src = (fetch_t40_backing(f, ps, cs, tr, obj_map, match.get("home_oid") or 0, match.get("file_id") or 0, _fsz)
                               or fetch_t40_backing(f, ps, cs, tr, obj_map, match.get("parent_oid") or 0, match.get("file_id") or 0, _fsz))
                 if args.json:
-                    rec = _build_record(match, sd_map, version_str)
+                    rec = _build_record(match, sd_map, version_str, oid2path)
                     eas, packed = extract_eas_from_value(ea_src) if ea_src is not None else (None, None)
                     if eas is not None:
                         rec["packed_ea_size"] = packed
@@ -10926,7 +11040,7 @@ def main():
                         rec["internal_flags"] = _ifl
                     _emit_json_obj(rec, _native_fmt_dest(args)[1], "record")
                 else:
-                    _print_file_detail(match, sd_map, version_str, raw_value=ea_src)
+                    _print_file_detail(match, sd_map, version_str, raw_value=ea_src, oid2path=oid2path)
                 f.close()
                 return
         log(f"[{PROG}] Looking up OID 0x{det_oid:x}...")
