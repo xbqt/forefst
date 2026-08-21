@@ -123,6 +123,16 @@ The `$J` data stream contains the actual `USN_RECORD_V3` entries as non-resident
 not to be confused with the type-0x100 `$EFS` attribute. The single-instance sub-record at 0x288
 contains organizational metadata including a creation timestamp and journal configuration.
 
+`$J` is a **bounded rolling log**: it is pre-allocated to a fixed size (typically 32 MiB or 128 MiB, set
+by `$Max`) and, once full, the oldest records are overwritten in place as new ones are appended — so its
+records fill the entire allocation. forefst therefore reads the **whole allocated window** (every extent),
+not a shorter "logical size" — the two multi-instance markers each carry a fixed data-stream *type* tag,
+not a byte length. Each record is self-describing (a record length and its own USN), so a partially-filled
+journal's zero tail is skipped and the full read is complete. A record's USN is its **byte offset in `$J`**,
+so a file's `LastUsn` (`$SI+0x40`) is the offset of that file's most recent record and is found in the
+journal **while that record is still inside the live window**; only changes older than the window's oldest
+surviving record have been overwritten and are gone.
+
 ### Activation detection
 
 | Image state | OID 0x520 row count | Change Journal entry |

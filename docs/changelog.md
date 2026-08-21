@@ -1,5 +1,40 @@
 # Changelog
 
+## v1.5.0 — 2026-08-21 — deleted-recovery overhaul, full USN journal, richer `details`
+
+**`export deleted` now produces an analyst-first output — a CSV/JSON index plus only the files you can actually
+read — and recovers non-resident deleted content on every ReFS layout, not just the newest. The USN journal is
+read in full, and `details` reports everything `files` does for a single file.**
+
+- **Non-resident deleted files carve on every layout.** A deleted non-resident file keeps its extent map in
+  page slack; on ReFS 3.4–3.10 and upgraded volumes that map is embedded *inside* the directory record as a
+  small B+-tree the previous recovery path could not reach — so those files were reported metadata-only and
+  never carved. `export deleted --carve`/`--full` now decodes that inline map (the same cover-guarded decoder
+  `extract` uses) and reconstructs the file: byte-exact where its clusters survive, and nothing at all — never
+  wrong or empty bytes — where the map points outside the volume. Corpus-wide this recovers thousands of files
+  that were previously unrecoverable, with no regression on the layouts that already worked. (Also fixes a
+  latent buffer-shrink where a past-EOF read could emit a 0-byte file.)
+- **`export deleted` output redesigned.** Instead of flooding the output directory with one raw `.row` remnant
+  per entry, the command writes **`deleted_files.csv` (+ `.json`)** — one row per deleted entry, with its
+  recoverability, a reliability grade (exact / best-effort / none), a system-vs-user category, and the exported
+  content file — plus a **`content/`** folder holding only the files that actually decode (resident byte-exact,
+  and carved non-resident under `--full`/`--carve`; never a 0-byte placeholder), and a recovery log. The raw
+  remnants are written only with **`--rows`**; **`--no-system`** hides OS/BitLocker churn; and the run ends with
+  a plain-language summary of what was recovered and where. `--trash` is a quick Trash-table view and now says
+  so when combined with an output/export flag, instead of silently writing nothing.
+- **The USN journal is read in full.** `usn` (and the super-timeline and `usn --stats`) previously stopped after
+  roughly the first 900 KB of a busy `$J` — a `$DATA` descriptor was being misread as the stream size — so most
+  of a large journal was invisible. The whole rolling journal is now read; on active volumes this turns a few
+  thousand visible records into the complete set (e.g. ~6.5 k → ~218 k on one image), and a file's `LastUsn`
+  resolves to its journal record across the full window.
+- **`details` reports everything `files` does.** `details <file>` is now a strict superset of a `files` row for
+  the targeted file — adding the creation directory, a security-descriptor (DACL) summary, the sparse flag, and
+  per-version snapshot names — so drilling into one file never shows less than the listing.
+- **Reference & documentation.** The deleted-recovery, methodology, and About pages were revised; the
+  Methodology page gained a clear *versions tested* table (driver builds and on-disk versions); a new reference
+  finding and an erratum were recorded for the full-journal read; and the tool / reference / website set was
+  reconciled to the current behaviour.
+
 ## v1.4.0 — 2026-08-16 — file identity completed, move/residency consolidation, output consistency + usability
 
 **The file-identity model completed for resident files and proven end-to-end for moves, a batch of

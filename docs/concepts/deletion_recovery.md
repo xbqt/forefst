@@ -130,7 +130,13 @@ name is a fragment from a row whose body was partly overwritten. It records whic
 **deleted from** — the owning table OID at page offset `0x48` ([page header](../structures/page_header.md)
 `TableIdLow`). Implemented as `forefst.py <image> deleted`: *recovery* mode scans the **live pages** (quick);
 `deleted --full` also scans **orphan pages** (the freed pages of deleted objects) for older deletions. Add
-`--no-slack` for a fast Trash+checkpoint pass; `export deleted DIR` writes the recovered rows out.
+`--no-slack` for a fast Trash+checkpoint pass. **`export deleted DIR`** writes a **`deleted_files.csv`/`.json`
+index** — one row per deleted entry (name, recoverability, reliability, category, and its content file if any) —
+plus a **`content/`** folder holding only the *readable* recoveries: `content/<name>` for a resident file
+(byte-exact) and, under `--full`/`--carve`, `content/<name>.carved` for a non-resident file (best-effort — the
+clusters may have been reused, so verify). A `recovery_log.txt` audit trail is written too. The raw remnant bytes
+go to `rows/` only with `--rows`; `--no-system` hides the BitLocker `FVE2.{…}` churn that otherwise dominates a
+volume's deleted list.
 
 **Deleted vs still-present — decided by file identity `(name, creation-time)`.** Each recovered row is either a
 genuine deletion or a copy-on-write remnant of a file that still exists. A remnant is **deleted** only when **no
@@ -156,7 +162,12 @@ separate on-disk extents, and its **extent map lives in a type-0x40 backing reco
 the live tree at deletion — but whose body **survives in the same page slack** as the name row. The scan
 recovers that backing, matches it to the name row by `(file_id, home-dir)` + exact size, and reconstructs
 the file from those clusters (`export deleted --carve`, best-effort — the clusters may have been
-reallocated). When even the extent table has been zeroed in the surviving remnant, only metadata is left.
+reallocated). On older and upgraded volumes the extent map is instead **embedded inside the name row itself**
+(a small B+-tree the file carries in place of a separate backing record); the scan decodes that embedded map
+the same way and carves those files too, so non-resident deleted content is recoverable on every layout — not
+just the newest one. A carve is only written when the extent map forms a complete, in-bounds picture of the
+file and at least some of its clusters are still readable; a map that points outside the volume or has been
+zeroed yields metadata only, never a corrupt or empty stand-in file.
 
 **Deleted directories are reconstructed as a group.** When a directory is deleted its own page survives in
 slack holding its children's rows, but its OID is gone from the tree — so those children are recovered with
