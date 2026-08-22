@@ -7,9 +7,9 @@
 The project consists of:  
 - **The ReFS format reference**, documenting the structures, attributes, main concepts like addressing or checksum mechanisms and version-specific changes. Available as plain Markdown in docs/ but above all as a website, <a href="https://xbpt.gitlab.io/forefst/" target="_blank"><strong>xbpt.gitlab.io/forefst</strong></a>.
 - **The open-source forensic tool, forefst.py**, for analysing ReFS volumes, including file metadata, deleted data, journals, hard links and special files.
-- **The reproducible research methodology and lab materials**, combining reverse engineering of Microsoft’s refs.sys driver with analysis of more than 100 disk images to validate the documented structures and behaviours. But also everything needed to reproduce and audit the structural analysis: hypervisor scripts, file-activity generators, tool output, some disk images and the refsanalysis.py tool.
+- **The reproducible research methodology and lab materials**, combining reverse engineering of Microsoft’s refs.sys driver with analysis of more than 100 disk images to validate the documented structures and behaviours. It also includes everything needed to reproduce and audit the structural analysis: hypervisor scripts, file-activity generators, tool output, some disk images and the refsanalysis.py tool.
 
-And if you want a complete introduction to the project: <a href="https://xbpt.gitlab.io/refs/" target="_blank">xbpt.gitlab.io/refs</a>.
+And if you want a complete introduction to the project: <a href="https://xbpt.gitlab.io/refs/" target="_blank"><strong>xbpt.gitlab.io/refs</strong></a>.
 
 ## Quick start
 
@@ -42,7 +42,7 @@ The input can be a raw ReFS image (`dd` / `.raw`), a raw disk or partition devic
 
 ## For NTFS analysts
 
-One structural difference comes first, because it reframes the whole workflow: **there is nothing to extract.** NTFS analysis usually means pulling one file out of an image — `$MFT`, `$UsnJrnl:$J`, `$Boot`, `$SDS` — and feeding it to a parser (the niche a tool like MFTECmd fills). ReFS has no single `$MFT`-like file; its metadata lives across Minstore B+-trees hanging off the checkpoint root tables. So instead of extracting an artifact, you point forefst at the raw image (or device) and it bootstraps the volume itself. Every command below reads the whole volume, not a carved-out file.
+One structural difference comes first, because it reframes the whole workflow: **there is nothing to extract.** NTFS analysis usually means pulling one file out of an image — `$MFT`, `$UsnJrnl:$J`, `$Boot`, `$SDS` — and feeding it to a parser (the niche a tool like MFTECmd fills). ReFS has no single `$MFT`-like file; its metadata lives across Minstore B+-trees hanging off the checkpoint root tables. So instead of extracting an artifact, you point forefst at the raw image (or device) and it bootstraps the volume itself. Every command below operates directly on the volume, not a carved-out file.
 
 | To… | NTFS (typical workflow) | ReFS (forefst) |
 |---|---|---|
