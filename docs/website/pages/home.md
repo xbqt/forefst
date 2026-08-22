@@ -99,20 +99,3 @@ look like?"* — it decodes one on-disk structure at a time (boot sector, superb
 object / schema / container / parent-child tables, the upcase table, and more), and includes a boot-sector
 inspect/repair mode. It's the companion for learning the format and for validating the forensic tool
 against new ReFS builds.
-
-### Try it in two minutes
-
-Both tools are pure Python (3.7+, standard library) — nothing to install. Download the sample image used
-below directly (no clone needed), decompress, and run:
-
-```bash
-curl -L -O https://github.com/xbqt/forefst/raw/main/analysis/samples/disks/win11refs2tsnapshots/win11refs2tsnapshots.raw.zst
-zstd -d win11refs2tsnapshots.raw.zst
-
-python3 forefst.py win11refs2tsnapshots.raw summary        # volume overview: version, size, counts, upgrade state
-python3 forefst.py win11refs2tsnapshots.raw -o files.csv   # full 40-column listing, opens straight in Timeline Explorer
-python3 forefst.py win11refs2tsnapshots.raw mlog --parse   # decode the transaction log into user actions
-```
-
-Or clone the repo and run `git lfs pull` to fetch all the sample images. Point forefst at a raw image
-(`dd` / `.raw`), a disk device, or an E01 exported to raw — it finds the ReFS partition itself.
