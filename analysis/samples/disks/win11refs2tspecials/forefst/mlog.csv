@@ -559,7 +559,7 @@ seq,timestamp,action,path,name,oid,opcodes,record_count,plcn
 558,,REPARENT,/testspecials,,0x702,DELETE_ROW REPARENT_TABLE INSERT_ROW,3,33890
 559,2026-05-16T16:34:27.130Z,CREATE,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369,backup_beta_229699.tmp,0x705,INSERT_ROW INSERT_ROW SET_OBJECT,3,33891
 560,,REPARENT,/testspecials,draft_uniform_166420.txt,0x702,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,33893
-561,,REPARENT,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369,backup_beta_229699.tmp,0x705,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,33894
+561,2026-05-16T16:34:27.259Z,REPARENT,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369,backup_beta_229699.tmp,0x705,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,33894
 562,,REPARENT,/testspecials,alpha_backup_597620.dat,0x702,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,33896
 563,2026-05-16T16:34:27.346Z,CREATE,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369,symlink_foxtrot_254926.lnk,0x705,INSERT_ROW INSERT_ROW SET_OBJECT,3,33897
 564,,ENTRY_REMOVE,/testspecials,,0x702,DELETE_ROW,1,33899
@@ -583,11 +583,11 @@ seq,timestamp,action,path,name,oid,opcodes,record_count,plcn
 582,2026-05-16T16:34:28.189Z,CREATE,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277,mike_november_838527.csv,0x708,INSERT_ROW INSERT_ROW SET_OBJECT,3,33925
 583,,ENTRY_REMOVE,/testspecials,,0x702,DELETE_ROW,1,33931
 584,2026-05-16T16:34:28.453Z,CREATE,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277,symlink_data_971036.lnk,0x708,INSERT_ROW INSERT_ROW SET_OBJECT,3,33932
-585,,ENTRY_REMOVE,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369,,0x705,DELETE_ROW,1,33934
+585,2026-05-16T16:34:28.578Z,ENTRY_REMOVE,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369,,0x705,DELETE_ROW,1,33934
 586,2026-05-16T16:34:28.627Z,CREATE,/testspecials,quebec_sierra_815130.csv,0x702,INSERT_ROW INSERT_ROW SET_OBJECT,3,33936
 587,,STREAM_UPD,/testspecials/dir_november_947335,,0x709,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,33938
 588,2026-05-16T16:34:28.778Z,CREATE,/testspecials/dir_november_947335,symlink_papa_109718.lnk,0x709,INSERT_ROW INSERT_ROW SET_OBJECT,3,33940
-589,,REPARENT,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111,symlink_temp_835968.lnk,0x704,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,33942
+589,2026-05-16T16:34:28.898Z,REPARENT,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111,symlink_temp_835968.lnk,0x704,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,33942
 590,,OP,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369,,0x705,INSERT_ROW INSERT_ROW INSERT_ROW,3,33944
 591,,STREAM_UPD,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416,,0x70b,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,33946
 592,2026-05-16T16:34:29.118Z,CREATE,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778,dir_romeo_851778,0x70d,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,33949
@@ -634,7 +634,7 @@ seq,timestamp,action,path,name,oid,opcodes,record_count,plcn
 633,,OP,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277,,0x708,INSERT_ROW INSERT_ROW INSERT_ROW,3,34024
 634,,REPARENT,/testspecials,cache_romeo_901499.xml,0x702,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,34029
 635,2026-05-16T16:34:28.375Z,CREATE,/testspecials,hardlink_sync_617075.xml,0x702,INSERT_ROW INSERT_ROW,2,34030
-636,,ENTRY_REMOVE,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/dir_echo_285482,,0x70c,DELETE_ROW DELETE_ROW DELETE_ROW,3,34036
+636,2026-05-16T16:34:32.605Z,ENTRY_REMOVE,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/dir_echo_285482,,0x70c,DELETE_ROW DELETE_ROW DELETE_ROW,3,34036
 637,,ENTRY_REMOVE,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581,,0x70e,DELETE_ROW,1,34038
 638,2026-05-16T16:34:32.765Z,CREATE,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104,yankee_romeo_767149.bak,0x703,INSERT_ROW INSERT_ROW SET_OBJECT,3,34039
 639,,OP,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395,,0x707,INSERT_ROW INSERT_ROW INSERT_ROW,3,34041
@@ -734,7 +734,7 @@ seq,timestamp,action,path,name,oid,opcodes,record_count,plcn
 733,2026-05-16T16:34:44.569Z,CREATE,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277,log_draft_374023.bak,0x708,INSERT_ROW INSERT_ROW SET_OBJECT,3,34235
 734,,STREAM_UPD,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277,,0x708,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34236
 735,2026-05-16T16:34:44.953Z,CREATE,/testspecials/dir_november_947335/dir_sync_924581/dir_backup_133264,echo_backup_486937.cfg,0x71d,INSERT_ROW INSERT_ROW SET_OBJECT,3,34242
-736,,REPARENT,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369,,0x705,DELETE_ROW REPARENT_TABLE INSERT_ROW,3,34245
+736,2026-05-16T16:34:45.134Z,REPARENT,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369,,0x705,DELETE_ROW REPARENT_TABLE INSERT_ROW,3,34245
 737,,ALLOCATE,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277,,0x708,ALLOCATE,1,34247
 738,2026-05-16T16:34:30.586Z,RENAME,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104,temp_draft_689123.bak,0x703,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW,4,34248
 739,,ENTRY_REMOVE,/testspecials,,0x702,DELETE_ROW,1,34249
@@ -874,7 +874,7 @@ seq,timestamp,action,path,name,oid,opcodes,record_count,plcn
 873,,STREAM_UPD,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277,,0x708,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34505
 874,2026-05-16T16:35:09.192Z,CREATE,/testspecials/dir_november_947335/dir_sync_924581/dir_mike_306826/dir_draft_942345,dir_draft_942345,0x73c,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,34506
 875,2026-05-16T16:35:09.320Z,CREATE,/testspecials/dir_november_947335,audit_trace_964546.txt,0x709,INSERT_ROW INSERT_ROW SET_OBJECT,3,34509
-876,,ENTRY_REMOVE,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778,,0x70d,DELETE_ROW DELETE_ROW DELETE_ROW,3,34512
+876,2026-05-16T16:35:09.460Z,ENTRY_REMOVE,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778,,0x70d,DELETE_ROW DELETE_ROW DELETE_ROW,3,34512
 877,2026-05-16T16:35:09.584Z,CREATE,/testspecials/dir_uniform_544837/dir_output_654155,draft_output_343220.txt,0x739,INSERT_ROW INSERT_ROW SET_OBJECT,3,34514
 878,,OP,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/dir_uniform_978658,,0x725,INSERT_ROW INSERT_ROW INSERT_ROW,3,34519
 879,,REPARENT,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416,,0x70b,DELETE_ROW REPARENT_TABLE INSERT_ROW,3,34521
@@ -1047,7 +1047,7 @@ seq,timestamp,action,path,name,oid,opcodes,record_count,plcn
 1046,2026-05-16T16:35:57.228Z,CREATE,/testspecials/dir_gamma_163068/dir_echo_659970,papa_sync_385403.txt,0x72b,INSERT_ROW INSERT_ROW SET_OBJECT,3,34854
 1047,,STREAM_UPD,/testspecials/dir_gamma_163068/dir_echo_659970,,0x72b,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34855
 1048,,STREAM_UPD,/testspecials/dir_gamma_163068/dir_echo_659970/dir_quebec_876879,,0x751,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34858
-1049,,ENTRY_REMOVE,/testspecials/dir_november_947335/dir_sync_924581/dir_backup_133264,,0x71d,DELETE_ROW,1,34866
+1049,2026-05-16T16:35:58.567Z,ENTRY_REMOVE,/testspecials/dir_november_947335/dir_sync_924581/dir_backup_133264,,0x71d,DELETE_ROW,1,34866
 1050,,ALLOCATE,/testspecials/dir_november_947335/dir_archive_582163,,0x75a,ALLOCATE,1,34868
 1051,2026-05-16T16:35:59.039Z,CREATE,/testspecials/dir_november_947335/dir_archive_582163,symlink_log_351399.lnk,0x75a,INSERT_ROW INSERT_ROW SET_OBJECT,3,34869
 1052,,REPARENT,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/dir_echo_285482,symlink_archive_396575.lnk,0x70c,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,34871
@@ -1224,7 +1224,7 @@ seq,timestamp,action,path,name,oid,opcodes,record_count,plcn
 1223,,MODIFY,/testspecials,,0x702,SET_RANGE_STATE,1,35217
 1224,,OP,/testspecials/dir_november_947335/dir_mike_527964/dir_config_596261,,0x76a,INSERT_ROW INSERT_ROW INSERT_ROW,3,35218
 1225,,STREAM_UPD,/testspecials/dir_uniform_195248/dir_hotel_837877,,0x760,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,35222
-1226,,REPARENT,/testspecials/dir_gamma_163068/dir_alpha_598099,,0x734,DELETE_ROW REPARENT_TABLE INSERT_ROW,3,35223
+1226,2026-05-16T16:37:04.686Z,REPARENT,/testspecials/dir_gamma_163068/dir_alpha_598099,,0x734,DELETE_ROW REPARENT_TABLE INSERT_ROW,3,35223
 1227,2026-05-16T16:37:05.121Z,CREATE,/testspecials/dir_uniform_195248/dir_hotel_837877,uniform_sync_171039.txt,0x760,INSERT_ROW INSERT_ROW SET_OBJECT,3,35226
 1228,,MODIFY,/testspecials/dir_uniform_195248/dir_hotel_837877,,0x760,SET_RANGE_STATE,1,35230
 1229,,MODIFY,/testspecials/dir_uniform_195248/dir_hotel_837877,,0x760,SET_RANGE_STATE,1,35231
@@ -1527,7 +1527,7 @@ seq,timestamp,action,path,name,oid,opcodes,record_count,plcn
 1526,2026-05-16T16:38:19.309Z,CREATE,/testspecials2/dir_trace_120580,mike_uniform_987865.csv,0x79c,INSERT_ROW INSERT_ROW SET_OBJECT,3,35824
 1527,,STREAM_UPD,/testspecials2/dir_trace_120580,,0x79c,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,35825
 1528,2026-05-16T16:38:19.623Z,CREATE,/testspecials2/dir_yankee_474982/dir_mike_734231,dir_log_472244,0x7a8,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,35827
-1529,,DELETE,/testspecials2/dir_oscar_397968/dir_romeo_329803,dir_kilo_204376,0x795,DELETE_ROW DELETE_ROW DELETE_TABLE DELETE_ROW,4,35832
+1529,2026-05-16T16:38:20.358Z,DELETE,/testspecials2/dir_oscar_397968/dir_romeo_329803,dir_kilo_204376,0x795,DELETE_ROW DELETE_ROW DELETE_TABLE DELETE_ROW,4,35832
 1530,2026-05-16T16:38:20.657Z,CREATE,/testspecials2,mike_index_889080.lnk,0x775,INSERT_ROW INSERT_ROW SET_OBJECT,3,35834
 1531,2026-05-16T16:38:20.855Z,CREATE,/testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/dir_archive_157527,november_oscar_974502.cfg,0x77e,INSERT_ROW INSERT_ROW SET_OBJECT,3,35837
 1532,,OP,/testspecials2/dir_yankee_474982,,0x7a2,INSERT_ROW INSERT_ROW INSERT_ROW,3,35839
@@ -1660,7 +1660,7 @@ seq,timestamp,action,path,name,oid,opcodes,record_count,plcn
 1659,,ALLOCATE,/testspecials2/dir_yankee_474982/dir_mike_734231,,0x7a8,ALLOCATE,1,36099
 1660,2026-05-16T16:38:51.940Z,CREATE,/testspecials2/dir_yankee_474982/dir_romeo_902399,symlink_gamma_306751.lnk,0x7ad,INSERT_ROW INSERT_ROW SET_OBJECT,3,36100
 1661,,OP,/testspecials2/dir_yankee_474982/dir_romeo_902399,,0x7ad,INSERT_ROW INSERT_ROW INSERT_ROW,3,36101
-1662,,ENTRY_REMOVE,/testspecials2/dir_yankee_474982/dir_romeo_902399,,0x7ad,DELETE_ROW,1,36102
+1662,2026-05-16T16:38:51.942Z,ENTRY_REMOVE,/testspecials2/dir_yankee_474982/dir_romeo_902399,,0x7ad,DELETE_ROW,1,36102
 1663,,OP,/testspecials2/dir_log_298284/dir_draft_685915/dir_report_598294,,0x7b0,INSERT_ROW INSERT_ROW INSERT_ROW,3,36105
 1664,,ENTRY_REMOVE,/testspecials2/dir_kilo_616914/dir_index_179689,,0x7af,DELETE_ROW,1,36107
 1665,,OP,/testspecials2/dir_log_298284,,0x776,INSERT_ROW INSERT_ROW INSERT_ROW,3,36108
@@ -2207,7 +2207,7 @@ seq,timestamp,action,path,name,oid,opcodes,record_count,plcn
 2206,2026-05-16T16:41:29.620Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790,xbpt_foxtrot_romeo_979913.json,0x7fd,INSERT_ROW INSERT_ROW SET_OBJECT,3,37099
 2207,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790,,0x7fd,UPDATE_STREAM,1,37100
 2208,2026-05-16T16:41:29.630Z,CREATE,OID 0x7ff,elvis_dir_data_582682,0x7ff,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,37102
-2209,,DELETE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398,elvis_dir_kilo_540242,0x7fb,DELETE_ROW DELETE_ROW DELETE_TABLE DELETE_ROW,4,37104
+2209,2026-05-16T16:41:29.661Z,DELETE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398,elvis_dir_kilo_540242,0x7fb,DELETE_ROW DELETE_ROW DELETE_TABLE DELETE_ROW,4,37104
 2210,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509,,0x7fc,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,37106
 2211,,ALLOCATE,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509,,0x7fc,ALLOCATE,1,37107
 2212,2026-05-16T16:41:29.673Z,CREATE,/test/elvis_dir_victor_783323,xbpt_yankee_output_781405.csv,0x7fa,INSERT_ROW INSERT_ROW SET_OBJECT,3,37108
@@ -2224,7 +2224,7 @@ seq,timestamp,action,path,name,oid,opcodes,record_count,plcn
 2223,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x7e7,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,37121
 2224,2026-05-16T16:41:29.838Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,xbpt_echo_tango_714597.log,0x7ea,INSERT_ROW INSERT_ROW SET_OBJECT,3,37123
 2225,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,,0x7ea,UPDATE_STREAM,1,37124
-2226,,DELETE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x7e7,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE,4,37125
+2226,2026-05-16T16:41:29.737Z,DELETE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x7e7,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE,4,37125
 2227,2026-05-16T16:41:29.908Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790,xbpt_archive_log_561904.tmp,0x7fd,INSERT_ROW INSERT_ROW SET_OBJECT,3,37127
 2228,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790,,0x7fd,UPDATE_STREAM,1,37128
 2229,,STREAM_UPD,/test/elvis_dir_victor_783323,,0x7fa,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,37129

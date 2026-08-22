@@ -2613,7 +2613,7 @@ MLog Transactions (parsed)
   [STREAM_UPD  ] /test/elvis_dir_victor_783323
     DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM
 
-  [REPARENT    ] /test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608
+  [REPARENT    ] /test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608  2026-05-16T16:51:55.083Z
     DELETE_ROW REPARENT_TABLE INSERT_ROW
 
   [DELETE      ] /test  (object table destroyed)
@@ -2778,7 +2778,7 @@ MLog Transactions (parsed)
   [STREAM_UPD  ] /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743
     UPDATE_STREAM
 
-  [DELETE      ] /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148  (object table destroyed)
+  [DELETE      ] /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148  (object table destroyed)  2026-05-16T16:51:55.644Z
     DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE
 
   [CREATE      ] /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790 → xbpt_archive_log_561904.tmp  2026-05-16T16:51:55.897Z
@@ -4045,7 +4045,7 @@ MLog Transactions (parsed)
   [STREAM_UPD  ] /test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165
     DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM
 
-  [DELETE      ] /test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509  (object table destroyed)
+  [DELETE      ] /test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509  (object table destroyed)  2026-05-16T16:52:01.597Z
     DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE
 
   [ALLOCATE    ] /test/elvis_dir_index_149423
@@ -4515,5 +4515,5 @@ Action summary
     INSERT              1
     OP                 13
 
-  304 of 1344 transactions carry an embedded timestamp; only those appear in
+  307 of 1344 transactions carry an embedded timestamp; only those appear in
   `timeline --source MLOG` (an untimestamped transaction cannot be placed on a timeline).

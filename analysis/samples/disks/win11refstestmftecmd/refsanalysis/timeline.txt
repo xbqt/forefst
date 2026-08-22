@@ -1,7 +1,7 @@
 ==============================================================================
 ReFS Super-Timeline — win11refstestmftecmd.raw
 ==============================================================================
-  Sources merged: USN=9371  MLog=1322  $SI-MACB=6976  (time-sorted; correlated by name/path —
+  Sources merged: USN=9371  MLog=1332  $SI-MACB=6976  (time-sorted; correlated by name/path —
                   a file has no OID: $SI shows OID —, USN the home-dir OID, MLog the target OID)
   Caveat: USN and $SI carry exact FILETIMEs. MLog has NO wall-clock time — an MLog row's time is
           the affected object's embedded $SI birth (approximate; for a RENAME/MOVE it is the object
@@ -439,6 +439,7 @@ ReFS Super-Timeline — win11refstestmftecmd.raw
   2026-05-23 06:32:43 UTC  MLog   0x701       /System Volume Informati…   CREATE
   2026-05-23 06:32:43 UTC  MLog   0x701       /System Volume Informati…   CREATE
   2026-05-23 06:56:48 UTC  MLog   0x707       OID 0x707                   CREATE
+  2026-05-23 06:56:53 UTC  MLog   0x600       /                           DELETE
   2026-05-23 06:57:03 UTC  MLog   0x70b       OID 0x70b                   CREATE
   2026-05-23 06:57:12 UTC  MLog   0x70c       OID 0x70c                   CREATE
   2026-05-23 06:57:18 UTC  MLog   0x70d       OID 0x70d                   CREATE
@@ -447,6 +448,7 @@ ReFS Super-Timeline — win11refstestmftecmd.raw
   2026-05-23 06:57:49 UTC  MLog   0x710       OID 0x710                   CREATE
   2026-05-23 06:57:55 UTC  MLog   0x711       OID 0x711                   CREATE
   2026-05-23 06:59:25 UTC  MLog   0x712       OID 0x712                   CREATE
+  2026-05-23 06:59:29 UTC  MLog   0x600       /                           DELETE
   2026-05-23 06:59:33 UTC  MLog   0x716       OID 0x716                   CREATE
   2026-05-23 06:59:34 UTC  MLog   0x717       OID 0x717                   CREATE
   2026-05-23 06:59:36 UTC  MLog   0x718       OID 0x718                   CREATE
@@ -462,6 +464,7 @@ ReFS Super-Timeline — win11refstestmftecmd.raw
   2026-05-23 07:01:36 UTC  $SI    —           testintegrity/dotnet-sdk…   Modified
   2026-05-23 07:02:35 UTC  $SI    —           testintegrity/dotnet-sdk…   Metadata-Changed
   2026-05-23 07:04:28 UTC  MLog   0x722       OID 0x722                   CREATE
+  2026-05-23 07:04:36 UTC  MLog   0x600       /                           DELETE
   2026-05-23 07:04:42 UTC  MLog   0x725       OID 0x725                   CREATE
   2026-05-23 07:04:53 UTC  MLog   0x726       OID 0x726                   CREATE
   2026-05-23 07:04:56 UTC  MLog   0x727       OID 0x727                   CREATE
@@ -1458,6 +1461,7 @@ ReFS Super-Timeline — win11refstestmftecmd.raw
   2026-05-23 07:34:05 UTC  $SI    —           test/elvis_dir_record_44…   Accessed
   2026-05-23 07:34:05 UTC  $SI    —           test/elvis_dir_index_149…   Created
   2026-05-23 07:34:05 UTC  MLog   0x75f       /test/elvis_dir_index_14…   CREATE
+  2026-05-23 07:34:05 UTC  MLog   0x756       /test/elvis_dir_record_4…   DELETE
   2026-05-23 07:34:05 UTC  $SI    —           test/elvis_dir_index_149…   Accessed
   2026-05-23 07:34:05 UTC  MLog   0x762       /test/elvis_dir_papa_805…   MOVE
   2026-05-23 07:34:05 UTC  $SI    —           test/elvis_dir_papa_8053…   Created
@@ -5192,6 +5196,7 @@ ReFS Super-Timeline — win11refstestmftecmd.raw
   2026-05-23 07:38:50 UTC  USN    0x799       xbpt_quebec_kilo_982841.…   DATA_EXTEND|FILE_CREATE
   2026-05-23 07:38:50 UTC  USN    0x799       xbpt_quebec_kilo_982841.…   DATA_OVERWRITE|DATA_EXTEND|FILE_CREATE
   2026-05-23 07:38:50 UTC  USN    0x799       xbpt_quebec_kilo_982841.…   DATA_OVERWRITE|DATA_EXTEND|FILE_CREATE + CLOSE
+  2026-05-23 07:38:50 UTC  MLog   0x779       /test2                      REPARENT
   2026-05-23 07:38:50 UTC  $SI    —           test2/elvis_dir_papa_805…   Modified
   2026-05-23 07:38:50 UTC  $SI    —           test2/elvis_dir_papa_805…   Metadata-Changed
   2026-05-23 07:38:50 UTC  $SI    —           test2/elvis_dir_papa_805…   Accessed
@@ -5514,6 +5519,7 @@ ReFS Super-Timeline — win11refstestmftecmd.raw
   2026-05-23 07:38:50 UTC  USN    0x798       elvis_dir_papa_455656       RENAME_OLD_NAME
   2026-05-23 07:38:50 UTC  USN    0x798       elvis_dir_papa_104235       RENAME_NEW_NAME
   2026-05-23 07:38:50 UTC  USN    0x798       elvis_dir_papa_104235       RENAME_NEW_NAME + CLOSE
+  2026-05-23 07:38:50 UTC  MLog   0x77b       /test2/elvis_dir_record_…   REPARENT
   2026-05-23 07:38:50 UTC  USN    0x786       xbpt_lima_yankee_391745.…   BASIC_INFO_CHANGE
   2026-05-23 07:38:50 UTC  USN    0x786       xbpt_lima_yankee_391745.…   BASIC_INFO_CHANGE + CLOSE
   2026-05-23 07:38:50 UTC  USN    0x786       xbpt_lima_yankee_391745.…   BASIC_INFO_CHANGE
@@ -7733,6 +7739,7 @@ ReFS Super-Timeline — win11refstestmftecmd.raw
   2026-05-23 07:44:17 UTC  USN    0x7bf       xbpt_hotel_romeo_449238.…   DATA_OVERWRITE|DATA_EXTEND|FILE_CREATE
   2026-05-23 07:44:17 UTC  USN    0x7bf       xbpt_hotel_romeo_449238.…   DATA_OVERWRITE|DATA_EXTEND|FILE_CREATE + CLOSE
   2026-05-23 07:44:17 UTC  MLog   0x7bf       /testspecials/dir_romeo_…   CREATE
+  2026-05-23 07:44:17 UTC  MLog   0x7b5       /testspecials/dir_echo_2…   ENTRY_REMOVE
   2026-05-23 07:44:17 UTC  USN    0x7c1       dir_zulu_928082             RENAME_OLD_NAME
   2026-05-23 07:44:17 UTC  USN    0x7c1       dir_gamma_942515            RENAME_NEW_NAME
   2026-05-23 07:44:17 UTC  USN    0x7c1       dir_gamma_942515            RENAME_NEW_NAME + CLOSE
@@ -10462,6 +10469,7 @@ ReFS Super-Timeline — win11refstestmftecmd.raw
   2026-05-23 07:44:21 UTC  USN    0x7fa       dir_cache_906630            FILE_CREATE
   2026-05-23 07:44:21 UTC  USN    0x7fa       dir_cache_906630            FILE_CREATE + CLOSE
   2026-05-23 07:44:21 UTC  MLog   0x7fa       /testspecials/dir_romeo_…   CREATE
+  2026-05-23 07:44:21 UTC  MLog   0x7db       /testspecials/dir_romeo_…   ENTRY_REMOVE
   2026-05-23 07:44:21 UTC  $SI    —           testspecials/dir_echo_26…   Created
   2026-05-23 07:44:21 UTC  USN    0x7c6       xbpt_lima_echo_432966.xml   FILE_CREATE
   2026-05-23 07:44:21 UTC  MLog   0x7c6       /testspecials/dir_echo_2…   CREATE
@@ -13853,6 +13861,7 @@ ReFS Super-Timeline — win11refstestmftecmd.raw
   2026-05-23 07:53:49 UTC  USN    0x81d       xbpt_zulu_index_720705.l…   DATA_OVERWRITE|DATA_EXTEND|NAMED_DATA_OVERWRITE|NAMED_DATA_EXTEND|FILE_CREATE|BASIC_INFO_CHANGE|STREAM_CHANGE + CLOSE
   2026-05-23 07:53:49 UTC  USN    0x81b       xbpt_archive_zulu_999745…   RENAME_OLD_NAME
   2026-05-23 07:53:49 UTC  USN    0x81b       xbpt_cache_backup_597783…   RENAME_NEW_NAME
+  2026-05-23 07:53:49 UTC  MLog   0x81d       /testintegrity/dir_romeo…   UPDATE
   2026-05-23 07:53:49 UTC  USN    0x81b       xbpt_cache_backup_597783…   RENAME_NEW_NAME + CLOSE
   2026-05-23 07:53:49 UTC  USN    0x819       xbpt_uniform_romeo_71603…   RENAME_OLD_NAME
   2026-05-23 07:53:49 UTC  USN    0x819       xbpt_index_oscar_734738.…   RENAME_NEW_NAME
@@ -14584,6 +14593,7 @@ ReFS Super-Timeline — win11refstestmftecmd.raw
   2026-05-23 07:53:50 UTC  USN    0x81d       xbpt_delta_hotel_266388.…   NAMED_DATA_EXTEND + CLOSE
   2026-05-23 07:53:50 UTC  USN    0x83e       dir_sierra_648600           FILE_DELETE + CLOSE
   2026-05-23 07:53:50 UTC  USN    0x842       dir_echo_622358             FILE_DELETE + CLOSE
+  2026-05-23 07:53:50 UTC  MLog   0x821       /testintegrity/dir_romeo…   ENTRY_REMOVE
   2026-05-23 07:53:50 UTC  MLog   0x81e       /testintegrity/dir_gamma…   RENAME
   2026-05-23 07:53:50 UTC  USN    0x81e       dir_tango_931330            RENAME_OLD_NAME
   2026-05-23 07:53:50 UTC  USN    0x81e       dir_data_379372             RENAME_NEW_NAME
@@ -17680,4 +17690,4 @@ ReFS Super-Timeline — win11refstestmftecmd.raw
   (undated)                MLog   0x818       /testintegrity              CREATE [MLog time unreliable]
   (undated)                MLog   0x818       /testintegrity              CREATE [MLog time unreliable]
 ------------------------------------------------------------------------------
-  17669 events
+  17679 events

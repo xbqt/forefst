@@ -132,7 +132,7 @@ MLog Transactions (parsed)
     INSERT_ROW INSERT_ROW SET_OBJECT
       name: "draft_yankee_800732.md" (in /testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193, $FILE_NAME)
 
-  [REPARENT    ] /testspecials → symlink_temp_137701.lnk
+  [REPARENT    ] /testspecials → symlink_temp_137701.lnk  2026-05-19T19:57:28.048Z
     DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW
       name: "symlink_temp_137701.lnk" (in /testspecials)
 
@@ -1307,7 +1307,7 @@ MLog Transactions (parsed)
   [OP          ] /testspecials/dir_record_119518/dir_delta_826049/dir_record_790212
     INSERT_ROW INSERT_ROW INSERT_ROW
 
-  [ENTRY_REMOVE] /testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_november_945195
+  [ENTRY_REMOVE] /testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_november_945195  2026-05-19T19:57:41.897Z
     DELETE_ROW
 
   [CREATE      ] /testspecials/dir_gamma_666805 → index_gamma_836180.xml  2026-05-19T19:58:10.252Z
@@ -1956,7 +1956,7 @@ MLog Transactions (parsed)
   [STREAM_UPD  ] /testspecials/dir_record_119518/dir_delta_826049/dir_record_396651
     DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM
 
-  [REPARENT    ] /testspecials/dir_config_384571/dir_backup_503994/dir_romeo_941465 → archive_index_532684.csv
+  [REPARENT    ] /testspecials/dir_config_384571/dir_backup_503994/dir_romeo_941465 → archive_index_532684.csv  2026-05-19T19:57:55.434Z
     DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW
       name: "archive_index_532684.csv" (in /testspecials/dir_config_384571/dir_backup_503994/dir_romeo_941465)
 
@@ -3312,7 +3312,7 @@ MLog Transactions (parsed)
   [STREAM_UPD  ] /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790
     UPDATE_STREAM
 
-  [DELETE      ] /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398 → elvis_dir_kilo_540242  (object table destroyed)
+  [DELETE      ] /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398 → elvis_dir_kilo_540242  (object table destroyed)  2026-05-19T20:00:53.376Z
     DELETE_ROW DELETE_ROW DELETE_TABLE DELETE_ROW
       name: "elvis_dir_kilo_540242" (in /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398, $FILE_NAME)
 
@@ -3641,7 +3641,7 @@ MLog Transactions (parsed)
   [STREAM_UPD  ] /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235
     DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM
 
-  [DELETE      ] /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016  (object table destroyed)
+  [DELETE      ] /testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016  (object table destroyed)  2026-05-19T20:00:52.570Z
     DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE
 
   [STREAM_UPD  ] /testintegrity/elvis_dir_record_449015
@@ -4963,5 +4963,5 @@ Action summary
     INSERT              1
     OP                 55
 
-  611 of 1339 transactions carry an embedded timestamp; only those appear in
+  616 of 1339 transactions carry an embedded timestamp; only those appear in
   `timeline --source MLOG` (an untimestamped transaction cannot be placed on a timeline).

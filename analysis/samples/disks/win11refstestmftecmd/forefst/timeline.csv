@@ -428,6 +428,7 @@ timestamp_utc,source,oid,name,event
 2026-05-23 06:32:43 UTC,MLog,0x701,/System Volume Information,CREATE
 2026-05-23 06:32:43 UTC,MLog,0x701,/System Volume Information,CREATE
 2026-05-23 06:56:48 UTC,MLog,0x707,OID 0x707,CREATE
+2026-05-23 06:56:53 UTC,MLog,0x600,/,DELETE
 2026-05-23 06:57:03 UTC,MLog,0x70b,OID 0x70b,CREATE
 2026-05-23 06:57:12 UTC,MLog,0x70c,OID 0x70c,CREATE
 2026-05-23 06:57:18 UTC,MLog,0x70d,OID 0x70d,CREATE
@@ -436,6 +437,7 @@ timestamp_utc,source,oid,name,event
 2026-05-23 06:57:49 UTC,MLog,0x710,OID 0x710,CREATE
 2026-05-23 06:57:55 UTC,MLog,0x711,OID 0x711,CREATE
 2026-05-23 06:59:25 UTC,MLog,0x712,OID 0x712,CREATE
+2026-05-23 06:59:29 UTC,MLog,0x600,/,DELETE
 2026-05-23 06:59:33 UTC,MLog,0x716,OID 0x716,CREATE
 2026-05-23 06:59:34 UTC,MLog,0x717,OID 0x717,CREATE
 2026-05-23 06:59:36 UTC,MLog,0x718,OID 0x718,CREATE
@@ -451,6 +453,7 @@ timestamp_utc,source,oid,name,event
 2026-05-23 07:01:36 UTC,$SI,,testintegrity/dotnet-sdk-9.0.314-win-x64.exe,Modified
 2026-05-23 07:02:35 UTC,$SI,,testintegrity/dotnet-sdk-9.0.314-win-x64.exe,Metadata-Changed
 2026-05-23 07:04:28 UTC,MLog,0x722,OID 0x722,CREATE
+2026-05-23 07:04:36 UTC,MLog,0x600,/,DELETE
 2026-05-23 07:04:42 UTC,MLog,0x725,OID 0x725,CREATE
 2026-05-23 07:04:53 UTC,MLog,0x726,OID 0x726,CREATE
 2026-05-23 07:04:56 UTC,MLog,0x727,OID 0x727,CREATE
@@ -1447,6 +1450,7 @@ timestamp_utc,source,oid,name,event
 2026-05-23 07:34:05 UTC,$SI,,test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_record_delta_426347.json,Accessed
 2026-05-23 07:34:05 UTC,$SI,,test/elvis_dir_index_149423/xbpt_config_sync_830891.tmp,Created
 2026-05-23 07:34:05 UTC,MLog,0x75f,/test/elvis_dir_index_149423,CREATE
+2026-05-23 07:34:05 UTC,MLog,0x756,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509,DELETE
 2026-05-23 07:34:05 UTC,$SI,,test/elvis_dir_index_149423/xbpt_config_sync_830891.tmp,Accessed
 2026-05-23 07:34:05 UTC,MLog,0x762,/test/elvis_dir_papa_805353,MOVE
 2026-05-23 07:34:05 UTC,$SI,,test/elvis_dir_papa_805353/xbpt_oscar_archive_362034.json,Created
@@ -5181,6 +5185,7 @@ timestamp_utc,source,oid,name,event
 2026-05-23 07:38:50 UTC,USN,0x799,xbpt_quebec_kilo_982841.tmp,DATA_EXTEND|FILE_CREATE
 2026-05-23 07:38:50 UTC,USN,0x799,xbpt_quebec_kilo_982841.tmp,DATA_OVERWRITE|DATA_EXTEND|FILE_CREATE
 2026-05-23 07:38:50 UTC,USN,0x799,xbpt_quebec_kilo_982841.tmp,DATA_OVERWRITE|DATA_EXTEND|FILE_CREATE + CLOSE
+2026-05-23 07:38:50 UTC,MLog,0x779,/test2,REPARENT
 2026-05-23 07:38:50 UTC,$SI,,test2/elvis_dir_papa_805353/xbpt_mike_oscar_154118.csv,Modified
 2026-05-23 07:38:50 UTC,$SI,,test2/elvis_dir_papa_805353/xbpt_mike_oscar_154118.csv,Metadata-Changed
 2026-05-23 07:38:50 UTC,$SI,,test2/elvis_dir_papa_805353/xbpt_mike_oscar_154118.csv,Accessed
@@ -5503,6 +5508,7 @@ timestamp_utc,source,oid,name,event
 2026-05-23 07:38:50 UTC,USN,0x798,elvis_dir_papa_455656,RENAME_OLD_NAME
 2026-05-23 07:38:50 UTC,USN,0x798,elvis_dir_papa_104235,RENAME_NEW_NAME
 2026-05-23 07:38:50 UTC,USN,0x798,elvis_dir_papa_104235,RENAME_NEW_NAME + CLOSE
+2026-05-23 07:38:50 UTC,MLog,0x77b,/test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,REPARENT
 2026-05-23 07:38:50 UTC,USN,0x786,xbpt_lima_yankee_391745.ini,BASIC_INFO_CHANGE
 2026-05-23 07:38:50 UTC,USN,0x786,xbpt_lima_yankee_391745.ini,BASIC_INFO_CHANGE + CLOSE
 2026-05-23 07:38:50 UTC,USN,0x786,xbpt_lima_yankee_391745.ini,BASIC_INFO_CHANGE
@@ -7722,6 +7728,7 @@ timestamp_utc,source,oid,name,event
 2026-05-23 07:44:17 UTC,USN,0x7bf,xbpt_hotel_romeo_449238.xml,DATA_OVERWRITE|DATA_EXTEND|FILE_CREATE
 2026-05-23 07:44:17 UTC,USN,0x7bf,xbpt_hotel_romeo_449238.xml,DATA_OVERWRITE|DATA_EXTEND|FILE_CREATE + CLOSE
 2026-05-23 07:44:17 UTC,MLog,0x7bf,/testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374,CREATE
+2026-05-23 07:44:17 UTC,MLog,0x7b5,/testspecials/dir_echo_260113/dir_november_183663/dir_record_577164,ENTRY_REMOVE
 2026-05-23 07:44:17 UTC,USN,0x7c1,dir_zulu_928082,RENAME_OLD_NAME
 2026-05-23 07:44:17 UTC,USN,0x7c1,dir_gamma_942515,RENAME_NEW_NAME
 2026-05-23 07:44:17 UTC,USN,0x7c1,dir_gamma_942515,RENAME_NEW_NAME + CLOSE
@@ -10451,6 +10458,7 @@ timestamp_utc,source,oid,name,event
 2026-05-23 07:44:21 UTC,USN,0x7fa,dir_cache_906630,FILE_CREATE
 2026-05-23 07:44:21 UTC,USN,0x7fa,dir_cache_906630,FILE_CREATE + CLOSE
 2026-05-23 07:44:21 UTC,MLog,0x7fa,/testspecials/dir_romeo_413583/dir_audit_570908/dir_quebec_863524,CREATE
+2026-05-23 07:44:21 UTC,MLog,0x7db,/testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/dir_papa_331610,ENTRY_REMOVE
 2026-05-23 07:44:21 UTC,$SI,,testspecials/dir_echo_260113/xbpt_lima_echo_432966.xml,Created
 2026-05-23 07:44:21 UTC,USN,0x7c6,xbpt_lima_echo_432966.xml,FILE_CREATE
 2026-05-23 07:44:21 UTC,MLog,0x7c6,/testspecials/dir_echo_260113,CREATE
@@ -13842,6 +13850,7 @@ timestamp_utc,source,oid,name,event
 2026-05-23 07:53:49 UTC,USN,0x81d,xbpt_zulu_index_720705.lnk,DATA_OVERWRITE|DATA_EXTEND|NAMED_DATA_OVERWRITE|NAMED_DATA_EXTEND|FILE_CREATE|BASIC_INFO_CHANGE|STREAM_CHANGE + CLOSE
 2026-05-23 07:53:49 UTC,USN,0x81b,xbpt_archive_zulu_999745.tmp,RENAME_OLD_NAME
 2026-05-23 07:53:49 UTC,USN,0x81b,xbpt_cache_backup_597783.tmp,RENAME_NEW_NAME
+2026-05-23 07:53:49 UTC,MLog,0x81d,/testintegrity/dir_romeo_348517,UPDATE
 2026-05-23 07:53:49 UTC,USN,0x81b,xbpt_cache_backup_597783.tmp,RENAME_NEW_NAME + CLOSE
 2026-05-23 07:53:49 UTC,USN,0x819,xbpt_uniform_romeo_716034.json,RENAME_OLD_NAME
 2026-05-23 07:53:49 UTC,USN,0x819,xbpt_index_oscar_734738.json,RENAME_NEW_NAME
@@ -14573,6 +14582,7 @@ timestamp_utc,source,oid,name,event
 2026-05-23 07:53:50 UTC,USN,0x81d,xbpt_delta_hotel_266388.json,NAMED_DATA_EXTEND + CLOSE
 2026-05-23 07:53:50 UTC,USN,0x83e,dir_sierra_648600,FILE_DELETE + CLOSE
 2026-05-23 07:53:50 UTC,USN,0x842,dir_echo_622358,FILE_DELETE + CLOSE
+2026-05-23 07:53:50 UTC,MLog,0x821,/testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/dir_cache_422839,ENTRY_REMOVE
 2026-05-23 07:53:50 UTC,MLog,0x81e,/testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_oscar_342854/dir_archive_860003,RENAME
 2026-05-23 07:53:50 UTC,USN,0x81e,dir_tango_931330,RENAME_OLD_NAME
 2026-05-23 07:53:50 UTC,USN,0x81e,dir_data_379372,RENAME_NEW_NAME

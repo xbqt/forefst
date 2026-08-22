@@ -59,7 +59,7 @@ from forefst import (
 )
 
 PROG = "refsanalysis"
-VERSION = "1.5.0"
+VERSION = "1.6.0"
 
 
 
@@ -514,6 +514,7 @@ def cmd_summary(image, remaining, partition_start, plus_mode=False):
             "directories": ndirs,
             "files": nfiles,
             "resident_files": nresident,
+            "non_resident_files": nfiles - nresident,   # always present so default `summary` prints the split too
             "total_file_size": hs(total_size),
             "total_file_size_bytes": total_size,
             "security_descriptors": sec_count,
@@ -4018,6 +4019,14 @@ def main():
     # Full-depth default walks (cmd_files/cmd_attributes) can recurse as deep as a real directory tree; raise
     # the limit well above any plausible depth (the walks are cycle-guarded, so this only covers genuine depth).
     sys.setrecursionlimit(40000)
+    # Global `--partition-start N` works in ANY position: relocate it to the END of argv so a flag placed
+    # BEFORE the subcommand (`IMG --partition-start 0 supb`) doesn't occupy the subcommand slot (argv[2]).
+    # No-op when already last; only the first occurrence moves. (The `--partition-start`-only, no-subcommand
+    # case stays handled by the default-`summary` branch below.)
+    for _pi in range(2, len(sys.argv) - 1):
+        if sys.argv[_pi] == "--partition-start":
+            sys.argv = sys.argv[:_pi] + sys.argv[_pi + 2:] + [sys.argv[_pi], sys.argv[_pi + 1]]
+            break
     _ALL_CMDS = set(_HANDLERS) | {"summary++"}
     _argv = sys.argv
     # ── help handling (before any dispatch) ──
@@ -4060,6 +4069,11 @@ def main():
 
     if len(sys.argv) < 3:
         subcmd, remaining = "summary", []
+    elif sys.argv[2].startswith("-") and sys.argv[2] not in ("-h", "--help", "--version"):
+        # No subcommand given — argv[2] is a leading GLOBAL flag (e.g. --partition-start / --json) for the
+        # default `summary` subcommand. Without this, `refsanalysis IMG --partition-start 0` mis-reads the flag
+        # as the subcommand ("unknown subcommand: --partition-start"). -h/--help/--version stay handled below.
+        subcmd, remaining = "summary", sys.argv[2:]
     else:
         subcmd, remaining = sys.argv[2], sys.argv[3:]
 

@@ -210,7 +210,7 @@ def validate_image(path, die_fn=None):
 
 # ─── Constants ────────────────────────────────────────────────────────
 PROG = "forefst"
-VERSION = "1.5.0"
+VERSION = "1.6.0"
 # Phase 3 (4.D): directory walks default to FULL depth (no artificial cap); `--depth N` overrides. The real
 # recursion depth equals the actual directory nesting (ReFS trees are shallow — tens of levels), so this
 # constant is never the binding limit; it just means "don't truncate". main() also raises the interpreter
@@ -2371,6 +2371,26 @@ def parse_mlog_deep_record(rec_bytes, redo_ops):
                     r["filename"] = _mlog_decode_utf16(vdata[4:])
                 elif tpl == 0 and v0_len > 34:
                     r["filename"] = _mlog_scan_utf16(vdata, 16)
+        # The NEW-name InsertRow of a rename is `tpl=0, val_count>=2`: v0 is short, and the name lives in a
+        # LATER value as an embedded type-0x30 filename row (type16=0x30, key_flags@2 in {1,2}, name UTF-16 @+4).
+        # Without this the new name is lost and classify_mlog_transaction can't see the rename (falls to UPDATE).
+        if not r["filename"] and val_count >= 2:
+            for i in range(val_count):
+                do = vbase + i * 8
+                if do + 8 > rs:
+                    break
+                voff = le32(rec_bytes, do); vlen = le32(rec_bytes, do + 4)
+                if voff + vlen > rs or vlen < 8:
+                    continue
+                vd = rec_bytes[voff:voff + vlen]
+                for k in range(0, len(vd) - 6, 2):
+                    if le16(vd, k) == 0x0030 and le16(vd, k + 2) in (0x0001, 0x0002):
+                        nm = _mlog_decode_utf16(vd[k + 4:k + 4 + 520])
+                        if len(nm) >= 2 and nm != "$I30":
+                            r["filename"] = nm
+                            break
+                if r["filename"]:
+                    break
     r["timestamp"] = _mlog_extract_timestamp(rec_bytes, rs, opcode, tpl,
                                               val_count, vbase)
     return r
@@ -2418,12 +2438,35 @@ MLOG_FILE_OPS = ("CREATE", "WRITE", "RENAME", "MOVE", "DELETE")
 MLOG_LOW_LEVEL = ("MODIFY", "STREAM_UPD", "REPARENT", "ENTRY_REMOVE", "ALLOCATE", "CONTAINER",
                   "DEDUP", "EXTENT_MOD", "UPDATE", "INSERT", "OP")
 
-def _mlog_name_entry_parents(recs, opcode):
+def _mlog_handle_oid_map(recs):
+    """handle -> table OID for a transaction. A record's key-context gives target_oid directly; records that
+    only reference an open-table by HANDLE (e.g. the new-name InsertRow of a rename, target_oid==0) resolve
+    through this map. Built from every record that DOES carry a target_oid (OpenTable and the old-name row)."""
+    m = {}
+    for r in recs:
+        if r.get("target_oid"):
+            m.setdefault(r["handle"], r["target_oid"])
+    return m
+
+def _mlog_name_entry_parents(recs, opcode, handle_oids=None):
     """The set of TARGET OIDs (parent-directory tables) of the name-entry rows of `opcode` in a
     transaction — non-zero only. For a rename/move this is the OLD parent (opcode 0x02 DeleteRow) vs the
-    NEW parent (opcode 0x01 InsertRow); comparing the two tells RENAME (same parent) from MOVE (reparent)."""
-    return {r["target_oid"] for r in recs
-            if r["opcode"] == opcode and r["filename"] and r["filename"] != "$I30" and r["target_oid"]}
+    NEW parent (opcode 0x01 InsertRow); comparing the two tells RENAME (same parent) from MOVE (reparent).
+    A name row with no inline target_oid (the new-name InsertRow, keyed only by table HANDLE) is resolved via
+    `handle_oids` so a same-parent rename is recognised instead of falling through to UPDATE."""
+    direct, resolved = set(), set()
+    for r in recs:
+        if r["opcode"] == opcode and r["filename"] and r["filename"] != "$I30":
+            if r["target_oid"]:
+                direct.add(r["target_oid"])
+            else:
+                h = (handle_oids or {}).get(r["handle"], 0)
+                if h:
+                    resolved.add(h)
+    # Prefer a name row's OWN parent OID; only fall back to the handle-resolved table when NO name row of this
+    # opcode carried a direct target (the pure-rename InsertRow). A MOVE's new-name row DOES carry its direct
+    # destination OID, so it is never masked by the source table the shared handle resolves to.
+    return direct if direct else resolved
 
 def classify_mlog_transaction(recs):
     """Classify a redo transaction into a concrete action.
@@ -2448,16 +2491,17 @@ def classify_mlog_transaction(recs):
     has_alloc = 0x06 in op_set
     has_upd_data = 0x04 in op_set
     has_set_objrec = 0x10 in op_set
-    named_ins = bool(_mlog_name_entry_parents(recs, 0x01))
-    named_del = bool(_mlog_name_entry_parents(recs, 0x02))
+    handle_oids = _mlog_handle_oid_map(recs)
+    named_ins = bool(_mlog_name_entry_parents(recs, 0x01, handle_oids))
+    named_del = bool(_mlog_name_entry_parents(recs, 0x02, handle_oids))
 
     # Real deletion: the object's own B+-tree table is destroyed.
     if has_del_table:
         return "DELETE"
     # Name-entry change WITH a matching removal: RENAME (same parent OID) vs MOVE (parent OID changed).
     if named_del and named_ins:
-        old_par = _mlog_name_entry_parents(recs, 0x02)
-        new_par = _mlog_name_entry_parents(recs, 0x01)
+        old_par = _mlog_name_entry_parents(recs, 0x02, handle_oids)
+        new_par = _mlog_name_entry_parents(recs, 0x01, handle_oids)
         if old_par and new_par:
             if old_par == new_par:
                 return "RENAME"
@@ -3873,16 +3917,23 @@ def _print_fastsummary(summary, plus_mode=False, is_summary=False):
     v = bk.get("vbr") or {}
     _supb = bk.get("supb", [])
     _chkps = bk.get("checkpoints", [])
+    def _self_ref_flag(rec):
+        # The page stores its own LCN at +0x20; a mismatch = a tampered/corrupt bootstrap copy (e.g. a zeroed
+        # self-reference — the classic hand-corrupted-superblock case). Surfaced here because the tool still
+        # bootstraps from a good copy, so the corruption is otherwise invisible in `summary`.
+        if rec.get("self_lcn_ok") is False:
+            return f"  !! CORRUPT self-reference: stored {rec.get('self_lcn', 0):#x}, expected own LCN {rec.get('lcn', 0):#x}"
+        return ""
     def _supb_line(s):
         _sha = summary.get("supb_sha256") if s.get("role") == "PRIMARY" else s.get("sha256")
         _st = "checksum OK" if s.get("cksum_ok") else ("signature OK" if s.get("ok") else "BAD")
         _bs(f"SUPB {s.get('role','?').lower()}", f"LCN {s.get('lcn',0):#x} (offset {s.get('lcn',0)*_cs:#x})",
-            _st, _sha)
+            _st + _self_ref_flag(s), _sha)
     def _chkp_line(rec):
         _sha = summary.get("chkp_sha256") if rec.get("role") == "PRIMARY" else rec.get("sha256")
         _cok = "checksum OK" if rec.get("cksum_ok") else ("signature OK" if rec.get("sig_ok") else "BAD")
         _st = _cok + (f", vclock={rec['vc']}" if rec.get("vc") is not None else "") \
-              + ("" if rec.get("roots_ok") else " (roots unreadable)")
+              + ("" if rec.get("roots_ok") else " (roots unreadable)") + _self_ref_flag(rec)
         _bs(f"CHKP {rec.get('role','?').lower()}", f"LCN {rec['lcn']:#x} (offset {rec['lcn']*_cs:#x})", _st, _sha)
 
     # 2summary: primary copies first, then a separator, then the backup copies (grouped by role, not by
@@ -3906,6 +3957,13 @@ def _print_fastsummary(summary, plus_mode=False, is_summary=False):
         if s.get("role") != "PRIMARY": _supb_line(s)
     for rec in _chkps:
         if rec.get("role") != "PRIMARY": _chkp_line(rec)
+    _corrupt_self = [x for x in (_supb + _chkps) if x.get("self_lcn_ok") is False]
+    if _corrupt_self:
+        print()
+        print(f"  ** BOOTSTRAP TAMPERING: {len(_corrupt_self)} structure(s) above carry a CORRUPT self-reference")
+        print("     (the page's stored own-LCN was overwritten, typically zeroed). The volume still parses —")
+        print("     the self-reference is not needed to bootstrap from a checkpoint — but a zeroed self-LCN does")
+        print("     not occur normally, so treat it as deliberate tampering / a hand-corrupted bootstrap.")
     if len([s for s in _supb if s.get("ok")]) >= 2:
         # B1: the SUPB copies hash differently by design — each stores its own LCN (page header +
         # self-descriptor) and its own self-checksum; the payload (GUID, checkpoint refs, generation) is
@@ -4772,14 +4830,40 @@ def _redo_ops_for_version(vmin):
     RD-validated to 0 unknown opcodes across the whole corpus. (finding #330)"""
     return REDO_OPS_V314 if vmin >= 7 else REDO_OPS_V34
 
-def _mlog_resolve_txn(txn, oid_paths):
+def _mlog_pair_si_timestamp(f, ps_off, cs, plcn, block):
+    """A rename / permanent-delete redo transaction carries NO inline FILETIME — the event time is written to
+    the paired $SI-update in the NEXT 4 KiB LogCore block, whose $SI MACB quartet sits at +0x140. Return that
+    FILETIME (the create/modify/change stamp), or 0 if the next block is not a $SI-update.
+
+    Discriminator (RD, bi0sCTF v3.4): a $SI-update block has >=3 valid FILETIMEs at +0x140/+0x148/+0x150; a redo
+    block has 0 there — so this can never borrow a redo block's bytes. Used ONLY for a transaction that has no
+    inline timestamp, so it can only ADD an event time, never change one. 6/6 CTF rename/delete events exact
+    (structure_reference §MLog; redo_opcode_complete.md 'Transaction & timestamp model')."""
+    per = max(1, cs // MLOG_BLOCK)
+    nb_plcn, nb_block = (plcn, block + 1) if block + 1 < per else (plcn + 1, 0)
+    try:
+        f.seek(ps_off + nb_plcn * cs + nb_block * MLOG_BLOCK)
+        blk = f.read(MLOG_BLOCK)
+    except (OSError, ValueError):
+        return 0
+    if len(blk) < 0x158:
+        return 0
+    q = [le64(blk, 0x140 + 8 * i) for i in range(3)]     # $SI create / modify / change
+    return q[0] if all(_FT_MIN < t < _FT_MAX for t in q) else 0
+
+
+# Actions whose event FILETIME is not inline but in the paired next-block $SI-update (name change / deletion).
+_MLOG_PAIRED_TS_ACTIONS = ("RENAME", "MOVE", "UPDATE", "DELETE", "ENTRY_REMOVE", "REPARENT")
+
+def _mlog_resolve_txn(txn, oid_paths, f=None, ps_off=None, cs=None):
     recs = txn["records"]
     action = classify_mlog_transaction(recs)
     # op_detail: the concrete fact that justifies the label, so the enhancement stays verifiable.
     op_detail = ""
     if action in ("MOVE", "RENAME"):
-        _old = sorted(_mlog_name_entry_parents(recs, 0x02))
-        _new = sorted(_mlog_name_entry_parents(recs, 0x01))
+        _hmap = _mlog_handle_oid_map(recs)
+        _old = sorted(_mlog_name_entry_parents(recs, 0x02, _hmap))
+        _new = sorted(_mlog_name_entry_parents(recs, 0x01, _hmap))
         if action == "MOVE" and _old and _new:
             op_detail = "parent 0x%x → 0x%x" % (_old[0], _new[0])
         elif action == "RENAME" and _new:
@@ -4814,9 +4898,16 @@ def _mlog_resolve_txn(txn, oid_paths):
     for r in recs:
         if r["timestamp"] > ts:
             ts = r["timestamp"]
+    # A rename/delete has no inline FILETIME; recover its event time from the paired next-block $SI-update
+    # (+0x140). Only when the transaction is otherwise untimestamped, so an inline stamp always wins.
+    ts_paired = False
+    if ts == 0 and f is not None and action in _MLOG_PAIRED_TS_ACTIONS:
+        _pt = _mlog_pair_si_timestamp(f, ps_off, cs, txn["plcn"], txn.get("block", 0))
+        if _pt:
+            ts, ts_paired = _pt, True
     return {
         "action": action, "op_detail": op_detail, "label": label, "path": path, "name": fname,
-        "oid": primary_oid, "timestamp": ts, "ts_str": _filetime_str(ts),
+        "oid": primary_oid, "timestamp": ts, "ts_str": _filetime_str(ts), "ts_paired": ts_paired,
         "plcn": txn["plcn"], "recs": recs,
         "ops_str": " ".join(r["op_short"] for r in recs),
         "handle_oids": handle_oids,
@@ -4888,7 +4979,7 @@ def cmd_mlog(image, remaining, partition_start):
                     w.writerow(["seq", "timestamp", "action", "path", "name", "oid",
                                 "opcodes", "record_count", "plcn"])
                     for i, txn in enumerate(txns, 1):
-                        t = _mlog_resolve_txn(txn, oid_paths)
+                        t = _mlog_resolve_txn(txn, oid_paths, f, ps, cs)
                         if t["ts_str"]:
                             ts_written[0] += 1
                         w.writerow([
@@ -4921,7 +5012,7 @@ def cmd_mlog(image, remaining, partition_start):
                     action_counts = {}
                     ts_count = 0
                     for txn in txns:
-                        t = _mlog_resolve_txn(txn, oid_paths)
+                        t = _mlog_resolve_txn(txn, oid_paths, f, ps, cs)
                         action = t["action"]
                         action_counts[action] = action_counts.get(action, 0) + 1
                         if t["ts_str"]:
@@ -5512,7 +5603,7 @@ def cmd_timeline(image, remaining, partition_start):
             mlog_undated = 0
             for txn in extract_mlog_transactions(
                     scan_mlog_data_area(f, ps, cs, tr, mlog_info, ctrl), redo_ops):
-                t = _mlog_resolve_txn(txn, oid_paths)
+                t = _mlog_resolve_txn(txn, oid_paths, f, ps, cs)
                 if t["timestamp"]:
                     mts = t["timestamp"]; action = t["action"]
                     if _vol_create and mts < _vol_create - TS_MARGIN_100NS:
@@ -6600,6 +6691,58 @@ def _resolve_id_entry(f, ps, cs, tr, obj_map, home_oid, file_id):
             return e
     return None
 
+def get_file_content(f, ps, cs, tr, info, verify_integrity=False):
+    """Return (bytes | None, meta) — a file's $DATA content resolved for ANY residency, using the SAME cascade
+    `cmd_extract` runs. `info` is an `_analyze_dir_extents` entry (fields: storage, file_size, extents,
+    resident_content, cow_content, extent_backed, raw_value). Single source of truth so every content consumer
+    (`extract`, `recyclebin`, `export recyclebin`) reads a file identically — no more resident-only assumptions
+    (this is the class behind #640 extract + the deleted-carve gap + the recyclebin non-resident $I bug).
+
+    meta["source"] is one of: empty / resident / cow / inline-holder / extents; or a NON-recoverable reason
+    (inline-holder-overflow / resident-nonplain / no-extents / too-large) with bytes=None. `verify_integrity`
+    attaches meta["integrity"] for the inline-holder path (the CRC32-C per-cluster check `extract` prints).
+    Byte-for-byte identical to `cmd_extract` on every corpus file (validated); reads are length-safe so a
+    past-EOF/stale extent cannot truncate the buffer (never wrong bytes)."""
+    storage = info.get("storage")
+    file_size = info.get("file_size", 0)
+    extents = info.get("extents") or []
+    # (A) resident-storage with no extent list: inline $DATA / CoW-shared / inline-0x10028-holder (§C.3b).
+    if storage == "resident" and not extents:
+        if file_size == 0:
+            return b"", {"source": "empty", "size": 0}
+        rc = info.get("resident_content")
+        if rc is not None:
+            return rc, {"source": "resident", "size": file_size}
+        cow = info.get("cow_content")
+        if cow is not None:
+            return cow, {"source": "cow", "size": file_size}
+        if info.get("extent_backed"):
+            ic = _recover_inline_extent_content(f, ps, cs, tr, info.get("raw_value", b""))
+            if ic is not None:
+                meta = {"source": "inline-holder", "size": file_size}
+                if verify_integrity:
+                    meta["integrity"] = _verify_inline_integrity(f, ps, cs, tr, info.get("raw_value", b""))
+                return ic, meta
+            return None, {"source": "inline-holder-overflow", "size": file_size}
+        return None, {"source": "resident-nonplain", "size": file_size}
+    # (B) non-resident: content lives in on-disk extents (type-0x40 backing or inline-holder multilevel map).
+    if not extents:
+        return None, {"source": "no-extents", "size": file_size}
+    sorted_exts = sorted(extents, key=lambda e: e["file_vcn"])
+    alloc = max(e["file_vcn"] + e["clusters"] for e in sorted_exts) * cs
+    if alloc > 4 * 1024 * 1024 * 1024:
+        return None, {"source": "too-large", "size": file_size}
+    buf = bytearray(alloc)
+    for ext in sorted_exts:
+        plcn = ext["plcn"]
+        for i in range(ext["clusters"]):
+            f.seek(ps + (plcn + i) * cs)
+            chunk = f.read(cs)
+            off = (ext["file_vcn"] + i) * cs
+            buf[off:off + len(chunk)] = chunk          # length-safe (a short/past-EOF read must not shrink buf)
+    return bytes(buf[:file_size]), {"source": "extents", "size": file_size, "n_extents": len(sorted_exts)}
+
+
 def cmd_extract(image, remaining, partition_start):
     args = _parse_args(remaining, flags=["--no-verify-integrity"],
                        valued=["--oid", "--depth", "--path", "--id", "-o", "--output"])
@@ -6897,8 +7040,17 @@ def _walk_recycle(f, ps, cs, tr, obj_map, dir_oid, sid, depth, out):
             child_dirs.append((le64(vd, 0x08) if len(vd) >= 0x10 else 0, name))
         elif name.startswith("$I"):
             i_rows.append((name, bytes(vd)))
+    # Resolve each $I's content through the SHARED resident-or-non-resident reader (get_file_content), so a
+    # NON-RESIDENT $I (len(vd)<=84, common on ReFS 3.4) is followed to its on-disk extents instead of failing
+    # "plain inline record". _analyze_dir_extents already resolved every file in this dir (resident inline /
+    # inline-holder / type-0x40 backing); the inline fallback covers any $I it did not enumerate.
+    infos = {info["name"]: info for info in _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid)}
     for name, vd in i_rows:
-        meta = _decode_recycle_i(get_resident_data_content(vd)) if len(vd) > 84 else None
+        if name in infos:
+            content, _m = get_file_content(f, ps, cs, tr, infos[name])
+        else:
+            content = get_resident_data_content(vd) if len(vd) > 84 else None
+        meta = _decode_recycle_i(content)
         r_name = "$R" + name[2:]
         out.append({"sid": sid, "i_name": name, "r_name": r_name,
                     "r_present": r_name in names_here, "meta": meta})
@@ -7810,6 +7962,8 @@ def _scan_backup_copies(f, ps, cs, chkp_lcns):
             if rec["sig_ok"]:
                 rec["sha256"] = hashlib.sha256(raw).hexdigest()
                 rec["vc"] = le64(raw, 0x10)
+                rec["self_lcn"] = le64(raw, 0x20)                 # page self-address (should equal its own LCN)
+                rec["self_lcn_ok"] = (rec["self_lcn"] == cl)
                 rec["cksum_ok"], rec["ckname"] = _verify_self_checksum(raw, cs)   # B3
                 try:
                     _vc, _fl, roots = _forefst_parse_chkp(f, ps, cs, cl)
@@ -7831,6 +7985,8 @@ def _scan_backup_copies(f, ps, cs, chkp_lcns):
     _pck = _verify_self_checksum(_psupb, cs) if _psupb[:4] == b"SUPB" else (None, "-")
     out["supb"].append({"lcn": SUPB_LCN, "role": "PRIMARY", "ok": _psupb[:4] == b"SUPB",
                         "cksum_ok": _pck[0], "ckname": _pck[1],
+                        "self_lcn": le64(_psupb, 0x20) if _psupb[:4] == b"SUPB" else None,
+                        "self_lcn_ok": (le64(_psupb, 0x20) == SUPB_LCN) if _psupb[:4] == b"SUPB" else None,
                         "sha256": hashlib.sha256(_psupb).hexdigest() if _psupb[:4] == b"SUPB" else None})
     if total_sectors > 1:
         end_lcn = (total_sectors * 512) // cs
@@ -7841,6 +7997,7 @@ def _scan_backup_copies(f, ps, cs, chkp_lcns):
                     _bck = _verify_self_checksum(_s, cs)
                     out["supb"].append({"lcn": lcn, "role": "backup", "ok": True,
                                         "cksum_ok": _bck[0], "ckname": _bck[1],
+                                        "self_lcn": le64(_s, 0x20), "self_lcn_ok": (le64(_s, 0x20) == lcn),
                                         "sha256": hashlib.sha256(_s).hexdigest()})
             except (OSError, OverflowError):
                 break
@@ -9987,14 +10144,11 @@ def cmd_export_recyclebin(image, remaining, partition_start):
         def collect(dir_oid, sid):
             for info in _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
                 if info["name"].startswith("$R"):
-                    c = info.get("resident_content") or info.get("cow_content")
-                    if c is None and info.get("extents"):
-                        buf = bytearray()
-                        for e in sorted(info["extents"], key=lambda x: x["file_vcn"]):
-                            for i in range(e["clusters"]):
-                                f.seek(ps + (e["plcn"] + i) * cs); buf += f.read(cs)
-                        c = bytes(buf[:info.get("file_size", len(buf))])
-                    if c is not None:
+                    # SHARED reader: resident inline / CoW / inline-holder / type-0x40 extents, placed by
+                    # file_vcn (correct for sparse/gapped files — the old inline append was wrong there) and
+                    # length-safe. This is how a NON-RESIDENT $R payload (ReFS 3.4) is now recovered.
+                    c, _m = get_file_content(f, ps, cs, tr, info)
+                    if c:
                         r_content[(sid, info["name"])] = c
             for kd, vd in walk_bplus(f, ps, cs, tr, obj_map[dir_oid]):
                 if len(kd) >= 4 and le16(kd, 0) == 0x30 and len(vd) >= 0x44 and (le32(vd, 0x40) & 0x10000000):
@@ -10687,6 +10841,14 @@ def main():
     # Full-depth walks (4.D): raise the interpreter recursion limit as a safety margin so a genuinely deep
     # directory tree cannot RecursionError (real trees are shallow; this is never hit in practice).
     sys.setrecursionlimit(max(sys.getrecursionlimit(), 40000))
+    # Global `--partition-start N` works in ANY position: relocate it to the END of argv so a flag placed
+    # BEFORE the subcommand (e.g. `IMG --partition-start 0 integrity`) confuses neither the forensic dispatch
+    # (which keys on argv[2]) nor argparse (which mishandles an optional between the image/command positionals).
+    # No-op when it is already last; only the first occurrence is moved.
+    for _pi in range(2, len(sys.argv) - 1):
+        if sys.argv[_pi] == "--partition-start":
+            sys.argv = sys.argv[:_pi] + sys.argv[_pi + 2:] + [sys.argv[_pi], sys.argv[_pi + 1]]
+            break
     _ALL_CMDS = set(SUBCOMMANDS) | set(HIDDEN_SUBCOMMANDS) | set(FORENSIC_SUBCOMMANDS)
     # Resolve a command-token alias (e.g. `find` -> `search`) to canonical BEFORE any dispatch/help, so all
     # downstream (help, argparse, forensic routing) sees the real name. The alias applies to the subcommand
@@ -10751,6 +10913,7 @@ def main():
     # since they use options argparse doesn't model (--parse/--raw-scan/--no-si/--source/...).
     if len(sys.argv) >= 3 and sys.argv[2] in FORENSIC_HANDLERS:
         image = sys.argv[1]
+        subcmd = sys.argv[2]
         remaining = sys.argv[3:]
         part_start = None
         filtered = []
@@ -10773,7 +10936,7 @@ def main():
             validate_image(image)
         except (ValueError, OSError) as e:
             print(f"{PROG}: error: {e}", file=sys.stderr); sys.exit(1)
-        sys.exit(FORENSIC_HANDLERS[sys.argv[2]](image, filtered, part_start))
+        sys.exit(FORENSIC_HANDLERS[subcmd](image, filtered, part_start))
 
     ap = argparse.ArgumentParser(prog=PROG,
                                  description="ReFS forensic file lister (MFTECmd equivalent)",
