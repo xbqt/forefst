@@ -33,7 +33,7 @@ seq,timestamp,action,path,name,oid,opcodes,record_count,plcn
 32,2026-05-19T19:57:28.539Z,CREATE,/testspecials/dir_record_119518/dir_delta_826049/dir_index_393008,india_archive_894856.ini,0x706,INSERT_ROW INSERT_ROW SET_OBJECT,3,3075
 33,2026-05-19T19:57:28.588Z,CREATE,/testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193,symlink_echo_871028.lnk,0x705,INSERT_ROW INSERT_ROW SET_OBJECT,3,3075
 34,2026-05-19T19:57:28.616Z,CREATE,/testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193,draft_yankee_800732.md,0x705,INSERT_ROW INSERT_ROW SET_OBJECT,3,3075
-35,,REPARENT,/testspecials,symlink_temp_137701.lnk,0x702,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,3076
+35,2026-05-19T19:57:28.048Z,REPARENT,/testspecials,symlink_temp_137701.lnk,0x702,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,3076
 36,,OP,/testspecials,,0x702,INSERT_ROW INSERT_ROW INSERT_ROW,3,3076
 37,2026-05-19T19:57:28.738Z,CREATE,/testspecials/dir_record_119518,echo_tango_543769.ini,0x703,INSERT_ROW INSERT_ROW SET_OBJECT,3,3076
 38,,STREAM_UPD,/testspecials/dir_record_119518,,0x703,UPDATE_STREAM,1,3076
@@ -344,7 +344,7 @@ seq,timestamp,action,path,name,oid,opcodes,record_count,plcn
 343,,STREAM_UPD,/testspecials/dir_config_384571/dir_backup_503994/dir_romeo_941465/dir_mike_372259,,0x727,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,3109
 344,2026-05-19T19:58:09.046Z,CREATE,/testspecials,symlink_victor_583095.lnk,0x702,INSERT_ROW INSERT_ROW SET_OBJECT,3,3109
 345,,OP,/testspecials/dir_record_119518/dir_delta_826049/dir_record_790212,,0x71f,INSERT_ROW INSERT_ROW INSERT_ROW,3,3109
-346,,ENTRY_REMOVE,/testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_november_945195,,0x708,DELETE_ROW,1,3109
+346,2026-05-19T19:57:41.897Z,ENTRY_REMOVE,/testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_november_945195,,0x708,DELETE_ROW,1,3109
 347,2026-05-19T19:58:10.252Z,CREATE,/testspecials/dir_gamma_666805,index_gamma_836180.xml,0x71b,INSERT_ROW INSERT_ROW SET_OBJECT,3,3110
 348,,REPARENT,/testspecials/dir_record_119518/dir_delta_826049,lima_whiskey_778046.dat,0x704,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,3110
 349,2026-05-19T19:58:10.913Z,CREATE,/testspecials/dir_oscar_738992,hotel_audit_578337.bin,0x738,INSERT_ROW INSERT_ROW SET_OBJECT,3,3110
@@ -513,7 +513,7 @@ seq,timestamp,action,path,name,oid,opcodes,record_count,plcn
 512,2026-05-19T19:59:02.129Z,CREATE,/testspecials/dir_gamma_666805/dir_data_621988/dir_cache_755834,draft_archive_819011.tmp,0x73d,INSERT_ROW INSERT_ROW SET_OBJECT,3,3127
 513,2026-05-19T19:59:02.746Z,CREATE,/testspecials/dir_record_119518/dir_delta_826049,uniform_whiskey_678922.bin,0x704,INSERT_ROW INSERT_ROW SET_OBJECT,3,3127
 514,,STREAM_UPD,/testspecials/dir_record_119518/dir_delta_826049/dir_record_396651,,0x707,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,3128
-515,,REPARENT,/testspecials/dir_config_384571/dir_backup_503994/dir_romeo_941465,archive_index_532684.csv,0x71a,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,3128
+515,2026-05-19T19:57:55.434Z,REPARENT,/testspecials/dir_config_384571/dir_backup_503994/dir_romeo_941465,archive_index_532684.csv,0x71a,DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW,4,3128
 516,,OP,/testspecials/dir_gamma_666805/dir_data_621988,,0x73c,INSERT_ROW INSERT_ROW INSERT_ROW,3,3128
 517,2026-05-19T19:59:03.905Z,CREATE,/testspecials/dir_record_119518/dir_yankee_902047,symlink_data_727776.lnk,0x723,INSERT_ROW INSERT_ROW SET_OBJECT,3,3128
 518,,STREAM_UPD,/testspecials/dir_gamma_666805/dir_temp_510750,,0x709,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,3128
@@ -892,7 +892,7 @@ seq,timestamp,action,path,name,oid,opcodes,record_count,plcn
 891,,STREAM_UPD,/testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790,,0x787,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,3161
 892,2026-05-19T20:00:54.053Z,CREATE,/testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790,xbpt_foxtrot_romeo_979913.json,0x787,INSERT_ROW INSERT_ROW SET_OBJECT,3,3161
 893,,STREAM_UPD,/testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790,,0x787,UPDATE_STREAM,1,3161
-894,,DELETE,/testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398,elvis_dir_kilo_540242,0x785,DELETE_ROW DELETE_ROW DELETE_TABLE DELETE_ROW,4,3161
+894,2026-05-19T20:00:53.376Z,DELETE,/testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398,elvis_dir_kilo_540242,0x785,DELETE_ROW DELETE_ROW DELETE_TABLE DELETE_ROW,4,3161
 895,,STREAM_UPD,/testintegrity/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509,,0x786,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,3161
 896,2026-05-19T20:00:54.096Z,CREATE,/testintegrity/elvis_dir_victor_783323,xbpt_yankee_output_781405.csv,0x784,INSERT_ROW INSERT_ROW SET_OBJECT,3,3161
 897,,STREAM_UPD,/testintegrity/elvis_dir_victor_783323,,0x784,UPDATE_STREAM,1,3161
@@ -981,7 +981,7 @@ seq,timestamp,action,path,name,oid,opcodes,record_count,plcn
 980,2026-05-19T20:00:54.804Z,CREATE,/testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,xbpt_temp_output_522138.tmp,0x773,INSERT_ROW INSERT_ROW SET_OBJECT,3,3167
 981,,STREAM_UPD,/testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x773,UPDATE_STREAM,1,3167
 982,,STREAM_UPD,/testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235,,0x78e,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,3168
-983,,DELETE,/testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x773,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE,4,3168
+983,2026-05-19T20:00:52.570Z,DELETE,/testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016,,0x773,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE,4,3168
 984,,STREAM_UPD,/testintegrity/elvis_dir_record_449015,,0x77c,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,3168
 985,2026-05-19T20:00:54.898Z,CREATE,/testintegrity,xbpt_tango_hotel_685730.json,0x76f,INSERT_ROW INSERT_ROW SET_OBJECT,3,3168
 986,,STREAM_UPD,/testintegrity,,0x76f,UPDATE_STREAM,1,3168

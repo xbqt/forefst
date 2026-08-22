@@ -1,7 +1,7 @@
 ==============================================================================
 ReFS Super-Timeline — win11refs2tsnapshots.raw
 ==============================================================================
-  Sources merged: USN=0  MLog=304  $SI-MACB=1216  (time-sorted; correlated by name/path —
+  Sources merged: USN=0  MLog=307  $SI-MACB=1216  (time-sorted; correlated by name/path —
                   a file has no OID: $SI shows OID —, USN the home-dir OID, MLog the target OID)
   NOTE: USN journal inactive on this image — timeline is $SI + MLog only.
   Caveat: USN and $SI carry exact FILETIMEs. MLog has NO wall-clock time — an MLog row's time is
@@ -408,6 +408,7 @@ ReFS Super-Timeline — win11refs2tsnapshots.raw
   2026-05-16 16:51:54 UTC  MLog   0x710       /test/elvis_dir_papa_805…   CREATE
   2026-05-16 16:51:55 UTC  MLog   0x704       /test/elvis_dir_record_4…   CREATE
   2026-05-16 16:51:55 UTC  $SI    0x71a       test/elvis_dir_record_44…   Created
+  2026-05-16 16:51:55 UTC  MLog   0x70d       /test/elvis_dir_record_4…   REPARENT
   2026-05-16 16:51:55 UTC  $SI    —           test/elvis_dir_record_44…   Metadata-Changed
   2026-05-16 16:51:55 UTC  MLog   0x702       /test                       RENAME
   2026-05-16 16:51:55 UTC  $SI    —           test/elvis_dir_record_44…   Created
@@ -446,6 +447,7 @@ ReFS Super-Timeline — win11refs2tsnapshots.raw
   2026-05-16 16:51:55 UTC  $SI    —           test/elvis_dir_record_44…   Created
   2026-05-16 16:51:55 UTC  $SI    —           test/elvis_dir_record_44…   Modified
   2026-05-16 16:51:55 UTC  $SI    —           test/elvis_dir_record_44…   Accessed
+  2026-05-16 16:51:55 UTC  MLog   0x704       /test/elvis_dir_record_4…   DELETE
   2026-05-16 16:51:55 UTC  MLog   0x711       /test/elvis_dir_record_4…   RENAME
   2026-05-16 16:51:55 UTC  $SI    —           test/elvis_dir_index_149…   Created
   2026-05-16 16:51:55 UTC  $SI    —           test/elvis_dir_index_149…   Modified
@@ -1119,6 +1121,7 @@ ReFS Super-Timeline — win11refs2tsnapshots.raw
   2026-05-16 16:52:01 UTC  $SI    —           test/elvis_dir_index_149…   Created
   2026-05-16 16:52:01 UTC  $SI    —           test/elvis_dir_index_149…   Accessed
   2026-05-16 16:52:01 UTC  MLog   0x722       /test/elvis_dir_index_14…   CREATE
+  2026-05-16 16:52:01 UTC  MLog   0x719       /test/elvis_dir_record_4…   DELETE
   2026-05-16 16:52:01 UTC  $SI    —           test/elvis_dir_papa_8053…   Created
   2026-05-16 16:52:01 UTC  $SI    —           test/elvis_dir_papa_8053…   Modified
   2026-05-16 16:52:01 UTC  $SI    —           test/elvis_dir_papa_8053…   Metadata-Changed
@@ -1532,4 +1535,4 @@ ReFS Super-Timeline — win11refs2tsnapshots.raw
   (undated)                MLog   0x70f       /test/elvis_dir_record_4…   CREATE [MLog time unreliable]
   (undated)                MLog   0x703       /test/elvis_dir_record_4…   STREAM_UPD [MLog time unreliable]
 ------------------------------------------------------------------------------
-  1520 events
+  1523 events

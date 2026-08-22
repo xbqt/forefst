@@ -1,5 +1,34 @@
 # Changelog
 
+## v1.6.0 — 2026-08-22 — MLog rename/event-time recovery, recycle-bin & bootstrap-corruption forensics, any-order flags
+
+**A forensics-focused release driven by a real ReFS-3.4 case: the recycle bin decodes non-resident metadata, the
+MLog reconstructs rename/delete labels *and* their event times, `summary` now flags a tampered bootstrap, and
+`--partition-start` works in any position on both tools.**
+
+- **Recycle bin recovers non-resident `$I`/`$R`.** `recyclebin` / `export recyclebin` previously failed on a
+  non-resident `$I` record ("could not be decoded from a plain inline record") — common on ReFS 3.4. A single
+  shared, residency-agnostic content reader (`get_file_content`) now resolves every recycle record the same way
+  `extract` does (resident inline / CoW / inline extent-holder / on-disk extents), so original paths, deletion
+  times, and the surviving `$R` payloads all come back. (Also fixed a `$R` reassembly bug that appended extents
+  instead of placing them by `file_vcn`.)
+- **MLog reconstructs renames and their event times.** `mlog --parse` (and the super-timeline) now (a) label a
+  same-directory directory rename as **RENAME** (and a cross-directory one as **MOVE**) instead of `UPDATE` — the
+  new name and its parent are resolved even when the record keys the table only by handle; and (b) recover the
+  **event FILETIME** of a rename/permanent-delete, which ReFS writes to the paired `$SI`-update in the following
+  log block rather than inline. On a busy volume this turns tens of thousands of previously-untimestamped
+  operations into dated timeline events (with no change where a transaction already carried its own time).
+- **`summary` flags a tampered/corrupt bootstrap.** Each superblock and checkpoint copy stores its own physical
+  location; `summary` now checks it and prints **`CORRUPT self-reference`** + a `BOOTSTRAP TAMPERING` note when a
+  copy's stored self-LCN doesn't match where it actually sits (e.g. a hand-zeroed superblock). The volume still
+  parses from a good checkpoint — the point is that the tampering is no longer invisible. (Clean on the whole
+  test corpus; only a deliberately-corrupted image trips it.)
+- **`--partition-start` works in any position — both tools.** `forefst IMG --partition-start 0 integrity` and
+  `refsanalysis IMG --partition-start 0 supb` (the flag *before* the subcommand) now work for every subcommand,
+  matching the flag-after form; a bare `refsanalysis IMG --partition-start 0` still defaults to `summary`.
+- **`details` and `refsanalysis summary` polish.** `refsanalysis summary` reports the resident/non-resident split
+  in the default view (it was blank on some volumes).
+
 ## v1.5.0 — 2026-08-21 — deleted-recovery overhaul, full USN journal, richer `details`
 
 **`export deleted` now produces an analyst-first output — a CSV/JSON index plus only the files you can actually

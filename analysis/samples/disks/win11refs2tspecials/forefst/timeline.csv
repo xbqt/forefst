@@ -286,6 +286,7 @@ timestamp_utc,source,oid,name,event
 2026-05-16 16:34:27 UTC,$SI,,testspecials/dir_november_947335/hardlink_log_446439.tmp,Created
 2026-05-16 16:34:27 UTC,MLog,0x705,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369,CREATE
 2026-05-16 16:34:27 UTC,MLog,0x705,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369,CREATE
+2026-05-16 16:34:27 UTC,MLog,0x705,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369,REPARENT
 2026-05-16 16:34:27 UTC,$SI,,testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_yankee_725332.lnk,Created
 2026-05-16 16:34:27 UTC,$SI,,testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_yankee_725332.lnk,Modified
 2026-05-16 16:34:27 UTC,$SI,,testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_yankee_725332.lnk,Accessed
@@ -419,6 +420,7 @@ timestamp_utc,source,oid,name,event
 2026-05-16 16:34:28 UTC,$SI,,testspecials/dir_november_947335/dir_oscar_742900/zulu_papa_691621.lnk,Modified
 2026-05-16 16:34:28 UTC,$SI,,testspecials/dir_november_947335/dir_oscar_742900/zulu_papa_691621.lnk,Accessed
 2026-05-16 16:34:28 UTC,MLog,0x708,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277,CREATE
+2026-05-16 16:34:28 UTC,MLog,0x705,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369,ENTRY_REMOVE
 2026-05-16 16:34:28 UTC,MLog,0x702,/testspecials,CREATE
 2026-05-16 16:34:28 UTC,$SI,,testspecials/dir_november_947335/dir_india_538407/dir_lima_396840/dir_draft_855171/data_oscar_221687.dat,Created
 2026-05-16 16:34:28 UTC,$SI,,testspecials/dir_november_947335/dir_sync_924581/dir_mike_306826/hardlink_cache_325845.dat,Created
@@ -431,6 +433,7 @@ timestamp_utc,source,oid,name,event
 2026-05-16 16:34:28 UTC,MLog,0x709,/testspecials/dir_november_947335,CREATE
 2026-05-16 16:34:28 UTC,$SI,,testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/dir_echo_285482/hardlink_india_662068.lnk,Metadata-Changed
 2026-05-16 16:34:28 UTC,$SI,,testspecials/dir_november_947335/symlink_papa_109718.lnk,Metadata-Changed
+2026-05-16 16:34:28 UTC,MLog,0x704,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111,REPARENT
 2026-05-16 16:34:28 UTC,$SI,,testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/symlink_mike_898898.lnk,Created
 2026-05-16 16:34:28 UTC,$SI,,testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/symlink_mike_898898.lnk,Modified
 2026-05-16 16:34:28 UTC,$SI,,testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/symlink_mike_898898.lnk,Metadata-Changed
@@ -603,6 +606,7 @@ timestamp_utc,source,oid,name,event
 2026-05-16 16:34:32 UTC,$SI,,testspecials/dir_gamma_163068/dir_echo_659970/dir_data_619360/hardlink_draft_508552.lnk,Modified
 2026-05-16 16:34:32 UTC,$SI,,testspecials/dir_gamma_163068/dir_echo_659970/dir_data_619360/hardlink_draft_508552.lnk,Accessed
 2026-05-16 16:34:32 UTC,MLog,0x708,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277,CREATE
+2026-05-16 16:34:32 UTC,MLog,0x70c,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/dir_echo_285482,ENTRY_REMOVE
 2026-05-16 16:34:32 UTC,$SI,,testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/symlink_trace_678820.lnk,Created
 2026-05-16 16:34:32 UTC,$SI,,testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/symlink_trace_678820.lnk,Modified
 2026-05-16 16:34:32 UTC,$SI,,testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/symlink_trace_678820.lnk,Metadata-Changed
@@ -977,6 +981,7 @@ timestamp_utc,source,oid,name,event
 2026-05-16 16:34:44 UTC,MLog,0x71d,/testspecials/dir_november_947335/dir_sync_924581/dir_backup_133264,CREATE
 2026-05-16 16:34:45 UTC,$SI,,testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/mike_romeo_215177.lnk,Metadata-Changed
 2026-05-16 16:34:45 UTC,$SI,0x727,testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_uniform_329376,Created
+2026-05-16 16:34:45 UTC,MLog,0x705,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369,REPARENT
 2026-05-16 16:34:45 UTC,MLog,0x703,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104,RENAME
 2026-05-16 16:34:45 UTC,$SI,,testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/hotel_record_407322.log,Created
 2026-05-16 16:34:45 UTC,$SI,,testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/archive_backup_662308.bak,Metadata-Changed
@@ -1386,6 +1391,7 @@ timestamp_utc,source,oid,name,event
 2026-05-16 16:35:09 UTC,$SI,,testspecials/dir_november_947335/hardlink_beta_183705.txt,Modified
 2026-05-16 16:35:09 UTC,$SI,,testspecials/dir_november_947335/hardlink_beta_183705.txt,Accessed
 2026-05-16 16:35:09 UTC,MLog,0x709,/testspecials/dir_november_947335,CREATE
+2026-05-16 16:35:09 UTC,MLog,0x70d,/testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778,ENTRY_REMOVE
 2026-05-16 16:35:09 UTC,$SI,,testspecials/dir_uniform_544837/dir_output_654155/draft_output_343220.txt,Created
 2026-05-16 16:35:09 UTC,$SI,,testspecials/dir_uniform_544837/hardlink_papa_582242.txt,Created
 2026-05-16 16:35:09 UTC,MLog,0x739,/testspecials/dir_uniform_544837/dir_output_654155,CREATE
@@ -2065,6 +2071,7 @@ timestamp_utc,source,oid,name,event
 2026-05-16 16:35:58 UTC,$SI,,testspecials/dir_november_947335/dir_sync_924581/dir_backup_133264/symlink_tango_581704.lnk,Modified
 2026-05-16 16:35:58 UTC,$SI,,testspecials/dir_november_947335/dir_sync_924581/dir_backup_133264/symlink_tango_581704.lnk,Accessed
 2026-05-16 16:35:58 UTC,$SI,,testspecials/dir_november_947335/dir_sync_924581/dir_backup_133264/symlink_tango_581704.lnk,Metadata-Changed
+2026-05-16 16:35:58 UTC,MLog,0x71d,/testspecials/dir_november_947335/dir_sync_924581/dir_backup_133264,ENTRY_REMOVE
 2026-05-16 16:35:58 UTC,$SI,,testspecials/dir_november_947335/dir_archive_582163/alpha_draft_805745.ini,Created
 2026-05-16 16:35:58 UTC,$SI,,testspecials/dir_november_947335/dir_archive_582163/alpha_draft_805745.ini,Modified
 2026-05-16 16:35:58 UTC,$SI,,testspecials/dir_november_947335/dir_archive_582163/alpha_draft_805745.ini,Metadata-Changed
@@ -2860,6 +2867,7 @@ timestamp_utc,source,oid,name,event
 2026-05-16 16:37:04 UTC,$SI,,testspecials/dir_uniform_195248/dir_hotel_837877/lima_log_610418.tmp,Metadata-Changed
 2026-05-16 16:37:04 UTC,$SI,,testspecials/dir_uniform_195248/dir_hotel_837877/lima_log_610418.tmp,Accessed
 2026-05-16 16:37:04 UTC,$SI,,testspecials/dir_gamma_163068/dir_alpha_598099/draft_beta_633328.md,Metadata-Changed
+2026-05-16 16:37:04 UTC,MLog,0x734,/testspecials/dir_gamma_163068/dir_alpha_598099,REPARENT
 2026-05-16 16:37:05 UTC,$SI,,testspecials/dir_uniform_195248/dir_hotel_837877/uniform_sync_171039.txt,Created
 2026-05-16 16:37:05 UTC,$SI,,testspecials/dir_uniform_195248/dir_hotel_837877/uniform_sync_171039.txt,Modified
 2026-05-16 16:37:05 UTC,$SI,,testspecials/dir_uniform_195248/dir_hotel_837877/uniform_sync_171039.txt,Metadata-Changed
@@ -4127,6 +4135,7 @@ timestamp_utc,source,oid,name,event
 2026-05-16 16:38:20 UTC,$SI,,testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/delta_index_239633.lnk,Modified
 2026-05-16 16:38:20 UTC,$SI,,testspecials2/dir_oscar_397968/dir_oscar_522053/dir_sync_436503/hardlink_india_396154.lnk,Modified
 2026-05-16 16:38:20 UTC,MLog,0x775,/testspecials2,CREATE
+2026-05-16 16:38:20 UTC,MLog,0x795,/testspecials2/dir_oscar_397968/dir_romeo_329803,DELETE
 2026-05-16 16:38:20 UTC,$SI,,testspecials2/mike_cache_429213.bak,Metadata-Changed
 2026-05-16 16:38:20 UTC,$SI,,testspecials2/mike_index_889080.lnk,Created
 2026-05-16 16:38:20 UTC,MLog,0x775,/testspecials2,CREATE
@@ -4580,6 +4589,7 @@ timestamp_utc,source,oid,name,event
 2026-05-16 16:38:51 UTC,$SI,,testspecials2/dir_yankee_474982/dir_romeo_902399/symlink_gamma_306751.lnk,Accessed
 2026-05-16 16:38:51 UTC,MLog,0x7ad,/testspecials2/dir_yankee_474982/dir_romeo_902399,CREATE
 2026-05-16 16:38:51 UTC,$SI,,testspecials2/dir_yankee_474982/dir_romeo_902399/symlink_gamma_306751.lnk,Metadata-Changed
+2026-05-16 16:38:51 UTC,MLog,0x7ad,/testspecials2/dir_yankee_474982/dir_romeo_902399,ENTRY_REMOVE
 2026-05-16 16:38:52 UTC,$SI,,testspecials2/dir_kilo_616914/dir_hotel_911814/hardlink_lima_651828.lnk,Metadata-Changed
 2026-05-16 16:38:52 UTC,$SI,,testspecials2/dir_kilo_616914/hardlink_delta_989509.lnk,Metadata-Changed
 2026-05-16 16:38:52 UTC,$SI,,testspecials2/dir_yankee_474982/symlink_whiskey_247953.lnk,Metadata-Changed
@@ -6170,11 +6180,13 @@ timestamp_utc,source,oid,name,event
 2026-05-16 16:41:29 UTC,MLog,0x7fd,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790,CREATE
 2026-05-16 16:41:29 UTC,MLog,0x7ff,OID 0x7ff,CREATE
 2026-05-16 16:41:29 UTC,$SI,,test/elvis_dir_record_449015/xbpt_sierra_victor_685719.xml,Metadata-Changed
+2026-05-16 16:41:29 UTC,MLog,0x7fb,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398,DELETE
 2026-05-16 16:41:29 UTC,MLog,0x7fa,/test/elvis_dir_victor_783323,CREATE
 2026-05-16 16:41:29 UTC,$SI,,test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509/xbpt_mike_trace_701071.dat,Created
 2026-05-16 16:41:29 UTC,MLog,0x7fc,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509,CREATE
 2026-05-16 16:41:29 UTC,$SI,,test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509/xbpt_mike_trace_701071.dat,Modified
 2026-05-16 16:41:29 UTC,$SI,,test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509/xbpt_mike_trace_701071.dat,Accessed
+2026-05-16 16:41:29 UTC,MLog,0x7e7,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,DELETE
 2026-05-16 16:41:29 UTC,MLog,0x7f4,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,RENAME
 2026-05-16 16:41:29 UTC,$SI,,test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_cache_sync_352758.ini,Created
 2026-05-16 16:41:29 UTC,$SI,,test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_cache_sync_352758.ini,Modified

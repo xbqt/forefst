@@ -819,7 +819,7 @@ seq,timestamp,action,path,name,oid,opcodes,record_count,plcn
 818,2026-05-16T16:51:55.008Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,xbpt_yankee_foxtrot_727835.bak,0x704,INSERT_ROW INSERT_ROW SET_OBJECT,3,34227
 819,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,UPDATE_STREAM,1,34228
 820,,STREAM_UPD,/test/elvis_dir_victor_783323,,0x717,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34231
-821,,REPARENT,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608,,0x70d,DELETE_ROW REPARENT_TABLE INSERT_ROW,3,34234
+821,2026-05-16T16:51:55.083Z,REPARENT,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608,,0x70d,DELETE_ROW REPARENT_TABLE INSERT_ROW,3,34234
 822,,DELETE,/test,,0x702,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE,4,34237
 823,2026-05-16T16:51:55.124Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790,xbpt_draft_india_571157.ini,0x71a,INSERT_ROW INSERT_ROW SET_OBJECT,3,34238
 824,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790,,0x71a,UPDATE_STREAM,1,34239
@@ -866,7 +866,7 @@ seq,timestamp,action,path,name,oid,opcodes,record_count,plcn
 865,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34293
 866,2026-05-16T16:51:55.816Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,xbpt_echo_tango_714597.log,0x707,INSERT_ROW INSERT_ROW SET_OBJECT,3,34295
 867,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743,,0x707,UPDATE_STREAM,1,34296
-868,,DELETE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE,4,34297
+868,2026-05-16T16:51:55.644Z,DELETE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148,,0x704,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE,4,34297
 869,2026-05-16T16:51:55.897Z,CREATE,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790,xbpt_archive_log_561904.tmp,0x71a,INSERT_ROW INSERT_ROW SET_OBJECT,3,34299
 870,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790,,0x71a,UPDATE_STREAM,1,34300
 871,,STREAM_UPD,/test/elvis_dir_victor_783323,,0x717,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34301
@@ -1213,7 +1213,7 @@ seq,timestamp,action,path,name,oid,opcodes,record_count,plcn
 1212,,STREAM_UPD,/test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165,,0x731,UPDATE_STREAM,1,34795
 1213,,STREAM_UPD,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778,,0x711,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34798
 1214,,STREAM_UPD,/test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165,,0x731,DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM,6,34800
-1215,,DELETE,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509,,0x719,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE,4,34801
+1215,2026-05-16T16:52:01.597Z,DELETE,/test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509,,0x719,DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE,4,34801
 1216,,ALLOCATE,/test/elvis_dir_index_149423,,0x722,ALLOCATE,1,34803
 1217,2026-05-16T16:52:01.884Z,CREATE,OID 0x736,elvis_dir_quebec_896971,0x736,OPEN_TABLE_FROM SET_OBJECT INSERT_ROW INSERT_ROW INSERT_ROW INSERT_ROW,6,34805
 1218,2026-05-16T16:52:01.111Z,MOVE,/test/elvis_dir_index_149423,elvis_dir_report_590629,0x722,DELETE_ROW DELETE_ROW INSERT_ROW INSERT_ROW SET_PARENT_ID,5,34806

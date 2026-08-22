@@ -1706,7 +1706,7 @@ MLog Transactions (parsed)
     DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW
       name: "draft_uniform_166420.txt" (in /testspecials)
 
-  [REPARENT    ] /testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369 → backup_beta_229699.tmp
+  [REPARENT    ] /testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369 → backup_beta_229699.tmp  2026-05-16T16:34:27.259Z
     DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW
       name: "backup_beta_229699.tmp" (in /testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369)
 
@@ -1793,7 +1793,7 @@ MLog Transactions (parsed)
     INSERT_ROW INSERT_ROW SET_OBJECT
       name: "symlink_data_971036.lnk" (in /testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277, $FILE_NAME)
 
-  [ENTRY_REMOVE] /testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369
+  [ENTRY_REMOVE] /testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369  2026-05-16T16:34:28.578Z
     DELETE_ROW
 
   [CREATE      ] /testspecials → quebec_sierra_815130.csv  2026-05-16T16:34:28.627Z
@@ -1807,7 +1807,7 @@ MLog Transactions (parsed)
     INSERT_ROW INSERT_ROW SET_OBJECT
       name: "symlink_papa_109718.lnk" (in /testspecials/dir_november_947335, $FILE_NAME)
 
-  [REPARENT    ] /testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111 → symlink_temp_835968.lnk
+  [REPARENT    ] /testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111 → symlink_temp_835968.lnk  2026-05-16T16:34:28.898Z
     DELETE_ROW INSERT_ROW REPARENT_TABLE INSERT_ROW
       name: "symlink_temp_835968.lnk" (in /testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111)
 
@@ -1988,7 +1988,7 @@ MLog Transactions (parsed)
     INSERT_ROW INSERT_ROW
       name: "hardlink_sync_617075.xml" (in /testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581, $FILE_NAME)
 
-  [ENTRY_REMOVE] /testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/dir_echo_285482
+  [ENTRY_REMOVE] /testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/dir_echo_285482  2026-05-16T16:34:32.605Z
     DELETE_ROW DELETE_ROW DELETE_ROW
 
   [ENTRY_REMOVE] /testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581
@@ -2354,7 +2354,7 @@ MLog Transactions (parsed)
     INSERT_ROW INSERT_ROW SET_OBJECT
       name: "echo_backup_486937.cfg" (in /testspecials/dir_november_947335/dir_sync_924581/dir_backup_133264, $FILE_NAME)
 
-  [REPARENT    ] /testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369
+  [REPARENT    ] /testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369  2026-05-16T16:34:45.134Z
     DELETE_ROW REPARENT_TABLE INSERT_ROW
 
   [ALLOCATE    ] /testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277
@@ -2882,7 +2882,7 @@ MLog Transactions (parsed)
     INSERT_ROW INSERT_ROW SET_OBJECT
       name: "audit_trace_964546.txt" (in /testspecials/dir_november_947335, $FILE_NAME)
 
-  [ENTRY_REMOVE] /testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778
+  [ENTRY_REMOVE] /testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778  2026-05-16T16:35:09.460Z
     DELETE_ROW DELETE_ROW DELETE_ROW
 
   [CREATE      ] /testspecials/dir_uniform_544837/dir_output_654155 → draft_output_343220.txt  2026-05-16T16:35:09.584Z
@@ -3533,7 +3533,7 @@ MLog Transactions (parsed)
   [STREAM_UPD  ] /testspecials/dir_gamma_163068/dir_echo_659970/dir_quebec_876879
     DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM
 
-  [ENTRY_REMOVE] /testspecials/dir_november_947335/dir_sync_924581/dir_backup_133264
+  [ENTRY_REMOVE] /testspecials/dir_november_947335/dir_sync_924581/dir_backup_133264  2026-05-16T16:35:58.567Z
     DELETE_ROW
 
   [ALLOCATE    ] /testspecials/dir_november_947335/dir_archive_582163
@@ -4185,7 +4185,7 @@ MLog Transactions (parsed)
   [STREAM_UPD  ] /testspecials/dir_uniform_195248/dir_hotel_837877
     DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM
 
-  [REPARENT    ] /testspecials/dir_gamma_163068/dir_alpha_598099
+  [REPARENT    ] /testspecials/dir_gamma_163068/dir_alpha_598099  2026-05-16T16:37:04.686Z
     DELETE_ROW REPARENT_TABLE INSERT_ROW
 
   [CREATE      ] /testspecials/dir_uniform_195248/dir_hotel_837877 → uniform_sync_171039.txt  2026-05-16T16:37:05.121Z
@@ -5337,7 +5337,7 @@ MLog Transactions (parsed)
       name: "dir_log_472244" (in /testspecials2/dir_yankee_474982/dir_mike_734231)
       name: "dir_log_472244" (in /testspecials2/dir_kilo_616914/dir_backup_630871, $FILE_NAME)
 
-  [DELETE      ] /testspecials2/dir_oscar_397968/dir_romeo_329803 → dir_kilo_204376  (object table destroyed)
+  [DELETE      ] /testspecials2/dir_oscar_397968/dir_romeo_329803 → dir_kilo_204376  (object table destroyed)  2026-05-16T16:38:20.358Z
     DELETE_ROW DELETE_ROW DELETE_TABLE DELETE_ROW
       name: "dir_kilo_204376" (in /testspecials2/dir_oscar_397968/dir_romeo_329803, $FILE_NAME)
 
@@ -5834,7 +5834,7 @@ MLog Transactions (parsed)
   [OP          ] /testspecials2/dir_yankee_474982/dir_romeo_902399
     INSERT_ROW INSERT_ROW INSERT_ROW
 
-  [ENTRY_REMOVE] /testspecials2/dir_yankee_474982/dir_romeo_902399
+  [ENTRY_REMOVE] /testspecials2/dir_yankee_474982/dir_romeo_902399  2026-05-16T16:38:51.942Z
     DELETE_ROW
 
   [OP          ] /testspecials2/dir_log_298284/dir_draft_685915/dir_report_598294
@@ -7827,7 +7827,7 @@ MLog Transactions (parsed)
       name: "elvis_dir_data_582682"
       name: "elvis_dir_data_582682" (in /test/elvis_dir_record_449015, $FILE_NAME)
 
-  [DELETE      ] /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398 → elvis_dir_kilo_540242  (object table destroyed)
+  [DELETE      ] /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398 → elvis_dir_kilo_540242  (object table destroyed)  2026-05-16T16:41:29.661Z
     DELETE_ROW DELETE_ROW DELETE_TABLE DELETE_ROW
       name: "elvis_dir_kilo_540242" (in /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398, $FILE_NAME)
 
@@ -7884,7 +7884,7 @@ MLog Transactions (parsed)
   [STREAM_UPD  ] /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743
     UPDATE_STREAM
 
-  [DELETE      ] /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148  (object table destroyed)
+  [DELETE      ] /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148  (object table destroyed)  2026-05-16T16:41:29.737Z
     DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE
 
   [CREATE      ] /test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790 → xbpt_archive_log_561904.tmp  2026-05-16T16:41:29.908Z
@@ -9502,5 +9502,5 @@ Action summary
     INSERT              1
     OP                151
 
-  1016 of 2666 transactions carry an embedded timestamp; only those appear in
+  1028 of 2666 transactions carry an embedded timestamp; only those appear in
   `timeline --source MLOG` (an untimestamped transaction cannot be placed on a timeline).

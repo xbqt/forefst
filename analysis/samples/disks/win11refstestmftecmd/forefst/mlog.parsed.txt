@@ -305,7 +305,7 @@ MLog Transactions (parsed)
       name: "MSI9d8e4.tmp"
       name: "MSI9d8e4.tmp" (in /, $FILE_NAME)
 
-  [DELETE      ] / → MSI9d8ea.tmp  (object table destroyed)
+  [DELETE      ] / → MSI9d8ea.tmp  (object table destroyed)  2026-05-23T06:56:53.554Z
     DELETE_ROW DELETE_ROW DELETE_TABLE DELETE_ROW
       name: "MSI9d8ea.tmp" (in /, $FILE_NAME)
 
@@ -352,7 +352,7 @@ MLog Transactions (parsed)
       name: "MSI9d926.tmp"
       name: "MSI9d926.tmp" (in /, $FILE_NAME)
 
-  [DELETE      ] / → MSI9d92c.tmp  (object table destroyed)
+  [DELETE      ] / → MSI9d92c.tmp  (object table destroyed)  2026-05-23T06:59:29.713Z
     DELETE_ROW DELETE_ROW DELETE_TABLE DELETE_ROW
       name: "MSI9d92c.tmp" (in /, $FILE_NAME)
 
@@ -424,7 +424,7 @@ MLog Transactions (parsed)
       name: "MSI9d986.tmp"
       name: "MSI9d986.tmp" (in /, $FILE_NAME)
 
-  [DELETE      ] / → MSI9d986.tmp  (object table destroyed)
+  [DELETE      ] / → MSI9d986.tmp  (object table destroyed)  2026-05-23T07:04:36.642Z
     DELETE_ROW DELETE_ROW DELETE_TABLE DELETE_ROW
       name: "MSI9d986.tmp" (in /, $FILE_NAME)
 
@@ -2961,7 +2961,7 @@ MLog Transactions (parsed)
   [STREAM_UPD  ] /test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165
     DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM
 
-  [DELETE      ] /test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509  (object table destroyed)
+  [DELETE      ] /test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509  (object table destroyed)  2026-05-23T07:34:05.112Z
     DELETE_TABLE DELETE_ROW DELETE_ROW DELETE_TABLE
 
   [ALLOCATE    ] /test/elvis_dir_index_149423
@@ -5422,7 +5422,7 @@ MLog Transactions (parsed)
   [STREAM_UPD  ] /test2/elvis_dir_india_800575
     UPDATE_STREAM
 
-  [REPARENT    ] /test2
+  [REPARENT    ] /test2  2026-05-23T07:38:50.451Z
     DELETE_ROW REPARENT_TABLE INSERT_ROW
 
   [STREAM_UPD  ] /test2/elvis_dir_index_149423
@@ -5523,7 +5523,7 @@ MLog Transactions (parsed)
   [STREAM_UPD  ] /test2/elvis_dir_record_449015
     UPDATE_STREAM
 
-  [REPARENT    ] /test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148
+  [REPARENT    ] /test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148  2026-05-23T07:38:50.904Z
     DELETE_ROW REPARENT_TABLE INSERT_ROW
 
   [ALLOCATE    ] /test2/elvis_dir_papa_805353/elvis_dir_november_478580
@@ -6644,7 +6644,7 @@ MLog Transactions (parsed)
     INSERT_ROW INSERT_ROW SET_OBJECT
       name: "xbpt_symlink_uniform_191290.lnk" (in /testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939, $FILE_NAME)
 
-  [ENTRY_REMOVE] /testspecials/dir_echo_260113/dir_november_183663/dir_record_577164
+  [ENTRY_REMOVE] /testspecials/dir_echo_260113/dir_november_183663/dir_record_577164  2026-05-23T07:44:17.698Z
     DELETE_ROW
 
   [DELETE      ] /testspecials  (object table destroyed)
@@ -7889,7 +7889,7 @@ MLog Transactions (parsed)
   [STREAM_UPD  ] /testspecials
     DELETE_ROW INSERT_ROW OPEN_TABLE_FROM UPDATE_STREAM ALLOCATE UPDATE_STREAM
 
-  [ENTRY_REMOVE] /testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/dir_papa_331610
+  [ENTRY_REMOVE] /testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/dir_papa_331610  2026-05-23T07:44:21.601Z
     DELETE_ROW
 
   [STREAM_UPD  ] /testspecials/dir_mike_420327
@@ -9196,7 +9196,7 @@ MLog Transactions (parsed)
     DELETE_ROW INSERT_ROW
       name: "hidden_2425" (in /testintegrity/dir_romeo_348517)
 
-  [UPDATE      ] /testintegrity/dir_romeo_348517 → hidden_7951
+  [UPDATE      ] /testintegrity/dir_romeo_348517 → hidden_7951  2026-05-23T07:53:49.300Z
     DELETE_ROW INSERT_ROW
       name: "hidden_7951" (in /testintegrity/dir_romeo_348517)
 
@@ -9621,7 +9621,7 @@ MLog Transactions (parsed)
       name: "xbpt_november_tango_774662.json" (in /testintegrity/dir_romeo_348517/dir_alpha_208192)
       name: "xbpt_november_tango_774662.json" (in /testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766, $FILE_NAME)
 
-  [ENTRY_REMOVE] /testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/dir_cache_422839
+  [ENTRY_REMOVE] /testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/dir_cache_422839  2026-05-23T07:53:50.355Z
     DELETE_ROW
 
   [MOVE        ] /testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/dir_cache_422839 → dir_sync_530462  (parent 0x821 → 0x829)  2026-05-23T07:53:50.443Z
@@ -10778,5 +10778,5 @@ Action summary
     INSERT              1
     OP                104
 
-  1322 of 2904 transactions carry an embedded timestamp; only those appear in
+  1332 of 2904 transactions carry an embedded timestamp; only those appear in
   `timeline --source MLOG` (an untimestamped transaction cannot be placed on a timeline).

@@ -1,7 +1,7 @@
 ==============================================================================
 ReFS Super-Timeline — win11refs2tspecials.raw
 ==============================================================================
-  Sources merged: USN=0  MLog=1016  $SI-MACB=6200  (time-sorted; correlated by name/path —
+  Sources merged: USN=0  MLog=1028  $SI-MACB=6200  (time-sorted; correlated by name/path —
                   a file has no OID: $SI shows OID —, USN the home-dir OID, MLog the target OID)
   NOTE: USN journal inactive on this image — timeline is $SI + MLog only.
   Caveat: USN and $SI carry exact FILETIMEs. MLog has NO wall-clock time — an MLog row's time is
@@ -298,6 +298,7 @@ ReFS Super-Timeline — win11refs2tspecials.raw
   2026-05-16 16:34:27 UTC  $SI    —           testspecials/dir_novembe…   Created
   2026-05-16 16:34:27 UTC  MLog   0x705       /testspecials/dir_gamma_…   CREATE
   2026-05-16 16:34:27 UTC  MLog   0x705       /testspecials/dir_gamma_…   CREATE
+  2026-05-16 16:34:27 UTC  MLog   0x705       /testspecials/dir_gamma_…   REPARENT
   2026-05-16 16:34:27 UTC  $SI    —           testspecials/dir_gamma_1…   Created
   2026-05-16 16:34:27 UTC  $SI    —           testspecials/dir_gamma_1…   Modified
   2026-05-16 16:34:27 UTC  $SI    —           testspecials/dir_gamma_1…   Accessed
@@ -431,6 +432,7 @@ ReFS Super-Timeline — win11refs2tspecials.raw
   2026-05-16 16:34:28 UTC  $SI    —           testspecials/dir_novembe…   Modified
   2026-05-16 16:34:28 UTC  $SI    —           testspecials/dir_novembe…   Accessed
   2026-05-16 16:34:28 UTC  MLog   0x708       /testspecials/dir_gamma_…   CREATE
+  2026-05-16 16:34:28 UTC  MLog   0x705       /testspecials/dir_gamma_…   ENTRY_REMOVE
   2026-05-16 16:34:28 UTC  MLog   0x702       /testspecials               CREATE
   2026-05-16 16:34:28 UTC  $SI    —           testspecials/dir_novembe…   Created
   2026-05-16 16:34:28 UTC  $SI    —           testspecials/dir_novembe…   Created
@@ -443,6 +445,7 @@ ReFS Super-Timeline — win11refs2tspecials.raw
   2026-05-16 16:34:28 UTC  MLog   0x709       /testspecials/dir_novemb…   CREATE
   2026-05-16 16:34:28 UTC  $SI    —           testspecials/dir_gamma_1…   Metadata-Changed
   2026-05-16 16:34:28 UTC  $SI    —           testspecials/dir_novembe…   Metadata-Changed
+  2026-05-16 16:34:28 UTC  MLog   0x704       /testspecials/dir_gamma_…   REPARENT
   2026-05-16 16:34:28 UTC  $SI    —           testspecials/dir_gamma_1…   Created
   2026-05-16 16:34:28 UTC  $SI    —           testspecials/dir_gamma_1…   Modified
   2026-05-16 16:34:28 UTC  $SI    —           testspecials/dir_gamma_1…   Metadata-Changed
@@ -615,6 +618,7 @@ ReFS Super-Timeline — win11refs2tspecials.raw
   2026-05-16 16:34:32 UTC  $SI    —           testspecials/dir_gamma_1…   Modified
   2026-05-16 16:34:32 UTC  $SI    —           testspecials/dir_gamma_1…   Accessed
   2026-05-16 16:34:32 UTC  MLog   0x708       /testspecials/dir_gamma_…   CREATE
+  2026-05-16 16:34:32 UTC  MLog   0x70c       /testspecials/dir_gamma_…   ENTRY_REMOVE
   2026-05-16 16:34:32 UTC  $SI    —           testspecials/dir_gamma_1…   Created
   2026-05-16 16:34:32 UTC  $SI    —           testspecials/dir_gamma_1…   Modified
   2026-05-16 16:34:32 UTC  $SI    —           testspecials/dir_gamma_1…   Metadata-Changed
@@ -989,6 +993,7 @@ ReFS Super-Timeline — win11refs2tspecials.raw
   2026-05-16 16:34:44 UTC  MLog   0x71d       /testspecials/dir_novemb…   CREATE
   2026-05-16 16:34:45 UTC  $SI    —           testspecials/dir_gamma_1…   Metadata-Changed
   2026-05-16 16:34:45 UTC  $SI    0x727       testspecials/dir_gamma_1…   Created
+  2026-05-16 16:34:45 UTC  MLog   0x705       /testspecials/dir_gamma_…   REPARENT
   2026-05-16 16:34:45 UTC  MLog   0x703       /testspecials/dir_gamma_…   RENAME
   2026-05-16 16:34:45 UTC  $SI    —           testspecials/dir_gamma_1…   Created
   2026-05-16 16:34:45 UTC  $SI    —           testspecials/dir_gamma_1…   Metadata-Changed
@@ -1398,6 +1403,7 @@ ReFS Super-Timeline — win11refs2tspecials.raw
   2026-05-16 16:35:09 UTC  $SI    —           testspecials/dir_novembe…   Modified
   2026-05-16 16:35:09 UTC  $SI    —           testspecials/dir_novembe…   Accessed
   2026-05-16 16:35:09 UTC  MLog   0x709       /testspecials/dir_novemb…   CREATE
+  2026-05-16 16:35:09 UTC  MLog   0x70d       /testspecials/dir_gamma_…   ENTRY_REMOVE
   2026-05-16 16:35:09 UTC  $SI    —           testspecials/dir_uniform…   Created
   2026-05-16 16:35:09 UTC  $SI    —           testspecials/dir_uniform…   Created
   2026-05-16 16:35:09 UTC  MLog   0x739       /testspecials/dir_unifor…   CREATE
@@ -2077,6 +2083,7 @@ ReFS Super-Timeline — win11refs2tspecials.raw
   2026-05-16 16:35:58 UTC  $SI    —           testspecials/dir_novembe…   Modified
   2026-05-16 16:35:58 UTC  $SI    —           testspecials/dir_novembe…   Accessed
   2026-05-16 16:35:58 UTC  $SI    —           testspecials/dir_novembe…   Metadata-Changed
+  2026-05-16 16:35:58 UTC  MLog   0x71d       /testspecials/dir_novemb…   ENTRY_REMOVE
   2026-05-16 16:35:58 UTC  $SI    —           testspecials/dir_novembe…   Created
   2026-05-16 16:35:58 UTC  $SI    —           testspecials/dir_novembe…   Modified
   2026-05-16 16:35:58 UTC  $SI    —           testspecials/dir_novembe…   Metadata-Changed
@@ -2872,6 +2879,7 @@ ReFS Super-Timeline — win11refs2tspecials.raw
   2026-05-16 16:37:04 UTC  $SI    —           testspecials/dir_uniform…   Metadata-Changed
   2026-05-16 16:37:04 UTC  $SI    —           testspecials/dir_uniform…   Accessed
   2026-05-16 16:37:04 UTC  $SI    —           testspecials/dir_gamma_1…   Metadata-Changed
+  2026-05-16 16:37:04 UTC  MLog   0x734       /testspecials/dir_gamma_…   REPARENT
   2026-05-16 16:37:05 UTC  $SI    —           testspecials/dir_uniform…   Created
   2026-05-16 16:37:05 UTC  $SI    —           testspecials/dir_uniform…   Modified
   2026-05-16 16:37:05 UTC  $SI    —           testspecials/dir_uniform…   Metadata-Changed
@@ -4139,6 +4147,7 @@ ReFS Super-Timeline — win11refs2tspecials.raw
   2026-05-16 16:38:20 UTC  $SI    —           testspecials2/dir_log_29…   Modified
   2026-05-16 16:38:20 UTC  $SI    —           testspecials2/dir_oscar_…   Modified
   2026-05-16 16:38:20 UTC  MLog   0x775       /testspecials2              CREATE
+  2026-05-16 16:38:20 UTC  MLog   0x795       /testspecials2/dir_oscar…   DELETE
   2026-05-16 16:38:20 UTC  $SI    —           testspecials2/mike_cache…   Metadata-Changed
   2026-05-16 16:38:20 UTC  $SI    —           testspecials2/mike_index…   Created
   2026-05-16 16:38:20 UTC  MLog   0x775       /testspecials2              CREATE
@@ -4592,6 +4601,7 @@ ReFS Super-Timeline — win11refs2tspecials.raw
   2026-05-16 16:38:51 UTC  $SI    —           testspecials2/dir_yankee…   Accessed
   2026-05-16 16:38:51 UTC  MLog   0x7ad       /testspecials2/dir_yanke…   CREATE
   2026-05-16 16:38:51 UTC  $SI    —           testspecials2/dir_yankee…   Metadata-Changed
+  2026-05-16 16:38:51 UTC  MLog   0x7ad       /testspecials2/dir_yanke…   ENTRY_REMOVE
   2026-05-16 16:38:52 UTC  $SI    —           testspecials2/dir_kilo_6…   Metadata-Changed
   2026-05-16 16:38:52 UTC  $SI    —           testspecials2/dir_kilo_6…   Metadata-Changed
   2026-05-16 16:38:52 UTC  $SI    —           testspecials2/dir_yankee…   Metadata-Changed
@@ -6182,11 +6192,13 @@ ReFS Super-Timeline — win11refs2tspecials.raw
   2026-05-16 16:41:29 UTC  MLog   0x7fd       /test/elvis_dir_record_4…   CREATE
   2026-05-16 16:41:29 UTC  MLog   0x7ff       OID 0x7ff                   CREATE
   2026-05-16 16:41:29 UTC  $SI    —           test/elvis_dir_record_44…   Metadata-Changed
+  2026-05-16 16:41:29 UTC  MLog   0x7fb       /test/elvis_dir_record_4…   DELETE
   2026-05-16 16:41:29 UTC  MLog   0x7fa       /test/elvis_dir_victor_7…   CREATE
   2026-05-16 16:41:29 UTC  $SI    —           test/elvis_dir_record_44…   Created
   2026-05-16 16:41:29 UTC  MLog   0x7fc       /test/elvis_dir_record_4…   CREATE
   2026-05-16 16:41:29 UTC  $SI    —           test/elvis_dir_record_44…   Modified
   2026-05-16 16:41:29 UTC  $SI    —           test/elvis_dir_record_44…   Accessed
+  2026-05-16 16:41:29 UTC  MLog   0x7e7       /test/elvis_dir_record_4…   DELETE
   2026-05-16 16:41:29 UTC  MLog   0x7f4       /test/elvis_dir_record_4…   RENAME
   2026-05-16 16:41:29 UTC  $SI    —           test/elvis_dir_index_149…   Created
   2026-05-16 16:41:29 UTC  $SI    —           test/elvis_dir_index_149…   Modified
@@ -7228,4 +7240,4 @@ ReFS Super-Timeline — win11refs2tspecials.raw
   (undated)                MLog   0x7e6       /test/elvis_dir_record_4…   STREAM_UPD [MLog time unreliable]
   (undated)                MLog   0x7fb       /test/elvis_dir_record_4…   MOVE [MLog time unreliable]
 ------------------------------------------------------------------------------
-  7216 events
+  7228 events

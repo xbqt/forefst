@@ -255,8 +255,19 @@ Full dispatch tables with cross-version mapping are maintained in the project's 
 
 ## Transaction structure
 
-Each MLog data page holds one redo block containing the records for a single atomic transaction. A
-transaction typically follows the pattern: start (flags bit 0) → operations → commit (flags bit 1).
+Each MLog data page holds one redo block containing the records for a single atomic transaction, marked by the
+**transaction-start flag** (record flags bit 0, at record+0x2C — the same flag the driver's replay tests). The
+commit flag (bit 1) is **always 0 on disk** — a commit is recorded at the checkpoint/log-core layer, not per
+record — so transactions are delimited by the start flag, and each fits within one 4 KiB log block.
+
+### Event timestamps — when the operation happened
+
+Some operations carry their own time and some do not. A **create or write** embeds the object's updated
+`$STANDARD_INFORMATION` in its own records, so the operation FILETIME reads straight out of the transaction. A
+**rename or a permanent delete carries no inline time** — ReFS writes the object's new `$SI` as a *separate*
+`$SI`-update in the **following** log block, whose MACB timestamps sit at that block's offset **+0x140**. `mlog
+--parse` pairs the two, so a rename/delete now shows its real event time instead of a blank — the same time then
+flows into `timeline`. (A transaction that already carries its own time is never overridden.)
 
 ### Concrete actions — grouping redo opcodes into what a user did
 

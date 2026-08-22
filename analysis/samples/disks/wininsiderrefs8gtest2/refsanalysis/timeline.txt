@@ -1,7 +1,7 @@
 ==============================================================================
 ReFS Super-Timeline — wininsiderrefs8gtest2.raw
 ==============================================================================
-  Sources merged: USN=0  MLog=611  $SI-MACB=3576  (time-sorted; correlated by name/path —
+  Sources merged: USN=0  MLog=616  $SI-MACB=3576  (time-sorted; correlated by name/path —
                   a file has no OID: $SI shows OID —, USN the home-dir OID, MLog the target OID)
   NOTE: USN journal inactive on this image — timeline is $SI + MLog only.
   Caveat: USN and $SI carry exact FILETIMEs. MLog has NO wall-clock time — an MLog row's time is
@@ -228,6 +228,7 @@ ReFS Super-Timeline — wininsiderrefs8gtest2.raw
   2026-05-19 19:57:28 UTC  MLog   0x703       /testspecials/dir_record…   CREATE
   2026-05-19 19:57:28 UTC  $SI    0x705       testspecials/dir_record_…   Created
   2026-05-19 19:57:28 UTC  MLog   0x705       /testspecials/dir_record…   CREATE
+  2026-05-19 19:57:28 UTC  MLog   0x702       /testspecials               REPARENT
   2026-05-19 19:57:28 UTC  $SI    —           testspecials/dir_record_…   Created
   2026-05-19 19:57:28 UTC  $SI    —           testspecials/dir_record_…   Modified
   2026-05-19 19:57:28 UTC  $SI    —           testspecials/dir_record_…   Accessed
@@ -971,6 +972,7 @@ ReFS Super-Timeline — wininsiderrefs8gtest2.raw
   2026-05-19 19:57:41 UTC  MLog   0x707       /testspecials/dir_record…   CREATE
   2026-05-19 19:57:41 UTC  $SI    0x723       testspecials/dir_record_…   Created
   2026-05-19 19:57:41 UTC  MLog   0x723       /testspecials/dir_record…   CREATE
+  2026-05-19 19:57:41 UTC  MLog   0x708       /testspecials/dir_record…   ENTRY_REMOVE
   2026-05-19 19:57:41 UTC  $SI    —           testspecials/record_queb…   Modified
   2026-05-19 19:57:41 UTC  $SI    —           testspecials/record_queb…   Metadata-Changed
   2026-05-19 19:57:41 UTC  $SI    —           testspecials/record_queb…   Accessed
@@ -1316,6 +1318,7 @@ ReFS Super-Timeline — wininsiderrefs8gtest2.raw
   2026-05-19 19:57:55 UTC  MLog   0x704       /testspecials/dir_record…   CREATE
   2026-05-19 19:57:55 UTC  $SI    —           testspecials/dir_record_…   Metadata-Changed
   2026-05-19 19:57:55 UTC  $SI    0x732       testspecials/dir_oscar_2…   Created
+  2026-05-19 19:57:55 UTC  MLog   0x71a       /testspecials/dir_config…   REPARENT
   2026-05-19 19:57:55 UTC  $SI    0x733       testspecials/dir_record_…   Created
   2026-05-19 19:57:55 UTC  $SI    0x733       testspecials/dir_record_…   Modified
   2026-05-19 19:57:55 UTC  $SI    0x733       testspecials/dir_record_…   Metadata-Changed
@@ -2951,6 +2954,7 @@ ReFS Super-Timeline — wininsiderrefs8gtest2.raw
   2026-05-19 20:00:52 UTC  $SI    —           testintegrity/elvis_dir_…   Modified
   2026-05-19 20:00:52 UTC  $SI    —           testintegrity/elvis_dir_…   Accessed
   2026-05-19 20:00:52 UTC  $SI    0x77c       testintegrity/elvis_dir_…   Created
+  2026-05-19 20:00:52 UTC  MLog   0x773       /testintegrity/elvis_dir…   DELETE
   2026-05-19 20:00:52 UTC  $SI    —           testintegrity/elvis_dir_…   Modified
   2026-05-19 20:00:52 UTC  $SI    —           testintegrity/elvis_dir_…   Accessed
   2026-05-19 20:00:52 UTC  $SI    —           testintegrity/elvis_dir_…   Created
@@ -3056,6 +3060,7 @@ ReFS Super-Timeline — wininsiderrefs8gtest2.raw
   2026-05-19 20:00:53 UTC  MLog   0x782       /testintegrity/elvis_dir…   CREATE
   2026-05-19 20:00:53 UTC  MLog   0x782       /testintegrity/elvis_dir…   MOVE
   2026-05-19 20:00:53 UTC  $SI    0x784       testintegrity/elvis_dir_…   Created
+  2026-05-19 20:00:53 UTC  MLog   0x785       /testintegrity/elvis_dir…   DELETE
   2026-05-19 20:00:53 UTC  MLog   0x77e       /testintegrity/elvis_dir…   CREATE
   2026-05-19 20:00:53 UTC  $SI    —           testintegrity/elvis_dir_…   Created
   2026-05-19 20:00:53 UTC  MLog   0x782       /testintegrity/elvis_dir…   CREATE
@@ -4199,4 +4204,4 @@ ReFS Super-Timeline — wininsiderrefs8gtest2.raw
   (undated)                MLog   0x770       /testintegrity/elvis_dir…   STREAM_UPD [MLog time unreliable]
   (undated)                MLog   0x785       /testintegrity/elvis_dir…   MOVE [MLog time unreliable]
 ------------------------------------------------------------------------------
-  4187 events
+  4192 events
