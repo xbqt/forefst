@@ -5,11 +5,11 @@
 **Forensic tools and byte-level structural documentation for Microsoft's Resilient File System (ReFS), versions 3.4 through 3.14.**
 
 The project consists of:  
-- **The ReFS format reference**, documenting the structures, attributes, main concepts like addressing or checksum mechanisms and version-specific changes. Available as plain Markdown in docs/ but above all as a website, **[xbpt.gitlab.io/forefst/](https://xbpt.gitlab.io/forefst/)**.
+- **The ReFS format reference**, documenting the structures, attributes, main concepts like addressing or checksum mechanisms and version-specific changes. Available as plain Markdown in docs/ but above all as a website, <a href="https://xbpt.gitlab.io/forefst/" target="_blank"><strong>xbpt.gitlab.io/forefst</strong></a>.
 - **The open-source forensic tool, forefst.py**, for analysing ReFS volumes, including file metadata, deleted data, journals, hard links and special files.
 - **The reproducible research methodology and lab materials**, combining reverse engineering of Microsoft’s refs.sys driver with analysis of more than 100 disk images to validate the documented structures and behaviours. But also everything needed to reproduce and audit the structural analysis: hypervisor scripts, file-activity generators, tool output, some disk images and the refsanalysis.py tool.
 
-And if you want a complete introduction to the project: **[https://xbpt.gitlab.io/refs](https://xbpt.gitlab.io/refs)**
+And if you want a complete introduction to the project: <a href="https://xbpt.gitlab.io/refs/" target="_blank">xbpt.gitlab.io/refs</a>.
 
 ## Quick start
 
