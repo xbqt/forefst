@@ -49,17 +49,18 @@ from pathlib import Path
 
 from forefst import (
     DEFAULT_DEPTH,
-    FILE_ATTR_FLAGS, SUPB_LCN, Translator, _CHKP_FLAG_BITS, _is_snapshot_value, _parse_ads_from_value, _select_ct_root, attrs_to_str,
+    FILE_ATTR_FLAGS, SUPB_LCN, Translator, _CHKP_FLAG_BITS, _parse_ads_from_value, _select_ct_root, attrs_to_str,
     bootstrap, count_snapshots_in_resident, find_refs_partition, fs_content_summary, get_object_si,
     get_resident_file_size, gpt_partition_detail, le16, le32, le64,
     parse_chkp as _forefst_parse_chkp, parse_resident_btree_rows,
     parse_supb as _forefst_parse_supb, parse_vbr as _forefst_parse_vbr, resolve_path,
     validate_image as _validate_image, walk_bplus, walk_directory_tree,
     _current_stream_extent_backed, _multilevel_extent_backed_size,
+    _attrs_to_str, _find_snapshot_files, _guid_str, _hx, _parse_extended_attributes, _vbr_checksum,   # 5.1: single-source helpers
 )
 
 PROG = "refsanalysis"
-VERSION = "1.7.0"
+VERSION = "1.7.1"
 
 
 
@@ -169,10 +170,6 @@ def _ok(v):
 def _guid_to_text(raw16):
     return str(uuid.UUID(bytes_le=bytes(raw16)))
 
-
-def _guid_str(b):
-    if len(b) < 16: return b.hex()
-    return f"{le32(b,0):08x}-{le16(b,4):04x}-{le16(b,6):04x}-{b[8:10].hex()}-{b[10:16].hex()}"
 
 
 def _print_table(headers, rows):
@@ -284,9 +281,6 @@ _KNOWN_OIDS = {
 }
 
 
-def _hx(v):
-    return f"0x{v:x}" if v is not None else "n/a"
-
 
 def _sig_str(b):
     if not b: return "(empty)"
@@ -341,14 +335,6 @@ _ROOT_LABELS = [
     "Small Allocator",
 ]
 
-
-def _vbr_checksum(sector, vbr_size):
-    checksum = 0
-    for off in range(0x03, vbr_size):
-        if off in (0x16, 0x17): continue
-        checksum = ((checksum >> 1) | ((checksum & 1) << 15)) & 0xFFFF
-        checksum = (checksum + sector[off]) & 0xFFFF
-    return checksum
 
 
 def _volume_flags_description(value):
@@ -2341,10 +2327,6 @@ _INTERNAL_FLAGS = {
 
 
 
-def _attrs_to_str(attrs, full=True):
-    # adapter over the canonical helper (hex render on no-flags = legacy refsanalysis behaviour)
-    return attrs_to_str(attrs, full=full, hex_if_empty=True)
-
 
 def _attrs_to_list(attrs):
     return [name for bit, name in FILE_ATTR_FLAGS.items() if attrs & bit]
@@ -2488,30 +2470,6 @@ def _walk_dir_tree(f, ps, cs, tr, obj_map, oid, path, depth, max_depth, results,
             _walk_dir_tree(f, ps, cs, tr, obj_map, entry["child_oid"],
                            child_path, depth + 1, max_depth, results, _visited)
 
-
-def _parse_extended_attributes(data):
-    """Parse Windows Extended Attributes (EA) chain from raw bytes."""
-    eas = []
-    offset = 0
-    for _ in range(100):
-        if offset + 8 > len(data): break
-        next_off = le32(data, offset)
-        ea_flags = data[offset + 4]
-        name_len = data[offset + 5]
-        value_len = le16(data, offset + 6)
-        if name_len == 0 and value_len == 0: break
-        name_start = offset + 8
-        name_end = name_start + name_len
-        if name_end >= len(data): break
-        name = data[name_start:name_end].decode("ascii", errors="replace")
-        value_start = name_end + 1
-        value_end = value_start + value_len
-        if value_end > len(data): break
-        value = data[value_start:value_end]
-        eas.append({"name": name, "value": value, "flags": ea_flags})
-        if next_off == 0: break
-        offset += next_off
-    return eas
 
 
 def _decode_lx_mode(mode_val):
@@ -3220,71 +3178,11 @@ def cmd_details(image, remaining, partition_start):
 #  SNAPSHOTS — Stream snapshots and ADS
 # ═══════════════════════════════════════════════════════════════════════
 
-def _extract_snapshot_name(key_data):
-    if len(key_data) < 18: return None
-    if (key_data[8:12] == b'\x02\x00\x00\x80' and key_data[12] == 0xB0 and key_data[13] == 0x00 and le32(key_data, 4) == 0):
-        name = key_data[16:].decode("utf-16-le", errors="replace").rstrip("\x00")
-        if name and '\x00' not in name: return name
-    return None
-
-
-def _classify_b0_entry(val_data):
-    return 'TRUE_SNAPSHOT' if _is_snapshot_value(val_data) else 'ADS'
-
-
-def _parse_snapshot_value(val_data, snap_name):
-    info = {"name": snap_name, "raw_len": len(val_data),
-            "is_true_snapshot": _classify_b0_entry(val_data) == 'TRUE_SNAPSHOT'}
-    if len(val_data) >= 0x28: info["stream_size"] = le64(val_data, 0x20)
-    if len(val_data) >= 0x30: info["allocation_size"] = le64(val_data, 0x28)
-    if len(val_data) >= 0x38: info["snapshot_alloc"] = le64(val_data, 0x30)
-    if len(val_data) >= 0x48: info["data_sub_id"] = le32(val_data, 0x44)
-    if len(val_data) >= 0x4C:
-        snap_id = le32(val_data, 0x48)
-        if 0 < snap_id < 1000: info["snapshot_id"] = snap_id
-    for off in [0x50, 0x48, 0x40, 0x58]:
-        if off + 8 <= len(val_data):
-            ft = le64(val_data, off)
-            if 0x01D0000000000000 < ft < 0x01F0000000000000:
-                info["creation_time"] = ft; break
-    return info
-
-
-def _parse_snapshots_from_value(vd):
-    snapshots = []
-    for kd, vd_row in parse_resident_btree_rows(vd):
-        snap_name = _extract_snapshot_name(kd)
-        if snap_name is not None:
-            snapshots.append(_parse_snapshot_value(vd_row, snap_name))
-    return snapshots
 
 
 
 
-def _find_snapshot_files(f, ps, cs, tr, obj_map, oid, path, depth, max_depth, results):
-    if depth > max_depth or oid not in obj_map: return
-    rows = walk_bplus(f, ps, cs, tr, obj_map[oid])
-    for kd, vd in rows:
-        if len(kd) < 4 or le16(kd, 0) != 0x30: continue
-        name = kd[4:].decode("utf-16-le", errors="replace").rstrip("\x00")
-        full_path = f"{path}/{name}" if path else name
-        if len(vd) <= 84:
-            child_oid = le64(vd, 0x08) if len(vd) >= 0x10 else 0
-            is_dir = bool(le32(vd, 0x40) & 0x10000000) if len(vd) >= 0x44 else False
-            if is_dir and child_oid and child_oid in obj_map:
-                _find_snapshot_files(f, ps, cs, tr, obj_map, child_oid, full_path, depth + 1, max_depth, results)
-            # A non-resident FILE has no own OID/tree: val+0x08 is its home-dir backref, so scanning
-            # obj_map[backref] returns the HOME DIRECTORY's $SNAPSHOT entries, not the file's -- a
-            # file/dir mix. (The file's own CoW versions live in its type-0x40 extents, which this
-            # snapshot-named-key scan does not match.) Skip rather than mis-attribute. --oid bug class.
-        else:
-            snapshots = _parse_snapshots_from_value(vd)
-            if snapshots:
-                file_info = {"path": full_path, "snapshots": snapshots, "value_len": len(vd), "vd": vd}
-                if len(vd) >= 0x50:
-                    file_info["create_time"] = le64(vd, 0x28); file_info["modify_time"] = le64(vd, 0x30)
-                    file_info["file_size"] = get_resident_file_size(vd)
-                results.append(file_info)
+
 
 
 

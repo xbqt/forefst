@@ -223,7 +223,7 @@ def validate_image(path, die_fn=None):
 
 # ─── Constants ────────────────────────────────────────────────────────
 PROG = "forefst"
-VERSION = "1.7.0"
+VERSION = "1.7.1"
 # Phase 3 (4.D): directory walks default to FULL depth (no artificial cap); `--depth N` overrides. The real
 # recursion depth equals the actual directory nesting (ReFS trees are shallow — tens of levels), so this
 # constant is never the binding limit; it just means "don't truncate". main() also raises the interpreter
@@ -618,20 +618,28 @@ class Translator:
         return vlcn
 
 
-_LAST_TR = None   # audit 3.2: the most recent Translator, so its unmapped-container misses can be surfaced at exit.
+_ALL_TRS = []   # audit 4.2: EVERY Translator built this run. Was a single _LAST_TR — but `--cow-before` builds a
+                # SECOND Translator (the earlier image), and it silently overwrote the first, dropping that image's
+                # unmapped-container caveat — the exact silent evidence-loss the 3.2 fix exists to prevent.
 
 def _warn_translator(tr):
-    """Surface unmapped-container misses (audit 3.2): 0 on a well-formed volume; non-zero => a corrupt/truncated
+    """Surface unmapped-container misses (audit 3.2/4.2): 0 on a well-formed volume; non-zero => a corrupt/truncated
     container table forced identity-mapped (VLCN==PLCN) reads, so some rows may be missing or wrong. stderr ONLY
-    — never alters stdout/JSON, so a valid volume is byte-unchanged — and at most once per run. Registered
-    at-exit (below) so EVERY command carries the caveat, not just fastsummary (which was the sole caller, 3.2)."""
+    — never alters stdout/JSON, so a valid volume is byte-unchanged — and at most once per translator (the
+    `_warned` flag). Registered at-exit so EVERY command carries the caveat (not just fastsummary, 3.2), once per
+    image (4.2: `--cow-before` builds a second Translator; the warning is labelled with which image it came from).
+    Deliberately NOT suppressed by `-q/--quiet` — an evidence caveat is not progress output. NB: atexit does not
+    fire on os._exit()/a signal, so the caveat is structurally slightly less reliable than the output it qualifies
+    (neither path occurs in the current code)."""
     if tr is None or not getattr(tr, "misses", 0) or getattr(tr, "_warned", False):
         return
     tr._warned = True
-    print(f"[{PROG}] WARNING: {tr.misses} VLCN(s) had no container mapping — output may be incomplete "
+    _img = getattr(tr, "_image", "")
+    _where = f" [{_img}]" if _img else ""
+    print(f"[{PROG}] WARNING:{_where} {tr.misses} VLCN(s) had no container mapping — output may be incomplete "
           f"(corrupt/truncated container table).", file=sys.stderr)
 
-atexit.register(lambda: _warn_translator(_LAST_TR))
+atexit.register(lambda: [_warn_translator(t) for t in _ALL_TRS])
 
 # ─── B+ tree walker ──────────────────────────────────────────────────
 def walk_bplus(f, ps, cs, tr, vlcns, max_depth=5):
@@ -3315,7 +3323,11 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
             if entry["is_dir"] and entry["oid"] and entry["oid"] in obj_map:
                 _walk_dir(entry["oid"], full_path, oid, depth + 1)
 
-    _walk_dir(start_oid, "", start_oid, 0)
+    try:
+        _walk_dir(start_oid, "", start_oid, 0)
+    except RecursionError:   # audit 5.3: a crafted/corrupt tree deeper than the (C-stack-safe) limit is now a
+        die("directory tree deeper than the walker supports — the volume may be corrupt or crafted; "   # clean
+            "bound the walk with --depth")                                                              # error
 
     # Post-process: group a file's names by their TRUE physical stream record (owner-dir, file_id).
     # file_id is the per-directory child ordinal (type-0x30 value+0x00), which COLLIDES — a directory
@@ -3608,6 +3620,7 @@ def _build_oid2path(results):
 
 _CSV_FORMULA_LEAD = ("=", "+", "-", "@", "\t", "\r")
 _CSV_GUARD = False   # default: byte-FAITHFUL CSV (names written exactly as on the volume). `--csv-safe` opts IN.
+_CSV_FORMULA_SEEN = 0   # audit 5.2: count formula-lead cells emitted UNGUARDED, to surface the hazard once at exit.
 
 def _csv_safe(v):
     """Neutralise spreadsheet formula injection (audit 2.10): a cell whose first character is a formula lead
@@ -3619,14 +3632,32 @@ def _csv_safe(v):
 
 def _csv_cell(v):
     """One CSV cell under the fidelity-first policy: byte-faithful by default (the name exactly as on the volume);
-    only with `--csv-safe` is the formula-injection guard applied. The tool never silently rewrites a name."""
-    return _csv_safe(v) if _CSV_GUARD else v
+    only with `--csv-safe` is the formula-injection guard applied. The tool never silently rewrites a name. When
+    the guard is OFF, a cell that begins with a formula lead is COUNTED (not altered) so the hazard is surfaced on
+    stderr at exit (audit 5.2) — the examiner is told to re-run with --csv-safe before Excel, stdout unchanged."""
+    if _CSV_GUARD:
+        return _csv_safe(v)
+    if ("" if v is None else str(v))[:1] in _CSV_FORMULA_LEAD:
+        global _CSV_FORMULA_SEEN
+        _CSV_FORMULA_SEEN += 1
+    return v
 
 def _csv_row(cells):
     """Apply the per-cell policy (_csv_cell) across a CSV data row, so every subject-controlled column follows the
     same faithful-by-default / `--csv-safe` rule in the standalone writers (usn/timeline/timestomp/mlog/deleted),
     matching `files`."""
     return [_csv_cell(c) for c in cells]
+
+def _warn_csv_formula():
+    """audit 5.2: at exit, if any CSV cell was emitted UNGUARDED with a leading formula character (= + - @), tell
+    the examiner — the default is byte-faithful, so the Excel-injection hazard would otherwise be invisible. Same
+    shape as the 3.2 translator caveat: stderr only, never touches stdout, so valid output is byte-unchanged."""
+    if _CSV_FORMULA_SEEN:
+        print(f"[{PROG}] WARNING: {_CSV_FORMULA_SEEN} CSV cell(s) begin with a spreadsheet formula character "
+              f"(= + - @). Output is byte-faithful as required; re-run with --csv-safe before opening the file in "
+              f"Excel or LibreOffice.", file=sys.stderr)
+
+atexit.register(_warn_csv_formula)
 
 def emit_csv(results, sd_map, version_str, out, full_path=False):
     # `full_path` is accepted for back-compat (the old --full-path-column flag) but is now a no-op: FullPath
@@ -4596,8 +4627,13 @@ def bootstrap(image_path, partition_start=None):
         ct_map_raw = _parse_ct_page(ct_page, f, ps, cs)
         ct_map = {k: v[0] for k, v in ct_map_raw.items()}
         tr = Translator(ct_map, cpc)
-        global _LAST_TR
-        _LAST_TR = tr   # audit 3.2: remember it so _warn_translator (at-exit) can surface any unmapped-CT misses
+        try:    tr._image = os.path.basename(image_path)   # audit 4.2: label the caveat with its image
+        except Exception:   pass
+        _ALL_TRS.append(tr)   # audit 3.2/4.2: remember Translators so their caveat can be surfaced at exit
+        del _ALL_TRS[:-4]     # ...but keep only the most recent few. A CLI run builds 1 (2 for --cow-before);
+                              # capping stops a long-running LIBRARY process (e.g. verify_claim bootstrapping the
+                              # whole corpus in one process) from accumulating every container map — the old
+                              # single _LAST_TR never grew, and this must not regress that.
 
         # Build object map
         ot_vlcns = best_roots[0] if len(best_roots) > 0 else []
@@ -8727,6 +8763,39 @@ def _collision_free_path(path):
         i += 1
     return f"{path}.dup{i}"
 
+def _guarded_extract_write(dest, data, failures):
+    """Write bytes `data` to `dest`, catching OSError so one bad file cannot ABORT a bulk extraction (audit 4.1).
+    The faithful (un-truncated) sanitizer can produce a name longer than the host filesystem's component limit;
+    that, plus disk-full / permission, must be SURFACED (our docstring's promise), not propagated as a mid-run
+    traceback that leaves a partial directory and no record. On failure, append a record to `failures` and return
+    None; on success return `dest`. The parent directory is created here too, so a too-long *directory* segment
+    (not just the leaf name) is caught the same way."""
+    try:
+        d = os.path.dirname(dest)
+        if d:
+            os.makedirs(d, exist_ok=True)
+        with open(dest, "wb") as fh:
+            fh.write(data)
+        return dest
+    except OSError as e:
+        failures.append({"path": dest, "name": os.path.basename(dest), "error": str(e)})
+        return None
+
+def _report_extract_failures(failures, out_dir):
+    """After a bulk extraction, record any writes that could not be completed to <out_dir>/_extract_failures.json
+    and warn on stderr (audit 4.1), so a name the host filesystem cannot hold surfaces as evidence — the examiner
+    learns how many files were skipped and why — instead of the run dying with an unhandled traceback."""
+    if not failures:
+        return
+    try:
+        with open(os.path.join(out_dir, "_extract_failures.json"), "w", encoding="utf-8") as fh:
+            json.dump(failures, fh, indent=2)
+    except OSError:
+        pass
+    print(f"[{PROG}] WARNING: {len(failures)} file(s) could not be written (name exceeds the host filesystem "
+          f"limit, disk full, or permission) — extraction continued; see "
+          f"{os.path.join(out_dir, '_extract_failures.json')}", file=sys.stderr)
+
 def _carve_extent_backed(f, ps_off, cs, tr, vd, t40_backing=None):
     """Best-effort content carve for a NON-RESIDENT deleted remnant. Returns (bytes, declared_size) or None.
     Two extent sources, in order: (1) the current stream's extents held INLINE in the name row (F5); (2) if
@@ -8945,6 +9014,7 @@ def cmd_deleted(image, remaining, partition_start):
     # so the roll-up (and the .recovered files export writes) reconcile by category: deleted files vs prior
     # versions of files still present. _rc counts the entries whose inline content actually decodes.
     _manifest = []
+    _write_failures = []   # audit 4.1: bulk-writes skipped (name too long for the host FS, disk full, permission)
     _view_verdicts = []     # deleted files (scan `deleted` + slack d_solid + slack d_partial)
     _prior_verdicts = []    # prior versions of LIVE files (scan still_present + slack p_solid)
     _log_deleted, _log_present = [], []   # captured for the recovery log written at the end of the run
@@ -8974,8 +9044,7 @@ def cmd_deleted(image, remaining, partition_start):
         if write_content and decoded:                    # RESIDENT — non-empty inline content (byte-exact; a
             cdir = os.path.join(extract_dir, "content"); os.makedirs(cdir, exist_ok=True)   # 0-byte file has
             content_path = _collision_free_path(os.path.join(cdir, safe))                   # nothing to recover)
-            with open(content_path, "wb") as of:
-                of.write(decoded)
+            content_path = _guarded_extract_write(content_path, decoded, _write_failures)   # audit 4.1
         elif write_content and carve and venum == "extent_backed":   # NON-RESIDENT — carve from the extent map
             cres = _carve_extent_backed(f, ps, cs, tr, vd, e.get("t40_backing"))
             if cres:
@@ -8983,13 +9052,11 @@ def cmd_deleted(image, remaining, partition_start):
                 carved_len = len(cbytes)
                 cdir = os.path.join(extract_dir, "content"); os.makedirs(cdir, exist_ok=True)
                 carved_path = _collision_free_path(os.path.join(cdir, safe + ".carved"))
-                with open(carved_path, "wb") as of:
-                    of.write(cbytes)
+                carved_path = _guarded_extract_write(carved_path, cbytes, _write_failures)   # audit 4.1
         if write_rows:                                   # raw remnant (evidence) — opt-in
             rdir = os.path.join(extract_dir, "rows"); os.makedirs(rdir, exist_ok=True)
             row_path = _collision_free_path(os.path.join(rdir, prov + ".row"))
-            with open(row_path, "wb") as of:
-                of.write(vd)
+            row_path = _guarded_extract_write(row_path, vd, _write_failures)   # audit 4.1
         cf = content_path or carved_path
         e["_content_file"] = ("content/" + os.path.basename(cf)) if cf else ""
         _manifest.append({
@@ -9007,6 +9074,7 @@ def cmd_deleted(image, remaining, partition_start):
     def _write_manifest():
         if not (extract_dir and _manifest):
             return
+        _report_extract_failures(_write_failures, extract_dir)   # audit 4.1
         import csv as _csv
         # (1) THE INDEX — one row per recovered entry (deleted_files.csv/.json). Replaces the old flood of one
         #     .row file per entry: the analyst reads THIS to see what was deleted, how recoverable it is, and
@@ -9423,6 +9491,7 @@ def cmd_snapshots(image, remaining, partition_start):
     verbose = args["v"] or args["verbose"]
     do_show = args["show"]
     extract_dir = args["extract"]
+    _snap_failures = []   # audit 4.1
     snap_sel = args["snapshot"]              # select ONE version: name substring, or 1-based index number
     max_depth = _int_arg(args["depth"], "--depth") if args["depth"] else DEFAULT_DEPTH
 
@@ -9558,13 +9627,13 @@ def cmd_snapshots(image, remaining, partition_start):
                         safe = _safe_filename(safe)   # faithful (no truncation) component sanitizer
                         os.makedirs(extract_dir, exist_ok=True)
                         outp = os.path.join(extract_dir, safe)
-                        with open(outp, "wb") as of:
-                            of.write(content)
-                        print(f"          -> wrote {outp}")
+                        if _guarded_extract_write(outp, content, _snap_failures):   # audit 4.1
+                            print(f"          -> wrote {outp}")
 
         if snap_sel and not any_sel_match:
             print(f"\n  No snapshot version matched --snapshot {snap_sel!r} "
                   f"(use a 1-based [N] index or part of a version name).")
+        _report_extract_failures(_snap_failures, extract_dir)   # audit 4.1
         return 0
 
     finally:
@@ -9839,12 +9908,13 @@ def cmd_export_metadata(image, remaining, partition_start):
         manifest = {"image": os.path.basename(image), "partition_start_bytes": ps, "cluster_size": cs,
                     "refs_version": f"{vmaj}.{vmin}", "artifacts": []}
         sha_lines = []
+        _md_failures = []   # audit 4.1
 
         def emit(name, data, source, **meta):
             if not data:
                 return
-            with open(os.path.join(outdir, name), "wb") as of:
-                of.write(data)
+            if _guarded_extract_write(os.path.join(outdir, name), data, _md_failures) is None:   # audit 4.1
+                return
             h = hashlib.sha256(data).hexdigest()
             manifest["artifacts"].append(dict(file=name, bytes=len(data), sha256=h, source=source, **meta))
             sha_lines.append(f"{h}  {name}")
@@ -9986,6 +10056,7 @@ def cmd_export_metadata(image, remaining, partition_start):
             sf.write("\n".join(sha_lines) + "\n")
         print(f"\n  {len(manifest['artifacts'])} artifacts + manifest.json + sha256sums.txt → {outdir}")
         print("  Verify later with:  sha256sum -c sha256sums.txt")
+        _report_extract_failures(_md_failures, outdir)   # audit 4.1
         return 0
     finally:
         f.close()
@@ -10161,7 +10232,7 @@ def cmd_export_resident(image, remaining, partition_start):
         die(str(e))
     try:
         os.makedirs(out_dir, exist_ok=True)
-        written = 0; skipped = 0
+        written = 0; skipped = 0; _res_failures = []   # audit 4.1
         def walk(dir_oid, path, depth):
             nonlocal written, skipped
             for info in _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
@@ -10174,10 +10245,8 @@ def cmd_export_resident(image, remaining, partition_start):
                     skipped += 1; continue
                 rel = _safe_relpath(f"{path}/{info['name']}" if path else info["name"])
                 dest = os.path.join(out_dir, rel)
-                os.makedirs(os.path.dirname(dest) or out_dir, exist_ok=True)
-                with open(dest, "wb") as o:
-                    o.write(content)
-                written += 1
+                if _guarded_extract_write(dest, content, _res_failures):   # audit 4.1 (also creates the subdir)
+                    written += 1
             if depth > 0:
                 for kd, vd in walk_bplus(f, ps, cs, tr, obj_map[dir_oid]):
                     if len(kd) >= 4 and le16(kd, 0) == 0x30 and len(vd) >= 0x44 and (le32(vd, 0x40) & 0x10000000):
@@ -10190,6 +10259,7 @@ def cmd_export_resident(image, remaining, partition_start):
         walk(start_oid, "", max_depth)
         print(f"[{PROG}] export resident-all: wrote {written} resident files to {out_dir} "
               f"({skipped} skipped: 0-byte or non-inline). source: inline $DATA / CoW-shared.", file=sys.stderr)
+        _report_extract_failures(_res_failures, out_dir)   # audit 4.1
         return 0
     finally:
         f.close()
@@ -10217,7 +10287,7 @@ def cmd_export_recyclebin(image, remaining, partition_start):
         recs = []
         _walk_recycle(f, ps, cs, tr, obj_map, recycle_oid, "", 8, recs)
         os.makedirs(out_dir, exist_ok=True)
-        written = 0
+        written = 0; _rb_failures = []   # audit 4.1
         # map $R name -> its content by walking each SID dir's $R rows through _analyze_dir_extents
         r_content = {}
         def collect(dir_oid, sid):
@@ -10242,9 +10312,9 @@ def cmd_export_recyclebin(image, remaining, partition_start):
                 continue
             orig = r["meta"]["original_path"] if r.get("meta") else r["r_name"]
             dest = os.path.join(out_dir, _safe_relpath(orig.replace("\\", "/").split("/")[-1] or r["r_name"]))
-            with open(dest, "wb") as o:
-                o.write(content)
-            written += 1
+            if _guarded_extract_write(dest, content, _rb_failures):   # audit 4.1
+                written += 1
+        _report_extract_failures(_rb_failures, out_dir)   # audit 4.1
         print(f"[{PROG}] export recyclebin: wrote {written} recovered payload(s) to {out_dir}.", file=sys.stderr)
         return 0
     finally:
@@ -10852,9 +10922,12 @@ def _help_requested(toks):
     return False
 
 def main():
-    # Full-depth walks (4.D): raise the interpreter recursion limit as a safety margin so a genuinely deep
-    # directory tree cannot RecursionError (real trees are shallow; this is never hit in practice).
-    sys.setrecursionlimit(max(sys.getrecursionlimit(), 40000))
+    # Full-depth walks (4.D / audit 5.3): a modest recursion-limit raise. Real ReFS trees are shallow (corpus max
+    # = 40 levels), so this is never hit legitimately; it is kept comfortably C-stack-SAFE (4000, ~100x the corpus
+    # max) so a crafted/corrupt tree deeper than this raises a CATCHABLE RecursionError — which walk_directory_tree
+    # turns into a clean error — rather than the 40000 setting's outcome on a small C stack: an uncatchable
+    # SIGSEGV / rc=137 that converts a reportable error into an unreportable process death.
+    sys.setrecursionlimit(max(sys.getrecursionlimit(), 4000))
     # `--csv-safe` (opt-in spreadsheet formula-injection guard) is a GLOBAL modifier that must apply to every
     # CSV-emitting command (files/usn/timeline/timestomp/mlog/deleted), so detect+strip it here before any
     # dispatch or argparse. Default stays OFF = filenames written byte-faithfully.
