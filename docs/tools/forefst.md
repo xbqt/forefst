@@ -600,6 +600,23 @@ finally:
 
 Python 3.7+ standard library only. No pip packages.
 
+## Exit codes
+
+`forefst.py` returns a process exit code so a script can branch on the result:
+
+| Code | Meaning |
+|------|---------|
+| `0` | Success — the command ran and flagged nothing. |
+| `1` | Error — the input could not be read or parsed (not a ReFS/GPT image, file missing, corrupt bootstrap), or an invalid argument/target was given. |
+| `2` | Either a **finding of interest** (`integrity` found a checksum/structural failure, or `security --audit` found descriptor tampering) **or** a **usage error** on the native argparse commands (an unrecognised flag on `files` / `summary` / `search` / `details`). |
+
+Two rough edges worth knowing when scripting:
+
+- **Code `2` is overloaded** — it means both "this volume has an integrity/tamper finding" and "you mistyped a flag on a native command." Tell them apart by context: a usage error prints a `usage:` line to stderr and no report to stdout, whereas a finding prints its report to stdout.
+- **A bad flag is reported differently by command family** — the native commands (`files`, `summary`, `search`, `details`) exit `2` (their parser rejects it), while the forensic commands (`usn`, `mlog`, `deleted`, …) exit `1`. Both print the offending flag to stderr.
+
+For portable automation the most reliable tests are `rc == 0` (clean) and `rc != 0` (something to look at); and for `integrity` / `security --audit` specifically, `rc == 2` means a genuine finding, since those two commands only reach `2` on a real finding, never on a usage error.
+
 ## Cross-References
 
 - [refsanalysis.py](refsanalysis.md) — the structure/lab analysis tool that imports this library

@@ -26,7 +26,7 @@ forefst.py mlog --help
 forefst.py disk.raw summary
 
 # Full forensic file listing
-forefst.py disk.raw files -csv files.csv
+forefst.py disk.raw files --csv files.csv
 
 # Search a file 
 forefst.py disk.raw search "passwords.txt"
@@ -39,6 +39,28 @@ forefst.py disk.raw mlog --parse
 ```
 
 The input can be a raw ReFS image (`dd` / `.raw`), a raw disk or partition device, or an E01 exported to raw (`ewfexport disk.E01`, or mount with `xmount --in ewf --out raw`) — forefst finds the ReFS partition inside a full-disk image automatically. Reading a live device (`/dev/sdX`, `\\.\PhysicalDriveN`) needs root / Administrator; an image file does not.
+
+## Repository layout
+
+```
+forefst/
+├── forefst.py                # forensic file lister + full forensic suite
+├── refsanalysis.py           # structure / lab tool — decode one on-disk structure at a time
+├── docs/                     # standalone ReFS structural reference
+│   ├── structures/           #   25 byte-level on-disk layouts
+│   ├── concepts/             #   34 forensic concepts & mechanisms
+│   ├── attributes/           #   11 per-attribute pages
+│   ├── examples/             #   6 worked walkthroughs (real tool output)
+│   ├── tools/                #   tool usage documentation
+│   ├── website/              #   Hugo site generator — publishes this reference as a static site
+│   ├── methodology.md        #   how every claim was verified
+│   └── KNOWLEDGE_MAP.md      #   topic -> authoritative-source index
+└── analysis/                 # lab materials + verification harness (the tools don't depend on it)
+    ├── reference_table.csv   #   the live claim register (440 findings)
+    ├── lab/                  #   VM setup, disk generation, activity generator + baseline
+    ├── samples/              #   captured tool output + samples/corpus/ + sample disks
+    └── reports/              #   verification scripts, results, per-claim audit/ harness
+```
 
 ## For NTFS analysts
 
@@ -102,28 +124,6 @@ ReFS deletion recovery has **five methods** — the Trash table, a checkpoint di
 ## refsanalysis.py — the analysis tool
 
 Where `forefst.py` answers *"what happened on this volume?"*, `refsanalysis.py` answers *"what does this structure look like?"* — it decodes one on-disk structure at a time: the boot chain (`boot`, `supb`, `chkp`), the B+-tree system tables (`objects`, `schema`, `containers`, `parentchild`, …), file-system content (`files`, `attributes`, `details`), quick volume overviews (`summary`, `summary++`, `all`), and boot-sector inspection/repair (`bootedit`). It is the companion for learning the format, validating the forensic tool, and adapting to new ReFS builds. Run `python3 refsanalysis.py <image> --list` for the full set with per-command options.
-
-## Repository layout
-
-```
-forefst/
-├── forefst.py                # forensic file lister + full forensic suite
-├── refsanalysis.py           # structure / lab tool — decode one on-disk structure at a time
-├── docs/                     # standalone ReFS structural reference
-│   ├── structures/           #   25 byte-level on-disk layouts
-│   ├── concepts/             #   34 forensic concepts & mechanisms
-│   ├── attributes/           #   11 per-attribute pages
-│   ├── examples/             #   6 worked walkthroughs (real tool output)
-│   ├── tools/                #   tool usage documentation
-│   ├── website/              #   Hugo site generator — publishes this reference as a static site
-│   ├── methodology.md        #   how every claim was verified
-│   └── KNOWLEDGE_MAP.md      #   topic -> authoritative-source index
-└── analysis/                 # lab materials + verification harness (the tools don't depend on it)
-    ├── reference_table.csv   #   the live claim register (440 findings)
-    ├── lab/                  #   VM setup, disk generation, activity generator + baseline
-    ├── samples/              #   captured tool output + samples/corpus/ + sample disks
-    └── reports/              #   verification scripts, results, per-claim audit/ harness
-```
 
 ## How it was built
 
