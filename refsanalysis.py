@@ -44,12 +44,12 @@ import os
 import struct
 import sys
 import uuid
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone
 from pathlib import Path
 
 from forefst import (
     DEFAULT_DEPTH,
-    FILE_ATTR_FLAGS, SUPB_LCN, Translator, _is_snapshot_value, _parse_ads_from_value, _select_ct_root, attrs_to_str,
+    FILE_ATTR_FLAGS, SUPB_LCN, Translator, _CHKP_FLAG_BITS, _is_snapshot_value, _parse_ads_from_value, _select_ct_root, attrs_to_str,
     bootstrap, count_snapshots_in_resident, find_refs_partition, fs_content_summary, get_object_si,
     get_resident_file_size, gpt_partition_detail, le16, le32, le64,
     parse_chkp as _forefst_parse_chkp, parse_resident_btree_rows,
@@ -59,7 +59,7 @@ from forefst import (
 )
 
 PROG = "refsanalysis"
-VERSION = "1.6.0"
+VERSION = "1.7.0"
 
 
 
@@ -264,16 +264,8 @@ _TID_TO_NAME = {tid: name for (name, tid, _) in _CHKP_ROOT_INFO}
 
 _CT_ROOT_INDICES = {7, 8, 12}
 
-_CHKP_FLAG_BITS = {
-    0x002: "always-set",
-    0x010: "dedup-bit4",
-    0x020: "dedup-bit5",
-    0x080: "native-Win11-format",
-    0x100: "dedup-bit8",
-    0x200: "indirect-root-list",
-    0x400: "metadata-checksum",
-    0x2000: "insider-flag (Windows Insider build 29574+)",
-}
+# _CHKP_FLAG_BITS is imported from forefst (single source of truth — audit 4.2: the two tools must print the
+# same name for the same checkpoint flag; a divergent copy showed the examiner a discrepancy not on disk).
 
 _KNOWN_OIDS = {
     0x0007: "Upcase Table",
@@ -809,7 +801,7 @@ def cmd_boot(image, remaining, partition_start):
         return 0
 
     if show_header:
-        print(f"\nReFS Boot Sector / FSRS")
+        print("\nReFS Boot Sector / FSRS")
         print("=" * 72)
         print(f"Image:        {image}")
         print(f"Image size:   {_human_size(os.path.getsize(image))} ({os.path.getsize(image)} bytes)")
@@ -1002,7 +994,7 @@ def cmd_supb(image, remaining, partition_start):
         print(f"SHA-256: {supb_sha}\n")
 
     if show_header and verbose == 0:
-        print(f"\nReFS Superblock (SUPB)")
+        print("\nReFS Superblock (SUPB)")
         print("=" * 72)
         print(f"Image:            {image}")
         print(f"SUPB SHA-256:     {supb_sha}")
@@ -1034,7 +1026,7 @@ def cmd_supb(image, remaining, partition_start):
         print(); return 0
 
     if show_header:
-        print(f"\nReFS Superblock (SUPB)")
+        print("\nReFS Superblock (SUPB)")
         print("=" * 72)
         print(f"Image:            {image}")
         print(f"SUPB SHA-256:     {supb_sha}")
@@ -1166,7 +1158,7 @@ def cmd_schema(image, remaining, partition_start):
             print(f"  Total entries:     {len(entries)}")
             print()
         else:
-            print(f"\nReFS Schema Table\n")
+            print("\nReFS Schema Table\n")
 
         fmt = "  {:<8} {:<32} {:>10} {:>6}"
         print("-" * 78)
@@ -1311,8 +1303,8 @@ def cmd_upcase(image, remaining, partition_start):
             print("=" * 78)
             print(f"  Image:             {image}")
             print(f"  ReFS version:      {vmaj}.{vmin}")
-            print(f"  Upcase OID:        0x7")
-            if has_dup: print(f"  Duplicate (0x08):  present")
+            print("  Upcase OID:        0x7")
+            if has_dup: print("  Duplicate (0x08):  present")
             print()
         else:
             print("\nReFS Upcase Table\n")
@@ -2150,7 +2142,7 @@ def cmd_parentchild(image, remaining, partition_start):
                     k0 = le64(e["key_raw"], 0); k2 = le64(e["key_raw"], 16)
                     if k0 != 0 or k2 != 0: struct_ok = False; break
             if struct_ok:
-                print(f"  [OK] All keys have structure [0, parent, 0, child]"); ok += 1
+                print("  [OK] All keys have structure [0, parent, 0, child]"); ok += 1
             else:
                 print("  [WARN] Some keys have non-zero padding fields")
 
@@ -2312,7 +2304,7 @@ def cmd_containers(image, remaining, partition_start):
             print(f"  Free clusters tracked: {total_free:,} / {total_cap:,} ({total_free*cs/(1024*1024*1024):.2f} GiB free)")
         else:
             print(f"  Total capacity: {total_cap:,} clusters ({total_cap*cs/(1024*1024*1024):.1f} GiB)")
-            print(f"  Free cluster tracking: not populated")
+            print("  Free cluster tracking: not populated")
         n_meta = sum(1 for r in ct_full.values() if r[1] & 0x0001)
         n_data = sum(1 for r in ct_full.values() if r[1] & 0x0040)
         n_free = sum(1 for r in ct_full.values() if r[1] & 0x2000)
@@ -2748,8 +2740,8 @@ def cmd_attributes(image, remaining, partition_start):
         # ($LX* -> lx_mode). This differs, intentionally, from forefst `files --filter wsl`, which selects
         # by the WSL reparse TAG. A file can have one without the other (the $LX* EAs need a `-o metadata`
         # DrvFs mount), so the two counts need not match — they answer different questions.
-        print(f"  NOTE: this selects files with WSL metadata EAs (lx_mode); forefst `--filter wsl` selects "
-              f"by reparse tag instead — the two can differ (see docs).", file=sys.stderr)
+        print("  NOTE: this selects files with WSL metadata EAs (lx_mode); forefst `--filter wsl` selects "
+              "by reparse tag instead — the two can differ (see docs).", file=sys.stderr)
 
     try:
         f, ps, cs, tr, roots, obj_map, vmaj, vmin, chkp_lcns = bootstrap(image, partition_start)
@@ -2800,7 +2792,7 @@ def cmd_attributes(image, remaining, partition_start):
         reparse = sum(1 for r in results if r.get("has_reparse"))
         snapshots = sum(1 for r in results if r.get("possible_snapshots"))
 
-        print(f"  Summary:")
+        print("  Summary:")
         print(f"    Total entries:     {total}")
         print(f"    Directories:       {dirs}")
         print(f"    Files:             {files}")
@@ -2837,9 +2829,9 @@ def cmd_attributes(image, remaining, partition_start):
             if r.get("is_resident"):
                 print(f"    Storage:     RESIDENT ({r['value_len']} bytes)")
             elif not is_dir:
-                print(f"    Storage:     NON-RESIDENT (no own OID)")
+                print("    Storage:     NON-RESIDENT (no own OID)")
             if r.get("is_encrypted"):
-                print(f"    *** EFS ENCRYPTED ***")
+                print("    *** EFS ENCRYPTED ***")
             if "lx_mode" in r:
                 print(f"    WSL Mode:    {_decode_lx_mode(r['lx_mode'])}")
             if "lx_uid" in r:
@@ -2850,11 +2842,11 @@ def cmd_attributes(image, remaining, partition_start):
                 _maj, _min = r["lx_dev"]
                 print(f"    WSL Dev:     {_maj},{_min} (major,minor)")
             if r.get("has_reparse"):
-                print(f"    *** REPARSE POINT (symlink/WSL special file) ***")
+                print("    *** REPARSE POINT (symlink/WSL special file) ***")
             if r.get("possible_snapshots"):
                 print(f"    *** STREAM SNAPSHOTS (large embedded data: {r['value_len']} bytes) ***")
             if verbose and "extended_attributes" in r:
-                print(f"    Extended Attributes:")
+                print("    Extended Attributes:")
                 for ea in r["extended_attributes"]:
                     val_hex = ea["value"].hex() if len(ea["value"]) <= 16 else ea["value"][:16].hex() + "..."
                     print(f"      {ea['name']:12s} = {val_hex} ({len(ea['value'])} bytes)")
@@ -3066,11 +3058,11 @@ def cmd_details(image, remaining, partition_start):
         print("=" * W); print(f"File Details — {path}"); print("=" * W)
         print(f"  Name:           {name}")
         if resident:
-            print(f"  Storage:        RESIDENT (inline in parent dir row — no OID of its own)")
+            print("  Storage:        RESIDENT (inline in parent dir row — no OID of its own)")
         elif info.get("is_dir"):
             print(f"  Storage:        non-resident directory  (OID {_hx(info['oid'])}, own B+-tree)")
         else:
-            print(f"  Storage:        non-resident file  (no OID of its own; data in out-of-line extents)")
+            print("  Storage:        non-resident file  (no OID of its own; data in out-of-line extents)")
         # FileRef identity (matches forefst `details`): a non-resident file's stable reference is
         # (home_oid = value+0x08, file_id = value+0x00). home_oid is the CREATION directory, frozen — so
         # home_oid != current parent flags a relocated (moved) or cross-directory hard-linked name.
@@ -3082,7 +3074,7 @@ def cmd_details(image, remaining, partition_start):
                     print(f"  Home directory: 0x{_hb:x}   created here; current parent 0x{parent_oid:x} (relocated/hard-linked)")
         print(f"  Parent OID:     {_hx(parent_oid)}")
         if "is_dir" in info and info["is_dir"]:
-            print(f"  Type:           DIRECTORY")
+            print("  Type:           DIRECTORY")
         print(f"  File size:      {info.get('file_size', 0)} bytes")
         if "data_size_alloc" in info:
             print(f"  DataSize (alloc): {info['data_size_alloc']} bytes ($SI+0x38; 8-aligned $DATA alloc)")
@@ -3097,7 +3089,7 @@ def cmd_details(image, remaining, partition_start):
             print(f"  MFT-Changed:    {info['changed']}")
             print(f"  Accessed:       {info['accessed']}")
         if info.get("security_unavailable"):
-            print(f"  SecurityId:     n/a (non-resident file — not stored in the directory entry)")
+            print("  SecurityId:     n/a (non-resident file — not stored in the directory entry)")
         else:
             print(f"  SecurityId:     {info.get('security_id', 0)}  (resolves in OID 0x530)")
         if "last_usn" in info:
@@ -3590,7 +3582,7 @@ def _bootedit_prepare_write(image, args):
         print("\n  [--inplace] Modifying the ORIGINAL image directly.")
         return image, _find_boot_offset(image, ps)
     out = args.get("output") or _auto_output(image)
-    print(f"\n  [SAFE MODE] Original image will NOT be modified.")
+    print("\n  [SAFE MODE] Original image will NOT be modified.")
     _make_sparse_copy(image, out)
     print(f"  Working on copy: {out}\n")
     return out, _find_boot_offset(out, ps)
@@ -3702,7 +3694,7 @@ def _bootedit_main(image, remaining, partition_start):
             print(f"\n  checksum (0x16): 0x{old_cs:04x} -> 0x{new_cs:04x}")
 
             if args["dry_run"]:
-                print(f"\n[DRY RUN] No changes written.")
+                print("\n[DRY RUN] No changes written.")
                 print(f"Would-be SHA-256: {hashlib.sha256(bytes(modified)).hexdigest()}")
                 return 0
 
@@ -3779,13 +3771,13 @@ def _bootedit_main(image, remaining, partition_start):
             print(f"  Checksum: 0x{old_cs:04x} -> 0x{new_cs:04x}")
 
             if args["dry_run"]:
-                print(f"\n[DRY RUN] No changes written.")
+                print("\n[DRY RUN] No changes written.")
                 print(f"Would-be SHA-256: {hashlib.sha256(bytes(sector)).hexdigest()}")
                 return 0
 
             target, target_bo = _bootedit_prepare_write(image, args)
             if args["inplace"]:
-                confirm = input(f"\nApply change to ORIGINAL image? Type 'YES': ")
+                confirm = input("\nApply change to ORIGINAL image? Type 'YES': ")
                 if confirm != "YES":
                     print("Aborted."); return 1
             with open(target, "r+b") as f:
@@ -4169,7 +4161,6 @@ def print_list():
                                 "parentchild", "containers", "upcase", "oid30"]),
         ("Boot sector repair", ["bootedit"]),
     ]
-    integrated = set(_HANDLERS.keys()) | {"summary++"}
     cmd_map = {name: (desc, args) for name, desc, args in SUBCOMMANDS}
     for cat_name, cmd_names in categories:
         print(f"  {cat_name}:")

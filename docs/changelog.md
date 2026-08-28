@@ -1,5 +1,32 @@
 # Changelog
 
+## v1.7.0 — 2026-08-28 — hardening pass (external code-audit response): robustness, fidelity, and consistency
+
+**A hardening release answering an independent code audit. No change to what the tools report on a valid volume —
+the full 122-image regression corpus is byte-identical — with malformed input, filename fidelity, forensic
+timestamp recovery, and cross-command consistency all tightened.**
+
+- **Robustness — malformed input can no longer crash or hang the tool.** A self-referential container table (which
+  previously fanned out and hung *every* subcommand) is stopped by a cycle guard; a zero / non-power-of-two cluster
+  size, an out-of-spec GPT entry array, and an over-long GPT entry count are all rejected with a clear error instead
+  of `ZeroDivisionError` / `MemoryError`; a B+-tree row whose key or value runs past its page is skipped instead of
+  read as a plausible-but-wrong record.
+- **Fidelity — filenames are reported and extracted exactly as they are on the volume.** CSV output is now
+  byte-faithful by **default**; the spreadsheet formula-injection guard (which prefixes a cell beginning `= + - @`)
+  is available as an opt-in **`--csv-safe`**. Extraction **never truncates** a name (a previous 120-character cap
+  quietly shortened long Windows names); very long names are surfaced rather than silently altered.
+- **Forensics — timestomped event times are no longer hidden.** The plausible-FILETIME window used to pair MLog
+  rename/delete events with their `$SI` timestamps was widened (~1968–2108), so a backdated or year-2000 event time
+  is now recovered and shown (verified on the bi0sCTF ReFS-3.4 image, which ships a timestomping tool) — while the
+  pairing discriminator stays strong enough that nothing is fabricated. Every command now also surfaces a stderr
+  caveat when a corrupt/truncated container table forced identity-mapped reads (previously only `fastsummary` did).
+- **Consistency — the two command families now behave the same.** One partition-acceptance policy (a ReFS partition
+  behind an NTFS one is accepted by every command, not just `files`); an unknown flag is reported before the image
+  is read; `details --json` with no target fails cleanly instead of printing help to stdout with a success code;
+  `forefst` and `refsanalysis` print identical checkpoint-flag labels (single source of truth).
+- **Hygiene & contract.** Both tools are lint-clean; the process exit-code contract is documented (see
+  `docs/tools/forefst.md`) and locked by a regression matrix. `bootedit` on `refsanalysis` is unchanged.
+
 ## v1.6.0 — 2026-08-22 — MLog rename/event-time recovery, recycle-bin & bootstrap-corruption forensics, any-order flags
 
 **A forensics-focused release driven by a real ReFS-3.4 case: the recycle bin decodes non-resident metadata, the

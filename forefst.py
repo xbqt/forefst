@@ -53,8 +53,7 @@ Body file format (Sleuthkit/mactime compatible):
 """
 
 from __future__ import annotations
-import argparse, csv, datetime, hashlib, io, json, os, struct, sys
-from typing import Optional
+import argparse, atexit, csv, datetime, hashlib, json, os, struct, sys
 
 # ─── Shared utilities (formerly in refs_common.py) ───────────────────
 SECTOR = 512
@@ -80,8 +79,10 @@ def find_refs_partition(path):
         if len(hdr) < 92 or hdr[:8] != b"EFI PART":
             return None, "no GPT partition table found (use --partition-start for raw partitions)"
         plba = le64(hdr, 72)
-        np = le32(hdr, 80)
+        np = min(le32(hdr, 80), 128)     # audit 2.2: cap entry count (a fuzzed 0xFFFFFFFF x es read = MemoryError)
         es = le32(hdr, 84)
+        if not (128 <= es <= 4096):      # entry size outside the UEFI spec -> not a usable GPT
+            return None, "GPT partition-entry array is out of spec (use --partition-start for raw partitions)"
         f.seek(plba * SECTOR)
         entries = f.read(np * es)
         first_basic = None
@@ -114,7 +115,9 @@ def gpt_partition_detail(path):
             hdr = f.read(SECTOR)
             if len(hdr) < 92 or hdr[:8] != b"EFI PART":
                 return None
-            plba = le64(hdr, 72); np = le32(hdr, 80); es = le32(hdr, 84)
+            plba = le64(hdr, 72); np = min(le32(hdr, 80), 128); es = le32(hdr, 84)
+            if not (128 <= es <= 4096):     # audit 2.2: bound entries/size before the read (MemoryError guard)
+                return None
             f.seek(plba * SECTOR)
             entries = f.read(np * es)
         for i in range(np):
@@ -182,13 +185,22 @@ def validate_image(path, die_fn=None):
                 fail("no ReFS or GPT signature found "
                      "(use --partition-start for raw partitions)")
 
-            # GPT found — read first partition's VBR to confirm ReFS
+            # GPT found — scan EVERY Basic-Data partition's VBR to confirm ReFS
             plba = struct.unpack_from("<Q", gpt_header, 72)[0]
-            nparts = struct.unpack_from("<I", gpt_header, 80)[0]
+            nparts = min(struct.unpack_from("<I", gpt_header, 80)[0], 128)   # audit 2.2: cap the entry count
             esz = struct.unpack_from("<I", gpt_header, 84)[0]
+            if not (128 <= esz <= 4096):                                     # audit 2.2: bound entry size (bomb)
+                fail("GPT partition-entry array is out of spec "
+                     "(use --partition-start for raw partitions)")
             f.seek(plba * SECTOR)
-            entries = f.read(min(nparts, 128) * esz)
-            for i in range(min(nparts, 128)):
+            entries = f.read(nparts * esz)
+            # audit 2.3: scan EVERY Basic-Data partition and accept if ANY is ReFS. Was `break` after the first,
+            # so a ReFS partition BEHIND an NTFS one was rejected here while find_refs_partition accepted it —
+            # two acceptance policies on one image (`files` worked, `usn` said "not ReFS"). Report NTFS/BitLocker
+            # (preserving the exact prior message, so a single-partition image is byte-unchanged) only when NO
+            # partition is ReFS.
+            saw = None
+            for i in range(nparts):
                 e = entries[i*esz:(i+1)*esz]
                 if len(e) >= 128 and e[:16] == GPT_BASIC_DATA:
                     part_lba = struct.unpack_from("<Q", e, 32)[0]
@@ -196,13 +208,14 @@ def validate_image(path, die_fn=None):
                     vbr = f.read(SECTOR)
                     if len(vbr) >= 16:
                         if vbr[3:7] == b"ReFS":
-                            return  # Confirmed ReFS partition
-                        if b"NTFS" in vbr[:16]:
-                            fail("partition contains NTFS, not ReFS")
-                        if b"-FVE-FS-" in vbr[:16]:
-                            fail("partition is BitLocker-encrypted")
-                    break  # Only check first data partition
-            # GPT present but couldn't confirm ReFS — let tools try
+                            return  # confirmed ReFS partition (any position)
+                        if saw is None and b"NTFS" in vbr[:16]:      saw = "NTFS"
+                        if saw is None and b"-FVE-FS-" in vbr[:16]:  saw = "BitLocker"
+            if saw == "NTFS":
+                fail("partition contains NTFS, not ReFS")
+            if saw == "BitLocker":
+                fail("partition is BitLocker-encrypted")
+            # GPT present but no Basic-Data partition confirmed ReFS — let tools try
     except PermissionError:
         fail(f"permission denied: {path}")
     except OSError as e:
@@ -210,7 +223,7 @@ def validate_image(path, die_fn=None):
 
 # ─── Constants ────────────────────────────────────────────────────────
 PROG = "forefst"
-VERSION = "1.6.0"
+VERSION = "1.7.0"
 # Phase 3 (4.D): directory walks default to FULL depth (no artificial cap); `--depth N` overrides. The real
 # recursion depth equals the actual directory nesting (ReFS trees are shallow — tens of levels), so this
 # constant is never the binding limit; it just means "don't truncate". main() also raises the interpreter
@@ -455,6 +468,16 @@ def parse_vbr(f, ps):
     bps = le32(bs, 0x20)
     spc = le32(bs, 0x24)
     cs = bps * spc
+    # Validate the cluster size before any caller divides by it (audit 2.1: cs==0 -> ZeroDivisionError in
+    # bootstrap, which escapes main's `except (ValueError, OSError)` as a raw traceback). Real ReFS clusters
+    # are a power of two (4096 or 65536 across the whole corpus); reject 0 / non-power-of-two / absurd so the
+    # user gets a diagnosis instead of a crash. ValueError is already handled by main and every forensic handler.
+    if cs <= 0 or cs > (2 << 20) or (cs & (cs - 1)):
+        raise ValueError(
+            f"implausible ReFS cluster size: {bps} B/sector x {spc} sectors/cluster = {cs} B "
+            f"(expected a power of two such as 4096 or 65536). The VBR at offset 0x{ps:x} is damaged, or this "
+            f"is not the partition start — check --partition-start, or run "
+            f"`refsanalysis.py <image> bootedit repair --dry-run`.")
     vmaj = bs[0x28]
     vmin = bs[0x29]
     chk_algo = le16(bs, 0x2A)   # C6: VBR 0x2A is a u16 selector (vbr.md); low byte carries 0/2/4, 0x2B==0 on all corpus images
@@ -463,7 +486,11 @@ def parse_vbr(f, ps):
 
 def parse_supb(f, ps, cs):
     f.seek(ps + SUPB_LCN * cs); data = f.read(cs)
-    if data[:4] != b"SUPB": raise ValueError("Bad SUPB")
+    if data[:4] != b"SUPB":
+        raise ValueError(
+            f"superblock (SUPB) not found at LCN 0x{SUPB_LCN:x} (offset 0x{ps + SUPB_LCN * cs:x}): expected "
+            f"'SUPB', got {data[:4]!r}. If this is a raw partition image, check --partition-start; to inspect "
+            f"the bootstrap chain run `refsanalysis.py <image> supb -v`.")
     off = le32(data, 0x70); cnt = le32(data, 0x74)
     # E9: clamp the on-disk count (doc: always 2). A fuzzed/corrupt cnt (e.g. 0xFFFFFFFF) would build a
     # multi-billion-entry list and hang; also bound to the page so an out-of-range off can't over-read.
@@ -475,7 +502,11 @@ def parse_supb(f, ps, cs):
 
 def parse_chkp(f, ps, cs, lcn):
     f.seek(ps + lcn * cs); raw = f.read(4 * cs)
-    if raw[:4] != b"CHKP": raise ValueError("Bad CHKP")
+    if raw[:4] != b"CHKP":
+        raise ValueError(
+            f"checkpoint (CHKP) not found at LCN 0x{lcn:x} (offset 0x{ps + lcn * cs:x}): expected 'CHKP', got "
+            f"{raw[:4]!r}. The superblock's checkpoint pointer may be corrupt — run "
+            f"`refsanalysis.py <image> chkp -v` to inspect.")
     vclock = le64(raw, 0x10)
     flags = le32(raw, 0x78)
     desc_len = le32(raw, 0x5c)
@@ -521,9 +552,14 @@ def _select_ct_root(f, ps, cs, roots):
                 return roots[ri]
     return roots[7] if len(roots) > 7 and roots[7] else []   # legacy fallback
 
-def _parse_ct_page(page, f, ps, cs, _depth=0):
+def _parse_ct_page(page, f, ps, cs, _depth=0, visited=None):
     # _depth guard: the Container Table is a shallow B+ tree; 64 bounds a circular/corrupt CT (never trips
-    # on valid data) to prevent unbounded recursion. Defaulted kwarg — existing callers are unaffected.
+    # on valid data) to prevent unbounded recursion. Defaulted kwargs — existing callers are unaffected.
+    # E10 (mirrors _walk): `visited` is a per-walk set of head child-LCNs — a self-referential/cyclic inner
+    # page would otherwise fan out ~4^depth and re-read identical pages forever (audit 2.4: hangs every
+    # subcommand via bootstrap). On a well-formed CT every child page is referenced exactly once, so this
+    # NEVER skips a legitimate page and the output is byte-identical; a cyclic child is skipped, not looped.
+    if visited is None: visited = set()
     if page[:4] != b"MSB+" or _depth > 64: return {}
     thoff = 0x50 + le32(page, 0x50)
     if thoff + 40 > len(page): return {}
@@ -539,6 +575,8 @@ def _parse_ct_page(page, f, ps, cs, _depth=0):
         if ro + 16 > len(page): break
         rh = struct.unpack_from("<I6H", page, ro)
         _, ko, kl, _, vo, vl, _ = rh
+        if (kl and ro + ko + kl > len(page)) or (vl and ro + vo + vl > len(page)):
+            continue     # audit 2.5: skip a row whose key/value runs past the page (no silent truncation)
         kd = page[ro+ko:ro+ko+kl] if kl > 0 else b""
         vd = page[ro+vo:ro+vo+vl] if vl > 0 else b""
         key = le64(kd, 0) if len(kd) >= 8 else 0
@@ -547,9 +585,13 @@ def _parse_ct_page(page, f, ps, cs, _depth=0):
                 cls = [le64(vd, j*8) for j in range(4)]
                 valid = [x for x in cls if x not in (0, 0xFFFFFFFFFFFFFFFF)]
                 if valid:
+                    head = valid[0]                          # E10: key on the head child LCN (mirrors _walk)
+                    if head in visited:
+                        continue                             # already-read / cyclic child page — skip
+                    visited.add(head)
                     cd = b""
                     for l in valid: f.seek(ps + l * cs); cd += f.read(cs)
-                    result.update(_parse_ct_page(cd, f, ps, cs, _depth + 1))
+                    result.update(_parse_ct_page(cd, f, ps, cs, _depth + 1, visited))
         else:
             if len(vd) >= 0x98:
                 result[key] = (le64(vd, len(vd) - 16), le32(vd, 0x18))
@@ -574,6 +616,22 @@ class Translator:
         # (VLCN read as PLCN). That silently loses evidence downstream; count it so callers can surface it.
         self.misses += 1
         return vlcn
+
+
+_LAST_TR = None   # audit 3.2: the most recent Translator, so its unmapped-container misses can be surfaced at exit.
+
+def _warn_translator(tr):
+    """Surface unmapped-container misses (audit 3.2): 0 on a well-formed volume; non-zero => a corrupt/truncated
+    container table forced identity-mapped (VLCN==PLCN) reads, so some rows may be missing or wrong. stderr ONLY
+    — never alters stdout/JSON, so a valid volume is byte-unchanged — and at most once per run. Registered
+    at-exit (below) so EVERY command carries the caveat, not just fastsummary (which was the sole caller, 3.2)."""
+    if tr is None or not getattr(tr, "misses", 0) or getattr(tr, "_warned", False):
+        return
+    tr._warned = True
+    print(f"[{PROG}] WARNING: {tr.misses} VLCN(s) had no container mapping — output may be incomplete "
+          f"(corrupt/truncated container table).", file=sys.stderr)
+
+atexit.register(lambda: _warn_translator(_LAST_TR))
 
 # ─── B+ tree walker ──────────────────────────────────────────────────
 def walk_bplus(f, ps, cs, tr, vlcns, max_depth=5):
@@ -604,6 +662,9 @@ def _walk(page, f, ps, cs, tr, depth, visited=None):
         if ro + 16 > len(page): break
         rh = struct.unpack_from("<I6H", page, ro)
         _, ko, kl, _, vo, vl, _ = rh
+        if (kl and ro + ko + kl > len(page)) or (vl and ro + vo + vl > len(page)):
+            continue     # audit 2.5: a row whose key/value runs past the page is corrupt — skip, don't let
+                         # Python slicing return a SHORT buffer that becomes a plausible-but-wrong key
         kd = page[ro+ko:ro+ko+kl] if kl > 0 else b""
         vd = page[ro+vo:ro+vo+vl] if vl > 0 else b""
         if is_inner:
@@ -1971,8 +2032,13 @@ def _verify_self_checksum(blk, cluster_size):
 MLOG_BLOCK = 0x1000
 
 _FT_EPOCH = datetime.datetime(1601, 1, 1)
-_FT_MIN = 130000000000000000
-_FT_MAX = 140000000000000000
+# Plausible-FILETIME band, used to (a) render a timestamp only if it is a real date and (b) discriminate a
+# paired $SI-update block from redo/random bytes in _mlog_pair_si_timestamp. Widened (audit 3.1) from the old
+# 2013–2044 band to ~1968–2108: a real or timestomped/backdated date outside 2013–2044 (e.g. a 1970 Unix-epoch
+# or year-2000 timestomp) must be shown as it is on disk, not suppressed. Still a tight ~0.2%-of-u64 band, so
+# requiring all three $SI stamps in-band keeps the pairing discriminator effectively false-positive-free.
+_FT_MIN = 116000000000000000   # ~1968
+_FT_MAX = 160000000000000000   # ~2108
 
 
 def _filetime_dt(val):
@@ -2481,7 +2547,6 @@ def classify_mlog_transaction(recs):
         EXISTING object (insert name, no new table, no delete)."""
     ops = [r["opcode"] for r in recs]
     op_set = set(ops)
-    fnames = [r["filename"] for r in recs if r["filename"] and r["filename"] != "$I30"]
     has_open = 0x00 in op_set
     has_insert = 0x01 in op_set
     has_delete = 0x02 in op_set
@@ -3005,20 +3070,6 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
             rows = walk_bplus(f, ps, cs, tr, vlcns)
         except Exception:
             return
-
-        # Extract this directory's own $SI (type 0x10) if enrichment is on
-        dir_si = None
-        for kd, vd in rows:
-            if len(kd) >= 2 and le16(kd, 0) == 0x10:
-                if len(vd) >= 0x60:
-                    dir_si = {
-                        "security_id": le64(vd, 0x50),
-                        # usn = LastUsn ($SI+0x40 / value+0x68), the real journal pointer
-                        # (value+0x58 = $SI+0x30 is unpopulated). See E30 retraction / E45.
-                        "usn": le64(vd, 0x68) if len(vd) >= 0x70 else 0,
-                        "internal_flags": le32(vd, 0x4C),
-                    }
-                break
 
         for kd, vd in rows:
             if len(kd) < 4: continue
@@ -3555,15 +3606,38 @@ def _build_oid2path(results):
     m.setdefault(0x600, "")
     return m
 
+_CSV_FORMULA_LEAD = ("=", "+", "-", "@", "\t", "\r")
+_CSV_GUARD = False   # default: byte-FAITHFUL CSV (names written exactly as on the volume). `--csv-safe` opts IN.
+
+def _csv_safe(v):
+    """Neutralise spreadsheet formula injection (audit 2.10): a cell whose first character is a formula lead
+    (= + - @ TAB CR) is prefixed with a single quote so Excel/LibreOffice treat it as text, never as a formula.
+    Because that single quote ALTERS the reported name, it is OPT-IN via `--csv-safe`, not the default — the tool
+    outputs filenames byte-faithfully unless the examiner explicitly asks for the spreadsheet-safe rendering."""
+    s = "" if v is None else str(v)
+    return "'" + s if s[:1] in _CSV_FORMULA_LEAD else s
+
+def _csv_cell(v):
+    """One CSV cell under the fidelity-first policy: byte-faithful by default (the name exactly as on the volume);
+    only with `--csv-safe` is the formula-injection guard applied. The tool never silently rewrites a name."""
+    return _csv_safe(v) if _CSV_GUARD else v
+
+def _csv_row(cells):
+    """Apply the per-cell policy (_csv_cell) across a CSV data row, so every subject-controlled column follows the
+    same faithful-by-default / `--csv-safe` rule in the standalone writers (usn/timeline/timestomp/mlog/deleted),
+    matching `files`."""
+    return [_csv_cell(c) for c in cells]
+
 def emit_csv(results, sd_map, version_str, out, full_path=False):
     # `full_path` is accepted for back-compat (the old --full-path-column flag) but is now a no-op: FullPath
     # is a standard column. Building a dict keyed by column name guarantees header/row stay aligned.
     writer = csv.writer(out)
     writer.writerow(CSV_COLUMNS)
     oid2path = _build_oid2path(results)                  # P6: for CreationDir (resolve HomeOID → path)
+    _cell = _csv_cell                                    # faithful by default; formula-guard only under --csv-safe
     for r in results:
         d = _csv_fields(r, sd_map, version_str, oid2path)
-        writer.writerow([d[c] for c in CSV_COLUMNS])
+        writer.writerow([_cell(d[c]) for c in CSV_COLUMNS])
 
 def emit_body(results, out):
     for r in results:
@@ -3878,11 +3952,11 @@ def cmd_fastsummary(f, ps, cs, tr, roots, obj_map, vmaj, vmin, chkp_lcns,
     if hash_image:
         summary["image_sha256"] = _hash_image(image_path, log_fn)
 
-    # E11: surface unmapped-container misses (0 on well-formed volumes; non-zero => corrupt/truncated
-    # container table, so some rows were read as identity and may be missing). stderr, not the summary.
-    if tr and getattr(tr, "misses", 0):
-        print(f"[{PROG}] WARNING: {tr.misses} VLCN(s) had no container mapping — output may be "
-              f"incomplete (corrupt/truncated container table).", file=sys.stderr)
+    # E11/3.2: surface unmapped-container misses (0 on well-formed volumes; non-zero => corrupt/truncated
+    # container table, so some rows were read as identity and may be missing). stderr, not the summary. The
+    # shared helper is also registered at-exit, so every OTHER command surfaces it too; the _warned flag keeps
+    # it to one line per run.
+    _warn_translator(tr)
     return summary
 
 def _print_fastsummary(summary, plus_mode=False, is_summary=False):
@@ -4038,14 +4112,14 @@ def _print_fastsummary(summary, plus_mode=False, is_summary=False):
                 _line = f"  FS Metadata:        {_lbl}"
             print(_line)
         else:
-            print(f"  FS Metadata:        no child entries")
+            print("  FS Metadata:        no child entries")
         print(f"  USN Journal:        {'Active' if fm.get('usn_journal') else 'Inactive'}")
         if "usn_journal_id" in summary:
             print(f"  USN Journal ID:     0x{summary['usn_journal_id']:016x}")
 
     print()
     if plus_mode and not is_summary:
-        print(f"For complete file statistics, use the `summary` subcommand (full directory walk)")
+        print("For complete file statistics, use the `summary` subcommand (full directory walk)")
 
 def _print_summary(summary, fast_data, plus_mode=False):
     _print_fastsummary(fast_data, plus_mode=plus_mode, is_summary=True)
@@ -4400,11 +4474,11 @@ def _print_file_detail(r, sd_map, version_str, raw_value=None, oid2path=None):
             # A mismatch means the backing was mis-resolved (file_id collision) — show nothing rather
             # than a wrong EA list (never display an unproven value).
             if sum(5 + len(e["name"]) + len(e["value"]) for e in eas) != packed:
-                print(f"    (EA content could not be resolved reliably — not shown)")
+                print("    (EA content could not be resolved reliably — not shown)")
             else:
                 wsl = decode_wsl_eas(eas)
                 if wsl:
-                    print(f"  WSL/Linux metadata:")
+                    print("  WSL/Linux metadata:")
                     if "mode" in wsl:
                         print(f"    Mode:             {decode_lx_mode(wsl['mode'])}")
                     if "uid" in wsl:
@@ -4464,7 +4538,6 @@ def cmd_search(f, ps, cs, tr, obj_map, vmaj, vmin, pattern, regex_mode=False, ma
     return matches
 
 def _print_search(matches, pattern):
-    w = 100
     if not matches:
         print(f"No matches for \"{pattern}\"")
         return
@@ -4502,16 +4575,19 @@ def bootstrap(image_path, partition_start=None):
         chkp_lcns = parse_supb(f, ps, cs)
 
         # Get newest checkpoint
-        best_vc = 0; best_roots = None; best_flags = 0
+        best_vc = 0; best_roots = None
         for cl in chkp_lcns:
             try:
                 vc, flags, roots = parse_chkp(f, ps, cs, cl)
                 if vc >= best_vc:
-                    best_vc = vc; best_roots = roots; best_flags = flags
+                    best_vc = vc; best_roots = roots
             except Exception:
                 continue
         if not best_roots:
-            raise ValueError("No valid checkpoint found")
+            raise ValueError(
+                "no valid checkpoint could be parsed from the superblock's checkpoint list — the bootstrap "
+                "chain (VBR -> SUPB -> CHKP) is damaged. Inspect it with `refsanalysis.py <image> supb -v` "
+                "and `chkp -v`, or diagnose with `refsanalysis.py <image> bootedit repair --dry-run`.")
 
         # Build container table translator — select by Table-ID 0x0B, not by root index 7 (#337)
         ct_vlcns = _select_ct_root(f, ps, cs, best_roots)
@@ -4520,6 +4596,8 @@ def bootstrap(image_path, partition_start=None):
         ct_map_raw = _parse_ct_page(ct_page, f, ps, cs)
         ct_map = {k: v[0] for k, v in ct_map_raw.items()}
         tr = Translator(ct_map, cpc)
+        global _LAST_TR
+        _LAST_TR = tr   # audit 3.2: remember it so _warn_translator (at-exit) can surface any unmapped-CT misses
 
         # Build object map
         ot_vlcns = best_roots[0] if len(best_roots) > 0 else []
@@ -4662,7 +4740,7 @@ def _emit_records(records, columns, fmt, dest, label="records"):
             w = _csv.writer(out)
             w.writerow(columns)
             for r in records:
-                w.writerow([r.get(c, "") for c in columns])
+                w.writerow([_csv_cell(r.get(c, "")) for c in columns])   # faithful by default; --csv-safe to guard
         elif fmt == "json":
             json.dump(records, out, indent=2, ensure_ascii=False)
             out.write("\n")
@@ -4970,7 +5048,6 @@ def cmd_mlog(image, remaining, partition_start):
             # list (unused on this path) is not built — this is what fixes the large-log OOM.
             txns = extract_mlog_transactions(
                 scan_mlog_data_area(f, ps, cs, tr, mlog_info, ctrl), redo_ops)
-            img_name = os.path.basename(image)
 
             if csv_arg is not None:
                 ts_written = [0]
@@ -4982,11 +5059,11 @@ def cmd_mlog(image, remaining, partition_start):
                         t = _mlog_resolve_txn(txn, oid_paths, f, ps, cs)
                         if t["ts_str"]:
                             ts_written[0] += 1
-                        w.writerow([
+                        w.writerow(_csv_row([
                             i, t["ts_str"], t["action"], t["path"], t["name"],
                             "0x%x" % t["oid"] if t["oid"] else "",
                             t["ops_str"], len(t["recs"]), t["plcn"],
-                        ])
+                        ]))
                 if csv_arg == "-":
                     _write_csv(sys.stdout)
                 else:
@@ -5070,7 +5147,6 @@ def cmd_mlog(image, remaining, partition_start):
         records = extract_redo_records(pages, redo_ops)
 
         if do_json:
-            import json as _json
             output = {
                 "version": "%d.%d" % (vmaj, vmin),
                 "control": ctrl,
@@ -5445,7 +5521,7 @@ def cmd_usn(image, remaining, partition_start):
                 for r in records:
                     parent_path = _usn_resolve_path(r.parent_oid, oid_paths)
                     full_path = "%s/%s" % (parent_path, r.filename) if parent_path and parent_path != "/" else r.filename
-                    w.writerow([
+                    w.writerow(_csv_row([
                         r.usn, _usn_filetime_iso(r.timestamp),
                         "0x%08x" % r.reason, usn_reason_to_short(r.reason),
                         r.filename, "dir" if r.file_idx == 0 else "file",
@@ -5454,7 +5530,7 @@ def cmd_usn(image, remaining, partition_start):
                         "0x%x" % r.parent_oid, full_path, "0x%08x" % r.file_attrs,
                         _usn_attrs_short(r.file_attrs), r.record_length,
                         r.security_id, "0x%08x" % r.source_info, "0x%x" % r.parent_idx,
-                    ])
+                    ]))
             if csv_arg == "-":
                 _write_csv(sys.stdout)
             else:
@@ -5466,7 +5542,6 @@ def cmd_usn(image, remaining, partition_start):
             return 0
 
         if do_json:
-            import json as _json
             entries = []
             for r in records:
                 parent_path = _usn_resolve_path(r.parent_oid, oid_paths)
@@ -5852,7 +5927,7 @@ def _print_sd(sd, verbose=False, index=None):
         for ace in dacl:
             print(f"      {ace.get('type','?')}: {ace.get('sid_name', ace.get('sid','?'))} -> {ace.get('mask_str', _hx(ace.get('mask',0)))}")
     else:
-        print(f"    DACL: (none)")
+        print("    DACL: (none)")
     sacl = sd.get("sacl", [])
     if sacl:
         print(f"    SACL ({len(sacl)} ACEs):")
@@ -6002,9 +6077,7 @@ def _find_extents_in_subrecord(vd, rec_off, rec_size, needed, tr, cs, result):
     for scan_off in range(rec_off + 4, rec_end - 24, 4):
         start = le32(vd, scan_off)
         end = le32(vd, scan_off + 4)
-        v2 = le32(vd, scan_off + 8)
         cap = le32(vd, scan_off + 12)
-        total = le32(vd, scan_off + 16)
         count = le32(vd, scan_off + 20)
         if not (0x10 <= start <= 0x200 and end > start and
                 count > 0 and count <= 1000 and cap >= 0x100):
@@ -6592,8 +6665,8 @@ def cmd_timestomp(image, remaining, partition_start):
                 w = _csv.writer(out)
                 w.writerow(["path", "storage", "confidence", "signals", "created", "modified", "changed", "accessed"])
                 for x in (rows if show_all else export_rows):
-                    w.writerow([x["path"], x["storage"], x["tier"], "|".join(x["signals"]),
-                                x["created"], x["modified"], x["changed"], x["accessed"]])
+                    w.writerow(_csv_row([x["path"], x["storage"], x["tier"], "|".join(x["signals"]),
+                                x["created"], x["modified"], x["changed"], x["accessed"]]))
             if csv_arg == "-":
                 _w(sys.stdout)
             else:
@@ -7105,7 +7178,7 @@ def cmd_recyclebin(image, remaining, partition_start):
                 print(f"    Deleted:        {filetime_to_iso(m['deletion_time'])}")
                 print(f"    Size:           {m['size']:,} bytes")
             else:
-                print(f"    ($I content could not be decoded from a plain inline record)")
+                print("    ($I content could not be decoded from a plain inline record)")
             print(f"    Payload ({r['r_name']}): {'present' if r['r_present'] else 'MISSING (metadata only)'}")
         print(f"\n  {len(recs)} recycled item(s).")
         if recs:
@@ -7184,7 +7257,7 @@ def cmd_security(image, remaining, partition_start):
                 fl = args["file"].lower()
                 files = [fe for fe in files if fl in fe["name"].lower()]
             if not files:
-                print(f"\n  No files found" + (f" matching '{args['file']}'" if args["file"] else ""))
+                print("\n  No files found" + (f" matching '{args['file']}'" if args["file"] else ""))
             else:
                 # Q7: per-owner-SID file-count summary BEFORE the (long) per-file list.
                 sid_counts = {}
@@ -7222,7 +7295,7 @@ def cmd_security(image, remaining, partition_start):
             for sd in descriptors:
                 owner = sd.get("owner", "")
                 if owner and owner != "(none)": unique_owners.add(owner)
-            print(f"  Summary:")
+            print("  Summary:")
             print(f"    Total SDs:        {len(descriptors)}")
             print(f"    Unique owners:    {len(unique_owners)}")
             for owner in sorted(unique_owners):
@@ -8297,7 +8370,7 @@ def _specials_print_type(typ, files):
         print(f"  {'STREAMS':<28} HOST FILE")
         for r in rows:
             print(f"    {(r.get('ads_names') or ''):<26} {_specials_path(r)}")
-        print(f"\n  Extract one:  forefst IMG export ads \"<file>:<stream>\"")
+        print("\n  Extract one:  forefst IMG export ads \"<file>:<stream>\"")
     elif typ in ("reparse", "wsl"):
         print(f"  {'TAG':<26} {'TARGET':<40} PATH")
         for r in rows:
@@ -8309,12 +8382,12 @@ def _specials_print_type(typ, files):
             fs = r.get("file_size", 0); al = r.get("allocated_size") or 0
             saved = fs - al if fs > al else 0
             print(f"    {fs:>14,} {al:>14,} {saved:>14,}  {_specials_path(r)}")
-        print(f"\n  Extent/run map:  forefst IMG dataruns <path>")
+        print("\n  Extent/run map:  forefst IMG dataruns <path>")
     elif typ == "snapshot":
         print(f"  {'PRIORS':>6}  PATH")
         for r in rows:
             print(f"    {r.get('snapshot_count', 0):>6}  {_specials_path(r)}")
-        print(f"\n  Extract versions:  forefst IMG export snapshots <dir>")
+        print("\n  Extract versions:  forefst IMG export snapshots <dir>")
     else:  # encrypted / compressed / integrity / ea — path (+ owner for encrypted)
         for r in rows:
             extra = f"  [{r.get('owner_sid','')}]" if typ == "encrypted" and r.get("owner_sid") else ""
@@ -8438,7 +8511,7 @@ def cmd_reparse(image, remaining, partition_start):
                 for tag in sorted(by_tag.keys()):
                     print(f"  {_hx(tag):<14} {_tag_name(tag):<35} {len(by_tag[tag])}")
                 if verbose:
-                    print(f"\n  Detailed entries:")
+                    print("\n  Detailed entries:")
                     for e in entries:
                         oid = e.get("dir_oid", 0)
                         oid_s = _KNOWN_OIDS.get(oid, _hx(oid))
@@ -8525,10 +8598,10 @@ def cmd_reparse(image, remaining, partition_start):
                     if entry.get("reparse_target"):
                         print(f"    Target:    {entry['reparse_target']}")
                 else:
-                    print(f"    Reparse:   (tag in attrs but target not recoverable from this record)")
+                    print("    Reparse:   (tag in attrs but target not recoverable from this record)")
                 wsl = entry.get("wsl_eas", {})
                 if wsl:
-                    print(f"    WSL EAs:")
+                    print("    WSL EAs:")
                     if "lxuid" in wsl: print(f"      UID:  {wsl['lxuid']}")
                     if "lxgid" in wsl: print(f"      GID:  {wsl['lxgid']}")
                     if "lxmod_str" in wsl: print(f"      Mode: {wsl['lxmod_str']}")
@@ -8537,8 +8610,8 @@ def cmd_reparse(image, remaining, partition_start):
         elif args["file"]:
             print(f"\n  No files matching '{args['file']}'")
         else:
-            print(f"\n  No reparse points found in root directory")
-            print(f"  (Reparse points may exist in subdirectories — use --file or --index)")
+            print("\n  No reparse points found in root directory")
+            print("  (Reparse points may exist in subdirectories — use --file or --index)")
 
         idx_entries, idx_error = _parse_reparse_index(f, ps, cs, tr, obj_map)
         if not idx_error and idx_entries:
@@ -8632,9 +8705,16 @@ def _deleted_recoverability(e, cs=None, tr=None):
     return ("metadata_only", _RECOVER_LABEL["metadata_only"], None)
 
 def _safe_filename(name):
-    """A filesystem-safe version of a recovered file's real name (used for content/<name>; provenance lives in
-    the index, not the filename). Collisions are handled by _collision_free_path."""
-    return ("".join(c if c.isalnum() or c in "._- " else "_" for c in (name or "")).strip() or "unnamed")[:120]
+    """Filesystem-safe form of a name for on-disk extraction. Only characters that cannot be written to a path
+    component (everything outside [alnum . _ - space]) are mapped to '_'; the name is otherwise preserved and,
+    crucially, written at FULL LENGTH — it is never truncated or shortened, so the extracted name stays faithful
+    to what is on the volume. A name longer than the host filesystem's component limit (255 bytes on ext4/NTFS)
+    would raise OSError on write; that is deliberate — the tool never silently alters a name's length instead of
+    surfacing it. (The whole validation corpus is <=171 bytes, so this cannot trigger there; a future release may
+    add an OPT-IN cap for exotic volumes.) `_safe_relpath` applies this per path segment and additionally drops
+    '.'/'..' for traversal safety. Provenance lives in the extraction index, not the on-disk name; collisions are
+    resolved by _collision_free_path."""
+    return "".join(c if c.isalnum() or c in "._- " else "_" for c in (name or "")) or "unnamed"
 
 def _collision_free_path(path):
     """Never clobber an existing file: on collision append .dup1/.dup2/… (user-selected overwrite policy).
@@ -8938,7 +9018,7 @@ def cmd_deleted(image, remaining, partition_start):
         with open(idx, "w", newline="") as of:
             w = _csv.writer(of); w.writerow(DELETED_CSV_COLUMNS)
             for r in rows:
-                w.writerow([r.get(c, "") for c in DELETED_CSV_COLUMNS])
+                w.writerow(_csv_row([r.get(c, "") for c in DELETED_CSV_COLUMNS]))
         with open(os.path.join(extract_dir, "deleted_files.json"), "w") as of:
             json.dump(rows, of, indent=2, default=str)
         # (2) detailed run manifest (programmatic provenance / per-file record)
@@ -9052,11 +9132,11 @@ def cmd_deleted(image, remaining, partition_start):
                         print(f"  Files in current but NOT in old ({len(added)}):")
                         for name in sorted(added): print(f"    + {name}")
                     if not removed and not added:
-                        print(f"  Same top-level files in both (change may be in subdirectories or metadata)")
+                        print("  Same top-level files in both (change may be in subdirectories or metadata)")
                 else:
-                    print(f"  Object Table root is identical in both checkpoints (no recent changes)")
+                    print("  Object Table root is identical in both checkpoints (no recent changes)")
             except Exception:
-                print(f"  Could not parse old checkpoint's object table")
+                print("  Could not parse old checkpoint's object table")
             print()
 
         if do_scan_pages:
@@ -9084,7 +9164,7 @@ def cmd_deleted(image, remaining, partition_start):
                     if not extract_dir or not e.get("vd"):
                         return
                     os.makedirs(extract_dir, exist_ok=True)
-                    safe = "".join(c if c.isalnum() or c in "._-" else "_" for c in name)
+                    safe = _safe_filename(name)   # faithful (no truncation) component sanitizer
                     base = os.path.join(extract_dir, f"{safe}__{tag}_c{e['plcn']}")
                     _emit(base, e, name, "orphan-scan", tag)
 
@@ -9147,7 +9227,7 @@ def cmd_deleted(image, remaining, partition_start):
                 if not extract_dir or not e.get("vd"):
                     return
                 os.makedirs(extract_dir, exist_ok=True)
-                safe = "".join(c if c.isalnum() or c in "._-" else "_" for c in e["name"])[:80]
+                safe = _safe_filename(e["name"])   # faithful (no truncation) — consistent with the other extractors
                 base = os.path.join(extract_dir, f"{safe}__slack-{tag}_c{e['plcn']}o{e['page_off']:x}")
                 _emit(base, e, e["name"], "slack", tag)
 
@@ -9185,7 +9265,7 @@ def cmd_deleted(image, remaining, partition_start):
                                 print(f"        parent directory is DELETED — name AMBIGUOUS ({len(_cands)} slack "
                                       f"versions from rename/move churn): {', '.join(_cands)}")
                             else:
-                                print(f"        parent directory is DELETED — its name did not survive in slack")
+                                print("        parent directory is DELETED — its name did not survive in slack")
                     elif e.get("owning_table_oid"):
                         print(f"      Owning table: {_hx(e['owning_table_oid'])}  (path unresolved)")
                     if e.get("create_time"):
@@ -9363,7 +9443,6 @@ def cmd_snapshots(image, remaining, partition_start):
             if true_snaps: true_snap_results.append({**r, "snapshots": true_snaps})
             if ads: ads_results.append({**r, "snapshots": ads})
         total_true = sum(len(r["snapshots"]) for r in true_snap_results)
-        total_ads = sum(len(r["snapshots"]) for r in ads_results)
 
         if out_fmt:
             json_out = {
@@ -9476,7 +9555,7 @@ def cmd_snapshots(image, remaining, partition_start):
                         print(f"          {shown!r}")
                     if content is not None and extract_dir:
                         safe = (r["path"].strip("/").replace("/", "_") + "__" + rec["name"])
-                        safe = "".join(c if c.isalnum() or c in "._-" else "_" for c in safe)
+                        safe = _safe_filename(safe)   # faithful (no truncation) component sanitizer
                         os.makedirs(extract_dir, exist_ok=True)
                         outp = os.path.join(extract_dir, safe)
                         with open(outp, "wb") as of:
@@ -9608,8 +9687,8 @@ def cmd_integrity(image, remaining, partition_start):
                 print(f"  Coverage:                full metadata tree "
                       f"(system roots + {ck_stats['objects']} object B+-trees)")
             else:
-                print(f"  Coverage:                system root tables only "
-                      f"(run --fullchecksums for every object B+-tree)")
+                print("  Coverage:                system root tables only "
+                      "(run --fullchecksums for every object B+-tree)")
             print(f"  Pages verified:          {ck_stats['pages']}")
             print(f"  CRC64  match / mismatch: {ck_stats['crc64_ok']} / {ck_stats['crc64_bad']}")
             print(f"  SHA256 match / mismatch: {ck_stats['sha_ok']} / {ck_stats['sha_bad']}")
@@ -9641,7 +9720,7 @@ def cmd_integrity(image, remaining, partition_start):
         pmark = "OK" if v["primary_cksum_ok"] else ("sig-ok, checksum?" if v["primary_ok"] else "BAD")
         print(f"  Boot sector (primary):   LBA 0 — {pmark}")
         if v["backup"] is None:
-            print(f"  Boot sector (backup):    not located (no volume-size field)")
+            print("  Boot sector (backup):    not located (no volume-size field)")
         elif v["backup"].get("present"):
             same = "identical to primary" if v["backup"]["matches_primary"] else "DIFFERS from primary"
             ck = "checksum OK" if v["backup"]["cksum_ok"] else "checksum?"
@@ -9651,8 +9730,8 @@ def cmd_integrity(image, remaining, partition_start):
                 if bvr and pvr and bvr != pvr:
                     print(f"      ↳ version mismatch: primary v{pvr}, backup v{bvr} — an UPGRADE "
                           f"(the backup keeps the ORIGINAL pre-upgrade version) or VBR tampering.")
-                    print(f"        The driver does NOT reconcile the two copies (no cross-copy "
-                          f"checksum/clock); the backup is consulted only if the primary fails to READ.")
+                    print("        The driver does NOT reconcile the two copies (no cross-copy "
+                          "checksum/clock); the backup is consulted only if the primary fails to READ.")
                     backup_warn.append(f"boot-sector version differs: primary v{pvr} vs backup v{bvr}")
                 else:
                     backup_warn.append("backup boot sector differs from primary")
@@ -9906,7 +9985,7 @@ def cmd_export_metadata(image, remaining, partition_start):
         with open(os.path.join(outdir, "sha256sums.txt"), "w") as sf:
             sf.write("\n".join(sha_lines) + "\n")
         print(f"\n  {len(manifest['artifacts'])} artifacts + manifest.json + sha256sums.txt → {outdir}")
-        print(f"  Verify later with:  sha256sum -c sha256sums.txt")
+        print("  Verify later with:  sha256sum -c sha256sums.txt")
         return 0
     finally:
         f.close()
@@ -9991,7 +10070,7 @@ def cmd_dataruns(image, remaining, partition_start):
             _emit_records(recs, cols, out_fmt, out_dest, "files")
             return 0
 
-        print(f"  Summary:")
+        print("  Summary:")
         print(f"    Total files analyzed:   {total_files}")
         print(f"    Resident (inline):      {total_resident}")
         print(f"    Non-resident (extents): {total_nonresident}")
@@ -10064,7 +10143,7 @@ SUBCOMMAND_ALIASES = {
 def _safe_relpath(path):
     """Turn a stored '/dir/sub/file' path into a safe on-disk relative name."""
     parts = [p for p in path.replace("\\", "/").split("/") if p and p not in (".", "..")]
-    return os.path.join(*[("".join(c if (c.isalnum() or c in " ._-") else "_" for c in p)) for p in parts]) if parts else "unnamed"
+    return os.path.join(*[_safe_filename(p) for p in parts]) if parts else "unnamed"   # faithful sanitizer per path segment
 
 def cmd_export_resident(image, remaining, partition_start):
     """export resident-all <dir>: write every RESIDENT file's inline $DATA (and CoW-shared resident content)
@@ -10297,71 +10376,6 @@ FILE_FILTERS.update({
 })
 VERSION_NOTE = ("Validated on ReFS 3.14 (24H2). All versions 3.4-3.14 parse, but some enriched fields "
                 "(e.g. non-resident symlink targets) may be incomplete on 3.4-3.10.")
-
-# ── Output-field provenance: which emitted values are NOT 100% certain, and why ──────────────────
-# Honesty layer for `forefst --provenance`. Each entry is a DOCUMENTED FACT with a citation into the
-# verified reference (errata E-NN / structure_reference §/finding), NOT a guess. `certainty`:
-#   CONDITIONAL     — correct only under a stated condition (a bit/version); may be wrong otherwise
-#   METHOD-DEPENDENT— correct only if a secondary record resolves; under-reports if it doesn't
-#   BOUNDED         — a heuristic with an explicit validity window; blind outside it
-#   NOT-EMITTED     — deliberately omitted because the underlying fact is UNCONFIRMED on disk
-# This table changes NO parsed value; it only lets the tool state where its own output is uncertain.
-FIELD_PROVENANCE = {
-    "HasEA / FileAttributes(EA bit)": (
-        "METHOD-DEPENDENT",
-        "For a NON-resident file the base file_attrs are read from the type-0x30 pointer (+0x40), which "
-        "UNDER-reports the EA bit (0x40000); forefst then OR's the EA bit back in from the type-0x40 backing "
-        "(+0x48) when that backing resolves. If the backing does NOT resolve, HasEA can be under-reported "
-        "(never over-reported).",
-        "errata E56 (pointer +0x40 vs backing +0x48; winsider: pointer omits EA on 8,140 files)"),
-    "ReparseTag": (
-        "CONDITIONAL",
-        "The type-0x40 backing +0x7C ReparseTag mirror is valid ONLY when its bit31 is set; when bit31 is "
-        "clear the mirror is 0 and the authoritative tag lives in the type-0xC0 reparse sub-record.",
-        "structure_reference §C.3 (+0x7C 'valid only when bit31 set') / §C.8"),
-    "IsDirectory": (
-        "CONDITIONAL",
-        "Derived from file_attrs bit 0x10000000, which is MASKED on Win10 / ReFS v3.4 (preserved on Win11). "
-        "On a v3.4 volume a real directory can read IsDirectory=False.",
-        "docs/attributes/STANDARD_INFORMATION.md ($SI+0x20 'bit 28 masked on Win10')"),
-    "USN (per-file LastUsn)": (
-        "CONDITIONAL",
-        "Read from $SI+0x40; meaningful only against its journal epoch ($SI+0x48 UsnJournalId). Nonzero only "
-        "on volumes captured with an ACTIVE USN journal; a re-created journal makes an old LastUsn stale.",
-        "errata E27 / E45 (LastUsn @ $SI+0x40, UsnJournalId @ +0x48; nonzero on 9/111 corpus images)"),
-    "TimestompFlags (MLog/slack corroboration)": (
-        "BOUNDED",
-        "The scan-based timestamp corroboration only recognises FILETIMEs inside 2012-12-14..2044-08-23 "
-        "(_FT window) and grades slack rows sane only inside 2009-11-26..2050-12-24 (_SANE). Back-dating "
-        "outside those windows is invisible to those channels.",
-        "forefst.py symbols _FT_MIN/_FT_MAX and _SANE — measured bounds (grep the names)"),
-    "SparseGhosted (NOT emitted)": (
-        "NOT-EMITTED",
-        "forefst deliberately emits NO per-file sparse/ghosted column: the candidate sparse flag (DATA "
-        "value+0x50 bit31) is UNCONFIRMED (0/31,678 set in the corpus; no sparse non-resident file exists to "
-        "positively test it). Emitting it would risk a false forensic signal.",
-        "structure_reference § DATA value+0x50 (finding #307, marked UNCONFIRMED)"),
-    "TimestompFlags / deleted (slack confidence tier)": (
-        "CONDITIONAL",
-        "These commands already print an explicit HIGH/MEDIUM/LOW (timestomp) or high/medium/partial "
-        "(slack) confidence per row — read that column; a lower tier means fewer independent sources agreed.",
-        "forefst.py symbols cmd_timestomp tiering / _scan_page_slack _SANE grading (grep the names)"),
-}
-
-
-def _print_field_provenance():
-    """`forefst --provenance` — list every emitted field whose value is NOT 100% certain, with the
-    condition and a citation into the verified reference. Needs no image; changes no parsed output."""
-    print("forefst output-field provenance — where the tool's own output is NOT 100% certain")
-    print("(each is a documented fact with a citation; certainty classes: CONDITIONAL / METHOD-DEPENDENT /")
-    print(" BOUNDED / NOT-EMITTED). Fields not listed here are disk-confirmed (RD) in the reference register.\n")
-    for field, (certainty, why, cite) in FIELD_PROVENANCE.items():
-        print(f"  {field}")
-        print(f"      certainty : {certainty}")
-        print(f"      condition : {why}")
-        print(f"      cite      : {cite}\n")
-    print(f"{len(FIELD_PROVENANCE)} field-provenance notes. Everything else forefst emits is RD-confirmed.")
-
 
 # ── Hand-written per-command help ────────────────────────────────────────────
 # Each entry: tagline, a short description, the option list (flag, help), and runnable examples.
@@ -10841,6 +10855,13 @@ def main():
     # Full-depth walks (4.D): raise the interpreter recursion limit as a safety margin so a genuinely deep
     # directory tree cannot RecursionError (real trees are shallow; this is never hit in practice).
     sys.setrecursionlimit(max(sys.getrecursionlimit(), 40000))
+    # `--csv-safe` (opt-in spreadsheet formula-injection guard) is a GLOBAL modifier that must apply to every
+    # CSV-emitting command (files/usn/timeline/timestomp/mlog/deleted), so detect+strip it here before any
+    # dispatch or argparse. Default stays OFF = filenames written byte-faithfully.
+    global _CSV_GUARD
+    if "--csv-safe" in sys.argv:
+        _CSV_GUARD = True
+        sys.argv = [a for a in sys.argv if a != "--csv-safe"]
     # Global `--partition-start N` works in ANY position: relocate it to the END of argv so a flag placed
     # BEFORE the subcommand (e.g. `IMG --partition-start 0 integrity`) confuses neither the forensic dispatch
     # (which keys on argv[2]) nor argparse (which mishandles an optional between the image/command positionals).
@@ -10896,18 +10917,8 @@ def main():
         print("forensic subcommands:")
         for _k, _v in FORENSIC_SUBCOMMANDS.items():
             print(f"  {_k:13} {_v}")
-        # --provenance DISABLED (2026-08-07): its citations reference internal-only artifacts
-        # (errata E##, structure_reference §, finding #) that a downloaded user cannot resolve.
-        # Kept in code (_print_field_provenance / FIELD_PROVENANCE) but not exposed on the CLI.
-        # print("\n  --provenance   list which emitted fields are NOT 100% certain (with citations)")
         print(f"\n{VERSION_NOTE}")
         return
-
-    # `forefst --provenance`: DISABLED (2026-08-07). See note above; the honesty-layer code is
-    # retained (_print_field_provenance) but the CLI entry point is commented out for now.
-    # if len(sys.argv) >= 2 and sys.argv[1] in ("--provenance", "--provenance-notes"):
-    #     _print_field_provenance()
-    #     return
 
     # Delegated forensic subcommands: parse like refsanalysis (raw remaining args + own flags),
     # since they use options argparse doesn't model (--parse/--raw-scan/--no-si/--source/...).
@@ -10919,7 +10930,14 @@ def main():
         filtered = []
         i = 0
         while i < len(remaining):
-            if remaining[i] == "--partition-start" and i + 1 < len(remaining):
+            if remaining[i] == "--partition-start":
+                if i + 1 >= len(remaining):
+                    # audit 2.9: --partition-start IS a known option missing its value — say so, don't let
+                    # _parse_args report it as "unknown option". (Exit stays 1, matching the invalid-value
+                    # path below; the usage-vs-runtime exit-code contract is a separate, deferred change.)
+                    print(f"{PROG}: error: option --partition-start requires a value "
+                          f"(a byte offset, e.g. 0 or 0x100000)", file=sys.stderr)
+                    sys.exit(1)
                 try:
                     part_start = int(remaining[i + 1], 0)
                 except ValueError:
@@ -10932,11 +10950,16 @@ def main():
             print(f"{PROG}: error: file not found: {image}", file=sys.stderr); sys.exit(1)
         if not os.path.isfile(image):
             print(f"{PROG}: error: not a regular file: {image}", file=sys.stderr); sys.exit(1)
+        # audit 2.8: do NOT validate the image here. The handler parses its own flags FIRST (via _parse_args /
+        # _check_unknown_flags), so a typo'd flag is reported before the image is read; its bootstrap() then
+        # validates/aborts with the SAME clean ValueError the `files` path already surfaces (audit 2.3 — one
+        # acceptance policy, one error message, for every command). Mirror the argparse path's catch.
         try:
-            validate_image(image)
-        except (ValueError, OSError) as e:
+            sys.exit(FORENSIC_HANDLERS[subcmd](image, filtered, part_start))
+        except ValueError as e:
             print(f"{PROG}: error: {e}", file=sys.stderr); sys.exit(1)
-        sys.exit(FORENSIC_HANDLERS[subcmd](image, filtered, part_start))
+        except OSError as e:
+            print(f"{PROG}: error: cannot read image: {e}", file=sys.stderr); sys.exit(1)
 
     ap = argparse.ArgumentParser(prog=PROG,
                                  description="ReFS forensic file lister (MFTECmd equivalent)",
@@ -10951,6 +10974,10 @@ def main():
     ap.add_argument("--body", action="store_true", help="files: body-file output (default CSV)")
     ap.add_argument("--full-path-column", action="store_true",
                     help="(deprecated no-op — FullPath is now a standard files CSV column)")
+    ap.add_argument("--csv-safe", action="store_true",
+                    help="CSV output: prefix a cell starting with = + - @ with a quote to neutralise spreadsheet "
+                         "formula injection. OFF by default so filenames are written byte-faithfully; enable this "
+                         "only if you will open the CSV in Excel/LibreOffice (applies to all CSV-emitting commands)")
     # --csv/--json/--jsonl now accept an OPTIONAL FILE (bare = stdout, `--json FILE` = write file + count),
     # standardizing files/summary/search/details with the forensic commands. Put the search/details TARGET
     # BEFORE these flags (`search foo --json`), so the pattern isn't consumed as the format's FILE.
@@ -11032,6 +11059,12 @@ def main():
 
     # Help-on-empty (4.C): a bare `details` (no target/OID/path/id) shows its help instead of opening the image.
     if args.command == "details" and args.target is None and args.oid is None and not args.path and not args.id:
+        # audit 2.12: when a MACHINE format was explicitly requested, a missing target is a usage error, not
+        # help. Help-on-stdout is invalid JSON in a pipe AND exits 0 (a silent pipeline failure); instead emit
+        # the error to stderr and exit non-zero (the existing error convention — the usage-vs-runtime exit-code
+        # split is the separately-deferred change). The friendly help stays for the interactive case.
+        if any(getattr(args, _f, None) is not None for _f in ("json", "jsonl", "csv")):
+            die("details: a target is required (a /path, --oid, or --id) when --json/--jsonl/--csv is requested")
         _render_cmd_help("details")
         return
 
@@ -11210,7 +11243,7 @@ def main():
         detail = cmd_oid_detail(f, ps, cs, tr, obj_map, vmaj, vmin, det_oid, log_fn=log)
         if detail is None:
             print(f"OID 0x{det_oid:x} not found in object table ({len(obj_map)} objects).", file=sys.stderr)
-            print(f"Use `forefst <image> search <name>` to find files by name.", file=sys.stderr)
+            print("Use `forefst <image> search <name>` to find files by name.", file=sys.stderr)
             f.close()
             sys.exit(1)
         if "error" in detail:
