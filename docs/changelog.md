@@ -1,5 +1,26 @@
 # Changelog
 
+## v1.7.1 — 2026-08-28 — follow-up-audit fixes: extraction robustness, caveat coverage, and de-duplication
+
+**A small hardening release answering an independent follow-up audit of v1.7.0. No change to what the tools report
+on a valid volume (the 122-image regression corpus is byte-identical bar the version banner); the changes are error
+handling, surfaced caveats, and removing duplicated code between the two tools.**
+
+- **Bulk extraction survives an unwritable name.** The faithful (un-truncated) sanitizer can produce a name longer
+  than the host filesystem's limit; the five bulk extractors (`deleted`, `snapshots`, `export metadata` /
+  `resident-all` / `recyclebin`) now record such a write to `_extract_failures.json` and continue, instead of
+  aborting the run with a traceback and a half-finished directory.
+- **The container-mapping caveat is reported for every image.** `--cow-before` builds a second volume view; its
+  unmapped-container caveat is no longer lost, and the warning now names which image it came from.
+- **Unguarded formula-lead CSV cells are surfaced.** With the byte-faithful default, a cell beginning `= + - @`
+  now triggers a one-line stderr note (re-run with `--csv-safe` before Excel) — the output stays byte-faithful.
+- **A pathologically deep directory tree is a clean error, not a crash.** The walker's recursion limit is set to a
+  value the C stack can hold, and a too-deep (corrupt/crafted) tree is reported instead of risking a hard process
+  kill.
+- **Shared byte-identical helpers are single-sourced.** `refsanalysis` now imports ten logic-identical helpers from
+  `forefst` instead of carrying its own copies — verified behaviour-identical. (Genuinely divergent code between the
+  two tools is deliberately left as-is.)
+
 ## v1.7.0 — 2026-08-28 — hardening pass (external code-audit response): robustness, fidelity, and consistency
 
 **A hardening release answering an independent code audit. No change to what the tools report on a valid volume —
