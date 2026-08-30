@@ -1,5 +1,22 @@
 # Changelog
 
+## v1.7.2 — 2026-08-29 — differential-audit follow-through: ID-based object-table selection + reference corrections
+
+**A small hardening release from a differential audit against a second, independent ReFS reader
+(`unsound/refsprogs`). No change to what the tools report on a valid volume — the 122-image regression corpus is
+byte-identical bar the version banner.**
+
+- **The object table is now selected by its on-disk table-ID, not its root index.** The container table was already
+  chosen by ID (a primary/duplicate root pair is not bound to a fixed index→ID order); the object table now follows
+  the same discipline, falling back to the historical index. On the whole corpus root 0 is always the object table,
+  so the output is byte-identical — this only matters if a primary/duplicate root pair is ever exchanged (which is
+  known to happen for the container-table pair on some large volumes).
+- **Reference/structure corrections (documentation only — no tool behaviour change).** The non-resident `$DATA`
+  stream-summary header is now documented as version-dependent: on ReFS v3.4 its size fields sit four bytes later
+  (`stream_size` at 0x3C, not 0x38) and `summary_size` is 0x1A0 before v3.14 — the earlier tables had been measured
+  on v3.14-only images. The tools already read v3.4 file sizes and content from version-independent fields, so this
+  is a docs/reference fix only.
+
 ## v1.7.1 — 2026-08-28 — follow-up-audit fixes: extraction robustness, caveat coverage, and de-duplication
 
 **A small hardening release answering an independent follow-up audit of v1.7.0. No change to what the tools report

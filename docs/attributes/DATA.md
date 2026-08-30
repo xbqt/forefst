@@ -43,17 +43,22 @@ Each file also has one or more multi-instance entries holding the **stream alloc
 inline content). The MI key is 40 bytes and carries the extent/allocation identifiers; the MI value does
 **not** use the common 12-byte sub-record header.
 
-**Value (extent record, summary size = 0x200):**
+**Value (extent record). Offsets below are the v3.7+ layout:**
 
-| Offset | Size | Field | Description |
+| Offset (v3.7+) | Size | Field | Description |
 |--------|------|-------|-------------|
-| 0x00 | 4 | Inner header size | 0x88 (136) |
-| 0x0C | 4 | Summary size | 0x200 |
+| 0x00 | 4 | Inner header size | 0x88 (136) — all versions |
+| 0x0C | 4 | Summary size | 0x200 on v3.14+; **0x1A0** on v3.4–v3.10 |
 | 0x30 | 8 | Total allocated | |
 | 0x38 | 8 | Stream size | the stream size in MI records (**not** the stream-flags field) |
 | 0x40 | 8 | Valid data length | |
 | 0x48 | 8 | Disk allocated | |
 | 0x50 | 4 | Version count + sparse flag | low 31 bits = version count (1 for a single-version stream); bit 31 = sparse flag |
+
+On **ReFS v3.4** the four size fields sit **+4** later — total allocated at 0x34, stream size at **0x3C**,
+valid data length at 0x44 — and the disk-allocated slot (0x4C) is 0, with the allocation carried by the
+total-allocated field alone. The inner header size (0x88) and the extent sub-record at +0x88 are the same on
+every version.
 
 The extent sub-record header sits at offset = inner_header_size (0x88): `+0x00` sub_rec_size (0x28),
 `+0x0C` flags (0xe00 = non-resident extents), `+0x14` extent_count, then 24-byte extents.

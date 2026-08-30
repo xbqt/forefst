@@ -223,7 +223,7 @@ def validate_image(path, die_fn=None):
 
 # ─── Constants ────────────────────────────────────────────────────────
 PROG = "forefst"
-VERSION = "1.7.1"
+VERSION = "1.7.2"
 # Phase 3 (4.D): directory walks default to FULL depth (no artificial cap); `--depth N` overrides. The real
 # recursion depth equals the actual directory nesting (ReFS trees are shallow — tens of levels), so this
 # constant is never the binding limit; it just means "don't truncate". main() also raises the interpreter
@@ -551,6 +551,28 @@ def _select_ct_root(f, ps, cs, roots):
             if ids.get(ri) == want and roots[ri]:
                 return roots[ri]
     return roots[7] if len(roots) > 7 and roots[7] else []   # legacy fallback
+
+def _select_ot_root(f, ps, cs, tr, roots):
+    """Pick the Object Table root by its on-disk Table-ID (0x02), NOT by assuming root index 0.
+
+    Same discipline as _select_ct_root: finding #337 proves a primary/duplicate root pair is not bound to a
+    fixed index->id order, and the Object Table (0x02) + its duplicate (0x04) are such a pair. UNLIKE the CT /
+    Small-Allocator roots (real physical LCNs), the Object Table root uses VIRTUAL LCNs, so its page is read
+    THROUGH the container translator `tr`. Returns the vlcn-list of the root whose page+0x48 == 0x02; falls
+    back to root index 0. Output-neutral on the corpus: root 0 == 0x02 on 116/116 ReFS images (2026-08-29),
+    so this returns roots[0] on every current image — the ID check only matters if the pair ever swaps."""
+    def tid_of(ri):
+        if ri >= len(roots) or not roots[ri]:
+            return None
+        try:
+            f.seek(ps + tr.tr(roots[ri][0]) * cs); pg = f.read(cs)
+            return le64(pg, 0x48) if pg[:4] == b"MSB+" else None
+        except Exception:
+            return None
+    for ri in range(len(roots)):                    # root 0 is the Object Table on every known volume
+        if tid_of(ri) == 0x02 and roots[ri]:
+            return roots[ri]
+    return roots[0] if roots and roots[0] else []   # legacy fallback (index 0)
 
 def _parse_ct_page(page, f, ps, cs, _depth=0, visited=None):
     # _depth guard: the Container Table is a shallow B+ tree; 64 bounds a circular/corrupt CT (never trips
@@ -4636,7 +4658,7 @@ def bootstrap(image_path, partition_start=None):
                               # single _LAST_TR never grew, and this must not regress that.
 
         # Build object map
-        ot_vlcns = best_roots[0] if len(best_roots) > 0 else []
+        ot_vlcns = _select_ot_root(f, ps, cs, tr, best_roots)
         obj_map = build_object_map(f, ps, cs, tr, ot_vlcns)
 
         return f, ps, cs, tr, best_roots, obj_map, vmaj, vmin, chkp_lcns

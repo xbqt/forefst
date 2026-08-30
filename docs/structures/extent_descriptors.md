@@ -69,18 +69,22 @@ When $DATA (type 0x80) appears as an embedded multi-instance sub-record in a fil
 preceded by two headers. This is the extent-bearing $DATA stream summary (marker `0x80000002`, descriptor
 `0x000E0080`) — distinct from the smaller resident-SI $DATA record.
 
-### $DATA sub-record header
+### $DATA sub-record header (offsets are the v3.7+ layout)
 
-| Offset | Size | Field | Description |
+| Offset (v3.7+) | Size | Field | Description |
 |--------|------|-------|-------------|
-| 0x00 | 4 | Inner header size (u32) | Typically 0x88 |
-| 0x0C | 4 | Summary size (u32) | 0x200 (the resident-SI $DATA record uses 0x30) |
+| 0x00 | 4 | Inner header size (u32) | Typically 0x88 (all versions) |
+| 0x0C | 4 | Summary size (u32) | 0x200 on v3.14+, **0x1A0** on v3.4–v3.10 (the resident-SI $DATA record uses 0x30) |
 | 0x2C | 4 | Data offset (u32) | 0x28 |
 | 0x30 | 8 | Total allocated size (u64) | -- |
 | 0x38 | 8 | Stream size (u64) | Logical file size |
 | 0x40 | 8 | Valid data length (u64) | -- |
 | 0x48 | 8 | Disk allocated size (u64) | 0 = inline; >0 = non-resident |
 | 0x50 | 8 | Version count (low 31) + sparse flag (bit 31) (u64) | low31 = stream version count (=1 for a single-version file, N for an N-version snapshotted file); bit 31 = sparse flag |
+
+On **ReFS v3.4** the four size fields shift **+4** (total allocated 0x34, stream size **0x3C**, valid data
+length 0x44); the disk-allocated slot (0x4C) is 0 and the allocation is carried by the total-allocated field.
+The inner header size (0x88) and the extent sub-record at +0x88 are unchanged across versions.
 
 ### Extent sub-record header (at inner_header_size offset)
 
