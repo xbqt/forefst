@@ -32,13 +32,31 @@ juggling individual scans:
 - **`deleted`** — *recovery* (the default, quick). Runs the Trash table, the checkpoint differential, and the
   B+-tree node-slack scan over the **live pages only** (the pages the tree walk already reads). It recovers the
   common in-tree deletions in seconds.
-- **`deleted --full`** — *complete*. Everything in recovery, plus a bounded full-volume scan of **orphan pages**
-  (the freed pages of deleted objects), and it carves non-resident extent-backed content on export.
+- **`deleted --full`** — *complete*. Everything in recovery, plus a scan of **every cluster on the volume** for
+  **orphan pages** (the freed pages of deleted objects), and it carves non-resident extent-backed content on export.
 
 Fine-grained flags still override the presets for power users: `--no-slack` (fast Trash+checkpoint pass),
 `--trash` (Trash only), `--scan-pages`, `--orphans` (a low-confidence Object-Table-orphan tier), `--carve`,
 `--max-scan N`, `--search SUB`. Each mode prints a one-line pointer to the other. Two related paths live in their
 own commands: **stream snapshots** (`snapshots`, Method 4 below) and the **Windows Recycle Bin** (`recyclebin`).
+
+### How long each option takes
+
+The deep options read the whole disk once, so their cost follows the **size of the volume** and the disk's
+sequential read speed — not the number of files on it. Choose the depth you need with the price in front of you:
+
+| Option | Cost | What it reads |
+|--------|------|---------------|
+| `deleted` (default), `--trash`, `--no-slack`, `--orphans`, `--search`, `--csv`/`--json` | **Fast** — seconds | Only pages the tree walk already touches |
+| `--carve` (on export) | **Moderate** | The data extents of each recovered non-resident file — cost follows how much deleted data you reconstruct |
+| `--full`, `--scan-pages` | **Slow** — on a 1–2 GB/s disk, about **a minute per 60–100 GB** of volume (≈1 min at 64 GB, ≈20–35 min at 2 TB) | Every cluster on the volume, looking for orphan `MSB+` pages |
+| `--full` on a multi-TB volume | **Very slow** — ≈2.5–4.5 h at 16 TB | As above; progress is printed as it runs |
+| `--max-scan N` | Turns a slow scan back into a fast one | Stops after N clusters — see the warning below |
+
+A slow run you *chose* is fine. A scan that quietly stopped part-way is not: the deep scan therefore covers the
+**whole volume by default**, always prints how much of the volume it examined, and marks any run bounded by
+`--max-scan` as **INCOMPLETE** in both the console output and the recovery log. Deleted data lands wherever the
+allocator last freed a page, so a partial scan misses files for no reason the analyst can see.
 
 | Method | What it reads | Mode | Recovers |
 |--------|---------------|------|----------|
@@ -129,7 +147,8 @@ and **grades by confidence** — high when both MACB timestamps are plausible FI
 name is a fragment from a row whose body was partly overwritten. It records which directory each row was
 **deleted from** — the owning table OID at page offset `0x48` ([page header](../structures/page_header.md)
 `TableIdLow`). Implemented as `forefst.py <image> deleted`: *recovery* mode scans the **live pages** (quick);
-`deleted --full` also scans **orphan pages** (the freed pages of deleted objects) for older deletions. Add
+`deleted --full` also scans **orphan pages** (the freed pages of deleted objects) across the whole volume, which
+is where the older deletions live — the ones whose directory entry has already left the tree. Add
 `--no-slack` for a fast Trash+checkpoint pass. **`export deleted DIR`** writes a **`deleted_files.csv`/`.json`
 index** — one row per deleted entry (name, recoverability, reliability, category, and its content file if any) —
 plus a **`content/`** folder holding only the *readable* recoveries: `content/<name>` for a resident file

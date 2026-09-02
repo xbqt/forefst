@@ -92,6 +92,13 @@ This matters forensically two ways: an inline ADS lives in the metadata tree (ca
 large ADS lives in clusters (recover it via its extent list) — and a tool that assumes *all* ADS are
 inline will miss the large ones.
 
+Finally, keep two separate questions apart: *where the stream's bytes live* (inline vs extents, above) and
+*where the record describing the stream lives*. The second can also move — when a file accumulates enough
+attributes, the directory value's inline sub-record tree gains a level and the records themselves relocate to
+a child page, leaving the value holding only an index node. A reader that stops at the inline table then sees
+nothing and reports "no alternate data streams" for a file that has plenty. See
+[Directory Entries](../structures/directory_entries.md).
+
 ## The forensic stakes
 
 A tool that assumes every file's content lives in external clusters will **silently fail to recover small

@@ -68,7 +68,7 @@ forefst.py disk.raw files --body -o t.body            # body file (live tree); d
 
 ### `summary` — full volume triage report
 
-Volume identity (version, GUID/label, cluster/container size, checksum type); a **Bootstrap structures** section listing the VBR (primary + backup), SUPB (primary + 2 backups) and CHKP (primary + backup) — each with its address, validity, and its own SHA-256; on-disk state (original / upgraded / native); the 13 root-table row counts; USN-journal status + UsnJournalId; a coarse **Free space** figure (a container-map estimate, not the exact allocator-bitmap count); then a full directory walk for file/dir/resident counts, total size, MACB extremes, and encrypted/integrity/compressed/hard-link/snapshot/ADS tallies. Extended by default.
+Volume identity (version, GUID/label, cluster/container size, checksum type); a **Bootstrap structures** section listing the VBR (primary + backup), SUPB (primary + 2 backups) and CHKP (primary + backup) — each with its address, validity, and its own SHA-256; on-disk state (original / upgraded / native); the 13 root-table row counts; USN-journal status + UsnJournalId; a **Space used** line — real free-vs-used space taken from the accounting ReFS maintains in the allocator's own root page, with the tail of the volume past the last container reported separately because it belongs to no allocator tier and is not free space (`refsanalysis.py <image> allocators` shows the tiers behind it); then a full directory walk for file/dir/resident counts, total size, MACB extremes, and encrypted/integrity/compressed/hard-link/snapshot/ADS tallies. Extended by default.
 
 | Option | Description |
 |--------|-------------|
@@ -329,9 +329,11 @@ forefst.py disk.raw reparse --tag 0xa000000c --json    # only symlinks, as JSON
 | Trash table (`0xD`) | always | names removed but storage not yet reclaimed — fast, reliable |
 | Checkpoint diff | always | top-level names in the older checkpoint but not the current one |
 | B+-tree node-slack scan | **default** (skip with `--no-slack`) | deleted rows still sitting in a tree page's free space — plus the directory each was **deleted from** (owning-table OID `page+0x48` → path; blank if unmapped, never invented). If that parent directory was **itself deleted**, its children are grouped under `$DELETED/DIR_OID_0x<oid>/` with the deleted folder's name offered as a best-effort, ambiguity-flagged hint |
-| Orphaned-page scan | `--scan-pages` | rows in metadata pages no longer linked into the live tree |
+| Orphaned-page scan | `--scan-pages` | rows in metadata pages no longer linked into the live tree (whole volume) |
 
-The slack scan **runs by default**; `--no-slack` gives a fast Trash+checkpoint pass and `--trash` returns after the Trash table only. Bound scans with `--max-scan`; filter with `--search SUB`.
+The slack scan **runs by default**; `--no-slack` gives a fast Trash+checkpoint pass and `--trash` returns after the Trash table only; filter with `--search SUB`.
+
+**What each depth costs.** `deleted` and the metadata-only flags are **fast** (seconds) — they read only pages the tree walk already touches. `--carve` is **moderate**: it reads the data extents of each recovered non-resident file, so its cost follows how much deleted data you reconstruct. `--full` and `--scan-pages` are **slow** — they read *every cluster on the volume* looking for orphan pages, at the disk's sequential read speed: on a 1–2 GB/s disk that is about **a minute per 60–100 GB** (≈1 min at 64 GB, ≈20–35 min at 2 TB). Treat a multi-TB volume as **very slow** (≈2.5–4.5 h at 16 TB, with progress printed). These deep scans cover the whole volume **by default** and always print how much of it they examined. `--max-scan N` trades that completeness for speed by stopping after N clusters; a bounded run is reported as **INCOMPLETE** in the output and the recovery log.
 
 **Recoverability verdict.** Every listed entry carries a verdict — computed disk-free by running the *same* inline-`$DATA` decoder used for live files on the captured remnant bytes:
 
@@ -350,11 +352,11 @@ The verdict is annotated for EFS (`CIPHERTEXT`), sparse (`short read expected`),
 |--------|-------------|
 | `--no-slack` | skip the slack scan (fast: Trash table + checkpoint diff only) |
 | `--trash` | only the Trash table, then return (fastest) |
-| `--scan-pages` | ALSO scan orphaned metadata pages (slower) |
+| `--scan-pages` | ALSO scan orphaned metadata pages across the whole volume (**slow** — see the cost note above) |
 | `--slack` | run the slack scan (already the default; kept for symmetry) |
 | `--carve` | with `export deleted`: also reconstruct non-resident (extent-backed) files |
 | `--search SUB` | filter recovered entries by name substring |
-| `--max-scan N` | max clusters to scan (default 50000) |
+| `--max-scan N` | stop the orphan-page scan after N clusters. Default: **no limit** — the whole volume is scanned. Bounding it makes the run faster but **INCOMPLETE** |
 | `--extract DIR` | **deprecated** — use `export deleted DIR` (identical result) |
 
 ```
@@ -542,7 +544,7 @@ MD5|name|inode|mode_as_string|UID|GID|size|atime|mtime|ctime|crtime
 Deleted files are recovered by the dedicated [`deleted`](#deleted--recover-deleted-files) command (the `files` and `search` listings cover the **live** tree only). It has two modes:
 
 - **`deleted`** — recovery (default): Trash Table (OID `0x0D`) + checkpoint diff + the live-page B+-tree node-slack scan. Quick.
-- **`deleted --full`** — the complete pass: also scans orphan pages (the freed pages of deleted objects) and carves non-resident content.
+- **`deleted --full`** — the complete pass: also scans every cluster of the volume for orphan pages (the freed pages of deleted objects) and carves non-resident content. Slow (~1 min per 100 GB) but it reaches the older deletions the live tree no longer points at.
 
 Each remnant is classified by **file identity** — a remnant is *deleted* only when no live file shares its
 **name and creation-time** anywhere on the volume; otherwise it is a still-present CoW prior version, or a neutral

@@ -161,7 +161,7 @@ Three differences change *how* a carve must be coded, not whether the artifact s
 - **Snapshot prior-content (M4).** `forefst.py <image> snapshots --show` (and
   `--extract DIR`) reconstructs `$SNAPSHOT` prior versions byte-for-byte from a single image.
 - **Node-slack deleted-name / `$SI` carve (M5).** `forefst.py <image> deleted` (add `--full`
-  for orphan pages; `export deleted DIR` to write out) brute-walks free-region row headers in
+  to sweep the whole volume for orphan pages too; `export deleted DIR` to write out) brute-walks free-region row headers in
   directory pages, decoding name + MACB + attributes for deleted entries the live tree no longer
   indexes, and classifies each by identity (deleted vs still-present).
 - **Trash Table (M1), checkpoint diff (M2), orphan-object scan (M3).** `deleted --trash` reads OID 0x0D;

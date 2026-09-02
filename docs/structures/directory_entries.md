@@ -74,6 +74,33 @@ The values below are common cases (consequences of the count), not an exhaustive
 | 4 | File with 1 snapshot, or 2 ADS, or reparse + EA |
 | 5+ | More ADS and/or snapshots (e.g. count=14 with 12 ADS) |
 
+### When the sub-record table moves into a child node
+
+The chain above sits directly in the value only while it is small enough to fit in one node. The inline table
+is a real B+-tree, and when a file accumulates enough attributes — many alternate data streams, for instance —
+ReFS promotes it: the node inside the value becomes an **index node**, and the sub-records themselves move to
+a **child page** elsewhere on the volume.
+
+The node descriptor tells you which case you are in:
+
+| Field | Leaf — attributes are here | Index — attributes are in a child |
+|-------|---------------------------|-----------------------------------|
+| Level (descriptor + 0x0C) | `0` | non-zero |
+| Flags (descriptor + 0x0D) | bit 0 clear | **bit 0 set** |
+
+An index node carries one row per child. That row has an **empty key** (key offset `0x10`, key size `0`) and a
+48-byte value which is a node reference: four cluster numbers, where `0` and `0xFFFFFFFFFFFFFFFF` mean
+"unused". Follow a valid one and you land on an ordinary `MSB+` page — read its rows exactly as you would read
+the inline ones.
+
+**Why this matters when you are reading evidence.** In the index case the value contains *no* attributes at
+all. A reader that walks only the inline offsets array finds nothing, and will report that the file has no
+alternate data streams, no reparse data and no `$DATA` record. That is a confident wrong answer rather than an
+error, which is the most dangerous shape a forensic result can take. On the reference corpus this affects
+1,329 files across 19 volumes and hides 4,094 attribute records, 548 of them alternate data streams — one
+volume that appeared to have no ADS whatsoever in fact has 60 files carrying them. The file-system driver
+descends into the child here, and so must any tool that wants a complete answer.
+
 ### Embedded sub-record markers
 
 | Marker | Meaning |

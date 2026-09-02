@@ -223,7 +223,7 @@ def validate_image(path, die_fn=None):
 
 # ─── Constants ────────────────────────────────────────────────────────
 PROG = "forefst"
-VERSION = "1.7.2"
+VERSION = "1.8.0"
 # Phase 3 (4.D): directory walks default to FULL depth (no artificial cap); `--depth N` overrides. The real
 # recursion depth equals the actual directory nesting (ReFS trees are shallow — tens of levels), so this
 # constant is never the binding limit; it just means "don't truncate". main() also raises the interpreter
@@ -529,6 +529,110 @@ def parse_chkp(f, ps, cs, lcn):
     return vclock, flags, roots
 
 # ─── Container Table + Translator ─────────────────────────────────────
+# ─── Allocator (schema 0xe010) ─────────────────────────────────────────
+# Reference: structure_reference.md B.2 / B.2a / B.2b, erratum E74. The row is NOT a fixed 2,072 bytes and
+# three of its fields were previously mis-documented; the notes below record only what the driver actually
+# does, because a capacity figure built on the wrong field is worse than none at all.
+_ALLOC_TIERS = ((1, "Medium", 0x21), (2, "Container", 0x20), (12, "Small", 0x22))
+_POPCOUNT = bytes(bin(i).count("1") for i in range(256))
+
+
+def alloc_decode_row(vd):
+    """Decode one allocator row. Returns None if it is not one.
+
+    E74: `flags` bit 0 — not the row length — says whether a bitmap follows, the bitmap offset is the BYTE at
+    +0x14 (the byte at +0x15 is a tier/format marker, not part of a u16 "header size"), and the bitmap runs
+    for ceil(range_length/8) bytes, so the row is variable-length. The count at +0x16 is a driver hint that
+    disagrees with the bitmap on ~14% of rows and is deliberately NOT used for arithmetic here.
+    """
+    if len(vd) < 0x18:
+        return None
+    start, length = struct.unpack_from("<QQ", vd, 0x00)
+    free_u16, flags, hdr, alloc_hint = struct.unpack_from("<4H", vd, 0x10)
+    bmoff, fmt = hdr & 0xFF, hdr >> 8
+    r = {"start": start, "length": length, "flags": flags, "bitmap_offset": bmoff, "format": fmt,
+         "free_u16": free_u16, "alloc_hint": alloc_hint, "bitmap": None}
+    if flags & 1:
+        need = ((int(length) + 7) // 8 + 7) & ~7
+        if not bmoff or bmoff + need > len(vd):
+            return None
+        r["bitmap"] = vd[bmoff:bmoff + need]
+    return r
+
+
+def alloc_row_counts(r):
+    """(allocated, free) clusters for one decoded row — never reads a saturating field as a number.
+
+    Bitmap row: popcount over exactly `length` bits. Compact row: uniform, and the discriminator is
+    `free_u16` (0 = fully allocated, non-zero = fully free) — NOT the +0x16 hint (E74).
+    """
+    L = int(r["length"])
+    bm = r["bitmap"]
+    if bm is None:
+        return (L, 0) if r["free_u16"] == 0 else (0, L)
+    whole, rem = divmod(L, 8)
+    pc = sum(_POPCOUNT[b] for b in bm[:whole])
+    if rem:
+        pc += _POPCOUNT[bm[whole] & ((1 << rem) - 1)]
+    return pc, L - pc
+
+
+def alloc_read_summary(f, ps, cs, tr, roots, root_idx, table_id=None, volume_clusters=None):
+    """The 384-byte summary ReFS keeps in an allocator table's ROOT page, as 48 u64s (or None).
+
+    One page read — no tree walk — so a caller can report capacity for free. Slot 1 = clusters covered,
+    slot 2 = free clusters (E74 / B.2b); the rest are undecoded. This is the volume's OWN accounting.
+
+    `table_id` makes the read refuse a root page that does not claim this tier's own table: a root INDEX is
+    not a tier (root 12 has been seen carrying the Container Table on a damaged volume), and reading 384
+    bytes out of the wrong table's page yields confident nonsense. `volume_clusters` adds the obvious
+    plausibility bound.
+    """
+    try:
+        if root_idx >= len(roots) or not roots[root_idx]:
+            return None
+        lcn = roots[root_idx][0]
+        p = lcn if root_idx in _CT_ROOT_INDICES else (tr.tr(lcn) if tr else lcn)
+        f.seek(ps + p * cs); pg = f.read(cs)
+        if pg[:4] != b"MSB+" or len(pg) < 0x58:
+            return None
+        if table_id is not None and le64(pg, 0x48) != table_id:
+            return None
+        base = 0x50 + le16(pg, 0x54)
+        if base + 384 > len(pg):
+            return None
+        s = struct.unpack_from("<48Q", pg, base)
+        if s[2] > s[1]:                                   # free can never exceed the span
+            return None
+        if volume_clusters is not None and s[1] > volume_clusters:
+            return None
+        return s
+    except (OSError, OverflowError, struct.error):
+        return None
+
+
+def alloc_capacity(f, ps, cs, tr, roots):
+    """Volume capacity from the Medium allocator's persisted summary (one page read).
+
+    Returns None when the summary is unreadable. `covered` is the space the allocator accounts for — the
+    Container-Table-mapped area; the physical tail beyond the last container belongs to no tier and is
+    reported separately rather than counted as free (E74).
+    """
+    try:
+        vol = (f.seek(0, 2) - ps) // cs
+    except (OSError, OverflowError):
+        return None
+    s = alloc_read_summary(f, ps, cs, tr, roots, 1, table_id=0x21, volume_clusters=vol)
+    if not s:
+        return None
+    covered, free = s[1], s[2]
+    if not covered:
+        return None
+    return {"volume_clusters": vol, "covered_clusters": covered, "free_clusters": free,
+            "used_clusters": covered - free, "outside_allocator_clusters": vol - covered,
+            "cluster_size": cs, "format": s[0]}
+
+
 def _select_ct_root(f, ps, cs, roots):
     """Pick the Container Table root by its on-disk Table-ID (0x0B), NOT by assuming root index 7.
 
@@ -1113,18 +1217,62 @@ _B0_MARKER = b"\x02\x00\x00\x80"  # 0x80000002 little-endian (multi-instance)
 _SI_MARKER = b"\x01\x00\x00\x80"  # 0x80000001 little-endian (single-instance)
 
 
-def parse_resident_btree_rows(vd):
+def _descend_embedded_index(vd, base, ctx, _depth=0):
+    """E73: the embedded attribute node is an INDEX node — its rows are child-page pointers, not attributes.
+
+    A file whose attribute set outgrows one embedded node gets a real multi-level B+-tree: the node inside the
+    type-0x30 value becomes an index node (descriptor+0x0C level != 0, +0x0D bit0 set) holding ONE row per child
+    with an EMPTY separator key (key_offset 0x10 / key_size 0) whose value is a 48-byte node reference. The
+    attributes ($DATA, ADS, $EA, $SNAPSHOT, $REPARSE ...) live in the child PAGE, not in the value. The driver
+    does exactly this descent (`CmsEmbeddedComposite::FindIndexHeaderInPage` -> `CmsBPlusTable::BinarySearchIndex`).
+    Returns the child rows in the same (key, value) shape as a leaf parse, so every caller is transparently fixed.
+    """
+    f, ps, cs, tr = ctx
+    if _depth > 3:
+        return []
+    astart = le32(vd, base + 0x10); aend = le32(vd, base + 0x20)
+    if not (0 < astart < aend) or base + aend > len(vd):
+        return []
+    rows = []; seen = set(); pos = base + astart
+    while pos + 4 <= base + aend and pos + 4 <= len(vd):
+        off = le16(vd, pos); pos += 4
+        ab = base + off
+        if ab + 16 > len(vd):
+            continue
+        _, ko, kl, _, vo, vl, _ = struct.unpack_from("<I6H", vd, ab)
+        if vl < 32 or ab + vo + vl > len(vd):
+            continue
+        val = vd[ab + vo:ab + vo + vl]
+        lcns = tuple(x for x in (le64(val, i * 8) for i in range(4))
+                     if x not in (0, 0xFFFFFFFFFFFFFFFF))
+        if not lcns or lcns in seen:
+            continue
+        seen.add(lcns)
+        try:
+            rows.extend(walk_bplus(f, ps, cs, tr, list(lcns)))
+        except Exception:
+            continue
+    return rows
+
+
+def parse_resident_btree_rows(vd, ctx=None):
     """Parse embedded B+-tree row offset table in a resident directory entry value.
 
     Returns list of (key_bytes, value_bytes) tuples for all rows found.
     Row offset table is at the end of vd (4-byte entries: u16 offset + 0xFFFF marker).
     Base offset for the data area is le32(vd, 0).
+
+    `ctx` = (f, ps, cs, tr). When supplied AND the embedded node is an INDEX node, the real attribute rows are
+    in a child page and are fetched by descending (E73). Without `ctx` the behaviour is exactly as before —
+    an index node yields no rows — so every existing caller is unchanged until it opts in.
     """
     if len(vd) < 0xC0:
         return []
     base = le32(vd, 0)
     if base < 0x28 or base >= len(vd) - 0x28:
         return []
+    if ctx is not None and base + 0x24 <= len(vd) and (vd[base + 0x0D] & 0x01):
+        return _descend_embedded_index(vd, base, ctx)
     offsets = []
     pos = len(vd) - 4
     while pos >= base:
@@ -1150,10 +1298,36 @@ def parse_resident_btree_rows(vd):
     return rows
 
 
+def _b0_name_offset(kd):
+    """Offset of the stream NAME in a 0xB0 embedded-attribute key, or None if this is not one.
+
+    The key has TWO on-disk forms (E72). From v3.7 an instance marker sits at key+0x08, the attribute type
+    at key+0x0C and the UTF-16 name from key+0x10. On v3.4 there is NO marker: the type is at key+0x08 and
+    the name starts at key+0x0C. Matching only the marker form makes every v3.4 alternate data stream
+    invisible — 176 live `hidden_*` streams on win10refs2tspecials alone, which the reader reported as
+    "0 ADS" until this was fixed.
+    """
+    if len(kd) >= 14 and kd[8:12] in (_B0_MARKER, _SI_MARKER) and kd[12] == 0xB0 and kd[13] == 0x00:
+        return 0x10
+    if len(kd) >= 12 and kd[8] == 0xB0 and kd[9] == 0x00 and kd[10] == 0x00 and kd[11] == 0x00:
+        return 0x0C          # v3.4, marker-less
+    return None
+
+
+def _b0_stream_name(kd):
+    """UTF-16LE stream name from a 0xB0 key, whichever form it is in ("" if absent/undecodable)."""
+    off = _b0_name_offset(kd)
+    if off is None or len(kd) <= off:
+        return ""
+    try:
+        return kd[off:].decode("utf-16-le").rstrip("\x00")
+    except UnicodeDecodeError:
+        return ""
+
+
 def _is_b0_snapshot_key(kd):
-    """True if B+-tree key is a 0xB0 embedded attribute (marker 0x80000002 + type 0xB0)."""
-    return (len(kd) >= 14 and kd[8:12] == _B0_MARKER
-            and kd[12] == 0xB0 and kd[13] == 0x00)
+    """True if the B+-tree key is a 0xB0 embedded attribute, in either the marker or the v3.4 form."""
+    return _b0_name_offset(kd) is not None
 
 
 def _is_snapshot_value(vd):
@@ -1163,38 +1337,36 @@ def _is_snapshot_value(vd):
     return len(vd) >= 0x14 and le16(vd, 0x10) == 2
 
 
-def _snapshot_meta(vd):
+def _snapshot_meta(vd, ctx=None):
     """(name, sub_id, ts) for each true snapshot 0xB0 sub-record in a resident value — the single source for
     both the count and the names. Name = the snapshotted stream name (0xB0 key bytes @+0x10, UTF-16LE);
     sub_id = value+0x44 (the data sub-id); ctime = value+0x4C. Same predicate as before (le16@+0x10 == 2)."""
     out = []
-    for kd, vd_row in parse_resident_btree_rows(vd):
+    for kd, vd_row in parse_resident_btree_rows(vd, ctx):
         if not (_is_b0_snapshot_key(kd) and _is_snapshot_value(vd_row)):
             continue
-        name = ""
-        if len(kd) > 0x10:
-            try:
-                name = kd[0x10:].decode("utf-16-le").rstrip("\x00")
-            except Exception:
-                name = kd[0x10:].hex()
+        name = _b0_stream_name(kd)                    # handles both key forms (E72)
+        if not name:
+            _off = _b0_name_offset(kd) or 0x10
+            name = kd[_off:].hex() if len(kd) > _off else ""
         sub_id = le32(vd_row, 0x44) if len(vd_row) >= 0x48 else 0
         ts = le64(vd_row, 0x4C) if len(vd_row) >= 0x54 else 0
         out.append((name, sub_id, ts))
     return out
 
-def count_snapshots_in_resident(vd):
+def count_snapshots_in_resident(vd, ctx=None):
     """Count true snapshot entries within a resident directory entry value."""
-    return len(_snapshot_meta(vd))
+    return len(_snapshot_meta(vd, ctx))
 
 
 # ─── Resident file-size extraction ───────────────────────────────────
-def get_resident_file_size(vd):
+def get_resident_file_size(vd, ctx=None):
     """Extract file content size from the $DATA sub-record in a resident value.
 
     The $DATA row in the embedded B+-tree has key marker 0x80000001 + attr type 0x80.
     Stream size is at value offset 0x20.
     """
-    for kd, vd_row in parse_resident_btree_rows(vd):
+    for kd, vd_row in parse_resident_btree_rows(vd, ctx):
         if (len(kd) >= 14 and kd[8:12] == _SI_MARKER
                 and kd[12] == 0x80 and kd[13] == 0x00):
             if len(vd_row) >= 0x28:
@@ -1203,7 +1375,7 @@ def get_resident_file_size(vd):
     # live stream lives in the type-0x80 descriptor-0x10028 holder keyed by the CURRENT sub_id 0x1000
     # (older snapshots are 0x1001, 0x1002, ...). The current content byte size is at value+0x38.
     # (E2/RD: win11refs2tsnapshots — arg.txt=15, lasttest.txt=201, test.txt=5.)
-    for kd, vd_row in parse_resident_btree_rows(vd):
+    for kd, vd_row in parse_resident_btree_rows(vd, ctx):
         if (len(kd) >= 0x18 and kd[12] == 0x80 and kd[13] == 0x00
                 and len(vd_row) >= 0x40 and le32(vd_row, 4) == SNAP_DATA_DESC
                 and le64(kd, 0x10) == 0x1000):
@@ -1211,7 +1383,7 @@ def get_resident_file_size(vd):
     return 0
 
 
-def get_resident_data_content(vd):
+def get_resident_data_content(vd, ctx=None):
     """Q7: inline bytes of the main $DATA stream of a resident file, or None.
 
     The $DATA row (key marker 0x80000001 + attr type 0x80) carries the SAME stream descriptor as an ADS
@@ -1219,7 +1391,7 @@ def get_resident_data_content(vd):
     at hdr+0x0C, stream size at hdr+0x1C, and inline content at hdr+0x38. Only storage_type==0 is inline
     (verified on desktop.ini: content '[.ShellClassInfo]...' at hdr+0x38). Returns None for a non-inline
     ($DATA descriptor pointing to extents) or malformed row — the caller falls back to the extent path."""
-    for kd, vrow in parse_resident_btree_rows(vd):
+    for kd, vrow in parse_resident_btree_rows(vd, ctx):
         if not (len(kd) >= 14 and kd[8:12] == _SI_MARKER and kd[12] == 0x80 and kd[13] == 0x00):
             continue
         hdr = None
@@ -1239,7 +1411,7 @@ def get_resident_data_content(vd):
     return None
 
 
-def _current_stream_extent_backed(vd):
+def _current_stream_extent_backed(vd, ctx=None):
     """F5: True when a file's CURRENT $DATA stream lives in on-disk extents (so the file is NON-RESIDENT even
     though its type-0x30 value is 'long' > 84 B). The live stream is the sub_id-0x1000 holder whose descriptor
     is 0x00010028 (le32 @ holder value+0x04); its on-disk allocation is disk_alloc @ holder value+0x48. Older
@@ -1247,14 +1419,14 @@ def _current_stream_extent_backed(vd):
     (its $DATA is a single-instance 0x80000001 descriptor) or disk_alloc==0. (structure_reference §C.6;
     calibrated on win11refs8g.raw: bigsparse/rangefile/stomp_nonres disk_alloc>0 => non-resident,
     test.txt current-stream disk_alloc==0 => resident.)"""
-    for kd, vrow in parse_resident_btree_rows(vd):
+    for kd, vrow in parse_resident_btree_rows(vd, ctx):
         if (len(kd) >= 0x18 and kd[12] == 0x80 and kd[13] == 0x00
                 and le64(kd, 0x10) == 0x1000 and len(vrow) >= 8 and le32(vrow, 4) == 0x00010028):
             return len(vrow) >= 0x50 and le64(vrow, 0x48) > 0
     return False
 
 
-def _multilevel_extent_backed_size(vd, cs):
+def _multilevel_extent_backed_size(vd, cs, ctx=None):
     """B2: on v3.4/v3.9/upgraded framing a 'long' (>84 B) resident type-0x30 value can be a MULTI-LEVEL
     embedded B+-tree — parse_resident_btree_rows reaches only the OUTER level, so no inline $DATA row is
     found (get_resident_file_size == 0) even though the file has on-disk data. Such a file is actually
@@ -1270,7 +1442,7 @@ def _multilevel_extent_backed_size(vd, cs):
     if len(vd) < 0x68 or cs <= 0:
         return None
     alloc = le64(vd, 0x60)
-    if alloc == 0 or alloc % cs != 0 or get_resident_file_size(vd) != 0:
+    if alloc == 0 or alloc % cs != 0 or get_resident_file_size(vd, ctx) != 0:
         return None
     size = le64(vd, 0x58)
     if 0 < size <= alloc:
@@ -1279,7 +1451,7 @@ def _multilevel_extent_backed_size(vd, cs):
 
 
 # ─── Resident ADS detection ─────────────────────────────────────────
-def detect_ads_in_resident(vd):
+def detect_ads_in_resident(vd, ctx=None):
     """Detect Alternate Data Streams in a resident directory entry value.
 
     ADS appear as 0xB0 entries (marker 0x80000002) with StreamSummary flags=0
@@ -1287,11 +1459,11 @@ def detect_ads_in_resident(vd):
     Returns (has_ads, ads_names) matching detect_ads() signature.
     """
     ads_names = []
-    for kd, vd_row in parse_resident_btree_rows(vd):
+    for kd, vd_row in parse_resident_btree_rows(vd, ctx):
         if _is_b0_snapshot_key(kd) and not _is_snapshot_value(vd_row):
-            if len(kd) > 16:
+            if True:
                 try:
-                    name = kd[16:].decode("utf-16-le").rstrip("\x00")
+                    name = _b0_stream_name(kd)
                     if name:
                         ads_names.append(name)
                 except UnicodeDecodeError:
@@ -1358,13 +1530,13 @@ def fetch_t40_backing(f, ps, cs, tr, obj_map, dir_oid, file_id, file_size=None):
                 return vd
     return cands[0]
 
-def extract_eas_from_value(vd):
+def extract_eas_from_value(vd, ctx=None):
     """(ea_list, packed_ea_size) from a resident value's embedded $EA/$EA_INFORMATION sub-records,
     or (None, None) if the file has no EAs ($EA_INFORMATION 0xD0 absent = the gate). packed_ea_size
     is read from the 0xD0 sub-record val[0x0C] (authoritative; never the +0x78 mirror)."""
     ea_info = None
     ea_chain = None
-    for kd, vr in parse_resident_btree_rows(vd):
+    for kd, vr in parse_resident_btree_rows(vd, ctx):
         if len(kd) >= 14 and kd[8:12] == _SI_MARKER and kd[13] == 0x00:
             if kd[12] == 0xD0 and len(vr) >= 0x10:
                 ea_info = vr
@@ -1623,7 +1795,7 @@ def recover_cow_current_content(f, ps_off, cs, tr, vd):
     (test.txt current 5B == snapshot 0x1004; lasttest.txt 201B == 0x1002)."""
     ncl = _volume_ncl(f, ps_off, cs)       # integrity-robust extent decode (skip interleaved CRC32-C)
     holders = {}   # sub_id -> (stream_size, disk_alloc, extents)
-    for k, v in parse_resident_btree_rows(vd):
+    for k, v in parse_resident_btree_rows(vd, (f, ps_off, cs, tr)):
         if (len(k) >= 0x18 and k[12] == 0x80 and k[13] == 0x00
                 and len(v) >= 0x50 and le32(v, 4) == SNAP_DATA_DESC):
             holders[le64(k, 0x10)] = parse_snapshot_data_entry(v, ncl)
@@ -1669,7 +1841,7 @@ def _recover_inline_extent_content(f, ps, cs, tr, vd):
     decode (the next real extent sits at +24 or +32). SEPARATE from the snapshot path (`parse_snapshot_data_entry`)
     which is left byte-identical. (structure_reference §C.6; Phase-0 SPEC 2026-08-02, disk-verified.)"""
     v = None
-    for k, hv in parse_resident_btree_rows(vd):
+    for k, hv in parse_resident_btree_rows(vd, (f, ps, cs, tr)):
         if (len(k) >= 0x18 and k[12] == 0x80 and k[13] == 0x00
                 and len(hv) >= 0x50 and le32(hv, 4) == SNAP_DATA_DESC and le64(k, 0x10) == 0x1000):
             v = hv; break
@@ -1736,7 +1908,7 @@ def _verify_inline_integrity(f, ps, cs, tr, vd):
     (the stored checksum is the ground truth; a mismatch is genuine corruption/tampering, surfaced non-fatally).
     (structure_reference §C.6; Phase-2 spec 2026-08-06, poly 0x82F63B78, static+disk confirmed on 391/391 clusters.)"""
     v = None
-    for k, hv in parse_resident_btree_rows(vd):
+    for k, hv in parse_resident_btree_rows(vd, (f, ps, cs, tr)):
         if (len(k) >= 0x18 and k[12] == 0x80 and k[13] == 0x00
                 and len(hv) >= 0x50 and le32(hv, 4) == SNAP_DATA_DESC and le64(k, 0x10) == 0x1000):
             v = hv; break
@@ -1789,7 +1961,7 @@ def recover_snapshot_streams(f, ps_off, cs, tr, vd):
     ncl = _volume_ncl(f, ps_off, cs)       # integrity-robust extent decode (skip interleaved CRC32-C)
     snaps = []   # (name, sub_id, stream_size, ts)
     data = {}    # sub_id -> (stream_size, disk_alloc, extents)
-    for k, v in parse_resident_btree_rows(vd):
+    for k, v in parse_resident_btree_rows(vd, (f, ps_off, cs, tr)):
         if len(k) < 0x10:
             continue
         typ = le16(k, 0x0C)
@@ -3144,7 +3316,7 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
                     if len(vd) > 0x88:
                         _lset = None
                         try:
-                            _subrows = parse_resident_btree_rows(vd)
+                            _subrows = parse_resident_btree_rows(vd, (f, ps, cs, tr))
                         except Exception:
                             _subrows = ()
                         for _sk, _sv in _subrows:
@@ -3263,7 +3435,7 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
                     entry["security_id"] = 0
                     entry["usn"] = 0
                     entry["allocated_size"] = 0
-                entry["file_size"] = get_resident_file_size(vd)
+                entry["file_size"] = get_resident_file_size(vd, (f, ps, cs, tr))
 
             # Derived flags
             fa = entry.get("file_attrs", 0)
@@ -3308,7 +3480,7 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
                 # file's value is the <=84 B index pointer (no embedded chain) and it has no own OID, so it
                 # carries no ADS; the former oid-gated non-resident branch was therefore dead (removed).
                 if entry["is_resident"] and not entry["is_dir"]:
-                    has_ads, ads_list = detect_ads_in_resident(vd)
+                    has_ads, ads_list = detect_ads_in_resident(vd, (f, ps, cs, tr))
                     if has_ads:
                         entry["has_ads"] = True
                         entry["ads_names"] = ";".join(ads_list)
@@ -3317,7 +3489,7 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
             # entry, so this resident path is complete (same corpus proof as ADS above). A non-resident file
             # carries no embedded snapshot record; the former oid-gated non-resident branch was dead (removed).
             if entry["is_resident"] and len(vd) > 0x60:
-                _snaps = _snapshot_meta(vd)
+                _snaps = _snapshot_meta(vd, (f, ps, cs, tr))
                 entry["snapshot_count"] = len(_snaps)
                 if _snaps:   # SnapshotNames: the ;-joined snapshotted stream names (blank name → its sub-id)
                     entry["snapshot_names"] = ";".join(n or f"0x{sid:x}" for n, sid, _ts in _snaps)
@@ -3327,14 +3499,14 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
             # already read from the inline value (correct); only the reported residency must reflect the
             # on-disk truth. Fixes ~209 large files/win11refs8g mislabeled resident (blanked HardLinkCount).
             if entry["is_resident"] and not entry["is_dir"]:
-                if _current_stream_extent_backed(vd):
+                if _current_stream_extent_backed(vd, (f, ps, cs, tr)):
                     entry["is_resident"] = False
                 else:
                     # B2: multi-level embedded-tree resident value (v3.4/v3.9/upgraded framing). Its $DATA
                     # lives in a NESTED subtree, so file_size read 0 and residency was mislabeled resident.
                     # The true size (value+0x58) + alloc (value+0x60) are directly readable; when alloc>0
                     # with no inline $DATA the file is extent-backed (NON-resident).
-                    _ml_size = _multilevel_extent_backed_size(vd, cs)
+                    _ml_size = _multilevel_extent_backed_size(vd, cs, (f, ps, cs, tr))
                     if _ml_size is not None:
                         entry["file_size"] = _ml_size
                         entry["is_resident"] = False
@@ -3984,7 +4156,26 @@ def cmd_fastsummary(f, ps, cs, tr, roots, obj_map, vmaj, vmin, chkp_lcns,
             summary["containers_used"] = used
             summary["containers_free"] = ct_size - used
             summary["utilization_pct"] = round(100.0 * used / ct_size, 1)
-            summary["free_space_est"] = hs((ct_size - used) * bpc)
+            # E74: the old `free_space_est` here was a CONTAINER-level figure — it counted unmapped
+            # containers as free, and the Container Table maps ~100% of every volume, so it reported ~64 MB
+            # free on any volume. Replaced by the allocator's own accounting below, at cluster granularity.
+
+        # Capacity, from the allocator's persisted summary (one page read — see B.2b / E74). `covered` is the
+        # Container-Table-mapped space; the physical tail past the last container belongs to no allocator tier
+        # and is reported separately rather than counted as free.
+        _cap = alloc_capacity(f, ps, cs, tr, roots)
+        if _cap:
+            summary["capacity"] = {
+                "used_bytes": _cap["used_clusters"] * cs,
+                "free_bytes": _cap["free_clusters"] * cs,
+                "allocator_covered_bytes": _cap["covered_clusters"] * cs,
+                "outside_allocator_bytes": _cap["outside_allocator_clusters"] * cs,
+                "volume_bytes": _cap["volume_clusters"] * cs,
+                "used_pct": round(100.0 * _cap["used_clusters"] / _cap["covered_clusters"], 1),
+                "used": hs(_cap["used_clusters"] * cs),
+                "free": hs(_cap["free_clusters"] * cs),
+                "source": "allocator summary (Medium tier root page)",
+            }
 
         # FS Metadata directory (OID 0x520)
         fs_meta = {"rows": 0, "children": [], "usn_journal": False}
@@ -4153,6 +4344,14 @@ def _print_fastsummary(summary, plus_mode=False, is_summary=False):
             _bootnote = ("  (first maps to PLCN 0 = boot region)"
                          if summary.get("containers_free") == 1 else "")
             print(f"  Containers used:    {summary['containers_used']} / {summary['containers_mapped']}{_bootnote}")
+        # Capacity comes from the volume's OWN allocator accounting, not from counting containers (E74).
+        if summary.get("capacity"):
+            _c = summary["capacity"]
+            print(f"  Space used:         {_c['used']} of {hs(_c['allocator_covered_bytes'])} "
+                  f"({_c['used_pct']}%) — {_c['free']} free")
+            if _c["outside_allocator_bytes"]:
+                print(f"      • {hs(_c['outside_allocator_bytes'])} of the volume lies past the last container "
+                      f"and is outside the allocator (not free space)")
         # 8summary: FS Metadata = OID 0x520 (ReFS's $Extend analogue; holds the USN "Change Journal" when
         # active). Show its named child entries, not the raw B+-tree row count — the lone row on an empty one
         # is the directory's own record, which read as a confusing "[1 rows]".
@@ -6011,7 +6210,7 @@ def _refs_sd_hash(sd_data):
         h = (d + (((h << 3) | (h >> 29)) & 0xFFFFFFFF)) & 0xFFFFFFFF
     return h
 
-def _stream_extent_records(vd):
+def _stream_extent_records(vd, ctx=None):
     """E61: extent lists for NON-RESIDENT (>= 2 KB) streams of a resident type-0x30 value. A large ADS's
     content is NOT inline and NOT in its 0xB0 descriptor — it lives in a separate **type-0x0 sub-record**
     (key type 0x00), one per non-resident stream, using the SAME 24-byte type-0x40 extent format as
@@ -6020,7 +6219,7 @@ def _stream_extent_records(vd):
     extent-backed ADS (win11refs8g v2 sweep 2 KB..2 MB + multi-ADS). Header: ihdr=le32(v,0);
     extent_count=le32(v,ihdr+0x14); extents at v[ihdr+0x28] (vlcn@+0, file_vcn@+0x0C, run@+0x14)."""
     recs = {}
-    for k, v in parse_resident_btree_rows(vd):
+    for k, v in parse_resident_btree_rows(vd, ctx):
         if len(k) <= 12 or k[12] != 0x00 or len(v) < 0x50:
             continue
         ihdr = le32(v, 0)
@@ -6062,7 +6261,7 @@ def _read_vlcn_extents(f, ps_off, cs, tr, exts, size):
             buf[off:off + cs] = f.read(cs)
     return bytes(buf[:size])
 
-def _parse_ads_from_value(vd):
+def _parse_ads_from_value(vd, ctx=None):
     """Extract Alternate Data Stream entries (name + inline content) from a resident directory-entry value.
 
     C11a: this now enumerates ADS via the embedded B+-tree ROW TABLE (the same structural walk `files`
@@ -6074,14 +6273,11 @@ def _parse_ads_from_value(vd):
     inline content at hdr+0x38. Snapshots share the 0xB0 key but have StreamSummary flags==2 (excluded via
     _is_snapshot_value). Same entry-dict shape the scanner returned, so callers are unchanged."""
     ads = []
-    _ext_recs = _stream_extent_records(vd)     # E61: type-0x0 extent lists for non-resident (>=2KB) ADS
-    for kd, vrow in parse_resident_btree_rows(vd):
-        if not _is_b0_snapshot_key(kd) or _is_snapshot_value(vrow) or len(kd) <= 16:
+    _ext_recs = _stream_extent_records(vd, ctx)     # E61: type-0x0 extent lists for non-resident (>=2KB) ADS
+    for kd, vrow in parse_resident_btree_rows(vd, ctx):
+        if not _is_b0_snapshot_key(kd) or _is_snapshot_value(vrow):
             continue
-        try:
-            stream_name = kd[16:].decode("utf-16-le").rstrip("\x00")
-        except UnicodeDecodeError:
-            continue
+        stream_name = _b0_stream_name(kd)
         if not stream_name:
             continue
         hdr = None
@@ -6426,7 +6622,7 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
                 "file_attrs": le32(vd, 0x48) if len(vd) >= 0x4C else 0,
                 "timestamps": [le64(vd, 0x28), le64(vd, 0x30), le64(vd, 0x38), le64(vd, 0x40)] if len(vd) >= 0x48 else [],
                 "extents": exts, "storage": "non-resident",
-                "extent_source": "inline-holder", "ads": _parse_ads_from_value(vd) if len(vd) > 0xA8 else [],
+                "extent_source": "inline-holder", "ads": _parse_ads_from_value(vd, (f, ps, cs, tr)) if len(vd) > 0xA8 else [],
             })
             continue
         file_size = get_resident_file_size(vd)
@@ -6442,7 +6638,7 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
             extents = ext_info["extents"]
             for ext in extents:
                 ext["disk_offset"] = ps + ext["plcn"] * cs
-        ads_list = _parse_ads_from_value(vd) if len(vd) > 0xA8 else []
+        ads_list = _parse_ads_from_value(vd, (f, ps, cs, tr)) if len(vd) > 0xA8 else []
         entry = {
             "name": name, "file_size": file_size, "alloc_size": alloc_size,
             "storage": "resident", "extents": extents,
@@ -6507,7 +6703,7 @@ def _parse_dir_entries(f, ps, cs, tr, vlcns):
             is_dir = False
             resident = True
 
-        ads_list = _parse_ads_from_value(vd) if resident and len(vd) > 0xA8 else []
+        ads_list = _parse_ads_from_value(vd, (f, ps, cs, tr)) if resident and len(vd) > 0xA8 else []
         entries.append({
             "name": name, "flags": flags, "child_oid": child_oid, "home_oid": home_oid, "file_id": file_id,
             "create_time": create_time, "modify_time": modify_time,
@@ -7628,9 +7824,9 @@ def _parse_snapshot_value(val_data, snap_name):
                 info["creation_time"] = ft; break
     return info
 
-def _parse_snapshots_from_value(vd):
+def _parse_snapshots_from_value(vd, ctx=None):
     snapshots = []
-    for kd, vd_row in parse_resident_btree_rows(vd):
+    for kd, vd_row in parse_resident_btree_rows(vd, ctx):
         snap_name = _extract_snapshot_name(kd)
         if snap_name is not None:
             snapshots.append(_parse_snapshot_value(vd_row, snap_name))
@@ -7682,21 +7878,78 @@ def _get_current_files(f, ps, cs, tr, obj_map, oid=0x600, path="", depth=0, max_
                 files.update(_get_current_files(f, ps, cs, tr, obj_map, child_oid, full_path, depth + 1, max_depth))
     return files
 
-def _scan_for_deleted_entries(f, ps, cs, tr, current_plcns, search_name=None, max_scan_clusters=50000):
+def _iter_msb_clusters(f, ps, cs, end_cl, start_cl=0, skip=None, block_bytes=(16 << 20), progress=None):
+    """Yield (cluster_index, cluster_bytes) for every cluster in [start_cl, end_cl) that starts with 'MSB+'.
+
+    Reads in large SEQUENTIAL blocks (16 MiB, so the buffer stays bounded on 64 K-cluster volumes too)
+    instead of one seek+read(4) per cluster, and hands back the bytes it already holds so a hit is never
+    re-read. `skip` is an optional set of cluster indices to ignore (the known-live pages).
+    `progress(done, total)` is called once per block so a whole-volume scan can say where it is.
+    A short read (EOF / hole at the tail) ends the walk cleanly.
+    """
+    cl = start_cl
+    total = max(0, end_cl - start_cl)
+    block_clusters = max(1, block_bytes // cs)
+    while cl < end_cl:
+        n = min(block_clusters, end_cl - cl)
+        try:
+            f.seek(ps + cl * cs)
+            buf = f.read(n * cs)
+        except (OSError, OverflowError):
+            cl += n
+            if progress: progress(min(cl - start_cl, total), total)
+            continue
+        got = len(buf) // cs
+        if got == 0:
+            break
+        # Only a cluster's FIRST byte can start the signature, so take one byte per cluster with a single
+        # C-level strided slice and hunt for 'M' in that tiny digest — a Python-level compare per cluster
+        # would touch 536 million clusters on a 2 TB volume (measured ~12x slower).
+        sig = buf[0:got * cs:cs]
+        pos = 0
+        while True:
+            i = sig.find(b"M", pos)
+            if i < 0:
+                break
+            pos = i + 1
+            base = i * cs
+            if buf[base:base + 4] != b"MSB+":
+                continue
+            idx = cl + i
+            if skip is None or idx not in skip:
+                yield idx, buf[base:base + cs]
+        cl += got
+        if progress: progress(min(cl - start_cl, total), total)
+
+
+def _scan_cov_line(stats):
+    """Coverage line for the recovery log, or None when no orphan scan ran."""
+    if not stats:
+        return None
+    return _scan_coverage_note(stats["scanned_clusters"], stats["total_clusters"], stats["bounded"])
+
+
+def _scan_coverage_note(scanned, total, bounded):
+    """One honest line about how much of the volume an orphan scan actually covered."""
+    pct = (100.0 * scanned / total) if total else 100.0
+    if not bounded:
+        return f"scanned {scanned:,} of {total:,} clusters (100% of the volume)"
+    return (f"scanned {scanned:,} of {total:,} clusters ({pct:.2f}% of the volume) "
+            f"-- INCOMPLETE: bounded by --max-scan; deleted data outside this range was NOT examined")
+
+
+def _scan_for_deleted_entries(f, ps, cs, tr, current_plcns, search_name=None, max_scan_clusters=None):
+    """Orphan-page name scan (--scan-pages). Covers the WHOLE volume unless max_scan_clusters bounds it,
+    in which case the coverage line says so — a page-level search that silently stopped part-way would
+    report "not found" for a file that is still on the disk."""
     found = []
     image_size = f.seek(0, 2)
     vol_clusters = (image_size - ps) // cs
-    max_clusters = min(vol_clusters, max_scan_clusters)
-    print(f"  Scanning up to {max_clusters} clusters for orphaned MSB+ pages...")
+    bounded = max_scan_clusters is not None and max_scan_clusters < vol_clusters
+    max_clusters = min(vol_clusters, max_scan_clusters) if max_scan_clusters is not None else vol_clusters
+    print("  Orphan-page scan: " + _scan_coverage_note(max_clusters, vol_clusters, bounded))
     orphan_count = 0
-    for cluster_idx in range(max_clusters):
-        plcn = cluster_idx
-        try:
-            f.seek(ps + plcn * cs); sig = f.read(4)
-        except (OSError, OverflowError): continue
-        if sig != b"MSB+": continue
-        if plcn in current_plcns: continue
-        f.seek(ps + plcn * cs); page = f.read(cs)
+    for plcn, page in _iter_msb_clusters(f, ps, cs, max_clusters, skip=current_plcns):
         if len(page) < 0x54: continue
         thoff = 0x50 + le32(page, 0x50)
         if thoff + 40 > len(page): continue
@@ -7923,11 +8176,15 @@ def _build_live_identity(f, ps, cs, tr, obj_map):
     return live_identity
 
 
-def _slack_recover(f, ps, cs, tr, roots, obj_map, max_scan, log, scan_orphans=True, live_identity=None):
+def _slack_recover(f, ps, cs, tr, roots, obj_map, max_scan, log, scan_orphans=True, live_identity=None,
+                   stats=None):
     """Scan B+-tree node slack. Always scans every LIVE metadata page (cheap — those pages are already read
-    by the tree walk). When scan_orphans is True it ALSO linearly scans the volume (bounded by max_scan) for
-    orphan MSB+ pages — the freed pages of deleted objects — which is the slow half but where the majority of
-    older deletions live. `recovery` mode passes scan_orphans=False (live pages only); `full` passes True."""
+    by the tree walk). When scan_orphans is True it ALSO scans the volume for orphan MSB+ pages — the freed
+    pages of deleted objects — which is the slow half but where the majority of older deletions live.
+    `recovery` mode passes scan_orphans=False (live pages only); `full` passes True.
+
+    The orphan scan covers the WHOLE volume unless the caller passes an explicit max_scan cluster budget;
+    a bounded scan is always reported as INCOMPLETE. `stats`, if given, receives the coverage numbers."""
     visited = set(); ptc = []
     for idx, rv in enumerate(roots):
         if rv:
@@ -7956,20 +8213,27 @@ def _slack_recover(f, ps, cs, tr, roots, obj_map, max_scan, log, scan_orphans=Tr
     orphans = 0
     if scan_orphans:
         vol_clusters = (f.seek(0, 2) - ps) // cs
-        for cl in range(min(vol_clusters, max_scan)):
-            if cl in live_plcns:
-                continue
-            try:
-                f.seek(ps + cl * cs); sig = f.read(4)
-            except (OSError, OverflowError):
-                continue
-            if sig != b"MSB+":
-                continue
-            f.seek(ps + cl * cs); data = f.read(cs)
+        bounded = max_scan is not None and max_scan < vol_clusters
+        end_cl = min(vol_clusters, max_scan) if max_scan is not None else vol_clusters
+        log("  Orphan-page scan: " + _scan_coverage_note(end_cl, vol_clusters, bounded))
+        _pstate = [0]
+
+        def _prog(done, total):
+            if total < 4000000:                 # only worth reporting on volumes that take real time
+                return
+            pct = int(100 * done / total) // 10 * 10
+            if pct > _pstate[0]:
+                _pstate[0] = pct
+                log(f"    ... {pct}% ({done:,}/{total:,} clusters)")
+
+        for cl, data in _iter_msb_clusters(f, ps, cs, end_cl, skip=live_plcns, progress=_prog):
             ent = _scan_page_slack(data, cl, "orphan-slack")
             _ingest_t40(data)          # a backing can survive on an orphan page with no surviving name row
             if ent:
                 orphans += 1; entries += ent
+        if stats is not None:
+            stats.update(scanned_clusters=end_cl, total_clusters=vol_clusters,
+                         bounded=bounded, orphan_pages=orphans)
     # Q6: resolve each recovered row's owning-table OID to the directory path it was deleted FROM.
     # build_oid_path_map covers live directories; an unmapped/zero OID stays blank (no invented path).
     oid_paths = build_oid_path_map(f, ps, cs, tr, obj_map)
@@ -8044,9 +8308,14 @@ def _slack_recover(f, ps, cs, tr, roots, obj_map, max_scan, log, scan_orphans=Tr
                 joined += 1
                 break
     log(f"  Scanned {len(ptc)} live pages"
-        + (f" + {orphans} orphan pages" if scan_orphans else " (orphan-page scan skipped — recovery mode)")
+        + (f" + {orphans} orphan pages" if scan_orphans
+           else " (orphan-page scan skipped — add --full to also scan the freed pages of older deletions)")
         + " with recoverable slack rows"
         + (f"; {joined} non-resident file(s) matched a type-0x40 extent map in slack" if joined else ""))
+    if scan_orphans and stats and stats.get("bounded"):
+        log(f"  WARNING: the orphan-page scan was bounded by --max-scan "
+            f"({stats['scanned_clusters']:,} of {stats['total_clusters']:,} clusters). This run is INCOMPLETE — "
+            f"drop --max-scan to scan the whole volume.")
     return entries
 
 def _scan_backup_copies(f, ps, cs, chkp_lcns):
@@ -8696,12 +8965,12 @@ _RECOVER_LABEL = {
 _T40_CARVE_LABEL = (_RECOVER_LABEL["extent_backed"]
                     + " [extent map from a type-0x40 backing recovered in slack — bytes may be stale]")
 
-def _extent_backed_carveable(vd):
+def _extent_backed_carveable(vd, ctx=None):
     """B4: True only when a deleted extent-backed remnant can ACTUALLY be carved — i.e. its 0x1000 holder
     yields a non-empty on-disk extent list (the exact predicate `_carve_extent_backed` uses). On a truncated
     slack remnant the disk_alloc field survives but the extent table is zeroed (ecount==0), so only metadata
     is recoverable and the 'extent_backed / --carve' promise would produce no file."""
-    for k, v in parse_resident_btree_rows(vd):
+    for k, v in parse_resident_btree_rows(vd, ctx):
         if (len(k) >= 0x18 and k[12] == 0x80 and k[13] == 0x00 and le64(k, 0x10) == 0x1000
                 and len(v) >= 0x50 and le32(v, 4) == SNAP_DATA_DESC):
             stream_size, disk_alloc, exts = parse_snapshot_data_entry(v)
@@ -8830,7 +9099,7 @@ def _carve_extent_backed(f, ps_off, cs, tr, vd, t40_backing=None):
     cmd_extract's fvcn placement/trim (proven on win11refs2tsnapshots arg.txt current stream, byte-exact)."""
     # (1) inline current-stream holder (sub_id 0x1000)
     holder = None
-    for k, v in parse_resident_btree_rows(vd):
+    for k, v in parse_resident_btree_rows(vd, (f, ps_off, cs, tr)):
         if (len(k) >= 0x18 and k[12] == 0x80 and k[13] == 0x00 and le64(k, 0x10) == 0x1000
                 and len(v) >= 0x50 and le32(v, 4) == SNAP_DATA_DESC):
             holder = v
@@ -8950,7 +9219,7 @@ def _deleted_rows(deleted, orphans, cs=None, tr=None):
     return rows
 
 def _write_recovery_log(path, image, vmaj, vmin, mode, methods, max_scan, deleted, present, extract_dir,
-                        orphans=None, cs=None, tr=None):
+                        orphans=None, cs=None, tr=None, scan_cov=None):
     """Write a forensic RECOVERY-RUN log — an audit trail of what was recovered and how: image, mode, methods,
     and the per-entry deleted-vs-still-present split (with each remnant's source page and, for still-present
     rows, whether the live file sits in a different directory). `orphans` (optional) logs the low-confidence
@@ -8961,7 +9230,10 @@ def _write_recovery_log(path, image, vmaj, vmin, mode, methods, max_scan, delete
     out = ["=" * 78, f"{PROG} recovery log (v{VERSION})", "=" * 78,
            f"Image:        {image}", f"ReFS version: {vmaj}.{vmin}",
            f"Run (UTC):    {datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None).isoformat(timespec='seconds')}Z",
-           f"Mode:         {mode}", f"Methods:      {methods}", f"Max-scan:     {max_scan}"]
+           f"Mode:         {mode}", f"Methods:      {methods}",
+           f"Max-scan:     {max_scan if max_scan is not None else 'unbounded (whole volume)'}"]
+    if scan_cov:
+        out.append(f"Scan coverage: {scan_cov}")
     if extract_dir:
         out.append(f"Exported to:  {extract_dir}")
     out += ["", f"DELETED — no live file with this name + creation time remains ({len(deleted)}):"]
@@ -9025,13 +9297,20 @@ def cmd_deleted(image, remaining, partition_start):
     carve = args["carve"] or full_mode
     if rows_only and content_only:
         die("--rows-only and --content-only are mutually exclusive")
-    max_scan = _int_arg(args["max_scan"], "--max-scan") if args["max_scan"] else 50000
+    # Orphan-page scan budget. Default = None = the WHOLE volume: when the user asks for the deep scan
+    # (--full / --scan-pages) it must cover the whole disk, otherwise "not found" would only mean "not
+    # found in the first N clusters". --max-scan N is the explicit opt-out for a quick partial pass, and
+    # every partial run is labelled INCOMPLETE in both the console output and the recovery log.
+    max_scan = _int_arg(args["max_scan"], "--max-scan") if args["max_scan"] else None
+    if max_scan is not None and max_scan < 0:
+        die("invalid value for --max-scan: must be >= 0 (omit it to scan the whole volume)")
     # The B+-tree node-slack scan runs BY DEFAULT (it is where deleted rows + recoverability live);
     # --no-slack skips it for a fast Trash+checkpoint pass, and --trash returns after the Trash table only.
     do_slack = not args["no_slack"] and not args["trash"]
     do_scan_pages = args["scan_pages"]
     do_orphans = args["orphans"] and not args["trash"]   # opt-in low-confidence OT-orphan directory tier
     scan_orphans = full_mode          # recovery = live-page slack only; --full adds the orphan-page slack scan
+    scan_stats = {}                   # filled by the orphan scan: how much of the volume it actually covered
     # Accumulators shared by the scan + slack extraction paths (one manifest per run). Two verdict buckets
     # so the roll-up (and the .recovered files export writes) reconcile by category: deleted files vs prior
     # versions of files still present. _rc counts the entries whose inline content actually decodes.
@@ -9291,7 +9570,7 @@ def cmd_deleted(image, remaining, partition_start):
             print("  Recovering deleted directory entries from metadata-page free space")
             print("  (ReFS deletion removes only the row's index slot; the row body persists).")
             raw = _slack_recover(f, ps, cs, tr, roots, obj_map, max_scan, print,
-                                 scan_orphans=scan_orphans, live_identity=live_ident)
+                                 scan_orphans=scan_orphans, live_identity=live_ident, stats=scan_stats)
             # dedup on (name, create_time, is_dir) — recover each identity ONCE (keep the longest row) — but
             # remember EVERY directory that identity was recovered from, so the log can list all locations a
             # file was deleted from (identical files deleted from several dirs => one recovered file, all dirs logged).
@@ -9442,14 +9721,16 @@ def cmd_deleted(image, remaining, partition_start):
         if do_orphans:    _ran.append("orphan-object scan (low confidence)")
         print(f"  Mode: {_mode}.  Ran: {', '.join(_ran)}.")
         if do_slack and not full_mode:
-            print("  This is `recovery` (quick): live-page slack only. Run `deleted --full` to ALSO scan orphan")
-            print("  pages (the freed pages of deleted objects — more, but a full-volume scan) and carve non-resident content.")
+            print("  This is `recovery` (quick, seconds): live-page slack only. Run `deleted --full` to ALSO scan")
+            print("  orphan pages (the freed pages of deleted objects) and carve non-resident content — that reads")
+            print("  the WHOLE volume once (about a minute per 60-100 GB), but it typically finds far more.")
         elif full_mode:
-            print("  This is `--full` (complete): live + orphan-page slack + carve. `deleted` (no --full) is the quicker,")
-            print("  live-pages-only pass.")
+            print("  This was `--full` (complete): live + whole-volume orphan-page slack + carve. `deleted` (no")
+            print("  --full) is the quicker, live-pages-only pass.")
         else:
             print("  Slack scan SKIPPED (--no-slack). Run `deleted` (the default) to recover deleted rows.")
-        print("  Fine-grained: --no-slack · --scan-pages · --orphans · --carve · --max-scan N · --search SUB · --csv/--json/--jsonl FILE · `export deleted DIR`.")
+        print("  Fine-grained: --no-slack · --scan-pages · --orphans · --carve · --search SUB · --csv/--json/--jsonl FILE · `export deleted DIR`.")
+        print("  --max-scan N stops the orphan scan early (faster, but the run is then INCOMPLETE); `help deleted` lists what each option costs.")
         if not do_orphans:
             print("  Also: `deleted --orphans` adds a low-confidence tier for OID-Table objects unlinked from the tree.")
         print("  Prior versions of files that still exist: `snapshots`.  Windows Recycle Bin: `recyclebin`.")
@@ -9489,7 +9770,7 @@ def cmd_deleted(image, remaining, partition_start):
                 _lp = f"forefst_recovery_{_b}_{_dt.datetime.now().strftime('%Y%m%d-%H%M%S')}.txt"
             _written = _write_recovery_log(_lp, image, vmaj, vmin, _logmode, ", ".join(_ran), max_scan,
                                            _log_deleted, _log_present, extract_dir, orphans=_log_orphans,
-                                           cs=cs, tr=tr)
+                                           cs=cs, tr=tr, scan_cov=_scan_cov_line(scan_stats))
             if _written and not (extract_dir and _manifest):   # export already reports the log in its summary
                 print(f"  Recovery log: {_written}")
 
@@ -10709,11 +10990,26 @@ CMD_HELP = {
   "tag": "Deleted-file VIEW + recoverability verdict (writing = `export deleted`)",
   "desc": ["Read-only view of deleted entries with a recoverability verdict. TWO MODES:",
            "  • `deleted`         — RECOVERY (default): Trash table (0xD) + checkpoint diff + the LIVE-page",
-           "                        B+-tree node-slack scan. Quick — reads only pages the tree walk already",
-           "                        touched. Recovers the common in-tree deletions.",
-           "  • `deleted --full`  — FULL recovery: ALSO scans orphan pages (the freed pages of deleted objects —",
-           "                        a full-volume scan, bounded by --max-scan) and, on export, carves",
-           "                        non-resident content. Finds more (the older/orphaned deletions), slower.",
+           "                        B+-tree node-slack scan.  [FAST — seconds]  Reads only pages the tree walk",
+           "                        already touched. Recovers the common in-tree deletions.",
+           "  • `deleted --full`  — FULL recovery: ALSO scans EVERY cluster of the volume for orphan pages (the",
+           "                        freed pages of deleted objects) and, on export, carves non-resident content.",
+           "                        Finds far more — the older deletions whose directory entry is already gone",
+           "                        from the tree.  [SLOW — it reads the whole volume once, at the disk's",
+           "                        sequential read speed. On a 1-2 GB/s disk that is about a minute per",
+           "                        60-100 GB: ~1 min for 64 GB, ~20-35 min for 2 TB, and VERY SLOW at",
+           "                        multi-TB (~2.5-4.5 h for 16 TB). Progress is printed as it runs.]",
+           "COST OF EACH OPTION (so you can choose knowingly):",
+           "  FAST       `deleted` · --trash · --no-slack · --orphans · --search · --csv/--json/--jsonl · --rows",
+           "  MODERATE   --carve (on export) — reads the data extents of each recovered non-resident file, so the",
+           "             cost follows how much deleted data you are reconstructing, not the size of the volume",
+           "  SLOW       --full · --scan-pages — each reads the WHOLE volume once, at the disk's sequential read",
+           "             speed: on a 1-2 GB/s disk about a minute per 60-100 GB (~1 min at 64 GB, ~20-35 min at",
+           "             2 TB), and VERY SLOW at multi-TB (~2.5-4.5 h at 16 TB)",
+           "  OPT-OUT    --max-scan N  makes a slow scan fast again by stopping after N clusters — but then the run",
+           "             covers only part of the disk and is labelled INCOMPLETE in the output and the recovery log.",
+           "A slow run that you chose knowingly is fine; a scan that silently stopped part-way is not, so coverage",
+           "is always printed and any partial run is flagged.",
            "Each entry carries a RECOVERABLE verdict: 'FULL FILE recoverable' (RESIDENT — content inline in the",
            "record) / 'extent_backed' (NON-RESIDENT — data is in on-disk extents whose MAP survives, so",
            "`export deleted --carve` reconstructs it best-effort) / 'metadata only' (name/size/timestamps only).",
@@ -10727,17 +11023,22 @@ CMD_HELP = {
            "recovered directory-entry value (name in the key; timestamps/attrs/size/extent-map at the $SI/index",
            "offsets — inspect one with the `details` command or the structure docs). A plain view writes nothing.",
            "'recoverable' means present & decodable, NOT un-overwritten."],
-  "opts": [("--full", "FULL recovery: also scan orphan pages + carve non-resident content (vs the quick default)"),
+  "opts": [("--full", "SLOW. FULL recovery: also scan every cluster for orphan pages + carve non-resident "
+                      "content (vs the quick default). Reads the whole volume once — about a minute per "
+                      "60-100 GB"),
            ("--no-slack", "skip the slack scan entirely (Trash table + checkpoint diff only — fast, metadata)"),
            ("--trash", "only the Trash table, then return (fastest; view only — no --csv/--json/export)"),
-           ("--scan-pages", "additionally run the orphaned-page scan (a distinct, rarely-productive method)"),
+           ("--scan-pages", "SLOW. Additionally run the orphaned-page NAME scan (a distinct method; whole "
+                            "volume, same about-a-minute-per-60-100 GB budget)"),
            ("--orphans", "add a LOW-CONFIDENCE tier: Object-Table OIDs unlinked from the tree (identity-filtered; "
                          "opt-in). Low volume; genuine deleted dirs usually recover more fully via the slack scan"),
            ("--carve", "with `export deleted`: reconstruct NON-RESIDENT files best-effort into content/<name>.carved "
                        "(on by default under --full). Best-effort — the data clusters may have been reused since "
                        "deletion, so .carved may be stale (verify); the resident content/<name> is byte-exact"),
            ("--search SUB", "filter recovered entries by name substring"),
-           ("--max-scan N", "max clusters for the orphan-page scan under --full (default 50000)"),
+           ("--max-scan N", "stop the orphan-page scan after N clusters. Default: NO limit — the whole volume "
+                            "is scanned, because a partial scan silently misses deleted files. Use this only to "
+                            "trade completeness for speed; the run is then reported as INCOMPLETE"),
            ("--rows", "with `export deleted`: ALSO write the raw remnant bytes to rows/ (OFF by default; provenance "
                       "/ chain-of-custody — the exact recovered directory-entry bytes)"),
            ("--no-system", "drop OS/BitLocker (`FVE2.{…}`) system churn from the index + export (focus on user files)"),

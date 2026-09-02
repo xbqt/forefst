@@ -60,42 +60,47 @@ is **not** the end of the story: the default `deleted` run adds the B+-tree node
 ### Step 2 — The strong method: B+-tree node slack (`forefst deleted`, Method 5)
 
 ```sh
-python3 forefst.py "$IMG" deleted          # the slack scan runs by default (--no-slack skips it)
+python3 forefst.py "$IMG" deleted --full   # --full adds the whole-volume orphan-page scan
 ```
 
 ```
 ── B+-tree Node Slack Scan (Method 5) ──
- Recovering deleted directory entries from metadata-page free space
- (ReFS deletion removes only the row's index slot; the row body persists).
- Scanned 55 live pages + 11 orphan pages with recoverable slack rows
+  Recovering deleted directory entries from metadata-page free space
+  (ReFS deletion removes only the row's index slot; the row body persists).
+  Orphan-page scan: scanned 1,044,480 of 1,044,480 clusters (100% of the volume)
+  Scanned 55 live pages + 11 orphan pages with recoverable slack rows
 
- DELETED (no longer listed in their owning directory): 21 [18 with valid timestamps, 3 partial remnants]
+  DELETED (no live file with this name + creation time remains on the volume): 25  [22 with valid timestamps, 3 partial remnants]
 
- FILE FVE2.{09cf57b8-9e6c-43d4-ae1f-0408882a397d}.1 (resident, live-slack @ cluster 3072 off 0x2e50)
- Created: 2026-05-23 08:46:26 UTC
- Modified: 2026-05-23 08:46:26 UTC
- FILE FVE2.{24e6f0ae-6a00-4f73-984b-75ce9942852d} (resident, live-slack @ cluster 3072 off 0x1dd0)
- Created: 2026-05-23 08:46:26 UTC
- Modified: 2026-05-23 08:46:26 UTC
- FILE FVE2.{c9ca54a3-6983-46b7-8684-a7e5e23499e3}.1 (resident, orphan-slack @ cluster 13316 off 0x968)
- Created: 2026-05-23 08:35:07 UTC
- Modified: 2026-05-23 08:35:40 UTC
- ... (21 deleted entries total) ...
+    DIR  $RECYCLE.BIN  (non-resident, orphan-slack @ cluster 4616 off 0x360)
+      Deleted from: /  (table 0x600)
+      Created:  2026-05-23 08:36:40 UTC
+      Modified: 2026-05-23 08:36:40 UTC
+      Recoverable: metadata only (non-resident — file data is NOT in this remnant)
+    FILE FVE2.{09cf57b8-9e6c-43d4-ae1f-0408882a397d}.1  (non-resident, live-slack @ cluster 3072 off 0x2e50)
+      Deleted from: /System Volume Information  (table 0x701)
+      Created:  2026-05-23 08:46:26 UTC
+      Modified: 2026-05-23 08:46:26 UTC
+    ... (25 deleted entries total) ...
 
- + 3 partial remnants (name fragment only, no valid timestamps — corroborate before use):
- 'FVE2.{b' (live-slack c3072 o0x260)
- 'FVE2.{c9ca54a3-6983-46b7-8684-a7e5e23499e3}.3' (live-slack c3072 o0x1c0)
- 'FVE2.{e40ad34d-dae9-4bc7-95bd-b16218c10f72}.1' (live-slack c3072 o0x120)
+    + 3 partial remnants (name fragment only, no valid timestamps — corroborate before use):
+      'FVE2.{b'  (live-slack c3072 o0x260)
+      'FVE2.{c9ca54a3-6983-46b7-8684-a7e5e23499e3}.3'  (live-slack c3072 o0x1c0)
+      'FVE2.{e40ad34d-dae9-4bc7-95bd-b16218c10f72}.1'  (live-slack c3072 o0x120)
 
- PRIOR VERSIONS of files still present (CoW slack remnants): 9 [9 with valid timestamps]
- $RECYCLE.BIN (orphan-slack @ cluster 52 off 0x360)
- IndexerVolumeGuid (orphan-slack @ cluster 1540 off 0x80)
- WPSettings.dat (live-slack @ cluster 3072 off 0x378)
- desktop.ini (live-slack @ cluster 14852 off 0x378)
- ... (10 prior-version remnants total) ...
+  STILL PRESENT — a live file with this name + creation time exists (CoW remnants, and former locations of moved/renamed files): 5  [5 with valid timestamps]
+    $RECYCLE.BIN  (orphan-slack @ cluster 52 off 0x360) — metadata only (non-resident — file data is NOT in this remnant)
+    IndexerVolumeGuid  (orphan-slack @ cluster 1540 off 0x80) — FULL FILE recoverable (resident — 76 B stored inline in the record)
+    WPSettings.dat  (live-slack @ cluster 3072 off 0x378) — FULL FILE recoverable (resident — 12 B stored inline in the record)
+    desktop.ini  (live-slack @ cluster 14852 off 0x378) — FULL FILE recoverable (resident — 129 B stored inline in the record)
 
- DELETED files: 0 of 21 are RESIDENT with full content recoverable; 5 are non-resident (carve-able with --carve).
+  DELETED files: 2 of 25 are RESIDENT with full content recoverable; 18 are non-resident (carve-able with --carve).
 ```
+
+The plain `deleted` run (live pages only, seconds) recovers 16 of these 25. The other 9 sit in **orphan
+pages** — pages the live tree no longer references — which only the `--full` scan reaches. That scan reads
+every cluster of the volume, so on this 4 GB image it costs a couple of seconds; on a real volume budget about
+a minute per 60–100 GB.
 
 This is the recovery payoff. ReFS deletion (`CmsBPlusTable::DeleteFromIndex`) removes only the
 deleted row's slot in the page's **offset array** and queues *delayed* compaction — the **row body is
@@ -139,17 +144,21 @@ python3 forefst.py "$IMG" deleted --scan-pages
 
 ```
 ── Orphaned Page Scan ──
- Current tree references 128 unique physical clusters
- Scanning up to 50000 clusters for orphaned MSB+ pages...
- Found 45 orphaned MSB+ leaf pages
- No deleted file entries found in scanned area
+  Current tree references 128 unique physical clusters
+  Orphan-page scan: scanned 1,044,480 of 1,044,480 clusters (100% of the volume)
+  Found 99 orphaned MSB+ leaf pages
+  No deleted file entries found in scanned area
 ```
 
-The orphan page scan carves `MSB+` leaf pages off the disk and finds **45 orphaned pages** — but
+The orphan page scan carves `MSB+` leaf pages off the disk and finds **99 orphaned pages** — but
 `No deleted file entries`. This is the crucial contrast with Step 2: the orphan scan follows each
 page's **live offset array**, so it never sees rows that live only in **slack**. The same 11 orphan
 pages that Step 2 mined for slack rows yield nothing here. This is exactly why the docs state the
 slack rows are *"recoverable by no other method."*
+
+Both scans cover the **whole volume**: the coverage line above states it explicitly, and a run bounded
+with `--max-scan` says so instead — a page-level search that stopped part-way would report "not found"
+for a file still sitting on the disk.
 
 ### Step 4 — Method 4 (stream snapshots) does not apply to this image
 
@@ -165,7 +174,8 @@ not applicable here — for a real worked snapshot extraction use a v3.14 image 
  + checkpoint diff) correctly return **nothing** — a drained trash queue and converged
  checkpoints are expected, not a parsing failure.
 - **B+-tree node slack (Method 5)** is the method that actually recovers deleted directory entries +
- their `$SI` timestamps on this image — 21 deleted rows, confidence-graded, with 3 partials flagged.
+ their `$SI` timestamps on this image — 25 deleted rows under `--full` (16 from live pages alone),
+ confidence-graded, with 3 partials flagged.
 - The **orphan page scan (`--scan-pages`) finds the pages but not the rows**, proving the slack scan reaches
  data no other method does.
 - Recovery yield is **image-dependent and honest**: most recovered names are BitLocker `FVE2` churn,

@@ -1,5 +1,110 @@
 # Changelog
 
+## v1.8.0 — 2026-09-01 — whole-volume deep recovery, real capacity reporting, and attributes hidden behind a multi-level embedded tree
+
+**A correctness release with four independent parts: a deep deletion scan that no longer stops part-way
+through the disk, capacity reporting built on a corrected allocator decode, alternate data streams that were
+invisible on ReFS 3.4, and attributes that were invisible behind a multi-level embedded tree.**
+
+### `deleted --full` and `--scan-pages` now scan the entire volume
+
+**The deep scans stopped after the first 50,000 clusters — a fixed budget unrelated to the size of the disk, and
+the analyst was never told. On a 64 GB volume that is 0.3% of the disk. Both scans now cover every cluster by
+default, always print how much of the volume they examined, and mark any bounded run as INCOMPLETE.**
+
+- **What it recovers.** On a 64 GB Windows volume, `deleted --full` goes from **165 to 22,353** orphan pages and
+  from **23,386 to 39,089** deleted files — 15,703 files (40%) that were on the disk and reachable, and were
+  silently skipped. Deleted metadata lands wherever the allocator last freed a page, so a prefix-bounded scan
+  misses files for no reason the analyst can see.
+- **The recovered files are real.** The two indexes were exported and compared: the old, bounded result is a
+  strict *subset* of the complete one — nothing is lost by scanning further — and the 15,488 new unique
+  identities were cross-checked against the volume's own USN change journal, an independent source the slack
+  scan never reads. **90.2% carry an explicit USN *delete* record**, against **33.6%** for the set the tool
+  already reported; among the entries graded byte-exact the rate is **99.3%**. The newly reached entries are
+  therefore better evidenced than the ones already trusted.
+- **It got faster at the same time**, so the wider scan is affordable. The scanner now reads the volume in 16 MiB
+  sequential blocks instead of one 4-byte seek-and-read per cluster, hands back the bytes it already holds
+  instead of re-reading each hit, and finds the `MSB+` signature through a one-byte-per-cluster strided digest
+  rather than a Python comparison per cluster — 11–15× less CPU in the inner loop, which is what makes a multi-TB
+  volume practical rather than grinding through half a billion Python iterations. The scan is now limited by the
+  disk, not the tool: a 2 TB volume sweeps in **19.8 minutes** (111 GB/min) where the same scan without this
+  change was CPU-bound and still unfinished after 45.
+- **You are told what each option costs.** `help deleted` labels every option fast / moderate / slow / very slow
+  with a concrete budget: the deep scans read the whole volume once at the disk's sequential read speed, so on a
+  1–2 GB/s disk that is about **a minute per 60–100 GB** (≈1 min at 64 GB, ≈20–35 min at 2 TB, ≈2.5–4.5 h at
+  16 TB), and long scans print progress. `--max-scan N` is still available to trade completeness for speed — it
+  is now an explicit opt-out rather than a silent default, and the run is labelled INCOMPLETE in the output and
+  the recovery log.
+- **The quick default is unchanged.** Plain `deleted` never ran the orphan scan and still doesn't; it stays a
+  seconds-long pass and now points at `--full` for the rest.
+
+### The volume's real free/used space, and a corrected allocator format
+
+**`summary` now reports capacity — how much of the volume is actually used — from ReFS's own accounting, and
+a new `refsanalysis allocators` command shows the allocator tiers behind it. Decoding it corrected four points
+of the published row format.**
+
+- **`summary` gains a capacity line.** It comes from the 384-byte summary ReFS keeps in the allocator's root
+  page — a single page read, so it costs nothing. It replaces a container-level "free space" estimate that was
+  computed but never shown, and could not have been right: it counted unmapped containers as free, and the
+  container table maps essentially the whole volume, so it reported about 64 MB free on any disk.
+- **`refsanalysis <image> allocators` (new)** decodes all three tiers and prints, for each, what the rows say
+  *and* what the volume's own summary says. The two can legitimately differ and the difference is evidence:
+  on ReFS 3.4 the tiers are strictly separated so the Medium rows span less than the summary while the free
+  counts still match exactly; if *both* numbers differ, the volume is damaged.
+- **The row format was wrong in four places**, now corrected from the driver's own codec (both the 3.4 and
+  3.14 generations) and re-measured on every corpus volume. The bitmap row is **variable length**
+  (`ceil(range_length/8)` bytes of bitmap — 2,072 is just the 16,384-cluster case; 152- and 32-byte rows
+  exist). The two bytes at `+0x14` are a **bitmap offset** and a **tier-dependent format byte**, not a u16
+  "header size". **Flags bit 0** — not the row length — says whether a bitmap is present. And the field at
+  `+0x16`, documented as a "used count", is a **driver hint that drifts**: it disagrees with the row's own
+  bitmap on about one bitmap row in six, so nothing computes capacity from it. The rows also turned out to be
+  keyed by **physical** cluster number, which is not what the published "addressing" column (about how the
+  tables' own pages are reached) had led us to assume.
+- **What the allocator does *not* cover is now stated.** The tail of the volume past the last container
+  belongs to no tier — 48 MiB on almost every volume, up to ~2 GB on a real Windows disk. It is reported
+  separately, never as free space.
+- **A tier is identified by its table, not its root index**, and page by page. On one damaged volume family
+  root 12 carries the container table rather than the small allocator, and a root that *does* claim the right
+  table still leads into foreign pages; those rows are rejected and reported rather than averaged into a
+  total. On undamaged volumes nothing is rejected.
+
+### ReFS 3.4 alternate data streams were invisible
+
+**On a ReFS 3.4 volume the tool reported no alternate data streams at all. It now finds them — 100
+ADS-bearing files on one 2 TB test volume that previously showed zero — and their contents extract
+byte-for-byte.**
+
+- **Cause:** the key that identifies an ADS row comes in two forms. From 3.7 an instance marker sits at
+  `key+0x08`, the attribute type at `key+0x0C` and the name from `key+0x10`; on 3.4 there is no marker, the
+  type is at `key+0x08` and the name starts at `key+0x0C`. The reader matched only the first form, so every
+  3.4 key failed the test and the answer came back as a confident "none". Both forms are now accepted, and
+  the name is read at the offset the matched form implies.
+- **Also affects upgraded volumes.** Marker-less rows survive an upgrade from 3.4, so the form is decided
+  per record, not from the volume version — two upgraded 3.14 volumes in the corpus also gained streams.
+- **Strictly additive:** 7 volumes change and every one goes from **0 to N**; nothing is lost or reinterpreted.
+- Verified against the volume's own generator: the recovered names are exactly the streams it wrote, and the
+  extracted contents match its text byte-for-byte.
+
+### Attributes hidden behind a multi-level embedded tree
+
+**On volumes where a file carries a large attribute set, some of its attributes were invisible — most visibly its
+alternate data streams. They are now read. 548 previously-unreported ADS are recovered across the regression
+corpus, and one test volume goes from reporting *no* ADS at all to 60.**
+
+- **Attributes stored in a child node are now read.** A file's attributes live in a small B+-tree embedded in
+  its directory record. When that set outgrows a single node, ReFS turns the embedded node into an *index*
+  node whose rows point at a child page holding the real attributes. The reader only ever looked at the
+  outer node, so for such files it saw nothing — no ADS, no reparse data, no `$DATA` record — and reported a
+  confident, wrong "none". It now descends into the child, exactly as the driver does.
+- **Scope:** 1,329 files across 19 of the 99 corpus volumes, on ReFS 3.4 through 3.14 — 4,094 attribute
+  records recovered in total, of which 548 are alternate data streams.
+- **Extraction works too**, not just listing: the recovered streams' contents extract byte-for-byte
+  (verified against a generator that writes deterministic content, 5/5 streams, sizes 40 KB … 200 KB).
+- **Nothing is lost or changed elsewhere.** The descent only applies where the old code returned nothing, so
+  it is strictly additive (measured: 4,094 records gained, 0 lost). 3,070 of the 3,168 regression
+  fingerprints are unchanged; every changed one is an image that gained attributes.
+
 ## v1.7.2 — 2026-08-29 — differential-audit follow-through: ID-based object-table selection + reference corrections
 
 **A small hardening release from a differential audit against a second, independent ReFS reader

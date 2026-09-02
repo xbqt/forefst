@@ -57,10 +57,11 @@ from forefst import (
     validate_image as _validate_image, walk_bplus, walk_directory_tree,
     _current_stream_extent_backed, _multilevel_extent_backed_size,
     _attrs_to_str, _find_snapshot_files, _guid_str, _hx, _parse_extended_attributes, _vbr_checksum,   # 5.1: single-source helpers
+    alloc_capacity, alloc_decode_row, alloc_read_summary, alloc_row_counts, _ALLOC_TIERS,
 )
 
 PROG = "refsanalysis"
-VERSION = "1.7.2"
+VERSION = "1.8.0"
 
 
 
@@ -110,6 +111,8 @@ SUBCOMMANDS = [
      ["-v: tree visualization", "-vv: raw row data", "--verify: consistency checks"]),
     ("containers",  "Container table and allocator analysis",
      ["-v: show container details"]),
+    ("allocators",  "Allocator tables (free/used space accounting)",
+     ["-v: per-row detail", "-vv: every row", "--json: machine-readable"]),
     ("upcase",      "Unicode upcase table",
      ["-v: verbose", "-vv: all mappings", "--verify: consistency checks", "-H: header fields"]),
     ("oid30",       "OID 0x30 session activity analysis",
@@ -551,7 +554,23 @@ def cmd_summary(image, remaining, partition_start, plus_mode=False):
                 summary["containers_used"] = used
                 summary["containers_free"] = ct_size - used
                 summary["utilization_pct"] = round(100.0 * used / ct_size, 1)
-                summary["free_space_est"] = hs((ct_size - used) * bpc)
+                # E74: the old container-level `free_space_est` counted unmapped containers as free and
+                # reported ~64 MB on any volume. Replaced by the allocator's own accounting, per-cluster.
+
+            _cap = alloc_capacity(f, ps, cs, tr, roots)
+            if _cap:
+                summary["capacity"] = {
+                    "used_bytes": _cap["used_clusters"] * cs,
+                    "free_bytes": _cap["free_clusters"] * cs,
+                    "allocator_covered_bytes": _cap["covered_clusters"] * cs,
+                    "outside_allocator_bytes": _cap["outside_allocator_clusters"] * cs,
+                    "volume_bytes": _cap["volume_clusters"] * cs,
+                    "used_pct": round(100.0 * _cap["used_clusters"] / _cap["covered_clusters"], 1),
+                    "used": hs(_cap["used_clusters"] * cs),
+                    "free": hs(_cap["free_clusters"] * cs),
+                    "source": "allocator summary (Medium tier root page)",
+                }
+
 
             # Extended file attribute counts
             summary["non_resident_files"] = nfiles - nresident   # D1: resident + non-resident = files
@@ -683,6 +702,14 @@ def cmd_summary(image, remaining, partition_start, plus_mode=False):
             if "containers_used" in summary:
                 print(f"  Containers used:    {summary['containers_used']} / {summary['containers_mapped']}"
                       f" ({summary['utilization_pct']}%)")   # B6: dropped the "Free space (est)" line (never real free space)
+            if summary.get("capacity"):
+                _c = summary["capacity"]
+                print(f"  Space used:         {_c['used']} of {hs(_c['allocator_covered_bytes'])} "
+                      f"({_c['used_pct']}%) - {_c['free']} free")
+                if _c["outside_allocator_bytes"]:
+                    print(f"                      + {hs(_c['outside_allocator_bytes'])} past the last container, "
+                          f"outside the allocator (not free space)")
+
 
         return 0
 
@@ -1239,6 +1266,165 @@ def cmd_schema(image, remaining, partition_start):
 #  UPCASE — Unicode upcase table reader
 # ═══════════════════════════════════════════════════════════════════════
 
+
+
+def _alloc_walk_tier(f, ps, cs, tr, roots, root_idx, want_id):
+    """Every allocator row under one tier root, WITH the table id of the page it sat on.
+
+    A tier is not identified by its root index: on a damaged volume root 12 has been seen carrying the
+    Container Table (0x0B) rather than the Small allocator, and an id-correct root's subtree can still
+    descend into pages belonging to other tables. So each row is tagged with its page's own id and the
+    caller reports anything foreign instead of silently averaging it into a total (E74).
+    """
+    rows, foreign = [], 0
+    if root_idx >= len(roots) or not roots[root_idx]:
+        return rows, foreign, None
+    real = root_idx in _CT_ROOT_INDICES
+    root_id = None
+    try:
+        l0 = roots[root_idx][0]
+        p0 = l0 if real else tr.tr(l0)
+        f.seek(ps + p0 * cs); pg = f.read(cs)
+        if pg[:4] == b"MSB+":
+            root_id = le64(pg, 0x48)
+    except (OSError, OverflowError):
+        pass
+    seen = set(); stack = [(list(roots[root_idx]), 0)]
+    while stack:
+        lcns, depth = stack.pop()
+        if depth > 8:
+            continue
+        data = b""
+        try:
+            for v in lcns:
+                p = v if real else tr.tr(v)
+                f.seek(ps + p * cs); data += f.read(cs)
+        except (OSError, OverflowError):
+            continue
+        if data[:4] != b"MSB+" or len(data) < 0x54:
+            continue
+        tid = le64(data, 0x48)
+        thoff = 0x50 + le32(data, 0x50)
+        if thoff + 40 > len(data):
+            continue
+        tbl = struct.unpack_from("<10I", data, thoff)
+        is_index = bool(tbl[3] & 0x100); astart, aend = tbl[4], tbl[8]
+        if astart >= aend:
+            continue
+        for i in range((aend - astart) // 4):
+            aa = thoff + astart + i * 4
+            if aa + 4 > len(data):
+                break
+            ro = thoff + le16(data, aa)
+            if ro + 16 > len(data):
+                break
+            _, ko, kl, _, vo, vl, _ = struct.unpack_from("<I6H", data, ro)
+            if ro + vo + vl > len(data):
+                continue
+            val = data[ro + vo:ro + vo + vl]
+            if is_index:
+                ch = tuple(c for c in (le64(val, j * 8) for j in range(4))
+                           if c not in (0, 0xFFFFFFFFFFFFFFFF)) if vl >= 32 else ()
+                if ch and ch not in seen:
+                    seen.add(ch); stack.append((list(ch), depth + 1))
+            elif tid != want_id:
+                foreign += 1
+            else:
+                r = alloc_decode_row(val)
+                if r:
+                    rows.append(r)
+    return rows, foreign, root_id
+
+
+def cmd_allocators(image, remaining, partition_start):
+    """Allocator tables (schema 0xe010): per-tier rows, totals, and the volume's own persisted summary."""
+    args = _parse_args(remaining, flags=["-v", "-vv", "--json"])
+    verbose = 2 if args["vv"] else (1 if args["v"] else 0)
+
+    try:
+        f, ps, cs, tr, roots, obj_map, vmaj, vmin, chkp_lcns = bootstrap(image, partition_start)
+    except (ValueError, OSError) as e:
+        die(str(e))
+    try:
+        vol = (f.seek(0, 2) - ps) // cs
+        out = {"image": os.path.basename(image), "refs_version": f"{vmaj}.{vmin}", "cluster_size": cs,
+               "volume_clusters": vol, "tiers": []}
+        if not args["json"]:
+            print(f"── Allocator Tables (schema 0xe010) — {os.path.basename(image)} ──")
+            print(f"  ReFS {vmaj}.{vmin}, cluster {cs} bytes, volume {vol:,} clusters ({_summary_human_size(vol * cs)})")
+            print()
+        for root_idx, name, tid in _ALLOC_TIERS:
+            rows, foreign, root_id = _alloc_walk_tier(f, ps, cs, tr, roots, root_idx, tid)
+            alloc = free = span = 0
+            nbitmap = ncompact = 0
+            for r in rows:
+                a, fr = alloc_row_counts(r)
+                alloc += a; free += fr; span += int(r["length"])
+                if r["bitmap"] is None: ncompact += 1
+                else: nbitmap += 1
+            summ = alloc_read_summary(f, ps, cs, tr, roots, root_idx, table_id=tid, volume_clusters=vol)
+            t = {"tier": name, "root_index": root_idx, "table_id": f"0x{tid:x}",
+                 "root_page_table_id": None if root_id is None else f"0x{root_id:x}",
+                 # How this tier's TABLE PAGES are reached. NOT how its rows are keyed: a row's
+                 # range_start is a PHYSICAL cluster number (E74) whichever way the pages are addressed.
+                 "addressing": "real" if root_idx in _CT_ROOT_INDICES else "virtual",
+                 "rows": len(rows), "bitmap_rows": nbitmap, "compact_rows": ncompact,
+                 "foreign_rows_rejected": foreign,
+                 "span_clusters": span, "allocated_clusters": alloc, "free_clusters": free,
+                 "summary_covered_clusters": None if not summ else summ[1],
+                 "summary_free_clusters": None if not summ else summ[2],
+                 "summary_format": None if not summ else summ[0]}
+            t["summary_agrees"] = bool(summ and summ[1] == span and summ[2] == free)
+            out["tiers"].append(t)
+            if args["json"]:
+                continue
+            idmark = "" if root_id is None or root_id == tid else f"  [!] root page claims 0x{root_id:x}, not 0x{tid:x}"
+            print(f"  {name} tier (root {root_idx}, table 0x{tid:x}, pages via {t['addressing']} LCNs; "
+                  f"rows keyed by physical cluster){idmark}")
+            print(f"    rows: {len(rows)}  ({nbitmap} bitmap, {ncompact} compact)"
+                  + (f"   [!] {foreign} row(s) on foreign pages REJECTED" if foreign else ""))
+            if not rows and not summ:
+                print("    this tier could not be read here — nothing is reported for it rather than a "
+                      "number taken from another table's page")
+                print(); continue
+            print(f"    from rows:    span {span:,} clusters   allocated {alloc:,} ({_summary_human_size(alloc * cs)})   "
+                  f"free {free:,} ({_summary_human_size(free * cs)})")
+            if summ:
+                print(f"    from summary: span {summ[1]:,} clusters   free {summ[2]:,} ({_summary_human_size(summ[2] * cs)})   "
+                      f"[{'agrees' if t['summary_agrees'] else 'DIFFERS from the rows'}]")
+                if not t["summary_agrees"]:
+                    print("      • a difference is a finding, not a parse error: on v3.4 the tiers are strictly")
+                    print("        separated so the Medium rows span less than the summary, and a truncated")
+                    print("        container table makes both numbers disagree. Compare with `containers`.")
+            else:
+                print("    from summary: (not readable — the root page does not carry this tier's table)")
+            if verbose:
+                for r in rows[:(None if verbose >= 2 else 12)]:
+                    a, fr = alloc_row_counts(r)
+                    kind = "compact" if r["bitmap"] is None else "bitmap "
+                    print(f"      {kind} start {r['start']:>13,}  len {int(r['length']):>9,}  "
+                          f"alloc {a:>9,}  free {fr:>9,}  flags 0x{r['flags']:02x}  fmt {r['format']}")
+                if verbose == 1 and len(rows) > 12:
+                    print(f"      ... {len(rows) - 12} more (use -vv)")
+            print()
+        cap = alloc_capacity(f, ps, cs, tr, roots)
+        out["capacity"] = cap
+        if not args["json"]:
+            if cap:
+                print("  Volume capacity (from the Medium tier's persisted summary):")
+                print(f"    used {_summary_human_size(cap['used_clusters'] * cs)} of {_summary_human_size(cap['covered_clusters'] * cs)} "
+                      f"({100.0 * cap['used_clusters'] / cap['covered_clusters']:.1f}%), "
+                      f"{_summary_human_size(cap['free_clusters'] * cs)} free")
+                if cap["outside_allocator_clusters"]:
+                    print(f"    {_summary_human_size(cap['outside_allocator_clusters'] * cs)} past the last container is outside "
+                          f"the allocator entirely — not free space")
+            else:
+                print("  Volume capacity: not available (allocator summary unreadable)")
+        else:
+            print(json.dumps(out, indent=2))
+        return 0
+    finally:
+        f.close()
 
 
 def cmd_upcase(image, remaining, partition_start):
@@ -3292,6 +3478,7 @@ _HANDLERS = {
     "parentchild": cmd_parentchild,
     "containers": cmd_containers,
     "upcase": cmd_upcase,
+    "allocators": cmd_allocators,
     "oid30": cmd_oid30,
     "files": cmd_files,
     "attributes": cmd_attributes,
@@ -3847,6 +4034,33 @@ CMD_HELP = {
             "container table (ID, physical LCN, free/capacity)."],
    "opts": [("-v", "full per-container table")],
    "ex": [("containers", "geometry + allocator summary"), ("containers -v", "+ per-container table")]},
+ "allocators": {"tag": "Allocator tables — the volume's own free/used accounting",
+   "desc": ["Decode the three allocator tiers (schema 0xe010) and report, per tier, what the ROWS say and",
+            "what the volume's own PERSISTED SUMMARY says — then the volume capacity.",
+            "",
+            "Tiers: Medium (root 1, table 0x21, virtual LCNs — the whole mapped volume), Container (root 2,",
+            "table 0x20, virtual — the container table's own pages) and Small (root 12, table 0x22, REAL",
+            "physical LCNs — the bootstrap structures).",
+            "",
+            "Two numbers are printed for each tier because they can legitimately differ, and the difference",
+            "is itself evidence:",
+            "  • from rows    — recomputed here from every allocation bitmap (popcount), the slow, exact way.",
+            "  • from summary — the 384-byte block ReFS maintains in the tier's own root page.",
+            "On ReFS 3.4 the tiers are strictly separated, so the Medium rows span LESS than the summary while",
+            "the free counts still match exactly. A difference in BOTH numbers instead points at a damaged",
+            "volume (a truncated container table); compare with `containers`.",
+            "",
+            "Rows are accepted only from pages that claim this tier's own table id, and the summary only from",
+            "a root page that does. A root INDEX is not a tier: on a damaged volume root 12 has been seen",
+            "carrying the container table. Anything rejected is reported, never averaged into a total.",
+            "",
+            "Capacity covers the container-mapped space. The tail of the volume past the last container",
+            "belongs to no tier and is reported separately — it is not free space."],
+   "opts": [("-v", "per-row detail (first 12 rows per tier)"), ("-vv", "every row"),
+            ("--json", "machine-readable output")],
+   "ex": [("allocators", "per-tier totals + volume capacity"),
+          ("allocators -v", "+ the individual allocation ranges"),
+          ("allocators --json", "machine-readable")]},
  "upcase": {"tag": "Unicode upcase table",
    "desc": ["Decode the Unicode upcase (case-folding) table. -v shows sample mappings; -vv dumps every",
             "non-identity mapping. " + _VERB_LADDER + "."],
@@ -4056,7 +4270,7 @@ def print_list():
         ("Quick analysis", ["summary", "summary++", "all"]),
         ("File system content", ["files", "attributes", "details"]),
         ("Structure analysis", ["boot", "supb", "chkp", "objects", "schema",
-                                "parentchild", "containers", "upcase", "oid30"]),
+                                "parentchild", "containers", "allocators", "upcase", "oid30"]),
         ("Boot sector repair", ["bootedit"]),
     ]
     cmd_map = {name: (desc, args) for name, desc, args in SUBCOMMANDS}

@@ -21,6 +21,23 @@ directory-entry value (offset ≥ 0xA8).
 | 0x08 | var | Stream name | UTF-16LE, null-terminated |
 | — | 0–6 | Alignment padding | to `(offset − marker_start) % 8 == 4` |
 
+### The key has two forms, and ReFS 3.4 uses the other one
+
+The row's **key** identifies the attribute, and its layout changed with the instance marker:
+
+| Version | key+0x08 | Attribute type | Stream name starts at |
+|---------|----------|----------------|-----------------------|
+| **3.7 and later** | instance marker (`0x80000002` / `0x80000001`) | key+0x0C | **key+0x10** |
+| **3.4** | *(no marker)* | **key+0x08** | **key+0x0C** |
+
+A reader that matches only the marker form finds **no alternate data streams at all on a ReFS 3.4 volume** —
+not because there are none, but because every key fails the test. The same marker-less rows also survive on
+volumes **upgraded** from 3.4, so the form has to be decided per record rather than from the volume version.
+
+These rows are usually not at the outer level of the embedded tree either: they sit in a
+[child node](../structures/directory_entries.md#when-the-sub-record-table-moves-into-a-child-node), so a
+reader must descend before it can even see them.
+
 **Value** (the type-0xB0 value header, shared with `$SNAPSHOT`):
 
 | Offset | Size | Field | Description |
@@ -73,6 +90,16 @@ An ADS is **inline while its content is below ~2 KB** — the `RefsConvertToNonR
   inline, 2048-byte content is extent-backed).
 
 The `val[0x38]` field is the checksum-type selector, **not** a residency flag.
+
+### Where the ADS *record* lives
+
+Residency above describes the stream's **content**. Independently of it, the **record** that describes the
+stream can move. A directory value keeps its sub-records in a small B+-tree, and once a file carries enough
+attributes that tree gains a level: the value then holds only an *index* node and the ADS records sit in a
+**child page**. Reading just the inline table in that case returns *no streams at all* — so a file can
+genuinely carry many alternate data streams while a naive read reports none. See
+[Directory Entries → When the sub-record table moves into a child node](../structures/directory_entries.md)
+for how to tell the two cases apart and follow the child.
 
 ## Cross-references
 
