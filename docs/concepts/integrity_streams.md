@@ -48,9 +48,10 @@ Two distinct stores hold the actual checksum data, and neither is the per-file r
 - **Per-cluster data checksums.** With integrity enabled, the driver checksums each data cluster with the
   volume's data-checksum algorithm — **CRC32-C** (Castagnoli, poly `0x82f63b78`, 4 bytes) on 4 KiB-cluster
   volumes, CRC64 (8 bytes) on 64 KiB-cluster volumes, SHA-256 (32 bytes) on SHA-256 volumes. On a 4 KiB
-  CRC32-C volume the checksum is stored **inline in the file's own extent map**: each checksummed cluster is a
-  `run==1` extent (flag `0x1c00d0`) immediately followed by an 8-byte element — `[CRC32-C : 4][reserved : 4]`
-  (`forefst extract` recomputes and verifies each one). The selected type is also reflected in the file's
+  CRC32-C volume the checksum is stored **inline in the file's own extent map**: an extent record whose flags
+  carry bit `0x80` is followed by **one 4-byte CRC32-C per cluster of its run**, and the record is padded to an
+  8-byte boundary (a single-cluster record is therefore 32 bytes in total). `forefst extract` recomputes and
+  verifies each one. The selected type is also reflected in the file's
   `$DATA` stream summary: the **stream-flags `u32` at `val+0x38`** low byte selects the algorithm (0x02 = CRC,
   0x04 = SHA-256), with **bit 0x10000 = integrity**. This selector tracks the *volume's* checksum configuration
   (0x02 on None/CRC64 volumes, 0x04 on SHA-256 volumes), so it follows the format choice rather than identifying

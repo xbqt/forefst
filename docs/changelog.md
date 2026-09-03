@@ -1,5 +1,121 @@
 # Changelog
 
+## v1.9.0 — 2026-09-03 — file recovery made complete: five ways a file's data was unreachable, all fixed
+
+**Everything here is relative to v1.8.** The headline is recovery correctness: five separate mechanisms could
+leave a file's data unreadable, or readable but wrong, and all five are fixed. On the reference volume — a
+4 GB Windows 11 volume that arrives with its **operator's own SHA-256 inventory**, written before the image
+ever reached this project — the number of files recovering byte-exact goes from **41 to 629 of 629**.
+
+### Files whose data could not be read, or came back wrong
+
+- **A file's extent map is a B+-tree node, not a flat list.** The records saying where a file's bytes live are
+  the *rows* of a small B+-tree held inside its data record. A file with one run looks exactly like a flat
+  array — which is why small files always worked — but a fragmented or large file needs more rows, and past
+  one node the map continues in a separate page. Neither was walked, so those files reported **no extents at
+  all** and `extract` stopped with nothing. Both are now read: **48 more files** across the test corpus report
+  their data runs, and on the reference volume the last 21 unreadable files — 1 MB to 791 MB, including a
+  782 MB archive and a 791 MB disc image — come back byte-exact.
+
+- **Extents in the upper half of the address space were being discarded.** An extent names a *virtual* cluster,
+  which the container table maps to a physical one; the virtual space runs roughly twice as far as the
+  physical. The check compared virtual numbers against the *physical* count, so any extent above it was thrown
+  out — and because the decoder stops at the first rejected entry, one rejection discarded the file's **whole**
+  map. On the reference volume this alone hid the contents of **583 of 629 files**.
+
+- **Small moved and hard-linked files gave up nothing.** Moving or hard-linking a file moves its *record* into
+  a separate backing record; it does not move the file's *bytes*, which for a small file usually stay inside
+  that record. Every such file was treated as stored on disk, so `extract` failed with "no extents decoded"
+  while the content sat in a record already in hand. **16,191 files across 26 volumes** — 14,580 of them on a
+  single real Windows volume.
+
+- **Blocks shared with a snapshot were returned as zeros.** Stream snapshots are copy-on-write: only blocks
+  written *since* a snapshot belong to the live version, and the rest are still described by the snapshot —
+  one copy on disk, shared. Files were assembled from their own extents alone and the remainder treated as
+  empty, producing a file of the **right length with the shared regions zero-filled** — bytes that are on the
+  volume nowhere — with no warning. `snapshots --extract` had the mirror problem, writing short, shifted
+  versions. Both now resolve every block position; a genuinely **sparse** file is untouched and its holes still
+  read as zeros. Measured against the lab generator's recorded sequence: **20 of 20** prior versions byte-exact,
+  against 8 of 20 before.
+
+- **Extraction could use a stale size and truncate real content.** A name keeps a *cached* copy of the file's
+  size and ReFS never refreshes it; the object's real size lives in its backing record. `files` already used
+  the backing, but `extract`, `dataruns` and `export` used the name's copy — so what you recovered depended on
+  which of an object's names you addressed. The cache can be too *small* as well as too large: three files in
+  the corpus were being silently truncated by 186 KB, 274 KB and 49 KB. Every command now resolves the same
+  size.
+
+### Metadata that was missing or wrong
+
+- **Directory junctions and directory symlinks now report their target.** On a directory the reparse buffer is
+  never a top-level attribute row — it sits in the attribute tree embedded inside the directory's own record —
+  so the tool printed the tag and no target at all. **98 targets across 11 volumes** come back, nothing else
+  moves. On a real Windows volume that is 78 of its 81 reparse points.
+
+- **`IsResident` answers the question it documents** — *is the current `$DATA` stream inline?* It read `False`
+  for every file in the third item above. A hard-linked file may now show resident storage *and* a link count
+  above one: the record moved, the bytes did not. *(Known remainder: on the busiest volume 548 of 14,580 keep
+  the old label because their name cannot be size-matched to its backing; their content extracts correctly.)*
+
+- **A volume upgraded from ReFS 3.9 no longer reports "formatted v3.14".** Two signals say a volume was
+  upgraded, and the weaker was overwriting the stronger. The UPGRADED verdict itself was never affected.
+
+- **`specials sparse` is labelled for what it tests** — the sparse attribute bit, not "allocated < logical
+  size". The selection never changed; only the label was wrong.
+
+### New
+
+- **`mlog --stats` verifies every log record.** Each MLog record carries an integrity value the driver
+  recomputes before replaying it; the algorithm — a four-way interleaved 64-bit XOR folded to 32 bits — is now
+  reproduced, so a torn or edited record is named instead of parsed in silence. `mlog --json` carries the same
+  verdict.
+
+- **4Kn-sector disks are read.** GPT sits at LBA 1, so its byte offset follows the disk's logical sector size;
+  only 512 was tried. **Untested on real 4Kn media** — the path is covered only by synthetic images, and a
+  result obtained through it should be treated as unverified. 512-byte behaviour is unchanged.
+
+### Fewer false alarms
+
+- **A healthy volume no longer reports "corrupt/truncated container table".** The inline extent decoder
+  enumerates many candidate rows and keeps only those forming a complete cover; it was translating every
+  candidate before deciding, so rejected ones counted as container-map misses and raised a corruption warning
+  on valid evidence. **6,475 of 6,520 spurious misses disappear**, while the 45 genuine ones still warn.
+
+- **A stream's extent record is identified by its key shape**, not by a byte that happened to be zero. It never
+  mis-resolved a stream on any image; the exact test removes the possibility.
+
+### Validation
+
+- **`win11bidule.raw` joins the verification corpus** — the first image arriving with its own operator-made
+  record: 631 files with sizes, attributes, timestamps and **SHA-256**, full change-journal dumps, `fsutil`
+  reports, and transcripts of the session that built it. Because that record was made on Windows before the
+  image reached this project, a match against it is not the tools agreeing with themselves. Two of its files
+  are pinned in the output fingerprint by their **operator-recorded hashes**.
+- Corpus: **100 volumes** (ReFS 3.4 → 3.14 + Insider, 2 GB–16 TB, 4 K and 64 K clusters). Anti-regression
+  **20/20**, unit suite **180 passed**, output fingerprint **3,498 command-runs**, every changed row accounted
+  for individually.
+
+### Format findings behind this release
+
+The claim register grows to **455** and the errata list to **86**. Eleven entries are new, each confirmed on the
+decompiled driver, the raw-disk corpus, or both. Two corrections worth singling out:
+
+- **The extent record's flags field is two bytes, not four.** The two bytes above it hold the record's own
+  size: `24` normally, `24 + run*4` when the run carries per-cluster CRC32-C. Read as a single 32-bit value the
+  pair looks like one flag constant — which is why the values seen in the wild all begin `0x18`: that is `24`,
+  the record size. Measured on **48,474 records across 40 volumes**, no exception; the field takes 136 distinct
+  values and tracks the run up to 223 clusters. Records are **8-byte aligned**, which is where the
+  long-documented "32-byte stride" for a single-cluster checksummed record comes from.
+- **The change journal is an in-place ring** — `USN mod allocation == byte offset`. After a wrap two
+  generations coexist, so byte order is **not** time order.
+
+### Compatibility
+
+Backward-compatible. Both tools remain **Python 3.7+, standard-library only** and open the input strictly
+**read-only**. Volumes with moved or hard-linked small files, snapshotted files, directory junctions, large or
+fragmented files, and integrity streams will report more than they did under v1.8 — nothing previously
+reported has been removed or reinterpreted.
+
 ## v1.8.0 — 2026-09-01 — whole-volume deep recovery, real capacity reporting, and attributes hidden behind a multi-level embedded tree
 
 **A correctness release with four independent parts: a deep deletion scan that no longer stops part-way

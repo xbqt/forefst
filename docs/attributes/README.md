@@ -73,7 +73,7 @@ schema − 0x100.
 | 0x1E0 | 0xE0 | **`$EA`** | extended-attribute body (carries the WSL `$LX*` names) | v3.14+ | [EA_INFORMATION](EA_INFORMATION.md) |
 | 0x1F0 | 0xF0 | **USN `$Max`** (`$LOGGED_UTILITY_STREAM`) | journal-size metadata on the Change Journal file (OID 0x520) | v3.14+ schema; attr v3.4-era when the journal is active | [structures/usn_journal](../structures/usn_journal.md) |
 | 0x200 | 0x100 | **`$EFS`** (`$LOGGED_UTILITY_STREAM`) | EFS encryption metadata (DDF + wrapped FEK) | v3.11+ | [EFS](EFS.md) |
-| — | 0x38 / 0x39 | **`$OBJ_LINK`** | object→primary-name backpointer (parent OID + name) embedded in the own-row | v3.4 (0x38) → v3.7+ (0x39) | [OBJ_LINK](OBJ_LINK.md) |
+| — | 0x38 / 0x39 | **`$OBJ_LINK`** | object→name backpointer (parent OID + name), **one per name**, embedded in the own-row | v3.4 (0x38) → v3.7+ (0x39) | [OBJ_LINK](OBJ_LINK.md) |
 
 The remaining attribute-schema slots are **structural**, not per-file attributes: `0x110` / `0x120` /
 `0x130` / `0x140` are the directory-entry, file-stream, and filename schemas — the rows of a directory's
@@ -122,7 +122,7 @@ type-0x10 value
             LastUsn     ($SI+0x40)  -> byte offset in $UsnJrnl:$J,
             UsnJournalId($SI+0x48)
   +0xA8+  embedded sub-record chain — each entry = [ value_length | marker | type code | value ]:
-            marker 0x80000002 · type 0x39 $OBJ_LINK    -> parent OID + primary filename
+            marker 0x80000002 · type 0x39 $OBJ_LINK    -> parent OID + filename (one row per name)
             marker 0x80000002 · type 0x90 $I30_INDEX   -> directory-index template
             (a file would instead carry: type 0x80 $DATA, optional 0xB0 ADS/$SNAPSHOT,
              0xD0/0xE0 $EA, 0xC0 $REPARSE_POINT, 0x100 $EFS …)

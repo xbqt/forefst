@@ -22,8 +22,8 @@ The on-disk B+-tree leaf-row key is **16 bytes** (the key type is `SmsBigIdentif
 | 0x18 | 4 | Generation counter (u32) | Checkpoint virtual clock at creation/last modification |
 | 0x1C | 4 | Dirty generation (u32) | Modification epoch (small integer 1-6) |
 | 0x20 | 32 | 4 x u64 LCN slots | Page references for object's own B+-tree root (see [Container Table](container_table.md) for the virtual-to-physical LCN translation) |
-| 0x40 | 8 | (unconfirmed) | u64 — the on-disk values are large and structured rather than a small bitfield; the exact role is not established. |
-| 0x48 | 8 | (per-object identifier — unconfirmed) | u64 — values are mostly distinct across rows, consistent with a per-object id; the exact role is not established. |
+| 0x40 | 8 | **Checksum descriptor** | The tail of the page reference: flags (u16), **checksum type at +0x42** (1 = CRC32-C, 2 = CRC64, 4 = SHA-256), digest offset at +0x43, digest length at +0x44. Observed `00 00 02 08 08 00 00 00` on a CRC64 volume — type 2, offset 8, length 8 |
+| 0x48 | 8 (32 for SHA-256) | **Digest of the object's root page** | Not an identifier. Recomputing the checksum over the page the LCN slots point at reproduces this value exactly — **34,108 of 34,108 rows** across the corpus (CRC64 and SHA-256 volumes, ReFS 3.4 → Insider). The only 20 mismatches are on one known-damaged volume family, which is what a checksum is for |
 
 ## Value Format -- Legacy (pre-v3.10)
 
@@ -93,4 +93,10 @@ The Object Table has a failover pair: root #0 (table ID 0x02) and root #5 (table
 
 ## Evidence
 
-The key/value layout, the compact-versus-legacy formats, and the failover pair are decompiled from the driver (E2) and decoded on raw disk across the corpus (RD). The record-header decode (`format=2`, key/value offsets, generation and dirty-generation counters) and the four-slot LCN tuple are read by `CmsObjectTable::GetObjectRecordOfIdentifier` / `MsGetObjectRecordPayload`. The OID-allocation behaviour (monotonic, never-reused, 0x701 user floor, 0x600 root exception) is proven both statically — `CmsObjectTable::GenerateIdentifier` (atomic increment), `DeleteIdentifier` (never decrements), `MsSetMinimumNewObjectId`, `RefsIsSystemObjectId` — and on disk via the observed no-reuse / gaps-equal-deletions behaviour. The 0x40 and 0x48 value fields are inferred only (no E2): 0x40 is an unconfirmed structured u64 and 0x48 is a probable per-object identifier; neither role is established. See [how this was verified](../methodology.md) to trace these to the exact images and measurements in `analysis/`.
+The key/value layout, the compact-versus-legacy formats, and the failover pair are decompiled from the driver (E2) and decoded on raw disk across the corpus (RD). The record-header decode (`format=2`, key/value offsets, generation and dirty-generation counters) and the four-slot LCN tuple are read by `CmsObjectTable::GetObjectRecordOfIdentifier` / `MsGetObjectRecordPayload`. The OID-allocation behaviour (monotonic, never-reused, 0x701 user floor, 0x600 root exception) is proven both statically — `CmsObjectTable::GenerateIdentifier` (atomic increment), `DeleteIdentifier` (never decrements), `MsSetMinimumNewObjectId`, `RefsIsSystemObjectId` — and on disk via the observed no-reuse / gaps-equal-deletions behaviour. > **Where this is checked.** `forefst.py <image> integrity --fullchecksums` crosses the Object Table's leaf
+> rows into every object B+-tree and verifies each page against the digest recorded here — so a stale or
+> corrupt object root **is** detected, by the command whose job that is. Ordinary commands do **not** verify
+> it: doing so would mean re-reading and re-checksumming every object's root page on every run, measured at
+> about 40 seconds on a volume with ~27,000 objects. If you need the assurance, run `integrity`.
+
+**0x20–0x50 is a complete [page reference](page_references.md)** — the same structure used everywhere else — of which 0x40 is the checksum descriptor and 0x48 the digest of the object's root page. This is raw-disk confirmed rather than inferred: the digest recomputes over the referenced page on **34,108 of 34,108** rows corpus-wide (the 20 exceptions are all on one known-damaged volume family). It follows that a stale or corrupt object root is detectable at no cost, and that the compact 80-byte row (0x20 + 0x30) and the 104-byte SHA-256 row (0x20 + 0x48) are exactly a header plus one page reference. See [how this was verified](../methodology.md) to trace these to the exact images and measurements in `analysis/`.

@@ -36,6 +36,22 @@ directory entries. The reparse tag is also mirrored into `$STANDARD_INFORMATION`
 
 Value sizes range roughly 188–548 bytes, depending on the path-string length.
 
+### Where to find it on a directory
+
+On a **file**, the buffer is usually reachable from a top-level `0xC0` attribute row. On a **directory**
+reparse point — a junction or a directory symlink — it is not: the directory's own table holds a **single
+row keyed 0x10**, and the buffer sits in the attribute tree embedded in that row's value, alongside the
+`0x90` and `0x39` attributes. The name row in the parent directory is an 84-byte index entry with no room
+for it. A reader that looks only at top-level rows therefore finds nothing and reports the target as
+absent, though it is fully present: across the image corpus **98 of 341** reparse-bearing objects keep
+their buffer only there — **78 of 81** on a real Windows volume, where they are the familiar compatibility
+junctions (`\??\C:\ProgramData`, `\??\C:\Users\Default`, `Program Files`, …).
+
+Two decode consequences follow. A junction commonly carries **print name length 0**, so the substitute
+name is the authoritative target — never fall back to the tag's *name*. And if the object's attribute set
+is large enough that its embedded tree becomes an index node, the attributes live one level further down
+again (see [Attributes](../concepts/attributes.md)), so the descent has to be followed there too.
+
 ## Reparse tags
 
 `refs.sys` structurally recognizes **only two** tags: `0xA0000003` (junction — gated to directory

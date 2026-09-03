@@ -30,16 +30,32 @@ See [B+-Tree Node](btree_node.md) for the page-level node structure that holds t
 
 Only **two** key_flags values exist on disk (distribution {0x01, 0x02} only, zero occurrences of 0x04):
 
-| Value | Type | Value Size | Description |
-|-------|------|-----------|-------------|
-| 0x01 | Resident file | >84 bytes | File with inline data |
-| 0x02 | Non-resident file | 84 bytes (v3.10+) / 72 bytes (v3.4–v3.9) | File with extent references |
+| Value | The row is | Value Size | Description |
+|-------|-----------|-----------|-------------|
+| 0x01 | an **embedded record** | >84 bytes | The file's own metadata header follows in this row. Its `$DATA` may be inline **or** extent-backed — the flag does not say which |
+| 0x02 | an **index entry** | 84 bytes, or 72 if written by a pre-v3.10 driver | A pointer; the record was split out into a type-0x40 row in the file's home directory. On a *file* this is the fingerprint of a move or a hard link |
+
+> **`key_flags` is not a residency flag.** Reading 0x01 as "resident" and 0x02 as "non-resident" is the
+> most common way to mis-parse this structure. Every kf=0x01 *file* row is extent-backed on ReFS 3.4–3.10
+> (1,120 / 250 / 386 / 236 rows measured, none inline); on 3.14 about 93 % are inline but 16,809 are not.
+> Determine residency from the `$DATA` attribute's storage — see
+> [Resident vs non-resident storage](../concepts/resident_storage.md).
 
 A directory is stored with **key_flags 0x02** (the non-resident value layout) and is identified by the directory attribute bit `0x10000000` at value+0x40: `RefsAddFileNameIndexEntry` ORs the `0x10000000` bit into the attribute word. There is no separate 0x04 = directory flag.
 
-The non-resident value length is **72 bytes on v3.4–v3.9 and 84 bytes on v3.10+** (measured across all corpus images) — the driver `RefsAddFileNameIndexEntry` sets `local_a8 = 0x54` (84) for v3.10+ volumes and `0x48` (72) for older ones.
+The non-resident value length is **72 bytes below v3.10 and 84 bytes from v3.10** — the driver
+`RefsAddFileNameIndexEntry` sets `0x54` (84) on a v3.10+ volume and `0x48` (72) on an older one.
 
-## Resident file value (key_flags = 0x01) — variable size
+**That length is fixed when the entry is written, and is never rewritten afterwards — so it is a property of
+the entry, not of the volume.** A volume upgraded across the v3.10 boundary carries **both layouts side by
+side**: its pre-upgrade entries keep the 72-byte form while the newer driver writes 84-byte entries for
+anything new. Take the size from the row's own length; keying on the volume version misparses every retained
+entry on an upgraded volume. Across the corpus every natively-formatted volume carries a single size matching
+its format-time version, and exactly the upgraded volumes carry a mixture — one of them 482 retained 72-byte
+entries beside 333 new 84-byte ones. Every field below sits at or under `value+0x44`, which is identical in
+both layouts, so testing the length as a **range** is both correct and version-independent.
+
+## Embedded-record value (key_flags = 0x01) — variable size
 
 | Offset | Size | Field | Description |
 |--------|------|-------|-------------|
@@ -149,7 +165,7 @@ Extent tables for non-resident content are stored in multi-instance sub-records 
 | 0x08 | 8 | Stream index (u64) | Matches ADS header+0x44 or default stream 0x0008 |
 | 0x10 | var | Extent table | See [Extent Descriptors](extent_descriptors.md) |
 
-## Non-resident file value (key_flags = 0x02) — 84 bytes (v3.10+) / 72 bytes (v3.4--v3.9)
+## Index-entry value (key_flags = 0x02) — 84 bytes, or 72 from a pre-v3.10 driver
 
 Directories also use this layout (key_flags 0x02) and are identified by the directory attribute bit `0x10000000` at offset 0x40.
 
@@ -164,7 +180,7 @@ Directories also use this layout (key_flags 0x02) and are identified by the dire
 | 0x30 | 8 | Allocated size (u64) | Total allocated bytes (cluster-aligned) |
 | 0x38 | 8 | File size (u64) | Logical content length |
 | 0x40 | 4 | File attributes (u32) | Win32 flags + ReFS extensions (dir bit 0x10000000) |
-| 0x44 | 4 / 12 | Padding | Zero; 4 bytes on v3.4--v3.9 (total 72), 12 bytes on v3.10+ (total 84) |
+| 0x44 | 4 / 12 | Padding | Zero; 4 bytes in the 72-byte form, 12 bytes in the 84-byte form |
 
 ### Relocated files — the entry moves, the identity does not
 
@@ -180,8 +196,9 @@ its ordinal `value+0x00 = 3`, and its type-0x40 backing is found in 0x9586, not 
 
 This is also *why* a relocated file always appears in the non-resident layout. The frozen creation-directory
 home is carried by `value+0x08`, and only this non-resident value has that field — the resident value
-(key_flags 0x01) does not. So a small file that was resident becomes **non-resident** the moment it is moved (or
-hard-linked), and it never reverts: the move re-homes the name and, because the identity must be stored
+(key_flags 0x01) does not. So a small file's entry takes the **non-resident layout** the moment it is moved (or
+hard-linked) — its record leaves the name row, though its data may well stay inline inside that record — and it
+never reverts: the move re-homes the name and, because the identity must be stored
 somewhere, the object takes the non-resident form for good. A file still in the resident layout has therefore
 never been relocated — its home always equals its current parent. (Measured directly on a controlled
 before/after move: a 16-byte resident file was non-resident after a cross-directory move, with `value+0x08`
@@ -227,4 +244,4 @@ A directory's tree also carries type 0x20 rows: a per-object FileId-resolution i
 
 ## Evidence
 
-The key/value layouts, the version size split (84/72 bytes), the {0x01, 0x02}-only key-flag census, the resident/non-resident field offsets, the sub-record markers and descriptors, and the 0 = ADS / 2 = snapshot discriminator are raw-disk decoded across the corpus (RD) and corroborated in the driver (E2): `RefsAddFileNameIndexEntry` ORs the directory bit and gates the 84/72-byte length, `RefsCreateStreamSnapshot` sets the snapshot StreamSummary bit, and the hard-link identity pair is written by `RefsLinkFileToSelf`. See [how this was verified](../methodology.md) to trace these to the exact images and measurements in `analysis/`.
+The key/value layouts, the 84/72-byte size split and its fixing at write time (proven by two controlled before/after upgrade pairs, where the pre-upgrade entries are retained byte-for-byte beside the new ones), the {0x01, 0x02}-only key-flag census, the resident/non-resident field offsets, the sub-record markers and descriptors, and the 0 = ADS / 2 = snapshot discriminator are raw-disk decoded across the corpus (RD) and corroborated in the driver (E2): `RefsAddFileNameIndexEntry` ORs the directory bit and gates the 84/72-byte length, `RefsCreateStreamSnapshot` sets the snapshot StreamSummary bit, and the hard-link identity pair is written by `RefsLinkFileToSelf`. See [how this was verified](../methodology.md) to trace these to the exact images and measurements in `analysis/`.

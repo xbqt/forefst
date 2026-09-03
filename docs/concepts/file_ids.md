@@ -103,8 +103,12 @@ The surprising row is the move. A **cross-directory move converts a small reside
 one**, and it never turns back. The reason is structural: a file that lives in more than one place — a moved
 file (name here, object still in its birth directory) or a hard-linked file (several names) — needs a slot that
 records its frozen creation-directory home. Only the **non-resident** directory-entry layout has that slot; the
-resident layout does not. So the moment a file is moved or hard-linked, ReFS must store it in the non-resident
-form, and there is no operation that converts it back to resident.
+resident layout does not. So the moment a file is moved or hard-linked, ReFS must store its entry in the
+non-resident *layout*, and there is no operation that converts it back.
+
+That is a statement about the **entry layout**, not about the file's data: the record moves out of the name
+row, and the bytes can perfectly well stay inline inside it. A small moved or hard-linked file is commonly
+still stored inline — see [Resident vs Non-Resident Storage](resident_storage.md).
 
 Two practical consequences:
 

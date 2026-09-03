@@ -24,12 +24,17 @@ is exactly why the on-disk field is always 1 and is not the source of truth.
 
 Linking a file performs three changes to its on-disk representation:
 
-1. **It promotes the file to non-resident.** Even a small file that would normally live inline
-   (resident, key flags `0x01`) is rewritten as a non-resident type-0x30 directory entry — key flags
-   `0x02`, an 84-byte value (72 bytes on v3.4). Resident files cannot be hard-linked, so promotion is
-   forced. The mechanics of that inline-to-extent conversion are on the
-   [Resident vs Non-Resident Storage](resident_storage.md) page; here the point is that the conversion
-   is mandatory and leaves a trace.
+1. **It splits the object's record out of the name row.** Even a small file that would normally keep its
+   record inline (key flags `0x01`) is rewritten as a key-flags `0x02` directory entry — an 84-byte value
+   (72 if a pre-v3.10 driver wrote it) that is only a pointer, with the record moved into a separate
+   backing record. A file whose record is embedded in one name cannot be given a second name, so the split
+   is forced, and it leaves a trace.
+
+   **This moves the record, not necessarily the data.** Placement and residency are independent: the
+   file's bytes can stay *inside* that backing record, and for small files they usually do — the three
+   names `hl1_a/b/c` in the lab corpus share a single 400-byte stream held inline. So a hard-linked file
+   is commonly reported as **resident with a link count above one**, which is not a contradiction. See
+   [Resident vs Non-Resident Storage](resident_storage.md).
 
 2. **It creates one type-0x30 directory entry per name.** Each name is a fully independent row in its
    own parent directory, carrying its own filename in the key. The names need not share a parent — that
@@ -101,6 +106,25 @@ any old value occurs — and that stale size is the one situation where a size-m
 name resolves to no candidate and is counted as a solo file). It is still one object, and its 0x39
 back-pointers still list every name. All of a file's names share the single FileRef `(HomeOid, FileId)`
 (see [File IDs](file_ids.md)); the back-pointers enumerate the names behind that one shared identity.
+
+### Which size is the file's real size
+
+The name's `value+0x38` is a **cache**. The object's size lives in its **type-0x40 backing record, at
+`value+0x58`** — that is the one to trust, and it is the one every forefst command resolves.
+
+The cache can be wrong **in either direction**, and the two failure modes are not equally visible:
+
+| Cache says | Effect if believed |
+|---|---|
+| **larger** than the object | Reads past the end of the real content and appends whatever fills the last cluster |
+| **smaller** than the object | **Silently truncates the file** — you get a short file with no error |
+
+Across the corpus this affects **190 of 83,176** index-entry names (ReFS 3.7 through 3.14), and both
+directions occur: one name caches 239,973 bytes for a 97,673-byte object, another caches 293,302 for a
+479,429-byte one. In every one of the 190 the backing's size agrees with the file's own `$DATA` stream size
+and the cached one does not, so the backing is corroborated rather than merely preferred.
+
+This cannot arise on **ReFS 3.4**, which has no type-0x40 backings and no index-entry file rows at all.
 
 ## Forensic implications
 

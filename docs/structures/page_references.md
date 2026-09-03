@@ -16,12 +16,14 @@ The page reference exists in three version- and checksum-dependent formats. Assu
 | 0x22 | 1 | Checksum type (u8) | See Checksum Type Codes below |
 | 0x23 | 1 | Checksum data offset (u8) | 0x08 |
 | 0x24 | 4 | Checksum data length (u32) | 8 (CRC64) |
-| 0x28 | 8 | CRC64 checksum | Written but **not verified** before v3.14 |
+| 0x28 | 8 | CRC64 checksum | Written; **apparently not verified** before v3.14 (driver-code reading, untested — see below) |
 | 0x30 | 56 | Padding | Zero-filled |
 
 **Total**: 104 bytes (0x68)
 
-CRC64 values are written at format time but the mount path instantiates `CmsChecksumNone` (a stub whose `VerifyChecksum` always returns success without comparison), so metadata-page checksums are not verified on these versions.
+CRC64 values are written at format time but the mount path instantiates `CmsChecksumNone` (a stub whose `VerifyChecksum` always returns success without comparison), so metadata-page checksums appear not to be verified on these versions.
+
+> **This rests on decompilation alone.** No behavioural test backs it here, and it sits against Microsoft's long-standing statement that ReFS validates metadata checksums. The decisive experiment is cheap and has not been run: flip one byte in a child page of a ReFS 3.4 volume and mount it on the matching Windows build — if the volume mounts and reads the page without complaint, the stub behaves as the code reads. Until then treat this as **something read out of the driver code, not an observed behaviour**.
 
 ## Format 2: 48 bytes (0x30) -- ReFS v3.10+ with CRC64
 
@@ -32,7 +34,7 @@ CRC64 values are written at format time but the mount path instantiates `CmsChec
 | 0x10 | 8 | LCN slot 2 (u64) | Third cluster |
 | 0x18 | 8 | LCN slot 3 (u64) | Fourth cluster |
 | 0x20 | 2 | Flags (u16) | 0x0000 |
-| 0x22 | 1 | Checksum type (u8) | 0x02 (CRC64, custom poly — not ECMA-182) |
+| 0x22 | 1 | Checksum type (u8) | 0x02 (CRC-64/NVME — not ECMA-182) |
 | 0x23 | 1 | Checksum data offset (u8) | 0x08 |
 | 0x24 | 4 | Checksum data length (u32) | 8 |
 | 0x28 | 8 | CRC64 checksum | Verified at mount from v3.14 |
@@ -61,7 +63,7 @@ CRC64 values are written at format time but the mount path instantiates `CmsChec
 |-------|-----------|-------|
 | 0x00 | None | No verification |
 | 0x01 | CRC32-C | CHKP self-descriptor only |
-| 0x02 | CRC64 (custom poly, not ECMA-182) | Standard metadata verification |
+| 0x02 | CRC-64/NVME (reflected poly 0x9A6C9329AC4BC9B5, not ECMA-182) | Standard metadata verification |
 
 ## Format Selection Rule
 
@@ -80,7 +82,7 @@ The format is determined by the [VBR](vbr.md) checksum algorithm selector (offse
 | VBR 0x2A | 0x0000 (None) | 0x0002 (CRC64) |
 | CHKP flags bit 0x400 | Not set | Set |
 | Verification class | CmsChecksumNone (stub) | CmsChecksum (real CRC64) |
-| CRC64 in page refs | Written but never verified | Written and verified |
+| CRC64 in page refs | Written; verification stubbed out *(read from the driver, untested)* | Written and verified |
 
 On upgraded volumes (v3.4 to v3.14): VBR 0x2A remains 0x0000 but CHKP flag 0x0400 is set. The driver uses CHKP flags (not VBR 0x2A) as the runtime indicator.
 
@@ -96,4 +98,4 @@ The CHKP self-descriptor **page reference** carries checksum **type 0x01 (CRC32-
 
 ## Evidence
 
-The three formats, the field layout, the checksum-type codes, and the format-selection rule are confirmed in the decompiled driver (E2). The custom-polynomial CRC64 (not ECMA-182) is finding GN_PREF_002. The non-verification on v3.4 follows from `CmsChecksumNone::VerifyChecksum` always returning TRUE, replaced in v3.14 by the unified `CmsChecksum` class that performs real CRC64 computation. The cluster-size-dependent SUPB/CHKP self-checksum, verified and self-healed at mount, is finding FS_SUPB_006, FS_CHKP_004, FS_SUPB_RA_003. See [how this was verified](../methodology.md) to trace these to the exact images and measurements in `analysis/`.
+The three formats, the field layout, the checksum-type codes, and the format-selection rule are confirmed in the decompiled driver (E2). The CRC64 is **CRC-64/NVME** (reflected poly 0x9A6C9329AC4BC9B5, check value 0xAE8B14860A799888) — not ECMA-182; finding GN_PREF_002. The non-verification on v3.4 follows from `CmsChecksumNone::VerifyChecksum` always returning TRUE — a driver-code inference with no behavioural test — replaced in v3.14 by the unified `CmsChecksum` class that performs real CRC64 computation. The cluster-size-dependent SUPB/CHKP self-checksum, verified and self-healed at mount, is finding FS_SUPB_006, FS_CHKP_004, FS_SUPB_RA_003. See [how this was verified](../methodology.md) to trace these to the exact images and measurements in `analysis/`.

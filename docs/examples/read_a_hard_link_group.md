@@ -145,7 +145,7 @@ ordinal can point at a different file, which the size match correctly separates)
 
 Tempting shortcut: read the field literally named *HardLinkCount* at `$SI+0x70`. It is a
 trap. `$SI+0x70` is a **resident-layout** field (offset within the key_flags 0x01 value),
-and these hard-linked files are **non-resident** (key_flags 0x02) — they have no `$SI+0x70`
+and these hard-linked files use the split-record layout (key_flags 0x02) — they have no `$SI+0x70`
 at all. Where it *does* exist, the driver writes it from a per-FCB scalar
 (`RefsComputeStandardInformationFromFcb` copies `$SI+0x70 <- FCB+0xB4`), so it reads **1**
 for every object — even on this very image, the one corpus volume that actually contains

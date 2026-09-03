@@ -156,7 +156,7 @@ documented from the on-disk side on the [Allocators](../structures/allocators.md
 |-------|------|-------|---------|------|
 | `CmsChecksumNone` | 8 | — | — | Stub: `VerifyChecksum` always returns TRUE (v3.4) |
 | `CmsCrc32` | 47 | — | — | CRC32-C computation templates (v3.4) |
-| `CmsCrc64` | 49 | — | — | CRC64 computation templates (v3.4); custom poly, **not** ECMA-182 |
+| `CmsCrc64` | 49 | — | — | CRC64 computation templates (v3.4); CRC-64/NVME, **not** ECMA-182 |
 | `CmsChecksum` | 4 | 11 | 13 | Unified polymorphic checksum class (v3.14+; CRC32-C/CRC64 via ClMul + XXH64) |
 
 v3.14 consolidated dozens of per-page-type checksum templates plus the `CmsChecksumNone` stubs into one

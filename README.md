@@ -56,7 +56,7 @@ forefst/
 │   ├── methodology.md        #   how every claim was verified
 │   └── KNOWLEDGE_MAP.md      #   topic -> authoritative-source index
 └── analysis/                 # lab materials + verification harness (the tools don't depend on it)
-    ├── reference_table.csv   #   the live claim register (440 findings)
+    ├── reference_table.csv   #   the live claim register (455 findings)
     ├── lab/                  #   VM setup, disk generation, activity generator + baseline
     ├── samples/              #   captured tool output + samples/corpus/ + sample disks
     └── reports/              #   verification scripts, results, per-claim audit/ harness

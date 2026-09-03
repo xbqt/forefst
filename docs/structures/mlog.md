@@ -45,7 +45,7 @@ in parentheses):
 | Offset | Size | Field | Description |
 |--------|------|-------|-------------|
 | 0x00 (0x78) | 8 | LSN | Copy of record+0x28 |
-| 0x08 (0x80) | 8 | **Checksum** | 8-byte XOR-fold — the real per-record integrity value; varies per record |
+| 0x08 (0x80) | 8 | **Checksum** | The real per-record integrity value (varies per record), described in the driver as an 8-byte XOR-fold. **Not yet reproduced:** the exact byte range, stride and initial value have not been pinned, so this field cannot currently be recomputed or verified from this reference — the reader stores it without checking it |
 | 0x18 (0x90) | 8 | Previous LSN | Copy of record+0x30 |
 | 0x20 (0x98) | 4 | Payload length | Redo-block bytes (control records carry 0xe48) |
 | 0x28 (0xA0) | 4 | Payload offset | From entry base = **0x38 (v3.4–v3.14) / 0x40 (Insider)** |
@@ -135,6 +135,40 @@ On a 64K-cluster volume each cluster holds 16 consecutive log records with conse
 must iterate **4 KiB blocks**, not clusters — otherwise a 64K-cluster log exposes only 1/16 of its
 records. On 4 KiB-cluster volumes the two are identical.
 
+## Verifying a record
+
+Every log record — control page and data record alike — carries an 8-byte integrity value at **entry header
++0x08** (= page+0x80, the entry-header offset at page+0x54 being 0x78). The driver recomputes it before
+replaying a record, and it can be recomputed from the page alone:
+
+```
+field_off = le32(page, 0x54) + 8          # the integrity value's own position
+block     = le32(page, 0x0C)              # 0x1000 on every volume, whatever the cluster size
+zero the 8 bytes at field_off
+result = 0
+for each block of `block` bytes:
+    acc = [rotate_left_1(result), 0, 0, 0]     # chain seed; 0 for the first block
+    for i, word in enumerate(little-endian u64 words of the block):
+        acc[i mod 4] ^= word
+    v      = acc[0] ^ acc[1] ^ acc[2] ^ acc[3]
+    result = (v >> 32) ^ (v & 0xFFFFFFFF)
+```
+
+A record is exactly one log block, so the chain seed is 0 in practice. The record **type** at entry header
++0x30 says which kind of record it is — **1** for a control page, **2** for a data record; no other value
+occurs on disk.
+
+Across the image corpus (ReFS 3.4 → 3.15, 4 K and 64 K clusters) this reproduces the stored value on all
+599,039 data records and all 95 control pages.
+
+> **An integrity check, not a signature.** It detects any altered byte — a single-bit flip at any of a
+> record's 4,096 offsets is caught — but being an XOR fold it is blind to a *reordering* of 8-byte words that
+> leaves each word at the same position modulo 4.
+
+`forefst <image> mlog --stats` runs this over every record in the data area and over both control copies,
+reporting each failure with its stored and recomputed value.
+
+
 ## Control page layout — ~252 bytes (18 fields decoded)
 
 | Offset | Size | Field | Description |
@@ -150,7 +184,7 @@ records. On 4 KiB-cluster volumes the two are identical.
 | 0x40-0x53 | 20 | *Zero* | All-zero |
 | 0x54 | 4 | `0x78` constant | Entry-header offset (=120); the payload is reached via this (see below) |
 | 0x58-0x7F | 40 | *Zero* | All-zero |
-| 0x80 | 4 | Valid checksum | Validation field (per-volume value) |
+| 0x80 | 8 | **Record integrity value** | The record's own XOR fold, at entry header +0x08. Per **record**, not per volume: it changes with the record's content. Only the low 4 bytes are ever used — the upper 4 are zero on every record measured. See *Verifying a record* below. |
 | 0x84-0xAF | -- | *Zero* | All-zero up to the payload base |
 | *payload (~0xB0)* | | *Variable-offset payload fields* | Located via entry header at 0x54 |
 
@@ -400,13 +434,14 @@ modes via `forefst.py <image> mlog`:
 | `-v` | Per-record detail (opcode + OID) **plus a LogCore Record Headers table** — per-record LSN, prevLSN, checksum, type, and payload offset, with `!chain` markers where `prevLSN[n] != LSN[n-1]` (circular-buffer wrap or a 64K-cluster multi-block page) |
 | `--parse` | Decoded transactions: action classification, file paths, timestamps |
 | `--csv [FILE]` | Transaction export as CSV (seq, timestamp, action, path, name, oid, opcodes) |
-| `--stats` | Opcode frequency histogram |
-| `--json` | Machine-readable JSON output |
+| `--stats` | Record-integrity verdict (every data record + both control copies) followed by the opcode frequency histogram |
+| `--json` | Machine-readable JSON output, including an `integrity` object with the same verdict |
 | `--info` | Reference: all actions, opcodes, timestamps, schema names |
 | `--raw-scan` | Raw page classification (debug) |
 
 Validated across v3.4 / v3.7 / v3.9 / v3.10 / v3.14 / Insider volumes — all PASS the LogCore framing
-check (entry header @0x78, type 2, single per-volume magic). The 4 KiB-block scanner gives full coverage
+check (entry header @0x78, type 2, single per-volume magic), and every record's integrity value recomputes:
+599,039 data records and 95 control pages, no mismatches. The 4 KiB-block scanner gives full coverage
 on 64K-cluster volumes.
 
 ## Cross-references

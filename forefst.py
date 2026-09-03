@@ -64,6 +64,30 @@ def le16(b, off): return int.from_bytes(b[off:off+2], "little")
 def le32(b, off): return int.from_bytes(b[off:off+4], "little")
 def le64(b, off): return int.from_bytes(b[off:off+8], "little")
 
+# GPT lives at LBA 1, so its byte offset depends on the disk's logical sector size: 512 on 512-native and
+# 512e media, 4096 on 4Kn. Everything here tries 512 FIRST, so every image that parses today takes exactly
+# the path it always did; 4096 is only reached when there is no GPT signature at 512.
+_LBA_SIZES = (512, 4096)
+
+
+def _read_gpt_header(f):
+    """(header_bytes, lba_size) for the GPT at LBA 1, or (None, 512).
+
+    NOTE: the 4096 branch is **untested** — this project has no 4Kn media. It is written so a 4Kn image is
+    read rather than rejected outright, not because the behaviour has been observed. Treat a result obtained
+    through it as unverified, and prefer `--partition-start` if the geometry looks wrong.
+    """
+    for lba in _LBA_SIZES:
+        try:
+            f.seek(lba)
+            hdr = f.read(lba)
+        except (OSError, OverflowError):
+            continue
+        if len(hdr) >= 92 and hdr[:8] == b"EFI PART":
+            return hdr, lba
+    return None, _LBA_SIZES[0]
+
+
 def find_refs_partition(path):
     """Find the first ReFS partition in a GPT disk image.
 
@@ -74,22 +98,21 @@ def find_refs_partition(path):
     Basic-Data partition (prior behaviour); the caller's parse_vbr then validates/aborts on it.
     """
     with open(path, "rb") as f:
-        f.seek(SECTOR)
-        hdr = f.read(SECTOR)
-        if len(hdr) < 92 or hdr[:8] != b"EFI PART":
+        hdr, lba = _read_gpt_header(f)
+        if hdr is None:
             return None, "no GPT partition table found (use --partition-start for raw partitions)"
         plba = le64(hdr, 72)
         np = min(le32(hdr, 80), 128)     # audit 2.2: cap entry count (a fuzzed 0xFFFFFFFF x es read = MemoryError)
         es = le32(hdr, 84)
         if not (128 <= es <= 4096):      # entry size outside the UEFI spec -> not a usable GPT
             return None, "GPT partition-entry array is out of spec (use --partition-start for raw partitions)"
-        f.seek(plba * SECTOR)
+        f.seek(plba * lba)
         entries = f.read(np * es)
         first_basic = None
         for i in range(np):
             e = entries[i*es:(i+1)*es]
             if len(e) >= 128 and e[:16] == GPT_BASIC_DATA:
-                start = le64(e, 32) * SECTOR
+                start = le64(e, 32) * lba
                 if first_basic is None:
                     first_basic = (start, f"partition #{i+1}")
                 try:
@@ -111,14 +134,13 @@ def gpt_partition_detail(path):
     """
     try:
         with open(path, "rb") as f:
-            f.seek(SECTOR)
-            hdr = f.read(SECTOR)
-            if len(hdr) < 92 or hdr[:8] != b"EFI PART":
+            hdr, lba = _read_gpt_header(f)
+            if hdr is None:
                 return None
             plba = le64(hdr, 72); np = min(le32(hdr, 80), 128); es = le32(hdr, 84)
             if not (128 <= es <= 4096):     # audit 2.2: bound entries/size before the read (MemoryError guard)
                 return None
-            f.seek(plba * SECTOR)
+            f.seek(plba * lba)
             entries = f.read(np * es)
         for i in range(np):
             e = entries[i*es:(i+1)*es]
@@ -130,8 +152,8 @@ def gpt_partition_detail(path):
                     "name": name or "(unnamed)",
                     "first_lba": first,
                     "last_lba": last,
-                    "size_bytes": (last - first + 1) * SECTOR if last >= first else 0,
-                    "start_bytes": first * SECTOR,
+                    "size_bytes": (last - first + 1) * lba if last >= first else 0,
+                    "start_bytes": first * lba,
                 }
     except Exception:
         return None
@@ -173,13 +195,11 @@ def validate_image(path, die_fn=None):
 
             # Check for GPT at sector 0 or sector 1
             gpt_header = None
+            gpt_lba = SECTOR
             if header[:8] == b"EFI PART":
                 gpt_header = header
             else:
-                f.seek(SECTOR)
-                sec1 = f.read(SECTOR)
-                if len(sec1) >= 8 and sec1[:8] == b"EFI PART":
-                    gpt_header = sec1
+                gpt_header, gpt_lba = _read_gpt_header(f)
 
             if gpt_header is None:
                 fail("no ReFS or GPT signature found "
@@ -192,7 +212,7 @@ def validate_image(path, die_fn=None):
             if not (128 <= esz <= 4096):                                     # audit 2.2: bound entry size (bomb)
                 fail("GPT partition-entry array is out of spec "
                      "(use --partition-start for raw partitions)")
-            f.seek(plba * SECTOR)
+            f.seek(plba * gpt_lba)
             entries = f.read(nparts * esz)
             # audit 2.3: scan EVERY Basic-Data partition and accept if ANY is ReFS. Was `break` after the first,
             # so a ReFS partition BEHIND an NTFS one was rejected here while find_refs_partition accepted it —
@@ -204,8 +224,8 @@ def validate_image(path, die_fn=None):
                 e = entries[i*esz:(i+1)*esz]
                 if len(e) >= 128 and e[:16] == GPT_BASIC_DATA:
                     part_lba = struct.unpack_from("<Q", e, 32)[0]
-                    f.seek(part_lba * SECTOR)
-                    vbr = f.read(SECTOR)
+                    f.seek(part_lba * gpt_lba)
+                    vbr = f.read(SECTOR)          # the VBR signature check only needs the first 512 bytes
                     if len(vbr) >= 16:
                         if vbr[3:7] == b"ReFS":
                             return  # confirmed ReFS partition (any position)
@@ -223,7 +243,7 @@ def validate_image(path, die_fn=None):
 
 # ─── Constants ────────────────────────────────────────────────────────
 PROG = "forefst"
-VERSION = "1.8.0"
+VERSION = "1.9.0"
 # Phase 3 (4.D): directory walks default to FULL depth (no artificial cap); `--depth N` overrides. The real
 # recursion depth equals the actual directory nesting (ReFS trees are shallow — tens of levels), so this
 # constant is never the binding limit; it just means "don't truncate". main() also raises the interpreter
@@ -1383,6 +1403,40 @@ def get_resident_file_size(vd, ctx=None):
     return 0
 
 
+def _backing_inline_data(vd, ctx=None):
+    """Inline `$DATA` bytes of a type-0x40 backing record, or None when the stream is extent-backed (E82).
+
+    A file whose record was SPLIT OUT of its name row (`key_flags 0x02`) can still keep its data **inside that
+    record**. Record placement and data residency are independent (E77): the split is what a move or a hard
+    link forces, and it says nothing about where the bytes live. When the data stayed inline, the backing's
+    main `$DATA` sub-record is the **resident** form — single-instance marker 0x80000001 + type 0x80, with
+    `summary_size@0x0C == 0x30` and `storage_type@0x10 == 0` — carrying the byte count at `+0x20` and the
+    bytes at `+0x3C`. (The extent-bearing form is the other one: `inner_hdr@0x00 = 0x88`, `summary_size` 0x200
+    on v3.14+ / 0x1A0 on v3.4-v3.10, extents at `+0x88`.)
+
+    Matching the single-instance marker matters: an ADS is a *multi-instance* 0x80 row, so accepting any 0x80
+    row returns a stream that is not the file's data.
+
+    Measured over the corpus: 16,191 of 83,176 index-entry files keep their data this way, on 26 images
+    (14,580 on one real Windows volume); the two forms are mutually exclusive — no record carries both.
+    Before this, such a file was reported non-resident and `extract` failed with "no extents decoded" while
+    its bytes sat in the record already held."""
+    try:
+        rows = parse_resident_btree_rows(bytes(vd), ctx)
+    except (ValueError, struct.error, IndexError):
+        return None
+    for kd, vr in rows:
+        if len(kd) >= 14 and kd[8:12] == _SI_MARKER and kd[12] == 0x80 and kd[13] == 0x00:
+            v = bytes(vr)
+            if len(v) < 0x28 or le32(v, 0x0C) != 0x30 or le32(v, 0x10) != 0:
+                return None                      # extent-bearing (or an unexpected shape) -> not inline
+            sz = le64(v, 0x20)
+            if sz == 0 or 0x3C + sz > len(v):
+                return None
+            return v[0x3C:0x3C + sz]
+    return None
+
+
 def get_resident_data_content(vd, ctx=None):
     """Q7: inline bytes of the main $DATA stream of a resident file, or None.
 
@@ -1714,7 +1768,7 @@ def _volume_ncl(f, ps_off, cs):
     return n
 
 
-def _decode_inline_extents(v, ncl, max_fvcn=None):
+def _decode_inline_extents(v, ncl, max_fvcn=None, tr=None):
     """Single source of truth for decoding the inline 24-byte extent records inside a 0x10028 holder.
     VALIDATED-GREEDY: after each real extent the next one sits at +24, OR at +32 when an 8-byte integrity
     CRC32-C element is interleaved (integrity streams) — pick whichever validates. Returns
@@ -1733,12 +1787,31 @@ def _decode_inline_extents(v, ncl, max_fvcn=None):
     ecount = le32(v, ihdr + 0x14)
     fvcn_bound = max_fvcn if max_fvcn is not None else ncl
 
+    def _plausible_vlcn(vlcn):
+        """A VLCN is VIRTUAL: the container table maps it to a physical cluster, and the virtual address
+        space is wider than the physical one (it starts at `first_container_id << shift` and runs roughly
+        twice as far — E74). Bounding it by the PHYSICAL cluster count therefore rejects every extent that
+        lives in the upper half of the virtual space: on win11bidule that is 583 of 629 files, each failing
+        `extract` with "inline-holder-overflow" although the extents are intact and translate cleanly.
+        When a translator is available, the authoritative test is whether the container table can map it."""
+        if vlcn == 0:
+            return True                 # sparse hole (zero-filled by reassembly; never disk-read)
+        if 0 < vlcn < ncl:
+            return True
+        if tr is None:
+            return False
+        try:
+            plcn = tr.tr(vlcn)
+        except Exception:
+            return False
+        return plcn is not None and 0 < plcn < ncl
+
     def _ext(off):
         if off < 0 or off + 24 > len(v):
             return None
         vlcn = le64(v, off); run = le32(v, off + 0x14); fvcn = le32(v, off + 0x0C)
-        if 0 < run <= ncl and fvcn < fvcn_bound and (vlcn == 0 or 0 < vlcn < ncl):
-            return (fvcn, vlcn, run)    # vlcn==0 -> sparse hole (zero-filled by reassembly)
+        if 0 < run <= ncl and fvcn < fvcn_bound and _plausible_vlcn(vlcn):
+            return (fvcn, vlcn, run)
         return None
 
     exts = []; pos = ihdr + 0x28
@@ -1759,7 +1832,7 @@ def _decode_inline_extents(v, ncl, max_fvcn=None):
     return exts
 
 
-def parse_snapshot_data_entry(v, ncl=None):
+def parse_snapshot_data_entry(v, ncl=None, tr=None):
     """Parse an embedded type-0x80 DATA entry -> (stream_size, disk_alloc, extents)
     where extents = [(file_vcn, vlcn, run_length), ...] sorted by file_vcn.
     When `ncl` (volume cluster count) is given, the extent list is decoded integrity-robustly via
@@ -1771,7 +1844,7 @@ def parse_snapshot_data_entry(v, ncl=None):
     stream_size = le64(v, 0x38)
     disk_alloc = le64(v, 0x48)
     if ncl is not None:
-        return (stream_size, disk_alloc, _decode_inline_extents(v, ncl))
+        return (stream_size, disk_alloc, _decode_inline_extents(v, ncl, tr=tr))
     ihdr = le32(v, 0)
     exts = []
     if ihdr + 0x18 <= len(v):
@@ -1798,7 +1871,7 @@ def recover_cow_current_content(f, ps_off, cs, tr, vd):
     for k, v in parse_resident_btree_rows(vd, (f, ps_off, cs, tr)):
         if (len(k) >= 0x18 and k[12] == 0x80 and k[13] == 0x00
                 and len(v) >= 0x50 and le32(v, 4) == SNAP_DATA_DESC):
-            holders[le64(k, 0x10)] = parse_snapshot_data_entry(v, ncl)
+            holders[le64(k, 0x10)] = parse_snapshot_data_entry(v, ncl, tr)
     cur = holders.get(0x1000)
     if cur is None:
         return None
@@ -1828,6 +1901,55 @@ def recover_cow_current_content(f, ps_off, cs, tr, vd):
             off = (fvcn + j) * cs
             buf[off:off + cs] = chunk
     return bytes(buf[:cur_size])
+
+
+def _snapshot_shared_blocks(vd, ctx, ncl, exclude=0x1000, older_than=None):
+    """Map file-VCN -> VLCN for the blocks a stream does not own itself but SHARES with stream snapshots.
+
+    ReFS stream snapshots are copy-on-write: a block is duplicated only when it is about to be overwritten, so
+    every block not yet modified since a snapshot stays **shared** — physically present once, listed in the
+    snapshot's extent table and absent from the current stream's. That is why a snapshotted file's current
+    stream can report `total_alloc` for the whole file while its own `disk_alloc` covers only the few clusters
+    written since the last snapshot (E83).
+
+    This resolves those blocks to the real clusters that hold them. Nothing is reconstructed or synthesised —
+    every VCN is answered with an actual on-disk cluster; the alternative (what the reader did before) was to
+    leave them zero-filled, which invents bytes that exist nowhere on the volume.
+
+    `exclude` is the stream being assembled. `older_than` restricts the search to snapshots strictly older than
+    a given sub_id, which is what reconstructing a PRIOR version needs: a newer snapshot may hold content
+    written *after* the version being recovered. For the current stream (`older_than=None`) the newest snapshot
+    holding a VCN wins, since a block only leaves the current stream's table when it has not changed since.
+    """
+    streams = {}
+    tr = ctx[3] if ctx and len(ctx) > 3 else None      # the translator, for virtual-LCN plausibility (E85)
+    try:
+        rows = parse_resident_btree_rows(vd, ctx)
+    except (ValueError, struct.error, IndexError):
+        return {}
+    for k, v in rows:
+        if len(k) < 0x18 or le16(k, 0x0C) != 0x80:
+            continue
+        v = bytes(v)
+        if len(v) < 0x50 or le32(v, 4) != SNAP_DATA_DESC:
+            continue
+        sub = le64(k, 0x10)
+        if sub == exclude or not (0x1000 <= sub <= 0xFFFF):
+            continue
+        if older_than is not None and sub >= older_than:
+            continue
+        try:
+            streams[sub] = parse_snapshot_data_entry(v, ncl, tr)
+        except (ValueError, struct.error, IndexError):
+            continue
+    shared = {}
+    for sub in sorted(streams, reverse=True):        # newest first; an older snapshot never overrides it
+        for fv, vlcn, run in (streams[sub][2] or []):
+            if not vlcn:
+                continue
+            for j in range(run):
+                shared.setdefault(fv + j, vlcn + j)
+    return shared
 
 
 def _recover_inline_extent_content(f, ps, cs, tr, vd):
@@ -1863,7 +1985,7 @@ def _recover_inline_extent_content(f, ps, cs, tr, vd):
     ncl = _volume_ncl(f, ps, cs)            # volume cluster count (plausibility bound)
 
     # validated-greedy decode (shared with the snapshot/carve paths); size_cl tightens the file_vcn bound.
-    exts = _decode_inline_extents(v, ncl, max_fvcn=size_cl)
+    exts = _decode_inline_extents(v, ncl, max_fvcn=size_cl, tr=tr)
 
     # COVERAGE GATE (the safety guarantee): every allocated cluster accounted for, exactly once, within the file.
     covered = set()
@@ -1874,6 +1996,25 @@ def _recover_inline_extent_content(f, ps, cs, tr, vd):
         return None
     if any(fv + run > size_cl for fv, _vl, run in exts):
         return None
+
+    # E83: blocks this stream does not own may be SHARED with a stream snapshot rather than being sparse
+    # holes. Resolve those to the clusters that actually hold them; a VCN no stream owns stays zero-filled,
+    # which is the genuine sparse case. Empty (and therefore a no-op) for a file without snapshots.
+    shared = _snapshot_shared_blocks(vd, (f, ps, cs, tr), ncl)
+    if shared:
+        for fv in range(size_cl):
+            if fv in covered or fv not in shared:
+                continue
+            off = fv * cs
+            try:
+                plcn = tr.tr(shared[fv]) if tr else shared[fv]
+            except Exception:
+                continue
+            f.seek(ps + plcn * cs)
+            chunk = f.read(cs)
+            if len(chunk) < min(cs, stream_size - off):
+                continue
+            exts = exts + [(fv, shared[fv], 1)]
 
     buf = bytearray(stream_size)            # holes stay zero (sparse)
     for fv, vlcn, run in exts:
@@ -1978,19 +2119,49 @@ def recover_snapshot_streams(f, ps_off, cs, tr, vd):
                     name = k[0x10:].hex()
             snaps.append((name, sub_id, le64(v, 0x20), le64(v, 0x4C)))
         elif typ == 0x80 and len(v) >= 0x50 and le32(v, 4) == SNAP_DATA_DESC:
-            data[le64(k, 0x10)] = parse_snapshot_data_entry(v, ncl)
+            data[le64(k, 0x10)] = parse_snapshot_data_entry(v, ncl, tr)
 
-    def _read_extents(stream_size, exts):
-        buf = b""
-        for _fvcn, vlcn, run in exts:
+    def _read_extents(stream_size, exts, sub_id=None):
+        """Assemble one version, placing every block at its own file VCN.
+
+        E83: a version owns only the blocks that were copied out for it; the rest it SHARES with OLDER
+        snapshots, which is why concatenating its own extents produced a short, offset-shifted file. Missing
+        VCNs are resolved from snapshots strictly older than this one — never newer, which could hold content
+        written after the version being recovered. A VCN no stream owns stays zero (a genuine sparse hole)."""
+        shared = (_snapshot_shared_blocks(vd, (f, ps_off, cs, tr), ncl, exclude=sub_id, older_than=sub_id)
+                  if sub_id else {})
+        nblocks = (stream_size + cs - 1) // cs
+        blocks = {}
+        for fvcn, vlcn, run in exts:
             for j in range(run):
-                try:
-                    plcn = tr.tr(vlcn + j)
-                except Exception:
-                    plcn = vlcn + j
-                f.seek(ps_off + plcn * cs)
-                buf += f.read(cs)
-        return buf[:stream_size]
+                if vlcn:
+                    blocks.setdefault(fvcn + j, vlcn + j)
+        for fvcn in range(nblocks):
+            if fvcn not in blocks and fvcn in shared:
+                blocks[fvcn] = shared[fvcn]
+        # Only hand back content when EVERY block position resolves to a real cluster. A partially resolved
+        # version would have to be zero-padded, and inventing bytes that are not on the volume is exactly the
+        # failure this change exists to remove — so an incomplete version is reported as not recovered
+        # instead. (A stream with no extents at all is the inline/CoW-resident case, handled elsewhere.)
+        if len(blocks) < nblocks:
+            return b""
+        buf = bytearray(stream_size)
+        for fvcn in range(nblocks):
+            vlcn = blocks.get(fvcn)
+            if not vlcn:
+                continue
+            try:
+                plcn = tr.tr(vlcn)
+            except Exception:
+                plcn = vlcn
+            f.seek(ps_off + plcn * cs)
+            chunk = f.read(cs)
+            off = fvcn * cs
+            n = min(cs, stream_size - off)
+            if len(chunk) < n:
+                return b""
+            buf[off:off + n] = chunk[:n]
+        return bytes(buf)
 
     out = []
     for name, sub_id, ssize, ts in sorted(snaps, key=lambda s: s[1]):
@@ -2005,7 +2176,7 @@ def recover_snapshot_streams(f, ps_off, cs, tr, vd):
                         "ts": ts, "content": None, "inline": True, "n_extents": 0})
         else:
             out.append({"name": name, "sub_id": sub_id, "stream_size": ssize, "ts": ts,
-                        "content": _read_extents(ssize, exts), "inline": False,
+                        "content": _read_extents(ssize, exts, sub_id), "inline": False,
                         "n_extents": len(exts)})
     return out
 
@@ -2449,6 +2620,82 @@ def extract_payload_from_mlog_page(page):
     if data_start + payload_size > len(page):
         return None
     return page[data_start:data_start + payload_size]
+
+
+def mlog_verify_record(page):
+    """Recompute an MLog data record's own integrity value and compare it with the stored one.
+
+    Returns (ok, stored, computed) — or None when `page` is not an MLog LogCore record, so a caller can
+    tell "did not apply" from "failed". Both record types carry the field: type 1 (control page) and
+    type 2 (data record), at entry_header+0x30.
+
+    The driver's scheme (`LogVerifyChecksumEntryHeader` -> `LogChecksumBlock`, E78): the checksum is an
+    8-byte field at `page + le32(page, 0x54) + 8`; it is **zeroed** and the whole log block is folded:
+
+        per block of `le32(page, 0x0C)` bytes (0x1000 on every volume measured):
+            acc[0..3] = 0, with acc[0] seeded from the previous block's result as (r << 1) | (r >> 31 & 1)
+            acc[i mod 4] ^= each little-endian u64 of the block
+            v      = acc0 ^ acc1 ^ acc2 ^ acc3
+            result = (v >> 32) ^ (v & 0xFFFFFFFF)
+
+    i.e. a four-way interleaved u64 XOR folded to 32 bits, chained across blocks. A record is one block, so
+    the chaining seed is 0 in practice. Verified byte-exact on 599,039 data records and 95 control pages
+    across the whole image corpus (ReFS 3.4 -> 3.15 + Insider, 4K and 64K clusters), 0 mismatches, and it
+    detects 2,000/2,000 random single-bit flips. Being an XOR fold it is blind to a REORDERING of 8-byte
+    words that keeps each word in its own lane (i mod 4) -- it is an integrity check, not a signature.
+    """
+    if len(page) < 0xB0 or page[:4] != b"MLog":
+        return None
+    eh_off = le32(page, 0x54)
+    if eh_off == 0 or eh_off + 0x34 > len(page):
+        return None
+    if le32(page, eh_off + 0x30) not in (1, 2):     # 1 = control record, 2 = data record; nothing else exists
+        return None
+    if eh_off + 16 > len(page):
+        return None
+    block = le32(page, 0x0C) or 0x1000
+    if block < 8 or block > len(page):
+        block = len(page)
+    stored = le64(page, eh_off + 8)
+    buf = bytearray(page)
+    struct.pack_into("<Q", buf, eh_off + 8, 0)      # the field is excluded by zeroing it, as the driver does
+    res = 0
+    for base in range(0, len(buf), block):
+        blk = bytes(buf[base:base + block])
+        if len(blk) < block:
+            blk += bytes(block - len(blk))
+        acc = [((res << 1) | ((res >> 31) & 1)) & 0xFFFFFFFFFFFFFFFF, 0, 0, 0]
+        for i in range(len(blk) // 8):
+            acc[i & 3] ^= struct.unpack_from("<Q", blk, i * 8)[0]
+        v = acc[0] ^ acc[1] ^ acc[2] ^ acc[3]
+        res = ((v >> 32) ^ (v & 0xFFFFFFFF)) & 0xFFFFFFFFFFFFFFFF
+    return (res == stored, stored, res)
+
+
+def mlog_verify_pages(pages, max_failures=100):
+    """Run mlog_verify_record() over an iterable of scan_mlog_data_area() blocks.
+
+    Returns {checked, verified, failed, failures, failures_truncated}; `failures` holds
+    (block_lcn, stored, computed) triples, capped at `max_failures`."""
+    checked = verified = 0
+    failures = []
+    truncated = False
+    for p in pages:
+        page = p.get("page")
+        if not page:
+            continue
+        r = mlog_verify_record(page)
+        if r is None:
+            continue
+        checked += 1
+        if r[0]:
+            verified += 1
+        elif len(failures) < max_failures:
+            failures.append((p.get("block_lcn", 0), r[1], r[2]))
+        else:
+            truncated = True
+    return {"checked": checked, "verified": verified, "failed": checked - verified,
+            "failures": failures, "failures_truncated": truncated}
 
 
 def parse_mlog_record_header(page):
@@ -3190,50 +3437,111 @@ def parse_usn_journal_metadata(streams, f_handle, ps, cs):
 
 
 # ─── Reparse target extraction ────────────────────────────────────────
+def _reparse_buffer_target(vd):
+    """Decode a REPARSE_DATA_BUFFER and return its target string ("" if it carries none).
+
+    `vd` starts at the buffer itself: tag u32@0x00, ReparseDataLength u16@0x04, Reserved u16@0x06, then for
+    SYMLINK / MOUNT_POINT the SubstituteName and PrintName offset+length pairs, and the path buffer at 0x14
+    (SYMLINK, which has a 4-byte Flags field) or 0x10 (MOUNT_POINT). The PrintName is preferred because it is
+    the display form; a junction usually carries only the SubstituteName, so that is the fallback."""
+    if len(vd) < 8:
+        return ""
+    tag = le32(vd, 0)
+    data_len = le16(vd, 4)
+    if tag == 0xA000000C and len(vd) >= 0x14:  # SYMLINK
+        sub_off = le16(vd, 0x08)
+        sub_len = le16(vd, 0x0A)
+        print_off = le16(vd, 0x0C)
+        print_len = le16(vd, 0x0E)
+        buf_start = 0x14
+        if print_len > 0 and buf_start + print_off + print_len <= len(vd):
+            try:
+                return vd[buf_start+print_off:buf_start+print_off+print_len].decode("utf-16-le")
+            except UnicodeDecodeError:
+                pass
+        if sub_len > 0 and buf_start + sub_off + sub_len <= len(vd):
+            try:
+                return vd[buf_start+sub_off:buf_start+sub_off+sub_len].decode("utf-16-le")
+            except UnicodeDecodeError:
+                pass
+    elif tag == 0xA0000003 and len(vd) >= 0x10:  # MOUNT_POINT/JUNCTION
+        sub_off = le16(vd, 0x08)
+        sub_len = le16(vd, 0x0A)
+        print_off = le16(vd, 0x0C)
+        print_len = le16(vd, 0x0E)
+        buf_start = 0x10
+        if print_len > 0 and buf_start + print_off + print_len <= len(vd):
+            try:
+                return vd[buf_start+print_off:buf_start+print_off+print_len].decode("utf-16-le")
+            except UnicodeDecodeError:
+                pass
+        if sub_len > 0 and buf_start + sub_off + sub_len <= len(vd):
+            try:
+                return vd[buf_start+sub_off:buf_start+sub_off+sub_len].decode("utf-16-le")
+            except UnicodeDecodeError:
+                pass
+    elif tag == 0xA000001D and len(vd) > 8:  # LX_SYMLINK
+        # E5 fix: skip the 4-byte version (8 -> 12) so it does not prefix the target.
+        try:
+            return vd[12:8+data_len].decode("utf-8").rstrip("\x00")
+        except UnicodeDecodeError:
+            pass
+    return REPARSE_TAGS.get(tag, f"0x{tag:08X}")
+
+
+def _embedded_reparse_target(vd, ctx=None):
+    """Target of a 0xC0 reparse attribute held INSIDE an object record's embedded attribute tree.
+
+    An object whose record is resident keeps its attributes in a small B+-tree embedded in a single row
+    (keyed 0x10). For a DIRECTORY reparse point — a junction or a directory symlink — that is the ONLY place
+    the reparse buffer exists: the object's table has no top-level 0xC0 row, and the name row in the parent is
+    an 84-byte index entry with no room for it. Scanning only top-level rows therefore returned "" and the
+    target was reported as absent though it is on disk (P4-2: 98 of 341 reparse-bearing objects corpus-wide,
+    78 of 81 on a real Windows volume).
+
+    The embedded 0xC0 value carries a 12-byte header whose u32 at +0x08 is the offset of the standard
+    REPARSE_DATA_BUFFER within the value.
+
+    `ctx` = (f, ps, cs, tr) and must be passed: without it an embedded INDEX node yields no rows, which is
+    exactly the E73 blind spot — an object with a large attribute set keeps its attributes in a CHILD page,
+    and a target there would be missed the same way."""
+    if len(vd) < 0x20:
+        return ""
+    try:
+        rows = parse_resident_btree_rows(bytes(vd), ctx)
+    except Exception:
+        return ""
+    for k, v in rows:
+        if len(k) < 0x0E or le16(k, 0x0C) != 0xC0 or len(v) < 0x18:
+            continue
+        off = le32(v, 0x08)
+        if off < 0x0C or off + 8 > len(v):
+            continue
+        t = _reparse_buffer_target(bytes(v)[off:])
+        if t:
+            return t
+    return ""
+
+
 def get_reparse_target(f, ps, cs, tr, vlcns):
-    """Extract reparse point target from an object's B+ tree (type 0xC0)."""
+    """Extract a reparse point's target from an object's B+ tree (type 0xC0).
+
+    The attribute sits at the TOP LEVEL on most objects, but on a directory reparse point it lives inside the
+    object record's embedded attribute tree instead, so both levels are searched (P4-2)."""
     try:
         rows = walk_bplus(f, ps, cs, tr, vlcns)
     except Exception:
         return ""
     for kd, vd in rows:
         if len(kd) >= 2 and le16(kd, 0) == 0xC0 and len(vd) >= 8:
-            tag = le32(vd, 0)
-            data_len = le16(vd, 4)
-            if tag == 0xA000000C and len(vd) >= 0x14:  # SYMLINK
-                sub_off = le16(vd, 0x08)
-                sub_len = le16(vd, 0x0A)
-                print_off = le16(vd, 0x0C)
-                print_len = le16(vd, 0x0E)
-                buf_start = 0x14
-                if print_len > 0 and buf_start + print_off + print_len <= len(vd):
-                    try:
-                        return vd[buf_start+print_off:buf_start+print_off+print_len].decode("utf-16-le")
-                    except UnicodeDecodeError:
-                        pass
-                if sub_len > 0 and buf_start + sub_off + sub_len <= len(vd):
-                    try:
-                        return vd[buf_start+sub_off:buf_start+sub_off+sub_len].decode("utf-16-le")
-                    except UnicodeDecodeError:
-                        pass
-            elif tag == 0xA0000003 and len(vd) >= 0x10:  # MOUNT_POINT/JUNCTION
-                sub_off = le16(vd, 0x08)
-                sub_len = le16(vd, 0x0A)
-                print_off = le16(vd, 0x0C)
-                print_len = le16(vd, 0x0E)
-                buf_start = 0x10
-                if print_len > 0 and buf_start + print_off + print_len <= len(vd):
-                    try:
-                        return vd[buf_start+print_off:buf_start+print_off+print_len].decode("utf-16-le")
-                    except UnicodeDecodeError:
-                        pass
-            elif tag == 0xA000001D and len(vd) > 8:  # LX_SYMLINK
-                # E5 fix: skip the 4-byte version (8 -> 12) so it does not prefix the target.
-                try:
-                    return vd[12:8+data_len].decode("utf-8").rstrip("\x00")
-                except UnicodeDecodeError:
-                    pass
-            return REPARSE_TAGS.get(tag, f"0x{tag:08X}")
+            t = _reparse_buffer_target(bytes(vd))
+            if t:
+                return t
+    for kd, vd in rows:                      # not at the top level -> look inside the object record
+        if len(kd) >= 4 and le16(kd, 0) == 0x10:
+            t = _embedded_reparse_target(vd, (f, ps, cs, tr))
+            if t:
+                return t
     return ""
 
 # ─── Directory tree walk ─────────────────────────────────────────────
@@ -3306,7 +3614,12 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
                     # EA bit, plus a rare Archive-bit, ever differ). We OR ONLY the EA bit back in post-
                     # processing so HasEA / FileAttributes / --filter ea are correct for non-resident files.
                     _bfa = le32(vd, 0x48) if len(vd) >= 0x4C else 0
-                    t40_content[(oid, le64(kd, 0x08))] = (_a, _s, _u, _j, _sid, _if, _tag, _tgt, _bfa)
+                    # E82: does this backing hold the file's data INLINE (resident-form $DATA) rather than
+                    # in extents? Record placement and data residency are independent, so a split-out record
+                    # can still be the home of the bytes. Kept as a flag only (not the content) so the walk
+                    # stays memory-flat; `extract`/`dataruns` re-read the bytes on demand.
+                    _inl = _backing_inline_data(vd, (f, ps, cs, tr)) is not None
+                    t40_content[(oid, le64(kd, 0x08))] = (_a, _s, _u, _j, _sid, _if, _tag, _tgt, _bfa, _inl)
                     # F-1 hardening: decode the backing's embedded type-0x39 hard-link back-pointers — one
                     # per name, each `(parent-dir OID @sub-value+0x08, name UTF-16LE @sub-value+0x18)`. This
                     # is the object's own authoritative list of its names (what the driver counts links from);
@@ -3592,6 +3905,10 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
             if len(rec) >= 9 and (rec[8] & 0x40000):
                 e["file_attrs"] = e.get("file_attrs", 0) | 0x40000
                 e["has_ea"] = True
+            # E82: the resolved backing keeps this file's data INLINE, so the current $DATA stream is
+            # resident even though the record was split out of the name row.
+            if len(rec) >= 10 and rec[9]:
+                e["data_inline"] = True
         # H3: non-resident reparse tag + target. The reparse buffer lives in the file's OWN (home)
         # backing; source from `rem` (home stream) to dodge the file_id-collision wrong-target bug,
         # falling back to the resolved rec, then the 0x540 index for the tag. v3.14: target recovered;
@@ -3636,7 +3953,7 @@ def fs_content_summary(f, ps, cs, tr, obj_map, plus=True, depth=DEFAULT_DEPTH):
     counts = {
         "directories": sum(1 for r in results if r["is_dir"]),
         "files": sum(1 for r in results if not r["is_dir"]),
-        "resident_files": sum(1 for r in results if r.get("is_resident")),
+        "resident_files": sum(1 for r in results if _reported_resident(r)),
         "total_file_size_bytes": sum(r.get("file_size", 0) for r in results),
     }
     counts["non_resident_files"] = counts["files"] - counts["resident_files"]   # D1: resident + non-resident = files
@@ -3699,6 +4016,19 @@ def annotate_timestomp(results, f, ps, cs, tr, obj_map, margin=TS_MARGIN_100NS):
 # reference = HomeOid:FileId, == the USN FileReferenceNumber), then HomeOid (owner dir = the FileId "home",
 # constant across a file's hard-link names) and FileId (per-home ordinal), then the name and its namespace
 # parent (ParentOID/ParentPath — differ from HomeOid for hard-links & recycle-bin/deleted entries), then
+def _reported_resident(r):
+    """Reported residency — *is the current `$DATA` stream inline?*, which is what `IsResident` is documented
+    to mean.
+
+    The internal `is_resident` flag carries a second, narrower meaning: *the object's record is embedded in
+    this name row*. That is the right gate for the ADS / snapshot / inline-reparse readers (they parse the
+    name row's own value) and for hard-link grouping, so those keep using it. But the two are independent
+    (E77/E82): a record split out into a type-0x40 backing — which a move or a hard link forces — can still
+    hold its bytes inline, and `data_inline` marks exactly those. Reporting therefore ORs them, so a
+    hard-linked file with inline data is reported resident *and* keeps its link count."""
+    return bool(r.get("is_resident") or r.get("data_inline"))
+
+
 # FullPath (now a standard column). The remaining columns keep their prior order.
 CSV_COLUMNS = [
     "OID", "FileName", "FullPath", "FileSize", "Extension",
@@ -3783,7 +4113,7 @@ def _csv_fields(r, sd_map, version_str, oid2path=None):
         "DACLSummary": dacl_summary,
         "HasADS": r.get("has_ads", False),
         "ADSNames": r.get("ads_names", ""),
-        "IsResident": r.get("is_resident", False),
+        "IsResident": _reported_resident(r),
         "IsDirectory": r["is_dir"],
         "IsEncrypted": r.get("is_encrypted", False),
         "IsCompressed": r.get("is_compressed", False),
@@ -3917,7 +4247,7 @@ def _build_record(r, sd_map, version_str, oid2path=None):
         "file_size": r.get("file_size", 0),
         "is_directory": r["is_dir"],
         "is_moved": _is_moved(r),
-        "is_resident": r.get("is_resident", False),
+        "is_resident": _reported_resident(r),
         "created": filetime_to_iso(r.get("create_time", 0)),
         "modified": filetime_to_iso(r.get("modify_time", 0)),
         "changed": filetime_to_iso(r.get("change_time", 0)),
@@ -4118,7 +4448,13 @@ def cmd_fastsummary(f, ps, cs, tr, roots, obj_map, vmaj, vmin, chkp_lcns,
                 # $VolInfo stamp usually tracks the current driver after upgrade, but if it lags it gives the
                 # exact original minor.
                 reasons.append("format-time v3.%d ≠ driver v3.%d ($VOLUME_INFORMATION stamp)" % (vol_mn, drv_mn))
-                from_ver = "v3.%d" % min(vol_mn, drv_mn)
+                # P4-1: do NOT overwrite a from_ver already set above. The CHKP native-format bit is a
+                # STRUCTURAL fact (clear on a v3.10+ volume => formatted pre-v3.10); the $VolInfo stamp is the
+                # weaker signal because it usually tracks the CURRENT driver after an upgrade (see the comment
+                # above). When both fire, the stamp's min() answer is wrong: win1122h2test_afteropenedwithinsider
+                # reported "formatted v3.14" while the volume is provably v3.9 (its pre-upgrade image
+                # win1122h2test), contradicting the evidence line printed directly beneath it.
+                from_ver = from_ver or "v3.%d" % min(vol_mn, drv_mn)
         if reasons:
             summary["volume_state"] = "UPGRADED"
             summary["upgrade_evidence"] = reasons
@@ -4667,7 +5003,7 @@ def _print_file_detail(r, sd_map, version_str, raw_value=None, oid2path=None):
     print(f"  Name:               {r.get('name', '')}")
     print(f"  Extension:          {ext_from_name(r.get('name', ''))}")
     print(f"  Is directory:       {r.get('is_dir', False)}")
-    print(f"  Is resident:        {r.get('is_resident', False)}")
+    print(f"  Is resident:        {_reported_resident(r)}")
     if r.get("is_deleted"):
         print(f"  Is deleted:         True ({r.get('deletion_source', '')})")
     print(f"  File size:          {r.get('file_size', 0)} ({_human_size(r.get('file_size', 0))})")
@@ -4777,7 +5113,7 @@ def cmd_search(f, ps, cs, tr, obj_map, vmaj, vmin, pattern, regex_mode=False, ma
             "parent_oid": f"0x{r['parent_oid']:x}" if r.get("parent_oid") else "",
             "type": "Dir" if r["is_dir"] else "File",
             "file_size": r.get("file_size", 0),
-            "is_resident": r.get("is_resident", False),
+            "is_resident": _reported_resident(r),
             "path": r["path"],
             "name": r["name"],
             "is_deleted": r.get("is_deleted", False),
@@ -5409,6 +5745,7 @@ def cmd_mlog(image, remaining, partition_start):
                 "control": ctrl,
                 "mlog_info": {k: v for k, v in (mlog_info or {}).items() if k != "page"},
                 "data_area": {"total_pages": len(pages), "page_types": {}},
+                "integrity": mlog_verify_pages(pages),
                 "records": records,
             }
             for p in pages:
@@ -5565,6 +5902,37 @@ def cmd_mlog(image, remaining, partition_start):
                 print()
 
         # Stats
+        if do_stats:
+            iv = mlog_verify_pages(pages)
+            if iv["checked"]:
+                print("=" * W)
+                print("Record Integrity")
+                print("=" * W)
+                print("  Every log record carries an 8-byte integrity value covering the record itself. The")
+                print("  driver recomputes it before replaying the record; forefst recomputes it the same way,")
+                print("  so a torn or altered record shows up here. It is an integrity check, not a signature:")
+                print("  it catches damage and byte-level edits, it is not proof of authenticity.")
+                print()
+                print("  Records checked:    %d" % iv["checked"])
+                print("  Verified:           %d" % iv["verified"])
+                print("  Failed:             %d%s" % (iv["failed"],
+                                                      "" if not iv["failed"] else "   <-- torn or altered"))
+                for blk, st, co in iv["failures"]:
+                    print("    block %-10d stored=0x%08x  computed=0x%08x" % (blk, st, co))
+                if iv["failures_truncated"]:
+                    print("    (only the first %d failing records are listed)" % len(iv["failures"]))
+                for key in ("ctrl_plcn_0", "ctrl_plcn_1"):
+                    cplcn = (mlog_info or {}).get(key, 0)
+                    if not cplcn:
+                        continue
+                    f.seek(ps + cplcn * cs)
+                    cr = mlog_verify_record(f.read(max(cs, 4096)))
+                    if cr is not None:
+                        print("  Control copy %s (PLCN 0x%x): %s" %
+                              (key[-1], cplcn, "verified" if cr[0] else
+                               "FAILED  stored=0x%08x computed=0x%08x" % (cr[1], cr[2])))
+                print()
+
         if do_stats and records:
             print("=" * W)
             print("Opcode Frequency")
@@ -6220,7 +6588,13 @@ def _stream_extent_records(vd, ctx=None):
     extent_count=le32(v,ihdr+0x14); extents at v[ihdr+0x28] (vlcn@+0, file_vcn@+0x0C, run@+0x14)."""
     recs = {}
     for k, v in parse_resident_btree_rows(vd, ctx):
-        if len(k) <= 12 or k[12] != 0x00 or len(v) < 0x50:
+        # E84: identify the record by its own key SHAPE, not by a zero byte at k[12]. A stream-extent key is
+        # 0x50 bytes with the attribute type 0x0003 at key+0x08 (657/657 corpus-wide, every one carrying a
+        # plausible stream size at value+0x38). The old test also admitted 2,382 rows of a DIFFERENT record —
+        # 14-byte keys whose type at key+0x08 is 0x0080 — for which value+0x38 is not a stream size at all
+        # (implausible on 2,330 of 2,350). They never collided with a real record's size on any corpus image,
+        # so this changes no output; it removes the possibility of one shadowing a real stream.
+        if len(k) != 0x50 or le16(k, 8) != 0x0003 or len(v) < 0x50:
             continue
         ihdr = le32(v, 0)
         if ihdr <= 0 or ihdr + 0x18 > len(v):
@@ -6500,11 +6874,22 @@ def _parse_inline_holder_extents(vd, cs, tr):
         vlcn = le64(vd, o)
         file_vcn = le32(vd, o + 0x0C)
         uniq[(file_vcn, vlcn, run_len, flags)] = {
-            "vlcn": vlcn, "plcn": tr.tr(vlcn) if vlcn else 0,
+            "vlcn": vlcn, "plcn": 0,
             "file_vcn": file_vcn, "clusters": run_len, "flags": flags, "disk_offset": 0,
         }
     exts = sorted(uniq.values(), key=lambda e: e["file_vcn"])
-    return exts if _contiguous_cover(exts, need) else []
+    if not _contiguous_cover(exts, need):
+        return []
+    # Translate ONLY the accepted set. The marker scan above is a heuristic: it treats any 0xffff-tagged
+    # word as a row pointer, so most candidates it enumerates are row-header or text bytes that happen to
+    # match. Translating them was harmless for the RESULT (the cover guard rejects them) but not for the
+    # SIDE EFFECT: each one counted as a container-map miss, and a healthy volume ended an `extract` with
+    # "N VLCN(s) had no container mapping — corrupt/truncated container table". Measured corpus-wide:
+    # 6,520 of 52,200 candidates were untranslatable, but only 45 of them survive into an accepted cover —
+    # so deferring the translation removes 6,475 false misses and keeps every genuine one.
+    for e in exts:
+        e["plcn"] = tr.tr(e["vlcn"]) if e["vlcn"] else 0
+    return exts
 
 
 def _decode_holder_extents(vb, cs, tr):
@@ -6525,6 +6910,135 @@ def _decode_holder_extents(vb, cs, tr):
     if not exts:
         exts = _parse_extents_from_type40(vb, cs, tr)["extents"]
     return exts if _contiguous_cover(exts, need) else []
+
+
+# ─── Nested extent node inside an embedded $DATA record (E86) ────────────────
+# A large file's extent map does not sit as a flat run array in its $DATA value. The value holds a B+-tree
+# node (0x28-byte header) whose LEAF rows are the extent records, and when that outgrows one node the node
+# becomes an INDEX node whose rows carry the standard 48-byte 4-LCN child reference. Row fields are the same
+# ones _parse_extents_from_type40 already reads (vlcn lo/hi +0x00/+0x04, flags +0x08, file_vcn +0x0C,
+# run +0x14); the extra field is `row_size` at +0x0A, which is 24 for a plain row and 24 + run*4 when the
+# stream carries per-cluster CRC32-C (integrity streams), the trailing u32s being those checksums.
+
+def _vlcn_mappable(tr, vlcn):
+    """True when the container table can map this VLCN — tested WITHOUT calling tr.tr(). Two reasons:
+    tr.tr() falls back to IDENTITY on a miss, so an unchecked call silently accepts an unmapped VLCN as a
+    physical cluster and reads the wrong data; and its miss counter feeds the analyst-facing "output may be
+    incomplete" caveat, which a speculative walk must not move."""
+    if tr is None:
+        return True
+    try:
+        return (vlcn >> tr.shift) in tr.map
+    except Exception:
+        return False
+
+def _extent_node_rows(buf, N):
+    """(level, [row_offset, ...]) for the extent node whose 0x28-byte header starts at buf[N:].
+    level 0 = leaf (rows are extents), non-zero = index (rows carry child-page references).
+    Returns (None, []) when buf[N:] is not such a node."""
+    if N < 0 or N + 0x28 > len(buf) or le32(buf, N) != 0x28:
+        return None, []
+    nrows = le32(buf, N + 0x14)
+    node_sz = le64(buf, N + 0x20)
+    if not (0 < nrows < 8192) or not (0x28 < node_sz <= len(buf) - N):
+        return None, []
+    idx = N + node_sz - 4 * nrows          # trailing index array: u16 row offset + u16 key hint
+    if idx < N + 0x28:
+        return None, []
+    offs = []
+    for r in range(nrows):
+        a = idx + 4 * r
+        if a + 4 > len(buf):
+            break
+        offs.append(N + le16(buf, a))
+    return buf[N + 0x0C], offs
+
+def _extent_node_map(buf, N, f, ps, cs, tr, depth=4, seen=None):
+    """Every extent below the node at buf[N:], descending index nodes into their child pages.
+    Returns extent dicts in the shape the rest of the tool uses. No cover check here — the caller
+    applies _contiguous_cover so an incomplete walk fails cleanly instead of emitting wrong bytes."""
+    if seen is None:
+        seen = set()
+    if depth <= 0:
+        return []
+    level, offs = _extent_node_rows(buf, N)
+    if level is None:
+        return []
+    out = []
+    if level == 0:
+        for ro in offs:
+            if ro + 0x18 > len(buf):
+                continue
+            row_sz = le16(buf, ro + 0x0A)
+            run = le32(buf, ro + 0x14)
+            # a plain run row is 24 bytes; an integrity-stream row appends one u32 CRC32-C per cluster
+            if run == 0 or row_sz not in (24, 24 + run * 4):
+                continue
+            vlcn = le64(buf, ro)
+            if vlcn == 0 or not _vlcn_mappable(tr, vlcn):
+                continue
+            # NOTE: no translation here. A VLCN is resolved only once the caller has accepted the set as a
+            # cover, so a speculative walk that comes to nothing never probes the container table — which
+            # would otherwise inflate the "VLCN had no container mapping" count the analyst reads as
+            # evidence the output may be incomplete.
+            out.append({"vlcn": vlcn, "plcn": None, "file_vcn": le32(buf, ro + 0x0C),
+                        "clusters": run, "flags": le32(buf, ro + 8), "disk_offset": 0})
+        return out
+    for ro in offs:
+        if ro + 0x10 > len(buf):
+            continue
+        _sz, _ko, _kl, _fl, vo, vl, _x = struct.unpack_from("<I6H", buf, ro)
+        if vl < 32 or ro + vo + vl > len(buf):
+            continue
+        nref = buf[ro + vo:ro + vo + vl]
+        lcns = [x for x in (le64(nref, j * 8) for j in range(4))
+                if x not in (0, 0xFFFFFFFFFFFFFFFF)]
+        if not lcns:
+            continue
+        if not all(_vlcn_mappable(tr, l) for l in lcns):
+            continue
+        key = tuple(lcns)
+        if key in seen:                     # cycle / repeated child guard (same rule as _walk)
+            continue
+        seen.add(key)
+        page = b""
+        try:
+            for l in lcns:
+                f.seek(ps + (tr.tr(l) if tr else l) * cs)
+                page += f.read(cs)
+        except Exception:
+            continue
+        if len(page) < 0x54 or page[:4] != b"MSB+":
+            continue
+        out += _extent_node_map(page, 0x50 + le32(page, 0x50), f, ps, cs, tr, depth - 1, seen)
+    return out
+
+def _embedded_data_extents(vd, cs, ctx):
+    """Extents of the CURRENT stream when its $DATA record lives in the object's embedded attribute tree
+    and holds its extent map in a nested node (E86). Returns [] unless the result is an exact contiguous
+    cover of the record's own allocation, so a partial walk fails cleanly.
+
+    The row MUST be selected on the sub-stream id (key+0x10 == 0x1000). A file with snapshots carries one
+    $DATA row per version under the same key prefix; picking by size or by first-match returns a SNAPSHOT's
+    extents and therefore that version's bytes, not the live ones."""
+    if not ctx or len(ctx) < 4 or not vd:
+        return []
+    f, ps, tr = ctx[0], ctx[1], ctx[3]
+    for kd, val in parse_resident_btree_rows(vd, ctx):
+        if (len(kd) >= 0x14 and le32(kd, 8) == 0x80000002 and le16(kd, 0x0C) == 0x0080
+                and le32(kd, 0x10) == 0x1000 and len(val) > 0x88 and le32(val, 0) == 0x88):
+            exts = _extent_node_map(bytes(val), 0x88, f, ps, cs, tr)
+            alloc = le64(val, 0x30)
+            need = alloc // cs if alloc > 0 and cs and alloc % cs == 0 else -1
+            if not _contiguous_cover(exts, need):
+                return []
+            for e in exts:                      # resolve only an accepted cover (see _extent_node_map)
+                try:
+                    e["plcn"] = tr.tr(e["vlcn"]) if tr else e["vlcn"]
+                except Exception:
+                    return []
+            return exts
+    return []
 
 
 def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
@@ -6561,7 +7075,13 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
         elif attr_type == 0x40 and len(kd) >= 24 and len(vd) >= 0x68:
             stream_idx = le64(kd, 8)
             parent_oid = le64(kd, 16)
-            type40_map[(stream_idx, parent_oid)] = {"extents": _decode_holder_extents(bytes(vd), cs, tr)}
+            # C1: keep the backing's OWN size/alloc. A name row caches a copy at value+0x38 that can go
+            # stale (measured: 190 of 83,176 index-entry names corpus-wide, v3.7-v3.14); the backing is the
+            # object's record, and its value+0x58 agreed with the independently-decoded $DATA stream size on
+            # 190/190 of those. Every size that gates a read or a write resolves through here.
+            type40_map[(stream_idx, parent_oid)] = {"extents": _decode_holder_extents(bytes(vd), cs, tr),
+                                                    "obj_size": le64(vd, 0x58), "obj_alloc": le64(vd, 0x60),
+                                                    "inline": _backing_inline_data(vd, (f, ps, cs, tr))}
 
     results = []
     _home_cache = {}   # target_oid -> {stream_idx: ext_info}; authoritative backing streams in the home tree
@@ -6571,7 +7091,9 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
             if oid in obj_map:
                 for rkd, rvd in walk_bplus(f, ps, cs, tr, obj_map[oid]):
                     if len(rkd) >= 24 and le16(rkd, 0) == 0x40 and len(rvd) >= 0x68:
-                        m.setdefault(le64(rkd, 8), {"extents": _decode_holder_extents(bytes(rvd), cs, tr)})
+                        m.setdefault(le64(rkd, 8), {"extents": _decode_holder_extents(bytes(rvd), cs, tr),
+                                                    "obj_size": le64(rvd, 0x58), "obj_alloc": le64(rvd, 0x60),
+                                                    "inline": _backing_inline_data(rvd, (f, ps, cs, tr))})
             _home_cache[oid] = m
         return _home_cache[oid]
     for name, stream_idx, target_oid, file_size, alloc_size, file_attrs, ts in files:
@@ -6586,6 +7108,33 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
         elif target_oid in obj_map:
             ext_info = _home_streams(target_oid).get(stream_idx)  # resolve from the HOME tree (authoritative)
             if ext_info: source = "remote"
+        # C1: the OBJECT's size wins over the name's cached copy. `files` already does this (the F-1
+        # hardening); doing it here makes `dataruns`, `extract` and `export` agree with it, so the recovered
+        # content of an object no longer depends on which of its names the analyst addressed. The stale value
+        # is kept and reported rather than silently dropped.
+        stale_name_size = None
+        if ext_info:
+            _osz = ext_info.get("obj_size") or 0
+            if _osz and _osz != file_size:
+                stale_name_size = file_size
+                file_size = _osz
+                if ext_info.get("obj_alloc"):
+                    alloc_size = ext_info["obj_alloc"]
+        # E82: the record was split out of the name row, but the DATA can still be inline in that record.
+        # When the backing resolves with no extents and carries the resident-form $DATA, the bytes are right
+        # here — report it as resident storage and hand the content over, instead of hunting for extents that
+        # do not exist and failing with "no extents decoded".
+        _inline = ext_info.get("inline") if ext_info else None
+        if _inline is not None and not (ext_info.get("extents") or []):
+            results.append({
+                "name": name, "stream_idx": stream_idx, "target_oid": target_oid,
+                "file_size": file_size, "alloc_size": alloc_size,
+                "file_attrs": file_attrs, "timestamps": ts,
+                "extents": [], "storage": "resident", "extent_source": source,
+                "stale_name_size": stale_name_size, "ads": [],
+                "resident_content": _inline,
+            })
+            continue
         info = {
             "name": name, "stream_idx": stream_idx, "target_oid": target_oid,
             "file_size": file_size, "alloc_size": alloc_size,
@@ -6593,6 +7142,7 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
             "extents": ext_info["extents"] if ext_info else [],
             "storage": "non-resident",
             "extent_source": source if ext_info else "unresolved",
+            "stale_name_size": stale_name_size,
             "ads": [],
         }
         for ext in info["extents"]:
@@ -6614,6 +7164,11 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
             # multi-node inline-holder files and emits extents only for an exact contiguous cover, else none
             # (clean `extract` failure) — never wrong bytes.
             exts = _decode_holder_extents(vb, cs, tr)
+            if not exts:
+                # E86: the map is not a flat run array here — it is a nested node inside the embedded
+                # $DATA record (and, past one node, a child page). Fallback ONLY: when the holder decode
+                # already produced a cover, nothing changes.
+                exts = _embedded_data_extents(vb, cs, (f, ps, cs, tr))
             for ext in exts:
                 ext["disk_offset"] = ps + ext["plcn"] * cs
             results.append({
@@ -6639,6 +7194,15 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
             for ext in extents:
                 ext["disk_offset"] = ps + ext["plcn"] * cs
         ads_list = _parse_ads_from_value(vd, (f, ps, cs, tr)) if len(vd) > 0xA8 else []
+        if not extents and file_size and get_resident_data_content(vd) is None:
+            # E86: an extent-backed record whose map is a nested node in the embedded $DATA row. Fallback
+            # ONLY — a file whose bytes are inline (resident) or reachable by the existing paths is not
+            # touched, so nothing that resolves today changes.
+            _nested = _embedded_data_extents(vd, cs, (f, ps, cs, tr))
+            if _nested:
+                for ext in _nested:
+                    ext["disk_offset"] = ps + ext["plcn"] * cs
+                extents = _nested
         entry = {
             "name": name, "file_size": file_size, "alloc_size": alloc_size,
             "storage": "resident", "extents": extents,
@@ -7293,6 +7857,14 @@ def cmd_extract(image, remaining, partition_start):
                   "The extracted bytes are CIPHERTEXT — plaintext recovery needs the user's RSA "
                   "private key (off-volume; see docs/attributes/EFS.md).", file=sys.stderr)
 
+        # C1: say so when this NAME cached a different size from the object's own record. It is not a
+        # coverage gap and not corruption — a name row keeps a copy of the size that the driver does not
+        # refresh on every update, so a hard-link or moved name can carry a stale one. The object's size is
+        # what gets extracted.
+        if target.get("stale_name_size") is not None:
+            print(f"[{PROG}] NOTE: the name '{target['name']}' caches a stale size "
+                  f"{target['stale_name_size']} — the object's own record says "
+                  f"{target.get('file_size', 0)}, which is what is extracted.", file=sys.stderr)
         print(f"Extracting '{target['name']}' ({target.get('file_size',0)} bytes):", file=sys.stderr)
         sorted_exts = sorted(target["extents"], key=lambda e: e["file_vcn"])
         file_size = target.get("file_size", 0)
@@ -8663,7 +9235,9 @@ SPECIALS_TYPES = [
                      (0x80000023, 0x80000024, 0x80000025, 0x80000026, 0xA000001D)),
     ("hardlink",   "multi-linked files (link groups)",  lambda r: r.get("hard_link_count", 1) > 1
                      and not r.get("is_resident") and not r.get("is_dir")),
-    ("sparse",     "allocated < logical size",          lambda r: bool(r.get("file_attrs", 0) & 0x200)),
+    # The label must name what the predicate actually tests. It reads the FILE_ATTRIBUTE_SPARSE_FILE bit,
+    # which is the file's declared sparseness — not a comparison of allocated against logical size.
+    ("sparse",     "FILE_ATTRIBUTE_SPARSE_FILE (0x200)", lambda r: bool(r.get("file_attrs", 0) & 0x200)),
     ("encrypted",  "EFS-encrypted ($EFS)",              lambda r: bool(r.get("is_encrypted"))),
     ("compressed", "WOF / compressed",                  lambda r: bool(r.get("is_compressed"))),
     ("integrity",  "integrity checksum stream",         lambda r: bool(r.get("has_integrity"))),
@@ -9105,7 +9679,7 @@ def _carve_extent_backed(f, ps_off, cs, tr, vd, t40_backing=None):
             holder = v
             break
     if holder is not None:
-        stream_size, disk_alloc, exts = parse_snapshot_data_entry(holder, _volume_ncl(f, ps_off, cs))
+        stream_size, disk_alloc, exts = parse_snapshot_data_entry(holder, _volume_ncl(f, ps_off, cs), tr)
         if disk_alloc > 0 and exts and stream_size > 0:
             alloc = max(fv + run for fv, _vl, run in exts) * cs
             if alloc <= 256 * 1024 * 1024:          # safety cap for a best-effort carve
@@ -10875,17 +11449,22 @@ CMD_HELP = {
            "opcode, target OID and PLCN+offset so every field is verifiable against the raw disk bytes.",
            "NOTE: this is the DURABLE LOG — operations here may not yet be checkpointed into the committed",
            "tree, so `files`/`summary` can omit recent activity shown here (and vice-versa). The per-record",
-           "'commit' flag is 0 on every volume (commit is a checkpoint/LogCore fact, not a redo-record flag)."],
+           "'commit' flag is 0 on every volume (commit is a checkpoint/LogCore fact, not a redo-record flag).",
+           "--stats also RECOMPUTES each record's own 8-byte integrity value the way the driver does before",
+           "replaying it, so a torn or byte-edited record is reported instead of being parsed silently. It is",
+           "an integrity check, not a signature: it catches damage and edits, it is not proof of authenticity.",
+           "Cost is proportional to the log size (about 8 s on a 512 MiB log, well under 1 s on a typical one)."],
   "opts": [("-v, --verbose", "byte-level proof: each redo record as opcode/name/target_oid/@PLCN+offset/key"),
            ("--parse", "reconstruct concrete actions (CREATE/WRITE/RENAME/MOVE/DELETE + low-level groups)"),
-           ("--stats", "opcode-frequency section"),
+           ("--stats", "record-integrity check + opcode-frequency section"),
            ("--raw-scan", "per-page raw dump instead of the data-area summary"),
            ("--info", "static opcode/action reference text only"),
            ("--csv FILE", "export transactions (action + opcodes + oid + plcn) to CSV"),
-           ("--json", "emit version/control/mlog_info/data_area/records as JSON")],
+           ("--json", "emit version/control/mlog_info/data_area/integrity/records as JSON")],
   "ex": [("mlog", "control header + page census + redo counts"),
          ("mlog --parse", "concrete file operations + low-level records, with MOVE/RENAME parent OIDs"),
          ("mlog --parse -v", "same, plus the per-record byte-level proof (opcode/OID/@PLCN+offset)"),
+         ("mlog --stats", "record-integrity verdict + opcode/category frequency"),
          ("mlog --csv mlog_txns.csv", "export the action timeline")],
  },
  "timeline": {

@@ -36,6 +36,39 @@ A per-page node header (`_SmsIndexHeader`) follows the page header on every node
 - Node type at +0x0C (**0 = leaf, nonzero = internal/index node**) and node flags at +0x0D (bit 0 set marks an index page)
 - The **per-node** row/key count at +0x14 — the number of rows on this page (children for an inner node, leaf rows for a leaf). This is *not* the whole-table total.
 
+The header is reached at `page + 0x50 + u32@(page + 0x50)`, and the fields a reader needs are:
+
+| Offset | Size | Field | Notes |
+|--------|------|-------|-------|
+| +0x0C | 1 | Node level | 0 = leaf; non-zero = internal / index node |
+| +0x0D | 1 | Node flags | Bit 0 marks an index page (its rows point at child pages) |
+| +0x10 | 4 | Key-index array **start** | Offset, relative to the header, of the row-pointer array |
+| +0x14 | 4 | Row count | Rows on **this page** |
+| +0x20 | 4 | Key-index array **end** | One past the last entry |
+
+Each key-index entry is **4 bytes**: a `u16` offset to the row (relative to the header) followed by a
+`u16` **marker**.
+
+That marker is not a count of anything — across the corpus it takes exactly two values, `0xFFFF` on 842,529
+entries and `0` on 879, and nothing else. `0` appears **only on an index page, once per page, on the last
+entry**, and always on a row with an **empty key** whose value is a page reference: the tree's **rightmost
+child**, the one covering keys above every separator key. Every other entry, and every entry on a leaf page,
+carries `0xFFFF`.
+
+It is also a version marker. Volumes from **3.10** onward write the `0` there; **3.4 through 3.9** leave
+`0xFFFF` on that same entry (216 pages, no exception). An **upgraded** volume keeps the old form on the pages
+it inherited — the same retention that governs [directory-entry sizes](directory_entries.md), and a reminder
+that the volume's current version does not tell you how any individual page was written.
+
+> **Invariant — `(u32@+0x20 − u32@+0x10) / 4 == u32@+0x14`.** The array length and the row count must
+> agree. Measured across the whole corpus: **118,351 pages, 0 violations**, on ReFS 3.4, 3.7, 3.9, 3.10,
+> 3.14, 3.15 and Insider. It is the cheapest structural check for "is this really a node page", and worth
+> asserting before trusting any row on it.
+>
+> Note that a page is **not** one cluster: on a 4 KiB-cluster volume it is four, and the key-index array
+> lives at the end of the *page*. Reading a single cluster leaves the array out of range and the row count
+> reads as zero — a mistake that silently empties a scan rather than failing it.
+
 On root nodes only, an **index root descriptor** (`_SmsIndexRoot`, Prade's "Index Root") precedes the node header at page+0x50, providing table-level metadata: the schema id, the leaf-extent count, and the **total row count for the whole table** (distinct from the per-node count above — on a multi-level tree they diverge cleanly). See the [Schema Table](schema_table.md) for how the schema id selects key comparison rules.
 
 ### 3. Data area (key-value pairs)
@@ -84,4 +117,4 @@ When copy-on-write replaces a page, the old page becomes orphaned but retains it
 
 ## Evidence
 
-The B+-tree storage engine and the MSB+ page model are confirmed in the driver (E2: the `CmsBPlusTable` / `CmsTable` classes) and raw-disk verified across the corpus (RD: every metadata page carries the `MSB+` signature). The row header, node header, and index-root descriptor offsets are decompiled-confirmed (E2) and re-measured on disk (RD): the node-type byte and the per-node count at header +0x14 hold on every leaf/inner page measured, and the index-root total-row count tracks an independent leaf-walk. The 0x40/0x48 table-OID split (always-0 high half, numeric low half) is the same. The insert/delete/lookup/enumerate/allocate functions are PDB symbols in the driver. Findings: **GN_ARCH_001**, **GN_ARCH_005**, **GN_PAGE_007**, **GN_IDXR_004**. See [how this was verified](../methodology.md) to trace these to the exact images and measurements in `analysis/`.
+The B+-tree storage engine and the MSB+ page model are confirmed in the driver (E2: the `CmsBPlusTable` / `CmsTable` classes) and raw-disk verified across the corpus (RD: every metadata page carries the `MSB+` signature). The row header, node header, and index-root descriptor offsets are decompiled-confirmed (E2) and re-measured on disk (RD): the node-type byte and the per-node count at header +0x14 hold on every leaf/inner page measured, the key-index array length agrees with that count on **118,351 pages across all seven versions with zero violations**, and the index-root total-row count tracks an independent leaf-walk. The 0x40/0x48 table-OID split (always-0 high half, numeric low half) is the same. The insert/delete/lookup/enumerate/allocate functions are PDB symbols in the driver. Findings: **GN_ARCH_001**, **GN_ARCH_005**, **GN_PAGE_007**, **GN_IDXR_004**. See [how this was verified](../methodology.md) to trace these to the exact images and measurements in `analysis/`.

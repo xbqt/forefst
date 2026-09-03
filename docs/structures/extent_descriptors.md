@@ -5,33 +5,53 @@ A VLCN is not a physical address: it must be translated through the [Container T
 to obtain the physical cluster where the data actually lives. Every extent — even a single contiguous run —
 is a fixed 24-byte entry.
 
+> **Do not sanity-check a VLCN against the volume's cluster count.** The virtual address space is *wider*
+> than the physical one — it starts above the first container and runs roughly twice as far — so a perfectly
+> valid extent can name a cluster number larger than the volume has. The only sound test is whether the
+> Container Table can translate it. Getting this wrong is quietly destructive: a decoder that walks extents
+> in order and stops at the first "implausible" one throws the **whole** map away, and the file then looks
+> as though it had no extents at all. On one 4 GB volume that mistake hid the contents of 583 of its 629
+> files, every one of which read back byte-perfect once the check was corrected.
+
 ## Extent Entry — 24 bytes
 
 | Offset | Size | Field | Description |
 |--------|------|-------|-------------|
 | 0x00 | 8 | Virtual LCN (VLCN) (u64) | Requires Container Table for physical translation |
-| 0x08 | 4 | Flags (u32) | See Extent Flags below |
+| 0x08 | 2 | Flags (u16) | See Extent Flags below |
+| 0x0A | 2 | Record size (u16) | `24` for a plain run; `24 + run_length*4` when the run carries per-cluster checksums, the trailing 4-byte values being them |
 | 0x0C | 4 | File VCN (u32) | Cluster index within file |
 | 0x10 | 4 | Padding (u32) | Always zero |
 | 0x14 | 4 | Run length (u32) | Number of contiguous clusters |
 
 ## Extent Flags
 
-| Value | Meaning |
-|-------|---------|
-| 0x180040 | Standard data-run extent (variable run_length) |
-| 0x180050 | Data-run with bit 0x10 set; the 0x10 bit is **not** run cardinality (meaning unresolved, candidate integrity/checksum-stride bit) |
-| 0x180060 / 0x180064 | **Sparse hole** (bit 0x20 set): the entry has `VLCN == 0` and its run is a zero-filled hole — never read from disk (see below) |
-| 0x1c00d0 | Integrity checksum entry (always run_length 1; 32-byte stride = 24-byte entry + 8-byte element `[CRC32-C : 4][reserved : 4]`, CRC32-C Castagnoli poly `0x82f63b78` over the 4 KiB cluster) |
+The flags occupy **two** bytes at `extent+0x08`; the two bytes above them are the record size. Read as one
+32-bit value the pair reads `(record_size << 16) | flags`, which is why the constants seen in the wild all
+begin `0x18` — that leading `0x18` is **24**, the size of a plain record, not a flag bit.
+
+| Flags | Record size | Meaning |
+|-------|-------------|---------|
+| 0x0040 | 24 | Standard data-run extent (variable run_length) |
+| 0x0050 | 24 | Data-run with bit 0x10 set |
+| 0x0060 / 0x0064 | 24 | **Sparse hole** (bit 0x20 set): the entry has `VLCN == 0` and its run is a zero-filled hole — never read from disk (see below) |
+| 0x00d0 | 24 + run*4 | **Per-cluster checksums present** (bit 0x80 set, over the 0x0050 run flags): each cluster of the run is followed by its CRC32-C (Castagnoli poly `0x82f63b78`) |
+
+Measured across **48,474 extent records on 40 volumes**: the record size is `24 + (bit 0x80 ? run*4 : 0)`
+in **every** case, with no exception. Observed flag values are `0x0040`, `0x0050`, `0x0060` (plain) and
+`0x00d0` (checksummed).
 
 Run cardinality is carried explicitly by the Run length field at extent+0x14, not by the flag bits:
-both 0x180040 and 0x180050 appear with single-cluster and multi-cluster runs. The exact meaning of the
-0x10 bit that distinguishes 0x180050 from 0x180040 is unresolved (a candidate is an integrity/checksum-stride
-bit; it correlates with the file_attrs 0x8000 flag).
+both 0x0040 and 0x0050 appear with single-cluster and multi-cluster runs. The meaning of the 0x10 bit that
+distinguishes 0x0050 from 0x0040 remains unresolved; it correlates with the file_attrs 0x8000 flag.
 
-The 0x1c00d0 integrity entries and the 0x180040 data runs share the same table header format, but the
-integrity entries use a wider 32-byte stride (the trailing 8 bytes hold a CRC). Both kinds of entry point
-at real file data.
+**Records are 8-byte aligned**, so the step from one record to the next is `record_size` rounded up to a
+multiple of 8. A checksummed single-cluster record is 28 bytes (24 + one 4-byte CRC32-C) and is therefore
+followed 32 bytes later — the 4 bytes in between are padding, not a field. A plain record is already a
+multiple of 8 and needs none.
+
+Checksummed and plain records share the same header format and both point at real file data; they differ only
+in the trailing checksums and the size that implies.
 
 ## No single-extent "shortcut" form
 
@@ -99,6 +119,37 @@ Extent entries following this header use the same 24-byte format as the [Extent 
 table above. Snapshot and copy-on-write $DATA reuse this identical extent format (the driver routes them
 through the same allocation-lookup routine as ordinary file reads).
 
+## Where the extent records live — a B+-tree node
+
+A file's extent records are not a bare list. They are the rows of a small **B+-tree node** held inside the
+file's own `$DATA` record, at offset `0x88` of that record. A file with a single run looks like a plain
+array because the node holds one row; a fragmented or large file needs more, and then the node framing has
+to be read.
+
+The node begins with a 40-byte header:
+
+| Offset | Size | Field | Description |
+|--------|------|-------|-------------|
+| +0x00 | 4 | Header size | `0x28` — identifies the node |
+| +0x0C | 1 | Level | `0` = leaf: the rows **are** extent records. Non-zero = the rows point at a child page |
+| +0x14 | 4 | Row count | |
+| +0x20 | 8 | Node size | The row index sits at `node_size - 4 * row_count` from the node start |
+
+Rows are addressed by a **trailing index** of 4-byte slots — a 2-byte row offset plus a 2-byte hint holding
+the row's file VCN. Use the file VCN inside the row itself, not the hint: the hint is only 16 bits and
+saturates on a file larger than 65,535 clusters.
+
+When the map outgrows one node, the level byte becomes non-zero and each row's value is a **48-byte node
+reference** holding four cluster numbers. Those are *virtual* cluster numbers — translate them through the
+Container Table — and together they address one 16 KiB page. That page carries the same node structure
+again, at offset `0x50 + <the 32-bit value at page+0x50>`, so the walk repeats unchanged.
+
+**Picking the right record.** A file that has stream snapshots carries one `$DATA` record per version, all
+under the same key and all the same size. They are told apart by a sub-stream id in the key at `key+0x10`:
+**`0x1000` is the live stream**, and `0x1001`, `0x1002` and so on are the snapshots, oldest first. A reader
+that picks by size or takes the first match will read a snapshot's extents and hand back an older version of
+the file as though it were the current one.
+
 ## Forensic notes
 
 - Two-level translation (VCN → VLCN → PLCN) is fundamental to ReFS. A parser that treats VLCN values as
@@ -121,15 +172,14 @@ raw-disk decoded (RD) and corroborated in the driver (E2): `CmsStream::LookupAll
 VLCN→PLCN translation formula is E2-confirmed in the `CmsVolumeContainer` container subsystem and verified
 on disk across the corpus.
 
-The extent-flag meanings are raw-disk verified: 0x180040 is the standard data run, 0x1c00d0 the
-integrity checksum entry (32-byte stride, run_length 1), and the 0x180050 vs 0x180040 distinction
-(bit 0x10) is *not* run cardinality — both flags occur with single- and multi-cluster runs. Every
-non-resident file resolves via the single 24-byte extent stride (raw-disk verified; sampled single-extent
-files content-match); the 16-byte region at the descriptor is the embedded $DATA sub-record header.
+The extent-flag meanings are raw-disk verified: flags `0x0040` is the standard data run, `0x00d0` carries
+per-cluster checksums, and the `0x0050` vs `0x0040` distinction (bit 0x10) is *not* run cardinality — both
+occur with single- and multi-cluster runs. A plain record is 24 bytes; the 16-byte region at the descriptor is
+the embedded $DATA sub-record header.
 Snapshot/CoW DATA uses the identical 24-byte extent format (E2: same
 `CmsStream::LookupAllocation` routine; RD content-recovery confirmed).
 
-The 0x1c00d0 integrity entry's 8-byte element is CRC32-C (Castagnoli, poly `0x82f63b78`) of the 4 KiB
+The checksum appended to an integrity record is CRC32-C (Castagnoli, poly `0x82f63b78`) of the 4 KiB
 cluster: confirmed in the driver (E2) — the `crc32c_4096` kernels via `ComputeOneChecksum` (which uses the
 4096-byte path only when the span is one cluster) — and on disk (RD), 886 checksummed clusters recomputed
 across three integrity volumes with 0 mismatches (a cross-algorithm control ruled out plain CRC-32 and CRC64).

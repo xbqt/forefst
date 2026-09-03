@@ -124,7 +124,7 @@ not to be confused with the type-0x100 `$EFS` attribute. The single-instance sub
 contains organizational metadata including a creation timestamp and journal configuration.
 
 `$J` is a **bounded rolling log**: it is pre-allocated to a fixed size (typically 32 MiB or 128 MiB, set
-by `$Max`) and, once full, the oldest records are overwritten in place as new ones are appended — so its
+by `$Max`) and, once full, the oldest records are believed to be overwritten **in place** as new ones are appended — so its
 records fill the entire allocation. forefst therefore reads the **whole allocated window** (every extent),
 not a shorter "logical size" — the two multi-instance markers each carry a fixed data-stream *type* tag,
 not a byte length. Each record is self-describing (a record length and its own USN), so a partially-filled
@@ -132,6 +132,8 @@ journal's zero tail is skipped and the full read is complete. A record's USN is 
 so a file's `LastUsn` (`$SI+0x40`) is the offset of that file's most recent record and is found in the
 journal **while that record is still inside the live window**; only changes older than the window's oldest
 surviving record have been overwritten and are gone.
+
+> **The journal is an in-place ring.** A record whose USN is *X* sits at byte offset *X* **modulo the allocation**, the extents begin at file VCN 0, and old records are overwritten where they lie — the buffer is never trimmed from the front. The practical consequences: the whole allocation must be read; **byte order is not time order**, because after a wrap the newest records sit at the *start* of the buffer and the oldest in the middle; and a highest USN larger than the stream size is normal rather than a sign of damage. On the one corpus volume whose journal has wrapped, the buffer holds two generations side by side — the older one filling offsets 7,352,320–33,554,168 and the newer one 0–7,350,976, with the write head at about 7.35 MB of a 32 MiB window — and every one of its 217,892 records sits exactly at its USN modulo that window.
 
 ### Activation detection
 
@@ -203,8 +205,13 @@ pairs across nine v3.14 volumes (File ID unchanged in every case) and corroborat
 USN ↔ `$SI+0x40` LastUsn link is both decompiled (E2) and disk-proven — every sampled file's LastUsn
 resolved to a `$J` record naming that file. Journal activation, the OID 0x520 Change Journal entry,
 and the type-0xF0 `$Max` attribute are corroborated in the driver
-(`RefsSetupUsnJournal`, `RefsWriteFcbUsnRecordToJournal`) and verified on disk. Findings:
-**MD_USN_RA_001**, **MD_USN_RA_002**, **MD_USN_RA_003**, **MD_USN_RA_004**, **AP_CHJN_001/002/004**,
+(`RefsSetupUsnJournal`, `RefsWriteFcbUsnRecordToJournal`) and verified on disk. The in-place ring is
+**observed, not assumed**: across 14 corpus journals all 338,439 records sit at their USN modulo the
+allocation, and on the one volume whose journal has wrapped — 2.22 windows' worth of records, every one of
+them past the end of the window — the buffer holds two generations cleanly split by position, which
+front-trimming cannot produce. The two quantities compared there are independent: the offset comes from the
+linear scan position, the USN from the record body. Findings:
+**MD_USN_RA_001**, **MD_USN_RA_002**, **MD_USN_RA_003**, **MD_USN_RA_004**, **MD_USN_RA_008**, **AP_CHJN_001/002/004**,
 **MD_SI_RA_013**, **MD_SI_RA_015**, **FS_OTBL_005**. See
 [how this was verified](../methodology.md) to trace these to the exact images and measurements in
 `analysis/`.

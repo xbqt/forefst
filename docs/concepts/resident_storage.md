@@ -10,15 +10,54 @@ dominate most volumes those are the majority. This page explains how the two mod
 makes the driver promote a file from one to the other, and why
 [alternate data streams](../attributes/README.md) are a permanent exception.
 
-## How the two modes are encoded
+## What `key_flags` actually encodes — and what it does not
 
-The mode is carried in a single field — `key_flags`, a `u16` at offset 0x02 of a directory entry's
-key — and only **two** values ever appear on disk:
+`key_flags`, a `u16` at offset 0x02 of a directory entry's key, takes only **two** values on disk. It is
+tempting to read them as "resident" and "non-resident", and that reading is **wrong**. What the field says
+is *where the file's record lives*, not where its data lives:
 
-| Mode | key_flags | Where the content is | Value size |
-|------|-----------|----------------------|------------|
-| **Resident** | 0x01 | Inline in the B+-tree row, after the file's metadata header | > 84 bytes (> 72 bytes on v3.4) |
-| **Non-resident** | 0x02 | Separate clusters, via a type 0x40 extent row | 84 bytes (v3.10+) / 72 bytes (v3.4–v3.9) |
+| key_flags | The name row is… | Value size |
+|-----------|------------------|------------|
+| **0x01** | an **embedded record** — the file's own metadata header follows in this row | > 84 bytes (> 72 on v3.4–v3.9) |
+| **0x02** | an **index entry** — a pointer whose record was split out into a [type 0x40 row](../structures/extent_descriptors.md) in the file's home directory | 84 bytes (v3.10+) / 72 bytes (v3.4–v3.9) |
+
+**A `key_flags` 0x01 row can perfectly well hold a file whose data is in extents.** Measured across the
+corpus, every kf=0x01 *file* row is extent-backed on ReFS **3.4, 3.7, 3.9 and 3.10** — 1,120 / 250 / 386 /
+236 rows, **none** inline. On **3.14** the balance reverses and most are inline (219,960 of 236,769, about
+93 %), but 16,809 are still extent-backed. So the flag predicts residency on no version.
+
+**Residency is a property of the `$DATA` attribute**, and the only reliable way to determine it is to read
+that attribute's storage: inline content in the row, or an allocation pointing at clusters. That is what
+`forefst` does, and it is why its `IsResident` column means *"the current `$DATA` stream is inline"* rather
+than *"key_flags is 0x01"*.
+
+### Two independent axes
+
+It is worth separating them explicitly, because a single flag cannot express both:
+
+| | |
+|---|---|
+| **Record placement** | Is the object's record *embedded in this name row* (`key_flags 0x01`), or *split out* into a separate backing record (`0x02`)? A move or a hard link forces the split. |
+| **Data residency** | Are the file's bytes *inline in that record*, or *on disk in extents*? |
+
+A split-out record still holds its own `$DATA` attribute, and for a small file that attribute is commonly
+the **inline** kind — so the bytes live in the backing record, not on disk. Across the image corpus
+**16,191 files keep their data this way**, about one in five of all split-record files, and on one real
+Windows volume 14,580 of them. Reading the attribute is the only way to tell: the inline form carries the
+byte count and the content directly, the other form carries an extent list instead, and no record has both.
+
+The practical consequence for a reader: a hard-linked file can legitimately show **resident storage together
+with a link count above one**, and a file addressed through such a name has its content available without
+touching the data area at all.
+
+### What a 0x02 file row does tell you
+
+A kf=0x02 row on a **file** is a fingerprint: the object has been **moved or hard-linked**, so its record
+was split out of the name row into a type-0x40 backing in its home directory. On the audited 2 TB volume
+this held for **51 of 51** such rows (49 moved, 2 hard-linked). It is also version-scoped: the form does
+not exist at all on ReFS **3.4**, where every file row is kf=0x01 and there are **no type-0x40 rows**.
+Directories are a separate matter — they use the 0x02 layout on every version and are identified by the
+directory attribute bit `0x10000000`, not by the flag.
 
 There is no third value. A census across the corpus finds `{0x01, 0x02}` and nothing else — in
 particular there is **no** `0x04 = directory` flag, despite older accounts. A directory is stored with
@@ -105,8 +144,9 @@ A tool that assumes every file's content lives in external clusters will **silen
 files**, because their bytes are not in any cluster it would carve — they are inside the directory's
 metadata tree. On the small-file workloads that make up the bulk of many volumes, that is the single most
 likely cause of under-recovery in practice, and it is silent: the tool reports success while quietly
-omitting most of the data. The discipline is to read content from the row when key_flags is 0x01 and to
-follow [extents](../structures/extent_descriptors.md) only when it is 0x02. The same split governs
+omitting most of the data. The discipline is to read the `$DATA` attribute and follow whichever storage it
+names — inline bytes in the row, or [extents](../structures/extent_descriptors.md) — and **never** to decide
+that from `key_flags`, which answers a different question (above). The same split governs
 [deletion recovery](deletion_recovery.md): a deleted resident file's bytes survive or perish *with its
 metadata row*, while a deleted non-resident file's bytes can persist in unreferenced clusters long after
 the row is gone — two very different recovery problems sharing one on-disk encoding.
@@ -116,9 +156,11 @@ the row is gone — two very different recovery problems sharing one on-disk enc
 A parser classifies a directory entry from key_flags + the value length, then **confirms residency from the
 `$DATA` allocation**:
 
-- An **84-byte value** (72 on v3.4–v3.9) is a **non-resident file** or a **directory**, separated by the
-  directory attribute bit `0x10000000` at value+0x40.
-- A value **larger than 84 bytes** (72 on v3.4) is a **long value with inline metadata** — usually a
+- An **84-byte value** — 72 if a pre-v3.10 driver wrote the entry — is a **non-resident file** or a
+  **directory**, separated by the directory attribute bit `0x10000000` at value+0x40. The length is fixed
+  when the entry is written and never rewritten, so an upgraded volume carries both forms at once; read it
+  from the row, not from the volume version.
+- A value **larger than 84 bytes** is a **long value with inline metadata** — usually a
   resident file, **but not always**: if its current `$DATA` stream is extent-backed on disk, the file is
   **non-resident** despite the long value.
 

@@ -10,7 +10,7 @@ The Checkpoint is the atomic commit point of a ReFS volume. A volume keeps two a
 | 0x50 | 4 | Version echo (u32) | Packed `minor<<16 | major` on native v3.10+; 0 on upgraded/legacy |
 | 0x54 | 2 | Major version (u16) | Always 3 |
 | 0x56 | 2 | Minor version (u16) | 4, 7, 9, 10, or 14 |
-| 0x58 | 4 | Table descriptor end (u32) | 0xD0 (v3.4-v3.10), 0xE0 (v3.14), 0xE8 (Insider) |
+| 0x58 | 4 | **Self-descriptor offset** (u32) | In-page offset of the checkpoint's **own** page reference — the descriptor whose first LCN slot is the checkpoint page itself. 0xD0 (v3.4–v3.10), 0xE0 (v3.14 and later), 0xE8 on some v3.14 images. Verified by reading the reference at this offset and comparing its slot 0 with the checkpoint's own LCN: **95/95 corpus images, every version**. Where the 0x88 region is populated it satisfies `0x88 == 0x58 + 14 × 0x5C` (76/95) — the self-descriptor plus the 13 root references |
 | 0x5C | 4 | Page reference size (u32) | 0x68 (v3.4), 0x30 (CRC64), 0x48 (SHA-256) |
 | 0x60 | 8 | Virtual clock (u64) | Matches header at 0x10; the checkpoint sequence counter — increments on every committed checkpoint. Bootstrap selects the active checkpoint by the higher value. |
 | 0x68 | 8 | Allocator clock (u64) | Always **≤ virtual clock**. A *separate* counter advanced when the allocator's persisted state changes; the **gap = virtual − allocator** is the count of checkpoints since the last allocation-table change. **Forensic interpretation:** a non-zero gap indicates recent checkpoints were metadata-only / in-place (no cluster allocation since the last allocator commit). The per-operation semantic is inferred from the offset relationship rather than verified at the operation level. |
@@ -20,7 +20,7 @@ The Checkpoint is the atomic commit point of a ReFS volume. A volume keeps two a
 | 0x88 | 4 | Data area end offset (u32) | 0x680 (v3.4), 0x380 (v3.14) on most checkpoints, but **0x0 on some v3.14-native images** — the 0x88–0x8F region co-varies populated-vs-zeroed per checkpoint, so do not treat it as a fixed constant |
 | 0x8C | 4 | Max root capacity (u32) | 0x20 (32) on most images but **0x0 on the same v3.14-native images** as 0x88; the "MS_CHECKPOINT_MAX_ROOTS = 0x20" label holds only where the region is populated |
 | 0x90 | 4 | Root count (u32) | Always 13 |
-| 0x94 | var | Root pointer list | 13 page references (direct) or pointer to root list page (indirect) |
+| 0x94 | var | Root pointer list | **Direct** (flag 0x0200 clear): the 13 page references start here. **Indirect** (0x0200 set): this is a `u32` **in-page offset** to an array of 13 `u32` offsets, each pointing at one root's page reference, spaced `0x5C` apart. It is *not* a pointer to a separate page — see the walk-through below |
 
 ## Checkpoint selection and fallback
 
@@ -111,8 +111,12 @@ The version echo distinguishes natively formatted v3.10+ volumes from upgraded o
 3. Read page reference size at 0x5C (determines stride for root list traversal)
 4. Read CHKP flags at 0x78
 5. Check bit 0x0200 to determine direct vs indirect root mode
-6. Parse the 13 root pointers accordingly at 0x94
-7. For each root, use the appropriate addressing mode (virtual for most, physical for roots 7, 8, 12)
+6. Parse the 13 root pointers at 0x94 — directly when flag 0x0200 is clear, otherwise follow the `u32`
+   there to the array of 13 in-page offsets and read one page reference at each (stride `0x5C`)
+7. Optional cross-check: the reference at the offset in **0x58** is the checkpoint's own self-descriptor —
+   its first LCN slot equals the checkpoint's LCN. A mismatch means the page is not the checkpoint you
+   think it is
+8. For each root, use the appropriate addressing mode (virtual for most, physical for roots 7, 8, 12)
 
 ## Cross-references
 

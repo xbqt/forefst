@@ -69,6 +69,36 @@ The refcount also doubles as a triage signal before extraction. A cluster range 
 guaranteed intact; clusters with refcount `0` survive only until the allocator reuses them. So a refcount
 check distinguishes "this version will reconstruct byte-for-byte" from "this is opportunistic salvage."
 
+### The consequence: no single stream is a complete block map
+
+Because only the *changed* blocks are rewritten, the live version's extent list ends up covering **only what
+has been written since the last snapshot**. Everything untouched is still described by the snapshot's list,
+and the cluster is shared rather than duplicated. Neither list, on its own, describes the whole file.
+
+The stream record says so directly, in two fields that are easy to confuse:
+
+| field | means |
+|-------|-------|
+| **allocated size for this stream** | what *this* version owns — the bytes its own extent list covers |
+| **total allocated size** | the **file's** whole allocation, including the blocks it shares |
+
+A snapshotted, then modified, file shows the second much larger than the first. One lab file reports a
+22,688-byte stream with a 24,576-byte total allocation but only 8,192 bytes of its own — its extent list
+holds two clusters, numbers 4 and 5. Clusters 0–2 belong to the first snapshot and cluster 3 to the second.
+
+So **reading any version means resolving each block position across the versions**, which is what the driver
+does on an ordinary read:
+
+- for the **live** version, a block it does not own comes from the **most recent** snapshot that holds it — a
+  block only drops out of the live list while it has not changed since;
+- for a **prior** version, only snapshots **older** than it may be used; a newer one can hold bytes written
+  after the version you are recovering;
+- a position no version holds is a genuine **sparse hole**, and reads as zeros.
+
+Nothing here is reconstructed or inferred: every block comes from a real cluster that is pinned by its
+refcount. Reading only one version's own extents produces a file of the right *length* whose shared regions
+are zeros — bytes that are not on the volume at all.
+
 ## The recovery chain
 
 From the resident type-0x30 row, recovery proceeds in four steps:

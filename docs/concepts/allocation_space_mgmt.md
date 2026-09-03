@@ -33,11 +33,16 @@ for all three tiers lives on the [Allocators](../structures/allocators.md) struc
 
 ## How free vs. allocated is determined
 
-Each managed range is described by one row. A **bitmap row** (2,072 bytes) carries a 2,048-byte
-allocation bitmap at offset `+0x18` — **1 bit per cluster, where `1 = allocated`**. Ranges that are
-entirely allocated or entirely free do not need a bitmap at all, so they collapse to a **compact row**
-(24 bytes) that keeps the header fields and drops the bitmap payload. The compact form is what carries the
-common case (a whole container fully in use, or fully free) without spending 2 KiB on a uniform bitmap.
+Each managed range is described by one row. A **bitmap row** carries an allocation bitmap at offset
+`+0x18` — **1 bit per cluster, where `1 = allocated`**. The row is **not a fixed size**: the bitmap is
+exactly as long as its range needs, so the row measures `bitmap_offset + roundup8(ceil(range_length / 8))`.
+The familiar 2,072-byte row is simply the one covering 16,384 clusters; rows of 152 bytes (1,024 clusters)
+and 32 bytes (a dozen clusters or fewer) occur too. Ranges that are entirely allocated or entirely free do
+not need a bitmap at all, so they collapse to a **compact row** that keeps the header fields and drops the
+bitmap payload — the common case of a whole container fully in use, or fully free, without spending 2 KiB
+on a uniform bitmap. Whether a row carries a bitmap is stated by **bit 0 of the flags** at `+0x12`, not by
+the row's length; for a compact row it is the **free count** that says which of the two uniform states it
+is in.
 
 The free/used split is self-checking. Each row's free count at `+0x10` must equal its range length at
 `+0x08` minus the number of set bits in the bitmap:
@@ -46,9 +51,11 @@ The free/used split is self-checking. Each row's free count at `+0x10` must equa
 free_count (+0x10) = range_length (+0x08) - popcount(bitmap)
 ```
 
-This invariant holds on every row measured across the corpus, which makes it a useful integrity check
-when parsing: a row that fails it is either misframed or tampered. A cluster is therefore **"live" iff its
-bit is set in the governing tier's bitmap row** (or it falls under a fully-allocated compact row).
+This invariant holds on every bitmap row measured across the corpus, which makes it a useful integrity
+check when parsing: a row that fails it is either misframed or tampered. (It is a bitmap-row rule: a compact
+row has no bitmap, and its free count saturates at 0xFFFF rather than wrapping, so read a compact row's state
+from the free count being zero or non-zero.) A cluster is therefore **"live" iff its bit is set in the
+governing tier's bitmap row** (or it falls under a fully-allocated compact row).
 
 ## Allocating clusters: AllocateLcns
 
@@ -131,11 +138,14 @@ whether a cluster's bytes are still the file's.
 
 ## Version and state differences
 
-The **row format is version-invariant** — a 2,072-byte bitmap row with the bitmap at `+0x18` — across all
-versions from v3.4 through Insider. What changed across versions is narrower:
+The **row format itself is version-invariant** — the same fields in the same places, the bitmap at `+0x18`
+whenever one is present — across all versions from v3.4 through Insider. What changed across versions is
+narrower:
 
-- **Medium-tier header-size value** (`+0x14`): `0x0118` on v3.4, `0x0218` on v3.7+. The Small and Container
-  tiers stay `0x0118` on all versions. The compact-row analogue is `0x0100` (v3.4) / `0x0200` (v3.7+).
+- **The format byte at `+0x15`.** The two bytes at `+0x14` are a pair: `+0x14` is the **bitmap offset**
+  (`0x18` when the row carries a bitmap, `0` when it does not) and `+0x15` is a **format byte** whose value
+  is 1 or 2. It is **tier**-dependent as much as version-dependent: the Container and Small tiers are format
+  1 on every version, while the Medium tier is 1 on v3.4 and 2 on v3.7+.
 - **Tier interaction.** v3.4 enforces strict separation: container ID 0 = Medium, ID 1 = Small, ID 2 =
   Container, ID 3+ = Medium, with zero overlap. v3.14 switched to *overlapping* management — Medium covers
   the entire virtual address space and marks the specialised tiers' containers as fully-allocated compact
@@ -174,8 +184,9 @@ from pairing that with the [block refcount](../structures/block_refcount.md) (Co
 
 ## Evidence
 
-The three-tier model, the bitmap/compact row layouts (2,072-byte row, bitmap at `+0x18`, `1 = allocated`),
-the `free_count = range_length − popcount(bitmap)` invariant, the version-dependent Medium header-size, and
+The three-tier model, the bitmap/compact row layouts (variable-length row, bitmap at `+0x18`,
+`1 = allocated`), the `free_count = range_length − popcount(bitmap)` invariant, the tier- and
+version-dependent Medium format byte, and
 the v3.4-vs-v3.14 tier-interaction change are confirmed on the raw-disk corpus (RD) and corroborated in the
 driver (E2). The allocation path is `AllocateLcns` with its `AllocateRange` / `AllocateFromCandidate` /
 `AllocateFromBitmapCandidateCacheAware` helpers, and the deferred-reuse lifecycle runs

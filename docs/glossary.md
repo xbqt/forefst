@@ -41,8 +41,8 @@ Key terms used throughout the ReFS documentation, listed alphabetically.
 **CRC32-C**
 : The block self-descriptor checksum type used on the SUPB/CHKP self-descriptor. It is *not* the page-reference checksum (that is CRC64) and *not* the SUPB/CHKP block digest (a cluster-size-dependent self-checksum: CRC32-C on 4K-cluster volumes, CRC64 on 64K, SHA-256 on SHA-256 volumes). Also the per-cluster algorithm used by integrity streams.
 
-**CRC64 (custom polynomial)**
-: The primary metadata checksum from v3.10+. A reflected CRC64 with the **custom** polynomial `0x9A6C9329AC4BC9B5` — **not** ECMA-182. Stored in page references and verified at mount on v3.14.
+**CRC64 (CRC-64/NVME)**
+: The primary metadata checksum from v3.10+. A reflected CRC64 with polynomial `0xAD93D23594C93659` (reflected `0x9A6C9329AC4BC9B5`), init and xorout all-ones — **not** ECMA-182, but the standard **CRC-64/NVME** (a.k.a. Rocksoft), check value `0xAE8B14860A799888`. Stored in page references and verified at mount on v3.14.
 
 **$DATA**
 : A file's default data stream. Can be resident (inline in a B+-tree row) or non-resident (in extent clusters). See [$DATA](attributes/DATA.md).

@@ -98,7 +98,7 @@ Each OID 0x520 B+-tree follows standard directory structure:
 
 ### Degenerate children (v3.4 through v3.7)
 
-These three file entries are created at format time by `CreateDownlevelDegenerateMetadataObjects`. Each has key_flags=0x01 (resident) and file_attributes=0x20 (ARCHIVE). They are lightweight file-entry wrappers for standalone system OIDs, not independent data stores.
+These three file entries are created at format time by `CreateDownlevelDegenerateMetadataObjects`. Each has key_flags=0x01 (record embedded in the name row) and file_attributes=0x20 (ARCHIVE). They are lightweight file-entry wrappers for standalone system OIDs, not independent data stores.
 
 #### Reparse Index
 

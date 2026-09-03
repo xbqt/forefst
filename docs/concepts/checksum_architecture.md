@@ -38,7 +38,7 @@ VBR
 | [VBR](../structures/vbr.md) | ROR1+ADD (custom rotate-add, offset 0x16) | in the VBR itself | Boot-sector self-check |
 | [SUPB](../structures/page_header.md) | self-checksum (`LcnWithChecksum` @+0xD0): cluster-size-dependent | in the SUPB itself | Superblock integrity — verified at mount + self-healed |
 | [CHKP](../structures/chkp.md) | self-checksum (`LcnWithChecksum`): same rule | in the CHKP itself | Checkpoint self-integrity; this is the Merkle root — verified at mount |
-| B+-tree pages | CRC64 (custom poly) or SHA-256 | in the **parent's** page reference | All metadata pages below the checkpoint |
+| B+-tree pages | CRC64/NVME or SHA-256 | in the **parent's** page reference | All metadata pages below the checkpoint |
 
 The [checkpoint (CHKP)](../structures/chkp.md) is the root of the tree, and that is what makes the SUPB
 and CHKP special. Below the checkpoint, every page's checksum lives in its *parent*, so verifying a
@@ -89,14 +89,16 @@ size-detection logic live on the [Page References](../structures/page_references
 
 ## The checksum algorithms
 
-### CRC64 (custom polynomial — NOT ECMA-182)
+### CRC64 — this is CRC-64/NVME (Rocksoft), not ECMA-182
 
 This is the primary metadata checksum (page-reference `cktype = 2`), applied to every B+-tree page when
 CRC64 verification is active. The single most important fact for a verifier is that it is **not**
 ECMA-182:
 
 - **Polynomial `0xAD93D23594C93659` (normal) / `0x9A6C9329AC4BC9B5` (reflected)** — the driver global
-  `ClMulCsCrc64`. This is a custom polynomial, not ECMA-182 (`0x42F0E1EBA9EA3693`); recomputing with the
+  `ClMulCsCrc64`. The polynomial is not ECMA-182's `0x42F0E1EBA9EA3693` (`0x42F0E1EBA9EA3693`); recomputing with the
+
+It is a **named, standard CRC**, so it does not need a bespoke implementation: ReFS uses **CRC-64/NVME** (also catalogued as CRC-64/Rocksoft) — polynomial `0xAD93D23594C93659` (reflected `0x9A6C9329AC4BC9B5`), init and xorout `0xFFFFFFFFFFFFFFFF`, reflected in and out. The catalogue check value for that CRC is `0xAE8B14860A799888`, and the reader's own implementation returns exactly that for `"123456789"` — so any `crc64_nvme` / `crc64_rocksoft` library reproduces ReFS metadata checksums directly.
   wrong polynomial fails on every page.
 - **Reflected**, init = xorout = `0xFFFFFFFFFFFFFFFF`.
 - Computed over the **full metadata page** (all of the page reference's LCN slots concatenated — 16 KiB
@@ -150,11 +152,31 @@ implements the Merkle tree will silently skip them.
 
 Each [MLog](../structures/mlog.md) log record carries its own integrity value — an **8-byte XOR-fold**
 (not a CRC) of the record body, stored in the entry header at +0x08 (= page+0x80). It is written by
-`LogCoreWriteDataRecord` and verified by `LogVerifyChecksumEntryHeader` on recovery. The dword at MLog
-page **+0x04 is NOT a CRC32**: it is a per-volume constant format/log-instance magic, identical for every
-control page and data record in a volume and validated only by equality. Reading +0x04 as a per-record
-checksum (a common mistake) finds the same value on every record; the real per-record value is the
-XOR-fold at +0x80.
+`LogCoreWriteDataRecord` and verified by `LogVerifyChecksumEntryHeader` on recovery.
+
+**The algorithm.** Zero the 8-byte field itself, then fold the log block: for each 8-byte little-endian word
+of the block, XOR it into one of **four** accumulators chosen by its index modulo 4; XOR the four accumulators
+together; and fold that 64-bit result down to 32 bits as `(v >> 32) ^ (v & 0xFFFFFFFF)`. The block size is the
+value at page+0x0C — `0x1000` on every volume, independent of the cluster size. Where a record spans several
+blocks they chain: the next block's first accumulator starts from the previous block's result rotated left by
+one bit. A record is exactly one block, so in practice the chain starts at zero.
+
+The same value guards **both** kinds of log record — the control page and the data record — distinguished by
+the type field at entry header +0x30 (1 and 2 respectively; no other type occurs).
+
+`forefst mlog --stats` recomputes it for every record and reports the verdict, so a torn or edited record is
+named rather than parsed in silence. Across the image corpus — ReFS 3.4 through 3.15, 4 K and 64 K clusters —
+all 599,039 data records and all 95 control pages recompute exactly.
+
+> **It is an integrity check, not a signature.** Being an XOR fold it catches any altered byte — a single-bit
+> flip at any of the 4,096 offsets in a record is detected — but it is blind to a *reordering* of 8-byte words
+> that leaves each word at the same position modulo 4. Treat a verified record as undamaged, not as
+> authenticated.
+
+The dword at MLog page **+0x04 is NOT a CRC32**: it is a per-volume constant format/log-instance magic,
+identical for every control page and data record in a volume and validated only by equality. Reading +0x04 as
+a per-record checksum (a common mistake) finds the same value on every record; the real per-record value is
+the XOR-fold at +0x80.
 
 ### Container-compression per-unit checksums (24H2)
 
@@ -170,9 +192,10 @@ per compression unit rather than per page.
 
 When a file is placed on an **integrity stream** (`fsutil`/Storage Spaces integrity, or `Set-FileIntegrity`),
 ReFS checksums its *data* clusters too — separately from metadata. On a 4 KiB-cluster CRC32-C volume this checksum
-lives **inline in the file's own extent map**: each checksummed cluster becomes a single-cluster extent (flag
-`0x1C00D0`) immediately followed by an 8-byte element holding the cluster's checksum —
-`[CRC32-C : 4 bytes][reserved : 4 bytes]`. The algorithm is **CRC32-C** (Castagnoli, `0x82F63B78`) over the full
+lives **inline in the file's own extent map**: the extent record carrying the clusters is followed by **one
+4-byte CRC32-C per cluster**, and the record is padded to an 8-byte boundary. For the common single-cluster
+case that makes the whole record 32 bytes — 24 of extent, 4 of checksum, 4 of padding.
+The algorithm is **CRC32-C** (Castagnoli, `0x82F63B78`) over the full
 4096-byte cluster. `extract` recomputes and verifies each one as it recovers the file, and flags any mismatch as
 corruption or tampering. SHA-256 and 64 KiB-cluster volumes keep their data checksums out of line (a 32-byte
 SHA-256 cannot fit the inline slot), so there is nothing to verify inline on those.

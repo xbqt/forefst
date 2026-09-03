@@ -14,8 +14,8 @@ backup copy resides in the last sector of the volume.
 | 0x10 | 4 | FSRS identifier | ASCII `"FSRS"` signature (`0x46535253`) |
 | 0x14 | 2 | VBR size (u16) | Always `0x0200` (512) |
 | 0x16 | 2 | VBR checksum (u16) | ROR-1 + ADD over bytes 3..511, excluding offsets 0x16-0x17 |
-| 0x18 | 8 | Total sector count (u64) | Volume size in 512-byte sectors |
-| 0x20 | 4 | Bytes per sector (u32) | Always 512 |
+| 0x18 | 8 | Total sector count (u64) | Volume size in units of the sector size in the field above (512 on every corpus image) |
+| 0x20 | 4 | Bytes per sector (u32) | 512 on every corpus image; ReFS also supports 4Kn media, which this project has not tested. The reader now looks for the GPT at byte 512 **and**, failing that, at 4096, so a 4Kn image is read rather than rejected — but that path is exercised only by synthetic test images, never by a real 4Kn volume. Treat a result obtained from one as unverified |
 | 0x24 | 4 | Sectors per cluster (u32) | 8 (4 KiB clusters) or 128 (64 KiB clusters) |
 | 0x28 | 1 | Major version (u8) | 3 on all covered volumes |
 | 0x29 | 1 | Minor version (u8) | 4–14 -- see Version values below |
@@ -56,7 +56,7 @@ v3.4-formatted volume mounted on Win11 will have its version updated to 3.14.
 | Value | Algorithm | Metadata verification | Page reference size |
 |-------|-----------|----------------------|---------------------|
 | 0x0000 | None | Disabled (`CmsChecksumNone` stub) | 0x68 (104 bytes) |
-| 0x0002 | CRC64 (custom poly 0x9A6C9329AC4BC9B5, **not** ECMA-182) | Enabled from v3.10+ | 0x30 (48 bytes) |
+| 0x0002 | CRC-64/NVME (reflected poly 0x9A6C9329AC4BC9B5, **not** ECMA-182) | Enabled from v3.10+ | 0x30 (48 bytes) |
 | 0x0004 | SHA-256 | Enabled | 0x48 (72 bytes) |
 
 This field is set at format time and **never modified** during version upgrades. On upgraded

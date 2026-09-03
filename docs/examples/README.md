@@ -13,6 +13,7 @@ output → byte-level reasoning → cross-references, so an analyst can follow a
 | [read_a_hard_link_group.md](read_a_hard_link_group.md) | Resolve every name of one physical object via the home-backref + child-ordinal + content fingerprint |
 | [track_a_file_across_moves.md](track_a_file_across_moves.md) | Follow one file through a rename and a cross-directory move — the FileRef `(HomeOid, FileId)` stays fixed while name and parent change |
 | [identify_native_vs_upgraded.md](identify_native_vs_upgraded.md) | Classify volume state from CHKP flags (0x002 / 0x602 / 0x682) and the immutable VBR format-time fields |
+| [recover_credentials_and_prior_versions.md](recover_credentials_and_prior_versions.md) | One investigation end to end — recover deleted and renamed credential files, list every alternate data stream, read a file's earlier versions from its snapshots, and see where carving fails |
 
 ## Raw tool dumps
 

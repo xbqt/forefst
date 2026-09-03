@@ -1,11 +1,24 @@
 # $OBJ_LINK
 
-`$OBJ_LINK` is the **object → primary-name backpointer** — it stores a file's canonical filename and
-parent OID directly in the object's own type-0x10 row, so a path can be reconstructed from the Object
-Table alone, without walking directory trees. It is a multi-instance embedded sub-record, **type 0x39 on
-v3.7+** and **type 0x38 on v3.4**. (It is the same on-disk row historically called **`$DIR_LINK`** — the
-legacy v3.4-era debug/management-API name.) The row is **one-per-object**: creating a hard link adds no
-new `$OBJ_LINK` row.
+`$OBJ_LINK` is the **object → name backpointer** — it stores a filename and its parent OID directly in the
+object's own record, so a path can be reconstructed from the Object Table alone, without walking directory
+trees. It is a multi-instance embedded sub-record, **type 0x39 on v3.7+** and **type 0x38 on v3.4**. (It is
+the same on-disk row historically called **`$DIR_LINK`** — the legacy v3.4-era debug/management-API name.)
+
+**There is one row per NAME, not one per object.** A hard link adds a row. Measured across the corpus, the
+number of *distinct* `(parent OID, name)` pairs in an object's backing equals the number of directory
+entries pointing at that object on **40,966 of 40,966** backings — ReFS 3.7, 3.9, 3.10 and 3.14, for objects
+carrying anywhere from **1 to 19 names**, with **no exceptions**. That makes these rows the object's own
+enumeration of every path that reaches it, and the most direct way to count and list a file's hard links.
+
+Two things to handle when counting:
+
+- **Deduplicate.** Some backings carry the *same* `(parent, name)` row twice, byte-for-byte. Count distinct
+  pairs, not rows. (Observed on moved files; the operation that produces the second copy is not yet pinned.)
+- **Scope "always present".** These rows live on objects that have their own record: directories (in their
+  type-0x10 row) and files whose record was split out into a type-0x40 backing. A file whose name row still
+  *embeds* its record (`key_flags` 0x01) has **none** — 0 of 219 on the audited volume. On **ReFS 3.4** no
+  directory carries one either (0 of 309 measured), so the v3.4 form is not a drop-in equivalent.
 
 ## Value layout
 
@@ -71,7 +84,7 @@ Upgraded v3.4→v3.14 volumes keep the old 0x38 rows.
 ## Cross-references
 
 - [Object Table](../structures/object_table.md) — the OID → row mapping `$OBJ_LINK` is reached through
-- [Hard Links](../concepts/hard_links.md) — why a hard link adds no new `$OBJ_LINK` row
+- [Hard Links](../concepts/hard_links.md) — how the per-name rows enumerate an object's links
 - [Resident vs Non-Resident Storage](../concepts/resident_storage.md) — the embedded sub-record model
 
 ## Evidence
