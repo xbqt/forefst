@@ -19,7 +19,8 @@ import sys
 
 import pytest
 
-REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# tests/ lives at analysis/tests/, so the repo root is THREE levels up (tests -> analysis -> repo).
+REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 FOREFST = os.path.join(REPO, "forefst.py")
 
 EXIT_OK = 0            # success / no finding
@@ -29,11 +30,22 @@ EXIT_2 = 2            # OVERLOADED: a finding (integrity/security) OR a usage er
 
 def _corpus_root():
     """Locate the image corpus (analysis/rawdisk/disks) regardless of where the tests were copied to."""
-    for base in ("/workspace/refs", os.getcwd(),
-                 os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(REPO))))):
-        d = os.path.join(base, "analysis", "rawdisk", "disks")
-        if os.path.isdir(d):
-            return d
+    # No hard-coded absolute path: it was one maintainer's workspace, tried FIRST, so a clone silently
+    # searched a directory that does not exist before looking at its own tree. Walk UP instead -- that
+    # finds a corpus wherever the checkout sits, and finds nothing in a clone (which ships no images),
+    # so the corpus-dependent tests skip rather than pretending to pass.
+    seen = set()
+    for start in (os.getcwd(), REPO):
+        d = os.path.abspath(start)
+        while d not in seen:
+            seen.add(d)
+            cand = os.path.join(d, "analysis", "rawdisk", "disks")
+            if os.path.isdir(cand):
+                return cand
+            parent = os.path.dirname(d)
+            if parent == d:
+                break
+            d = parent
     return None
 
 

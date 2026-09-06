@@ -14,7 +14,7 @@ run; treat them as the latest evidence snapshot, not a stable reference.
 | `report_static_verification.txt` | `verify_static.py` | Static-evidence pass over the reference-table `NOT_TESTED` entries (decompilation + function-catalog search) — PASS/WARN/FAIL |
 | `report_oid_0x520_*.txt` | ad-hoc probe (`investigate_oid_0x520.py`) | Historical OID 0x520 (Change Journal / FS Metadata directory) investigation |
 
-Regenerate (from the repo root): `python3 analysis/reports/verify_docs_static.py` and `python3 analysis/reports/verify_docs_tools.py`.
+Regenerate (from the repo root): `python3 analysis/reports/verify_static_claims.py` and `python3 analysis/reports/verify_docs_tools.py`.
 
 > Regeneration runs only against the private disk corpus and the Ghidra / decompiled exports, which are **not** bundled in this repository; point the scripts at a local copy via `REFS_DISKS` / `REFS_CORPUS` / `REFS_GHIDRA` / `REFS_DECOMPILED` / `REFS_FUNC_CATALOG`.
 >

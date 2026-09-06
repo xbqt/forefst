@@ -47,7 +47,8 @@ def main():
     ap.add_argument("--samples-root", default=None)
     a = ap.parse_args()
 
-    repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    # analysis/tests/ -> three levels up to the repo root.
+    repo = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     root = a.samples_root or os.path.join(repo, "analysis", "samples", "disks")
     tools = {"forefst": a.tool or os.path.join(repo, "forefst.py"),
              "refsanalysis": os.path.join(repo, "refsanalysis.py")}
