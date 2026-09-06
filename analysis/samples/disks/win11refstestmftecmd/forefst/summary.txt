@@ -75,6 +75,9 @@ Volume Detail
   Reparse index:      330 entries
   Trash table:        0 entries
   Containers used:    62 / 63  (first maps to PLCN 0 = boot region)
+  Space used:         1.2 GB of 3.9 GB (29.4%) — 2.8 GB free
+      • 48.0 MB lies beyond the last container,
+        so no allocator tracks it — it is neither used nor free
   FS Metadata:        1 child (Change Journal)
   USN Journal:        Active
   USN Journal ID:     0x01dcea86b624a787
@@ -83,7 +86,7 @@ Volume Detail
 File System Content (from directory walk)
 ------------------------------------------------------------------------------
   Directories:        237
-  Files:              1507 (273 resident + 1234 non-resident)
+  Files:              1507 (274 inline + 1233 extent-backed)
   Total file size:    1.4 GB
   Oldest timestamp:   2021-05-18 07:16:04.9990009
   Newest timestamp:   2026-05-23 11:15:52.3435495

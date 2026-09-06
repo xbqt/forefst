@@ -11,7 +11,7 @@ so the bytes they report are the file's actual content.
 
 | Tool | What it is | Reach for it when you want… |
 |------|------------|------------------------------|
-| **[forefst.py](forefst.md)** | The **unified forensic tool** — the ReFS equivalent of MFTECmd for NTFS, plus a full forensic suite. | a CSV / [body-file](forefst.md) / JSON listing of every file (MACB, sizes, owner+group SID, attributes) · deleted-file & CoW recovery · the USN journal, MLog, super-timelines, timestomp detection, file extraction, security descriptors, reparse points, snapshots, integrity checking, and metadata export |
+| **[forefst.py](forefst.md)** | The **unified forensic tool** — a per-file metadata lister for ReFS, plus a full forensic suite. | a CSV / [body-file](forefst.md) / JSON listing of every file (MACB, sizes, owner+group SID, attributes) · deleted-file & CoW recovery · the USN journal, MLog, super-timelines, timestomp detection, file extraction, security descriptors, reparse points, snapshots, integrity checking, and metadata export |
 | **[refsanalysis.py](refsanalysis.md)** | The **structure / lab tool** — decode one on-disk structure at a time. | to inspect the VBR, superblock, checkpoint, object/schema/container/parent-child tables, the upcase table, or a lab-format file/attribute view — or to repair a damaged VBR |
 
 Rule of thumb: **`forefst.py` for everything file- and forensics-related (triage, timeline, recovery, logs);
@@ -20,7 +20,7 @@ Rule of thumb: **`forefst.py` for everything file- and forensics-related (triage
 
 ## `forefst.py` subcommands
 
-`forefst.py <image> <subcommand> [options]` (the default subcommand is `files`).
+`forefst.py <image> <subcommand> [options]` (the default subcommand is `summary`).
 
 | Group | Subcommands |
 |-------|-------------|

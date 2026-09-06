@@ -146,6 +146,8 @@ contrast.
 
 ## Cross-references
 
+- [Driver Transitions](driver_transitions.md) — taking a stream snapshot is one of the residency triggers
+
 - [Transactions and Crash Consistency](transactions_crash_consistency.md) — the two-pass, redo-only
   recovery that CoW makes possible
 - [MLog](../structures/mlog.md) — the redo-only log; it needs no undo records *because* of CoW

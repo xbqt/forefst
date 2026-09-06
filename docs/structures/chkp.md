@@ -20,7 +20,7 @@ The Checkpoint is the atomic commit point of a ReFS volume. A volume keeps two a
 | 0x88 | 4 | Data area end offset (u32) | 0x680 (v3.4), 0x380 (v3.14) on most checkpoints, but **0x0 on some v3.14-native images** — the 0x88–0x8F region co-varies populated-vs-zeroed per checkpoint, so do not treat it as a fixed constant |
 | 0x8C | 4 | Max root capacity (u32) | 0x20 (32) on most images but **0x0 on the same v3.14-native images** as 0x88; the "MS_CHECKPOINT_MAX_ROOTS = 0x20" label holds only where the region is populated |
 | 0x90 | 4 | Root count (u32) | Always 13 |
-| 0x94 | var | Root pointer list | **Direct** (flag 0x0200 clear): the 13 page references start here. **Indirect** (0x0200 set): this is a `u32` **in-page offset** to an array of 13 `u32` offsets, each pointing at one root's page reference, spaced `0x5C` apart. It is *not* a pointer to a separate page — see the walk-through below |
+| 0x94 | var | Root pointer list | **Direct** (flag 0x0200 clear): 13 `u32` **in-page offsets** start here, each pointing at one page reference elsewhere in the checkpoint — the references themselves do *not* start at 0x94. **Indirect** (0x0200 set): this is a `u32` **in-page offset** to an array of 13 `u32` offsets, each pointing at one root's page reference, spaced `0x5C` apart. It is *not* a pointer to a separate page — see the walk-through below |
 
 ## Checkpoint selection and fallback
 
@@ -57,7 +57,9 @@ The **0x0080 bit cleanly separates native-formatted v3.10+ volumes (set) from up
 
 The 13 root table pointers have two encodings, selected by flag bit 0x0200:
 
-- **Without 0x0200 (direct)**: 13 page references stored inline starting at CHKP+0x94
+- **Without 0x0200 (direct)**: CHKP+0x94 holds **13 `u32` in-page offsets**, one per root. Each names a
+  position *within the same checkpoint page* where that root's page reference sits; the reference is
+  `desc_len` bytes long (`desc_len` from CHKP+0x5C). The offsets are at 0x94 — the page references are not.
 - **With 0x0200 (indirect)**: CHKP+0x94 holds a u32 **offset within the same checkpoint page** to the root-list region (not a pointer to a separate page — the value is far smaller than one page and equals the embedded-data base offset)
 
 **Critical**: A parser must read the flag bit **before** decoding the root list. Reading an indirect-mode checkpoint as direct (or vice versa) yields 13 wrong root addresses.

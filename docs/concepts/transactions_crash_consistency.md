@@ -42,7 +42,7 @@ entry header (Layer 2), the payload is a single **redo block** (`_SmsRedoHeader`
 layout is on the [MLog](../structures/mlog.md) page; the offsets that carry an analyst through a record
 are:
 
-```
+```text
 _SmsRedoRecord + 0x00   record_size (u32)
 _SmsRedoRecord + 0x04   opcode (u32)        <-- dispatched by PerformRedo
 _SmsRedoRecord + 0x20   object_id (u64)     target OID
@@ -59,7 +59,7 @@ and that gap is precisely the forensic window described below.
 
 ### Replay on mount
 
-```
+```sh
 mount:
   pick the higher-virtual-clock CHKP copy that passes its self-checksum
   # self-checksum is cluster-size-dependent: CRC32-C/4B on 4K, CRC64/8B on 64K, SHA-256/32B on SHA-256
@@ -137,7 +137,7 @@ documents why the self-checksum width tracks the cluster size.
 `forefst.py <image> mlog` surfaces the log; the four-layer decode and per-record framing are
 validated across v3.4, v3.7, v3.9, v3.10, v3.14, and Insider:
 
-```
+```sh
 forefst.py <image> mlog --parse        # decoded transactions: action, path, timestamp
 forefst.py <image> mlog --stats        # opcode histogram (correctly named per version)
 forefst.py <image> mlog --csv out.csv  # timeline export for super-timeline correlation

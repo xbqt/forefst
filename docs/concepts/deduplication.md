@@ -44,7 +44,7 @@ allocator bitmap row, is on the [Block Refcount Table](../structures/block_refco
 
 Every `u16` array entry packs a reference count into the low 14 bits and two flag bits on top:
 
-```
+```text
  bit 15   bit 14            bits 13..0
 +--------+----------------+-------------------------+
 | dedup- | dedup-metadata | reference count         |

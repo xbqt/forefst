@@ -3,7 +3,7 @@
 A ReFS file has **no Object ID of its own** (that identifier belongs to directories and system tables — see
 [Object IDs](object_ids.md)). A file is instead identified by a **FileId**: the pair
 
-```
+```text
  FileRef = (HomeOid, FileId)
            HomeOid = the OID of the directory the file was CREATED in
            FileId  = a per-directory ordinal assigned to the file at birth

@@ -1,12 +1,12 @@
 # forefst win11refs2tsnapshots.raw search test
 # ----------------------------------------------------------------------------
-OID          Parent       Type          Size  Res  Modified             Path
-───────────  ───────────  ────  ──────────── ────  ───────────────────  ────────────────────────────────────────
-0x702        0x600        Dir              0    —  2026-05-16 16:52:03  test
-0x73c        0x600        Dir              0    —  2026-05-16 17:34:52  testsnapshots
-(resident)   0x73c        File         201 B  Yes  2026-05-16 17:35:57  testsnapshots/lasttest.txt
-(resident)   0x73c        File           5 B  Yes  2026-05-16 17:19:37  testsnapshots/test.txt
-(resident)   0x73c        File          12 B  Yes  2026-05-16 17:27:58  testsnapshots/testads.txt
-(resident)   0x73c        File           5 B  Yes  2026-05-16 17:19:37  testsnapshots/testxyz.txt
+ObjectRef      Type          Size  Data             Modified             Path
+─────────────  ────  ────────────  ───────────────  ───────────────────  ────────────────────────────────────────
+0x702          Dir              0  —                2026-05-16 16:52:03  test
+0x73c          Dir              0  —                2026-05-16 17:34:52  testsnapshots
+0x73c:0x9      File         201 B  snapshot-shared  2026-05-16 17:35:57  testsnapshots/lasttest.txt
+0x73c:0x5      File           5 B  snapshot-shared  2026-05-16 17:19:37  testsnapshots/test.txt
+0x73c:0x7      File          12 B  snapshot-shared  2026-05-16 17:27:58  testsnapshots/testads.txt
+0x73c:0x6      File           5 B  inline           2026-05-16 17:19:37  testsnapshots/testxyz.txt
 
-6 matches. Use `details <path>` (or `details --id HomeOid:FileId`) for full detail.
+6 matches. Use `details <path>`, `details --id FileRef` (HomeOID:FileID) or `details --id OID` for full detail.

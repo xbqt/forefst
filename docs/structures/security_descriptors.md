@@ -55,7 +55,7 @@ ACCESS_ALLOWED (0x00), ACCESS_DENIED (0x01), SYSTEM_AUDIT (0x02). AccessMask 0x0
 A file reaches its descriptor through its SecurityId. Where that SecurityId lives depends on whether
 the file record is resident or non-resident:
 
-```
+```text
 Resident file:     directory entry value offset 0x50 (SecurityId, u64)
 Non-resident file: type-0x40 backing record value offset 0x50 (SecurityId, u64)
  -> OID 0x530 (Security Descriptors table)
@@ -85,7 +85,7 @@ only possible if the low 32 bits are a deterministic content hash, not a per-vol
 
 The hash is the NTFS `$Secure` SD-hash, not zlib-CRC32 — ReFS reuses the NTFS descriptor hash:
 
-```
+```text
 h = 0
 for each little-endian u32 dword d in the SECURITY_DESCRIPTOR:
     h = (d + ROL(h, 3)) & 0xFFFFFFFF
@@ -97,7 +97,7 @@ is hashed and matched against existing entries before a new SecurityId is minted
 
 ### Worked example (SecurityId 0x10a9f9562)
 
-```
+```text
 key:   size=88 pad=0 secid_hi=0x01 secid_lo=0x0a9f9562
 value: hash=0x0a9f9562 generation=1 size=88 | SD:
        rev=1 control=0x8004 (SE_DACL_PRESENT|SE_SELF_RELATIVE)

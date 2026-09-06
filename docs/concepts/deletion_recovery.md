@@ -14,12 +14,13 @@ inline `$SI` that no other method can reach.
 
 ReFS does not erase a deleted file synchronously. The cleanup path
 (`RefsCommonCleanup` → `RefsDeleteFile` / `DeleteFileOnDisk`, and `DeleteDirectoryOnDisk` for
-directories) removes the directory row with `MsDeleteRow`. For a **non-resident file or a directory** it then
+directories) removes the directory row with `MsDeleteRow`. For an **extent-backed file or a directory** it then
 **reparents the object to the [Trash Table](../structures/trash_table.md)** (OID 0x0D, schema 0xe0d0) via
 `MsReparentFileToTrash` and `CmsTrashTable::AddFileTable`; a background work item, `TrashCleanerWorkItemMethod`,
-later calls `DeleteFileTable` to free the data extents. A **resident (inline) file bypasses the Trash entirely**
-— it is removed in a single transaction by `RefsDeleteResidentDataScbAndCommit`, so the Trash queue only ever
-holds non-resident files and directories. Two consequences follow directly, and both are recoverable: a
+later calls `DeleteFileTable` to free the data extents. A file whose bytes are **inline** bypasses the Trash
+entirely — it is removed in a single transaction by `RefsDeleteResidentDataScbAndCommit` (the name says it: an
+inline-data stream control block), so the Trash queue only ever holds extent-backed files and directories.
+The axis here is the **data**, not the record: a split record whose bytes are still inline bypasses it too. Two consequences follow directly, and both are recoverable: a
 reparented object lingers in the Trash Table until the cleaner runs, and — because the directory row is *removed
 from the offset array* rather than scrubbed — its body survives in page slack. Each of the methods below exploits
 one of the seams this leaves behind.
@@ -33,7 +34,7 @@ juggling individual scans:
   B+-tree node-slack scan over the **live pages only** (the pages the tree walk already reads). It recovers the
   common in-tree deletions in seconds.
 - **`deleted --full`** — *complete*. Everything in recovery, plus a scan of **every cluster on the volume** for
-  **orphan pages** (the freed pages of deleted objects), and it carves non-resident extent-backed content on export.
+  **orphan pages** (the freed pages of deleted objects), and it carves extent-backed content on export.
 
 Fine-grained flags still override the presets for power users: `--no-slack` (fast Trash+checkpoint pass),
 `--trash` (Trash only), `--scan-pages`, `--orphans` (a low-confidence Object-Table-orphan tier), `--carve`,
@@ -48,7 +49,7 @@ sequential read speed — not the number of files on it. Choose the depth you ne
 | Option | Cost | What it reads |
 |--------|------|---------------|
 | `deleted` (default), `--trash`, `--no-slack`, `--orphans`, `--search`, `--csv`/`--json` | **Fast** — seconds | Only pages the tree walk already touches |
-| `--carve` (on export) | **Moderate** | The data extents of each recovered non-resident file — cost follows how much deleted data you reconstruct |
+| `--carve` (on export) | **Moderate** | The data extents of each recovered extent-backed file — cost follows how much deleted data you reconstruct |
 | `--full`, `--scan-pages` | **Slow** — on a 1–2 GB/s disk, about **a minute per 60–100 GB** of volume (≈1 min at 64 GB, ≈20–35 min at 2 TB) | Every cluster on the volume, looking for orphan `MSB+` pages |
 | `--full` on a multi-TB volume | **Very slow** — ≈2.5–4.5 h at 16 TB | As above; progress is printed as it runs |
 | `--max-scan N` | Turns a slow scan back into a fast one | Stops after N clusters — see the warning below |
@@ -60,10 +61,10 @@ allocator last freed a page, so a partial scan misses files for no reason the an
 
 | Method | What it reads | Mode | Recovers |
 |--------|---------------|------|----------|
-| 1 — Trash table | OID 0x0D queue | recovery | Whole non-resident files/dirs not yet reclaimed |
+| 1 — Trash table | OID 0x0D queue | recovery | Whole extent-backed files/dirs not yet reclaimed |
 | 2 — Checkpoint differential | two checkpoints' Object Tables | recovery | OIDs deleted in the last transaction batch (empty after clean unmount) |
 | 3 — Orphan-object scan | OID Table ∖ tree | `--orphans` (opt-in) | Object-Table directory OIDs unlinked from the tree — low confidence |
-| 5 — B+-tree node slack | metadata-page free space | recovery (live pages) / `--full` (+ orphan pages) | Deleted names, inline `$SI`, and carve-able non-resident extent maps — **the primary method** |
+| 5 — B+-tree node slack | metadata-page free space | recovery (live pages) / `--full` (+ orphan pages) | Deleted names, inline `$SI`, and carve-able extent maps — **the primary method** |
 | 4 — Stream snapshots | `$SNAPSHOT` (type 0xB0) | `snapshots` command | **Exact prior bytes** of files that still exist |
 
 Every method classifies its results by **file identity**, and an **export writes a recovery log** — both covered
@@ -72,8 +73,8 @@ below.
 ## Method 1 — Trash Table recovery
 
 The [Trash Table](../structures/trash_table.md) is the deferred-deletion queue: any object reparented
-here is a **non-resident file or a directory** whose metadata and data have **not yet been reclaimed**
-(resident files never appear — they bypass the Trash, as above). Reading OID 0x0D
+here is an **extent-backed file or a directory** whose metadata and data have **not yet been reclaimed**
+(a file holding its bytes inline never appears — it bypasses the Trash, as above). Reading OID 0x0D
 through the [Object Table](../structures/object_table.md) and enumerating its rows therefore yields
 recently deleted objects in their entirety, before the background cleaner has freed anything. On a cleanly
 maintained volume the Trash Table is usually empty — the cleaner runs promptly — so this method captures
@@ -151,8 +152,8 @@ name is a fragment from a row whose body was partly overwritten. It records whic
 is where the older deletions live — the ones whose directory entry has already left the tree. Add
 `--no-slack` for a fast Trash+checkpoint pass. **`export deleted DIR`** writes a **`deleted_files.csv`/`.json`
 index** — one row per deleted entry (name, recoverability, reliability, category, and its content file if any) —
-plus a **`content/`** folder holding only the *readable* recoveries: `content/<name>` for a resident file
-(byte-exact) and, under `--full`/`--carve`, `content/<name>.carved` for a non-resident file (best-effort — the
+plus a **`content/`** folder holding only the *readable* recoveries: `content/<name>` for an inline file
+(byte-exact) and, under `--full`/`--carve`, `content/<name>.carved` for an extent-backed file (best-effort — the
 clusters may have been reused, so verify). A `recovery_log.txt` audit trail is written too. The raw remnant bytes
 go to `rows/` only with `--rows`; `--no-system` hides the BitLocker `FVE2.{…}` churn that otherwise dominates a
 volume's deleted list.
@@ -176,14 +177,14 @@ occurred (move, rename, or copy); it states the fact and leaves the interpretati
 was deleted from — so a component-store file wiped from a dozen places yields one recovered file and a complete
 list of where it lived.
 
-**Non-resident content is carve-able from slack too.** A deleted non-resident file keeps its data in
+**Extent-backed content is carve-able from slack too.** A deleted extent-backed file keeps its data in
 separate on-disk extents, and its **extent map lives in a type-0x40 backing record** that is unlinked from
 the live tree at deletion — but whose body **survives in the same page slack** as the name row. The scan
 recovers that backing, matches it to the name row by `(file_id, home-dir)` + exact size, and reconstructs
 the file from those clusters (`export deleted --carve`, best-effort — the clusters may have been
 reallocated). On older and upgraded volumes the extent map is instead **embedded inside the name row itself**
 (a small B+-tree the file carries in place of a separate backing record); the scan decodes that embedded map
-the same way and carves those files too, so non-resident deleted content is recoverable on every layout — not
+the same way and carves those files too, so extent-backed deleted content is recoverable on every layout — not
 just the newest one. A carve is only written when the extent map forms a complete, in-bounds picture of the
 file and at least some of its clusters are still readable; a map that points outside the volume or has been
 zeroed yields metadata only, never a corrupt or empty stand-in file.
@@ -198,7 +199,7 @@ holds multiple epochs and any single reconstructed name could be a pre-rename ar
 
 > **Caveat.** Slack recovery is **image-dependent**: it finds only what survives in un-rewritten slack. A
 > heavily rewritten or freshly compacted page may retain nothing, so a single recovered row should always
-> be corroborated (timestamps, surrounding rows) before it is relied on. Carved non-resident content is
+> be corroborated (timestamps, surrounding rows) before it is relied on. Carved extent-backed content is
 > best-effort — the extent *map* survived, but the data clusters may have been reused since deletion.
 
 ## The recovery log
@@ -239,7 +240,7 @@ deterministic. The three recovery categories follow:
 
 A gap-analysis run on one modestly active 2 GiB volume illustrates the shape of this — the fractions
 below are a single-volume snapshot (small denominators), not general survival rates. Across a window of
-266 transactions, of the non-resident files that had been modified, **about half still had their old
+266 transactions, of the extent-backed files that had been modified, **about half still had their old
 data fully intact**, roughly **6%** of old clusters were refcount-protected (and so guaranteed), and
 about **62%** of old metadata pages remained valid:
 
@@ -247,7 +248,7 @@ about **62%** of old metadata pages remained valid:
 |--------|-------|
 | Modified user objects | 39 |
 | Modified system objects | 7 |
-| Non-resident files analysed | 18 |
+| Extent-backed files analysed | 18 |
 | Files with old data fully intact | 9/18 (50%) |
 | Old clusters with refcount `>= 2` (CoW-protected) | 76/1,181 (6.4%) |
 | Old metadata pages still valid | 13/21 (61.9%) |
@@ -328,7 +329,7 @@ coverage, never asserted.
 The deletion flow — `RefsDeleteFile` / `DeleteFileOnDisk` → `MsDeleteRow` →
 `MsReparentFileToTrash` → `CmsTrashTable::AddFileTable` (OID 0x0D) → background
 `TrashCleanerWorkItemMethod` → `DeleteFileTable` — is confirmed in the decompiled driver (E2), as is the
-**resident-file bypass** (`RefsDeleteResidentDataScbAndCommit`, a single transaction that never touches the
+**inline-data bypass** (`RefsDeleteResidentDataScbAndCommit`, a single transaction that never touches the
 Trash). The Trash Table OID 0x0D / schema 0xe0d0 and its empty-on-clean-volume state are also raw-disk verified (RD). The
 page-header OID at offset 0x48 (`TableIdLow`) with offset 0x40 always 0 is RD-verified.
 The checkpoint differential decoding to identical 13-root pointer lists across the corpus is RD
@@ -339,7 +340,7 @@ corpus (both v3.4 and v3.14): the **identity-based** deleted-vs-still-present te
 only when no live file shares its name *and* creation-time — 0 false deletions across the USN-bearing images,
 where the on-disk classification is independently checked against the live listing); the **two-mode subset**
 invariant (recovery-mode results are always a subset of `--full` — 0 violations across the whole corpus); the
-**type-0x40 backing carve** (the deleted non-resident extent map recovered from slack reconstructs byte-for-byte
+**type-0x40 backing carve** (the deleted extent map recovered from slack reconstructs byte-for-byte
 identically to the live extract path — validated on live files, and on deleted files that preserved the
 generator's `GFSAREPLAY` content signature at their original clusters); and the **deleted-directory grouping**
 under `$DELETED/DIR_OID_0x<oid>/` (present on 30 of the corpus's ReFS images; the name-candidate ambiguity is

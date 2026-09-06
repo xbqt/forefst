@@ -11,7 +11,7 @@ exactly *which* general choice ReFS makes and *what it costs an analyst*.
 
 Storage is a stack of abstractions, each one allocating from the layer beneath it:
 
-```
+```text
 Raw storage device
  └─ Sectors        (smallest addressable hardware unit)
    └─ Partitions   (contiguous regions, managed independently)

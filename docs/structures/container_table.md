@@ -63,7 +63,7 @@ Treat the labels as hypotheses pending decompilation of the container-flags read
 
 ## Address translation (VLCN to PLCN)
 
-```
+```text
 shift = CPC.bit_length()   # 15 for 4 KiB clusters, 11 for 64 KiB
 mask  = CPC - 1
 container_index     = vlcn >> shift
@@ -73,7 +73,7 @@ physical_LCN        = container_map[container_index] + offset_in_container
 
 Or equivalently, once the container's physical start is known:
 
-```
+```text
 physical_LCN = container_phys_start + (vlcn & (CPC - 1))
 ```
 
@@ -129,10 +129,16 @@ to normal row / B+-tree walking:
 
 | Offset | Size | Field | Values |
 |--------|------|-------|--------|
-| 0xA0 | 4 | prefix | always `0x0F` |
+| 0xA0 | 4 | marker | `0x07` on a v3.4-format volume, `0x0F` from v3.7 on — version-keyed, not constant |
 | 0xA4 | 2 | format | 0 = None, 1 = LZ4, 2 = ZSTD, 3 = LZ4QAT |
 | 0xA6 | 2 | level (i16) | signed |
 | 0xA8 | 4 | chunk_size | bytes (power of two) |
+
+Measured over every volume in the corpus whose container-table root page is an index root: the marker is
+`0x07` on all 13 v3.4 pages and `0x0F` on all 72 v3.7-and-later ones, at either cluster size and under
+either checksum algorithm. Where compression is actually configured, `format` reads 1 (LZ4) or 2 (ZSTD),
+`level` 1–15, and `chunk_size` 4, 32, 128 or 256 KiB. `format` 3 (LZ4QAT) is defined by the driver but has
+no instance on disk here.
 
 Individual containers that have actually been compacted/compressed are flagged by bit `0x800` in the
 in-memory `SmsContainer` flags word at +0x264 (loaded from the container-table row), with the compressed payload

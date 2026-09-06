@@ -73,7 +73,7 @@ content — roughly half of multi-extent entries observed are unsorted.
 
 A VLCN must be resolved through the Container Table to reach the physical disk address:
 
-```
+```text
 physical_LCN = container_phys_start + (vlcn & (CPC - 1))
 ```
 
@@ -132,11 +132,19 @@ The node begins with a 40-byte header:
 |--------|------|-------|-------------|
 | +0x00 | 4 | Header size | `0x28` — identifies the node |
 | +0x0C | 1 | Level | `0` = leaf: the rows **are** extent records. Non-zero = the rows point at a child page |
-| +0x14 | 4 | Row count | |
-| +0x20 | 8 | Node size | The row index sits at `node_size - 4 * row_count` from the node start |
+| +0x10 | 4 | Key-index array **start** | Offset, relative to the node, of the row-pointer array |
+| +0x14 | 4 | Row count | Rows on this node |
+| +0x20 | 4 | Key-index array **end** | One past the last entry |
+| +0x24 | 4 | — | 0 on every node measured |
 
-Rows are addressed by a **trailing index** of 4-byte slots — a 2-byte row offset plus a 2-byte hint holding
-the row's file VCN. Use the file VCN inside the row itself, not the hint: the hint is only 16 bits and
+This is the same node header the [B+-tree page](btree_node.md) uses, and the same invariant applies:
+**`(u32@+0x20 − u32@+0x10) / 4 == u32@+0x14`**. Read the array's start from `+0x10`; deriving it by
+subtracting `4 × row_count` from a value at `+0x20` gives the same answer on a well-formed node — which is
+why that reading went unnoticed — but it cannot tell a damaged header from a good one, and it treats `+0x20`
+as an 8-byte field when `+0x24` is a separate word. Verified on 480 extent nodes with 0 violations.
+
+Rows are addressed by that **trailing index** of 4-byte slots — a 2-byte row offset plus a 2-byte hint
+holding the row's file VCN. Use the file VCN inside the row itself, not the hint: the hint is only 16 bits and
 saturates on a file larger than 65,535 clusters.
 
 When the map outgrows one node, the level byte becomes non-zero and each row's value is a **48-byte node

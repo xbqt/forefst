@@ -95,7 +95,7 @@ When a fact changes, this map shows every page that documents it (the cross-doc-
 
 | Page | Topic | Master § | Findings | Evidence | Status |
 |------|-------|----------|----------|----------|--------|
-| [forefst.md](tools/forefst.md) | ReFS forensic analysis tool. forefst.py is the MFTECmd-equivalent for ReFS — it produces comprehensive per-file metadata (CSV / JSON /… | — | FN_LINK_002, FS_OTBL_RA_008, FS_SUPB_001, FS_CHKP_005 | E2/RD | CONFIRMED (tool — subcommand behavior code-verified + all-disk validated) |
+| [forefst.md](tools/forefst.md) | ReFS forensic analysis tool. forefst.py is the file-lister and forensic suite for ReFS — it produces comprehensive per-file metadata (CSV / JSON /… | — | FN_LINK_002, FS_OTBL_RA_008, FS_SUPB_001, FS_CHKP_005 | E2/RD | CONFIRMED (tool — subcommand behavior code-verified + all-disk validated) |
 | [refsanalysis.md](tools/refsanalysis.md) | ReFS structure and lab analysis tool — boot sector, superblock, checkpoint, object/schema/container tables, the upcase table,… | — | FN_LINK_002, FS_SUPB_001, FS_CHKP_005, FS_SUPB_005 | E2/RD | CONFIRMED (tool — subcommand behavior code-verified + all-disk validated) |
 
 ## examples/

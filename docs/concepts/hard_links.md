@@ -4,7 +4,7 @@ A hard link is a second (or third, ...) directory name that points at one physic
 mechanism is unusual enough that a parser written for NTFS will get the link count wrong every time:
 there is **no explicit `HardLinkCount` field anywhere on disk**, and the value at
 [`$SI`](../attributes/STANDARD_INFORMATION.md) offset 0x70 — the field whose PDB name *is*
-"HardLinkCount" — is a resident-layout per-FCB scalar that always reads 1, never the number of names.
+"HardLinkCount" — is an embedded-layout per-FCB scalar that always reads 1, never the number of names.
 For an analyst this has two consequences. First, link relationships must be **reconstructed by joining
 directory-entry fields**, not read from a counter. Second, the join exposes a fact a live directory
 listing never surfaces: the directory a file was *first created in*.
@@ -33,15 +33,15 @@ Linking a file performs three changes to its on-disk representation:
    **This moves the record, not necessarily the data.** Placement and residency are independent: the
    file's bytes can stay *inside* that backing record, and for small files they usually do — the three
    names `hl1_a/b/c` in the lab corpus share a single 400-byte stream held inline. So a hard-linked file
-   is commonly reported as **resident with a link count above one**, which is not a contradiction. See
-   [Resident vs Non-Resident Storage](resident_storage.md).
+   is commonly reported as a **split record holding inline data, with a link count above one** — not a
+   contradiction. See [Record placement and data residency](resident_storage.md).
 
 2. **It creates one type-0x30 directory entry per name.** Each name is a fully independent row in its
    own parent directory, carrying its own filename in the key. The names need not share a parent — that
    is the whole point of a hard link.
 
-3. **It stamps every name with the same file identity** in the non-resident value. Two fields in the
-   [non-resident value](../structures/directory_entries.md) carry that identity:
+3. **It stamps every name with the same file identity** in the index-entry value. Two fields in the
+   [index-entry value](../structures/directory_entries.md) carry that identity:
    - `value+0x00` is the **per-directory child ordinal** — the same `NextFileId` ordinal the home
      directory assigned from its `$SI+0x58` counter. Every name of the one file shares it. Crucially it
      is **not** a globally-unique FileId: it is reused per directory and *collides across sibling
@@ -80,7 +80,7 @@ colliding ordinal whose stream is a *different* size is correctly rejected; a na
 candidate is not merged (counted as 1). This reproduces `fsutil hardlink list` exactly and matches the
 driver's own object identity.
 
-```
+```text
 file1 "hltest_file1"  dir=0x600  →  value+0x00 = 3  value+0x08 = 0x600  ┐
 file1 "link1"         dir=0x600  →  value+0x00 = 3  value+0x08 = 0x600  ├─ 4 links
 file1 "link2"         dir=0x600  →  value+0x00 = 3  value+0x08 = 0x600  │  (ordinal 3)
@@ -128,11 +128,11 @@ This cannot arise on **ReFS 3.4**, which has no type-0x40 backings and no index-
 
 ## Forensic implications
 
-- **The `$SI+0x70` field is a decoy.** It is present only in resident (key flags `0x01`) values and is
+- **The `$SI+0x70` field is a decoy.** It is present only in embedded (key flags `0x01`) values and is
   always 1 across the entire corpus — even on the volume that actually contains hard links. Treating it
   as a link count will silently report "no hard links" on a volume that has them, because hard-linked
-  files are non-resident and carry no `$SI+0x70` at all. See
-  [Standard Information](../attributes/STANDARD_INFORMATION.md) for the field's true (resident-layout)
+  files are split out and carry no `$SI+0x70` at all. See
+  [Standard Information](../attributes/STANDARD_INFORMATION.md) for the field's true (embedded-layout)
   meaning.
 
 - **Link reconstruction is a join.** To count links you must scan every type-0x30 entry, resolve each to
@@ -148,9 +148,11 @@ This cannot arise on **ReFS 3.4**, which has no type-0x40 backings and no index-
   [Object Table](../structures/object_table.md) to a concrete directory, so it can place a file's origin
   even when all of its current names live elsewhere.
 
-- **Promotion-to-non-resident is itself an artifact.** A tiny file that is non-resident (key flags
-  `0x02`, 84-byte value, with extents) when its size would normally make it resident is a fingerprint of
-  having been hard-linked at some point — see [Resident vs Non-Resident Storage](resident_storage.md).
+- **The record split is itself an artifact.** A file whose record was split out of its name row (key flags
+  `0x02`, 84-byte value) is a fingerprint of having been moved or hard-linked at some point. Read it as a
+  statement about the *record*, not the data: such a file very often still holds its bytes **inline** in
+  the backing record — 16,191 rows across the corpus do — so the split changes no byte of the data and is
+  not a change of data residency. See [Record placement and data residency](resident_storage.md).
 
 - **Each name carries its own MACB — a hard-link-specific tamper check.** ReFS keeps one
   [`$SI`](../attributes/STANDARD_INFORMATION.md) timestamp set *per name*, not per file: every name's
@@ -162,7 +164,7 @@ This cannot arise on **ReFS 3.4**, which has no type-0x40 backings and no index-
   journal-independent, and it is stronger than NTFS's `$SI`-vs-`$FILE_NAME` check, where all hard links
   share one `$SI` and cannot diverge.
 
-- **Hard links are a v3.14-native-only signal.** A non-resident multi-name group on a volume that should
+- **Hard links are a v3.14-native-only signal.** A split multi-name group on a volume that should
   be v3.4, or on a volume that was *upgraded* rather than natively formatted, is anomalous (see below).
 
 - **Do not confuse hard links with block-clones.** A block-clone is a copy-on-write share: two
@@ -177,19 +179,19 @@ This cannot arise on **ReFS 3.4**, which has no type-0x40 backings and no index-
 | Aspect | v3.4 | v3.14 (native) |
 |--------|------|----------------|
 | Hard links supported | No | Yes |
-| Non-resident type-0x30 value size | 72 bytes | 84 bytes |
+| Index-entry type-0x30 value size | 72 bytes | 84 bytes |
 | Driver support routines | absent | present (`RefsLinkFileToSelf`, etc.) |
 
 Hard links require the **CHKP native-format flag `0x080`** (the native-format marker). They are **not**
 available on a v3.4 volume that was *upgraded* to v3.14 — only on a volume natively formatted as v3.14.
-On an upgraded volume the directory still reports the legacy behavior, so a multi-name non-resident group
+On an upgraded volume the directory still reports the legacy behavior, so a multi-name split group
 should not appear; finding one is an inconsistency worth flagging.
 
 ## Tooling
 
 `forefst.py` emits a computed `hard_link_count` column (alongside `hard_link_names`) in its file
 listing — a CSV/JSON field, not a subcommand. The grouping runs automatically during the standard
-directory walk (`walk_directory_tree`): it resolves each non-resident name to the type-0x40 stream —
+directory walk (`walk_directory_tree`): it resolves each split name to the type-0x40 stream —
 local `(parent, file_id)` or home `(home, file_id)` — whose 0x40 size matches the name's own size
 (`value+0x38`), and groups names that share that stream's `(owner, file_id)`. It reproduces
 `fsutil hardlink list` (a 4-link group, a 2-link group, and a 1-name survivor), keeps block-clones
@@ -201,11 +203,11 @@ field rather than reading any `$SI` field directly.
 - [File IDs](file_ids.md) — the FileRef `(HomeOid, FileId)` every name of a hard-linked file shares, and
   why `HomeOid != current parent` marks a relocated *or* hard-linked-elsewhere name
 - [Directory Entries](../structures/directory_entries.md) — the type-0x30 key/value layout; the
-  non-resident value carries the child ordinal (`+0x00`) and home backref (`+0x08`) the join depends on
+  index-entry value carries the child ordinal (`+0x00`) and home backref (`+0x08`) the join depends on
 - [Standard Information](../attributes/STANDARD_INFORMATION.md) — the `$SI+0x70` "HardLinkCount" decoy
   and the `$SI+0x58` NextFileId ordinal that seeds the child ordinal
-- [Resident vs Non-Resident Storage](resident_storage.md) — why hard-linking forces promotion to
-  non-resident, and the inline-to-extent conversion it triggers
+- [Record placement and data residency](resident_storage.md) — why hard-linking splits the record out of the
+  name row, and why that leaves the data where it was
 - [Extent Descriptors](../structures/extent_descriptors.md) — the type-0x40 stream record each name is
   resolved to
 - [Object Table](../structures/object_table.md) — resolves the home-dir backref OID (`+0x08`) to a
@@ -224,7 +226,7 @@ into the new name and emits the redo under tag `0x80000040`, allocating no new s
 `RefsOpenHardlinkDirectoryTarget` (target resolution), and `RefsPosixDeleteLink` (POSIX unlink).
 `RefsConvertToStandardInfoLinkCount` synthesizes the count for the `FILE_STANDARD_INFORMATION` query API
 and writes the 4-byte `$SI+0x70` slot — the reason that field always reads 1.
-`RefsComputeStandardInformationFromFcb` fills the resident `$SI`, copying `$SI+0x70 <- FCB+0xB4` and
+`RefsComputeStandardInformationFromFcb` fills the embedded `$SI`, copying `$SI+0x70 <- FCB+0xB4` and
 `$SI+0x58 <- SCB+0x1B8` (the NextFileId ordinal), confirming 0x70 is a per-FCB scalar, not a
 cross-directory aggregate. Raw-disk: the mechanism was decoded against the one corpus image with genuine
 hard links (ground-truth `fsutil hardlink list`), where one file's four names all share ordinal 3 / home
@@ -232,7 +234,7 @@ hard links (ground-truth `fsutil hardlink list`), where one file's four names al
 across the corpus. The size-matched resolution was validated by an independent oracle reading each name's
 own `value+0x38`: zero over-merge across the image corpus, the `fsutil` control reproduced, and genuine
 multi-name groups preserved. Findings: **FN_LINK_002** (mechanism), **FS_OTBL_RA_008** (home-dir backref),
-**FN_LINK_002, MD_SI_RA_009 / MD_SI_RA_001** (`$SI+0x70` is resident-only, never > 1),
+**FN_LINK_002, MD_SI_RA_009 / MD_SI_RA_001** (`$SI+0x70` is embedded-only, never > 1),
 **MD_DATA_RA_004** (type-0x40 stream key), **MD_DATA_RA_006** (`alloc=0` stub form); the size match
 defeats the colliding-ordinal over-merge. The per-name MACB divergence was proven on disk against a
 two-name file whose one name was name-scoped timestomped while its sibling kept the true birth

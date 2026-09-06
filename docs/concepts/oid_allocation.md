@@ -72,7 +72,7 @@ root rather than recomputed from live rows. The driver's rightmost/max-key trave
 `MsFindRightmostNodeAvlFull` / `PinInIndexRightMost`; there is no `CmsKey::RightMost` symbol in any
 build. The net effect is a strictly monotonic, per-volume, never-recycled identifier space.
 
-```
+```text
  counter @ CmsObjectTable+0x18
  seed 0x700 ─► 0x701 ─► 0x702 ─► 0x703 ─► 0x704 ─► ...
  issued: f1 f2(del) f3 f4(del)
@@ -89,7 +89,7 @@ is now gone — there is no aliasing, no reuse, no ambiguity.
 
 **Estimate the deleted-object count from OID density.** Define
 
-```
+```text
 present_OIDs = number of live Object Table rows with OID >= 0x701
 density = present_OIDs / (max_OID - min_OID + 1)
 deleted_est = (max_OID - min_OID + 1) - present_OIDs

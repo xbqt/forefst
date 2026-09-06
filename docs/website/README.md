@@ -44,7 +44,7 @@ python3 build.py && hugo --minify        # output in public/
 
 ## Layout of this project
 
-```
+```text
 website/
 ├── hugo.toml                 # config: nav menu, params (title, github URL, default theme)
 ├── build.py                  # docs/ -> content/  (the only "magic"; well-commented)

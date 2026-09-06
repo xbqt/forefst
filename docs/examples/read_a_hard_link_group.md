@@ -27,13 +27,13 @@ IMG=your_v3.14_image.raw
 ### Step 1 — Ask the tool: `forefst --jsonl`, then read `hard_link_count` / `hard_link_names`
 
 ```sh
-python3 forefst.py "$IMG" --jsonl -q | grep -i hltest
+python3 forefst.py "$IMG" files --jsonl | grep -i hltest
 ```
 
 Relevant fields from the real output (one JSON object per directory entry; trimmed to the
 hard-link fields):
 
-```
+```text
 file_name "hltest_file1.txt" hard_link_count 4 hard_link_names [
  "hltest_dir1/link1_to_file1.txt", "hltest_dir1/link3_to_file1.txt",
  "hltest_dir2/link2_to_file1.txt", "hltest_file1.txt" ]
@@ -51,20 +51,26 @@ file_name "survivor.txt" hard_link_count 1 hard_link_names null
 Every one of file1's 4 names carries the *same* `hard_link_count: 4` and the *same*
 `hard_link_names` array — the tool reports the whole group from any member. file2's two
 names both read `2`; `survivor.txt` reads `1` with `hard_link_names: null`. This reproduces
-`fsutil hardlink list` exactly (4 / 2 / 1). Note all seven rows share `"home_oid": "0x600"` (their `"oid"` is `null`) and
-`"is_resident": false` — hard-linking promotes a file out of resident storage, so they have
-no own OID and live as non-resident type-0x30 entries (per
-[Hard Links](../concepts/hard_links.md) and [Resident Storage](../concepts/resident_storage.md)).
+`fsutil hardlink list` exactly (4 / 2 / 1). All seven rows share `"creation_dir_oid": "0x600"` — the directory
+they were created in — and none has an OID of its own (`"oid": null`): a file is identified by its
+`"file_ref"`, which is what the merged identity column shows.
+
+Note what `"is_resident": true` means here (it is the deprecated alias for `DataResidency == inline`). Creating a hard link moves the file's *record* out of the name row
+into a shared backing — that is what lets several names resolve to one object. It does **not** move the file's
+*bytes*: for a small file those stay inline, which is exactly what these rows report. Placement and residency
+are separate questions, so a hard-linked file showing **inline** data *and* a link count above one is not a
+contradiction (see [Hard Links](../concepts/hard_links.md) and
+[Record placement and data residency](../concepts/resident_storage.md)).
 
 ### Step 2 — Prove it by hand: decode the value, then resolve the content record
 
 The tool's count is a **join**, not a field read. To see what it joined on, locate one
-name's type-0x30 row on disk and decode its 84-byte non-resident value. The key for
+name's type-0x30 row on disk and decode its 84-byte split-record value. The key for
 `hltest_file1.txt` sits at file offset `0x1209d28` (`30 00 02 00` = type 0x30,
-key_flags **0x02** non-resident, followed by the UTF-16LE name); its 16-byte row header at
+key_flags **0x02**, the index-entry layout, followed by the UTF-16LE name); its 16-byte row header at
 `0x1209d18` gives `voff=56`, so the value is at `0x1209d50`:
 
-```
+```text
 +0x00: 03 00 00 00 00 00 00 00 00 06 00 00 00 00 00 00
 +0x10: 24 82 99 80 c3 fb dc 01 c9 d1 99 80 c3 fb dc 01
 +0x20: 66 75 7e a9 c3 fb dc 01 c9 d1 99 80 c3 fb dc 01
@@ -73,10 +79,10 @@ key_flags **0x02** non-resident, followed by the UTF-16LE name); its 16-byte row
 +0x50: 00 00 00 00
 ```
 
-Decoded against the non-resident value layout
+Decoded against the index-entry value layout
 ([Directory Entries](../structures/directory_entries.md), C.3):
 
-```
+```text
 +0x00 child ordinal = 3
 +0x08 home-dir backref = 0x600
 +0x10 created = 0x01dcfbc380998224 (2026-06-14 06:03:20.901072)
@@ -120,10 +126,10 @@ backdated name and never on the clean sibling.
 
 ### Step 3 — Confirm the two files resolve to different content records
 
-Decode `hltest_file2.txt`'s non-resident value the same way (key at `0x1209f80`, value via
+Decode `hltest_file2.txt`'s index-entry value the same way (key at `0x1209f80`, value via
 its row header):
 
-```
+```text
 +0x00 child ordinal = 4
 +0x08 home-dir backref = 0x600
 +0x10 created = 2026-06-14 06:03:20.947043
@@ -144,7 +150,7 @@ ordinal can point at a different file, which the size match correctly separates)
 ### Step 4 — Why you must NOT read `$SI+0x70` ("HardLinkCount")
 
 Tempting shortcut: read the field literally named *HardLinkCount* at `$SI+0x70`. It is a
-trap. `$SI+0x70` is a **resident-layout** field (offset within the key_flags 0x01 value),
+trap. `$SI+0x70` is an **embedded-layout** field (offset within the key_flags 0x01 value),
 and these hard-linked files use the split-record layout (key_flags 0x02) — they have no `$SI+0x70`
 at all. Where it *does* exist, the driver writes it from a per-FCB scalar
 (`RefsComputeStandardInformationFromFcb` copies `$SI+0x70 <- FCB+0xB4`), so it reads **1**
@@ -170,16 +176,16 @@ it would report "no hard links" on a volume that demonstrably has them.
 - **`value+0x08` (home-dir backref = 0x600) is provenance:** it records the directory the
  file was *first created in* (here the volume root), and survives even after the file is
  hard-linked into `hltest_dir1` / `hltest_dir2` — a fact a live `dir` listing never shows.
-- **Never trust `$SI+0x70`.** It is a resident-only decoy that is always 1; hard-linked
- files are non-resident and do not even carry it.
+- **Never trust `$SI+0x70`.** It is an embedded-only decoy that is always 1; hard-linked
+ files are split out and do not even carry it.
 - Hard links are a **native v3.14 signal** (this volume's `CHKP` flags = `0x682`). A
- multi-name non-resident group on a v3.4 or *upgraded* volume would be anomalous.
+ multi-name split group on a v3.4 or *upgraded* volume would be anomalous.
 
 ## See also
 
 - [Hard Links](../concepts/hard_links.md) — the identity-tuple join, the `$SI+0x70` decoy, and the v3.14 gating
-- [Directory Entries](../structures/directory_entries.md) — the type-0x30 key + the C.3 non-resident value layout decoded in Step 2
+- [Directory Entries](../structures/directory_entries.md) — the type-0x30 key + the C.3 index-entry value layout decoded in Step 2
 - [Standard Information](../attributes/STANDARD_INFORMATION.md) — the `$SI+0x70` "HardLinkCount" field and the `$SI+0x58` NextFileId ordinal source
-- [Resident Storage](../concepts/resident_storage.md) — why hard-linking forces promotion to non-resident
+- [Record placement and data residency](../concepts/resident_storage.md) — why hard-linking splits the record out of the name row, and why the data stays put
 - [Object Table](../structures/object_table.md) — resolving the `value+0x08` home backref OID
-- Master reference: `structure_reference.md` §J (Hard Links), §C.3 (non-resident value), §C.7 (`$SI+0x70`)
+- Master reference: `structure_reference.md` §J (Hard Links), §C.3 (index-entry value), §C.7 (`$SI+0x70`)

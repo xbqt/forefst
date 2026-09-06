@@ -1,6 +1,6 @@
 # Directory Entries
 
-Directory entries (type 0x30) are B+-tree rows within a per-directory B+-tree. Each file or subdirectory appears as a type 0x30 row in its parent directory's tree. The storage mode (resident vs non-resident) determines the value layout, and a parser must resolve that mode from the key flags before reading any field.
+Directory entries (type 0x30) are B+-tree rows within a per-directory B+-tree. Each file or subdirectory appears as a type 0x30 row in its parent directory's tree. The record placement (embedded vs split) determines the value layout, and a parser must resolve that mode from the key flags before reading any field.
 
 ## B+-tree row header — 16 bytes
 
@@ -8,7 +8,7 @@ Every row in a B+-tree leaf begins with this header:
 
 | Offset | Size | Field | Description |
 |--------|------|-------|-------------|
-| 0x00 | 4 | Row size (u32) | total byte size of the row (0x70 is the common value for a typical resident row, **not** a constant flag) |
+| 0x00 | 4 | Row size (u32) | total byte size of the row (0x70 is the common value for a typical embedded row, **not** a constant flag) |
 | 0x04 | 2 | Key offset (u16) | Byte offset from row start to key data |
 | 0x06 | 2 | Key length (u16) | -- |
 | 0x08 | 2 | Reserved (u16) | a candidate deleted-row bit `0x04` here is E2-only and disk-**unconfirmable** (GN_IENT_004) — not relied upon |
@@ -39,11 +39,11 @@ Only **two** key_flags values exist on disk (distribution {0x01, 0x02} only, zer
 > most common way to mis-parse this structure. Every kf=0x01 *file* row is extent-backed on ReFS 3.4–3.10
 > (1,120 / 250 / 386 / 236 rows measured, none inline); on 3.14 about 93 % are inline but 16,809 are not.
 > Determine residency from the `$DATA` attribute's storage — see
-> [Resident vs non-resident storage](../concepts/resident_storage.md).
+> [Record placement and data residency](../concepts/resident_storage.md).
 
-A directory is stored with **key_flags 0x02** (the non-resident value layout) and is identified by the directory attribute bit `0x10000000` at value+0x40: `RefsAddFileNameIndexEntry` ORs the `0x10000000` bit into the attribute word. There is no separate 0x04 = directory flag.
+A directory is stored with **key_flags 0x02** (the index-entry value layout) and is identified by the directory attribute bit `0x10000000` at value+0x40: `RefsAddFileNameIndexEntry` ORs the `0x10000000` bit into the attribute word. There is no separate 0x04 = directory flag.
 
-The non-resident value length is **72 bytes below v3.10 and 84 bytes from v3.10** — the driver
+The index-entry value length is **72 bytes below v3.10 and 84 bytes from v3.10** — the driver
 `RefsAddFileNameIndexEntry` sets `0x54` (84) on a v3.10+ volume and `0x48` (72) on an older one.
 
 **That length is fixed when the entry is written, and is never rewritten afterwards — so it is a property of
@@ -72,13 +72,13 @@ both layouts, so testing the length as a **range** is both correct and version-i
 | 0x68 | 8 | LastUsn (u64) | File's last USN = virtual byte offset of its most recent `$UsnJrnl:$J` record (OID 0x520). 0 if the journal is inactive. This (offset 0x68) is the per-file USN. |
 | 0x70 | 8 | UsnJournalId (u64) | Journal epoch ID (one per volume); 0 if journal inactive. |
 | 0x80 | 8 | NextFileId (u64) | Directory child-creation ordinal (mirrors $SI+0x58). |
-| 0xA8+ | var | Embedded sub-record chain | $DATA / ADS / snapshot / EA / $EFS rows. **There is NO embedded $SI sub-record**: the type-0x30 value is an *index entry* that carries the USN-journal fields inline at 0x68/0x70. Version-dependent; see below. |
+| 0xA8+ | var | Embedded sub-record chain | $DATA / ADS / snapshot / EA / $EFS rows. **There is NO embedded $SI sub-record**: the type-0x30 value **mirrors** the $SI fields and carries the USN-journal fields inline at 0x68/0x70. Version-dependent; see below. |
 
-The resident value is an *index entry* that mirrors the file's own type-0x10 $STANDARD_INFORMATION at every offset **except 0x58/0x60**, where it carries FileSize / AllocatedSize instead of the $SI's (always-0) USN / DataSize fields. The own-row $SI total size is 116 bytes (0x74) on Win10 and 124 bytes (0x7C) on Win11. See [Standard Information](../attributes/STANDARD_INFORMATION.md) for that separate structure, and [Resident Storage](../concepts/resident_storage.md) for the threshold that keeps a file inline.
+The embedded value **mirrors** the file's own type-0x10 $STANDARD_INFORMATION at every offset **except 0x58/0x60**, where it carries FileSize / AllocatedSize instead of the $SI's (always-0) USN / DataSize fields. The own-row $SI total size is 116 bytes (0x74) on Win10 and 124 bytes (0x7C) on Win11. See [Standard Information](../attributes/STANDARD_INFORMATION.md) for that separate structure, and [Record placement and data residency](../concepts/resident_storage.md) for the rule that decides whether the bytes sit inline.
 
-### Sub-record row count (offset 0x20 in resident value)
+### Sub-record row count (offset 0x20 in the embedded value)
 
-The value+0x20 field is a **count of embedded sub-record rows** in the resident file's inline B+-tree (the inline file object's sub-record table: 1 default $DATA + one row per ADS, snapshot, reparse, EA, and $EFS). It is **NOT** a fixed 1-6 enum. It equals the parsed sub-record row count in the large majority of resident files (the residual are deleted/marker rows). The count is unbounded: values up to **14** have been observed (e.g. a file with 12 ADS).
+The value+0x20 field is a **count of embedded sub-record rows** in the embedded record's inline B+-tree (the inline file object's sub-record table: 1 default $DATA + one row per ADS, snapshot, reparse, EA, and $EFS). It is **NOT** a fixed 1-6 enum. It equals the parsed sub-record row count in the large majority of embedded records (the residual are deleted/marker rows). The count is unbounded: values up to **14** have been observed (e.g. a file with 12 ADS).
 
 The values below are common cases (consequences of the count), not an exhaustive enumeration:
 
@@ -156,7 +156,7 @@ Both alternate data streams (ADS) and snapshot streams are stored as multi-insta
 
 ### DATA sub-records (descriptor 0x000E0080)
 
-Extent tables for non-resident content are stored in multi-instance sub-records with descriptor 0x000E0080. Multiple DATA sub-records may coexist in one value (default $DATA, ADS streams, internal streams).
+Extent tables for extent-backed content are stored in multi-instance sub-records with descriptor 0x000E0080. Multiple DATA sub-records may coexist in one value (default $DATA, ADS streams, internal streams).
 
 | Offset | Size | Field | Description |
 |--------|------|-------|-------------|
@@ -194,21 +194,25 @@ its ordinal `value+0x00 = 3`, and its type-0x40 backing is found in 0x9586, not 
 `value+0x08 != containing directory` shape also arises for a hard-link name placed in a second directory
 (told apart from a move by the derived link count — see below).
 
-This is also *why* a relocated file always appears in the non-resident layout. The frozen creation-directory
-home is carried by `value+0x08`, and only this non-resident value has that field — the resident value
-(key_flags 0x01) does not. So a small file's entry takes the **non-resident layout** the moment it is moved (or
-hard-linked) — its record leaves the name row, though its data may well stay inline inside that record — and it
-never reverts: the move re-homes the name and, because the identity must be stored
-somewhere, the object takes the non-resident form for good. A file still in the resident layout has therefore
-never been relocated — its home always equals its current parent. (Measured directly on a controlled
-before/after move: a 16-byte resident file was non-resident after a cross-directory move, with `value+0x08`
-still pointing at its creation directory.)
+This is also *why* a relocated file always appears in the **split** layout. The frozen creation-directory
+home is carried by `value+0x08`, and only the split value has that field — the embedded value
+(`key_flags 0x01`) does not. So a file's entry takes the **split layout** the moment it is moved or
+hard-linked, and it never reverts. A file whose record is still **embedded** has therefore never been
+relocated: its home always equals its current parent.
+
+Note carefully what this does *not* say. The split moves the **record**, not the **bytes**. A moved file's
+`$DATA` is untouched, and for a small file it stays inline inside the backing record. Measured on a
+controlled before/after move of a whole volume: of 9,521 files present in both images, **5 changed
+placement and 0 changed data residency**, and the moved 16-byte file's `$DATA` sub-record was
+**byte-identical** either side — read out of the name row before the move and out of its backing record
+after, with `value+0x08` still pointing at its creation directory. See
+[Record placement and data residency](../concepts/resident_storage.md) for the two axes.
 
 ## Critical layout differences
 
-Timestamps and most fields are at **different offsets** between resident and non-resident entries:
+Timestamps and most fields are at **different offsets** between an embedded record and an index entry:
 
-| Field | Resident Offset | Non-Resident Offset |
+| Field | Embedded record (kf 0x01) | Index entry (kf 0x02) |
 |-------|----------------|---------------------|
 | Creation time | +0x28 | +0x10 |
 | File attributes | +0x48 | +0x40 |
@@ -220,14 +224,14 @@ Timestamps and most fields are at **different offsets** between resident and non
 
 A parser **must** resolve the storage mode from key_flags before reading any timestamp. Applying the wrong offset layout will misparse every field.
 
-> **Non-resident SecurityId / USN:** a non-resident file's short dir entry (type 0x30) does not carry these,
-> but they are **not** reached through the Object Table — a non-resident file has no Object-Table OID. They
+> **SecurityId / USN of a split file:** a split file's type-0x30 index entry does not carry these,
+> but they are **not** reached through the Object Table — a file has no Object-Table OID. They
 > live in the file's own **type-0x40 backing record** (its `$SI` / stream-summary, keyed by home-dir OID +
 > FileId) at backing value+0x50 (SecurityId), +0x68 (LastUsn), +0x70 (UsnJournalId).
 
 ## Hard links
 
-When a file gains a second name it is promoted to the **non-resident** layout above (key_flags 0x02), and each name becomes its own type-0x30 entry. All of one file's names share `value+0x00` (the per-directory child ordinal) and `value+0x08` (the home-dir backref) — both already in the non-resident value table above. There is no explicit on-disk HardLinkCount field, and `$SI+0x70` is a resident-layout scalar that always reads 1, so the link count is **derived** by resolving each name to its size-matched type-0x40 stream rather than read from a field. Hard links are a native v3.14 feature. See [Hard Links](../concepts/hard_links.md) for the full resolution model and forensic implications.
+When a file gains a second name its record is **split** out into the index-entry layout above (key_flags 0x02), and each name becomes its own type-0x30 entry. All of one file's names share `value+0x00` (the per-directory child ordinal) and `value+0x08` (the home-dir backref) — both already in the index-entry value table above. There is no explicit on-disk HardLinkCount field, and `$SI+0x70` is an embedded-layout scalar that always reads 1, so the link count is **derived** by resolving each name to its size-matched type-0x40 stream rather than read from a field. Hard links are a native v3.14 feature. See [Hard Links](../concepts/hard_links.md) for the full resolution model and forensic implications.
 
 ## Reverse index (type 0x20)
 
@@ -236,12 +240,12 @@ A directory's tree also carries type 0x20 rows: a per-object FileId-resolution i
 ## Cross-references
 
 - [Reverse Index](reverse_index.md) -- the type 0x20 FileId-resolution rows in the same directory tree
-- [Extent Descriptors](extent_descriptors.md) -- non-resident files link to type 0x40 extent rows
-- [Object Table](object_table.md) -- the home-dir backref in non-resident entries resolves via the Object Table
+- [Extent Descriptors](extent_descriptors.md) -- extent-backed files link to type 0x40 extent rows
+- [Object Table](object_table.md) -- the home-dir backref in index entries resolves via the Object Table
 - [Standard Information](../attributes/STANDARD_INFORMATION.md) -- $SI layout differs by version
-- [Resident Storage](../concepts/resident_storage.md) -- threshold rules for resident vs non-resident
+- [Record placement and data residency](../concepts/resident_storage.md) -- the two independent axes
 - [Hard Links](../concepts/hard_links.md) -- multi-name files and the size-matched link count
 
 ## Evidence
 
-The key/value layouts, the 84/72-byte size split and its fixing at write time (proven by two controlled before/after upgrade pairs, where the pre-upgrade entries are retained byte-for-byte beside the new ones), the {0x01, 0x02}-only key-flag census, the resident/non-resident field offsets, the sub-record markers and descriptors, and the 0 = ADS / 2 = snapshot discriminator are raw-disk decoded across the corpus (RD) and corroborated in the driver (E2): `RefsAddFileNameIndexEntry` ORs the directory bit and gates the 84/72-byte length, `RefsCreateStreamSnapshot` sets the snapshot StreamSummary bit, and the hard-link identity pair is written by `RefsLinkFileToSelf`. See [how this was verified](../methodology.md) to trace these to the exact images and measurements in `analysis/`.
+The key/value layouts, the 84/72-byte size split and its fixing at write time (proven by two controlled before/after upgrade pairs, where the pre-upgrade entries are retained byte-for-byte beside the new ones), the {0x01, 0x02}-only key-flag census, the embedded/index-entry field offsets, the sub-record markers and descriptors, and the 0 = ADS / 2 = snapshot discriminator are raw-disk decoded across the corpus (RD) and corroborated in the driver (E2): `RefsAddFileNameIndexEntry` ORs the directory bit and gates the 84/72-byte length, `RefsCreateStreamSnapshot` sets the snapshot StreamSummary bit, and the hard-link identity pair is written by `RefsLinkFileToSelf`. See [how this was verified](../methodology.md) to trace these to the exact images and measurements in `analysis/`.

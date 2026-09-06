@@ -102,7 +102,7 @@ The broader NTFS↔ReFS architectural mapping is in [NTFS vs ReFS](../concepts/n
 A directory's or system object's metadata is its own B+-tree, reached by OID through the Object Table (a file has none — its attributes live embedded in its containing directory's tree). A directory's tree
 decodes to rows of three kinds — for example a real user directory:
 
-```
+```text
 OID 0x701  (a user directory)
   Type 0x10  $STANDARD_INFORMATION — the own row (always exactly one)
   Type 0x20  FileId reverse index  — one row per child name
@@ -112,7 +112,7 @@ OID 0x701  (a user directory)
 The **type-0x10 own-row value** is where the attributes live, laid out as `$SI` followed by the
 embedded sub-record chain:
 
-```
+```text
 type-0x10 value
   +0x00   sub-record header (content begins at the offset stored in +0x04, = 0x28)
   +0x28   $STANDARD_INFORMATION region:

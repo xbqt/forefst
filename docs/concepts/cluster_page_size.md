@@ -2,7 +2,7 @@
 
 The cluster size is a single number chosen when a ReFS volume is formatted, and it quietly sets the
 geometry of almost everything else on disk: how many clusters fit in a container, the stride of the
-virtual-to-physical address arithmetic, the size of a Container Table row, and the ceiling on a resident
+virtual-to-physical address arithmetic, the size of a Container Table row, and the ceiling on an inline
 stream. An analyst who reads it wrong from the [VBR](../structures/vbr.md) will mis-size structures and
 mis-translate addresses across the whole volume, so it is one of the first values any parser must fix and
 the value almost every other layout decision is keyed to. This page explains the two configurations, how
@@ -11,8 +11,11 @@ the cluster size derives the page and container geometry, and the structures tha
 ## Two configurations, fixed at format time
 
 ReFS supports exactly two cluster sizes — **4 KiB** and **64 KiB** — and the choice is permanent. It is
-recorded as a sector count at [VBR](../structures/vbr.md) offset `0x24` (sectors-per-cluster), and since
-the sector size is always 512 bytes, the cluster size is simply `512 × sectors_per_cluster`:
+recorded as a sector count at [VBR](../structures/vbr.md) offset `0x24` (sectors-per-cluster), and the
+cluster size is `bytes_per_sector × sectors_per_cluster` — both read from the VBR, `0x20` and `0x24`.
+Every volume measured here reports **512** bytes per sector, so the product is `512 × sectors_per_cluster`
+in practice; a 4Kn volume would report 4096 and is not represented in the measured set, which is why the
+size is derived from the field rather than assumed:
 
 | Cluster size | Sectors/cluster (VBR 0x24) | CPC | Page size |
 |--------------|---------------------------|-----|-----------|
@@ -30,7 +33,7 @@ The volume is carved into fixed **64 MiB containers** — `bytes_per_container` 
 [VBR](../structures/vbr.md) offset `0x40` is `0x04000000` and is invariant across every version and
 cluster size. Dividing that by the cluster size gives **CPC**, the clusters-per-container count:
 
-```
+```text
 CPC = bytes_per_container / cluster_size = 64 MiB / cluster_size
     = 16,384  (4 KiB clusters)
     =  1,024  (64 KiB clusters)
@@ -75,7 +78,7 @@ offset (the full mechanism is on the [virtual addressing](virtual_addressing.md)
 | 4 KiB | 15 | 0x3FFF |
 | 64 KiB | 11 | 0x3FF |
 
-```
+```text
 container_index     = vlcn >> shift
 offset_in_container = vlcn & mask
 physical_LCN        = container_phys_start + offset_in_container
@@ -106,11 +109,11 @@ the physical start is always at `value[len − 16]`, and CPC is always at `value
 which row size is in play. A parser that hard-codes `0x90` will read garbage on a 64 KiB or SHA-256
 volume.
 
-### Resident stream ceiling
+### Inline stream ceiling
 
-A small Alternate Data Stream (content below 2 KB) is kept [inline](resident_storage.md) in a B+-tree row;
-a larger ADS is converted to non-resident extents at the ~2 KB threshold, like any large stream. So the
-inline-ADS ceiling is the 2 KB conversion threshold (well within a single row on any page size), not the
+On format 3.11+, a small Alternate Data Stream (content below 2 KiB) is kept [inline](resident_storage.md) in a B+-tree row;
+a larger one is extent-backed from the 2 KiB threshold up, like any large stream. So the
+inline-ADS ceiling is the 2 KiB conversion threshold (well within a single row on any page size), not the
 page capacity — the page size instead bounds how much *resident metadata* a directory entry can hold
 before the tree splits.
 
@@ -153,7 +156,8 @@ SHA-256 each independently forcing 224 and not stacking — is RD-confirmed (**C
 address-translation shift of 15 (4 KiB) / 11 (64 KiB) is confirmed by decompilation of
 `GetContainerIdFromRealRange` (with `IsValidContainerLcn` guaranteeing the boundary bit) and on disk
 (**CT_CTBL_002**, **CT_CTBL_003**, **CT_CTBL_RA_007**). The inline-ADS
-ceiling is the ~2 KB `RefsConvertToNonResident` threshold — a larger ADS is extent-backed — which is
-driver- and disk-supported (E2/RD, reconstructed byte-exact across a 256 B → 2 MB ADS size sweep). The single-cluster self-checksum is proven by recomputation across the
+ceiling on a format 3.11+ volume is the 2 KiB `RefsConvertToNonResident` threshold — a larger ADS is
+extent-backed — which is
+confirmed both in the driver and on disk, reconstructed byte-exact across a 256 B → 2 MB ADS size sweep. The single-cluster self-checksum is proven by recomputation across the
 corpus in `ComputeOrVerifySelfChecksumBlock`. See [how this was verified](../methodology.md) to trace
 these to the exact images and measurements in `analysis/`.

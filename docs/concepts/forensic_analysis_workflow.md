@@ -13,7 +13,7 @@ Steps 1–3 are mandatory preconditions for everything else; steps 4–7 are the
 can be run in any order once the volume is bootstrapped. Each step names the structure or concept it
 depends on and the exact `forefst.py` / `refsanalysis.py` command that surfaces it.
 
-```
+```text
 1. Detect ReFS      VBR "ReFS"/"FSRS"                       → is this a ReFS partition?
 2. Classify version VBR 0x28/0x2A/0x2C + CHKP               → which layouts apply, native vs upgraded?
 3. Bootstrap        VBR→SUPB→CHKP→13 roots→Container Table  → reach the Object Table
@@ -33,7 +33,7 @@ A ReFS partition is identified at the **first sector of the partition** by two s
 the driver itself uses in `RefsIsBootSectorOurs`) — a mismatch means a damaged or
 `refsutil fixboot`-wiped boot sector, which is itself an evidentiary finding (see step 7).
 
-```
+```sh
 python3 refsanalysis.py <image> boot -vv   # field-by-field VBR decode + checksum verify
 ```
 
@@ -68,7 +68,7 @@ Extended GUID, and CHKP flag 0x0080 set. This matters forensically: POSIX unlink
 them — their absence on an upgraded volume is expected, not evidence of scrubbing. See
 [Version Detection](version_detection.md) for the full marker table.
 
-```
+```sh
 python3 refsanalysis.py <image> summary       # version, size, file/dir counts
 python3 refsanalysis.py <image> supb --verify # version echo + consistency
 python3 refsanalysis.py <image> chkp -vv      # CHKP flags + root pointers + translation mode
@@ -97,7 +97,7 @@ The non-obvious steps:
   Load the [Container Table](../structures/container_table.md) first (root 7), then the
   [Object Table](../structures/object_table.md) at root 0.
 
-```
+```sh
 python3 refsanalysis.py <image> chkp        # confirm winning checkpoint + root LCNs
 python3 refsanalysis.py <image> containers  # Container Table (VLCN→PLCN map)
 python3 refsanalysis.py <image> objects     # Object Table: OID → VLCN, system OIDs named
@@ -113,7 +113,7 @@ is inline or extent-based — and the byte-layout difference that follows — is
 occupy 0x00–0x6FF (0x700 is the boundary, never assigned; the allocation rule is on
 [Object IDs](object_ids.md)).
 
-```
+```sh
 python3 forefst.py <image> files -o files.csv       # full file listing (CSV: SID, ADS, reparse, snapshots)
 python3 refsanalysis.py <image> files -v            # tree view with MACB + sizes
 python3 forefst.py <image> extract <name> > out     # extract content (resident + extents + ADS)
@@ -149,7 +149,7 @@ OID gaps are permanent deletion evidence: OIDs are monotonically increasing and 
 missing OID between two present ones proves a create-then-delete — a stronger long-window signal than
 NTFS's reusable MFT records.
 
-```
+```sh
 python3 forefst.py <image> deleted                        # recovery (default): trash + diff + live-page slack
 python3 forefst.py <image> deleted --full                 # complete: + whole-volume orphan-page scan + carve (slow: ~1 min/64 GB)
 python3 forefst.py <image> export deleted DIR             # write recovered .row + .recovered content
@@ -173,7 +173,7 @@ the v3.4 driver dispatches a 29-value opcode range (0x00–0x1C) and the v3.14 d
 (0x00–0x2B), all through `CmsLogRedoQueue::PerformRedo` — so the parser must pick the table by version
 before it can name an operation.
 
-```
+```sh
 python3 forefst.py <image> timeline --csv > timeline.csv  # merged $SI + USN + MLog
 python3 forefst.py <image> timeline --fast              # change-journal-only (USN+MLog), large vols
 python3 forefst.py <image> usn --stats                  # USN reason-code distribution
@@ -192,7 +192,7 @@ lower bound** on any file's creation. Cross-check the structural integrity in th
 walks every reachable page and (with `--fullchecksums`) recomputes every B+-tree page's CRC64/SHA-256
 against the stored value, exiting with code 2 on any mismatch.
 
-```
+```sh
 python3 forefst.py <image> timestomp                  # combine the three anchors, score suspects
 python3 forefst.py <image> integrity --fullchecksums  # whole-tree tamper/corruption check
 ```

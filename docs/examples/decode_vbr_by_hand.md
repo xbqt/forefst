@@ -32,7 +32,7 @@ print(first_lba, first_lba * 512)
 
 Output:
 
-```
+```text
 32768 16777216
 ```
 
@@ -50,7 +50,7 @@ for off in range(0, 0x60, 16):
 
 Output (4 KiB image):
 
-```
+```text
 0000 00 00 00 52 65 46 53 00 00 00 00 00 00 00 00 00
 0010 46 53 52 53 00 02 89 54 00 00 3e 00 00 00 00 00
 0020 00 02 00 00 08 00 00 00 03 0e 02 00 66 00 00 00
@@ -84,7 +84,7 @@ print("GUID @0x48 :", vbr[0x48:0x58].hex())
 
 Output (4 KiB image):
 
-```
+```text
 fs name @0x03 : b'ReFS\x00\x00\x00\x00'
 FSRS @0x10 : b'FSRS'
 VBR cksum @0x16 : 0x5489
@@ -114,7 +114,7 @@ print("volume size :", g("<Q",0x18)*512 / 2**30, "GiB")
 
 Output (4 KiB image):
 
-```
+```text
 cluster size : 4096 (4 KiB)
 clusters/contnr: 16384
 volume size : 1.9375 GiB
@@ -137,7 +137,7 @@ print(hex(cs), "==", hex(g("<H",0x16)), "->", cs == g("<H",0x16))
 
 Output (4 KiB image):
 
-```
+```text
 0x5489 == 0x5489 -> True
 ```
 
@@ -147,7 +147,7 @@ Annotation: the computed value equals the stored value, so this VBR is intact. A
 
 Running Steps 2-5 against the 64 KiB v3.14 image yields:
 
-```
+```text
 0020 00 02 00 00 80 00 00 00 03 0e 02 00 66 00 00 00
 bytes/sector @0x20 : 512
 sectors/clus @0x24 : 128
@@ -163,13 +163,13 @@ Annotation: the *only* changed format byte is sectors-per-cluster at 0x24 (`80` 
 
 ### Step 7 -- Cross-check with the tool
 
-```
+```console
 $ python3 refsanalysis.py image.raw   # the 4 KiB v3.14 image
 ```
 
 Output (excerpt):
 
-```
+```text
  ReFS version: 3.14
  Cluster size: 0x1000 (4.0 KB)
  Container size: 0x4000000 (64.0 MB)
@@ -178,7 +178,7 @@ Output (excerpt):
 
 And for the 64 KiB image:
 
-```
+```text
  ReFS version: 3.14
  Cluster size: 0x10000 (64.0 KB)
  Container size: 0x4000000 (64.0 MB)

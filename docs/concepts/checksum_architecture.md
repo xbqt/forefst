@@ -15,7 +15,7 @@ The integrity model spans four levels, from the volume root down to individual m
 level uses a different algorithm suited to its role, and the parent of each level is what stores the
 child's checksum:
 
-```
+```text
 VBR
  └─ ROR1+ADD self-checksum (offset 0x16)
  └─ SUPB
@@ -60,7 +60,7 @@ slots) and a checksum of the child page's data. The same structure does the
 [virtual-to-physical addressing](virtual_addressing.md) and the corruption detection, which is why a
 parser that mis-sizes it gets both wrong at once.
 
-```
+```text
 +0x00  8 bytes   LCN slot 0 (first cluster)
 +0x08  8 bytes   LCN slot 1
 +0x10  8 bytes   LCN slot 2

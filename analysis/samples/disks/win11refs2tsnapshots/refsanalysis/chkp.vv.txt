@@ -32,9 +32,9 @@ CHKP (latest)
 
   Flag bits:
     0x002 = always-set
-    0x080 = native-Win11-format
+    0x080 = native-Win11-format (v3.10+)
     0x200 = indirect-root-list
-    0x400 = metadata-checksum
+    0x400 = metadata-checksum (CRC64/SHA-256)
 
 Container Table
 ------------------------------------------------------------------------------

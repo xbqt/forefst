@@ -20,7 +20,7 @@ ReFS Deleted File Finder
 ── B+-tree Node Slack Scan (Method 5) ──
   Recovering deleted directory entries from metadata-page free space
   (ReFS deletion removes only the row's index slot; the row body persists).
-  Scanned 906 live pages (orphan-page scan skipped — recovery mode) with recoverable slack rows; 6 non-resident file(s) matched a type-0x40 extent map in slack
+  Scanned 906 live pages (orphan-page scan skipped — add --full to also scan the freed pages of older deletions) with recoverable slack rows; 6 non-resident file(s) matched a type-0x40 extent map in slack
 
   DELETED (no live file with this name + creation time remains on the volume): 148  [108 with valid timestamps, 40 partial remnants]
 
@@ -711,9 +711,11 @@ ReFS Deleted File Finder
   No orphan objects found.
 ── Recovery methods ──
   Mode: recovery.  Ran: Trash table (0xD), checkpoint diff, B+-tree node-slack scan (live pages only), orphan-object scan (low confidence).
-  This is `recovery` (quick): live-page slack only. Run `deleted --full` to ALSO scan orphan
-  pages (the freed pages of deleted objects — more, but a full-volume scan) and carve non-resident content.
-  Fine-grained: --no-slack · --scan-pages · --orphans · --carve · --max-scan N · --search SUB · --csv/--json/--jsonl FILE · `export deleted DIR`.
+  This is `recovery` (quick, seconds): live-page slack only. Run `deleted --full` to ALSO scan
+  orphan pages (the freed pages of deleted objects) and carve non-resident content — that reads
+  the WHOLE volume once (about a minute per 60-100 GB), but it typically finds far more.
+  Fine-grained: --no-slack · --scan-pages · --orphans · --carve · --search SUB · --csv/--json/--jsonl FILE · `export deleted DIR`.
+  --max-scan N stops the orphan scan early (faster, but the run is then INCOMPLETE); `help deleted` lists what each option costs.
   Prior versions of files that still exist: `snapshots`.  Windows Recycle Bin: `recyclebin`.
 
   DELETED files: 0 of 148 are RESIDENT with full content recoverable; 59 are non-resident (carve-able with --carve).

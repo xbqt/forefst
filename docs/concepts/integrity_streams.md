@@ -29,7 +29,7 @@ Win32 attribute word at **`$SI+0x20`** as `FILE_ATTRIBUTE_INTEGRITY_STREAM` (0x8
 [`$STANDARD_INFORMATION`](../attributes/STANDARD_INFORMATION.md) is the *only* authoritative on-disk signal
 that a given file is an integrity stream:
 
-```
+```text
 RefsSetIntegrity ──sets──▶ SCB+0x98 bit15 (0x8000)
                               │ reflected to
                               ▼
@@ -120,6 +120,8 @@ The integrity marker is read directly from the `$SI` attribute word surfaced by 
 integrity streams.
 
 ## Cross-references
+
+- [Driver Transitions](driver_transitions.md) — enabling integrity is one of the residency triggers
 
 - [Integrity State Table](../structures/integrity_state.md) — root #11 byte layout, the volume-level tracker (not a per-file roster)
 - [$STANDARD_INFORMATION](../attributes/STANDARD_INFORMATION.md) — the `$SI+0x20` attribute word holding the 0x8000 marker, and the corrected `$SI+0x24` internal flags that do *not*

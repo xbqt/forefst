@@ -49,7 +49,7 @@ A scan that only counts `type_flag = 2` will report zero Format B on v3.4 — th
 
 ## Coverage
 
-Not every type 0x30 child has a corresponding type 0x20 entry. Resident files — identified by the sentinel at child_oid (val+0x08) >= 0x10000000000 — typically lack type 0x20 entries. (No file has its own Object-Table OID: a resident file carries that sentinel at val+0x08, while a non-resident file carries its home-dir backref there — a real *directory* OID, not an OID of its own.) The total type 0x20 count per directory is always <= the type 0x30 child count.
+There is one type 0x20 row per **record**, not per name: an object's record carries one (Format A for an embedded record, Format B for a type-0x40 backing), so the additional *names* of a multi-name file have none of their own. Resident files — identified by the sentinel at child_oid (val+0x08) >= 0x10000000000 — typically lack type 0x20 entries. (No file has its own Object-Table OID: a resident file carries that sentinel at val+0x08, while a non-resident file carries its home-dir backref there — a real *directory* OID, not an OID of its own.) The total type 0x20 count per directory is always <= the type 0x30 child count.
 
 Case-sensitive files that differ only in case get distinct FileIds and distinct type 0x20 child indices, so they coexist as separate B+-tree entries.
 

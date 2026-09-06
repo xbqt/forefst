@@ -16,14 +16,14 @@ when the volume really existed, so every flag the tool raises can be checked.
 
 ### Step 1 — Triage with the high-confidence filter
 
-```
+```sh
 python3 forefst.py \
  image.raw timestomp --min HIGH
 ```
 
 Actual output (header + first suspects):
 
-```
+```text
 ==============================================================================
 ReFS Timestamp-Anomaly (Timestomp) Detection
 ==============================================================================
@@ -57,7 +57,7 @@ signals — `CHANGE_LATE` and `PRE_FORMAT` — agree, which is what earns the HI
 Running the same subcommand without `--min` lists every tier and prints the legend
 the analyst needs to read the signals. Actual tail of the output:
 
-```
+```text
  Signal legend:
  CHANGE_LATE $SI change-time post-dates created/modified — common timestomp
  tools (SetFileTime/PowerShell/.NET) can't reach it; defeated by a
@@ -79,7 +79,7 @@ agreement (or a USN confirmation) is conclusive.
 
 ### Step 3 — Pull a single flagged record from the lister
 
-```
+```sh
 python3 forefst.py \
  image.raw --timestomp --jsonl
 ```

@@ -72,11 +72,15 @@ Volume Detail
   Volume created:     2026-05-19 19:56:46.8989928
   Volume modified:    2026-05-19 19:56:47.3896445
   Volume state:       NATIVE v3.14
-      • driver v3.15 is newer than the format-time v3.14 (natively formatted — not an upgrade)
+      • driver v3.15 is newer than the format-time v3.14
+        (natively formatted — not an upgrade)
   Security descs:     7
   Reparse index:      173 entries
   Trash table:        0 entries
   Containers used:    126 / 127  (first maps to PLCN 0 = boot region)
+  Space used:         1.3 GB of 7.9 GB (16.9%) — 6.6 GB free
+      • 48.0 MB lies beyond the last container,
+        so no allocator tracks it — it is neither used nor free
   FS Metadata:        no child entries
   USN Journal:        Inactive
 
@@ -84,7 +88,7 @@ Volume Detail
 File System Content (from directory walk)
 ------------------------------------------------------------------------------
   Directories:        118
-  Files:              776 (126 resident + 650 non-resident)
+  Files:              776 (251 inline + 525 extent-backed)
   Total file size:    822.2 MB
   Oldest timestamp:   2021-05-18 07:16:04.9990009
   Newest timestamp:   2026-05-19 20:00:58.3654380

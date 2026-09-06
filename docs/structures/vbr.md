@@ -61,8 +61,10 @@ v3.4-formatted volume mounted on Win11 will have its version updated to 3.14.
 
 This field is set at format time and **never modified** during version upgrades. On upgraded
 volumes (v3.4 to v3.14), VBR 0x2A remains 0x0000 even though the driver activates CRC64 via CHKP
-flags. The selector also determines the on-disk
-[page reference](page_references.md) format, so it must be read before any tree page can be parsed.
+flags. The selector records the algorithm the volume was **formatted** with, so on an upgraded volume it no longer
+describes what is on disk. The authority for the on-disk
+[page reference](page_references.md) format is the **checkpoint's** page-reference size at CHKP+0x5C — an
+upgraded volume still reads `0x0000` here while its checkpoint has moved to the 48-byte CRC64 reference.
 
 ## Volume flags (offset 0x2C)
 
@@ -93,7 +95,7 @@ Observed composite values:
 
 The VBR checksum (offset 0x16) is computed by `RefsIsBootSectorOurs`:
 
-```
+```text
 checksum = 0 (u16)
 for i = 3 to 511:
     if i == 0x16 or i == 0x17: skip

@@ -1,10 +1,10 @@
 # forefst.py
 
-ReFS forensic analysis tool. `forefst.py` is the MFTECmd-equivalent for ReFS — it produces comprehensive per-file metadata (CSV / JSON / body file) from a raw disk image — and a full forensic suite on top: the USN journal, the MLog transaction log, super-timelines, timestamp-anomaly detection, file extraction, security descriptors, reparse points, deleted-file recovery, snapshots, integrity checking, and a metadata exporter.
+ReFS forensic analysis tool. `forefst.py` produces comprehensive per-file metadata (CSV / JSON / body file) from a raw disk image — and a full forensic suite on top: the USN journal, the MLog transaction log, super-timelines, timestamp-anomaly detection, file extraction, security descriptors, reparse points, deleted-file recovery, snapshots, integrity checking, and a metadata exporter.
 
 ## Invocation
 
-```
+```sh
 forefst.py <image> [subcommand] [options]
 forefst.py <image>                  # no subcommand → volume summary
 forefst.py <image> <cmd> --help     # detailed help + examples for one subcommand
@@ -16,11 +16,11 @@ forefst.py help <cmd>               # per-command help without needing an image
 
 The subcommand token comes **after** the image path. Output formats `--json`, `--jsonl` and `--body` are mutually exclusive; the default is CSV. `--partition-start <bytes>` overrides volume auto-detection (accepts `0x` hex), and `-q`/`--quiet` (on the native subcommands — `files`/`summary`/`search`/`details`) silences the progress lines printed to stderr.
 
-> **Version support:** validated on ReFS 3.14 (24H2). All versions 3.4–3.14 parse, but some enriched fields (e.g. non-resident symlink targets) may be incomplete on 3.4–3.10.
+> **Version support:** validated on ReFS 3.14 (24H2). All versions 3.4–3.14 parse, but some enriched fields (e.g. symlink targets on extent-backed files) may be incomplete on 3.4–3.10.
 
 ## Quick Start
 
-```
+```sh
 forefst.py disk.raw                                   # volume summary (the default view)
 forefst.py disk.raw files                             # CSV file listing to stdout
 forefst.py disk.raw files -o listing.csv              # … to a file
@@ -51,15 +51,24 @@ Walks the directory B+-tree from the root object (OID `0x600`) and emits one enr
 | `-o, --output FILE` | alias for `--csv FILE` (and the `--body` target) |
 | `--filter CATEGORY` | keep only one [attribute category](#files---filter-categories) |
 | `--cow-before IMAGE` | recover prior CoW versions by diffing against an earlier image |
-| `--timestomp` | add the `TimestompFlags` column ($SI heuristic) |
+| `--no-timestomp` | leave the `TimestompFlags` column **blank** rather than computing it (it is computed by default). The column stays in place, so the schema does not change with the flag |
+| `--csv-safe` | prefix any CSV cell that starts with `=`, `+`, `-` or `@` with a single quote, so a spreadsheet treats it as text (see the warning below). **Off by default** — it alters the reported name |
 | `-q, --quiet` | silence the progress lines on stderr |
 | `--depth N` | max directory recursion depth (default: the full tree) |
+
+> **Filenames on a suspect volume are attacker-controlled, and CSV is opened in a spreadsheet.**
+> A name beginning `=`, `+`, `-` or `@` is interpreted by Excel and LibreOffice as a **formula**, which is
+> the classic CSV-injection hazard. The default output is **byte-faithful**: names are written exactly as
+> they are on the volume, because silently rewriting an evidential filename is worse than the hazard. The
+> tool instead **counts** such cells and tells you at the end of the run, and `--csv-safe` prefixes them with
+> a single quote when you are about to open the file in a spreadsheet. Use it for viewing, not for the copy
+> you keep as evidence — the quote changes the name.
 
 The `files` listing covers the **live** tree only. Deleted files are recovered by the separate [`deleted`](#deleted--recover-deleted-files) command.
 
 > Running `forefst.py <image>` with no subcommand prints the volume **summary**, not this listing — use `files` for the CSV.
 
-```
+```sh
 forefst.py disk.raw files -o listing.csv              # full CSV listing
 forefst.py disk.raw files --filter hardlink           # only multi-link files
 forefst.py disk.raw files --filter ea --json          # EA-bearing files as JSON
@@ -68,7 +77,7 @@ forefst.py disk.raw files --body -o t.body            # body file (live tree); d
 
 ### `summary` — full volume triage report
 
-Volume identity (version, GUID/label, cluster/container size, checksum type); a **Bootstrap structures** section listing the VBR (primary + backup), SUPB (primary + 2 backups) and CHKP (primary + backup) — each with its address, validity, and its own SHA-256; on-disk state (original / upgraded / native); the 13 root-table row counts; USN-journal status + UsnJournalId; a **Space used** line — real free-vs-used space taken from the accounting ReFS maintains in the allocator's own root page, with the tail of the volume past the last container reported separately because it belongs to no allocator tier and is not free space (`refsanalysis.py <image> allocators` shows the tiers behind it); then a full directory walk for file/dir/resident counts, total size, MACB extremes, and encrypted/integrity/compressed/hard-link/snapshot/ADS tallies. Extended by default.
+Volume identity (version, GUID/label, cluster/container size, checksum type); a **Bootstrap structures** section listing the VBR (primary + backup), SUPB (primary + 2 backups) and CHKP (primary + backup) — each with its address, validity, and its own SHA-256; on-disk state (original / upgraded / native); the 13 root-table row counts; USN-journal status + UsnJournalId; a **Space used** line — real free-vs-used space taken from the accounting ReFS maintains in the allocator's own root page, with the tail of the volume past the last container reported separately because it belongs to no allocator tier and is not free space (`refsanalysis.py <image> allocators` shows the tiers behind it); then a full directory walk for file/dir/inline-data counts, total size, MACB extremes, and encrypted/integrity/compressed/hard-link/snapshot/ADS tallies. Extended by default.
 
 | Option | Description |
 |--------|-------------|
@@ -76,7 +85,7 @@ Volume identity (version, GUID/label, cluster/container size, checksum type); a 
 | `--hash-image` | also SHA-256 the whole image (chain-of-custody; streams the image) |
 | `--depth N` | max recursion depth for the content census (default: full — the whole tree) |
 
-```
+```sh
 forefst.py disk.raw summary                           # text triage report
 forefst.py disk.raw summary --json                    # one JSON object
 forefst.py disk.raw summary --hash-image              # + full-image SHA-256
@@ -96,7 +105,7 @@ Case-insensitive substring match on the name across the whole tree; add `--regex
 
 `search` prints a match count for the pattern, then the rows; it covers the live tree — to search deleted objects use [`deleted --search PATTERN`](#deleted--recover-deleted-files).
 
-```
+```sh
 forefst.py disk.raw search report                     # names containing "report"
 forefst.py disk.raw search '^link\d+_to' --regex      # regex on the basename
 forefst.py disk.raw deleted --search secret           # search deleted objects
@@ -104,7 +113,7 @@ forefst.py disk.raw deleted --search secret           # search deleted objects
 
 ### `details` — all attributes for ONE object
 
-Full record for a single file, directory or object: timestamps, attributes (incl. EA), SecurityId/owner, USN, reparse target, and — for resident files — the inline sub-records ($DATA, ADS, $EA / WSL metadata, snapshots). Address a file by `/path`; a directory or system object by `/path` or `0xOID` (files have no OID). `--path`/`--oid` are the explicit forms.
+Full record for a single file, directory or object: timestamps, attributes (incl. EA), SecurityId/owner, USN, reparse target, and — where the record carries them — the inline sub-records ($DATA, ADS, $EA / WSL metadata, snapshots). Address a file by `/path`; a directory or system object by `/path` or `0xOID` (files have no OID). `--path`/`--oid` are the explicit forms.
 
 | Option | Description |
 |--------|-------------|
@@ -112,7 +121,7 @@ Full record for a single file, directory or object: timestamps, attributes (incl
 | `--path P` / `--oid O` | explicit addressing |
 | `--json` | emit the full record as JSON |
 
-```
+```sh
 forefst.py disk.raw details /wsltests/lxsymlink       # a reparse/WSL file by path
 forefst.py disk.raw details 0x705                      # a directory object by OID
 forefst.py disk.raw details /dir/file.txt --json
@@ -134,7 +143,7 @@ Parses `$UsnJrnl:$J`: per-record USN, timestamp, reason flags, resolved file nam
 | `--csv FILE` | export all records to a 17-column CSV |
 | `--json` | emit `{journal, record_count, records[]}` |
 
-```
+```sh
 forefst.py disk.raw usn                                # activity summary (bare usn; use --list for the record list)
 forefst.py disk.raw usn --info                         # journal layout & health
 forefst.py disk.raw usn --stats                        # activity summary
@@ -173,7 +182,7 @@ the USN journal — MOVE/RENAME/CREATE matched the ground-truth log on all resol
 | `--csv FILE` | export transactions (action + opcodes + oid + plcn) to CSV |
 | `--json` | emit version/control/mlog_info/data_area/records as JSON |
 
-```
+```sh
 forefst.py disk.raw mlog                               # control header + page census
 forefst.py disk.raw mlog --parse                       # concrete file operations + low-level records
 forefst.py disk.raw mlog --parse -v                    # same, plus the per-record byte-level proof
@@ -197,7 +206,7 @@ actually destroyed.
 | `--limit N` | keep only the first N events after filtering/sorting |
 | `--depth N` | max recursion depth for the $SI walk (default: full) |
 
-```
+```sh
 forefst.py disk.raw timeline --fast --limit 50         # quick USN+MLog timeline
 forefst.py disk.raw timeline --csv > timeline.csv      # full super-timeline (CSV)
 forefst.py disk.raw timeline --file hello.txt          # events touching one file
@@ -224,7 +233,7 @@ Created + Modified) is a **LOW-only** signal that never rises above LOW and neve
 second stamps are also produced by driver packages (VirtIO/QEMU) and archive extraction, so round-ness suggests a
 set date but is not proof; corroborate with USN or hard-link evidence.
 
-```
+```sh
 forefst.py disk.raw timestomp                          # HIGH-confidence suspects (default)
 forefst.py disk.raw timestomp --min MEDIUM             # reveal the MEDIUM tier too
 forefst.py disk.raw timestomp --csv suspects.csv       # export ALL tiers to CSV
@@ -234,7 +243,7 @@ forefst.py disk.raw timestomp --csv suspects.csv       # export ALL tiers to CSV
 
 ### `extract` — extract a file's content (or one ADS)
 
-Recovers a file's bytes and writes them to stdout (redirect to a file): **non-resident** files from their extents — whether the extent map is held **inline** in the directory record (the common 3.14 case, listed as `IsResident=False`) or in a separate record — **resident** files from their inline `$DATA` — including a file whose record was split out of its name row by a move or a hard link but whose bytes stayed inline inside that record — and **CoW resident files unmodified since a snapshot** from the blocks they share with the latest snapshot. Address by bare name, absolute `/path`, or `--path`; use `name:stream` to pull an ADS (a small ADS from its inline bytes, or a large ≥2 KB ADS reassembled from its on-disk extents). Only a rare oversized/overflow extent table falls back to `dataruns`; a modified-CoW file's prior versions are in `snapshots --extract`.
+Recovers a file's bytes and writes them to stdout (redirect to a file): **extent-backed** files from their extents — whether the extent map is held **inline** in the directory record (the common 3.14 case, listed as `DataResidency=extents`) or in a separate record — **inline** files from the `$DATA` bytes in the record — including a file whose record was split out of its name row by a move or a hard link but whose bytes stayed inline inside that record — and **snapshot-shared files unmodified since a snapshot** from the blocks they share with the latest snapshot. Address by bare name, absolute `/path`, or `--path`; use `name:stream` to pull an ADS (a small ADS from its inline bytes, or a large ≥2 KiB ADS reassembled from its on-disk extents). Only a rare oversized/overflow extent table falls back to `dataruns`; a modified-CoW file's prior versions are in `snapshots --extract`.
 
 **Sparse holes** in a file's extent map are reconstructed as zeros (never read from disk). **Integrity streams**
 (3.14, 4 KiB clusters, CRC32-C) are verified as they are recovered: each cluster's stored CRC32-C is recomputed
@@ -255,7 +264,7 @@ the name is not unique.
 | `--depth N` | max depth for a **bare-name** search (default: full; a full path ignores this) |
 | `--no-verify-integrity` | skip the per-cluster CRC32-C check on integrity-stream files |
 
-```
+```sh
 forefst.py disk.raw extract /specials/gamma.bak > out.bak   # carve by absolute path (any depth, direct)
 forefst.py disk.raw extract report.dat:hidden_6247 > s.bin  # extract one inline ADS
 forefst.py disk.raw extract deep.log --oid 0x73c            # scope a bare-name search to a subtree
@@ -274,7 +283,7 @@ Lists each security descriptor (owner, group, control flags, DACL/SACL ACEs). `-
 | `--audit` | tamper check: recompute each SD's content hash |
 | `--json` | machine-readable output |
 
-```
+```sh
 forefst.py disk.raw security                           # list all descriptors
 forefst.py disk.raw security --files                   # map files to owners
 forefst.py disk.raw security --audit                   # verify SD hashes
@@ -293,7 +302,7 @@ Lists files carrying a special attribute. No argument prints a **count summary**
 | `sparse` | logical vs allocated size + bytes saved (`dataruns` for the extent map) |
 | `encrypted` / `compressed` / `integrity` / `ea` / `snapshot` | the matching files (+ owner for EFS, prior-version count for snapshot) |
 
-```
+```sh
 forefst.py disk.raw specials              # count summary of every type
 forefst.py disk.raw specials ads          # every ADS + host file
 forefst.py disk.raw specials hardlink     # hard-link groups
@@ -312,7 +321,7 @@ Walks the tree for files with the REPARSE_POINT attribute and decodes each buffe
 | `--file SUB` | default mode: filter to names containing SUB |
 | `--json` | machine-readable output |
 
-```
+```sh
 forefst.py disk.raw reparse                            # all reparse points + targets
 forefst.py disk.raw reparse --index -v                 # dump the reparse index
 forefst.py disk.raw reparse --tag 0xa000000c --json    # only symlinks, as JSON
@@ -333,20 +342,20 @@ forefst.py disk.raw reparse --tag 0xa000000c --json    # only symlinks, as JSON
 
 The slack scan **runs by default**; `--no-slack` gives a fast Trash+checkpoint pass and `--trash` returns after the Trash table only; filter with `--search SUB`.
 
-**What each depth costs.** `deleted` and the metadata-only flags are **fast** (seconds) — they read only pages the tree walk already touches. `--carve` is **moderate**: it reads the data extents of each recovered non-resident file, so its cost follows how much deleted data you reconstruct. `--full` and `--scan-pages` are **slow** — they read *every cluster on the volume* looking for orphan pages, at the disk's sequential read speed: on a 1–2 GB/s disk that is about **a minute per 60–100 GB** (≈1 min at 64 GB, ≈20–35 min at 2 TB). Treat a multi-TB volume as **very slow** (≈2.5–4.5 h at 16 TB, with progress printed). These deep scans cover the whole volume **by default** and always print how much of it they examined. `--max-scan N` trades that completeness for speed by stopping after N clusters; a bounded run is reported as **INCOMPLETE** in the output and the recovery log.
+**What each depth costs.** `deleted` and the metadata-only flags are **fast** (seconds) — they read only pages the tree walk already touches. `--carve` is **moderate**: it reads the data extents of each recovered extent-backed file, so its cost follows how much deleted data you reconstruct. `--full` and `--scan-pages` are **slow** — they read *every cluster on the volume* looking for orphan pages, at the disk's sequential read speed: on a 1–2 GB/s disk that is about **a minute per 60–100 GB** (≈1 min at 64 GB, ≈20–35 min at 2 TB). Treat a multi-TB volume as **very slow** (≈2.5–4.5 h at 16 TB, with progress printed). These deep scans cover the whole volume **by default** and always print how much of it they examined. `--max-scan N` trades that completeness for speed by stopping after N clusters; a bounded run is reported as **INCOMPLETE** in the output and the recovery log.
 
 **Recoverability verdict.** Every listed entry carries a verdict — computed disk-free by running the *same* inline-`$DATA` decoder used for live files on the captured remnant bytes:
 
 | Verdict | Meaning | `export deleted` writes |
 |---------|---------|--------------------------|
-| `FULL FILE recoverable` | **resident** file — `$DATA` is inline in the record and decodes | `.recovered` (the full file) |
-| `extent_backed` | **non-resident** file — data is in on-disk extents, and the extent **map** survives in slack (inline in the record, *or* in a type-0x40 backing recovered from the same page slack) | `.carved` **with `--carve`** (best-effort; see below) |
-| `metadata only` | non-resident file with no usable data/extent info in the remnant | `.row` only (name/size/timestamps) |
+| `FULL FILE recoverable` | **inline** file — `$DATA` bytes are in the record and decode | `.recovered` (the full file) |
+| `extent_backed` | **extent-backed** file — data is in on-disk extents, and the extent **map** survives in slack (inline in the record, *or* in a type-0x40 backing recovered from the same page slack) | `.carved` **with `--carve`** (best-effort; see below) |
+| `metadata only` | extent-backed file with no usable data/extent info in the remnant | `.row` only (name/size/timestamps) |
 | `fragment only` | a Trash-table key/value fragment | `.row` only |
 
 The verdict is annotated for EFS (`CIPHERTEXT`), sparse (`short read expected`), and partial slack remnants (`corroborate`). "Recoverable" means the bytes (or their extent map) are **present** in the remnant, *not* that they are un-overwritten (there is no allocation/freshness check). A roll-up at the end splits **deleted files** from **prior versions of files still present** — decided per **owning directory** (a row is a prior version only if its owning directory is still live *and* still holds that exact name), so a real deletion is never hidden by a same-named file living in some other directory. The counts reconcile exactly with the files `export deleted` writes.
 
-> **Resident vs non-resident — what you can restore.** A **resident** deleted file's *full content* is recovered straight from the remnant (`.recovered`). A **non-resident** file keeps its data in separate on-disk extents — but the *extent map* survives in slack (either inline in the record, or in the file's type-0x40 backing record, which is unlinked from the live tree at deletion yet whose body persists in the same page slack and is matched back to the name by `file_id`+size), so `export deleted --carve` reconstructs the file from those clusters **best-effort** (they may have been reallocated — the output is labelled `.carved` and flagged in the manifest). Only when even the extent map has been zeroed in the surviving remnant (`metadata only`) is nothing but the record recoverable here. A complementary, not-yet-implemented method — **whole-disk signature carving** (scan every cluster for file magics, filesystem-agnostic) — would recover those remaining cases.
+> **Inline vs extent-backed — what you can restore.** An **inline** deleted file's *full content* is recovered straight from the remnant (`.recovered`). An **extent-backed** file keeps its data in separate on-disk extents — but the *extent map* survives in slack (either inline in the record, or in the file's type-0x40 backing record, which is unlinked from the live tree at deletion yet whose body persists in the same page slack and is matched back to the name by `file_id`+size), so `export deleted --carve` reconstructs the file from those clusters **best-effort** (they may have been reallocated — the output is labelled `.carved` and flagged in the manifest). Only when even the extent map has been zeroed in the surviving remnant (`metadata only`) is nothing but the record recoverable here. A complementary, not-yet-implemented method — **whole-disk signature carving** (scan every cluster for file magics, filesystem-agnostic) — would recover those remaining cases.
 
 | Option | Description |
 |--------|-------------|
@@ -354,12 +363,12 @@ The verdict is annotated for EFS (`CIPHERTEXT`), sparse (`short read expected`),
 | `--trash` | only the Trash table, then return (fastest) |
 | `--scan-pages` | ALSO scan orphaned metadata pages across the whole volume (**slow** — see the cost note above) |
 | `--slack` | run the slack scan (already the default; kept for symmetry) |
-| `--carve` | with `export deleted`: also reconstruct non-resident (extent-backed) files |
+| `--carve` | with `export deleted`: also reconstruct extent-backed files |
 | `--search SUB` | filter recovered entries by name substring |
 | `--max-scan N` | stop the orphan-page scan after N clusters. Default: **no limit** — the whole volume is scanned. Bounding it makes the run faster but **INCOMPLETE** |
 | `--extract DIR` | **deprecated** — use `export deleted DIR` (identical result) |
 
-```
+```sh
 forefst.py disk.raw deleted                            # Trash + checkpoint + slack (default) + recoverability
 forefst.py disk.raw deleted --no-slack                 # fast: Trash + checkpoint diff only
 forefst.py disk.raw deleted --trash                    # fastest: Trash-only check
@@ -368,13 +377,13 @@ forefst.py disk.raw deleted --search report            # only deleted entries na
 
 ### `recyclebin` — decode `$RECYCLE.BIN` `$I` metadata
 
-Walks `$RECYCLE.BIN/<SID>/` and decodes each `$I` metadata file — the **original full path**, **deletion time**, and **logical size** of a recycled item — and reports whether its `$R` payload still survives. Filesystem-agnostic Windows format (`$I` header `1` = Vista–8.1, `2` = Win10/11). The `$I` is a small resident file, so its bytes come from the same inline-`$DATA` path as `extract`.
+Walks `$RECYCLE.BIN/<SID>/` and decodes each `$I` metadata file — the **original full path**, **deletion time**, and **logical size** of a recycled item — and reports whether its `$R` payload still survives. Filesystem-agnostic Windows format (`$I` header `1` = Vista–8.1, `2` = Win10/11). The `$I` is a small file whose bytes sit inline, so they come from the same inline-`$DATA` path as `extract`.
 
 | Option | Description |
 |--------|-------------|
 | `--json` | machine-readable output |
 
-```
+```sh
 forefst.py disk.raw recyclebin                         # original path + deletion time per recycled item
 forefst.py disk.raw recyclebin --json
 ```
@@ -393,7 +402,7 @@ Inventories files carrying **stream snapshots** — prior versions kept by ReFS'
 | `--extract DIR` | write each recovered version into DIR |
 | `--json` | machine-readable inventory |
 
-```
+```sh
 forefst.py disk.raw snapshots                          # list files with snapshots
 forefst.py disk.raw snapshots --file lasttest.txt --snapshot first --show   # just one version
 forefst.py disk.raw snapshots --file lasttest.txt --show -v
@@ -412,7 +421,7 @@ Structural audit of metadata pages. Default is a fast verdict; `--checksums` ver
 | `--scan-range A-B` | raw mode: inspect each LCN in the range standalone |
 | `--max-pages N` | cap the checksum crawl (default 300000) |
 
-```
+```sh
 forefst.py disk.raw integrity                          # fast structural verdict
 forefst.py disk.raw integrity --checksums              # verify system-root checksums
 forefst.py disk.raw integrity --fullchecksums -v       # full sweep + page details
@@ -426,25 +435,25 @@ forefst.py disk.raw integrity --fullchecksums -v       # full sweep + page detai
 
 | Subverb | Gets out |
 |--------|-------------|
-| `export file <path>` \[`-o FILE`\] \| `--oid O` | one file's live `$DATA` (resident inline / CoW-shared / non-resident extents) — same as `extract`; stdout or `-o` |
-| `export ads "<path>:<stream>"` \[`-o FILE`\] | one alternate data stream — inline (small) or reassembled from extents (large ≥ 2 KB) — stdout or `-o` |
+| `export file <path>` \[`-o FILE`\] \| `--oid O` | one file's live `$DATA` (inline / CoW-shared / extents) — same as `extract`; stdout or `-o` |
+| `export ads "<path>:<stream>"` \[`-o FILE`\] | one alternate data stream — inline (small) or reassembled from extents (on format 3.11+, ≥ 2 KiB) — stdout or `-o` |
 | `export reparse` \[`--json`\] \[`-o FILE`\] | the reparse-point inventory (decoded targets/tags/kind) — text by default (same as `reparse`), or `--json` — stdout or `-o` |
-| `export resident-all [dir]` | every resident file's inline `$DATA` to a folder, tree preserved (skips 0-byte / non-inline) |
+| `export resident-all [dir]` | every file's inline `$DATA` to a folder, tree preserved (skips 0-byte / non-inline) |
 | `export snapshots [dir]` | every stream-snapshot version — same as `snapshots --extract` (aliases: `snapshot`, `prior-versions`) |
-| `export deleted [dir] [--carve] [--rows-only\|--content-only]` | recover deleted remnants — the raw `.row` **and** the decoded `.recovered` (resident); with `--carve` also `.carved` (non-resident), plus a `recovery_manifest.json` |
+| `export deleted [dir] [--carve] [--rows-only\|--content-only]` | recover deleted remnants — the raw `.row` **and** the decoded `.recovered` (inline); with `--carve` also `.carved` (extent-backed), plus a `recovery_manifest.json` |
 | `export recyclebin [dir]` | surviving `$R` payloads, named by their decoded original filename |
 | `export metadata -o <dir>` | the hash-verified metadata bundle (`--what vbr,chkp,supb,mlog,usn,btree` · `--btree-mode packed\|per-object` · `--max-scan N`) |
 
-**`export deleted` writes, per entry, by default:** the raw **`.row`** (the recovered directory-entry record, verbatim — chain-of-custody evidence) and, for a **resident** file whose inline `$DATA` decodes, the **`.recovered`** file (the full reconstructed content). With **`--carve`**, a **non-resident** `extent_backed` entry also gets a **`.carved`** file — reassembled from the extent map held inline in the record (validated byte-exact on a known live extent-backed file; **best-effort** for deleted files because the clusters may have been reallocated, and sparse files short-read — both flagged in the manifest). The distinct `.recovered`/`.carved` extensions mark carved remnants, never verbatim live copies. Files never clobber — a collision auto-renames to `.dup1`/`.dup2`. `--rows-only` reproduces the historical raw-row-only output byte-for-byte; `--content-only` writes just the decoded bytes (drops the evidence — used with a warning). A `recovery_manifest.json` stamps every entry (source, cluster, confidence, verdict, sizes).
+**`export deleted` writes, per entry, by default:** the raw **`.row`** (the recovered directory-entry record, verbatim — chain-of-custody evidence) and, for a file whose inline `$DATA` decodes, the **`.recovered`** file (the full reconstructed content). With **`--carve`**, an **extent-backed** entry also gets a **`.carved`** file — reassembled from the extent map held inline in the record (validated byte-exact on a known live extent-backed file; **best-effort** for deleted files because the clusters may have been reallocated, and sparse files short-read — both flagged in the manifest). The distinct `.recovered`/`.carved` extensions mark carved remnants, never verbatim live copies. Files never clobber — a collision auto-renames to `.dup1`/`.dup2`. `--rows-only` reproduces the historical raw-row-only output byte-for-byte; `--content-only` writes just the decoded bytes (drops the evidence — used with a warning). A `recovery_manifest.json` stamps every entry (source, cluster, confidence, verdict, sizes).
 
 > Not yet implemented: **whole-disk signature carving** (scan every cluster for file magics) would recover the `metadata only` cases where even the extent map is gone.
 
-```
+```sh
 forefst.py disk.raw export file /dir/report.docx -o out.docx     # one file, saved
 forefst.py disk.raw export ads "notes.txt:hidden"                # one ADS to the screen (add -o to save)
 forefst.py disk.raw export reparse --json -o reparse.json        # the reparse inventory as JSON (omit --json for text)
 forefst.py disk.raw export snapshots                             # every snapshot -> auto-timestamped folder
-forefst.py disk.raw export resident-all ./resident/              # bulk-carve small resident files
+forefst.py disk.raw export resident-all ./resident/              # bulk-carve every file whose bytes are inline
 forefst.py disk.raw export deleted ./rec/ --carve                # deleted rows: .row + .recovered + .carved + manifest
 forefst.py disk.raw export recyclebin ./recovered/              # recover the recycle-bin payloads
 forefst.py disk.raw export metadata -o ./bundle/                 # metadata bundle (= the old `export`)
@@ -452,15 +461,15 @@ forefst.py disk.raw export metadata -o ./bundle/                 # metadata bund
 
 ### `dataruns` — file data extents / data-runs
 
-Maps non-resident files to their on-disk extents. Default lists extent-backed files; `-v` adds resident/no-extent files and every decoded run (fvcn/lcn/length).
+Maps extent-backed files to their on-disk extents. Default lists extent-backed files; `-v` adds inline and no-extent files and every decoded run (fvcn/lcn/length).
 
 | Option | Description |
 |--------|-------------|
-| `-v, --verbose` | include resident/no-extent files and every decoded run |
+| `-v, --verbose` | include inline and no-extent files, and every decoded run |
 | `--oid O` | start at object O (default 0x600) |
 | `--depth N` | max recursion depth (default: full) |
 
-```
+```sh
 forefst.py disk.raw dataruns                           # map extent-backed files
 forefst.py disk.raw dataruns -v --depth 5              # full per-file run dump
 forefst.py disk.raw dataruns --oid 0x705 -v            # scope to one subtree
@@ -470,50 +479,70 @@ forefst.py disk.raw dataruns --oid 0x705 -v            # scope to one subtree
 
 ## CSV Output Fields
 
-The `files` CSV has **40 columns**, one row per file/directory, in this order (matching `CSV_COLUMNS` in `forefst.py`):
+The `files` CSV has **41 columns**, one row per file/directory, in this order (matching `CSV_COLUMNS` in `forefst.py`):
+
+> **These 41 header names are frozen for the whole 1.10 line.** Every header is a plain identifier — no
+> slash, space or bracket — so a consumer can key on it (`df["TimestompFlags"]`, a Timeline Explorer
+> column filter). **No header will be renamed, added, removed or reordered in any 1.10.x release**, so a
+> script written against this table stays correct for the line.
+>
+> Coming from **v1.9**, exactly one name changed: its `OID` and `FileRef` columns are now the single
+> `ObjectRef`. `RecordPlacement` and `DataResidency` are new. Every other v1.9 name is unchanged,
+> `HomeOID` and `TimestompFlags` included. The `--json` output is unaffected and always has been — it
+> uses its own snake_case keys (`id`, `oid`, `file_ref`, …), not these names.
 
 | # | Column | Description |
 |---|--------|-------------|
-| 1 | OID | own Object Identifier — a directory/object shows its OID; a **file emits blank** (files have no own OID) |
-| 2 | FileName | file or directory name |
-| 3 | FullPath | full path from root (ParentPath + FileName) |
-| 4 | FileSize | logical file size in bytes |
-| 5 | Extension | file extension (lowercase) |
-| 6 | ParentPath | path of the directory this **name currently lives in** |
-| 7 | ParentOID | OID of that current parent (differs from HomeOID after a move/hard-link) |
-| 8 | Created | $SI creation timestamp |
-| 9 | Modified | $SI modification timestamp |
-| 10 | Changed | $SI metadata-change timestamp (MFT-equivalent) |
-| 11 | Accessed | $SI access timestamp |
-| 12 | FileRef | the stable 128-bit file reference `HomeOID:FileID` (== the USN `FileReferenceNumber`) — populated for **resident files too** |
-| 13 | CreationDir | resolved path of HomeOID (the directory the file was **created** in) |
-| 14 | HomeOID | the **creation** directory's OID (frozen at create — unchanged by move/rename) |
-| 15 | FileID | the per-directory child ordinal (low 64 bits) — monotonic, never re-used after deletion |
-| 16 | USN | Update Sequence Number (LastUsn) |
-| 17 | FileAttributes | decoded Windows file-attribute flags |
-| 18 | SecurityId | ReFS security-descriptor ID |
-| 19 | OwnerSid | owner: friendly name + SID (e.g. `BUILTIN\Administrators (S-1-5-32-544)`) |
-| 20 | GroupSid | group: friendly name + SID (from the security descriptor) |
-| 21 | DACLSummary | compact per-descriptor ACE list (`N ACE(s): ALLOWED:Owner:FULL_CONTROL \| …`); the full DACL is in `security` |
-| 22 | HasADS | alternate data stream present |
-| 23 | ADSNames | names of detected ADS |
-| 24 | IsResident | `True` if content is stored inline in the B+-tree |
-| 25 | IsDirectory | `True` if the entry is a directory |
-| 26 | IsEncrypted | EFS encryption flag |
-| 27 | IsCompressed | compression flag |
-| 28 | HasIntegrity | integrity-stream flag |
-| 29 | HasEA | Extended Attributes present (correct for non-resident files too) |
-| 30 | HardLinkCount | number of names sharing the file's content (non-resident files) |
-| 31 | HardLinkNames | `;`-joined names sharing the content |
-| 32 | SnapshotCount | number of stream snapshots |
-| 33 | SnapshotNames | `;`-joined snapshot version labels (e.g. `v3;v2;v1`) |
-| 34 | ReparseTag | `IO_REPARSE_TAG_* (0xTAG)` for reparse points |
-| 35 | ReparseTarget | symlink/junction target |
-| 36 | IsSparse | `FILE_ATTRIBUTE_SPARSE_FILE` (0x200) set — corroborated by AllocatedSize < FileSize |
-| 37 | AllocatedSize | on-disk allocated size (blank when unresolved) |
-| 38 | InternalFlags | `$SI` internal flags (e.g. `DeleteDisposition`); blank unless a confidently-named bit is set |
-| 39 | IsMoved | `True` when the file currently sits **outside its creation directory** (HomeOID ≠ ParentOID, single name) — a genuine move (always a non-resident file; blank for hard-links and resident files) |
-| 40 | TimestompFlags | timestomp heuristic flags (populated with `--timestomp`) |
+| 1 | ObjectRef | the object's identity — a **directory** shows its own OID, a **file** its FileRef `HomeOID:FileID` (the USN `FileReferenceNumber`). Exactly one of the two applies, so they share one column |
+| 2 | FullPath | full path from root (ParentPath + FileName) |
+| 3 | FileName | file or directory name |
+| 4 | Extension | file extension (lowercase) |
+| 5 | FileSize | logical file size in bytes |
+| 6 | Created | $SI creation timestamp |
+| 7 | Modified | $SI modification timestamp |
+| 8 | Changed | $SI metadata-change timestamp (MFT-equivalent) |
+| 9 | Accessed | $SI access timestamp |
+| 10 | ParentPath | path of the directory this **name currently lives in** |
+| 11 | ParentOID | OID of that current parent (differs from CreationDirOID after a move/hard-link) |
+| 12 | CreationDir | resolved path of CreationDirOID (the directory the file was **created** in); the volume root reads `.` |
+| 13 | HomeOID | OID of the directory the file was **created in** — frozen at creation, unchanged by move or rename (older spelling: `CreationDirOID`). Its resolved path is column 12, `CreationDir`. Differs from `ParentOID` (where the file is **now**) exactly when the file has been moved |
+| 14 | FileID | the per-directory child ordinal (low 64 bits) — monotonic, never re-used after deletion |
+| 15 | USN | Update Sequence Number (LastUsn) |
+| 16 | FileAttributes | decoded Windows file-attribute flags |
+| 17 | SecurityId | ReFS security-descriptor ID |
+| 18 | OwnerSid | owner: friendly name + SID (e.g. `BUILTIN\Administrators (S-1-5-32-544)`) |
+| 19 | GroupSid | group: friendly name + SID (from the security descriptor) |
+| 20 | DACLSummary | compact per-descriptor ACE list (`N ACE(s): ALLOWED:Owner:FULL_CONTROL \| …`); the full DACL is in `security` |
+| 21 | HasADS | alternate data stream present |
+| 22 | ADSNames | names of detected ADS |
+| 23 | RecordPlacement | `embedded` when the file's record sits inside its name row, `split` when it lives in its own type-0x40 backing record. **A move or a hard link forces the split** — and moves no data. Blank for directories |
+| 24 | DataResidency | where the current `$DATA` bytes actually are: `inline` (in the record), `extents` (on disk), `snapshot-shared` (the live stream owns no allocation; its bytes are the latest snapshot's, and `extract` still recovers them) or `sparse` (owns no allocation and has no snapshot — nothing was ever written). Blank for directories |
+| 25 | IsResident | **Deprecated alias**, kept for one release: `True` exactly when `DataResidency` is `inline`. Prefer `DataResidency`, which distinguishes the four cases this boolean collapses |
+| 26 | IsDirectory | `True` if the entry is a directory |
+| 27 | IsEncrypted | EFS encryption flag |
+| 28 | IsCompressed | compression flag |
+| 29 | HasIntegrity | integrity-stream flag |
+| 30 | HasEA | Extended Attributes present (correct for extent-backed files too) |
+| 31 | HardLinkCount | number of names resolving to this file — `1` for an ordinary file, higher when hard-linked. Blank for directories (not applicable) |
+| 32 | HardLinkNames | `;`-joined names sharing the content |
+| 33 | SnapshotCount | number of stream snapshots |
+| 34 | SnapshotNames | `;`-joined snapshot version labels (e.g. `v3;v2;v1`) |
+| 35 | ReparseTag | `IO_REPARSE_TAG_* (0xTAG)` for reparse points |
+| 36 | ReparseTarget | symlink/junction target |
+| 37 | IsSparse | `FILE_ATTRIBUTE_SPARSE_FILE` (0x200) set — corroborated by AllocatedSize < FileSize. Distinct from `DataResidency = sparse`, which is derived from the `$DATA` descriptor (extent form owning no allocation and no snapshot) rather than from the attribute bit. The two are independent readings and agree on the corpus |
+| 38 | AllocatedSize | on-disk allocated size (blank when unresolved) |
+| 39 | InternalFlags | `$SI` internal flags (e.g. `DeleteDisposition`); blank unless a confidently-named bit is set |
+| 40 | IsMoved | `True` when the file currently sits **outside its creation directory** (CreationDirOID ≠ ParentOID with a single name) — a genuine move, as distinct from a hard link into another directory. A moved file may still report `IsResident True`: the move relocates the *record*, not the *bytes* |
+| 41 | TimestompFlags | timestamp-anomaly flags as `TIER:SIGNAL` — **HIGH** is authoritative (a hard-link sibling keeps the true birth); MEDIUM/LOW are $SI heuristics that also fire on timestamp-preserving copies. Computed by default; `--no-timestomp` omits it |
+
+> **Column changes in this release** (for saved Timeline Explorer / spreadsheet layouts): two columns are
+> **added** after `ADSNames` — `RecordPlacement` (23) and `DataResidency` (24) — so every column from
+> `IsResident` onward shifts right by two. `IsResident` keeps its name and position relative to the others
+> but changes meaning: it is now exactly `DataResidency == inline`. It previously ORed the record-placement
+> flag with an inline-data flag, so a 0-byte file whose record is in the *extent* form read `True`; 1,098 such
+> rows across the corpus now read `False`, as do the 9 rows whose residency is `snapshot-shared` or `sparse`.
+> No file that holds its bytes inline changed. `--filter resident` is now `--filter inline`; the old spelling
+> still works and both select on `DataResidency == inline`.
 
 > `FileRef` = `HomeOID:FileID` is the object's stable identity — it is the USN `FileReferenceNumber`, so the
 > `files` and `usn` outputs join directly on it. `HomeOID` (the creation directory) is frozen at create time,
@@ -533,7 +562,7 @@ field-based and EA-safe — `wsl` is detected via the reparse tag, not the EA-de
 
 Sleuthkit/mactime compatible:
 
-```
+```text
 MD5|name|inode|mode_as_string|UID|GID|size|atime|mtime|ctime|crtime
 ```
 
@@ -544,7 +573,7 @@ MD5|name|inode|mode_as_string|UID|GID|size|atime|mtime|ctime|crtime
 Deleted files are recovered by the dedicated [`deleted`](#deleted--recover-deleted-files) command (the `files` and `search` listings cover the **live** tree only). It has two modes:
 
 - **`deleted`** — recovery (default): Trash Table (OID `0x0D`) + checkpoint diff + the live-page B+-tree node-slack scan. Quick.
-- **`deleted --full`** — the complete pass: also scans every cluster of the volume for orphan pages (the freed pages of deleted objects) and carves non-resident content. Slow (~1 min per 100 GB) but it reaches the older deletions the live tree no longer points at.
+- **`deleted --full`** — the complete pass: also scans every cluster of the volume for orphan pages (the freed pages of deleted objects) and carves extent-backed content. Slow (~1 min per 100 GB) but it reaches the older deletions the live tree no longer points at.
 
 Each remnant is classified by **file identity** — a remnant is *deleted* only when no live file shares its
 **name and creation-time** anywhere on the volume; otherwise it is a still-present CoW prior version, or a neutral
@@ -552,7 +581,7 @@ Each remnant is classified by **file identity** — a remnant is *deleted* only 
 with every location recorded in the log. Each entry carries a **recoverability verdict** (whether the content is
 present in the remnant and decodes). Every run writes a **recovery log** (audit trail; path via `--log`).
 `deleted` pairs with `export deleted DIR` to write each recovered `.row` evidence remnant + the decoded
-`.recovered` content (`--carve` also reconstructs non-resident files best-effort). `deleted --orphans` adds a
+`.recovered` content (`--carve` also reconstructs extent-backed files best-effort). `deleted --orphans` adds a
 low-confidence tier for Object-Table objects unlinked from the tree.
 
 ## CoW Version Recovery
@@ -574,8 +603,8 @@ low-confidence tier for Object-Table objects unlinked from the tree.
 | `le16/le32/le64()` | `(data, offset)` | little-endian integer reads |
 | `find_refs_partition()` | `(path)` | partition start offset from GPT |
 | `filetime_to_iso()` | `(ft)` | Windows FILETIME → ISO 8601 |
-| `parse_resident_btree_rows()` | `(value_data)` | embedded sub-records from a resident value |
-| `NON_RESIDENT_MAX_VALUE` | `84` | threshold: `value_length > 84` ⇒ resident entry |
+| `parse_resident_btree_rows()` | `(value_data)` | embedded sub-records from an embedded (kf 0x01) value |
+| `NON_RESIDENT_MAX_VALUE` | `84` | placement threshold: `value_length > 84` ⇒ the record is embedded in the name row |
 
 ### The bootstrap() call
 
@@ -590,8 +619,8 @@ try:
     for key_data, value_data in walk_bplus(f, ps, cs, tr, obj_map[0x600]):
         if le16(key_data, 0) == 0x30:                       # filename entry
             name = key_data[4:].decode("utf-16-le").rstrip("\x00")
-            # value+0x38 is the file size for NON-resident entries (value_len <= 84);
-            # resident files store their size inline — read it with parse_resident_btree_rows().
+            # value+0x38 is the file size for index entries (value_len <= 84); an embedded
+            # record carries its size inline — read it with parse_resident_btree_rows().
             if len(value_data) <= NON_RESIDENT_MAX_VALUE:
                 print(f"{name}: {le64(value_data, 0x38)} bytes")
 finally:

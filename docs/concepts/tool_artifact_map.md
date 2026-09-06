@@ -38,8 +38,8 @@ timeline entry looks wrong, drop to the inspector on that object and read the by
 | Per-file MACB + attributes (timeline) | `forefst.py IMG files -o out.csv` · `forefst.py IMG files --body -o t.body` · `… --json` | Resident type-0x30 dir entry + child $SI (Created / Modified / Changed / Accessed at $SI 0x00–0x18) | [directory entries](../structures/directory_entries.md), [$STANDARD_INFORMATION](../attributes/STANDARD_INFORMATION.md) |
 | Single object's full attribute dump | `forefst.py IMG details 0x705` · `refsanalysis.py IMG attributes` | All embedded sub-records of one OID (markers 0x80000001 / 0x80000002) | [attributes](attributes.md), [Object Table](../structures/object_table.md) |
 | Search for a file by name | `forefst.py IMG search "*.docx"` · `… search rx --regex` | Type-0x30 filename keys (full long name; ReFS has no 8.3 entry) | [directory entries](../structures/directory_entries.md) |
-| Timestomp detection | `forefst.py IMG timestomp` · `forefst.py IMG files --timestomp` (per-row `TimestompFlags`) | $SI MACB anomalies (parent-0x30 vs child-0x10), USN `BASIC_INFO_CHANGE` cross-check | [timestomp detection](timestomp_detection.md), [$STANDARD_INFORMATION](../attributes/STANDARD_INFORMATION.md) |
-| File content extraction | `forefst.py IMG extract NAME > out` · `… extract "NAME:stream"` | Resident value (key flags 0x01) / non-resident type-0x40 extents; a small ADS (< 2 KB) is inline, a large ADS (≥ 2 KB) is extent-backed (E61) | [resident storage](resident_storage.md), [extent descriptors](../structures/extent_descriptors.md) |
+| Timestomp detection | `forefst.py IMG timestomp` · `forefst.py IMG files` (per-row `TimestompFlags`, on by default) | $SI MACB anomalies (parent-0x30 vs child-0x10), USN `BASIC_INFO_CHANGE` cross-check | [timestomp detection](timestomp_detection.md), [$STANDARD_INFORMATION](../attributes/STANDARD_INFORMATION.md) |
+| File content extraction | `forefst.py IMG extract NAME > out` · `… extract "NAME:stream"` | Resident value (key flags 0x01) / non-resident type-0x40 extents; on format 3.11+ a small ADS (< 2 KiB) is inline and a large one (≥ 2 KiB) is extent-backed (E61) | [resident storage](resident_storage.md), [extent descriptors](../structures/extent_descriptors.md) |
 | Data-extent (datarun) mapping | `forefst.py IMG dataruns -v` | 24-byte extent descriptors (VLCN @ 0x00, VCN @ 0x0C, runlen @ 0x14) | [extent descriptors](../structures/extent_descriptors.md), [virtual addressing](virtual_addressing.md) |
 | Security descriptor / owner SID | `forefst.py IMG security --files` · `forefst.py IMG files` (OwnerSid column) | OID 0x530 security table; SecurityId at $SI 0x28 | [security descriptors](../structures/security_descriptors.md) |
 | Reparse points (symlinks / junctions / WSL) | `forefst.py IMG reparse` · `… reparse --index` · `forefst.py IMG files` (ReparseTarget column) | $REPARSE_POINT data (schema 0x170 / 0x1C0); ReparseTag at $SI 0x54; OID 0x540 index | [reparse points](../structures/reparse_points.md), [$REPARSE_POINT](../attributes/REPARSE_POINT.md) |
@@ -128,8 +128,9 @@ measured); the per-goal backing is:
 - **Timestomp detection** — MD_TS_RA_005, MD_UNSUP_RA_001, FN_LINK_003. No NTFS `$FILE_NAME` cross-check for a
   single-named file (the analog is parent-0x30 vs child-0x10); for a **hard-linked** file, compare the per-name MACB
   across the file's names — a name-scoped stomp leaves siblings at the true birth (the `HARDLINK_MACB_MISMATCH` signal).
-- **File content extraction** — MD_SNAP_RA_005, MD_SNAP_RA_006, MD_SNAP_RA_007. Resident value (key flags 0x01) vs
-  non-resident type-0x40 extents; a small ADS (< 2 KB) is inline, a large ADS (≥ 2 KB) is extent-backed (E61).
+- **File content extraction** — MD_SNAP_RA_005, MD_SNAP_RA_006, MD_SNAP_RA_007. Embedded value (key flags 0x01) vs
+  a split record's type-0x40 extents; on format 3.11+ a small ADS (< 2 KiB) is inline and a large one
+  (≥ 2 KiB) is extent-backed (E61).
 - **Data-extent mapping** — MD_DATA_RA_001, MD_SNAP_RA_003, CT_DRNT_RA_001, CT_DRNT_RA_002. The 24-byte extent entry holds VLCN @ 0x00,
   file VCN @ 0x0C, run length @ 0x14; extents may be stored out of file order (CT_DRNT_RA_002).
 - **Security descriptor / owner SID** — FS_SECD_RA_002, FS_SECD_RA_001, MD_SECT_001. SecurityId at $SI 0x28 resolves directly

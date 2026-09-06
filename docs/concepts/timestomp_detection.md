@@ -56,7 +56,7 @@ A caller using any of these **cannot reach `C`**, and the filesystem updates `C`
 effect of the metadata write it performs. So after a back-dating stomp, B/M/A point into the past while
 `C` is left at the real moment of the operation. The signature is
 
-```
+```text
 C >> max(B, M)
 ```
 
@@ -144,12 +144,12 @@ Two tempting shortcuts do not hold up and should not be treated as primary signa
 The two parts of the detector live in different places for a reason. The lister `forefst.py` defines the
 shared `timestomp_intrinsic_flags()` helper, which computes only the `$SI`-intrinsic signals
 (`CHANGE_LATE`, `PRE_FORMAT`, `CREATE_GT_MODIFY`, `FUTURE`) without touching the journal — invoking the
-lister with `--timestomp` attaches these as a per-row `TimestompFlags` column (CSV) or `timestomp_flags`
+lister attaches these by default as a per-row `TimestompFlags` column (CSV) or `timestomp_flags`
 field (JSON). The full cross-source verdict, which loads the [USN journal](../structures/usn_journal.md)
 and adds the `BASIC_INFO_CHANGE` and create-mismatch signals, lives in
 `forefst.py <image> timestomp`, which imports the same helper so the intrinsic logic is identical:
 
-```
+```sh
 forefst.py <image> timestomp                # flagged files, ranked by confidence
 forefst.py <image> timestomp --min HIGH     # only high-confidence suspects
 forefst.py <image> timestomp --json         # machine-readable

@@ -9,7 +9,7 @@ ReFS special-attribute inventory — win11refs2tsnapshots.raw (ReFS 3.14)
   reparse            3   symlinks / junctions / WSL links
   wsl                0   WSL / Linux-metadata links
   hardlink           2   multi-linked files (link groups)
-  sparse             0   allocated < logical size
+  sparse             0   FILE_ATTRIBUTE_SPARSE_FILE (0x200)
   encrypted          0   EFS-encrypted ($EFS)
   compressed         0   WOF / compressed
   integrity          0   integrity checksum stream

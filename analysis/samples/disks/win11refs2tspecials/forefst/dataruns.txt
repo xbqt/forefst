@@ -10,9 +10,9 @@ ReFS File Data Extent Analysis
   Start OID:    0x600
 
   Summary:
-    Total files analyzed:   1057
-    Resident (inline):      732
-    Non-resident (extents): 325
+    Total files analyzed:   1333
+    Resident (inline):      1010
+    Non-resident (extents): 323
     With decoded extents:   284
 
 ==============================================================================
@@ -154,7 +154,7 @@ File Data Locations
             size=414625, attrs=Archive, extents=2, clusters=102
             created=2026-05-16 16:41:26
   EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_hardlink_audit_219848.cfg
-            size=239973, attrs=Archive, extents=2, clusters=24
+            size=97673, attrs=Archive, extents=2, clusters=24
             created=2026-05-16 16:41:26
   EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_report_audit_396522.txt
             size=241654, attrs=Archive, extents=4, clusters=59
@@ -184,13 +184,13 @@ File Data Locations
             size=240655, attrs=Archive, extents=2, clusters=59
             created=2026-05-16 16:35:12
   EXTENT    testspecials/hardlink_mike_576693.csv
-            size=293302, attrs=Archive, extents=2, clusters=118
+            size=479429, attrs=Archive, extents=2, clusters=118
             created=2022-08-11 16:34:51
   EXTENT    testspecials/hardlink_output_565061.txt
             size=6791, attrs=Archive, extents=2, clusters=2
             created=2026-05-16 16:36:00
   EXTENT    testspecials/hardlink_uniform_425955.csv
-            size=493090, attrs=Archive, extents=2, clusters=118
+            size=479429, attrs=Archive, extents=2, clusters=118
             created=2024-02-23 16:34:40
   EXTENT    testspecials/hardlink_yankee_419979.dat
             size=391674, attrs=Archive, extents=4, clusters=96
@@ -226,7 +226,7 @@ File Data Locations
             size=150307, attrs=Archive, extents=2, clusters=37
             created=2026-05-16 16:34:30
   EXTENT    testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/config_gamma_561281.ini
-            size=133862, attrs=Archive, extents=2, clusters=100
+            size=408146, attrs=Archive, extents=2, clusters=100
             created=2026-05-16 16:34:36
   EXTENT    testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/foxtrot_data_307933.txt
             size=376982, attrs=Archive, extents=3, clusters=93
@@ -259,7 +259,7 @@ File Data Locations
             size=502037, attrs=Archive, extents=6, clusters=123
             created=2025-08-10 16:35:01
   EXTENT    testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_data_601823.txt
-            size=452557, attrs=Archive, extents=6, clusters=123
+            size=502037, attrs=Archive, extents=6, clusters=123
             created=2025-08-10 16:35:01
   EXTENT    testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_output_296985.csv
             size=479429, attrs=Archive, extents=2, clusters=118
@@ -352,10 +352,10 @@ File Data Locations
             size=218785, attrs=Archive, extents=2, clusters=54
             created=2026-05-16 16:34:29
   EXTENT    testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416/papa_victor_867137.csv
-            size=293302, attrs=Archive, extents=2, clusters=118
+            size=479429, attrs=Archive, extents=2, clusters=118
             created=2022-05-05 16:35:30
   EXTENT    testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416/temp_log_106377.cfg
-            size=374609, attrs=Archive, extents=5, clusters=95
+            size=388115, attrs=Archive, extents=5, clusters=95
             created=2026-05-16 16:34:31
   EXTENT    testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416/trace_archive_590985.json
             size=258016, attrs=Archive, extents=6, clusters=63
@@ -370,7 +370,7 @@ File Data Locations
             size=240062, attrs=Archive, extents=4, clusters=59
             created=2026-05-16 16:34:27
   EXTENT    testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/hardlink_hotel_423014.csv
-            size=293302, attrs=Archive, extents=2, clusters=118
+            size=479429, attrs=Archive, extents=2, clusters=118
             created=2022-05-05 16:35:30
   EXTENT    testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/hardlink_record_894725.json
             size=258016, attrs=Archive, extents=6, clusters=63
@@ -391,7 +391,7 @@ File Data Locations
             size=312544, attrs=Archive, extents=2, clusters=77
             created=2025-06-25 16:34:28
   EXTENT    testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_uniform_329376/foxtrot_oscar_943219.log
-            size=107036, attrs=Archive, extents=4, clusters=42
+            size=168183, attrs=Archive, extents=4, clusters=42
             created=2026-05-16 16:34:51
   EXTENT    testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_uniform_329376/hardlink_november_543825.ini
             size=60201, attrs=Archive, extents=2, clusters=15
@@ -445,7 +445,7 @@ File Data Locations
             size=240062, attrs=Archive, extents=4, clusters=59
             created=2026-05-16 16:34:27
   EXTENT    testspecials/dir_november_947335/hardlink_log_446439.tmp
-            size=216069, attrs=Archive, extents=4, clusters=59
+            size=240062, attrs=Archive, extents=4, clusters=59
             created=2026-05-16 16:34:27
   EXTENT    testspecials/dir_november_947335/hardlink_oscar_269153.ini
             size=60201, attrs=Archive, extents=2, clusters=15
@@ -610,7 +610,7 @@ File Data Locations
             size=282007, attrs=Archive, extents=3, clusters=69
             created=2021-11-16 16:37:57
   EXTENT    testspecials2/november_papa_479034.log
-            size=470303, attrs=Archive, extents=6, clusters=123
+            size=503630, attrs=Archive, extents=6, clusters=123
             created=2026-05-16 16:37:43
   EXTENT    testspecials2/quebec_record_289611.log
             size=185287, attrs=Archive, extents=2, clusters=46

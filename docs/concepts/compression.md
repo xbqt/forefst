@@ -101,7 +101,7 @@ redo handler requires at least 6 and optionally reads the 7th (the flags field).
 The driver supports three live compression formats behind a vtable. `CmsCompression::InitializeLibrary`
 builds a dispatch table indexed by format value (index 0 is unused):
 
-```
+```text
 SupportedCompressionFormats[1] = &CmsCompressionLZ4::vftable
 SupportedCompressionFormats[2] = &CmsCompressionZSTD::vftable
 SupportedCompressionFormats[3] = &CmsCompressionLZ4QAT::vftable
@@ -187,7 +187,7 @@ beyond the first unit.
 
 The read path threads the policy, the container flag, and the header together:
 
-```
+```text
 RefsDecompressWorker
  -> MsReadCompressedContainerRange
  -> CmsVolumeContainer::ReadCompressedContainerRange

@@ -21,7 +21,7 @@ activity.
 | 0x10 | 8 | Modification stamp (u64) | Low byte varies (e.g. 0xE4 / 0xF0) — NOT always 0x01 |
 | 0x18 | 4 | **TotalRefCount (u32)** | **= Σ(array entry & 0x3FFF)**; upper 16 bits always 0 |
 | 0x1C | 2,048 | Per-cluster refcount array (u16[1024]) | Spans **0x1C..0x81B**; one entry per cluster (4 KiB); bits 0–13 = refcount, bits 14–15 = flags |
-| 0x81C | 4 | Trailing | Rounds the value to 0x820 |
+| 0x81C | 4 | Unknown (4 bytes) | Not padding: zero on most rows, structured content on the rest. Non-zero on 159 of 1,441 rows across 8 volumes, all of them format 3.14, in 15 distinct values whose **high half is always `0xFFFF`**. Meaning undetermined |
 
 The normal value is **2,080 bytes (0x820)**: a 28-byte header (0x00..0x1B, including
 **TotalRefCount@0x18**) + the **u16[1024] array @ 0x1C..0x81B** (one entry per cluster) + a 4-byte

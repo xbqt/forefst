@@ -42,8 +42,10 @@ A handful of ideas explain most of what ReFS writes to disk:
   Almost every address on the volume is virtual and resolved through it — which is also what lets ReFS
   relocate and tier data underneath a file. See [Virtual Addressing](virtual_addressing.md).
 - **Resident vs non-resident storage.** A small stream sits *inline* in its B+-tree row (resident); a
-  larger one lives in on-disk **extents** (non-resident). The resident threshold is far larger than NTFS's,
-  so whole files can hide inside a metadata row. See [Resident Storage](resident_storage.md).
+  larger one lives in on-disk **extents**. The inline ceiling is **2 KiB** on modern volumes (format 3.11
+  and later); below it, a whole small file sits inside a metadata row where a cluster carver never looks.
+  On older formats main file data is never inline at all — there, only an *alternate data stream* can hide
+  in a row, up to a hard 128 KiB. See [Resident Storage](resident_storage.md).
 - **Checksums, integrity, and self-healing.** Every metadata page carries a checksum, and optional
   *integrity streams* checksum file data too. Core metadata is kept in **failover pairs**, so a mismatch
   is caught at mount and the good copy heals the bad one. See

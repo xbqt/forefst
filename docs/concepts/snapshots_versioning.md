@@ -36,7 +36,7 @@ stream size at snapshot time at `val[0x20]` (u64), and the snapshot creation FIL
 offset `val[0x4c]`. That `data_sub_id` is matched against `$DATA key[16:20]` to find the frozen extent
 set — this is the join that drives the whole recovery.
 
-```
+```text
 resident type-0x30 row (the file)
  ├─ $SNAPSHOT sub-record (0xB0, marker 0x80000002, val[0x10]=2)
  │   val[0x44] = data_sub_id ──────────────┐  (0x1001, 0x1002, …)
@@ -174,6 +174,8 @@ classification.
 validated MD5-identical to an independent export.
 
 ## Cross-references
+
+- [Driver Transitions](driver_transitions.md) — taking a stream snapshot converts an inline stream to extents
 
 - [Copy-on-Write](copy_on_write.md) — the update model that keeps snapshot extents intact; the canonical
   recovery-chain walk-through and the refcount-survival categories

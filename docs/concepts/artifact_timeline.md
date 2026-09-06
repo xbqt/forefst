@@ -36,7 +36,7 @@ and *stronger* than NTFS's `$SI`-vs-`$FN`, where hard links cannot diverge becau
 The remaining four sources are not per-file metadata at all; they are **volume-level event and
 clock artifacts**, each with a different relationship to wall-clock time:
 
-```
+```text
  ┌──────────────────────────────────────────────────────────────┐
  │ $VOLUME_INFORMATION +0x90 → volume creation (hard lower bound)│
  ├──────────────────────────────────────────────────────────────┤
@@ -220,7 +220,7 @@ signal/tier model and its validation live on the
 
 | Need | Command |
 |------|---------|
-| Per-file MACB + intrinsic timestomp flags | `forefst.py <image> ... --timestomp` (adds `TimestompFlags` / `timestomp_flags`) |
+| Per-file MACB + intrinsic timestomp flags | `forefst.py <image> files` (`TimestompFlags` / `timestomp_flags`, on by default) |
 | Full cross-source timestomp verdict (adds USN) | `forefst.py <image> timestomp [--min HIGH] [--json] [--csv out.csv]` |
 | USN event log (the history) | `forefst.py <image> usn [--csv] [--json] [--stats] [--info]` |
 | MLog transaction times | `forefst.py <image> mlog --parse` / `--csv FILE` (seq, timestamp, action, path, oid) |

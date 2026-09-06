@@ -117,9 +117,26 @@ The redundancy is not just resilience — each of the three policies leaves a re
 The **Redundancy / Backup Copies** section verifies all three structures: the backup boot sector (0x16
 self-checksum plus a byte-compare to the primary, flagging a version mismatch honestly as "upgrade or
 tampering"), the checkpoint pair (signature, virtual clock, and valid roots, labelling the copies
-PRIMARY/backup by clock), and the superblock copies (located and signature-checked). Failover — actually
-*using* a backup when the primary is corrupt, the way the driver does — is documented but not yet
-implemented in the tool.
+PRIMARY/backup by clock), and the superblock copies (located and self-checksum-verified).
+
+## Repairing a corrupt copy — `refsanalysis bootedit repair`
+
+Because the redundancy is real and each copy's integrity is independently verifiable, a corrupt copy can be
+**rebuilt from a healthy sibling** — the failover the driver performs, done offline. `refsanalysis.py <image>
+bootedit repair` scans all three structures' copies (the same scan `integrity` uses) and restores any copy that
+fails its checksum while a sibling still passes:
+
+- **Boot sector.** The two VBR copies are byte-identical, so a bad one is simply overwritten with the good one.
+- **Superblock.** The copies share one payload, but each stores its **own self-LCN** (in the page header at
+  SUPB+0x20, and again at the start of the self-descriptor at +0xD0) and its **own self-checksum**. So the repair
+  copies the good sibling's block to the bad location, rewrites both self-LCN fields to the target LCN, and
+  recomputes the self-checksum — reproducing the original block **byte-for-byte**.
+- **Checkpoint.** The two slots are alternating *states*, not copies (different virtual clocks), so a corrupt
+  slot cannot be reconstructed from the other. The tool reports it — the volume is still recoverable from the
+  valid slot — but does not force a lossy rollback.
+
+By default the repair writes a **repaired sparse copy** and never touches the original; `--inplace` edits the
+image directly (after a confirmation), and `--dry-run` previews the plan without writing.
 
 ## Cross-references
 

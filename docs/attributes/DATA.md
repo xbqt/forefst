@@ -1,8 +1,20 @@
 # $DATA
 
-`$DATA` is a file's **default data stream** (embedded type 0x80, schema 0x180). It is stored either
-**resident** (content inline in the B+-tree row) or **non-resident** (extent references to data
-clusters). On disk it appears as embedded sub-records inside the type-0x10 / type-0x30 rows: one
+`$DATA` is a file's **default data stream** (embedded type 0x80, schema 0x180). Its bytes are stored either
+**inline** in the B+-tree row or in on-disk **extents**, and *which* is a property of the **volume format**:
+
+| format | main `$DATA` |
+|---|---|
+| **≤ 3.10** | **never inline.** Every file's data is in extents — a 5-byte file still holds a whole cluster |
+| **≥ 3.11** | inline while the stream is under **2 KiB** (`0x800`), extents at or above it |
+
+Two further states exist on ≥ 3.11 and are neither of the above: a live stream whose descriptor is the
+extent form but which owns **no allocation** (`disk_alloc` at `+0x48` is 0). If a snapshot sub-record
+exists for the same stream, its bytes are the snapshot's — **snapshot-shared**, and still recoverable; if
+none does, nothing was ever written — a **sparse** file. Both were previously indistinguishable.
+
+Where the *record* sits (embedded in the name row, or split into a type-0x40 backing) is a **separate
+question** — see [Resident vs Non-Resident Storage](../concepts/resident_storage.md). On disk it appears as embedded sub-records inside the type-0x10 / type-0x30 rows: one
 **single-instance (SI)** entry carrying the stream summary and any inline content, plus one or more
 **multi-instance (MI)** entries carrying the extent / allocation metadata.
 

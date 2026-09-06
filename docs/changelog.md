@@ -1,5 +1,123 @@
 # Changelog
 
+## v1.10.0 — 2026-09-05 — one word meant two things: record placement and data residency are now separate
+
+**Everything here is relative to v1.9.0.** One word — *resident* — was doing two jobs. It named **where a
+file's record sits** (inside its directory-entry row, or split out into a backing record) and, separately,
+**where the file's bytes are** (inline in that record, or out in extents on disk). The two are independent:
+moving or hard-linking a file forces the record to be split out and moves **no data at all**. Because a
+single `IsResident` column collapsed both, files were reported wrong and some could not be extracted.
+
+### The listing now answers both questions
+
+- **Two columns replace one.** `RecordPlacement` says `embedded` or `split`; `DataResidency` says `inline`,
+  `extents`, `snapshot-shared` or `sparse`. `IsResident` stays for one release as a deprecated alias — it is
+  `True` exactly when `DataResidency` is `inline` — so existing scripts keep working while they move over.
+  The CSV goes from 40 to 41 columns: the two new ones land after the ADS columns, and the separate `OID`
+  and `FileRef` columns merge into one (below), so everything after the ADS columns shifts right by two.
+- **Exactly one header name changes for you: `OID` and `FileRef` become `ObjectRef`.** Every other v1.9
+  header keeps its name, including `HomeOID` and `TimestompFlags`. (Both were briefly mangled during
+  development into `CreationDirOID (HomeOID)` and `TimestompFlags (informational)`; neither was ever
+  released, and both are back to the names v1.9 published.) All 41 headers are plain identifiers with no
+  slash, space or bracket, so a consumer can key on them — and they are **frozen for the 1.10 line**.
+  `HomeOID` is the directory the file was **created** in; `CreationDir` is that same directory's path.
+- **`--filter inline`** replaces `--filter resident`, which still works for one release.
+- **`-o FILE` keeps working on `files` and `summary`.** It had been refused outright, on the reasoning that
+  the same flag produced CSV, JSON or a bodyfile depending on other flags. The reasoning was sound and the
+  correction was not: it broke the README's own first example and four more in the tool page, against the
+  promise above that existing spellings keep working. `-o` is accepted as the selected format's
+  destination (CSV by default), with a deprecation note pointing at `--csv FILE`, and it warns instead of
+  silently losing the value if you also name a destination on the format flag.
+- **`search` says which form too.** Its `Res` column was a Yes/No — the same collapse. It now reads
+  `Data` and prints the form itself, using **exactly** the `DataResidency` value set (both read the same
+  function, so the two views cannot drift apart), and its identity column shows a real file reference
+  where it used to print the placeholder `(non-res)`.
+- **A moved file can be `split` and `inline` at once**, and that is now sayable. It is the common case for a
+  small file: **16,191 rows across the corpus** are split records whose bytes are still in the record
+  (14,666 with content plus 1,525 empty ones).
+
+### Files that could not be extracted, or were described wrongly
+
+- **Empty files that had been moved or hard-linked did not exist as far as `extract` was concerned.** A
+  0-byte file whose record had been split out was dropped from the record list entirely, so `extract`
+  answered `file '<name>' not found` for a name that `files` and `details` both listed happily. **772 such
+  rows on 11 volumes.** They now extract, writing nothing, as an empty file should.
+- **Files whose home directory the walk never visited lost their data residency, USN, owner and size.**
+  A split record is found through the directory that owns it; when that directory was not itself walked, the
+  lookup missed and every field the backing record carries was silently left unset — so `files` called the
+  file extent-backed while `extract`, which resolves differently, correctly read it as inline. **548 names on
+  one real Windows volume.** The backing is now fetched on demand from the owning object. The previous join
+  is kept for one release behind `--legacy-link-join`.
+- **Agreement is now exact.** Against an independent byte-level classifier built from the on-disk descriptors,
+  the listing agrees on **every record of every volume tested** — 507,433 records across 79 distinct volumes
+  (523,756 comparisons over the 117 images as measured, before counting byte-identical copies once). It was
+  99.686 % before.
+
+### Three things the tool reported that it should not have
+
+- **`HardLinkCount` was blank for a file with one name** — blank meant "not computed", not "unknown", and it
+  made `files` disagree with `summary`. A file with no backing record provably has exactly one name, so it
+  now reads **1**. Directories stay blank, where the count does not apply.
+- **`deleted` promised a carve it could not honour.** The single-extent fallback accepted a match without
+  checking the cluster number could actually be mapped, and an unmapped number is passed through unchanged —
+  so matches landing 52 GB into a 5 GB image were reported as recoverable data. Mappability is now checked
+  first, and the counts drop to what can really be carved (103 → 96 and 45 → 35 on the two affected volumes).
+- **`CreationDir` was empty for a file created in the volume root**, which read as "unknown". The root is
+  `.` everywhere else in the listing and is now `.` here too.
+
+### Reading the change journal
+
+- **A directory's journal identity is its own object ID**, with file number 0 — verified on 589 directories
+  across 10 volumes, with no counterexample. `OID` and `FileRef` were two columns of which exactly one was
+  ever filled; they are one column, `ObjectRef`, and either kind of object is addressable by it.
+- **The journal is read in journal order.** Records are ordered by their USN, each record's position is
+  checked against the journal's own wrap arithmetic, and the torn record at the wrap point is reported rather
+  than stepped over silently.
+
+### Smaller corrections
+
+- **`extract -o` on a 0-byte file now creates the file.** It printed `0 bytes` and wrote nothing, so a
+  caller who asked for a file got none.
+- **The tool stopped using the word the documentation retired.** `summary` counted files as
+  "resident + non-resident" and `extract`/`details` said the same in five more places; they now say
+  `inline` / `extent-backed` / `snapshot-shared`, matching the columns.
+- **`--no-timestomp`** leaves the column blank rather than removing it — the documented behaviour now
+  matches, and the schema no longer depends on a flag.
+- **The CSV formula hazard is documented.** A filename beginning `=`, `+`, `-` or `@` is a formula to a
+  spreadsheet, and filenames on a suspect volume are attacker-controlled. Output stays byte-faithful by
+  default, the count is reported at the end of a run, and `--csv-safe` — which existed but was
+  undocumented — is now on the tool page with the caveat that it alters the recorded name.
+
+### Documentation and the claim register
+
+- **Reference corrections.** The container-table compression header's marker at `+0xA0` is **not** the
+  constant it was recorded as — it reads `0x07` on a v3.4-format volume and `0x0F` from v3.7 on, measured on
+  every volume in the corpus whose container-table root page is an index root. The `$EFS` decryption-field
+  layout, the block-refcount value's trailing field, and the two-axis storage model are all now carried in
+  the claim register rather than only on a page.
+- **What a metadata page's checksum actually covers is now settled.** Each page reference stores a digest
+  of the page it points at; that digest is taken over the **whole** page — every cluster of it, after the
+  virtual-to-physical translation — with nothing excluded, not even the page's own header. Recomputing it
+  matches the stored value on **34,291 of 34,291** live references across 89 volumes, under both the CRC64
+  and SHA-256 algorithms. That is the count for the row a reader actually uses: an object table can hold more
+  than one row for the same object, an earlier one and a current one, and only the current one is read.
+- **The pages say which axis they mean.** The word *resident* is replaced by `embedded`/`split` for record
+  placement and `inline`/`extents`/`snapshot-shared`/`sparse` for data residency wherever the distinction
+  carries weight, and a check now fails the build if a page reintroduces it.
+- **Every byte offset published in a page's offset table is checked against the claim register**, so a page
+  cannot state an offset that no measurement backs. It found three real gaps, all since closed.
+- **Four reference corrections.** The checkpoint's direct root list at `+0x94` holds **13 `u32` in-page
+  offsets**, not the page references themselves. The VBR's checksum selector records what the volume was
+  *formatted* with, so the authority for the on-disk page-reference format is the **checkpoint's** size
+  field, not the VBR's. Cluster size is `bytes_per_sector × sectors_per_cluster`, both read from the VBR,
+  rather than assuming 512-byte sectors. The Trash Table page now says plainly that the table was **empty
+  on every image measured**, so its key content is inferred from the driver and not observed — and that a
+  file, having no object id, cannot contribute one the way a directory does.
+- **Two new gate checks.** Every command example in the README and the tool pages is now run, and the gate
+  fails if the CLI rejects one — the check that would have caught the `-o` break. And the documentation
+  checker now fails when it scans zero pages instead of reporting green, which is what it did when run
+  from anywhere but the maintainer's own tree.
+
 ## v1.9.0 — 2026-09-03 — file recovery made complete: five ways a file's data was unreachable, all fixed
 
 **Everything here is relative to v1.8.** The headline is recovery correctness: five separate mechanisms could

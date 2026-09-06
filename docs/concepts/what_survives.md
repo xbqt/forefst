@@ -43,7 +43,7 @@ they are the most durable provenance markers ReFS offers, and they drive the ent
 
 What each event does to the on-disk image, in one line apiece:
 
-```
+```text
 event ──► what it does to the on-disk image
 ─────────────────────────────────────────────────────────────────
 delete         reparent to Trash Table (OID 0x0D), dereference pages,

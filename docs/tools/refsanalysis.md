@@ -6,7 +6,7 @@ ReFS **structure and lab** analysis tool — boot sector, superblock, checkpoint
 
 ## Invocation
 
-```
+```sh
 refsanalysis.py <image> <subcommand> [options]
 refsanalysis.py <image>                       # no subcommand → summary
 refsanalysis.py <image> summary++             # extended summary
@@ -34,7 +34,7 @@ subcommand is reachable without leaving refsanalysis — the file lister (`files
 `reparse`/`deleted`/`snapshots`/`integrity`/`export`/`dataruns`). It re-uses forefst's real dispatch (no code
 is duplicated), so the behaviour, options, and output are identical to running `forefst.py` directly.
 
-```
+```sh
 refsanalysis.py disk.raw forefst usn --stats            # forefst's USN activity summary
 refsanalysis.py disk.raw forefst files --filter ea --json   # forefst's file listing (EA-only) as JSON
 refsanalysis.py disk.raw forefst timeline --fast            # forefst's super-timeline
@@ -47,7 +47,7 @@ remains the single implementation of the forensic commands.)
 
 ## Quick Start
 
-```
+```sh
 refsanalysis.py disk.raw summary                       # volume overview
 refsanalysis.py disk.raw summary++ --json              # extended summary, JSON
 refsanalysis.py disk.raw files -v                       # lab-format file listing
@@ -109,7 +109,7 @@ refsanalysis.py disk.raw all > structure_dump.txt       # run every structure to
 | `bootedit import -i FILE [--dry-run]` | Replace the boot sector with a 512-byte file. |
 | `bootedit sparse -o FILE` | Create a sparse (zero-skipping) copy of the whole image. |
 
-```
+```sh
 refsanalysis.py disk.raw bootedit read                                 # read-only display
 refsanalysis.py disk.raw bootedit repair --dry-run                     # preview a fixboot repair
 refsanalysis.py disk.raw bootedit set --field checksum_algo --value 2 --dry-run

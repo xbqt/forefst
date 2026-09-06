@@ -1,0 +1,37 @@
+# Pinned legacy uses of the bare word 'resident' (E87 vocabulary).
+# The pages that STATE the residency rules were corrected; these are legacy prose elsewhere.
+# The linter fails when a page exceeds its number here, so the debt cannot grow.
+KNOWLEDGE_MAP.md	1
+README.md	3
+attributes/DATA.md	6
+attributes/NAMED_DATA.md	1
+attributes/OBJ_LINK.md	2
+attributes/README.md	12
+attributes/REPARSE_POINT.md	1
+attributes/SNAPSHOT.md	2
+attributes/STANDARD_INFORMATION.md	9
+concepts/README.md	7
+concepts/artifact_timeline.md	8
+concepts/attributes.md	9
+concepts/carrier_categories.md	16
+concepts/cluster_page_size.md	3
+concepts/file_ids.md	15
+concepts/forensic_analysis_workflow.md	6
+concepts/snapshots_versioning.md	7
+concepts/tiering.md	1
+concepts/tool_artifact_map.md	6
+concepts/what_survives.md	3
+examples/find_a_deleted_file.md	1
+examples/recover_credentials_and_prior_versions.md	6
+examples/track_a_file_across_moves.md	1
+structures/README.md	4
+structures/btree_node.md	1
+structures/directory_entries.md	2
+structures/extent_descriptors.md	8
+structures/reverse_index.md	3
+structures/security_descriptors.md	7
+structures/trash_table.md	1
+structures/usn_journal.md	2
+tools/refsanalysis.md	2
+website/pages/forensics_101.md	2
+website/pages/home.md	6

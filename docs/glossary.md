@@ -3,7 +3,7 @@
 Key terms used throughout the ReFS documentation, listed alphabetically.
 
 **ADS** (Alternate Data Stream)
-: A named data stream stored as a multi-instance sub-record in a directory-entry value. A small ADS (content below 2 KB) is inline (embedded in the B+-tree row); a larger one is non-resident, its bytes held in on-disk extents. Snapshot streams share the same descriptor but are distinguished by a stream-summary flag.
+: A named data stream stored as a multi-instance sub-record in a directory-entry value. On format 3.11+ a small ADS (content below 2 KiB) is inline (embedded in the B+-tree row); a larger one is extent-backed, its bytes held in on-disk clusters. Snapshot streams share the same descriptor but are distinguished by a stream-summary flag.
 
 **Allocator**
 : ReFS's free-space manager — a three-tier hierarchy (Container, Medium, Small allocator) sharing one bitmap-row format and differing only in the region they manage. The Small Allocator and the Container Table use real physical LCNs — the bootstrap exception underlying virtual addressing. See [Allocator Tables](structures/allocators.md).
@@ -45,7 +45,7 @@ Key terms used throughout the ReFS documentation, listed alphabetically.
 : The primary metadata checksum from v3.10+. A reflected CRC64 with polynomial `0xAD93D23594C93659` (reflected `0x9A6C9329AC4BC9B5`), init and xorout all-ones — **not** ECMA-182, but the standard **CRC-64/NVME** (a.k.a. Rocksoft), check value `0xAE8B14860A799888`. Stored in page references and verified at mount on v3.14.
 
 **$DATA**
-: A file's default data stream. Can be resident (inline in a B+-tree row) or non-resident (in extent clusters). See [$DATA](attributes/DATA.md).
+: A file's default data stream. Its bytes are either **inline** in a B+-tree row or in **extent** clusters — which one depends on the volume's format version and the stream's size. See [$DATA](attributes/DATA.md).
 
 **Deduplication**
 : A ReFS feature that stores identical data once and shares the clusters between files, tracked by the Block Refcount Table. See [Deduplication](concepts/deduplication.md).
@@ -59,8 +59,11 @@ Key terms used throughout the ReFS documentation, listed alphabetically.
 **Embedded sub-record**
 : A nested attribute packed **inside** a B+-tree row value rather than given its own row — how `$DATA`, ADS, `$SNAPSHOT`, `$EA`, and `$EFS` ride inside a directory-entry value. A leading marker distinguishes single-instance (`0x80000001`) from multi-instance (`0x80000002`). See [Directory Entries](structures/directory_entries.md).
 
+**Format version vs driver build**
+: The **format version** is a property of the volume (3.4, 3.7, 3.9, 3.10, 3.14 …), recorded on disk and read by the driver from the VCB; the **driver build** is the `refs.sys` that happens to be mounting it. Behaviour is gated on the *volume's* format, so a current driver on an older volume takes the older path — and an upgrade changes only what happens to future writes. See [Driver Transitions](concepts/driver_transitions.md).
+
 **Extent**
-: A contiguous run of clusters holding a non-resident stream's data, described as (VCN → starting VLCN, length). A file's extent table (type-0x40 records) maps its logical clusters to volume clusters. See [Extent Descriptors](structures/extent_descriptors.md).
+: A contiguous run of clusters holding an extent-backed stream's data, described as (VCN → starting VLCN, length). A file's extent table (type-0x40 records) maps its logical clusters to volume clusters. See [Extent Descriptors](structures/extent_descriptors.md).
 
 **Failover pair**
 : Two copies of a critical structure (for example the Object, Schema, and Container tables) kept at independent locations, so a checksum mismatch on one can be healed from the other at mount. See [Redundancy](concepts/redundancy.md).
@@ -70,6 +73,20 @@ Key terms used throughout the ReFS documentation, listed alphabetically.
 
 **FileId / FileRef** (128-bit file reference)
 : The identity of a file, which has no OID of its own. `FileRef = (HomeOid, FileId)`: the upper 64 bits are the **HomeOid** — the OID of the directory the file was *created in* — and the lower 64 bits are the **FileId** ordinal (a per-directory counter). It is the 16-byte reference carried in USN V3 records and is **frozen for the life of the object**: a rename or a move to another directory changes the file's name and parent, never its FileRef. `forefst.py` surfaces it as the `FileRef` / `HomeOid` / `FileId` columns. See [File IDs](concepts/file_ids.md).
+
+**HomeOID / CreationDirOID** (two names, one field)
+: The OID of the directory a file was **created in**, frozen at creation and never changed by a move or a
+rename. It is the upper half of the file's [FileRef](#), which is why moving a file does not change its
+identity. The `files` listing reports it as the **`HomeOID`** column, with its resolved path in
+**`CreationDir`** — the two are the same field, one as an id and one as a path. "CreationDirOID" is the
+older spelling and means exactly this. Contrast **`ParentOID`**, which is where the file lives *now* and
+does change on a move: a file whose `HomeOID` and `ParentOID` differ has been moved.
+
+**ObjectRef** (the identity column)
+: One column carrying whichever identity the object has: a **directory** has an [OID](#) of its own and
+shows it; a **file** has none and shows its [FileRef](#) as `HomeOID:FileID`. Both address the same object
+through `details --id`. It replaces the separate `OID` and `FileRef` columns, of which exactly one was ever
+populated on any given row.
 
 **Hard link**
 : Two or more directory names for one file object. All names share a single FileId and one set of data, but each name carries its **own** `$SI` (its own MACB timestamps) — the basis of the ReFS-specific per-name timestomp cross-check. See [Hard Links](concepts/hard_links.md).
@@ -134,8 +151,17 @@ Key terms used throughout the ReFS documentation, listed alphabetically.
 **Reparse point** / **reparse tag**
 : A file carrying an `IO_REPARSE_TAG_*` that redirects or annotates it — symlink, junction, mount point, WSL `LX_SYMLINK`, or a WOF-compressed file. The tag sits at `$SI+0x54`; the target/data follows in the `$REPARSE_POINT` attribute. See [Reparse Points](structures/reparse_points.md).
 
+**Data residency**
+: Where a stream's bytes actually live, read from the `$DATA` descriptor's own form: **inline** (in the record), **extents** (on-disk clusters), **snapshot-shared** (the live stream owns no allocation and its bytes are a snapshot's — still recoverable), or **sparse** (owns no allocation and has no snapshot; nothing was ever written). Independent of record placement. See [Resident Storage](concepts/resident_storage.md).
+
+**Record placement**
+: Whether an object's record is **embedded** in its directory name row (`key_flags` 0x01) or **split** out into its own type-0x40 backing record (`key_flags` 0x02). A move or a hard link forces the split, and the split is one-way. It says **nothing** about where the file's bytes are — a split record commonly still holds its data inline. See [Resident Storage](concepts/resident_storage.md).
+
+**Index entry / backing record**
+: An **index entry** is a directory name row whose object record was split out; the **backing record** is the type-0x40 row in the object's home directory that actually holds it. Several index entries — the names of a hard-linked file — can point at one backing record. See [Directory Entries](structures/directory_entries.md).
+
 **Resident / Non-resident**
-: Whether a stream's bytes live **inline** in the B+-tree row value (*resident* — small streams) or in separate **on-disk extent clusters** (*non-resident* — larger streams; an ADS promotes at ≥ 2 KB, and a cross-directory move forces a file non-resident). Recovering a non-resident stream means translating its extents VLCN→PLCN. See [Resident Storage](concepts/resident_storage.md).
+: Older wording for two *different* properties that a single word cannot express — prefer **record placement** and **data residency** below. Where it is still used, "resident" means the stream's bytes are inline. See [Resident Storage](concepts/resident_storage.md).
 
 **Row type**
 : The type marker on a B+-tree key/row: **0x10** = an object's own-row (carries `$SI`); **0x30** = a filename / directory entry (and a resident file's value); **0x40** = an extent record (a non-resident file's data runs); **0x20** = the reverse index (FileId → name / home directory). See [Directory Entries](structures/directory_entries.md).

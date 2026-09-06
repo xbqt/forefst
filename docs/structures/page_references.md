@@ -65,6 +65,32 @@ CRC64 values are written at format time but the mount path instantiates `CmsChec
 | 0x01 | CRC32-C | CHKP self-descriptor only |
 | 0x02 | CRC-64/NVME (reflected poly 0x9A6C9329AC4BC9B5, not ECMA-182) | Standard metadata verification |
 
+## What the checksum covers
+
+The digest is taken over the **whole referenced page** — the cluster bytes of every valid LCN slot,
+concatenated in slot order and read *after* container translation. Nothing is excluded: not the page
+header, not the page's own self-checksum field. Reproducing it is therefore a complete integrity check on
+a metadata page, independent of whether the mounting driver performs one.
+
+How many slots are in use is decided by the **cluster size**, not by the version:
+
+| Cluster size | Slots used | Page |
+|---|---|---|
+| 4 KiB | 4 | 16 KiB |
+| 64 KiB | 1 | 64 KiB |
+
+An object table can hold **more than one row for the same object** — an earlier generation and a current
+one — and a reader keeps the current one. Only that row is meaningful: a superseded row may point at a page
+that has since been freed or reallocated, so whether its digest still matches says nothing about the volume.
+
+Scoped that way the check is exact. Across every Object-Table page reference in the corpus — 34,311 of them
+on 89 volumes, under both algorithms, none skipped — the digest of the row the reader uses matches on
+**33,883 of 33,883**, on every volume, with no exception and no tolerance. Of the remaining references, all
+of them superseded rows, 408 still match and 20 do not; duplicate rows occur on four images out of 89.
+
+Because an Object-Table row's page reference begins at **value+0x20**, the LCN slots sit at
+value+0x20…0x38 and the checksum at **value+0x48**.
+
 ## Format Selection Rule
 
 The format is determined by the [VBR](vbr.md) checksum algorithm selector (offset 0x2A) and the [CHKP](chkp.md) page reference size field (offset 0x5C):
@@ -72,8 +98,14 @@ The format is determined by the [VBR](vbr.md) checksum algorithm selector (offse
 | VBR 0x2A | CHKP 0x5C | Format |
 |----------|-----------|--------|
 | 0x0000 | 0x68 | 104-byte (v3.4) |
+| **0x0000** | **0x30** | **48-byte (CRC64) — an *upgraded* volume** |
 | 0x0002 | 0x30 | 48-byte (CRC64) |
 | 0x0004 | 0x48 | 72-byte (SHA-256) |
+
+The second row is the one that catches readers out. VBR 0x2A is written at format time and **never
+modified** by an upgrade, so a volume created as v3.4 and upgraded still advertises `0x0000` there while
+its checkpoint has moved to the 48-byte CRC64 reference. **`CHKP 0x5C` is the authority**; the VBR field
+records only what the volume was born as. See [VBR](vbr.md).
 
 ## Verification Behavior by Version
 
@@ -98,4 +130,4 @@ The CHKP self-descriptor **page reference** carries checksum **type 0x01 (CRC32-
 
 ## Evidence
 
-The three formats, the field layout, the checksum-type codes, and the format-selection rule are confirmed in the decompiled driver (E2). The CRC64 is **CRC-64/NVME** (reflected poly 0x9A6C9329AC4BC9B5, check value 0xAE8B14860A799888) — not ECMA-182; finding GN_PREF_002. The non-verification on v3.4 follows from `CmsChecksumNone::VerifyChecksum` always returning TRUE — a driver-code inference with no behavioural test — replaced in v3.14 by the unified `CmsChecksum` class that performs real CRC64 computation. The cluster-size-dependent SUPB/CHKP self-checksum, verified and self-healed at mount, is finding FS_SUPB_006, FS_CHKP_004, FS_SUPB_RA_003. See [how this was verified](../methodology.md) to trace these to the exact images and measurements in `analysis/`.
+The three formats, the field layout, the checksum-type codes, and the format-selection rule are confirmed in the decompiled driver (E2). The CRC64 is **CRC-64/NVME** (reflected poly 0x9A6C9329AC4BC9B5, check value 0xAE8B14860A799888) — not ECMA-182; finding GN_PREF_002. The non-verification on v3.4 follows from `CmsChecksumNone::VerifyChecksum` always returning TRUE — a driver-code inference with no behavioural test — replaced in v3.14 by the unified `CmsChecksum` class that performs real CRC64 computation. The cluster-size-dependent SUPB/CHKP self-checksum, verified and self-healed at mount, is finding FS_SUPB_006, FS_CHKP_004, FS_SUPB_RA_003. What the digest covers — the whole page, all slots, after translation — is reproduced from the bytes across the corpus (finding GN_PREF_RA_004); that reproduction is independent of the driver-code reading about when verification happens. See [how this was verified](../methodology.md) to trace these to the exact images and measurements in `analysis/`.

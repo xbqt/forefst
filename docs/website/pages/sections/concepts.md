@@ -4,7 +4,7 @@ How ReFS works — the mechanisms behind the on-disk format, from first principl
 Carrier's five data categories that organise every artifact. **General** orients you to ReFS itself — how it
 differs from NTFS, how to read a volume's version, and the two-layer driver that produces everything on disk.
 **On-disk mechanics** is the load-bearing model: the bootstrap chain, virtual addressing, clusters and pages,
-resident vs non-resident storage, and the copy-on-write policy that makes history recoverable. **Integrity &
+inline vs extent storage, and the copy-on-write policy that makes history recoverable. **Integrity &
 redundancy** covers the checksums, integrity streams, and failover copies that detect and heal corruption.
 **Files, metadata & features** is object and file identity, attributes, hard links, stream snapshots, WSL
 metadata, compression, deduplication, and tiering. **Forensics & recovery** is the payoff — deletion recovery,

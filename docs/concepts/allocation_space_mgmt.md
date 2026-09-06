@@ -47,7 +47,7 @@ is in.
 The free/used split is self-checking. Each row's free count at `+0x10` must equal its range length at
 `+0x08` minus the number of set bits in the bitmap:
 
-```
+```text
 free_count (+0x10) = range_length (+0x08) - popcount(bitmap)
 ```
 
@@ -63,7 +63,7 @@ governing tier's bitmap row** (or it falls under a fully-allocated compact row).
 to allocated. When a write needs space for a new metadata page or file extent, it scans the appropriate
 tier's bitmap for a free run, marks that run used, and decrements the row's free count:
 
-```
+```text
 write needs N clusters
  │
  ▼
@@ -84,7 +84,7 @@ Freeing a cluster is **not** the same as making it reusable. When clusters are r
 **not** clear them and does **not** immediately return them to the free pool for re-handout. Instead it
 records the range in a *recently-deallocated* set, gated by checkpoint and transaction boundaries:
 
-```
+```text
 free clusters → MergeIntoRecentlyDeallocated   ← range parked, NOT yet reusable
     ...the allocator consults CheckRecentlyDeallocated /
        RecentlyDeallocatedForAllocator before reusing a range (avoids handing

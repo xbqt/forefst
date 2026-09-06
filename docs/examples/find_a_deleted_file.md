@@ -24,7 +24,7 @@ IMG=deleted_file_test.raw   # a v3.14 ReFS test volume; file deleted via Explore
 python3 forefst.py "$IMG" deleted --no-slack
 ```
 
-```
+```text
   ReFS version: 3.14
   Cluster size: 0x1000
   Checkpoints:  2 (VC: 46, 45)
@@ -63,7 +63,7 @@ is **not** the end of the story: the default `deleted` run adds the B+-tree node
 python3 forefst.py "$IMG" deleted --full   # --full adds the whole-volume orphan-page scan
 ```
 
-```
+```text
 ── B+-tree Node Slack Scan (Method 5) ──
   Recovering deleted directory entries from metadata-page free space
   (ReFS deletion removes only the row's index slot; the row body persists).
@@ -94,7 +94,7 @@ python3 forefst.py "$IMG" deleted --full   # --full adds the whole-volume orphan
     WPSettings.dat  (live-slack @ cluster 3072 off 0x378) — FULL FILE recoverable (resident — 12 B stored inline in the record)
     desktop.ini  (live-slack @ cluster 14852 off 0x378) — FULL FILE recoverable (resident — 129 B stored inline in the record)
 
-  DELETED files: 2 of 25 are RESIDENT with full content recoverable; 18 are non-resident (carve-able with --carve).
+  DELETED files: 2 of 25 are RESIDENT with full content recoverable; 18 are extent-backed (carve-able with --carve).
 ```
 
 The plain `deleted` run (live pages only, seconds) recovers 16 of these 25. The other 9 sit in **orphan
@@ -119,7 +119,7 @@ reuses the space.
  same file relocated from a different file that merely reuses the name — two unrelated `Shield.png` in
  different folders are judged independently, and a common filename deleted from one folder is never masked by
  an unrelated live copy elsewhere.
-- **Non-resident deleted files carve too.** The roll-up notes `5 non-resident (carve-able with --carve)`:
+- **Non-resident deleted files carve too.** The roll-up notes `5 extent-backed (carve-able with --carve)`:
  for these the file's data is in separate extents, and the extent map survived in a type-0x40 backing
  record recovered from the same slack — `export deleted --carve` reconstructs them best-effort (the
  clusters may have been reused since deletion). Deleted directories, when present, are grouped under
@@ -142,7 +142,7 @@ This is the **only** method that recovers these rows — confirm that with Step 
 python3 forefst.py "$IMG" deleted --scan-pages
 ```
 
-```
+```text
 ── Orphaned Page Scan ──
   Current tree references 128 unique physical clusters
   Orphan-page scan: scanned 1,044,480 of 1,044,480 clusters (100% of the volume)

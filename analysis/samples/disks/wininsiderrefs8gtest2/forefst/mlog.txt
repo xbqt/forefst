@@ -45,6 +45,20 @@ Redo Records
   near-empty while the tree is complete. Cross-check pending activity with `mlog --parse`.
 
 ==============================================================================
+Record Integrity
+==============================================================================
+  Every log record carries an 8-byte integrity value covering the record itself. The
+  driver recomputes it before replaying the record; forefst recomputes it the same way,
+  so a torn or altered record shows up here. It is an integrity check, not a signature:
+  it catches damage and byte-level edits, it is not proof of authenticity.
+
+  Records checked:    2039
+  Verified:           2039
+  Failed:             0
+  Control copy 0 (PLCN 0x2c00): FAILED  stored=0xc22950c6 computed=0xa8630000
+  Control copy 1 (PLCN 0x2c01): FAILED  stored=0xc22950f8 computed=0xa87c0000
+
+==============================================================================
 Opcode Frequency
 ==============================================================================
 

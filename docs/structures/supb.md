@@ -41,6 +41,10 @@ Each SUPB copy carries a **cluster-size-dependent self-checksum** — a `LcnWith
 
 The SUPB sits outside the page-reference Merkle tree — no parent structure stores a checksum of it — but it is **not unchecked**: the self-checksum IS verified at mount (`ValidateSuperBlock` → `ComputeOrVerifySelfChecksumBlock`). A copy that fails its self-checksum is dropped and self-healed from a valid copy: the winning copy is copied over the stale ones, re-stamped `SUPB`, re-checksummed, and written back, and the surrounding checkpoint machinery advances the virtual clock. See [Redundancy](../concepts/redundancy.md) for the self-heal mechanism.
 
+### Per-copy self-LCN
+
+Each copy also stores its **own LCN** (a self-reference) in two places — in the page header at **SUPB+0x20** and again at the start of the self-descriptor at **+0xD0** — set to that copy's physical location: `0x1E` on the primary, the backup's own LCN on each backup. The three copies are therefore **not byte-identical** even though their payload is: they differ only in the self-LCN (0x20 and 0xD0) and the digest (at descriptor+0x28). A tool rebuilding a corrupt copy from a healthy sibling copies the payload, rewrites the self-LCN at **both** offsets to the target location, and recomputes the self-checksum — reproducing the original block exactly. See [Redundancy → Repairing a corrupt copy](../concepts/redundancy.md).
+
 ## Volume GUID
 
 The Volume GUID at offset 0x50 is used to derive the **volume signature** found in every metadata page header at offset 0x0C. The volume signature is computed as the XOR of the four 32-bit words of the GUID.

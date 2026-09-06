@@ -10,7 +10,7 @@ places where the chain *must* break the virtual-addressing rule or it would neve
 
 ## The chain at a glance
 
-```
+```text
 GPT → VBR → SUPB → CHKP → Container Table → any target table
 ```
 
@@ -133,7 +133,7 @@ The volume is carved into fixed **64 MiB containers**, and a VLCN is just a cont
 bits and an in-container offset in its low bits. Translation is therefore a shift, a mask, and one table
 lookup:
 
-```
+```text
 shift = CPC.bit_length()          # 15 for 4 KiB clusters, 11 for 64 KiB
 mask  = CPC - 1
 

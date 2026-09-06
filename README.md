@@ -56,7 +56,7 @@ forefst/
 │   ├── methodology.md        #   how every claim was verified
 │   └── KNOWLEDGE_MAP.md      #   topic -> authoritative-source index
 └── analysis/                 # lab materials + verification harness (the tools don't depend on it)
-    ├── reference_table.csv   #   the live claim register (455 findings)
+    ├── reference_table.csv   #   the live claim register (467 findings)
     ├── lab/                  #   VM setup, disk generation, activity generator + baseline
     ├── samples/              #   captured tool output + samples/corpus/ + sample disks
     └── reports/              #   verification scripts, results, per-claim audit/ harness
@@ -105,7 +105,7 @@ Deep dives: [NTFS vs ReFS](docs/concepts/ntfs_comparison.md) · [Tool-to-artifac
 | Resolve symlinks / junctions / WSL reparse points | `forefst.py disk.raw reparse -v` |
 | Decode `$RECYCLE.BIN` (`$I` metadata + `$R` payload) | `forefst.py disk.raw recyclebin` |
 | Extract one file's content, or dump all its attributes | `forefst.py disk.raw extract /path` · `details /path` |
-| Address a file by its stable identity, independent of path | `forefst.py disk.raw details --id HomeOid:FileId` |
+| Address a file by its stable identity, independent of path | `forefst.py disk.raw details --id <HomeOID>:<FileID>` |
 
 ### Example — deleted-file recovery
 

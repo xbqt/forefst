@@ -1,10 +1,11 @@
 # $NAMED_DATA
 
 `$NAMED_DATA` is ReFS's **named (alternate) data stream** — ADS. Unlike NTFS, which uses named `$DATA`
-attributes, ReFS stores ADS as **multi-instance sub-records** (embedded type 0xB0) inside resident
-directory-entry values. A **small ADS (content below 2 KB) is inline** — its bytes sit in the record.
-An ADS whose content **reaches 2 KB is promoted to non-resident** and stored in on-disk **extents**, the
-same as any large stream (see [Residency](#residency)). The type-0xB0 code is shared with `$SNAPSHOT`;
+attributes, ReFS stores ADS as **multi-instance sub-records** (embedded type 0xB0) inside the
+directory-entry value. On a **format 3.11 or later** volume a **small ADS (content below 2 KiB) is inline** — its bytes sit in
+the record — and one that **reaches 2 KiB spills to on-disk extents**, the same as any large stream.
+On **format 3.10 and earlier** the rule is different: a named stream is always inline, up to a 128 KiB cap.
+See [Residency](#residency) for both. The type-0xB0 code is shared with `$SNAPSHOT`;
 the two are told apart by the StreamSummary flag (below).
 
 ## Value layout
@@ -54,9 +55,9 @@ reader must descend before it can even see them.
 | 0x28 | 8 | Valid data length | usually equals stream size |
 | 0x30 | 8 | Total allocated | usually equals allocated size |
 | 0x38 | 4 | Stream flags | checksum-type / integrity selector (0x02 = CRC, 0x04 = SHA-256; bit 0x10000 = integrity), **not** a residency flag. 0 on v3.4 |
-| 0x3C | var | Inline content | the ADS content bytes (stream_size long) — **present only for a small (< 2 KB) inline ADS** |
+| 0x3C | var | Inline content | the ADS content bytes (stream_size long) — **present only for a small (< 2 KiB) inline ADS** |
 
-Most ADS are small (tens of bytes) and inline. A **large ADS (>= 2 KB)** has **no inline content**: its
+Most ADS are small (tens of bytes) and inline. A **large ADS (>= 2 KiB)** has **no inline content**: its
 value collapses to a fixed 116-byte descriptor (`val[0x04] = 0x68`, `val[0x02]` bit 0x1000 set) and its
 data lives in extents — see [Residency](#residency). An ADS on a snapshot-bearing file may carry extra
 space matching the snapshot value size.
@@ -77,17 +78,29 @@ ADS entries offset 0x44 falls inside the inline content. `forefst.py` uses `val[
 
 ## Residency
 
-An ADS is **inline while its content is below ~2 KB** — the `RefsConvertToNonResident` threshold. Reaching
-2 KB promotes it to **non-resident**, exactly like a large `$DATA` stream:
+The rule differs by **volume format**:
 
-- The 0xB0 descriptor stays an ADS (`val[0x10] = 0`), sets `val[0x02]` bit 0x1000 (stream-set member), and
-  becomes a fixed 116-byte record with `val[0x04] = 0x68` and **no inline content**.
+| format | named stream |
+|---|---|
+| **≤ 3.10** | always inline, up to a hard **128 KiB** (`0x20000`) cap — a write past it fails with `STATUS_FILE_SYSTEM_LIMITATION`. The v3.4 driver reaches that branch through a routine named `RefsTelemetryUnsupportedADS`, which is what identifies the limit as a *named-stream* limit rather than a file-data one |
+| **≥ 3.11** | inline while below **2 KiB** (`0x800`) — the same constant the driver applies to main `$DATA` — then extents |
+
+On ≥ 3.11 the boundary is exact in one direction: across 8,238 named streams, **no inline stream reaches
+2,048 bytes**, and the extent-backed ones begin at exactly 2,048. Below 2 KiB a stream is inline *unless
+its writer pre-allocated*: 13 smaller streams are extent-backed, every one with `alloc != size` (an inline
+stream stores its bytes packed). Reaching 2 KiB promotes a stream to extents, exactly like a large
+`$DATA` stream:
+
+- The 0xB0 descriptor stays an ADS (`val[0x10] = 0`) and becomes a fixed 116-byte record with
+  `val[0x04] = 0x68` and **no inline content**. It sets `val[0x02]` bit **0x1000**, which is the reliable
+  discriminator: across 8,353 0xB0 rows the bit is set on **exactly** the 844 that are not inline
+  (729 extent-backed + 115 snapshot entries) and clear on **exactly** the 7,509 that are — 0 exceptions.
 - The **extent list is stored in a separate type-0x0 sub-record** of the same directory value (not in the
   0xB0 descriptor and not via a stream index), using the standard 24-byte type-0x40 extent format. The ADS
   is linked to its extent record by matching **stream size** (`val[0x20]`).
 - `forefst` reconstructs the content by translating those extents (VLCN → PLCN) and reading the clusters —
-  proven byte-exact on a 256 B → 2 MB size sweep (the boundary sits exactly at 2 KB: 1920-byte content is
-  inline, 2048-byte content is extent-backed).
+  proven byte-exact on a 256 B → 2 MB size sweep on a format 3.14 volume (the boundary sits exactly at
+  2 KiB: 1920-byte content is inline, 2048-byte content is extent-backed).
 
 The `val[0x38]` field is the checksum-type selector, **not** a residency flag.
 
@@ -112,6 +125,6 @@ for how to tell the two cases apart and follow the child.
 Type 0xB0 / descriptor 0x000500B0 and the value layout are confirmed in the decompiled driver (E2 —
 `RefsCreateStreamSnapshot`, `RefsUpdateScbFromAttribute`, `RefsConvertToNonResident`) and raw-disk
 decoded across the corpus (RD). Findings: **MD_SNAP_RA_005, FS_SNAP_RA_001** (ADS census), **MD_SNAP_RA_005**
-(`val[0x38]` is the checksum selector, not residency). The **extent-backed (>= 2 KB) ADS** layout — the
-2 KB threshold and the type-0x0 extent record — was decoded and reconstructed **byte-exact on 161 large
+(`val[0x38]` is the checksum selector, not residency). The **extent-backed (>= 2 KiB, format 3.11+) ADS** layout — the
+2 KiB threshold and the type-0x0 extent record — was decoded and reconstructed **byte-exact on 161 large
 ADS** (256 B → 2 MB size sweep). See [how this was verified](../methodology.md).

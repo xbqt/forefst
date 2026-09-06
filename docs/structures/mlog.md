@@ -12,7 +12,7 @@ Each MLog data page is a single LogCore data record. The on-disk format is **fou
 two. All offsets are version-invariant — the only version difference is the entry-header payload-offset
 *value* (Layer 2 +0x28).
 
-```
+```text
 page/record
  ├─ 0x00 Layer 1: LogCore record header (0x78 = 120 bytes)
  ├─ 0x78 Layer 2: entry header (56 bytes; 64 on Insider)
@@ -45,7 +45,7 @@ in parentheses):
 | Offset | Size | Field | Description |
 |--------|------|-------|-------------|
 | 0x00 (0x78) | 8 | LSN | Copy of record+0x28 |
-| 0x08 (0x80) | 8 | **Checksum** | The real per-record integrity value (varies per record), described in the driver as an 8-byte XOR-fold. **Not yet reproduced:** the exact byte range, stride and initial value have not been pinned, so this field cannot currently be recomputed or verified from this reference — the reader stores it without checking it |
+| 0x08 (0x80) | 8 | **Checksum** | The per-record integrity value, an interleaved u64 XOR-fold. **Reproducible:** zero this field, then for each log block of `le32(page, 0x0C)` bytes (`0x1000` on every volume, independent of cluster size) fold each little-endian u64 into `acc[i mod 4]`, take `v = acc0^acc1^acc2^acc3` and reduce it to `(v >> 32) ^ (v & 0xFFFFFFFF)`. Blocks chain: the next block's `acc[0]` is seeded with a **rotate-left-1** of the previous block's result. `forefst mlog --stats` recomputes and verifies it |
 | 0x18 (0x90) | 8 | Previous LSN | Copy of record+0x30 |
 | 0x20 (0x98) | 4 | Payload length | Redo-block bytes (control records carry 0xe48) |
 | 0x28 (0xA0) | 4 | Payload offset | From entry base = **0x38 (v3.4–v3.14) / 0x40 (Insider)** |
@@ -87,7 +87,7 @@ Each data page holds exactly one redo block — typically all records of a singl
 
 ### Iteration logic (from `ForEachRedoInBlock`)
 
-```
+```text
 remaining = total_size - first_record_offset
 ptr = header + first_record_offset
 if (total_size < first_record_offset + 8) or (total_size < 0x38): error
@@ -141,7 +141,7 @@ Every log record — control page and data record alike — carries an 8-byte in
 +0x08** (= page+0x80, the entry-header offset at page+0x54 being 0x78). The driver recomputes it before
 replaying a record, and it can be recomputed from the page alone:
 
-```
+```text
 field_off = le32(page, 0x54) + 8          # the integrity value's own position
 block     = le32(page, 0x0C)              # 0x1000 on every volume, whatever the cluster size
 zero the 8 bytes at field_off

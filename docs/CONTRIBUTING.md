@@ -1,7 +1,7 @@
 # Contributing to forefst
 
 Thanks for your interest. **forefst** is an open, auditable forensic toolkit for Microsoft's ReFS —
-`forefst.py` (the MFTECmd-equivalent file lister + forensic suite) and `refsanalysis.py` (the structure-level
+`forefst.py` (the file lister + forensic suite) and `refsanalysis.py` (the structure-level
 lab) — backed by a byte-level reference whose every claim is graded by evidence. Contributions of all kinds are
 welcome: bug reports, new test volumes, format findings, documentation fixes, and code.
 
@@ -10,7 +10,7 @@ welcome: bug reports, new test volumes, format findings, documentation fixes, an
 The only requirement is **Python 3.7+, standard library only** — no `pip install`, no dependencies, no build
 step. Clone and run, on Linux, macOS, or Windows:
 
-```
+```sh
 python3 forefst.py --list                       # every subcommand
 python3 forefst.py disk.raw summary             # volume overview
 python3 forefst.py disk.raw -o files.csv        # full file listing

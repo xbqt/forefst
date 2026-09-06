@@ -20,7 +20,9 @@ ReFS Deleted File Finder
 ── B+-tree Node Slack Scan (Method 5) ──
   Recovering deleted directory entries from metadata-page free space
   (ReFS deletion removes only the row's index slot; the row body persists).
+  Orphan-page scan: scanned 8,000 of 536,866,816 clusters (0.00% of the volume) -- INCOMPLETE: bounded by --max-scan; deleted data outside this range was NOT examined
   Scanned 1125 live pages + 76 orphan pages with recoverable slack rows; 152 non-resident file(s) matched a type-0x40 extent map in slack
+  WARNING: the orphan-page scan was bounded by --max-scan (8,000 of 536,866,816 clusters). This run is INCOMPLETE — drop --max-scan to scan the whole volume.
 
   DELETED (no live file with this name + creation time remains on the volume): 370  [313 with valid timestamps, 57 partial remnants]
 
@@ -2492,9 +2494,10 @@ ReFS Deleted File Finder
         body was partly overwritten — always corroborate before relying on one entry.
 ── Recovery methods ──
   Mode: full.  Ran: Trash table (0xD), checkpoint diff, B+-tree node-slack scan (live + orphan pages).
-  This is `--full` (complete): live + orphan-page slack + carve. `deleted` (no --full) is the quicker,
-  live-pages-only pass.
-  Fine-grained: --no-slack · --scan-pages · --orphans · --carve · --max-scan N · --search SUB · --csv/--json/--jsonl FILE · `export deleted DIR`.
+  This was `--full` (complete): live + whole-volume orphan-page slack + carve. `deleted` (no
+  --full) is the quicker, live-pages-only pass.
+  Fine-grained: --no-slack · --scan-pages · --orphans · --carve · --search SUB · --csv/--json/--jsonl FILE · `export deleted DIR`.
+  --max-scan N stops the orphan scan early (faster, but the run is then INCOMPLETE); `help deleted` lists what each option costs.
   Also: `deleted --orphans` adds a low-confidence tier for OID-Table objects unlinked from the tree.
   Prior versions of files that still exist: `snapshots`.  Windows Recycle Bin: `recyclebin`.
 

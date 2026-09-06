@@ -17,13 +17,13 @@ The upgraded image was formatted on Win10 (v3.4) and later mounted on Win11, whi
 
 ### Step 1 — Extended summary of the NATIVE volume
 
-```
+```console
 $ python3 refsanalysis.py win11refsmini.raw summary++
 ```
 
 Actual output (trimmed to the discriminating sections):
 
-```
+```text
  Image: win11refsmini.raw
  ReFS version: 3.14
  Cluster size: 0x1000 (4.0 KB)
@@ -41,13 +41,13 @@ The checkpoint **Flags: 0x682** carries the native-format marker bit `0x0080`. `
 
 ### Step 2 — Extended summary of the UPGRADED volume
 
-```
+```console
 $ python3 refsanalysis.py win10to11refs4g.raw summary++
 ```
 
 Actual output (same sections):
 
-```
+```text
  Image: win10to11refs4g.raw
  ReFS version: 3.14
  Cluster size: 0x1000 (4.0 KB)
@@ -92,7 +92,7 @@ for tag, img in IMAGES:
 
 Actual output:
 
-```
+```text
 === NATIVE win11refsmini.raw ===
  0x28 version = 0x0E03 raw=030e
  0x2A checksum selector = 0x0002 raw=0200

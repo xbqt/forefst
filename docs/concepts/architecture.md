@@ -16,7 +16,7 @@ B+-tree page directly. Functions named `Cms*` / `Ms*` implement the storage engi
 file semantics (names, timestamps, permissions). Everything that crosses the boundary goes through a small,
 stable API:
 
-```
+```text
 ┌──────────────────────────────────────────────────┐
 │ Upper layer: Refs*  (filesystem semantics)        │
 │   IRP handling, FCB/VCB lifecycle, security,      │
@@ -121,7 +121,7 @@ transactions, and checkpoint commits. Tier 3 *is* the lower (Minstore) layer; ti
 A single `CreateFile` makes all three tiers visible at once, and shows the upper layer building the rows
 that the lower layer ultimately stores and commits:
 
-```
+```text
 User: CreateFile("E:\folder\newfile.txt", ...)
  │
  ├─ RefsFsdDispatchSwitch → RefsFspDispatch
@@ -203,7 +203,7 @@ v3.14, and Insider builds (E2). Class and method ownership — including that `F
 belong to `CmsTable` with no `ModifyRow`, that checkpoint ops live on `CmsVolume` with no `CmsVolumeCheckpoint`,
 and that log I/O is `CmsLogRedoQueue`/`CmsTxMemLog` with no `CmsLogFile` — is catalog-verified. The B+-tree
 storage model and container translation are additionally raw-disk confirmed across the corpus (RD). The
-attribute-schema growth (12 → 16, 18 distinct) is E2/RD — the driver's schema roster and the schema-table
+attribute-schema growth (12 → 16, 18 distinct) is confirmed both in the driver and on disk — the driver's schema roster and the schema-table
 row counts measured across the disk corpus. Findings:
 **GN_ARCH_001** (Minstore B+-tree engine), **GN_ARCH_002** (copy-on-write update policy). See
 [how this was verified](../methodology.md) to trace these to the exact images and measurements in `analysis/`.

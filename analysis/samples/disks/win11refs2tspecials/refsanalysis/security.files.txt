@@ -4,17 +4,16 @@ ReFS Security Descriptors
   Image:        win11refs2tspecials.raw
   ReFS version: 3.14
 
-  Files per owner SID (6 distinct SID(s)):
+  Files per owner SID (5 distinct SID(s)):
     SecurityId       Files   Owner
   ----------------------------------------------------------------------------
-    0x1348ee884       1327   BUILTIN\Administrators (S-1-5-32-544)
+    0x1348ee884       1330   BUILTIN\Administrators (S-1-5-32-544)
     0x120005b20        216   BUILTIN\Administrators (S-1-5-32-544)
-    0x0                  3   (unknown)
     0x123d306f5          2   SYSTEM (S-1-5-18)
     0x10a9f9562          1   BUILTIN\Administrators (S-1-5-32-544)
     0x10aa39b62          1   BUILTIN\Administrators (S-1-5-32-544)
   ----------------------------------------------------------------------------
-    Total: 1550 files across 6 owner SID(s)
+    Total: 1550 files across 5 owner SID(s)
 
   Name                                     Type   SecurityId     Owner
   ----------------------------------------------------------------------------
@@ -1178,7 +1177,7 @@ ReFS Security Descriptors
   testspecials2/dir_kilo_616914/symlink_yankee_365679.lnk FILE   0x1348ee884    BUILTIN\Administrators (S-1-5-32-544)
   testspecials2/dir_kilo_616914/tango_draft_683595.bak FILE   0x1348ee884    BUILTIN\Administrators (S-1-5-32-544)
   testspecials2/dir_kilo_616914/tango_log_555645.json FILE   0x1348ee884    BUILTIN\Administrators (S-1-5-32-544)
-  testspecials2/dir_kilo_616914/uniform_sierra_103233.md FILE   0x0            (unknown)
+  testspecials2/dir_kilo_616914/uniform_sierra_103233.md FILE   0x1348ee884    BUILTIN\Administrators (S-1-5-32-544)
   testspecials2/dir_kilo_616914/victor_foxtrot_346767.lnk FILE   0x1348ee884    BUILTIN\Administrators (S-1-5-32-544)
   testspecials2/dir_kilo_616914/yankee_india_996670.tmp FILE   0x1348ee884    BUILTIN\Administrators (S-1-5-32-544)
   testspecials2/dir_log_298284             DIR    0x120005b20    BUILTIN\Administrators (S-1-5-32-544)
@@ -1546,9 +1545,9 @@ ReFS Security Descriptors
   testspecials2/foxtrot_output_368928.md   FILE   0x1348ee884    BUILTIN\Administrators (S-1-5-32-544)
   testspecials2/foxtrot_romeo_528126.cfg   FILE   0x1348ee884    BUILTIN\Administrators (S-1-5-32-544)
   testspecials2/hardlink_alpha_380079.lnk  FILE   0x1348ee884    BUILTIN\Administrators (S-1-5-32-544)
-  testspecials2/hardlink_backup_438537.md  FILE   0x0            (unknown)
+  testspecials2/hardlink_backup_438537.md  FILE   0x1348ee884    BUILTIN\Administrators (S-1-5-32-544)
   testspecials2/hardlink_data_959532.lnk   FILE   0x1348ee884    BUILTIN\Administrators (S-1-5-32-544)
-  testspecials2/hardlink_hotel_900638.xml  FILE   0x0            (unknown)
+  testspecials2/hardlink_hotel_900638.xml  FILE   0x1348ee884    BUILTIN\Administrators (S-1-5-32-544)
   testspecials2/hardlink_uniform_628960.log FILE   0x1348ee884    BUILTIN\Administrators (S-1-5-32-544)
   testspecials2/hardlink_zulu_148090.log   FILE   0x1348ee884    BUILTIN\Administrators (S-1-5-32-544)
   testspecials2/india_zulu_632200.md       FILE   0x1348ee884    BUILTIN\Administrators (S-1-5-32-544)

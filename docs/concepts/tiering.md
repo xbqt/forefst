@@ -18,7 +18,7 @@ same heat signal drives compression policy: cold data becomes a candidate for co
 freshly-warmed data for decompression. The engine only *classifies and decides* — the
 actual movement and (de)compression are carried out downstream.
 
-```
+```text
  I/O on a block
  │
  ▼
@@ -117,7 +117,7 @@ The whole-volume tier state is exposed by Windows on a live mount; forefst does 
 on-disk `0xe130` heat rows (which are typically empty on test volumes — the persistence
 table exists but carries no rows unless tiered storage is actively in use).
 
-```
+```sh
 fsutil refsinfo C:
  ...
  Bytes Per Physical Sector : 4096
@@ -151,7 +151,7 @@ the per-class `EnableHeatQueryType` entry points. The on-disk binding is confirm
 `CmsVolumeHeatEngine::Initialize`, which loads the schema ID into a durable-table create
 call:
 
-```
+```text
 mov dword [rsp+0x30], 0xe130   ; schema ID for the Heat Engine persistence table
 ```
 

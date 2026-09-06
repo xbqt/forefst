@@ -30,7 +30,7 @@ that is also a cross-directory move:
 python3 forefst.py "$IMG" usn --csv - | awk -F, '$7=="0x959e:0x30"'
 ```
 
-```
+```text
 reason                         file_ref     home_oid  file_id  parent_oid  name
 FILE_CREATE                    0x959e:0x30  0x959e    0x30     0x959e      tmpCF1F.tmp
 DATA_EXTEND|DATA_TRUNCATION    0x959e:0x30  0x959e    0x30     0x959e      tmpCF1F.tmp
@@ -59,7 +59,7 @@ back-reference. Take a file that was created in one directory and later moved un
 python3 forefst.py "$IMG" files --csv - | awk -F, '$5=="Generate-FSActivity.ps1"'
 ```
 
-```
+```text
 FileRef      HomeOid  FileId  FileName                 ParentOID  ParentPath  FileSize  HardLinkCount
 0x9586:0x3   0x9586   0x3     Generate-FSActivity.ps1  0x9e25     tools       72305     1
 ```
@@ -74,7 +74,7 @@ hard-link name placed in a second directory — see [Hard Links](../concepts/har
 The entry lives in directory `0x9e25`'s B+-tree, but decode its non-resident value and the home
 back-reference names a *different* directory:
 
-```
+```text
 value+0x00..+0x0f: 03 00 00 00 00 00 00 00  86 95 00 00 00 00 00 00
                    └── ordinal = 3 ──────┘  └── home backref = 0x9586 ┘
 value+0x38 file size = 72305
@@ -94,7 +94,7 @@ resolves through the home directory even though the name now lives elsewhere:
 python3 forefst.py "$IMG" details --id 0x9586:0x3
 ```
 
-```
+```text
 File Detail: tools/Generate-FSActivity.ps1
   Parent OID:   0x9e25
   Parent path:  tools

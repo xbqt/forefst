@@ -29,7 +29,7 @@ The volume is carved into fixed **64 MiB containers**. A VLCN is simply a contai
 bits and an offset *within* that container in its low bits, so the translation is a shift, a mask, and
 one table lookup:
 
-```
+```text
 shift = log2(CPC) + 1      # 15 for 4 KiB clusters, 11 for 64 KiB
 mask  = CPC - 1
 

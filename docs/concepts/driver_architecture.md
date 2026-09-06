@@ -216,6 +216,8 @@ present in the Insider binary.
 
 ## Cross-references
 
+- [Driver Transitions](driver_transitions.md) — which driver function changes a file's placement or its data residency, per build
+
 - [Driver Architecture](architecture.md) — the two-layer model and three-tier IRP dispatch this page measures
 - [Version Evolution](version_evolution.md) — the per-version structural changes the subsystem growth produces
 - [Checksum Architecture](checksum_architecture.md) — how the `CmsChecksum` consolidation appears on disk

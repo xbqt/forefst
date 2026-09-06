@@ -1,8 +1,8 @@
 # forefst wininsiderrefs8gtest2.raw search test
 # ----------------------------------------------------------------------------
-OID          Parent       Type          Size  Res  Modified             Path
-───────────  ───────────  ────  ──────────── ────  ───────────────────  ────────────────────────────────────────
-0x76f        0x600        Dir              0    —  2026-05-19 20:00:58  testintegrity
-0x702        0x600        Dir              0    —  2026-05-19 19:59:12  testspecials
+ObjectRef      Type          Size  Data             Modified             Path
+─────────────  ────  ────────────  ───────────────  ───────────────────  ────────────────────────────────────────
+0x76f          Dir              0  —                2026-05-19 20:00:58  testintegrity
+0x702          Dir              0  —                2026-05-19 19:59:12  testspecials
 
-2 matches. Use `details <path>` (or `details --id HomeOid:FileId`) for full detail.
+2 matches. Use `details <path>`, `details --id FileRef` (HomeOID:FileID) or `details --id OID` for full detail.

@@ -17,7 +17,7 @@ than in NTFS, because almost every address on the volume is **virtual** and must
 the [Container Table](../structures/container_table.md) before the cluster it names can be read. Parse
 in the wrong order and you translate garbage.
 
-```
+```text
 1. FILE SYSTEM   VBR -> SUPB -> CHKP -> 13 root tables -> Container Table
                  (establishes layout + VLCN->PLCN translation)
                    |
@@ -65,7 +65,7 @@ copy-on-write checksum streams.
 An analyst uses this category to carve and reconstruct file bytes. The resident/non-resident decision
 matters here because it determines whether a small file's content sits inline in metadata or out in
 extents: the driver (`RefsAddAllocationForResidentWrite`) converts to non-resident at **2048 bytes
-(0x800) on v3.11+**, with a **128 KB (0x20000)** hard cap on v3.4–v3.10. Following an extent then means
+(0x800) on v3.11+**, with a **128 KiB (0x20000)** hard cap on v3.4–v3.10. Following an extent then means
 running each VLCN through the Container Table — exactly the dependency this category inherits from
 Category 1. Deduplicated and cloned regions are read from the Block Refcount per-cluster entry (bits
 13:0 = reference count, bit 14 = dedup-metadata flag, bit 15 = dedup-managed), and user data can be
@@ -194,7 +194,7 @@ structure.
 - **File System:** the CHKP composite flags encode volume state — 0x002 (v3.4 / 3.7 / 3.9), 0x082
   (v3.10), 0x682 (v3.14 native), 0x602 (v3.14 upgraded), 0x2682 (Insider). Classify original / upgraded /
   native from these before trusting any layout (see [version detection](version_detection.md)).
-- **Content:** the resident→non-resident conversion threshold drops from 128 KB (v3.4–v3.10) to 2048
+- **Content:** the resident→non-resident conversion threshold drops from 128 KiB (v3.4–v3.10) to 2048
   bytes (v3.11+). The Block Refcount Table schema (0xe0b0) exists since v3.4 but is only *populated* on
   v3.14 sharing activity.
 - **Metadata:** `$SI` layout changes non-backward-compatibly at v3.14 (offset 0x50 and above); the
@@ -210,7 +210,7 @@ structure.
 
 `forefst.py` and `refsanalysis.py` are organised along these same categories. Representative invocations:
 
-```
+```sh
 refsanalysis.py <image> chkp                          # File System: CHKP + 13 roots (boot/supb for VBR/SUPB)
 refsanalysis.py <image> containers                    # File System: Container Table / translation
 forefst.py <image> snapshots --show / --extract  # Application/Content: CoW prior-version bytes

@@ -1,13 +1,15 @@
 # Resident vs Non-Resident Storage
 
 The single most consequential question a ReFS recovery tool can get wrong is *where a file's bytes
-actually are*. ReFS stores file content in one of two modes, chosen per file and reversible: **resident**
+actually are*. ReFS stores file content in one of two modes, chosen per file: **resident**
 content lives **inline**, packed into the file's own row inside a directory's
 [B+-tree](../structures/directory_entries.md); **non-resident** content lives in separate clusters
 reached through a [type 0x40 extent row](../structures/extent_descriptors.md). A carver that only follows
 extents — the NTFS reflex — never sees the resident files at all, and on the small-file workloads that
-dominate most volumes those are the majority. This page explains how the two modes are encoded, what
-makes the driver promote a file from one to the other, and why
+dominate most volumes those are the majority. The change runs one way only: every driver examined has a
+`RefsConvertToNonResident` and **none has a `ConvertToResident`**, so nothing brings a stream back inline.
+This page explains how the two modes are encoded, what
+makes the driver move a file from one to the other, and why
 [alternate data streams](../attributes/README.md) are a permanent exception.
 
 ## What `key_flags` actually encodes — and what it does not
@@ -42,8 +44,9 @@ It is worth separating them explicitly, because a single flag cannot express bot
 
 A split-out record still holds its own `$DATA` attribute, and for a small file that attribute is commonly
 the **inline** kind — so the bytes live in the backing record, not on disk. Across the image corpus
-**16,191 files keep their data this way**, about one in five of all split-record files, and on one real
-Windows volume 14,580 of them. Reading the attribute is the only way to tell: the inline form carries the
+**16,191 of 83,485 split-record rows keep their data this way** — about one in five — and on one real
+Windows volume 14,580 of them. (That count includes 0-byte records whose descriptor is the inline form;
+the rule is always *what the descriptor says*, for empty records as much as for full ones.) Reading the attribute is the only way to tell: the inline form carries the
 byte count and the content directly, the other form carries an extent list instead, and no record has both.
 
 The practical consequence for a reader: a hard-linked file can legitimately show **resident storage together
@@ -73,59 +76,76 @@ row stores that same metadata **followed by the file's bytes**, so its size grow
 size relationship is itself a reliable detector — see [the detection rule](#a-reliable-detection-rule)
 below.
 
-## What triggers promotion to non-resident
+## What decides where the bytes go
 
-A file does not choose its mode up front; the driver promotes it from resident to non-resident the moment
-its content outgrows a version-specific threshold. The decision is made in
-`RefsAddAllocationForResidentWrite`, and the threshold changed dramatically at the v3.11 feature epoch:
+The decision is made in `RefsAddAllocationForResidentWrite`, and it is gated on the **volume's format
+version** — read from the VCB at `+0x318`/`+0x319` and compared against `0x30b`, the packed encoding of
+v3.11. It is the *volume's* format, not the driver's build: a current driver mounting an older volume
+takes the older path.
 
-| Version | Threshold | Behaviour |
-|---------|-----------|-----------|
-| v3.4 – v3.10 | **128 KiB** (0x20000) | Hard cap; a resident write past it returns `STATUS_FILE_SYSTEM_LIMITATION` |
-| v3.11+ (incl. v3.14) | **2 KiB** (0x800) | Convert to non-resident once the data reaches 2 KiB |
+```c
+if (volume_format < 0x30b && 0x20000 < new_size)   // < 3.11 and > 128 KiB
+    raise STATUS_FILE_SYSTEM_LIMITATION;
+if (volume_format < 0x30b || new_size < 0x800)     // < 3.11, or < 2048 bytes
+    stay inline;
+else
+    convert to extents;
+```
 
-The driver gates this on the packed version: in effect `if (version < 0x30b || alloc_size < 0x800) stay
-resident, else convert to non-resident` — where `0x30b` is the packed encoding of v3.11. The threshold
-applies to the **data/allocation portion**, not to the total row size, so the small fixed metadata header
-does not count against it.
+Two things follow, and they differ by **stream kind**:
 
-**Size is not the only trigger. A move or a hard link also forces non-residency — regardless of size.** When a
-file is moved to another directory (or gains a second name through a hard link), it must record the directory it
-was *created* in, and only the non-resident directory-entry layout has a field for that home reference. So even a
-tiny file that was comfortably resident becomes **non-resident the instant it is moved or hard-linked**, and it
-never converts back — there is no resident-again path. A file still stored resident has therefore never been
-moved: its home directory is always its current parent. (Confirmed on a controlled before/after move: a 16-byte
-resident file was non-resident after a single cross-directory move.) See
-[File IDs](file_ids.md) for what the move preserves (the identity) and what it changes (the location).
+| | format ≤ 3.10 | format ≥ 3.11 |
+|---|---|---|
+| **main `$DATA`** | **never inline.** Even a 5-byte file gets a whole 4 KiB cluster | inline while under **2 KiB** (0x800), then extents |
+| **named stream (ADS)** | always inline, up to a hard **128 KiB** cap — past it the write fails | inline while under **2 KiB**, then extents |
 
-The practical effect is a sharp behavioural split between Windows generations. On a v3.4 volume the
-128 KiB cap is larger than almost any ordinary file, so content stays resident as a matter of course; on a
-v3.14 volume the 2 KiB threshold is crossed by anything but the smallest files, so non-resident storage is
-common. The practical consequence is a clear version split rather than a precise ratio. On an **original
-v3.4–v3.10** volume ordinary files are almost all resident: the 128 KiB cap exceeds typical content (and
-every file in the small-file test corpus is resident there — a property of the cap meeting the workload,
-not evidence that v3.4 lacks non-resident storage; a file past 128 KiB *would* spill to extents). On a
-**v3.14** volume the 2 KiB threshold is crossed by anything but the smallest files, so non-resident
-storage is common, and the resident fraction falls as files get larger and more numerous. The forensic
-takeaway is that **version detection drives carving strategy**: on an upgraded or native v3.14 volume you
-must expect both modes side by side, while on an original v3.4 volume almost everything is inline.
+The `0x20000` (128 KiB) branch is the **named-stream** limit, not a file-data threshold. The v3.4 driver
+reaches it through a routine Microsoft named `RefsTelemetryUnsupportedADS`, and that driver has no
+`RefsConvertToNonResident` at all — there is nothing there to convert a resident stream out of line, which
+is the driver-side counterpart of main `$DATA` never being inline on those formats.
+
+### Size is not the only trigger — but a move is not one of them
+
+Several operations convert an inline stream to extents **regardless of size**. They are exactly the callers
+of `RefsConvertToNonResident`: taking a **stream snapshot**, enabling **integrity streams**, block-clone
+(`RefsDuplicateExtents`), **encryption**, remote/tiering, strictly-sequential, and an explicit
+set-allocation or set-end-of-file.
+
+**A move or a hard link is not among them.** No rename, move or link function calls
+`RefsConvertToNonResident` in any driver build examined. What those operations force is the **record
+split** — `key_flags` 0x01 → 0x02 — which says nothing at all about where the bytes live. A moved file can be,
+and often is, still inline: on a controlled before/after move of a whole volume, **5 files changed
+placement and 0 changed residency**, and the moved file's `$DATA` record was byte-identical either side.
+
+### An upgrade does not convert anything
+
+Because the gate reads the volume's format at write time, upgrading a volume changes only what happens to
+**future** writes. On a v3.4 volume upgraded to v3.14, **0 of 262 pre-existing files changed residency**;
+the single inline file on it is one of three names created *after* the upgrade.
 
 ## Alternate data streams: inline while small, extent-backed when large
 
-[Alternate data streams](../attributes/README.md) (ADS) are **inline while their content stays below
-2 KB** — which covers the overwhelming majority (typical ADS are tens of bytes). An ADS record *is* a
+The threshold below is the **format 3.11 and later** rule. On **format 3.10 and earlier** a named stream
+is always inline instead, up to a hard 128 KiB cap — see
+[Named data streams](../attributes/NAMED_DATA.md#residency) for both. Which rule applies is a property of
+the *volume's* format, not of the driver reading it.
+
+On format 3.11+, [alternate data streams](../attributes/README.md) (ADS) are **inline while their content
+stays below 2 KiB** — which covers the overwhelming majority (typical ADS are tens of bytes). An ADS record *is* a
 type-0xB0 entry (type 0xB0 is shared with `$SNAPSHOT`/`$NAMED_DATA`), and `RefsConvertToNonResident`
-accepts 0xB0 at a ~2 KB threshold. A small ADS never reaches it, so it stays inline (StreamSummary flag 0
-at val+0x10) regardless of the file's own mode — even an ADS on a snapshot-bearing file (attribute flag
-0x1000) is inline. (The neighbouring val+0x38 is the integrity/checksum-type selector — 0x02 on
+accepts 0xB0 at that same 2 KiB threshold on this format. A small ADS usually never reaches it, so it stays inline (StreamSummary flags 0 at val+0x10 — the same
+field reads 2 for a snapshot entry) regardless of the file's own mode. The attribute-flags bit **0x1000**
+at `val+0x02` is the discriminator, and it means the opposite of what an earlier reading of this page said:
+across 8,238 named streams it is set on **exactly** the 844 that are *not* inline and clear on **exactly**
+the 7,509 that are, with no exceptions. (The neighbouring val+0x38 is the integrity/checksum-type selector — 0x02 on
 None/CRC64, 0x04 on SHA-256 — and has nothing to do with residency.)
 
-A **large ADS (>= 2 KB) is promoted to non-resident**: its descriptor becomes a fixed 116-byte record
+Still on format 3.11+, a **large ADS (>= 2 KiB) is extent-backed**: its descriptor becomes a fixed 116-byte record
 (`val[0x04] = 0x68`, no inline content), and its bytes move to on-disk **extents** — stored in a separate
 type-0x0 sub-record of the same directory value, using the standard type-0x40 extent format. So the "ADS
-ceiling" is not the page size; it is the **2 KB conversion threshold**, above which the stream spills to
+ceiling" is not the page size; it is the **2 KiB conversion threshold**, above which the stream spills to
 extents exactly like a large `$DATA` stream. `forefst` reconstructs such an ADS from its extents
-(byte-exact, verified on a 256 B → 2 MB size sweep with the boundary at 2 KB).
+(byte-exact, verified on a 256 B → 2 MB size sweep with the boundary at 2 KiB).
 
 This matters forensically two ways: an inline ADS lives in the metadata tree (carve it there), while a
 large ADS lives in clusters (recover it via its extent list) — and a tool that assumes *all* ADS are
@@ -202,6 +222,8 @@ The file's entire content lives in the parent directory's B+-tree leaf row — a
 
 ## Cross-references
 
+- [Driver Transitions](driver_transitions.md) — the functions behind the gate, and the complete conversion-trigger list
+
 - [Directory Entries](../structures/directory_entries.md) — the byte-level resident and non-resident value
   layouts this page summarises, and the key where `key_flags` lives
 - [Extent Descriptors](../structures/extent_descriptors.md) — the type 0x40 rows a non-resident file points
@@ -218,11 +240,11 @@ The file's entire content lives in the parent directory's B+-tree leaf row — a
 ## Evidence
 
 The two key_flags values and the `{0x01, 0x02}`-only census, the directory-bit discriminator, and the
-resident/non-resident value sizes are raw-disk decoded (RD) across the corpus, correcting the earlier
-`0x04 = directory` reading. The promotion thresholds and the v3.11
+embedded/index-entry value sizes are raw-disk decoded (RD) across the corpus, correcting the earlier
+`0x04 = directory` reading. The size thresholds and the v3.11
 version gate are confirmed in the driver (E2): `RefsAddAllocationForResidentWrite` checks `version < 0x30b`
 against the 0x800 / 0x20000 limits, and `RefsConvertToNonResident` accepts types 0x80 and 0xB0. A small
-ADS (< 2 KB) is inline; a large ADS (>= 2 KB) is extent-backed via a type-0x0 record (E2 + RD, reconstructed
+ADS (< 2 KiB) is inline; a large ADS (>= 2 KiB) is extent-backed via a type-0x0 record (E2 + RD, reconstructed
 byte-exact across a 256 B → 2 MB size sweep). The val+0x38 field is a checksum-type selector, not a
 residency field.
 See [how this was verified](../methodology.md) to trace these to the exact images and measurements in the

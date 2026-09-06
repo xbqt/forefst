@@ -14,7 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 """
-forefst.py — ReFS forensic file lister (MFTECmd equivalent).
+forefst.py — ReFS forensic file lister.
 
 Produces CSV and body file output from ReFS disk images with comprehensive
 metadata for each file and directory:
@@ -32,7 +32,7 @@ metadata for each file and directory:
 
 Supports ReFS 3.4 through 3.14+ and Windows Insider builds.
 
-CSV output is designed to be comparable with Eric Zimmerman's MFTECmd
+CSV output is designed to be comparable with common NTFS file-lister output
 output for NTFS $MFT, enabling side-by-side forensic comparison.
 
 Usage:
@@ -243,7 +243,7 @@ def validate_image(path, die_fn=None):
 
 # ─── Constants ────────────────────────────────────────────────────────
 PROG = "forefst"
-VERSION = "1.9.0"
+VERSION = "1.10.0"
 # Phase 3 (4.D): directory walks default to FULL depth (no artificial cap); `--depth N` overrides. The real
 # recursion depth equals the actual directory nesting (ReFS trees are shallow — tens of levels), so this
 # constant is never the binding limit; it just means "don't truncate". main() also raises the interpreter
@@ -754,10 +754,17 @@ class Translator:
         self.shift = cpc.bit_length() if cpc > 0 else 0
         self.mask = cpc - 1 if cpc > 0 else 0
         self.misses = 0   # E11: count VLCNs with no container mapping (unmapped => read as identity)
+        self._first_cid = min(self.map) if self.map else None   # below this: not containerised
     def tr(self, vlcn):
         cid = vlcn >> self.shift
         if cid in self.map:
             return self.map[cid] + (vlcn & self.mask)
+        # Below the first container id the volume is not containerised: ids start at 2 (E74), so
+        # keys 0 and 1 are never in the table and an address there is ALREADY physical. Identity is
+        # the correct answer, not a fallback, and counting it as a miss made every v3.4 volume warn
+        # that its output "may be incomplete" because of three large files that read perfectly.
+        if self._first_cid is not None and cid < self._first_cid:
+            return vlcn
         # E11: an unmapped container (corrupt/truncated CT, or a wrong-mode read) falls back to identity
         # (VLCN read as PLCN). That silently loses evidence downstream; count it so callers can surface it.
         self.misses += 1
@@ -786,6 +793,9 @@ def _warn_translator(tr):
           f"(corrupt/truncated container table).", file=sys.stderr)
 
 atexit.register(lambda: [_warn_translator(t) for t in _ALL_TRS])
+# Skipped work is reported at exit whatever the command did, for the same reason as the
+# translator caveat above: an incomplete answer must not look like a complete one.
+atexit.register(lambda: _skip_summary())
 
 # ─── B+ tree walker ──────────────────────────────────────────────────
 def walk_bplus(f, ps, cs, tr, vlcns, max_depth=5):
@@ -972,7 +982,10 @@ def cow_recovery(f_after, ps_a, cs_a, tr_a, obj_map_a,
             # Read per-object B+ tree from BEFORE image
             try:
                 rows = walk_bplus(f_b, ps_b, cs_b, tr_b, vlcns)
-            except Exception:
+            except Exception as _e:
+                # Dropping this object silently would understate the recovery: the operator
+                # would see fewer previous versions with nothing saying why.
+                _skip_note("CoW recovery (before-image object)", "oid 0x%x" % oid, _e)
                 continue
 
             name = None
@@ -1006,19 +1019,24 @@ def cow_recovery(f_after, ps_a, cs_a, tr_a, obj_map_a,
             if not name and not si:
                 continue
 
-            # Check if old B+ tree pages still have MSB+ on AFTER image
+            # Check if the object's old B+ tree PAGE still has MSB+ on the AFTER image.
+            # `vlcns` is the object's 4-cluster node reference — ONE page, not four. The MSB+ signature lives
+            # only at the page's start, so testing every cluster counted 4 "pages" per page and could only ever
+            # find 1 survivor: the ratio was pinned at 25% on every volume regardless of what actually survived.
             obj_survived = 0
-            for vlcn in vlcns:
+            _head = next((v for v in vlcns if v), None)
+            if _head is not None:
                 pages_total += 1
                 try:
-                    plcn = tr_b.tr(vlcn)
+                    plcn = tr_b.tr(_head)
                     f_after.seek(ps_a + plcn * cs_a)
-                    sig = f_after.read(4)
-                    if sig == b"MSB+":
+                    if f_after.read(4) == b"MSB+":
                         obj_survived += 1
                         pages_survived += 1
-                except Exception:
-                    pass
+                except Exception as _e:
+                    # This counter drives the "N/M old pages still valid (X%)" figure; a
+                    # swallowed failure quietly biases it downward.
+                    _skip_note("CoW recovery (page survival probe)", "page", _e)
 
             fa = si.get("file_attrs", 0)
             status = "cow_modified" if oid in obj_map_a else "cow_deleted"
@@ -1403,6 +1421,140 @@ def get_resident_file_size(vd, ctx=None):
     return 0
 
 
+# ─── The two storage axes (E87) ───────────────────────────────────────
+# "Resident" was one word for two independent properties, which is why this file used to
+# decide `is_resident` twice: once from the name row's length (placement) and again from the
+# $DATA descriptor (residency), overwriting the first with the second.
+#
+#   RECORD PLACEMENT  embedded in the name row, or split into a type-0x40 backing.
+#                     key_flags at type-0x30 key+0x02: 0x01 embedded, 0x02 split.
+#                     A move or a hard link forces the split -- and moves no data.
+#   DATA RESIDENCY    where the bytes are. Read from the $DATA sub-record's own header.
+#
+# A 0-byte file is decided by descriptor form like any other: an inline-form record that
+# happens to carry no bytes is `inline`; an extent-form one is `extents`.
+DATA_INLINE, DATA_EXTENTS, DATA_SNAPSHOT_SHARED, DATA_SPARSE, DATA_UNKNOWN = (
+    "inline", "extents", "snapshot-shared", "sparse", "unknown")
+
+
+def _stream_data_form(rec, ctx=None):
+    """DATA RESIDENCY of a file record's CURRENT stream. `rec` is the embedded name-row value
+    or the type-0x40 backing -- the same test applies to both, which is the point.
+
+    Returns one of DATA_*:
+      inline           the descriptor is the resident form (summary_size@0x0C == 0x30,
+                       StreamSummary flags@0x10 == 0); the bytes are at +0x3C, and there may be none.
+      extents          the extent-bearing form (inner header 0x88 / descriptor 0x00010028),
+                       with an allocation of its own.
+      snapshot-shared  extent form owning NO allocation (disk_alloc@+0x48 == 0) while a
+                       snapshot sub-record for the same stream exists -- the live bytes are
+                       the snapshot's (E83).
+      sparse           extent form owning no allocation and NO snapshot row: nothing was ever
+                       written. Measured on `bigsparse.dat` / `sparse.dat`; without this the
+                       two are indistinguishable from the snapshot case.
+      unknown          no $DATA row, or a shape that matches none of the above.
+    """
+    try:
+        rows = parse_resident_btree_rows(bytes(rec), ctx)
+    except (ValueError, struct.error, IndexError):
+        return DATA_UNKNOWN
+    live = None
+    snapshot_rows = False
+    v34 = None
+    for kd, vr in rows:
+        if len(kd) < 0x0E:
+            continue
+        mk, ty = le32(kd, 8), le16(kd, 0x0C)
+        if ty == 0x0080 and mk in (0x80000001, 0x80000002):
+            sub = le32(kd, 0x10) if len(kd) >= 0x14 else None
+            if mk == 0x80000001 and live is None:
+                live, v34 = bytes(vr), False
+            elif sub == 0x1000 and live is None:
+                live, v34 = bytes(vr), False
+            elif sub is not None and sub > 0x1000:
+                snapshot_rows = True
+        elif mk == 0x80 and ty == 0x0000 and live is None:
+            live, v34 = bytes(vr), True          # v3.4 key: no marker, type u32 at +0x08
+    if live is None:
+        return DATA_UNKNOWN
+    if len(live) >= 0x14 and le32(live, 0x0C) == 0x30 and le32(live, 0x10) == 0:
+        return DATA_INLINE
+    if len(live) >= 8 and le32(live, 0) == 0x88 and le32(live, 4) == 0x00010028:
+        size = le64(live, 0x3C if v34 else 0x38) if len(live) >= 0x44 else 0
+        if not v34 and size > 0 and len(live) >= 0x50 and le64(live, 0x48) == 0:
+            return DATA_SNAPSHOT_SHARED if snapshot_rows else DATA_SPARSE
+        return DATA_EXTENTS
+    return DATA_UNKNOWN
+
+
+# ─── Skipped work is reported, never swallowed (Phase 1.3) ────────────────
+# A swallowed exception is indistinguishable from "nothing was there", which is how a reader
+# returns a confident wrong answer: E73's outer-level-only parse returned [] and every consumer
+# reported "no attributes". Anything that gives up on part of the volume says so, once per kind,
+# with a count -- and anything that would otherwise emit BYTES raises instead (never invent data).
+_SKIP_NOTES = {}
+
+# Set by --legacy-link-join; see walk_directory_tree.
+LEGACY_LINK_JOIN = False
+
+
+def _skip_note(stage, where, exc, limit=3):
+    """Record and report a skipped unit of work. Returns the running count for this kind."""
+    key = (stage, type(exc).__name__)
+    n = _SKIP_NOTES.get(key, 0) + 1
+    _SKIP_NOTES[key] = n
+    if n <= limit:
+        print(f"[{PROG}] WARNING: {stage} skipped {where}: {type(exc).__name__}: {exc}",
+              file=sys.stderr)
+    elif n == limit + 1:
+        print(f"[{PROG}] WARNING: {stage}: further {type(exc).__name__} skips suppressed "
+              f"(count reported at exit)", file=sys.stderr)
+    return n
+
+
+_SKIP_SUMMARY_DONE = []
+
+
+def _skip_summary():
+    """One line per kind of skipped work, for the end of a run. Silent when nothing was skipped.
+
+    Idempotent: registered with atexit, so an explicit call must not double-report."""
+    if not _SKIP_NOTES or _SKIP_SUMMARY_DONE:
+        return
+    _SKIP_SUMMARY_DONE.append(True)
+    total = sum(_SKIP_NOTES.values())
+    print(f"[{PROG}] WARNING: {total} unit(s) of work were skipped and are NOT reflected in the "
+          f"output above:", file=sys.stderr)
+    for (stage, exc), n in sorted(_SKIP_NOTES.items()):
+        print(f"[{PROG}]          {stage}: {n} x {exc}", file=sys.stderr)
+
+
+def _t40_record_tuple(vd, ctx=None):
+    """The per-object facts carried by a type-0x40 backing record, as one tuple.
+
+    Shared by the directory walk and by the on-demand home-tree lookup (E89) so the two cannot
+    drift: the walk only sees backings in directories it traverses, and a file whose HOME object
+    is never traversed would otherwise get none of this -- losing its residency, USN, SecurityId,
+    EA bit and allocated size, and reporting it non-resident with the data sitting in the record.
+    Layout: alloc @+0x60, size @+0x58, LastUsn @+0x68, journal @+0x70, SecurityId @+0x50,
+    internal flags @+0x4C, reparse tag mirror @+0x7C (bit31), file attrs @+0x48.
+    """
+    _a = le64(vd, 0x60) if len(vd) >= 0x68 else 0
+    _s = le64(vd, 0x58) if len(vd) >= 0x60 else 0
+    _u = le64(vd, 0x68) if len(vd) >= 0x70 else 0
+    _j = le64(vd, 0x70) if len(vd) >= 0x78 else 0
+    _sid = le64(vd, 0x50) if len(vd) >= 0x58 else 0
+    _if = le32(vd, 0x4C) if len(vd) >= 0x50 else 0
+    _tag = le32(vd, 0x7C) if len(vd) >= 0x80 else 0
+    if not (_tag >> 31) & 1:
+        _tag = 0
+    _tgt = extract_reparse_from_backing(vd) if _tag in (0xA000000C, 0xA0000003) else ""
+    _bfa = le32(vd, 0x48) if len(vd) >= 0x4C else 0
+    _inl = _backing_inline_data(vd, ctx) is not None
+    _form = _stream_data_form(vd, ctx)
+    return (_a, _s, _u, _j, _sid, _if, _tag, _tgt, _bfa, _inl, _form)
+
+
 def _backing_inline_data(vd, ctx=None):
     """Inline `$DATA` bytes of a type-0x40 backing record, or None when the stream is extent-backed (E82).
 
@@ -1410,7 +1562,7 @@ def _backing_inline_data(vd, ctx=None):
     record**. Record placement and data residency are independent (E77): the split is what a move or a hard
     link forces, and it says nothing about where the bytes live. When the data stayed inline, the backing's
     main `$DATA` sub-record is the **resident** form — single-instance marker 0x80000001 + type 0x80, with
-    `summary_size@0x0C == 0x30` and `storage_type@0x10 == 0` — carrying the byte count at `+0x20` and the
+    `summary_size@0x0C == 0x30` and `StreamSummary flags@0x10 == 0` — carrying the byte count at `+0x20` and the
     bytes at `+0x3C`. (The extent-bearing form is the other one: `inner_hdr@0x00 = 0x88`, `summary_size` 0x200
     on v3.14+ / 0x1A0 on v3.4-v3.10, extents at `+0x88`.)
 
@@ -1431,7 +1583,13 @@ def _backing_inline_data(vd, ctx=None):
             if len(v) < 0x28 or le32(v, 0x0C) != 0x30 or le32(v, 0x10) != 0:
                 return None                      # extent-bearing (or an unexpected shape) -> not inline
             sz = le64(v, 0x20)
-            if sz == 0 or 0x3C + sz > len(v):
+            if sz == 0:
+                # A genuinely EMPTY resident stream: the inline form is present (summary 0x30 /
+                # storage 0) and simply carries no bytes. Returning None here made it look
+                # extent-backed, so the file was reported non-resident and `extract` failed with
+                # "file not found" for every empty hard-linked name (772 rows / 11 images).
+                return b""
+            if 0x3C + sz > len(v):
                 return None
             return v[0x3C:0x3C + sz]
     return None
@@ -1683,15 +1841,18 @@ def resolve_path(f, ps, cs, tr, obj_map, path):
         found = None
         try:
             rows = walk_bplus(f, ps, cs, tr, obj_map[oid])
-        except Exception:
+        except Exception as _e:
+            # "Unreadable" is not "absent". Returning the not-found tuple silently turns a
+            # damaged directory into a confident wrong answer for every caller.
+            _skip_note("path resolution (directory unreadable)", "oid 0x%x" % oid, _e)
             return (None, None, None)
         for kd, vd in rows:
             if len(kd) < 4 or le16(kd, 0) != 0x30:
                 continue
             try:
                 nm = kd[4:].decode("utf-16-le").rstrip("\x00")
-            except Exception:
-                continue
+            except UnicodeDecodeError:
+                continue          # a name that will not decode cannot be the one asked for
             if nm.lower() == part.lower():
                 found = (kd, vd)
                 break
@@ -1796,15 +1957,14 @@ def _decode_inline_extents(v, ncl, max_fvcn=None, tr=None):
         When a translator is available, the authoritative test is whether the container table can map it."""
         if vlcn == 0:
             return True                 # sparse hole (zero-filled by reassembly; never disk-read)
-        if 0 < vlcn < ncl:
-            return True
-        if tr is None:
-            return False
-        try:
-            plcn = tr.tr(vlcn)
-        except Exception:
-            return False
-        return plcn is not None and 0 < plcn < ncl
+        if tr is not None:
+            # Ask the container table whether it MAPS this address, and ask without translating:
+            # `tr.tr()` does not raise on a miss -- it falls back to identity and increments the
+            # miss counter -- so probing with it both accepted unmappable addresses (identity can
+            # land inside the physical range) and produced spurious "unmapped VLCN" warnings from
+            # a test that was never a real read. Translation happens only once a cover is accepted.
+            return _vlcn_mappable(tr, vlcn)
+        return 0 < vlcn < ncl           # no translator: physical range is all we have
 
     def _ext(off):
         if off < 0 or off + 24 > len(v):
@@ -2399,6 +2559,42 @@ def _verify_self_checksum(blk, cluster_size):
         if calc == stored:
             return (True, _CKNAME.get(ck, "?"))
     return (False, _CKNAME.get(ck, "?"))
+
+
+def _self_checksum_recipe(blk, cluster_size):
+    """Write-side companion of _verify_self_checksum: return (desc_off, cktype, digest_len, zero_window) for the
+    self-descriptor window that VERIFIES on `blk`, or None. `_recompute_self_checksum` uses it to reproduce the
+    exact digest ReFS accepts after a location-specific field is edited (e.g. a repaired SUPB's self-LCN)."""
+    import hashlib as _h, struct as _st
+    for off in range(0x40, min(len(blk), 0x400) - 0x30):
+        if blk[off + 0x23] != 0x08:                 continue
+        ck = blk[off + 0x22]
+        if ck not in (1, 2, 4):                     continue
+        dl = le32(blk, off + 0x24)
+        if dl not in (4, 8, 32) or off + 0x28 + dl > len(blk):   continue
+        stored = bytes(blk[off + 0x28: off + 0x28 + dl])
+        for dz in (0x2c, 0x30, 0x48, 0x68, 0x80):
+            if off + dz > cluster_size:             continue
+            b = bytearray(blk[:cluster_size]); b[off:off + dz] = b"\x00" * dz
+            calc = (_st.pack("<I", _crc32c(bytes(b))) if ck == 1 else
+                    _st.pack("<Q", refs_crc64(bytes(b))) if ck == 2 else _h.sha256(bytes(b)).digest())
+            if calc == stored:
+                return (off, ck, dl, dz)
+        return None
+    return None
+
+
+def _recompute_self_checksum(blk, cluster_size, recipe):
+    """Return a NEW bytearray = `blk` with the self-checksum digest recomputed per `recipe`
+    (from _self_checksum_recipe) and written at desc+0x28 — used after editing a self-LCN during repair."""
+    import hashlib as _h, struct as _st
+    off, ck, dl, dz = recipe
+    out = bytearray(blk)
+    b = bytearray(out[:cluster_size]); b[off:off + dz] = b"\x00" * dz
+    dig = (_st.pack("<I", _crc32c(bytes(b))) if ck == 1 else
+           _st.pack("<Q", refs_crc64(bytes(b))) if ck == 2 else _h.sha256(bytes(b)).digest())
+    out[off + 0x28: off + 0x28 + dl] = dig[:dl]
+    return out
 # The MLog log block (one LogCore record) is ALWAYS 4 KiB, independent of the
 # volume cluster size. On a 64 KiB-cluster volume each data-area cluster holds
 # 16 of these 4 KiB log blocks (verified RD; see docs/structures/mlog.md).
@@ -3220,17 +3416,37 @@ def _warn_usn_nonv3(versions):
           % (PROG, vs, vs), file=sys.stderr)
 
 
-def parse_usn_records(j_data):
+def parse_usn_records(j_data, alloc=None):
+    """Parse the `$J` ring buffer into records.
+
+    `alloc` (the journal's allocated size) enables a structural check: a record's USN **is** its
+    byte offset in the journal, so `usn % alloc == offset` holds for every genuine record.
+    Measured: 217,892 of 217,892 on `winsider`, 9,371 of 9,378 on `win11refstestmftecmd`,
+    33,379 of 33,381 on `win11refs8gtestmove_aftermove` -- the handful of failures are zero-filled
+    slack that happens to parse as a record (`usn == 0` at a non-zero offset), plus one genuine
+    outlier. Violations are REPORTED, never dropped: a torn or overwritten record is evidence, and
+    discarding it silently is what this whole pass exists to stop.
+
+    Bytes stepped over as unparseable are counted too. The loop advances 8 bytes at a time through
+    anything it cannot read, which on a wrapped journal is exactly where the torn record at the
+    write head lives -- previously skipped without a word.
+    """
     records = []
     off = 0
     end = len(j_data)
     nonv3 = set()
+    slack_bytes = 0        # zero-filled: the ring has not reached here yet -- normal
+    torn_bytes = 0         # NON-zero bytes that parse as no record -- a real anomaly
+    usn_violations = 0
     while off < end - USN_MIN_RECORD:
         rec_len = le32(j_data, off)
         if rec_len == 0:
-            off += 8; continue
+            # A zero record length is unwritten ring space, not damage: a journal that has never
+            # wrapped is mostly zeros (132 MB of 134 MB on one corpus volume). Counted separately
+            # so the caveat fires for torn data and stays silent for an empty journal.
+            off += 8; slack_bytes += 8; continue
         if rec_len < USN_MIN_RECORD or rec_len > USN_MAX_RECORD or (rec_len & 7) != 0:
-            off += 8; continue
+            off += 8; torn_bytes += 8; continue
         if off + rec_len > end:
             break
         major = le16(j_data, off + 0x04)
@@ -3241,17 +3457,32 @@ def parse_usn_records(j_data):
         # (a non-ReFS journal, or crafted/corrupt input) rather than refuse it, but we only have the V3
         # field layout — so those records are decoded with V3 offsets and flagged once via _warn_usn_nonv3.
         if major < 2 or major > 4:
-            off += 8; continue
+            off += 8; torn_bytes += 8; continue
         name_off_field = le16(j_data, off + 0x4A)
         name_len_field = le16(j_data, off + 0x48)
         if name_off_field < 0x4C or name_off_field + name_len_field > rec_len:
-            off += 8; continue
-        records.append(UsnRecord(j_data, off))
+            off += 8; torn_bytes += 8; continue
+        _r = UsnRecord(j_data, off)
+        if alloc and _r.usn % alloc != off:
+            usn_violations += 1
+        records.append(_r)
         if major != 3:
             nonv3.add(major)
         off += (rec_len + 7) & ~7
     if nonv3:
         _warn_usn_nonv3(nonv3)
+    if usn_violations:
+        _skip_note("USN journal", "%d record(s) whose USN is not their journal offset"
+                   % usn_violations, ValueError("usn %% alloc != offset"))
+    if torn_bytes:
+        # Non-zero and not a record. On the corpus these regions hold PRIOR CLUSTER CONTENTS --
+        # `GFSAREPLAY` marker text and BitLocker signatures -- i.e. ring space the journal was
+        # allocated over but has not yet written. That is recoverable prior data, not damage; the
+        # other cause is a genuinely torn record at the write head. Reported either way so the
+        # analyst knows the journal is not fully accounted for.
+        _skip_note("USN journal", "%d non-zero byte(s) that parse as no record (unwritten ring space "
+                   "still holding prior cluster contents, or a torn record at the write head)"
+                   % torn_bytes, ValueError("unparseable journal bytes"))
     return records
 
 
@@ -3545,8 +3776,15 @@ def get_reparse_target(f, ps, cs, tr, vlcns):
     return ""
 
 # ─── Directory tree walk ─────────────────────────────────────────────
-def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, trash_set):
-    """Walk the directory tree and collect file metadata."""
+def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, trash_set,
+                        legacy_link_join=None):
+    """Walk the directory tree and collect file metadata.
+
+    `legacy_link_join` restores the pre-E89 behaviour for one release: resolve a split name
+    only against backings the walk happened to traverse, instead of looking its home object
+    up on demand. Kept so a regression can be attributed rather than argued about."""
+    if legacy_link_join is None:
+        legacy_link_join = LEGACY_LINK_JOIN
     results = []
     visited = set()
     t40_content = {}     # (owner_dir_oid, file_id) -> has_real_content (alloc>0 or size>0); alloc=0 stubs map to False
@@ -3591,35 +3829,9 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
                 # @key+0x08) collides across files home'd in the same dir, so size is the disambiguator.
                 # alloc @val+0x60, size @val+0x58. (#340 / over-merge fix 2026-06-20.)
                 if len(kd) >= 0x10:
-                    _a = le64(vd, 0x60) if len(vd) >= 0x68 else 0
-                    _s = le64(vd, 0x58) if len(vd) >= 0x60 else 0
-                    # #327: the backing record IS the file's own $SI/stream-summary, same layout as the
-                    # resident type-0x30 value — SecurityId at val+0x50, internal-flags at val+0x4C,
-                    # LastUsn at val+0x68 ($SI+0x40), journal-id at val+0x70.
-                    _u = le64(vd, 0x68) if len(vd) >= 0x70 else 0
-                    _j = le64(vd, 0x70) if len(vd) >= 0x78 else 0
-                    _sid = le64(vd, 0x50) if len(vd) >= 0x58 else 0
-                    _if = le32(vd, 0x4C) if len(vd) >= 0x50 else 0
-                    # H3: reparse tag mirror @val+0x7C (valid only if bit31 set) + the embedded
-                    # REPARSE_DATA_BUFFER target (v3.14). Both ride this backing record; the hard-link
-                    # resolution below picks the file's OWN backing, so the resolved rec carries the
-                    # right tag/target (avoids the file_id-collision wrong-target bug). Target scan is
-                    # gated on a symlink/junction tag so non-reparse records are not scanned.
-                    _tag = le32(vd, 0x7C) if len(vd) >= 0x80 else 0
-                    if not (_tag >> 31) & 1:
-                        _tag = 0
-                    _tgt = extract_reparse_from_backing(vd) if _tag in (0xA000000C, 0xA0000003) else ""
-                    # Backing file_attrs (+0x48): the AUTHORITATIVE attrs for a non-resident file. The
-                    # type-0x30 pointer's +0x40 attrs omit the EA bit (0x40000) — proven on disk (only the
-                    # EA bit, plus a rare Archive-bit, ever differ). We OR ONLY the EA bit back in post-
-                    # processing so HasEA / FileAttributes / --filter ea are correct for non-resident files.
-                    _bfa = le32(vd, 0x48) if len(vd) >= 0x4C else 0
-                    # E82: does this backing hold the file's data INLINE (resident-form $DATA) rather than
-                    # in extents? Record placement and data residency are independent, so a split-out record
-                    # can still be the home of the bytes. Kept as a flag only (not the content) so the walk
-                    # stays memory-flat; `extract`/`dataruns` re-read the bytes on demand.
-                    _inl = _backing_inline_data(vd, (f, ps, cs, tr)) is not None
-                    t40_content[(oid, le64(kd, 0x08))] = (_a, _s, _u, _j, _sid, _if, _tag, _tgt, _bfa, _inl)
+                    # One definition of what a backing record says, shared with the on-demand
+                    # home-tree lookup below (E89) so the walked and unwalked paths cannot drift.
+                    t40_content[(oid, le64(kd, 0x08))] = _t40_record_tuple(vd, (f, ps, cs, tr))
                     # F-1 hardening: decode the backing's embedded type-0x39 hard-link back-pointers — one
                     # per name, each `(parent-dir OID @sub-value+0x08, name UTF-16LE @sub-value+0x18)`. This
                     # is the object's own authoritative list of its names (what the driver counts links from);
@@ -3669,6 +3881,9 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
                 entry["file_size"] = le64(vd, 0x38) if len(vd) >= 0x40 else 0
                 entry["is_dir"] = bool(entry["file_attrs"] & 0x10000000)
                 entry["is_resident"] = False
+                # RECORD PLACEMENT (E87), set once from the row's own form and never refined.
+                # `is_resident` below is refined by F5 into a residency statement; this is not.
+                entry["record_embedded"] = False
                 entry["security_id"] = 0
                 entry["usn"] = 0
                 entry["internal_flags"] = 0
@@ -3712,6 +3927,7 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
                 # Resident entry (small file)
                 entry["oid"] = 0  # No separate OID for resident files
                 entry["is_resident"] = True
+                entry["record_embedded"] = True      # RECORD PLACEMENT (E87), never refined
                 entry["is_dir"] = False
                 # A resident file has a FileRef too: home == parent (a resident file can never have been
                 # relocated — a cross-directory move forces non-residency, E70 / FS_MOVE_RA_001), and its
@@ -3824,6 +4040,11 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
                         entry["file_size"] = _ml_size
                         entry["is_resident"] = False
 
+            # DATA RESIDENCY (E87) for an embedded record, straight from the $DATA descriptor.
+            # A split record's form is filled in post-processing from its resolved backing.
+            if entry.get("record_embedded") and not entry.get("is_dir"):
+                entry["data_form"] = _stream_data_form(vd, (f, ps, cs, tr))
+
             results.append(entry)
 
             # Recurse into directories
@@ -3848,10 +4069,40 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
     # (winsider 33,104). Replaces the (home,ordinal,size,ctime,mtime) tuple and the presence-based
     # content-aware key, BOTH of which over-merged on the colliding ordinal (the size guard was dropped).
     hl_groups = {}
+
+    # E89: `t40_content` only holds backings found in directories the walk TRAVERSED. A split name
+    # whose HOME object is never traversed therefore resolved to nothing, fell to the `solo` branch,
+    # and lost every fact the backing carries -- residency, USN, SecurityId, the EA bit, allocated
+    # size. Measured: 548 names (446 distinct) on a real Windows volume reported IsResident=False
+    # while their backing's $DATA was the inline form; `extract` got it right because it resolves the
+    # home tree on demand, so `files` and `extract` disagreed about the same file.
+    #
+    # The home tree is reachable from obj_map whether or not the walk visited it, so look it up on
+    # demand and cache it. `--legacy-link-join` restores the old behaviour for one release.
+    _home_t40_cache = {}
+
+    def _home_t40(oid):
+        """{stream_idx: backing tuple} for one owner object, walked at most once."""
+        if oid not in _home_t40_cache:
+            got = {}
+            if oid and oid in obj_map:
+                try:
+                    _rows = walk_bplus(f, ps, cs, tr, obj_map[oid])
+                except Exception as _e:
+                    _rows = ()
+                    _skip_note("home-tree walk", "oid 0x%x" % oid, _e)
+                for _k, _v in _rows:
+                    if len(_k) >= 24 and le16(_k, 0) == 0x40 and len(_v) >= 0x68:
+                        got.setdefault(le64(_k, 8), _t40_record_tuple(_v, (f, ps, cs, tr)))
+            _home_t40_cache[oid] = got
+        return _home_t40_cache[oid]
+
     for i, e in enumerate(nonres_files):
         P = e["parent_oid"]; fid = e["file_id"]; home = e.get("home_oid", 0); S = e.get("file_size", 0)
         loc = t40_content.get((P, fid))      # (alloc, size, last_usn, journal_id) or None
         rem = t40_content.get((home, fid))
+        if rem is None and home and not legacy_link_join:
+            rem = _home_t40(home).get(fid)   # E89: the home object was not traversed by the walk
         if loc and loc[1] == S and loc[0] > 0:            # living here: local stream size+alloc match
             sig = ("obj", P, fid); rec = loc
         elif rem and rem[1] == S:                          # content at home: home stream size matches
@@ -3909,6 +4160,8 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
             # resident even though the record was split out of the name row.
             if len(rec) >= 10 and rec[9]:
                 e["data_inline"] = True
+            if len(rec) >= 11 and rec[10]:
+                e["data_form"] = rec[10]
         # H3: non-resident reparse tag + target. The reparse buffer lives in the file's OWN (home)
         # backing; source from `rem` (home stream) to dodge the file_id-collision wrong-target bug,
         # falling back to the resolved rec, then the 0x540 index for the tag. v3.14: target recovered;
@@ -3953,7 +4206,7 @@ def fs_content_summary(f, ps, cs, tr, obj_map, plus=True, depth=DEFAULT_DEPTH):
     counts = {
         "directories": sum(1 for r in results if r["is_dir"]),
         "files": sum(1 for r in results if not r["is_dir"]),
-        "resident_files": sum(1 for r in results if _reported_resident(r)),
+        "resident_files": sum(1 for r in results if _data_residency(r) == DATA_INLINE),
         "total_file_size_bytes": sum(r.get("file_size", 0) for r in results),
     }
     counts["non_resident_files"] = counts["files"] - counts["resident_files"]   # D1: resident + non-resident = files
@@ -3993,9 +4246,41 @@ def _volume_times(f, ps, cs, tr, obj_map):
     return (0, 0)
 
 def annotate_timestomp(results, f, ps, cs, tr, obj_map, margin=TS_MARGIN_100NS):
-    """Attach intrinsic timestomp flags to each non-directory record in place
-    (F2). Pure $SI heuristic; corroborate with refsanalysis `timestomp` (USN)."""
+    """Attach timestamp-anomaly flags to each non-directory record, in place.
+
+    The column used to carry only the four intrinsic `$SI` signals — the weakest evidence the tool has. Those
+    fire on ordinary creation-time-preserving copies as readily as on tampering (on one corpus volume 576 files
+    are flagged and only 2 have real evidence), so a reader could not tell a lead from a finding.
+
+    Two signals are added here, both free because the walk has already computed what they need:
+
+    * **HARDLINK_MACB_MISMATCH** — AUTHORITATIVE, and specific to ReFS: `$SI` is stored per NAME, so a
+      name-scoped SetFileTime rewrites only the opened name while a sibling hard-link keeps the true birth.
+      Two names of one object disagreeing on Created is structural proof, independent of any journal. Only the
+      back-dated name is flagged; the sibling holding the latest (authentic) Created stays clean.
+    * **ROUND_TIMESTAMPS** — created AND modified both whole-second, which a tool setting a date tends to
+      produce. Weak alone (archive extraction does it too), so it never raises the tier by itself.
+
+    Each flagged record also carries a tier: HIGH with an authoritative signal, else MEDIUM for a strong
+    intrinsic one, else LOW. The USN-journal signals stay in the `timestomp` command, which reads the
+    journal; this runs inside a plain `files` walk and must not."""
     vc, vm = _volume_times(f, ps, cs, tr, obj_map)
+    groups = {}
+    for r in results:
+        if r.get("is_dir"):
+            continue
+        key = (r.get("home_oid") or 0, r.get("file_id") or 0)
+        if key != (0, 0) and (r.get("hard_link_count", 1) or 1) > 1:
+            groups.setdefault(key, []).append(r)
+    hl_backdated = set()
+    for _key, members in groups.items():
+        cts = [m.get("create_time", 0) for m in members if _ft_valid(m.get("create_time", 0))]
+        if len(cts) < 2 or max(cts) - min(cts) <= margin:
+            continue
+        authentic = max(cts)                      # the LATEST sibling birth is the authentic one
+        for m in members:
+            if _ft_valid(m.get("create_time", 0)) and m["create_time"] < authentic - margin:
+                hl_backdated.add(id(m))
     for r in results:
         if r.get("is_dir"):
             continue
@@ -4003,8 +4288,19 @@ def annotate_timestomp(results, f, ps, cs, tr, obj_map, margin=TS_MARGIN_100NS):
             r.get("create_time", 0), r.get("modify_time", 0),
             r.get("change_time", 0), r.get("access_time", 0),
             vc, vm, margin)
+        if id(r) in hl_backdated:
+            flags.insert(0, "HARDLINK_MACB_MISMATCH")
+        _c, _m = r.get("create_time", 0), r.get("modify_time", 0)
+        if _ft_valid(_c) and _ft_valid(_m) and _c % 10000000 == 0 and _m % 10000000 == 0:
+            flags.append("ROUND_TIMESTAMPS")
         if flags:
-            r["timestomp_flags"] = "|".join(flags)
+            if "HARDLINK_MACB_MISMATCH" in flags:
+                tier = "HIGH"
+            elif any(s in flags for s in ("CHANGE_LATE", "PRE_FORMAT", "FUTURE")):
+                tier = "MEDIUM"
+            else:
+                tier = "LOW"
+            r["timestomp_flags"] = tier + ":" + "|".join(flags)
     return results
 
 # ─── Output formatters ───────────────────────────────────────────────
@@ -4016,27 +4312,42 @@ def annotate_timestomp(results, f, ps, cs, tr, obj_map, margin=TS_MARGIN_100NS):
 # reference = HomeOid:FileId, == the USN FileReferenceNumber), then HomeOid (owner dir = the FileId "home",
 # constant across a file's hard-link names) and FileId (per-home ordinal), then the name and its namespace
 # parent (ParentOID/ParentPath — differ from HomeOid for hard-links & recycle-bin/deleted entries), then
-def _reported_resident(r):
-    """Reported residency — *is the current `$DATA` stream inline?*, which is what `IsResident` is documented
-    to mean.
+def _record_placement(r):
+    """RECORD PLACEMENT (E87): is the object's record embedded in this name row, or split out
+    into a type-0x40 backing? A move or a hard link forces the split -- and moves no data.
+    Blank for directories, where the distinction does not apply."""
+    if r.get("is_dir"):
+        return ""
+    return "embedded" if r.get("record_embedded") else "split"
 
-    The internal `is_resident` flag carries a second, narrower meaning: *the object's record is embedded in
-    this name row*. That is the right gate for the ADS / snapshot / inline-reparse readers (they parse the
-    name row's own value) and for hard-link grouping, so those keep using it. But the two are independent
-    (E77/E82): a record split out into a type-0x40 backing — which a move or a hard link forces — can still
-    hold its bytes inline, and `data_inline` marks exactly those. Reporting therefore ORs them, so a
-    hard-linked file with inline data is reported resident *and* keeps its link count."""
-    return bool(r.get("is_resident") or r.get("data_inline"))
+
+def _data_residency(r):
+    """DATA RESIDENCY (E87): where the current $DATA stream's bytes are, read from the
+    descriptor's own form -- `inline`, `extents`, `snapshot-shared` or `sparse`.
+
+    Independent of placement. A 0-byte file is decided by descriptor form like any other:
+    an inline-form record carrying no bytes is `inline`; an extent-form one is `extents`.
+    Blank for directories."""
+    if r.get("is_dir"):
+        return ""
+    return r.get("data_form") or ""
+
+
 
 
 # FullPath (now a standard column). The remaining columns keep their prior order.
 CSV_COLUMNS = [
-    "OID", "FileName", "FullPath", "FileSize", "Extension",
-    "ParentPath", "ParentOID",
+    # Phase C: identity first. OID and FileRef were two columns of which exactly one was ever populated —
+    # OID for a directory, FileRef for a file — so they are merged into ONE identity column. This is
+    # consistent with the change journal, where a directory's own reference IS `OID:0x0` (its OID in the
+    # home slot, FileId 0) — verified on 589 directories with no counterexample.
+    "ObjectRef",
+    "FullPath", "FileName", "Extension", "FileSize",
     "Created", "Modified", "Changed", "Accessed",
-    "FileRef", "CreationDir", "HomeOID", "FileID", "USN",
+    "ParentPath", "ParentOID",
+    "CreationDir", "HomeOID", "FileID", "USN",
     "FileAttributes", "SecurityId", "OwnerSid", "GroupSid", "DACLSummary",
-    "HasADS", "ADSNames", "IsResident", "IsDirectory",
+    "HasADS", "ADSNames", "RecordPlacement", "DataResidency", "IsResident", "IsDirectory",
     "IsEncrypted", "IsCompressed", "HasIntegrity", "HasEA",
     "HardLinkCount", "HardLinkNames", "SnapshotCount", "SnapshotNames",
     "ReparseTag", "ReparseTarget", "IsSparse", "AllocatedSize",
@@ -4068,10 +4379,16 @@ def _full_path(r):
     return f"{pp}/{r['name']}" if pp and pp != "." else r["name"]
 
 def _is_moved(r):
-    """IsMoved (P6): the file currently sits in a directory other than the one it was created in. Detectable
-    only for non-resident files (a moved file is always non-resident, E70) and never for a hard link (hlc>1)
-    — those have a name outside their creation dir by design, not a move. Directories excluded."""
-    if r.get("is_dir") or r.get("is_resident"):
+    """IsMoved: the file currently sits in a directory other than the one it was created in —
+    `home_oid != parent_oid`, and not a hard link (hlc > 1), whose extra names live outside the
+    creation directory by design rather than by a move. Directories excluded.
+
+    Placement-independent (E87). It used to be gated on `is_resident` because E70 was read as
+    "a moved file is always non-resident"; what a move actually forces is the record SPLIT, and
+    the home back-reference this test needs exists only on a split row anyway — so the gate was
+    doing nothing except tying the column to a residency flag it has no relation to. A moved
+    file can perfectly well still hold its bytes inline."""
+    if r.get("is_dir"):
         return False
     home, par = r.get("home_oid") or 0, r.get("parent_oid") or 0
     return bool(home and par and home != par and (r.get("hard_link_count", 1) or 1) <= 1)
@@ -4088,20 +4405,19 @@ def _csv_fields(r, sd_map, version_str, oid2path=None):
     _home = r.get("home_oid") or 0
     creation_dir = (oid2path.get(_home, "") if (oid2path and _home) else "")
     return {
-        # Identity: OID is 0/empty for files; FileRef=HomeOID:FileID is the stable 128-bit ref; CreationDir is
-        # the resolved path of HomeOID (the directory the file was created in).
-        "OID": f"0x{oid:x}" if oid else "",
-        "FileName": r["name"],
+        # ONE identity column: a directory has an OID and no FileRef; a file has a FileRef and no OID — the two
+        # were never populated together. The journal agrees: a directory's own reference is `OID:0x0`.
+        "ObjectRef": (f"0x{oid:x}" if oid else _file_ref(r)),
         "FullPath": _full_path(r),
-        "FileSize": r.get("file_size", 0),
+        "FileName": r["name"],
         "Extension": ext_from_name(r["name"]),
-        "ParentPath": r.get("parent_path", ""),
-        "ParentOID": f"0x{r['parent_oid']:x}" if r.get("parent_oid") else "",
+        "FileSize": r.get("file_size", 0),
         "Created": filetime_to_iso(r.get("create_time", 0)),
         "Modified": filetime_to_iso(r.get("modify_time", 0)),
         "Changed": filetime_to_iso(r.get("change_time", 0)),
         "Accessed": filetime_to_iso(r.get("access_time", 0)),
-        "FileRef": _file_ref(r),
+        "ParentPath": r.get("parent_path", ""),
+        "ParentOID": f"0x{r['parent_oid']:x}" if r.get("parent_oid") else "",
         "CreationDir": creation_dir,
         "HomeOID": f"0x{r['home_oid']:x}" if r.get("home_oid") else "",
         "FileID": f"0x{r['file_id']:x}" if r.get("file_id") else "",
@@ -4113,13 +4429,20 @@ def _csv_fields(r, sd_map, version_str, oid2path=None):
         "DACLSummary": dacl_summary,
         "HasADS": r.get("has_ads", False),
         "ADSNames": r.get("ads_names", ""),
-        "IsResident": _reported_resident(r),
+        "RecordPlacement": _record_placement(r),
+        "DataResidency": _data_residency(r),
+        "IsResident": (_data_residency(r) == DATA_INLINE),
         "IsDirectory": r["is_dir"],
         "IsEncrypted": r.get("is_encrypted", False),
         "IsCompressed": r.get("is_compressed", False),
         "HasIntegrity": r.get("has_integrity", False),
         "HasEA": r.get("has_ea", False),
-        "HardLinkCount": r.get("hard_link_count", 1) if _file else "",
+        # F7: every FILE has at least one name, so report 1 rather than blank. The count is derived by
+        # grouping names that share a type-0x40 backing, and only a record split out of its name row has one —
+        # but a file WITHOUT one provably has exactly one name (creating a hard link forces the record out,
+        # E70), so 1 is the true value, not a guess. Blank here meant "not computed" and made `files`
+        # disagree with `summary`, which counts only groups of 2 or more. Directories keep "" (not applicable).
+        "HardLinkCount": (r.get("hard_link_count", 1) if _file else (1 if not r.get("is_dir") else "")),
         # Q5: hard-link names (;-joined), same gate as HardLinkCount (non-resident files only).
         "HardLinkNames": ";".join(r.get("hard_link_names") or []) if _file else "",
         "SnapshotCount": r.get("snapshot_count", 0) if r.get("snapshot_count", 0) > 0 else "",
@@ -4132,14 +4455,19 @@ def _csv_fields(r, sd_map, version_str, oid2path=None):
         # Q3: $SI InternalFlags (only confidently-named bits, e.g. 0x01 DeleteDisposition) — blank otherwise.
         "InternalFlags": internal_flags_str(r.get("internal_flags", 0)),
         "IsMoved": _is_moved(r),
+        # Named "informational" in the header itself: the intrinsic $SI signals fire on ordinary
+        # creation-time-preserving copies as often as on tampering, so the column is a lead, not a finding.
         "TimestompFlags": r.get("timestomp_flags", ""),
     }
 
 def _build_oid2path(results):
-    """OID → FullPath for directories, to resolve CreationDir from a row's HomeOID. Root (OID 0x600) maps to
-    '' (the volume root) so a root-created file resolves too."""
-    m = {r["oid"]: _full_path(r) for r in results if r.get("is_dir") and r.get("oid")}
-    m.setdefault(0x600, "")
+    """OID → FullPath for directories, to resolve CreationDir from a row's HomeOID.
+
+    Root (OID 0x600) maps to "." — the same way ParentPath renders the root. It used to map to "", which is
+    falsy, so every file created in the volume root showed an EMPTY CreationDir, indistinguishable from
+    "unknown". Any other directory that resolves to an empty path is normalised the same way."""
+    m = {r["oid"]: (_full_path(r) or ".") for r in results if r.get("is_dir") and r.get("oid")}
+    m.setdefault(0x600, ".")
     return m
 
 _CSV_FORMULA_LEAD = ("=", "+", "-", "@", "\t", "\r")
@@ -4178,7 +4506,7 @@ def _warn_csv_formula():
     shape as the 3.2 translator caveat: stderr only, never touches stdout, so valid output is byte-unchanged."""
     if _CSV_FORMULA_SEEN:
         print(f"[{PROG}] WARNING: {_CSV_FORMULA_SEEN} CSV cell(s) begin with a spreadsheet formula character "
-              f"(= + - @). Output is byte-faithful as required; re-run with --csv-safe before opening the file in "
+              f"(= + - @). Output is byte-faithful; re-run with --csv-safe before opening the file in "
               f"Excel or LibreOffice.", file=sys.stderr)
 
 atexit.register(_warn_csv_formula)
@@ -4232,22 +4560,24 @@ def _build_record(r, sd_map, version_str, oid2path=None):
     _home = r.get("home_oid") or 0
     creation_dir = (oid2path.get(_home, "") if (oid2path and _home) else "") or None
     return {
-        # Identity (lead) — mirrors the CSV; oid is null for files, file_ref=HomeOID:FileID, creation_dir = the
-        # resolved HomeOID path. (JSON keys are snake_case by convention; the recovery fields live in `deleted`.)
+        # Identity (lead), ordered like the CSV. `id` is the single identity the CSV shows in its first column
+        # (a directory's OID, or a file's FileRef); `oid` and `file_ref` are KEPT separate as well, because a
+        # JSON consumer reads by name and losing the distinction would cost more than the key saves.
+        "id": (f"0x{oid:x}" if oid else (_fr or None)),
         "oid": f"0x{oid:x}" if oid else None,
         "file_ref": _fr or None,
-        "home_oid": f"0x{r['home_oid']:x}" if r.get("home_oid") else None,
-        "file_id": f"0x{r['file_id']:x}" if r.get("file_id") else None,
-        "creation_dir": creation_dir,
-        "file_name": r["name"],
-        "parent_oid": f"0x{r['parent_oid']:x}" if r.get("parent_oid") else None,
-        "parent_path": r.get("parent_path", ""),
         "full_path": _full_path(r),
+        "file_name": r["name"],
         "extension": ext_from_name(r["name"]),
         "file_size": r.get("file_size", 0),
+        "parent_path": r.get("parent_path", ""),
+        "parent_oid": f"0x{r['parent_oid']:x}" if r.get("parent_oid") else None,
+        "creation_dir": creation_dir,
+        "creation_dir_oid": f"0x{r['home_oid']:x}" if r.get("home_oid") else None,
+        "file_id": f"0x{r['file_id']:x}" if r.get("file_id") else None,
         "is_directory": r["is_dir"],
         "is_moved": _is_moved(r),
-        "is_resident": _reported_resident(r),
+        "is_resident": (_data_residency(r) == DATA_INLINE),
         "created": filetime_to_iso(r.get("create_time", 0)),
         "modified": filetime_to_iso(r.get("modify_time", 0)),
         "changed": filetime_to_iso(r.get("change_time", 0)),
@@ -4263,7 +4593,8 @@ def _build_record(r, sd_map, version_str, oid2path=None):
         "has_integrity": r.get("has_integrity", False),
         "has_ea": r.get("has_ea", False),
         "reparse_target": r.get("reparse_target", "") or None,
-        "hard_link_count": r.get("hard_link_count", 1) if not r.get("is_resident") and not r.get("is_dir") else None,
+        "hard_link_count": (None if r.get("is_dir")
+                            else (r.get("hard_link_count", 1) if not r.get("is_resident") else 1)),   # F7
         "hard_link_names": r.get("hard_link_names") or None,
         "snapshot_count": r.get("snapshot_count", 0) if r.get("snapshot_count", 0) > 0 else None,
         "snapshot_names": (r.get("snapshot_names") or None) if r.get("snapshot_count", 0) > 0 else None,
@@ -4668,7 +4999,14 @@ def _print_fastsummary(summary, plus_mode=False, is_summary=False):
         elif vstate:
             print(f"  Volume state:       {vstate}")
             if summary.get("driver_note"):
-                print(f"      • {summary['driver_note']}")   # B10: Insider (newer driver, native format) note
+                # S1: printed over two lines — as one it ran well past the width used everywhere else.
+                _dn = summary["driver_note"]
+                if " (" in _dn:
+                    _head, _tail = _dn.split(" (", 1)
+                    print(f"      • {_head}")
+                    print(f"        ({_tail}")
+                else:
+                    print(f"      • {_dn}")
         print(f"  Security descs:     {summary.get('security_descriptors', 0)}")
         print(f"  Reparse index:      {summary.get('reparse_index_entries', 0)} entries")
         print(f"  Trash table:        {summary.get('trash_table_entries', 0)} entries")
@@ -4686,8 +5024,9 @@ def _print_fastsummary(summary, plus_mode=False, is_summary=False):
             print(f"  Space used:         {_c['used']} of {hs(_c['allocator_covered_bytes'])} "
                   f"({_c['used_pct']}%) — {_c['free']} free")
             if _c["outside_allocator_bytes"]:
-                print(f"      • {hs(_c['outside_allocator_bytes'])} of the volume lies past the last container "
-                      f"and is outside the allocator (not free space)")
+                # S3: the old wording said where the space was but not what it meant, on a 106-column line.
+                print(f"      • {hs(_c['outside_allocator_bytes'])} lies beyond the last container,")
+                print("        so no allocator tracks it — it is neither used nor free")
         # 8summary: FS Metadata = OID 0x520 (ReFS's $Extend analogue; holds the USN "Change Journal" when
         # active). Show its named child entries, not the raw B+-tree row count — the lone row on an empty one
         # is the directory's own record, which read as a confusing "[1 rows]".
@@ -4717,7 +5056,7 @@ def _print_summary(summary, fast_data, plus_mode=False):
     print("File System Content (from directory walk)")
     print("-" * w)
     print(f"  Directories:        {summary['directories']}")
-    print(f"  Files:              {summary['files']} ({summary['resident_files']} resident + {summary.get('non_resident_files', 0)} non-resident)")
+    print(f"  Files:              {summary['files']} ({summary['resident_files']} inline + {summary.get('non_resident_files', 0)} extent-backed)")
     print(f"  Total file size:    {summary['total_file_size']}")
     print(f"  Oldest timestamp:   {summary['oldest_timestamp']}")
     print(f"  Newest timestamp:   {summary['newest_timestamp']}")
@@ -4897,13 +5236,58 @@ def cmd_oid_detail(f, ps, cs, tr, obj_map, vmaj, vmin, target_oid, json_mode=Fal
 
     return result
 
-def _print_oid_detail(detail, path=None):
+def _print_oid_detail(detail, path=None, sd_map=None):
+    """Detail for a DIRECTORY / system object.
+
+    It used to open straight into the raw structural dump — VLCNs, attribute types, field names like
+    `si_field_0x30` — which is a different thing from the labelled summary a FILE gets, for no good reason:
+    a directory has the same identity, timestamps, ownership and attributes a file does. It now leads with
+    that summary, using the same labels and order as `details <file>` and the `files` columns, and the
+    structural dump follows unchanged so nothing is lost."""
     w = 78
+    si = (detail.get("attributes", {}).get("0x10", {}).get("entries") or [{}])[0].get("si", {}) or {}
+    def _si(k, default=""):
+        v = si.get(k, default)
+        return "" if v is None else v
     print("=" * w)
-    print(f"OID Detail: {detail['oid']}")
+    print(f"Directory Detail: {path or detail['oid']}")
     print("=" * w)
+    print(f"  ObjectRef:          {detail['oid']}   (this object's own OID)")
     if path:
         print(f"  Path:               {path}")
+    print(f"  Created:            {_si('create_time')}")
+    print(f"  Modified:           {_si('modify_time')}")
+    print(f"  Changed:            {_si('change_time')}")
+    print(f"  Accessed:           {_si('access_time')}")
+    # Child count — what a reader actually wants from a directory, and it is simply the number of name rows.
+    _kids = detail.get("attributes", {}).get("0x30", {}).get("count")
+    if _kids is not None:
+        print(f"  Child entries:      {_kids}   (type-0x30 name rows in this directory)")
+    print("  Is directory:       True")
+    print(f"  File attributes:    {_si('file_attrs')}")
+    _sec = _si("security_id")
+    print(f"  Security ID:        {_sec}")
+    if sd_map and _sec:
+        try:
+            _key = int(str(_sec), 16) if str(_sec).startswith("0x") else int(_sec)
+        except (TypeError, ValueError):
+            _key = None
+        _sd = (sd_map.get(_key) or ("", "", "")) if _key is not None else ("", "", "")
+        if _sd[0]:
+            print(f"  Owner SID:          {_sid_display(_sd[0])}")
+            print(f"  Group SID:          {_sid_display(_sd[1])}")
+            if _sd[2]:
+                print(f"  DACL:               {_sd[2]}")
+    if _si("last_usn"):
+        print(f"  USN:                {_si('last_usn')}")
+    if _si("internal_flags"):
+        print(f"  Internal flags:     {_si('internal_flags')}")
+    if str(_si("reparse_tag")) not in ("", "0x00000000"):
+        print(f"  Reparse tag:        {_si('reparse_tag')}")
+    print()
+    print("-" * w)
+    print("  On-disk structure")
+    print("-" * w)
     print(f"  VLCNs:              {', '.join(detail['vlcns'])}")
     print(f"  Total rows:         {detail['attribute_count']}")
     print(f"  Attribute types:    {', '.join(f'0x{t:02x}' for t in detail['attribute_types'])}")
@@ -4979,12 +5363,15 @@ def _print_file_detail(r, sd_map, version_str, raw_value=None, oid2path=None):
     # type-0x30 pointer) and the detail block below.
     _eas, _packed = extract_eas_from_value(raw_value) if raw_value is not None else (None, None)
     _has_ea = _eas is not None
-    print(f"  OID:                {('0x%x' % oid) if oid else '(resident/non-resident file — no own OID)'}")
+    # Phase C: ONE identity line, matching the `files` ObjectRef column — a directory has an OID, a file has
+    # a FileRef; they were never both populated.
     _fref = _file_ref(r)
-    if _fref:
-        print(f"  FileRef:            {_fref}   (HomeOid:FileId, the stable file reference)")
-    print(f"  Parent OID:         {('0x%x' % r['parent_oid']) if r.get('parent_oid') else ''}")
-    print(f"  Parent path:        {r.get('parent_path', '')}")
+    if oid:
+        print(f"  ObjectRef:          0x{oid:x}   (this object's own OID)")
+    elif _fref:
+        print(f"  ObjectRef:          {_fref}   (FileRef = HomeOID:FileID, the directory the file was CREATED in)")
+    else:
+        print("  ObjectRef:          (none resolved)")
     # Relocation signal (F-1): a file whose HOME (creation dir, value+0x08) differs from its current parent
     # was either moved out of its creation directory (single name) or hard-linked into another directory
     # (>1 name) — told apart by the hard-link count. HomeOid is frozen at creation; the parent is the
@@ -4996,23 +5383,35 @@ def _print_file_detail(r, sd_map, version_str, raw_value=None, oid2path=None):
             print(f"  Home directory:     0x{_home:x}   hard-link name — created here, not in 0x{_par:x}")
         else:
             print(f"  Home directory:     0x{_home:x}   ⚠ moved: created here, now under parent 0x{_par:x}")
-    if oid2path is not None and _home:
-        _cdir = oid2path.get(_home, "")
-        if _cdir:
-            print(f"  Creation dir:       {_cdir}")
+    # Field order mirrors the `files` columns, so the two views read the same way.
     print(f"  Name:               {r.get('name', '')}")
     print(f"  Extension:          {ext_from_name(r.get('name', ''))}")
-    print(f"  Is directory:       {r.get('is_dir', False)}")
-    print(f"  Is resident:        {_reported_resident(r)}")
-    if r.get("is_deleted"):
-        print(f"  Is deleted:         True ({r.get('deletion_source', '')})")
     print(f"  File size:          {r.get('file_size', 0)} ({_human_size(r.get('file_size', 0))})")
-    print(f"  Allocated size:     {'' if al is None else f'{al} ({_human_size(al)})'}")
     print(f"  Created:            {filetime_to_iso(r.get('create_time', 0))}")
     print(f"  Modified:           {filetime_to_iso(r.get('modify_time', 0))}")
     print(f"  Changed:            {filetime_to_iso(r.get('change_time', 0))}")
     print(f"  Accessed:           {filetime_to_iso(r.get('access_time', 0))}")
+    print(f"  Parent path:        {r.get('parent_path', '')}")
+    print(f"  Parent OID:         {('0x%x' % _par) if _par else ''}")
+    if oid2path is not None and _home:
+        _cdir = oid2path.get(_home, "")
+        if _cdir:
+            print(f"  Creation dir:       {_cdir}")
+    if _home:
+        print(f"  HomeOID:            0x{_home:x}   (the directory this file was CREATED in; unchanged by move/rename)")
+    if r.get("file_id"):
+        print(f"  FileID:             0x{r['file_id']:x}")
+    print(f"  Is directory:       {r.get('is_dir', False)}")
+    print(f"  Data residency:     {_data_residency(r) or '(directory)'}")
+    print(f"  Is moved:           {_is_moved(r)}")
+    if r.get("is_deleted"):
+        print(f"  Is deleted:         True ({r.get('deletion_source', '')})")
+    print(f"  Allocated size:     {'' if al is None else f'{al} ({_human_size(al)})'}")
     print(f"  File attributes:    0x{fa:08x} ({attrs_to_str(fa)})")
+    if r.get("internal_flags"):
+        print(f"  Internal flags:     0x{r['internal_flags']:02x}")
+    if r.get("timestomp_flags"):
+        print(f"  Timestomp flags:    {r['timestomp_flags']}   (informational — corroborate with `timestomp`)")
     print(f"  Security ID:        {sec if sec else ''}")
     print(f"  Owner SID:          {_sid_display(owner)}")
     print(f"  Group SID:          {_sid_display(group)}")
@@ -5110,10 +5509,16 @@ def cmd_search(f, ps, cs, tr, obj_map, vmaj, vmin, pattern, regex_mode=False, ma
             continue
         matches.append({
             "oid": f"0x{r['oid']:x}" if r["oid"] else ("(resident)" if r.get("is_resident") else "(non-res)"),
+            # Phase C: the single identity a reader can act on — a directory's OID, or a file's FileRef.
+            "id": (f"0x{r['oid']:x}" if r["oid"] else (_file_ref(r) or "")),
             "parent_oid": f"0x{r['parent_oid']:x}" if r.get("parent_oid") else "",
             "type": "Dir" if r["is_dir"] else "File",
             "file_size": r.get("file_size", 0),
-            "is_resident": _reported_resident(r),
+            "is_resident": (_data_residency(r) == DATA_INLINE),
+            # E87: the listing says WHICH form, not a yes/no -- collapsing four states into one
+            # boolean is the conflation this release removes from the CSV, so the human view
+            # must not reintroduce it.
+            "data": _data_residency(r),
             "path": r["path"],
             "name": r["name"],
             "is_deleted": r.get("is_deleted", False),
@@ -5129,20 +5534,24 @@ def _print_search(matches, pattern):
     if not matches:
         print(f"No matches for \"{pattern}\"")
         return
-    print(f"{'OID':<12} {'Parent':<12} {'Type':<5} {'Size':>12} {'Res':>4}  {'Modified':<19}  Path")
-    print(f"{'─'*11}  {'─'*11}  {'─'*4}  {'─'*12} {'─'*4}  {'─'*19}  {'─'*40}")
+    # Phase C: one identity column (a directory's OID, a file's FileRef) — the old OID column carried
+    # "(non-res)"/"(resident)" placeholders for files, which said nothing about identity and duplicated the
+    # Res column. `Parent` is dropped: the parent directory is already visible in Path.
+    # The value set here is EXACTLY the CSV's DataResidency set -- one vocabulary, not an abbreviation
+    # for the human view and a longer token for the machine one. That divergence is what E87 corrects.
+    print(f"{'ObjectRef':<14} {'Type':<5} {'Size':>12}  {'Data':<15}  {'Modified':<19}  Path")
+    print(f"{'─'*13}  {'─'*4}  {'─'*12}  {'─'*15}  {'─'*19}  {'─'*40}")
     for m in matches:
         size_str = _human_size(m["file_size"]) if m["file_size"] else "0"
-        res = "Yes" if m["is_resident"] else "No"
+        res = m.get("data") or ""
         if m["type"] == "Dir":
             res = "—"
         del_mark = " [DEL]" if m.get("is_deleted") else ""
         mod = (m.get("modified") or "")[:19]
-        print(f"{m['oid']:<12} {m['parent_oid']:<12} {m['type']:<5} {size_str:>12} {res:>4}  {mod:<19}  {m['path']}{del_mark}")
+        print(f"{m.get('id') or m['oid']:<14} {m['type']:<5} {size_str:>12}  {res:<15}  {mod:<19}  {m['path']}{del_mark}")
     n = len(matches)
-    # A FILE has no own OID (OID 0), so `--oid` addresses only directories — point at `details <path>` (works
-    # for files too) / `details --id HomeOid:FileId` for the unambiguous reference.
-    print(f"\n{n} match{'es' if n != 1 else ''}. Use `details <path>` (or `details --id HomeOid:FileId`) for full detail.")
+    print(f"\n{n} match{'es' if n != 1 else ''}. Use `details <path>`, `details --id FileRef` "
+          f"(HomeOID:FileID) or `details --id OID` for full detail.")
 
 # ─── Bootstrap ────────────────────────────────────────────────────────
 def bootstrap(image_path, partition_start=None):
@@ -5225,9 +5634,12 @@ def die(msg):
     sys.exit(1)
 
 def _looks_text(b, sample=8192):
-    """Conservative text sniff for the C1 stdout-newline: no NUL byte and decodes as UTF-8."""
-    chunk = b[:sample]
-    if b"\x00" in chunk:
+    """Conservative text sniff for the C1 stdout-newline: no EMBEDDED NUL, and decodes as UTF-8.
+
+    TRAILING NULs are padding, not content — a Zone.Identifier ADS ends with one, and rejecting it on that
+    basis left genuine text without its newline so the next stderr line ran on to the same line."""
+    chunk = b.rstrip(b"\x00")[:sample]
+    if not chunk or b"\x00" in chunk:
         return False
     try:
         chunk.decode("utf-8")
@@ -5357,7 +5769,7 @@ def _native_fmt_dest(args):
     if getattr(args, "json", None)  is not None: return "json",  _d(args.json)
     if getattr(args, "jsonl", None) is not None: return "jsonl", _d(args.jsonl)
     if getattr(args, "csv", None)   is not None: return "csv",   _d(args.csv)
-    if getattr(args, "body", False):             return "body",  o
+    if getattr(args, "body", None) is not None:  return "body",  _d(args.body)
     return "csv", o
 
 def _native_out(dest):
@@ -6015,7 +6427,14 @@ def cmd_usn(image, remaining, partition_start):
 
         j_data = read_usn_j_stream(f, ps, cs, streams["j_extents"],
                                     streams["j_stream_size"])
-        records = parse_usn_records(j_data)
+        records = parse_usn_records(j_data, alloc=len(j_data))
+        # `$J` is a RING: once it wraps, buffer order stops being time order and the listing runs
+        # backwards across the wrap point. Sorting by USN restores the chronology the analyst is
+        # actually reading. Measured: `winsider` is wrapped (1 descending step in 217,892 records),
+        # the first wrapped journal observed on this corpus -- E77 had the wrap model recorded as
+        # inferred with none seen. Unwrapped journals are already in USN order, so this is a no-op
+        # for them (verified: 0 descending steps on every other corpus journal).
+        records.sort(key=lambda r: r.usn)
         journal_meta = parse_usn_journal_metadata(streams, f, ps, cs)
 
         oid_paths = build_oid_path_map(f, ps, cs, tr, obj_map)
@@ -6728,13 +7147,18 @@ def _find_extents_in_subrecord(vd, rec_off, rec_size, needed, tr, cs, result):
             run_len = le32(vd, eoff + 20)
             full_vlcn = vlcn | (vlcn_hi << 32)
             if run_len > 0 and full_vlcn > 0:
-                plcn = tr.tr(full_vlcn)
+                # NOTE: no tr.tr() here. Translating a candidate that is then REJECTED counted a
+                # container-table miss, and that counter is surfaced to the analyst as "output may be
+                # incomplete (corrupt/truncated container table)" — a false alarm on healthy volumes
+                # (measured: 794 of 794 misses on three corpus images were rejected candidates).
                 candidate_extents.append({
-                    "vlcn": full_vlcn, "plcn": plcn, "file_vcn": file_vcn,
+                    "vlcn": full_vlcn, "plcn": 0, "file_vcn": file_vcn,
                     "clusters": run_len, "flags": flags, "disk_offset": 0,
                 })
                 total_clusters += run_len
         if total_clusters == needed and candidate_extents:
+            for _e in candidate_extents:                 # resolve only an ACCEPTED set
+                _e["plcn"] = tr.tr(_e["vlcn"])
             result["extents"] = candidate_extents
             return
 
@@ -6751,15 +7175,16 @@ def _find_extents_in_subrecord(vd, rec_off, rec_size, needed, tr, cs, result):
             run_len = le32(vd, eoff + 20)
             full_vlcn = vlcn | (vlcn_hi << 32)
             if run_len > 0 and full_vlcn > 0:
-                plcn = tr.tr(full_vlcn)
-                candidate_extents.append({
-                    "vlcn": full_vlcn, "plcn": plcn, "file_vcn": file_vcn,
+                candidate_extents.append({                 # translation deferred — see the first loop
+                    "vlcn": full_vlcn, "plcn": 0, "file_vcn": file_vcn,
                     "clusters": run_len, "flags": flags, "disk_offset": 0,
                     "integrity_checksum": flags == 0x1c00d0,
                 })
                 total_clusters += run_len
             eoff += 32 if flags == 0x1c00d0 else 24
         if total_clusters == needed and candidate_extents:
+            for _e in candidate_extents:
+                _e["plcn"] = tr.tr(_e["vlcn"])
             result["extents"] = candidate_extents
             return
 
@@ -6768,10 +7193,13 @@ def _find_extents_in_subrecord(vd, rec_off, rec_size, needed, tr, cs, result):
         if le32(vd, scan_off) == _DATA_ATTR_MARKER:
             vlcn = le32(vd, scan_off + 4)
             cluster_count = le64(vd, scan_off + 8) if scan_off + 16 <= len(vd) else 0
-            if cluster_count == needed and vlcn > 0:
-                plcn = tr.tr(vlcn)
+            if cluster_count == needed and vlcn > 0 and _vlcn_mappable(tr, vlcn):
+                # The mappability test (not tr.tr()) matters twice here: this is a heuristic marker scan, so a
+                # coincidental match on an UNMAPPABLE vlcn would otherwise be accepted and read identity-mapped
+                # — the wrong clusters — and would also count a container-table miss the analyst sees as
+                # evidence the volume is damaged.
                 result["extents"] = [{
-                    "vlcn": vlcn, "plcn": plcn, "file_vcn": 0,
+                    "vlcn": vlcn, "plcn": tr.tr(vlcn), "file_vcn": 0,
                     "clusters": cluster_count, "flags": 0, "disk_offset": 0,
                 }]
                 return
@@ -6909,7 +7337,19 @@ def _decode_holder_extents(vb, cs, tr):
     exts = _parse_inline_holder_extents(vb, cs, tr)
     if not exts:
         exts = _parse_extents_from_type40(vb, cs, tr)["extents"]
-    return exts if _contiguous_cover(exts, need) else []
+    if not _contiguous_cover(exts, need):
+        return []
+    # Report any address in an ACCEPTED cover that the container table cannot map. The cover is
+    # structurally complete, so the extents are real; an unmappable address means the read of
+    # those clusters will fall back to identity and return whatever is at that physical offset.
+    # Silence here is how wrong bytes reach the operator looking like right ones.
+    if tr is not None:
+        bad = [e["vlcn"] for e in exts if e.get("vlcn") and not _vlcn_mappable(tr, e["vlcn"])]
+        if bad:
+            _skip_note("extent cover (unmappable VLCN)",
+                       "%d of %d addresses, first 0x%x" % (len(bad), len(exts), bad[0]),
+                       ValueError("container table has no mapping"))
+    return exts
 
 
 # ─── Nested extent node inside an embedded $DATA record (E86) ────────────────
@@ -6928,7 +7368,17 @@ def _vlcn_mappable(tr, vlcn):
     if tr is None:
         return True
     try:
-        return (vlcn >> tr.shift) in tr.map
+        key = vlcn >> tr.shift
+        if key in tr.map:
+            return True
+        # Below the FIRST container id the address space is not containerised at all: container
+        # ids begin at 2 (E74), so keys 0 and 1 never appear in the table and an address there is
+        # a real physical cluster that needs no translation. Treating those as "unmappable" made
+        # the tool warn that output "may be incomplete" for three perfectly readable large files
+        # on every v3.4 volume -- the same false-alarm shape as the container-warning fix in the
+        # 2026-09-03 pass, where 794 of 794 warnings were spurious.
+        low = min(tr.map) if tr.map else None
+        return low is not None and key < low
     except Exception:
         return False
 
@@ -6938,13 +7388,23 @@ def _extent_node_rows(buf, N):
     Returns (None, []) when buf[N:] is not such a node."""
     if N < 0 or N + 0x28 > len(buf) or le32(buf, N) != 0x28:
         return None, []
+    # Header fields as `_walk` reads them on a page (btree_node.md, E77 item 6): the key-index
+    # array runs from +0x10 to +0x20 with a 4-byte stride, and its length must agree with the
+    # row count at +0x14. Deriving the array's start from a u64 at +0x20 worked only because the
+    # top four bytes happen to be zero, and it silently produced a plausible offset when the
+    # header was damaged instead of rejecting the node.
     nrows = le32(buf, N + 0x14)
-    node_sz = le64(buf, N + 0x20)
-    if not (0 < nrows < 8192) or not (0x28 < node_sz <= len(buf) - N):
+    idx_start = le32(buf, N + 0x10)
+    idx_end = le32(buf, N + 0x20)
+    if not (0 < nrows < 8192):
         return None, []
-    idx = N + node_sz - 4 * nrows          # trailing index array: u16 row offset + u16 key hint
-    if idx < N + 0x28:
+    if not (0x28 <= idx_start < idx_end <= len(buf) - N):
         return None, []
+    if (idx_end - idx_start) // 4 != nrows:
+        _skip_note("extent node header", "index array (%d-%d)/4 != %d rows"
+                   % (idx_end, idx_start, nrows), ValueError("node-header invariant"))
+        return None, []
+    idx = N + idx_start                    # index array: u16 row offset + u16 key hint
     offs = []
     for r in range(nrows):
         a = idx + 4 * r
@@ -7067,7 +7527,11 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
                 file_size = le64(vd, 0x38)
                 file_attrs = le32(vd, 0x40)
                 is_dir = bool(file_attrs & 0x10000000)
-                if not is_dir and file_size > 0:
+                if not is_dir:
+                    # A 0-byte file is still a file. Skipping it here emitted NO record at all, so
+                    # `extract` reported "file not found" for a name that `files`/`details` list
+                    # (measured: every empty hard-linked name on win11refs2tspecials). Its content
+                    # resolves through the normal path below and is correctly empty.
                     files.append((name, stream_idx, target_oid, file_size,
                                   alloc_size, file_attrs, ts))
             elif key_flags == 0x01 and len(vd) > 84:
@@ -7566,7 +8030,14 @@ def _parse_id_ref(id_str):
     """Parse a `--id HomeOid:FileId` reference (e.g. 0x3069:0x2) into (home_oid, file_id) ints (4.F). Both
     parts accept 0x-hex or decimal. Dies on a malformed reference."""
     if ":" not in id_str:
-        die(f"--id must be HomeOid:FileId (e.g. 0x3069:0x2), got {id_str!r}")
+        # A bare OID is a directory / system object: its own reference is `OID:0` (FileId 0 == the object
+        # itself), which is exactly how the change journal identifies a directory. So `--id 0x703` and
+        # `--id 0x703:0x0` mean the same thing, and one flag addresses either kind of object.
+        try:
+            return int(id_str, 0), 0
+        except ValueError:
+            die(f"--id: expected an OID (e.g. 0x703) or a FileRef HomeOID:FileID (e.g. 0x703:0x2e), "
+                f"got {id_str!r}")
     a, b = id_str.split(":", 1)
     try:
         return int(a, 0), int(b, 0)
@@ -7598,6 +8069,8 @@ def get_file_content(f, ps, cs, tr, info, verify_integrity=False):
     file_size = info.get("file_size", 0)
     extents = info.get("extents") or []
     # (A) resident-storage with no extent list: inline $DATA / CoW-shared / inline-0x10028-holder (§C.3b).
+    if file_size == 0 and not extents:
+        return b"", {"source": "empty", "size": 0}
     if storage == "resident" and not extents:
         if file_size == 0:
             return b"", {"source": "empty", "size": 0}
@@ -7766,7 +8239,7 @@ def cmd_extract(image, remaining, partition_start):
             if ads_match["storage"] == "extent-backed" and ads_match.get("extents"):
                 # E61: a large (>=2 KB) non-resident ADS — content in on-disk extents (type-0x0 record).
                 buf = _read_vlcn_extents(f, ps, cs, tr, ads_match["extents"], ads_match["stream_size"])
-                print(f"Extracting '{target['name']}:{stream_name}' ({len(buf)} bytes — non-resident ADS, "
+                print(f"Extracting '{target['name']}:{stream_name}' ({len(buf)} bytes — extent-backed ADS, "
                       f"{len(ads_match['extents'])} extents):", file=sys.stderr)
                 if target.get("file_attrs", 0) & 0x4000:
                     print(f"[{PROG}] WARNING: host is EFS-encrypted — ADS bytes are CIPHERTEXT.", file=sys.stderr)
@@ -7775,15 +8248,24 @@ def cmd_extract(image, remaining, partition_start):
             die(f"ADS '{stream_name}' storage is '{ads_match['storage']}' — its content is not inline in the "
                 f"directory value and no extent list was found, so it cannot be extracted from this record")
 
+        if (target.get("file_size", 0) == 0 and not target["extents"]
+                and target["storage"] != "resident"):
+            # An empty file whose record was split out of its name row: there are no bytes and no
+            # extents, so the correct result is an empty output, not a failure. Reported without
+            # the word "resident" because this record does not carry the inline form.
+            print(f"Extracting '{target['name']}' (0 bytes — empty file):", file=sys.stderr)
+            _emit(b"")            # -o was given: create the (empty) file rather than nothing
+            return 0
         if target["storage"] == "resident" and not target["extents"]:
             if target.get("file_size", 0) == 0:
-                print(f"Extracting '{target['name']}' (0 bytes — empty resident file):", file=sys.stderr)
+                print(f"Extracting '{target['name']}' (0 bytes — empty file, inline form):", file=sys.stderr)
+                _emit(b"")        # -o was given: create the (empty) file rather than nothing
                 return 0
             # Q7: resident files store their $DATA inline in the directory value — write those bytes.
             content = target.get("resident_content")
             if content is not None:
                 fsz = target.get("file_size", 0)
-                print(f"Extracting '{target['name']}' ({len(content)} bytes — resident/inline):", file=sys.stderr)
+                print(f"Extracting '{target['name']}' ({len(content)} bytes — inline):", file=sys.stderr)
                 if len(content) != fsz:
                     print(f"[{PROG}] WARNING: inline content is {len(content)} bytes but $DATA size is {fsz} "
                           f"— verify before relying on the output.", file=sys.stderr)
@@ -7794,7 +8276,7 @@ def cmd_extract(image, remaining, partition_start):
             cow = target.get("cow_content")
             if cow is not None:
                 fsz = target.get("file_size", 0)
-                print(f"Extracting '{target['name']}' ({len(cow)} bytes — resident, shared with latest snapshot):",
+                print(f"Extracting '{target['name']}' ({len(cow)} bytes — snapshot-shared with the latest snapshot):",
                       file=sys.stderr)
                 if len(cow) != fsz:
                     print(f"[{PROG}] WARNING: recovered {len(cow)} bytes but $DATA size is {fsz} — verify.",
@@ -7811,7 +8293,7 @@ def cmd_extract(image, remaining, partition_start):
                 _ic = _recover_inline_extent_content(f, ps, cs, tr, target.get("raw_value", b""))
                 if _ic is not None:
                     fsz = target.get("file_size", 0)
-                    print(f"Extracting '{target['name']}' ({len(_ic)} bytes — non-resident, inline extent map):",
+                    print(f"Extracting '{target['name']}' ({len(_ic)} bytes — extent-backed, inline extent map):",
                           file=sys.stderr)
                     if target.get("file_attrs", 0) & 0x4000:
                         print(f"[{PROG}] WARNING: '{target['name']}' is EFS-encrypted — the extracted bytes are "
@@ -9567,7 +10049,14 @@ def _deleted_recoverability(e, cs=None, tr=None):
 
     'recoverable' means the content (or its extent map) is PRESENT in this remnant — NOT that the bytes are
     un-overwritten (there is no allocation/freshness check). EFS content decodes to CIPHERTEXT; sparse files
-    short-read; a 'partial'-confidence slack remnant is hedged."""
+    short-read; a 'partial'-confidence slack remnant is hedged.
+
+    On a **format <= 3.10 volume this can never return `recoverable_inline`**, and that is structural rather
+    than a version check: the verdict is read from the `$DATA` descriptor's own form, and main `$DATA` is
+    never written in the inline form before format 3.11 (E87 — 0 inline of 7,006 file rows over 18 corpus
+    paths spanning v3.4/3.7/3.9/3.10). So the tool cannot promise row carving on those volumes; it grades
+    them `extent_backed` or `metadata_only`, which is what they are. A version gate here would be an
+    unreachable branch asserting something the byte test already guarantees."""
     vd = e.get("vd") or b""
     if not vd:
         return ("fragment_only", _RECOVER_LABEL["fragment_only"], None)
@@ -10814,8 +11303,8 @@ def cmd_export_metadata(image, remaining, partition_start):
                     f.seek(ps + (total_sectors - 1) * 512)
                     emit("vbr_backup.bin", f.read(512), "backup boot sector @ last LBA",
                          lba=total_sectors - 1)
-                except (OSError, OverflowError):
-                    pass
+                except (OSError, OverflowError) as _e:
+                    _skip_note("metadata export", "artefact at this offset", _e)
 
         if want("chkp"):
             for i, cl in enumerate(chkp_lcns):
@@ -10823,14 +11312,14 @@ def cmd_export_metadata(image, remaining, partition_start):
                     d = rd(cl, 4)
                     role = "current" if i == 0 else "alternate"
                     emit(f"checkpoint_{i}_lcn{cl:x}.bin", d, f"CHKP ({role})", lcn=cl)
-                except (OSError, OverflowError):
-                    pass
+                except (OSError, OverflowError) as _e:
+                    _skip_note("metadata export", "artefact at this offset", _e)
 
         if want("supb"):
             try:
                 emit("supb_primary.bin", rd(SUPB_LCN), "SUPB primary @ LCN 0x1e", lcn=SUPB_LCN)
-            except (OSError, OverflowError):
-                pass
+            except (OSError, OverflowError) as _e:
+                _skip_note("metadata export", "artefact at this offset", _e)
             if total_sectors > 1:
                 end_lcn = (total_sectors * 512) // cs
                 for lcn in (end_lcn - 2, end_lcn - 3):
@@ -10838,8 +11327,8 @@ def cmd_export_metadata(image, remaining, partition_start):
                         d = rd(lcn)
                         if d[:4] == b"SUPB":
                             emit(f"supb_backup_lcn{lcn:x}.bin", d, "SUPB backup", lcn=lcn)
-                    except (OSError, OverflowError):
-                        pass
+                    except (OSError, OverflowError) as _e:
+                        _skip_note("metadata export", "artefact at this offset", _e)
 
         if want("mlog"):
             try:
@@ -10851,8 +11340,8 @@ def cmd_export_metadata(image, remaining, partition_start):
                     if mi.get(k):
                         try:
                             emit(f"mlog_{k}.bin", rd(mi[k]), f"MLog control page ({k})", lcn=mi[k])
-                        except (OSError, OverflowError):
-                            pass
+                        except (OSError, OverflowError) as _e:
+                            _skip_note("metadata export", "artefact at this offset", _e)
                 # live log pages only (the data area is mostly zero — dump the MLog-signature blocks).
                 # The data area is addressed by PHYSICAL LCN (NOT container-translated; structure_reference
                 # §E + LogLibraryReadFromCopy reads the raw offset with a NULL table identity), and each
@@ -11066,7 +11555,9 @@ def cmd_dataruns(image, remaining, partition_start):
 
 
 SUBCOMMANDS = {
-    "files":       "List files and directories (default)",
+    "files":       "List files and directories (default). Identity is one `ObjectRef` column "
+                   "(a directory's own OID, or a file's FileRef `HomeOID:FileID`); `HomeOID` is the "
+                   "directory the file was CREATED in (formerly `CreationDirOID`), which a move does not change",
     "summary":     "Extended volume summary — full directory walk + all metrics",
     "search":      "Search files/directories by name (PATTERN; add --regex)  [alias: find]",
     "details":     "All attributes for one object — a file by /path, a directory/system object by /path or 0xOID (/path | 0xOID | --path | --oid)",
@@ -11283,12 +11774,16 @@ def cmd_export(image, remaining, partition_start):
     # no recognized subverb (or a bare -o …) => the metadata bundle (back-compat with the old `export`)
     return cmd_export_metadata(image, remaining, partition_start)
 
+# The two weakest results: both infer from heuristics over sources of differing reliability, so they are
+# listed last, under their own heading, and labelled experimental wherever they are described.
+EXPERIMENTAL_SUBCOMMANDS = ("timeline", "timestomp")
+
 # Delegated forensic subcommands (Phase 2) — own option parsing; routed before argparse.
 FORENSIC_SUBCOMMANDS = {
     "usn":       "USN (Change) Journal parser — file change records (-v/--stats/--json/--info/--csv FILE)",
     "mlog":      "MLog (durable log) parser — redo records and transactions (-v/--parse/--stats/--json/--raw-scan/--info)",
-    "timeline":  "Super-timeline — merge USN + MLog + $SI MACB, sorted by time (--csv/--no-si/--file/--oid/--limit/--source/--depth)",
-    "timestomp": "Timestamp-anomaly detection — $SI MACB vs USN, flags back-dating (--all/--json/--csv/--min/--margin-days/--depth)",
+    "timeline":  "Super-timeline (experimental) — merge USN + MLog + $SI MACB, sorted by time (--csv/--no-si/--file/--oid/--limit/--source/--depth)",
+    "timestomp": "Timestamp-anomaly detection (experimental) — $SI MACB vs USN, flags back-dating (--all/--json/--csv/--min/--margin-days/--depth)",
     "extract":   "Extract a file's content to stdout — by full path (direct, any depth) or bare name (first match; --oid/--depth scope the name search)",
     "security":  "Security descriptors / ACLs per object (-v/--files/--json/--audit/--sid/--file)",
     "specials":  "Special-attribute files — ads/reparse/wsl/hardlink/sparse/encrypted/compressed/integrity/ea/snapshot (specials [type|all]; --csv/--json/--jsonl)",
@@ -11319,9 +11814,14 @@ FORENSIC_HANDLERS = {"usn": cmd_usn, "mlog": cmd_mlog, "timeline": cmd_timeline,
 FILE_FILTERS = {name: pred for name, _desc, pred in SPECIALS_TYPES}
 FILE_FILTERS.update({
     "directory":  lambda r: bool(r.get("is_dir")),
-    "resident":   lambda r: bool(r.get("is_resident")),
+    # DATA RESIDENCY (E87). `inline` is the current name; `resident` is kept as an accepted
+    # alias for one release. Both now select on the same thing the `DataResidency` column
+    # reports -- previously this filter read the internal placement/residency hybrid flag, so
+    # it could disagree with the column beside it.
+    "inline":     lambda r: _data_residency(r) == DATA_INLINE,
+    "resident":   lambda r: _data_residency(r) == DATA_INLINE,   # alias, one release
 })
-VERSION_NOTE = ("Validated on ReFS 3.14 (24H2). All versions 3.4-3.14 parse, but some enriched fields "
+VERSION_NOTE = ("Mainly validated on ReFS 3.14. All versions 3.4-3.14 parse, but some enriched fields "
                 "(e.g. non-resident symlink targets) may be incomplete on 3.4-3.10.")
 
 # ── Hand-written per-command help ────────────────────────────────────────────
@@ -11345,19 +11845,19 @@ CMD_HELP = {
            "for hard-links & recycle-bin/deleted entries) and FullPath. The ReFS equivalent of an MFT",
            "listing/bodyfile. Default output is a 39-column CSV (OID..InternalFlags)."],
   "opts": [("--csv | --json | --jsonl [FILE]", "machine output (default CSV); bare → stdout, +FILE → write & print a count"),
-           ("--body", "bodyfile (mactime) output instead of CSV; combine with -o FILE for the path"),
-           ("-o, --output FILE", "output file (alias for --csv FILE; also the --body target)"),
-           ("--full-path-column", "(deprecated no-op — FullPath is now a standard column)"),
+           ("--body [FILE]", "bodyfile (mactime) output instead of CSV; bare \u2192 stdout, +FILE \u2192 write to FILE"),
            ("--filter CATEGORY", "keep only one category: reparse, encrypted, compressed, integrity, ea,"),
            ("", "ads, wsl, sparse, snapshot, directory, resident, hardlink"),
            ("--cow-before IMAGE", "recover prior CoW versions by diffing against an earlier image"),
-           ("--timestomp", "add the TimestompFlags column ($SI heuristic; corroborate with `timestomp`)"),
+           ("--no-timestomp", "omit the TimestompFlags column (computed by default)"),
+           ("", "flags read TIER:SIGNAL — HIGH = authoritative (a hard-link sibling keeps the true"),
+           ("", "birth); MEDIUM/LOW are $SI heuristics that also fire on timestamp-preserving copies"),
            ("--depth N", "cap directory recursion depth (default: full)"),
            ("-q, --quiet", "suppress stderr progress")],
-  "ex": [("files -o listing.csv", "full CSV file listing to a file"),
+  "ex": [("files --csv listing.csv", "full CSV file listing to a file"),
          ("files --filter hardlink", "only entries with more than one hard link"),
          ("files --filter ea --json", "non-resident & resident EA-bearing files as JSON"),
-         ("files --body -o timeline.body", "bodyfile of the live tree (mactime); deleted files → `deleted`")],
+         ("files --body timeline.body", "bodyfile of the live tree (mactime); deleted files → `deleted`")],
  },
  "summary": {
   "tag": "Full volume triage report (identity + integrity + content census)",
@@ -11392,8 +11892,8 @@ CMD_HELP = {
            "--regex for a Python regex against the basename). Prints a table by default."],
   "opts": [("PATTERN", "(positional) the name substring, or regex with --regex"),
            ("--regex", "treat PATTERN as a case-insensitive regular expression"),
-           ("--filter CATEGORY", "restrict matches to one attribute category (same set as `files --filter`: "
-                                 "reparse/ads/encrypted/…) — enriches the walk"),
+           ("--filter CATEGORY", "keep only one category: reparse, encrypted, compressed, integrity, ea,"),
+           ("", "ads, wsl, sparse, snapshot, directory, resident, hardlink"),
            ("--csv | --json | --jsonl [FILE]", "emit matches as CSV / JSON / JSON Lines (bare → stdout, +FILE → write & count)"),
            ("-q, --quiet", "suppress stderr progress")],
   "ex": [("search report", "names containing 'report'"),
@@ -11407,12 +11907,16 @@ CMD_HELP = {
            "($DATA, ADS, $EA/WSL metadata, snapshots). Address a file by /path; a directory or system object by /path or 0xOID (files have no OID)."],
   "opts": [("/path", "(positional) e.g. /dir/file.txt — a leading slash means path"),
            ("0xOID", "(positional) e.g. 0x705 — a 0x prefix means OID"),
-           ("--path P / --oid O", "explicit addressing (same as the positional forms)"),
-           ("--id HomeOid:FileId", "address by reference (e.g. 0x760:0xc; :0x0 = a directory) — no path needed"),
-           ("--json [FILE]", "emit the full record as JSON (bare → stdout, +FILE → write & count)")],
+           ("--path P", "address by path (e.g. /dir/file.txt)"),
+           ("--id ID", "address by identity: an OID (0x703) or a FileRef HomeOID:FileID (0x703:0x2e)"),
+           ("", "aliases: --OID, --FileRef, --oid — all mean --id"),
+           ("--json [FILE]", "the full record as JSON — for a directory, its on-disk structure"),
+           ("--csv | --jsonl [FILE]", "one row in the `files` schema (same columns, so it concatenates)")],
   "ex": [("details /wsltests/lxsymlink", "inspect a reparse/WSL file by path"),
          ("details 0x705", "inspect a directory object by OID"),
-         ("details /dir/file.txt --json", "machine-readable full record")],
+         ("details --FileRef 0x703:0x2e", "address a file by its reference — no path needed"),
+         ("details /dir/file.txt --json", "machine-readable full record"),
+         ("details /dir/file.txt --csv", "one row in the `files` column schema")],
  },
  "usn": {
   "tag": "USN (Change) Journal — file change records",
@@ -11748,7 +12252,7 @@ def _render_cmd_help(cmd):
     if not h:
         print(f"{PROG}: no help for {cmd!r}. Run `{PROG} --help`.", file=sys.stderr); return
     forensic = cmd in FORENSIC_SUBCOMMANDS
-    print(f"{PROG} <image> {cmd} — {h['tag']}\n")
+    print(f"{PROG} v{VERSION} <image> {cmd} — {h['tag']}\n")
     print(f"  usage: {PROG} <image> {cmd} [options]" + ("" if forensic else "") + "\n")
     for line in h["desc"]:
         print(f"  {line}")
@@ -11762,22 +12266,28 @@ def _render_cmd_help(cmd):
     print()
 
 def _print_overview():
-    print(f"{PROG} v{VERSION} — ReFS forensic analysis (MFTECmd-equivalent file lister + forensic suite)\n")
+    print(f"{PROG} v{VERSION} — ReFS forensic analysis tool\n")
     print(f"usage: {PROG} <image> [subcommand] [options]")
-    print(f"       {PROG} <image>                 # defaults to `files`")
+    print(f"       {PROG} <image>                 # defaults to `summary`")
     print(f"       {PROG} <image> <cmd> --help    # detailed help for one subcommand")
-    print(f"       {PROG} --list                  # one-line index of all subcommands\n")
-    print("Native subcommands:")
+    print(f"       {PROG} list                    # one-line index of all subcommands\n")
+    print("Core subcommands:")
     for k, v in SUBCOMMANDS.items():
         print(f"  {k:12} {v}")
-    print("\nForensic subcommands:")
+    print("\nSecondary subcommands:")
     for k in FORENSIC_SUBCOMMANDS:
+        if k in EXPERIMENTAL_SUBCOMMANDS:
+            continue
         print(f"  {k:12} {CMD_HELP[k]['tag']}")
+    print("\nExperimental / informational  (suggestive output — corroborate before relying on it):")
+    for k in EXPERIMENTAL_SUBCOMMANDS:
+        if k in FORENSIC_SUBCOMMANDS:
+            print(f"  {k:12} {CMD_HELP[k]['tag']}")
     print(f"\n{GLOBAL_HELP}\n")
     print("Examples (grouped by what you want to do):")
     _EXAMPLE_GROUPS = (
         ("List / inventory", (
-            ("files -o listing.csv",        "full 38-column inventory -> CSV (the bodyfile)"),
+            ("files --csv listing.csv",     "full inventory -> CSV"),
             ("find report --regex",         "find files by name (alias of `search`)"),
             ("details /dir/file.txt",       "everything about ONE file (or 0xOID)"),
         )),
@@ -11849,6 +12359,28 @@ def main():
     # Resolve a command-token alias (e.g. `find` -> `search`) to canonical BEFORE any dispatch/help, so all
     # downstream (help, argparse, forensic routing) sees the real name. The alias applies to the subcommand
     # token, which is sys.argv[2] (sys.argv[1] is the image).
+    # Case-insensitive SUBCOMMAND and OPTION NAMES (values are left exactly as typed — a path, a stream name
+    # or a --filter category is case-sensitive data, not a keyword). Normalising here means every downstream
+    # consumer — help, argparse, forensic routing — sees the canonical spelling.
+    if len(sys.argv) >= 3:
+        _lc = sys.argv[2].lower()
+        if sys.argv[2] not in _ALL_CMDS and _lc in _ALL_CMDS:
+            sys.argv[2] = _lc
+        elif sys.argv[2] not in SUBCOMMAND_ALIASES and _lc in SUBCOMMAND_ALIASES:
+            sys.argv[2] = _lc
+    # Long option NAMES only. A token is skipped when it is the VALUE of a valued option, so a path or a
+    # stream name that happens to start with "--" is never touched. Every option whose canonical spelling has
+    # capitals (--ID / --OID / --FileRef) also has a lowercase form registered, so lowercasing always lands on
+    # a real option.
+    for _i in range(2, len(sys.argv)):
+        _a = sys.argv[_i]
+        if not _a.startswith("--") or _a == "--":
+            continue
+        if _i > 0 and sys.argv[_i - 1] in _VALUED_OPTS:
+            continue                                    # this token is a value, not an option name
+        _name, _sep, _val = _a.partition("=")
+        if _name.lower() != _name:
+            sys.argv[_i] = _name.lower() + _sep + _val if _sep else _name.lower()
     if len(sys.argv) >= 3 and sys.argv[2] in SUBCOMMAND_ALIASES:
         sys.argv[2] = SUBCOMMAND_ALIASES[sys.argv[2]]
     _argv = sys.argv
@@ -11884,14 +12416,22 @@ def main():
             _print_overview()
         return
 
-    # `forefst --list` / `-l`: list subcommands (no image needed)
-    if len(sys.argv) >= 2 and sys.argv[1] in ("--list", "-l"):
-        print("forefst subcommands (usage: forefst <image> <subcommand> [options]):")
+    # `forefst list` / `--list` / `-l`: list subcommands (no image needed). The bare word is accepted for the
+    # same reason `help` is: a user who types one expects the other to work the same way.
+    if len(sys.argv) >= 2 and sys.argv[1] in ("list", "--list", "-l"):
+        print(f"{PROG} v{VERSION} — subcommands (usage: {PROG} <image> <subcommand> [options]):\n")
+        print("core subcommands:")
         for _k, _v in SUBCOMMANDS.items():
             print(f"  {_k:13} {_v}")
-        print("forensic subcommands:")
+        print("\nsecondary subcommands:")
         for _k, _v in FORENSIC_SUBCOMMANDS.items():
+            if _k in EXPERIMENTAL_SUBCOMMANDS:
+                continue
             print(f"  {_k:13} {_v}")
+        print("\nexperimental / informational subcommands  (suggestive output — corroborate before relying on it):")
+        for _k in EXPERIMENTAL_SUBCOMMANDS:
+            if _k in FORENSIC_SUBCOMMANDS:
+                print(f"  {_k:13} {FORENSIC_SUBCOMMANDS[_k]}")
         print(f"\n{VERSION_NOTE}")
         return
 
@@ -11925,6 +12465,11 @@ def main():
             print(f"{PROG}: error: file not found: {image}", file=sys.stderr); sys.exit(1)
         if not os.path.isfile(image):
             print(f"{PROG}: error: not a regular file: {image}", file=sys.stderr); sys.exit(1)
+        # G3: the delegated subcommands took a different route from the native ones and never printed the
+        # opening banner, so the tool version was invisible on 14 of the 20 commands. stderr only (as on the
+        # native path), so piped stdout / --csv output is unaffected.
+        if not ({"-q", "--quiet"} & set(remaining)):          # match the native path, which honours -q
+            print(f"[{PROG} v{VERSION}] Opening {os.path.basename(image)}...", file=sys.stderr)
         # audit 2.8: do NOT validate the image here. The handler parses its own flags FIRST (via _parse_args /
         # _check_unknown_flags), so a typo'd flag is reported before the image is read; its bootstrap() then
         # validates/aborts with the SAME clean ValueError the `files` path already surfaces (audit 2.3 — one
@@ -11937,7 +12482,7 @@ def main():
             print(f"{PROG}: error: cannot read image: {e}", file=sys.stderr); sys.exit(1)
 
     ap = argparse.ArgumentParser(prog=PROG,
-                                 description="ReFS forensic file lister (MFTECmd equivalent)",
+                                 description="ReFS forensic file lister",
                                  epilog=VERSION_NOTE)
     ap.add_argument("--version", action="version", version=f"forefst.py v{VERSION} — ReFS forensic file lister")
     ap.add_argument("image", help="Path to disk image")
@@ -11946,9 +12491,8 @@ def main():
     ap.add_argument("target", nargs="?", default=None,
                     help="search PATTERN, or details /path | 0xOID")
     ap.add_argument("-o", "--output", help="Output file (default: stdout); or use --csv/--json/--jsonl FILE")
-    ap.add_argument("--body", action="store_true", help="files: body-file output (default CSV)")
-    ap.add_argument("--full-path-column", action="store_true",
-                    help="(deprecated no-op — FullPath is now a standard files CSV column)")
+    ap.add_argument("--body", nargs="?", const="-", metavar="FILE",
+                    help="files: body-file (mactime) output; bare = stdout, or give a FILE")
     ap.add_argument("--csv-safe", action="store_true",
                     help="CSV output: prefix a cell starting with = + - @ with a quote to neutralise spreadsheet "
                          "formula injection. OFF by default so filenames are written byte-faithfully; enable this "
@@ -11964,20 +12508,23 @@ def main():
                     help="JSON Lines output to stdout, or to FILE")
     ap.add_argument("--hash-image", action="store_true",
                     help="summary: include SHA-256 hash of the full disk image")
-    ap.add_argument("--oid", type=lambda x: int(x, 0), default=None,
-                    help="details: address the object by OID (e.g. 0x705)")
     ap.add_argument("--path", default=None,
                     help="details: address the object by path (e.g. /dir/file.txt)")
-    ap.add_argument("--id", default=None,
-                    help="details/export: address a file by its reference HomeOid:FileId (e.g. 0x3069:0x2)")
+    ap.add_argument("--id", "--ID", "--FileRef", "--fileref", "--oid", "--OID", dest="id", default=None,
+                    help="details/export: address the object by identity — an OID (e.g. 0x703) or a FileRef "
+                         "HomeOID:FileID (e.g. 0x703:0x2e). --FileRef/--OID are aliases of --id.")
     ap.add_argument("--regex", action="store_true",
                     help="search: treat PATTERN as a regular expression")
     ap.add_argument("--filter", default=None, metavar="CATEGORY",
                     help="files: subset by attribute category — " + "/".join(FILE_FILTERS))
-    ap.add_argument("--timestomp", action="store_true",
-                    help="files: add the TimestompFlags column — a $SI-only HEURISTIC (investigative "
-                         "information, NOT proof); the `timestomp` subcommand adds the authoritative USN + "
-                         "hard-link cross-checks and a per-row basis.")
+    ap.add_argument("--timestomp", dest="timestomp", action="store_true", default=True,
+                    help=argparse.SUPPRESS)      # now the default; kept so existing commands keep working
+    ap.add_argument("--legacy-link-join", action="store_true",
+                    help="resolve split names only against backings the walk traversed "
+                         "(pre-E89 behaviour, one release)")
+    ap.add_argument("--no-timestomp", dest="timestomp", action="store_false",
+                    help="files: omit the TimestompFlags column (it is computed by default; the cost is "
+                         "negligible, but the intrinsic signals also fire on timestamp-preserving copies)")
     ap.add_argument("--depth", type=int, default=DEFAULT_DEPTH, help="Max directory recursion depth (default: full)")
     ap.add_argument("--partition-start", type=lambda x: int(x, 0), default=None,
                     help="Override partition start offset in bytes")
@@ -11989,6 +12536,9 @@ def main():
                          "(otherwise both auto-detect). NOTE: the CoW-recovery path is lightly tested.")
     ap.add_argument("-q", "--quiet", action="store_true", help="Suppress progress to stderr")
     args = ap.parse_args()
+    if getattr(args, "legacy_link_join", False):
+        global LEGACY_LINK_JOIN
+        LEGACY_LINK_JOIN = True
     if args.command is None:
         # Phase 3 (4.A): a bare `forefst <image>` gives the volume SUMMARY (orientation first); run
         # `forefst <image> files` for the full CSV listing.
@@ -12003,7 +12553,7 @@ def main():
         sys.exit(1)
 
     # Output format mutual exclusion (--csv/--json/--jsonl accept an optional FILE, so they are None-or-str)
-    fmt_count = (1 if args.body else 0) + sum(1 for v in (args.csv, args.json, args.jsonl) if v is not None)
+    fmt_count = sum(1 for v in (args.body, args.csv, args.json, args.jsonl) if v is not None)
     if fmt_count > 1:
         die("--csv, --json, --jsonl and --body are mutually exclusive")
 
@@ -12023,8 +12573,28 @@ def main():
             die("--cow-before image must be different from the main image")
         if args.command != "files":
             die("--cow-before is only valid with the 'files' subcommand")
+    # -o/--output on a LISTING command means "write the current format here", so the same flag produces CSV,
+    # JSON or a bodyfile depending on other flags — the format is invisible at the call site, which is why
+    # each format now carries its own destination (`--csv FILE`, `--json FILE`, ...). Refusing -o outright
+    # was the wrong correction: it broke every documented example and every script that used it, against a
+    # release note promising the old spellings keep working. It is accepted as an alias for the selected
+    # format's destination (CSV by default) -- `_resolve_out_fmt` already implements exactly that -- with a
+    # deprecation note, and a warning when it is given ALONGSIDE an explicit destination, where it is ignored.
+    if getattr(args, "output", None) and args.command in SUBCOMMANDS:
+        _explicit = next((f"--{n} {v}" for n, v in (("csv", getattr(args, "csv", None)),
+                                                    ("json", getattr(args, "json", None)),
+                                                    ("jsonl", getattr(args, "jsonl", None)),
+                                                    ("body", getattr(args, "body", None)))
+                          if isinstance(v, str) and v not in ("", "-")), None)
+        if _explicit:
+            print(f"[{PROG}] WARNING: both `{_explicit}` and `-o {args.output}` given — the format flag's "
+                  f"destination wins and -o is ignored.", file=sys.stderr)
+        else:
+            print(f"[{PROG}] note: -o/--output is deprecated for `{args.command}`; it still works and writes "
+                  f"the selected format. Prefer naming the format's own destination: "
+                  f"`{PROG} <image> {args.command} --csv {args.output}`.", file=sys.stderr)
     # Subcommand flag scoping (clean break: these belong to specific subcommands)
-    if (args.oid is not None or args.path) and args.command != "details":
+    if (args.id is not None or args.path) and args.command != "details":
         die("--oid/--path are only valid with the 'details' subcommand")
     if args.filter is not None:
         if args.command not in ("files", "search"):
@@ -12033,7 +12603,7 @@ def main():
             die(f"--filter: unknown category {args.filter!r}. Choices: {', '.join(sorted(FILE_FILTERS))}")
 
     # Help-on-empty (4.C): a bare `details` (no target/OID/path/id) shows its help instead of opening the image.
-    if args.command == "details" and args.target is None and args.oid is None and not args.path and not args.id:
+    if args.command == "details" and args.target is None and not args.path and not args.id:
         # audit 2.12: when a MACHINE format was explicitly requested, a missing target is a usage error, not
         # help. Help-on-stdout is invalid JSON in a pipe AND exits 0 (a silent pipeline failure); instead emit
         # the error to stderr and exit non-zero (the existing error convention — the usage-vs-runtime exit-code
@@ -12126,14 +12696,13 @@ def main():
     # details subcommand — inspect ONE object by OID, path, or reference (--id HomeOid:FileId)
     if args.command == "details":
         det_oid, det_path = None, None
-        if args.oid is not None and args.path:
-            die("details: use --oid OR --path, not both")
-        if args.target is not None and (args.oid is not None or args.path):
-            die("details: give a target OR --oid/--path, not both")
+        # Two ways in: by PATH or by IDENTITY. `--id` (aliases --oid/--OID/--FileRef) takes either an OID or a
+        # FileRef, so there is no longer a separate --oid flag to confuse with it.
+        if args.id is not None and args.path:
+            die("details: give --id (or --oid/--FileRef) OR --path, not both")
+        if args.target is not None and (args.id is not None or args.path):
+            die("details: give a target OR --id/--path, not both")
         if args.id is not None:
-            # 4.F: address a file by its reference. file_id==0 ⇒ a directory self-reference (its own OID).
-            if args.oid is not None or args.path or args.target is not None:
-                die("details: use --id alone (not with a target/OID/path)")
             _hoid, _fid = _parse_id_ref(args.id)
             if _fid == 0:
                 det_oid = _hoid
@@ -12142,8 +12711,6 @@ def main():
                 if _ent is None:
                     print(f"no object for --id {args.id}", file=sys.stderr); f.close(); sys.exit(1)
                 det_path = _ent["path"]
-        elif args.oid is not None:
-            det_oid = args.oid
         elif args.path:
             det_path = args.path
         elif args.target is not None:
@@ -12210,11 +12777,27 @@ def main():
                     if _ifl:
                         rec["internal_flags"] = _ifl
                     _emit_json_obj(rec, _native_fmt_dest(args)[1], "record")
+                elif args.csv is not None or args.jsonl is not None:
+                    # D7: one row in the `files` schema — same columns, so a details row can sit alongside a
+                    # files export without reshaping.
+                    _fmt = "csv" if args.csv is not None else "jsonl"
+                    _dest = _native_fmt_dest(args)[1]
+                    _row = _csv_fields(match, sd_map, version_str, oid2path)
+                    _emit_records([_row], CSV_COLUMNS, _fmt, _dest or "-", "record")
                 else:
                     _print_file_detail(match, sd_map, version_str, raw_value=ea_src, oid2path=oid2path)
                 f.close()
                 return
         log(f"[{PROG}] Looking up OID 0x{det_oid:x}...")
+        # Resolve the directory's own path so its detail can lead with the same identity block a file gets.
+        try:
+            _oid_path = build_oid_path_map(f, ps, cs, tr, obj_map).get(det_oid)
+        except Exception:
+            _oid_path = None
+        try:
+            _oid_sd = build_security_map(f, ps, cs, tr, obj_map)   # so a directory resolves owner/group too
+        except Exception:
+            _oid_sd = None
         detail = cmd_oid_detail(f, ps, cs, tr, obj_map, vmaj, vmin, det_oid, log_fn=log)
         if detail is None:
             print(f"OID 0x{det_oid:x} not found in object table ({len(obj_map)} objects).", file=sys.stderr)
@@ -12227,8 +12810,20 @@ def main():
             sys.exit(1)
         if args.json is not None:
             _emit_json_obj(detail, _native_fmt_dest(args)[1], "detail")
+        elif args.csv is not None or args.jsonl is not None:
+            # D7: a directory row in the `files` schema, so --csv/--jsonl mean the same thing for a directory
+            # as for a file. Resolved from the same walk `files` uses, rather than reshaping the structural
+            # detail, so every column is populated identically.
+            _fmt = "csv" if args.csv is not None else "jsonl"
+            _res = walk_directory_tree(f, ps, cs, tr, obj_map, 0x600, args.depth, True, set())
+            _m = next((r for r in _res if r.get("is_dir") and r.get("oid") == det_oid), None)
+            if _m is None:
+                print(f"OID 0x{det_oid:x} is not a directory in the tree — use --json for its structure.",
+                      file=sys.stderr); f.close(); sys.exit(1)
+            _row = _csv_fields(_m, _oid_sd or {}, version_str, _build_oid2path(_res))
+            _emit_records([_row], CSV_COLUMNS, _fmt, _native_fmt_dest(args)[1] or "-", "record")
         else:
-            _print_oid_detail(detail)
+            _print_oid_detail(detail, path=_oid_path, sd_map=_oid_sd)
         f.close()
         return
 
@@ -12248,7 +12843,14 @@ def main():
             sys.exit(1)
         _sfmt, _sdest = _native_fmt_dest(args)
         if args.json is not None or args.jsonl is not None or args.csv is not None:
-            _scols = ["oid", "parent_oid", "type", "file_size", "is_resident", "modified", "path", "is_deleted"]
+            # Phase C: `id` leads — a directory's OID or a file's FileRef, the value a reader can pass to
+            # `details --id`. `oid` is kept for compatibility but now holds a real OID or nothing; it used to
+            # carry the placeholder strings "(resident)"/"(non-res)", which are not identifiers.
+            _scols = ["id", "oid", "parent_oid", "type", "file_size", "is_resident", "modified", "path",
+                      "is_deleted"]
+            for _m in matches:
+                if not str(_m.get("oid", "")).startswith("0x"):
+                    _m["oid"] = ""
             _emit_records(matches, _scols, _sfmt, _sdest or "-", "matches")
         else:
             _print_search(matches, pattern)
@@ -12329,7 +12931,7 @@ def main():
         elif fmt == "jsonl":
             emit_jsonl(results, sd_map, version_str, out)
         else:
-            emit_csv(results, sd_map, version_str, out, full_path=args.full_path_column)
+            emit_csv(results, sd_map, version_str, out)
     finally:
         if _close:
             out.close()

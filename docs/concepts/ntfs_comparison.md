@@ -51,20 +51,26 @@ In NTFS a file's data is resident only if it fits in the slack of its 1 KiB MFT 
 bytes after the record's attributes. ReFS has no fixed record, so the threshold is a driver policy
 decision, and it is large and version-dependent:
 
-| File system | Resident threshold |
-|-------------|--------------------|
-| NTFS | ~700 bytes (constrained by the 1 KiB MFT record) |
-| ReFS v3.4–v3.10 | 128 KiB hard cap (`STATUS_FILE_SYSTEM_LIMITATION` above it) |
-| ReFS v3.11+ | 2 KiB data threshold |
+ReFS does not have one threshold; it has a rule with two inputs — **which stream** and **which volume
+format** — and for a file's main data on an older format the answer is "never":
 
-`RefsAddAllocationForResidentWrite` is the function that makes the call, converting to non-resident
-(via `RefsConvertToNonResident`) once allocation crosses the threshold. The practical impact: a tool
-calibrated to NTFS's ~700-byte line under-counts resident files on ReFS, and on v3.4–v3.10 it misses
-files up to 128 KiB that live entirely inside a B+-tree page with no external extents. The 2 KiB
-v3.11+ threshold is why v3.14 volumes show non-resident files where Win10 v3.4 volumes show almost none.
-Alternate data streams follow the same rule: a small ADS (< 2 KB) is resident/inline, and a large ADS
-(>= 2 KB) is promoted to non-resident extents. See [Resident Storage](resident_storage.md) for the
-conversion logic.
+| File system | Main `$DATA` | Named stream (ADS) |
+|-------------|--------------|--------------------|
+| NTFS | inline below ~700 bytes (constrained by the 1 KiB MFT record) | same record, same limit |
+| ReFS format ≤ 3.10 | **never inline** — always extents, whatever the size | inline up to a 128 KiB hard cap (`STATUS_FILE_SYSTEM_LIMITATION` above it) |
+| ReFS format ≥ 3.11 | inline below 2 KiB | inline below 2 KiB, then extents |
+
+`RefsAddAllocationForResidentWrite` makes the call: it compares the **volume's** format version against
+3.11 before it looks at any size, so the gate is a property of the volume, not of the driver mounting it —
+an up-to-date driver on an older volume still takes the older path, and upgrading a volume does not move
+data that is already written.
+
+The practical impact runs the opposite way to the NTFS intuition. A tool calibrated to NTFS's ~700-byte
+line under-counts inline files on a **v3.14** volume, where anything under 2 KiB is in the record; on a
+**v3.4** volume there is nothing to under-count, because no file's main data is inline there at all —
+the smallest extent-backed file measured is 5 bytes occupying a whole 4 KiB cluster. What v3.4 *can* hide
+in a record is a **named stream**, up to that 128 KiB cap. See
+[Record placement and data residency](resident_storage.md) for the full rule.
 
 ## Slack space takes a different form
 
@@ -250,7 +256,8 @@ to. Concretely retired techniques:
 - Security-descriptor analysis: the blob format is identical; reroute the lookup from `$Secure` to OID
   0x530.
 - Four-timestamp interpretation: unchanged for the `$SI` set.
-- Resident-file extraction: same idea, different size threshold (128 KiB or 2 KiB, not ~700 bytes).
+- Inline-file extraction: same idea, a different and format-dependent threshold (2 KiB on format 3.11+, and on
+  older formats no main-data inlining at all), not NTFS's ~700 bytes.
 
 **Same capability, different mechanism.**
 
@@ -272,7 +279,7 @@ to. Concretely retired techniques:
 - [Copy-on-Write](copy_on_write.md) — why ReFS needs no undo log and why prior pages survive on disk
 - [Transactions and Crash Consistency](transactions_crash_consistency.md) — the redo-only MLog model and
   the checkpoint-flush commit point
-- [Resident Storage](resident_storage.md) — the 128 KiB / 2 KiB residency thresholds versus NTFS's
+- [Record placement and data residency](resident_storage.md) — the format-gated residency rule versus NTFS's
   ~700-byte line
 - [Deletion Recovery](deletion_recovery.md) — recovering stale B+-tree rows, the ReFS analogue of
   MFT-record slack

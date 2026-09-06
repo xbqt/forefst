@@ -94,7 +94,7 @@ Load-bearing claims prefer **E2 + RD** — confirmed in both the code and the by
 
 ## 5. The claim register — `reference_table.csv`
 
-Every claim is one row in **`analysis/reference_table.csv`** (440 rows), keyed by a stable **finding ID**
+Every claim is one row in **`analysis/reference_table.csv`** (467 rows), keyed by a stable **finding ID**
 of the form `<CATEGORY>_<STRUCTURE>[_RA|_SA]_<NNN>` (e.g. `FS_CHKP_RA_001`, `MD_SI_RA_015`,
 `GN_ALLC_SA_001`). The categories map to Carrier's five data categories (`FS` file system, `CT` content,
 `MD` metadata, `FN` file name, `AP` application), plus `GN` for general/cross-cutting findings; `RA` marks a raw-disk-anchored finding,

@@ -9,7 +9,7 @@ against something the volume itself recorded, it is checked.
 
 ## Setup
 
-A 3.9 GB native **ReFS 3.14** volume (4 KB clusters, CRC64 metadata checksums) imaged from a Windows 11 test
+A 3.9 GB native **ReFS 3.14** volume (4 KiB clusters, CRC64 metadata checksums) imaged from a Windows 11 test
 machine. It was used normally for a day: files downloaded, edited, renamed, deleted three different ways, and
 snapshotted.
 
@@ -18,7 +18,7 @@ IMG=disk.raw
 python3 forefst.py "$IMG" summary
 ```
 
-```
+```text
   ReFS version:       3.14
   Volume label:       data
   Cluster size:       0x1000 (4.0 KB)
@@ -43,7 +43,7 @@ Start with the deletion scan, which reads the free space inside metadata pages:
 python3 forefst.py "$IMG" deleted
 ```
 
-```
+```text
     FILE username.txt  (resident, live-slack @ cluster 3596 off 0xa10)
       Deleted from: /tests  (table 0x703)
       Created:  2026-09-01 10:36:44 UTC
@@ -61,12 +61,12 @@ python3 forefst.py "$IMG" export deleted ./out
 cat ./out/content/username.txt
 ```
 
-```
+```text
 username:bat
 password:in the other file
 ```
 
-```
+```text
   20 deleted entries indexed → ./out/deleted_files.csv  (+ .json)
     Content recovered: 14 resident (exact) + 0 non-resident carved = 14 files → ./out/content/
 ```
@@ -81,7 +81,7 @@ Nothing on the volume is called `password`. Search for the obvious alternative:
 python3 forefst.py "$IMG" search passphrase
 ```
 
-```
+```text
 OID          Parent       Type          Size  Res  Modified             Path
 ───────────  ───────────  ────  ──────────── ────  ───────────────────  ──────────────────────
 (resident)   0x703        File         104 B  Yes  2026-09-01 10:39:30  tests/passphrase.txt
@@ -91,7 +91,7 @@ OID          Parent       Type          Size  Res  Modified             Path
 python3 forefst.py "$IMG" extract /tests/passphrase.txt
 ```
 
-```
+```text
 password:Des scorpions culpabiliseront dans mon salon.
 
 ** Generated with https://xbpt.gitlab.io/pp/
@@ -105,7 +105,7 @@ one object rather than two files that happen to look alike:
 python3 forefst.py "$IMG" usn --csv | grep RENAME
 ```
 
-```
+```text
 66904,2026-09-01T10:40:11.224Z,0x00001000,RENAME_OLD_NAME,generatepasswordfromxbptgitlabiopp.txt,file,0x703:0x2b,…
 67056,2026-09-01T10:40:11.224Z,0x00002000,RENAME_NEW_NAME,passphrase.txt,                        file,0x703:0x2b,…
 ```
@@ -132,7 +132,7 @@ Three independent places on the volume agree:
 python3 forefst.py "$IMG" recyclebin
 ```
 
-```
+```text
   $IY0YDJS.txt   (SID S-1-5-21-1473886876-2352682097-2257922272-1001)
     Original path:  R:\tests\bigtextfiledeleted.txt
     Deleted:        2026-09-01 10:50:39.0020000
@@ -146,7 +146,7 @@ it outright:
 python3 forefst.py "$IMG" extract /logs/transcript2.txt | head -6
 ```
 
-```
+```text
 Windows PowerShell transcript start
 Start time: 20260901132501
 Username: malw\bat
@@ -168,7 +168,7 @@ file's own attribute set, so listing them is a single tree walk:
 python3 forefst.py "$IMG" ads
 ```
 
-```
+```text
 ── ads  (28) — named data streams ──
   STREAMS                      HOST FILE
     Zone.Identifier            tests/100pagesword.docx
@@ -186,7 +186,7 @@ are provenance, and they answer a different question: *where did these files com
 python3 forefst.py "$IMG" export ads "tests/Get-ZimmermanTools.zip:Zone.Identifier"
 ```
 
-```
+```text
 [ZoneTransfer]
 ZoneId=3
 ReferrerUrl=https://ericzimmerman.github.io/
@@ -208,7 +208,7 @@ One file on this volume reports snapshots:
 python3 forefst.py "$IMG" snapshots --show
 ```
 
-```
+```text
   Files with snapshots: 1
   Total snapshots:      2
 
@@ -235,7 +235,7 @@ Now compare that with the file as it stands today:
 python3 forefst.py "$IMG" extract /tests/secret.txt
 ```
 
-```
+```text
 no, i can't say that...
 ```
 
