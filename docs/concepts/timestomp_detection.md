@@ -105,22 +105,59 @@ tamper check that needs no journal and no volume-create floor to stand on.
 
 ## Confidence tiers
 
-The tool collapses the signal set into one of three verdicts:
+The tool collapses the signal set into one of four verdicts. The dividing line is **corroboration from an
+independent source** — the change journal, or a hard-link sibling — not the number of intrinsic signals that
+happen to fire together.
 
-- **HIGH** — the journal confirms a deliberate edit (`USN_BASIC_INFO_CHANGE` or `USN_CREATE_MISMATCH`)
-  **and** an intrinsic signal agrees; **or** two independent intrinsic signals agree
-  (`CHANGE_LATE` + `PRE_FORMAT`); **or** the journal alone confirms it.
-- **MEDIUM** — one solid intrinsic signal (`CHANGE_LATE` or `PRE_FORMAT`) with no journal to confirm it,
-  so a creation-preserving copy cannot be ruled out.
-- **LOW** — a weak or common signal alone (`FUTURE`, `CREATE_GT_MODIFY`, `ROUND_TIMESTAMPS`).
+| Tier | Reached when | Reading |
+|---|---|---|
+| **HIGH** | the journal confirms a deliberate edit (`USN_BASIC_INFO_CHANGE` / `USN_CREATE_MISMATCH`), **or** a hard-link sibling preserves a different birth time (`HARDLINK_MACB_MISMATCH`) | an independent source disagrees with `$SI` |
+| **MEDIUM** | `CHANGE_LATE` **without** `PRE_FORMAT` — created on *this* volume and altered afterwards — or `FUTURE` | worth investigating; a copy cannot produce it |
+| **INFO** | only the copy-signature set fires: `PRE_FORMAT`, `CHANGE_LATE`, `CREATE_GT_MODIFY`, `ROUND_TIMESTAMPS` | **ambiguous**, see below |
+| **LOW** | anything else that fires but fits none of the above | weak; corroborate before use |
 
-The journal's presence is the dividing line between HIGH and MEDIUM: without it, even a strong intrinsic
-inconsistency stays one explanation short of confirmation.
+### Why `PRE_FORMAT` + `CHANGE_LATE` is INFO, and what INFO does *not* mean
 
-`ROUND_TIMESTAMPS` is capped at LOW by design. Whole-second Created **and** Modified stamps are *suggestive* of
-a deliberately set date, but they are **not proof**: VirtIO/QEMU driver packages and archive extraction also
-write whole-second times, so the signal never rises above LOW and never upgrades another tier's verdict.
-Corroborate it with the USN journal or a hard-link MACB comparison before relying on it.
+These two are not independent. A timestamp-preserving copy — `robocopy /COPY:T`, a restore, an archive
+extraction — writes the original create/modify (which predate this volume, so `PRE_FORMAT`) and sets the
+change time to the moment of the copy (so `CHANGE_LATE`). They are two halves of **one event**, so treating
+their co-occurrence as two agreeing signals is wrong: it marked **95.4 %** of the files on a real Windows
+installation as tampered, which trains an examiner to ignore the column.
+
+**But the pair does not identify that event as a copy.** Deliberately back-dating a creation time produces
+exactly the same two signals — a lab volume whose generator log records **74 `SetCreationTimeUtc` actions**
+carries this signature. So INFO means *a copy and a back-dated creation are indistinguishable here*, and the
+only thing that separates them is an independent source: the USN journal, or a hard-link sibling. **INFO is
+a lowered tier, not an exoneration.**
+
+### How often each signal fires
+
+Base rates over the full corpus — 96 volumes, 521,060 files. Read them as a floor, not as a typical volume:
+the corpus is mostly small purpose-built lab images.
+
+| Signal | Base rate | Tier contribution |
+|---|---|---|
+| `PRE_FORMAT` | 22.67 % | INFO |
+| `CHANGE_LATE` | 22.32 % | MEDIUM only *without* `PRE_FORMAT` |
+| `CREATE_GT_MODIFY` | 1.04 % | INFO |
+| `ROUND_TIMESTAMPS` | 0.04 % | never lifts a tier |
+| `HARDLINK_MACB_MISMATCH` | 0.04 % | **HIGH** |
+| `FUTURE` | 4 files | MEDIUM |
+
+The split by volume kind is the reason the tiers are shaped this way. On the corpus's one **real Windows
+installation** (120,617 files) the copy signature fires on **95.7 %** of files — that is what installing an
+operating system looks like — against **1.86 %** across 95 lab-built volumes. Under a tiering that treated
+the pair as corroboration, almost every file on that volume was MEDIUM; the actionable set is now **385**
+files rather than roughly 115,000.
+
+`ROUND_TIMESTAMPS` is capped by design. Whole-second Created **and** Modified stamps are *suggestive* of a
+deliberately set date but are **not proof**: VirtIO/QEMU driver packages and archive extraction also write
+whole-second times, so the signal never lifts another tier's verdict.
+
+The same four tiers appear in the `TimestompFlags` column of `files` and in the `timestomp` command, which
+share one function — see the [tool reference](../tools/forefst.md) for the command-line surface and
+`--min TIER` filtering. The column reaches a tier no higher than the command, because the listing does not
+read the journal.
 
 ## What does not work as a substitute
 

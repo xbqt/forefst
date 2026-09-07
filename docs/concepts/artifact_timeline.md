@@ -196,10 +196,12 @@ hierarchy of strength, from "always available but circumstantial" to "immutable 
    the higher virtual clock (`CHKP+0x60`) is the newer one — use it to order states that carry no
    wall clock.
 
-A verdict reaches **HIGH** confidence when the journal confirms a deliberate edit and an intrinsic
-signal agrees, or when two independent intrinsic signals agree (`CHANGE_LATE` + `PRE_FORMAT`);
-**MEDIUM** for one solid intrinsic signal with no journal; **LOW** for a weak signal alone. The full
-signal/tier model and its validation live on the
+A verdict reaches **HIGH** confidence only when an **independent** source disagrees with `$SI` — the
+journal confirms a deliberate edit, or a hard-link sibling preserves a different birth time. **MEDIUM** is
+`CHANGE_LATE` without `PRE_FORMAT` (created on this volume, altered afterwards) or `FUTURE`. The
+copy-signature set on its own — `PRE_FORMAT` with `CHANGE_LATE` — is **INFO**: a timestamp-preserving copy
+and a back-dated creation produce it identically, so it is ambiguous rather than cleared. The full
+signal/tier model, the base rates and their validation live on the
 [timestomp detection](timestomp_detection.md) page.
 
 ## Version and state differences

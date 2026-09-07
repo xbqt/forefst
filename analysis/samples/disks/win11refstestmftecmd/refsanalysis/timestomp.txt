@@ -6,7 +6,7 @@ ReFS Timestamp-Anomaly (Timestomp) Detection
   Volume modified: 2026-05-23 11:15:52
   USN journal:     present (authoritative cross-check ON)
   Files examined:  1507
-  Flagged:         184  (HIGH 116 / MEDIUM 60 / LOW 8)
+  Flagged:         184  (HIGH 41 / MEDIUM 0 / LOW 0 / INFO 143 — INFO = ambiguous: a timestamp-preserving copy and a backdated creation produce the same signals; corroborate with USN)
 
   This flags timestamps that LOOK anomalous — it is investigative INFORMATION, not proof of
   tampering. Weigh the BASIS of each row: a journal/hardlink signal is authoritative; an
@@ -16,152 +16,10 @@ ReFS Timestamp-Anomaly (Timestomp) Detection
 
   Conf   Basis         Claimed birth         Last real write       Path
   ------------------------------------------------------------------------------------------------
-  HIGH   intrinsic     2024-08-03 07:17:33   2026-05-23 07:34:05   test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_zulu_india_473528.csv
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2024-11-23 07:17:31   2026-05-23 07:34:05   test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_whiskey_delta_922359.tmp
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2023-11-27 07:16:30   2026-05-23 07:34:03   test/elvis_dir_index_149423/xbpt_beta_archive_985685.tmp
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2022-05-20 07:16:16   2026-05-23 07:34:02   test/elvis_dir_index_149423/xbpt_zulu_kilo_319858.csv
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2024-01-13 07:17:04   2026-05-23 07:34:04   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_delta_echo_268401.csv
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2025-07-16 07:17:35   2026-05-23 07:34:05   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_lima_victor_941030.cfg
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2022-02-07 07:16:33   2026-05-23 07:34:02   test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_temp_sierra_130629.tmp
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2026-03-01 07:16:07   2026-05-23 07:34:04   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_cache_zulu_259753.dat
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2023-08-26 07:16:12   2026-05-23 07:33:59   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_delta_temp_981764.tmp
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2021-10-19 07:16:21   2026-05-23 07:34:01   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_audit_config_255291.dat
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2024-06-07 07:17:11   2026-05-23 07:34:04   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_zulu_trace_481495.md
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2022-06-17 07:16:38   2026-05-23 07:34:02   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_backup_echo_585708.csv
-         signals: CHANGE_LATE, PRE_FORMAT
   HIGH   journal/link  2022-08-02 07:16:28   2026-05-23 07:34:02   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_romeo_output_531365.cfg
          signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH
-  HIGH   intrinsic     2025-12-30 07:17:16   2026-05-23 07:34:04   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_temp_mike_134457.bak
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2022-04-19 07:16:47   2026-05-23 07:34:03   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_yankee_foxtrot_727835.bak
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2021-10-14 07:17:10   2026-05-23 07:34:04   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_audit_log_130131.ini
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2025-06-11 07:16:10   2026-05-23 07:34:02   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_beta_cache_861983.json
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2025-02-23 07:17:23   2026-05-23 07:34:05   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_romeo_gamma_831931.dat
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2025-03-31 07:17:11   2026-05-23 07:34:04   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_tango_victor_844323.json
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2024-05-06 07:17:31   2026-05-23 07:34:05   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899/xbpt_config_record_746941.dat
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2023-10-15 07:17:00   2026-05-23 07:34:04   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_victor_echo_578793.cfg
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2023-11-21 07:17:13   2026-05-23 07:34:04   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_zulu_output_293634.cfg
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2022-03-06 07:16:22   2026-05-23 07:34:05   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_cache_beta_265588.tmp
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2022-02-28 07:17:26   2026-05-23 07:34:05   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_index_temp_198731.cfg
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2022-12-26 07:16:15   2026-05-23 07:34:00   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_log_whiskey_169575.dat
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2025-04-08 07:17:35   2026-05-23 07:34:05   test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_temp_foxtrot_475776.md
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2025-04-19 07:17:09   2026-05-23 07:34:04   test/elvis_dir_victor_783323/xbpt_delta_echo_626074.json
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2025-12-01 07:17:11   2026-05-23 07:34:04   test/elvis_dir_victor_783323/xbpt_record_mike_276675.tmp
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2022-05-31 07:17:29   2026-05-23 07:34:05   test/elvis_dir_victor_783323/xbpt_romeo_yankee_383561.cfg
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2021-10-04 07:16:49   2026-05-23 07:34:03   test/elvis_dir_victor_783323/xbpt_trace_config_794136.tmp
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2025-09-04 07:16:57   2026-05-23 07:34:03   test/elvis_dir_victor_783323/xbpt_yankee_output_781405.csv
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2021-10-15 07:17:19   2026-05-23 07:34:05   test/xbpt_config_log_982725.bin
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2025-06-06 07:17:11   2026-05-23 07:34:04   test/xbpt_index_india_423224.csv
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2025-08-11 07:17:32   2026-05-23 07:34:05   test/xbpt_india_papa_801739.json
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2024-04-02 07:16:32   2026-05-23 07:34:03   test/xbpt_india_temp_831504.csv
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2022-02-12 07:16:16   2026-05-23 07:34:01   test/xbpt_yankee_audit_433793.xml
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2024-08-03 07:17:33   2026-05-23 07:38:52   test2/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_zulu_india_473528.csv
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2024-11-23 07:17:31   2026-05-23 07:38:52   test2/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_whiskey_delta_922359.tmp
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2023-11-27 07:16:30   2026-05-23 07:38:49   test2/elvis_dir_index_149423/xbpt_beta_archive_985685.tmp
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2022-05-20 07:16:16   2026-05-23 07:38:48   test2/elvis_dir_index_149423/xbpt_zulu_kilo_319858.csv
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2024-01-13 07:17:04   2026-05-23 07:38:50   test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_delta_echo_268401.csv
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2025-07-16 07:17:35   2026-05-23 07:38:52   test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_lima_victor_941030.cfg
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2022-02-07 07:16:33   2026-05-23 07:38:48   test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_temp_sierra_130629.tmp
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2026-03-01 07:16:07   2026-05-23 07:38:50   test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_cache_zulu_259753.dat
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2023-08-26 07:16:12   2026-05-23 07:38:46   test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_delta_temp_981764.tmp
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2021-10-19 07:16:21   2026-05-23 07:38:48   test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_audit_config_255291.dat
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2024-06-07 07:17:11   2026-05-23 07:38:50   test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_zulu_trace_481495.md
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2022-06-17 07:16:38   2026-05-23 07:38:48   test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_backup_echo_585708.csv
-         signals: CHANGE_LATE, PRE_FORMAT
   HIGH   journal/link  2022-08-02 07:16:28   2026-05-23 07:38:48   test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_romeo_output_531365.cfg
          signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH
-  HIGH   intrinsic     2025-12-30 07:17:16   2026-05-23 07:38:51   test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_temp_mike_134457.bak
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2022-04-19 07:16:47   2026-05-23 07:38:49   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_yankee_foxtrot_727835.bak
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2021-10-14 07:17:10   2026-05-23 07:38:50   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_audit_log_130131.ini
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2025-06-11 07:16:10   2026-05-23 07:38:48   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_beta_cache_861983.json
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2025-02-23 07:17:23   2026-05-23 07:38:51   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_romeo_gamma_831931.dat
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2025-03-31 07:17:11   2026-05-23 07:38:51   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_tango_victor_844323.json
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2024-05-06 07:17:31   2026-05-23 07:38:51   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899/xbpt_config_record_746941.dat
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2023-10-15 07:17:00   2026-05-23 07:38:50   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_victor_echo_578793.cfg
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2023-11-21 07:17:13   2026-05-23 07:38:51   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_zulu_output_293634.cfg
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2022-03-06 07:16:22   2026-05-23 07:38:51   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_cache_beta_265588.tmp
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2022-02-28 07:17:26   2026-05-23 07:38:51   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_index_temp_198731.cfg
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2022-12-26 07:16:15   2026-05-23 07:38:46   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_log_whiskey_169575.dat
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2025-04-08 07:17:35   2026-05-23 07:38:52   test2/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_temp_foxtrot_475776.md
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2025-04-19 07:17:09   2026-05-23 07:38:50   test2/elvis_dir_victor_783323/xbpt_delta_echo_626074.json
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2025-12-01 07:17:11   2026-05-23 07:38:50   test2/elvis_dir_victor_783323/xbpt_record_mike_276675.tmp
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2022-05-31 07:17:29   2026-05-23 07:38:51   test2/elvis_dir_victor_783323/xbpt_romeo_yankee_383561.cfg
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2021-10-04 07:16:49   2026-05-23 07:38:49   test2/elvis_dir_victor_783323/xbpt_trace_config_794136.tmp
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2025-09-04 07:16:57   2026-05-23 07:38:50   test2/elvis_dir_victor_783323/xbpt_yankee_output_781405.csv
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2021-10-15 07:17:19   2026-05-23 07:38:51   test2/xbpt_config_log_982725.bin
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2025-06-06 07:17:11   2026-05-23 07:38:51   test2/xbpt_index_india_423224.csv
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2025-08-11 07:17:32   2026-05-23 07:38:51   test2/xbpt_india_papa_801739.json
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2024-04-02 07:16:32   2026-05-23 07:38:49   test2/xbpt_india_temp_831504.csv
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2022-02-12 07:16:16   2026-05-23 07:38:47   test2/xbpt_yankee_audit_433793.xml
-         signals: CHANGE_LATE, PRE_FORMAT
-  HIGH   intrinsic     2026-04-18 07:48:17   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/dir_zulu_312953/xbpt_hardlink_tango_212500.json
-         signals: CHANGE_LATE, PRE_FORMAT
   HIGH   journal/link  2024-05-21 07:48:14   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/xbpt_record_cache_677917.dat
          signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
   HIGH   journal/link  2022-04-18 07:50:12   2026-05-23 07:53:54   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_oscar_342854/dir_archive_860003/xbpt_hardlink_backup_502262.bin
@@ -194,8 +52,6 @@ ReFS Timestamp-Anomaly (Timestomp) Detection
          signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
   HIGH   journal/link  2024-07-02 07:49:01   2026-05-23 07:53:51   testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_hardlink_beta_222943.txt
          signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE
-  HIGH   intrinsic     2026-04-18 07:48:17   2026-05-23 07:53:49   testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_hardlink_index_906427.json
-         signals: CHANGE_LATE, PRE_FORMAT
   HIGH   journal/link  2025-05-28 07:50:04   2026-05-23 07:53:53   testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_hardlink_quebec_103258.csv
          signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH
   HIGH   journal/link  2022-01-16 07:49:30   2026-05-23 07:53:53   testintegrity/dir_romeo_348517/xbpt_hardlink_india_193722.bak
@@ -206,8 +62,6 @@ ReFS Timestamp-Anomaly (Timestomp) Detection
          signals: PRE_FORMAT, USN_CREATE_MISMATCH
   HIGH   journal/link  2026-04-18 07:48:17   2026-05-23 07:53:53   testintegrity/xbpt_gamma_data_633866.json
          signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE
-  HIGH   intrinsic     2021-12-28 07:49:15   2026-05-23 07:53:53   testintegrity/xbpt_hardlink_backup_104228.log
-         signals: CHANGE_LATE, PRE_FORMAT
   HIGH   journal/link  2025-03-09 07:48:01   2026-05-23 07:53:50   testintegrity/xbpt_index_victor_598659.bak
          signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
   HIGH   journal/link  2024-02-04 07:47:54   2026-05-23 07:53:49   testintegrity/xbpt_india_lima_261899.json
@@ -220,8 +74,6 @@ ReFS Timestamp-Anomaly (Timestomp) Detection
          signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
   HIGH   journal/link  2021-08-06 07:40:34   2026-05-23 07:44:20   testspecials/dir_echo_260113/xbpt_lima_audit_873256.log
          signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   intrinsic     2021-12-11 07:40:20   2026-05-23 07:44:19   testspecials/dir_mike_420327/xbpt_hardlink_romeo_520215.json
-         signals: CHANGE_LATE, PRE_FORMAT
   HIGH   journal/link  2025-10-27 07:42:06   2026-05-23 07:44:23   testspecials/dir_mike_420327/xbpt_hardlink_tango_580634.log
          signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH
   HIGH   journal/link  2025-10-27 07:42:06   2026-05-23 07:44:23   testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_hardlink_data_733507.log
@@ -232,8 +84,6 @@ ReFS Timestamp-Anomaly (Timestomp) Detection
          signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
   HIGH   journal/link  2023-03-25 07:40:58   2026-05-23 07:44:21   testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_mike_981731/xbpt_echo_beta_386853.csv
          signals: CHANGE_LATE, PRE_FORMAT, USN_CREATE_MISMATCH
-  HIGH   intrinsic     2022-11-01 07:39:55   2026-05-23 07:44:17   testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_gamma_421188/dir_uniform_641683/dir_echo_253572/xbpt_hardlink_quebec_835914.cfg
-         signals: CHANGE_LATE, PRE_FORMAT
   HIGH   journal/link  2023-07-08 07:39:50   2026-05-23 07:44:20   testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_gamma_421188/xbpt_trace_kilo_387263.ini
          signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE
   HIGH   journal/link  2021-12-11 07:40:20   2026-05-23 07:44:19   testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_sierra_120452/xbpt_oscar_yankee_456045.json
@@ -249,7 +99,7 @@ ReFS Timestamp-Anomaly (Timestomp) Detection
   HIGH   journal/link  2021-11-15 07:39:56   2026-05-23 07:44:18   testspecials/xbpt_uniform_beta_276130.dat
          signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
 
-  (60 MEDIUM + 8 LOW row(s) hidden — `--min MEDIUM` / `--min LOW` to show; CSV/JSON already include every tier.)
+  (0 MEDIUM + 0 LOW row(s) hidden — `--min MEDIUM` / `--min LOW` to show; CSV/JSON already include every tier.)
 
   Signal legend  (AUTHORITATIVE = independent evidence · HEURISTIC = suggestive $SI-only):
     [AUTHORITATIVE]
@@ -266,5 +116,8 @@ ReFS Timestamp-Anomaly (Timestomp) Detection
       ROUND_TIMESTAMPS       created AND modified are whole-second (.0000000) — a tool often sets a
                              date with no sub-second time; LOW only (driver packages / archive
                              extraction also produce whole-second times)
-  Note: the intrinsic signals also fire on legitimate creation-time-preserving copies
-  (robocopy /COPY:T, restore), so an intrinsic-only HIGH is not proof — corroborate.
+  Note: PRE_FORMAT / CHANGE_LATE / CREATE_GT_MODIFY also fire on a legitimate
+  timestamp-preserving copy (robocopy /COPY:T, a restore, an archive extraction) — and
+  equally on a deliberately backdated creation. That pair alone is INFO: ambiguous, not
+  cleared. The one intrinsic signal that reaches HIGH is HARDLINK_MACB_MISMATCH, which a
+  copy cannot produce; corroborate anything below HIGH with the USN journal.

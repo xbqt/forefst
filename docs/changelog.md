@@ -1,5 +1,59 @@
 # Changelog
 
+## v1.10.2 — 2026-09-07 — release hygiene: what the tool says, what the docs say, and what the site serves
+
+**Everything here is relative to v1.10.1.** No new decoders and no new columns. This release closes the gap
+between three things that had drifted apart: the tool's own wording, the documentation, and the published
+artefacts.
+
+### `dataruns` now speaks the whole residency vocabulary
+
+- v1.10.1 gave `dataruns` two data states, `inline` and `extents`. ReFS has four. A **snapshot-shared**
+  stream — one that owns no allocation because its bytes are still the snapshot's — was printed as
+  "bytes stored in the record", which is wrong twice over: the bytes are neither inline nor this stream's.
+  `dataruns` now resolves residency through `_stream_data_form()`, the same classifier `files` uses, and
+  prints `SHARED` and `SPARSE` alongside `INLINE` and `EXTENT`, with a per-state summary line.
+- **A regression assertion now holds the two commands together**: `dataruns` and `files` must report the
+  same residency for every file. Measured across the corpus — **521,060 files on 96 volumes, 0
+  disagreements**. The listing and the data-run view can no longer drift apart silently.
+
+### Hole reporting says what it means
+
+- `FILE.holes.json` and the `extract` note **merge adjacent ranges**. A hole crossing an extent boundary was
+  reported as two entries (`0–4095`, `4096–97672`); that split described the extent map, not the hole. The
+  byte total was always right — the range list now is too.
+- The `timestomp` trailer no longer says "an intrinsic-only HIGH is not proof" because the signals it named
+  can no longer reach HIGH: since v1.10.1 they top out at INFO. The one intrinsic signal that does reach
+  HIGH is `HARDLINK_MACB_MISMATCH`, which a copy cannot produce — so the caveat was attached to a verdict it
+  no longer applied to.
+
+### Documentation caught up with the tool
+
+- **`concepts/timestomp_detection.md` documented a rule the tool no longer follows.** It described three
+  tiers and awarded HIGH to "two independent intrinsic signals agree (`CHANGE_LATE` + `PRE_FORMAT`)" — the
+  exact rule v1.10.1 removed. Rewritten: four tiers with what each means, the measured base rates, the
+  lab-vs-real-installation split (**95.7 %** against **1.86 %**), and why INFO means *ambiguous* rather than
+  *cleared*. `concepts/artifact_timeline.md` carried the same superseded sentence and is corrected.
+- `analysis/README.md` claimed **435** register rows; there are **469**. It had drifted because the
+  register-count gate scanned only `README.md` and `docs/` and knew two phrasings; it now covers that file
+  and a third phrasing.
+- `verify_samples.py` requires **all four** sample images and exits non-zero naming the missing ones. That
+  was correct but undocumented, so a partial run looked like a tooling failure rather than a deliberate
+  refusal to certify a subset.
+
+### The gate can now see the published site
+
+- A new check fetches the **live site** and asserts its footer version equals the published tool's `VERSION`,
+  and that no live page carries a retired phrase. v1.10.1 shipped correct pages while the site served
+  v1.10.0 for a day, and every in-repo gate stayed green throughout — because every check read the working
+  tree. This one reads the site. An unreachable site is reported as SKIP, never PASS. Between a sync and the
+  push it fails by design: that failure is the statement "the published tree is ahead of the live site".
+- The four shipped **sample bundles are regenerated** from the released tool, and the gate now regenerates
+  them and diffs. The v1.10.1 bundles were copied rather than rebuilt, so they showed `dataruns` with 51
+  extent rows where the tool produces 258, and `timestomp` as `HIGH 36 / MEDIUM 14 / LOW 4` where the tool
+  now says `HIGH 1 / INFO 53`.
+
+
 ## v1.10.1 — 2026-09-06 — one timestamp verdict, and two checks that say what they can prove
 
 **Everything here is relative to v1.10.0.** A consolidation release: no new decoders and no new columns. The

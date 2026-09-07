@@ -62,7 +62,7 @@ from forefst import (
 )
 
 PROG = "refsanalysis"
-VERSION = "1.10.1"
+VERSION = "1.10.2"
 
 
 

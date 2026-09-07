@@ -342,3 +342,87 @@ def test_a_file_with_no_holes_extracts_with_exit_zero():
         assert not os.path.exists(out + ".holes.json")
     finally:
         shutil.rmtree(d, ignore_errors=True)
+
+
+def test_hole_ranges_merge_across_extent_boundaries():
+    """W7: one hole spanning two adjacent extents is ONE range, not one per extent.
+
+    `_extent_hole_ranges` walks extent by extent, so a hole crossing a boundary arrived as two adjacent
+    entries (0-4095, 4096-97672). That split describes the extent map, not the hole. The byte total was
+    always right; the range list now is too.
+    """
+    cs = 4096
+    with tempfile.NamedTemporaryFile(suffix=".raw", delete=False) as tf:
+        path = tf.name
+    try:
+        # a sparse file: 8 clusters of hole, then one cluster of data
+        with open(path, "wb") as w:
+            w.truncate(8 * cs)
+            w.seek(8 * cs)
+            w.write(b"\xab" * cs)
+        f = open(path, "rb")
+        try:
+            # two ADJACENT extents, each fully inside the hole: clusters 0 and 1..3
+            exts = [{"file_vcn": 0, "plcn": 0, "clusters": 1},
+                    {"file_vcn": 1, "plcn": 1, "clusters": 3}]
+            got = F._extent_hole_ranges(f, 0, cs, exts, 4 * cs)
+            if got is None:
+                pytest.skip("SEEK_DATA/SEEK_HOLE unsupported on this filesystem")
+            assert got == [(0, 4 * cs)], f"adjacent holes must merge into one range, got {got}"
+            assert sum(n for _o, n in got) == 4 * cs
+
+            # a gap between the two extents must NOT be merged away
+            exts2 = [{"file_vcn": 0, "plcn": 0, "clusters": 1},
+                     {"file_vcn": 2, "plcn": 2, "clusters": 1}]
+            got2 = F._extent_hole_ranges(f, 0, cs, exts2, 3 * cs)
+            assert got2 == [(0, cs), (2 * cs, cs)], f"non-adjacent ranges must stay separate, got {got2}"
+        finally:
+            f.close()
+    finally:
+        os.unlink(path)
+
+
+def test_dataruns_reports_the_full_residency_vocabulary():
+    """W6: `dataruns` must not flatten snapshot-shared or sparse into inline/extents.
+
+    It keyed on the record's PLACEMENT and had two data states, so a snapshot-shared stream -- one owning no
+    allocation because its bytes are still the snapshot's -- printed as "bytes stored in the record", which
+    is wrong twice: they are neither inline nor this stream's. Both surfaces now resolve residency through
+    `_stream_data_form`, the one classifier `files` uses.
+    """
+    img = _corpus_image("win11refs2tsnapshots.raw")
+    if img is None:
+        pytest.skip("corpus image not present")
+    f, ps, cs, tr, roots, obj_map, vmaj, vmin, _ = F.bootstrap(img, None)
+    try:
+        walk = {e["path"]: e for e in F.walk_directory_tree(
+            f, ps, cs, tr, obj_map, 0x600, F.DEFAULT_DEPTH, False, set()) if not e.get("is_dir")}
+        shared = [e for e in walk.values() if e.get("data_form") == F.DATA_SNAPSHOT_SHARED]
+        assert shared, "this image is the snapshot-shared witness; it must have some"
+
+        seen, compared, mismatch = set(), 0, []
+        for e in walk.values():
+            oid = e["parent_oid"]
+            if oid in seen:
+                continue
+            seen.add(oid)
+            infos = F._analyze_dir_extents(f, ps, cs, tr, obj_map, oid)
+            pp = e.get("parent_path")
+            for info in infos:
+                key = info["name"] if pp in (".", "", None) else pp + "/" + info["name"]
+                w = walk.get(key)
+                if w is None:
+                    continue
+                compared += 1
+                if (w.get("data_form") or "") != (info.get("data_residency") or ""):
+                    mismatch.append((key, w.get("data_form"), info.get("data_residency")))
+        assert compared > 0, "a check that compared nothing is not a pass"
+        assert not mismatch, f"dataruns disagrees with files on {len(mismatch)}: {mismatch[:3]}"
+    finally:
+        f.close()
+
+    r = subprocess.run([sys.executable, os.path.join(REPO, "forefst.py"), img, "dataruns", "-v"],
+                       capture_output=True, text=True, timeout=1800)
+    assert r.returncode == 0, r.stderr[-300:]
+    assert "SHARED" in r.stdout, "a snapshot-shared file must print SHARED, not INLINE"
+    assert "owned by the snapshot" in r.stdout

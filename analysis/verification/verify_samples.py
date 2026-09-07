@@ -12,6 +12,10 @@ DIR is searched recursively for the sample .raw files. Rows are keyed by BASENAM
 images can live anywhere. The tool VERSION is normalised out of the captured output, so a version bump alone
 produces a zero-row diff and only real behaviour changes show up.
 
+ALL FOUR images must be present: the script exits non-zero naming the missing ones rather than checking a
+subset, because a partial run that reported PASS would certify less than it appears to. Decompress the
+git-lfs samples first (they are stored compressed) and point --images at the directory holding them.
+
 Exit 0 when every row matches (or, with --generate, when the golden is written).
 """
 import argparse
@@ -85,7 +89,8 @@ def rows(images, ver):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
-    ap.add_argument("--images", required=True, help="directory to search for the sample .raw files")
+    ap.add_argument("--images", required=True,
+                    help="directory searched recursively for the sample .raw files; ALL FOUR must be present")
     ap.add_argument("--generate", action="store_true", help="write the golden instead of checking it")
     a = ap.parse_args()
     images = find_images(a.images)

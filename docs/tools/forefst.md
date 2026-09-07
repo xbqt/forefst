@@ -301,6 +301,11 @@ directions and to corroborate them.
 
 Pass **`--refuse-holes`** for a strict run: same report, same exit code, nothing written.
 
+The reported ranges are the **holes**, not the extents containing them, and adjacent ranges are **merged**:
+a hole that spans two extents is one range, because the split at an extent boundary describes the extent
+map rather than the gap. Two ranges in the list therefore mean two genuinely separate gaps with captured
+data between them.
+
 **The exact trigger.** The check fires when **any** byte of the file's data range lies in a hole of the image
 file, tested with `SEEK_DATA`/`SEEK_HOLE` against the decoded extent list and clipped to `[0, file_size)` so
 allocation slack past EOF is never counted. If the platform cannot answer, the result is *unknown* and the
@@ -537,11 +542,26 @@ forefst.py disk.raw export metadata -o ./bundle/                 # metadata bund
 
 ### `dataruns` — file data extents / data-runs
 
-Maps extent-backed files to their on-disk extents. Default lists extent-backed files; `-v` adds inline and no-extent files and every decoded run (fvcn/lcn/length).
+Maps extent-backed files to their on-disk extents. Default lists extent-backed files; `-v` adds every other
+file and every decoded run (fvcn/lcn/length).
+
+It reports **where the bytes are**, which is not the same question as where the *record* is — see
+[Record placement and data residency](../concepts/resident_storage.md). Each line carries both: the state,
+and `record=embedded|split`.
+
+| Line | Meaning |
+|---|---|
+| `EXTENT` | the bytes are in on-disk extents; the runs follow |
+| `INLINE` | the bytes are stored in the record itself — no clusters |
+| `SHARED` | the stream owns **no allocation**: its bytes are still the snapshot's. Not inline, and not this stream's clusters |
+| `NOEXTENT` | extent-backed, but the map did not decode (may live in a remote object) |
+
+An embedded record is frequently extent-backed — placement does not imply residency — so a file listed as
+`record=embedded` will normally still show runs.
 
 | Option | Description |
 |--------|-------------|
-| `-v, --verbose` | include inline and no-extent files, and every decoded run |
+| `-v, --verbose` | include inline, shared, sparse and no-extent files, and every decoded run |
 | `--oid O` | start at object O (default 0x600) |
 | `--depth N` | max recursion depth (default: full) |
 

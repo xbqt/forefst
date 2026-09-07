@@ -243,7 +243,7 @@ def validate_image(path, die_fn=None):
 
 # ─── Constants ────────────────────────────────────────────────────────
 PROG = "forefst"
-VERSION = "1.10.1"
+VERSION = "1.10.2"
 # Phase 3 (4.D): directory walks default to FULL depth (no artificial cap); `--depth N` overrides. The real
 # recursion depth equals the actual directory nesting (ReFS trees are shallow — tens of levels), so this
 # constant is never the binding limit; it just means "don't truncate". main() also raises the interpreter
@@ -7643,6 +7643,7 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
             # 190/190 of those. Every size that gates a read or a write resolves through here.
             type40_map[(stream_idx, parent_oid)] = {"extents": _decode_holder_extents(bytes(vd), cs, tr),
                                                     "obj_size": le64(vd, 0x58), "obj_alloc": le64(vd, 0x60),
+                                                    "raw": bytes(vd),      # for _stream_data_form (W6)
                                                     "inline": _backing_inline_data(vd, (f, ps, cs, tr))}
 
     results = []
@@ -7655,6 +7656,7 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
                     if len(rkd) >= 24 and le16(rkd, 0) == 0x40 and len(rvd) >= 0x68:
                         m.setdefault(le64(rkd, 8), {"extents": _decode_holder_extents(bytes(rvd), cs, tr),
                                                     "obj_size": le64(rvd, 0x58), "obj_alloc": le64(rvd, 0x60),
+                                                    "raw": bytes(rvd),     # for _stream_data_form (W6)
                                                     "inline": _backing_inline_data(rvd, (f, ps, cs, tr))})
             _home_cache[oid] = m
         return _home_cache[oid]
@@ -7693,7 +7695,9 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
                 "file_size": file_size, "alloc_size": alloc_size,
                 "file_attrs": file_attrs, "timestamps": ts,
                 "extents": [], "storage": "resident", "extent_source": source,
-                "record_placement": "split", "data_residency": "inline",
+                "record_placement": "split",
+                "data_residency": (_stream_data_form(ext_info["raw"], (f, ps, cs, tr))
+                                   if ext_info and ext_info.get("raw") else DATA_INLINE),
                 "stale_name_size": stale_name_size, "ads": [],
                 "resident_content": _inline,
             })
@@ -7705,7 +7709,10 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
             "extents": ext_info["extents"] if ext_info else [],
             "storage": "non-resident",
             "record_placement": "split",
-            "data_residency": "extents",
+            # W6: the FULL residency vocabulary from the one classifier `files` uses, so a
+            # snapshot-shared or sparse stream is not flattened into "extents".
+            "data_residency": (_stream_data_form(ext_info["raw"], (f, ps, cs, tr))
+                               if ext_info and ext_info.get("raw") else DATA_EXTENTS),
             "extent_source": source if ext_info else "unresolved",
             "stale_name_size": stale_name_size,
             "ads": [],
@@ -7742,7 +7749,8 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
                 "file_attrs": le32(vd, 0x48) if len(vd) >= 0x4C else 0,
                 "timestamps": [le64(vd, 0x28), le64(vd, 0x30), le64(vd, 0x38), le64(vd, 0x40)] if len(vd) >= 0x48 else [],
                 "extents": exts, "storage": "non-resident",
-                "record_placement": "embedded", "data_residency": "extents",
+                "record_placement": "embedded",
+                "data_residency": _stream_data_form(vd, (f, ps, cs, tr)) or DATA_EXTENTS,
                 "extent_source": "inline-holder", "ads": _parse_ads_from_value(vd, (f, ps, cs, tr)) if len(vd) > 0xA8 else [],
             })
             continue
@@ -7776,7 +7784,8 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
             # its BYTES are. `extents` is non-empty exactly when the map resolved (including the E86 nested
             # node), so data residency follows the bytes, not the record.
             "record_placement": "embedded",
-            "data_residency": "extents" if extents else "inline",
+            "data_residency": (_stream_data_form(vd, (f, ps, cs, tr))
+                               or (DATA_EXTENTS if extents else DATA_INLINE)),
             "file_attrs": file_attrs, "timestamps": ts,
             "ads": ads_list,
             # Q7: inline $DATA bytes so `extract` can write a resident file's content (None if non-inline).
@@ -8117,8 +8126,11 @@ def cmd_timestomp(image, remaining, partition_start):
         print("      ROUND_TIMESTAMPS       created AND modified are whole-second (.0000000) — a tool often sets a")
         print("                             date with no sub-second time; LOW only (driver packages / archive")
         print("                             extraction also produce whole-second times)")
-        print("  Note: the intrinsic signals also fire on legitimate creation-time-preserving copies")
-        print("  (robocopy /COPY:T, restore), so an intrinsic-only HIGH is not proof — corroborate.")
+        print("  Note: PRE_FORMAT / CHANGE_LATE / CREATE_GT_MODIFY also fire on a legitimate")
+        print("  timestamp-preserving copy (robocopy /COPY:T, a restore, an archive extraction) — and")
+        print("  equally on a deliberately backdated creation. That pair alone is INFO: ambiguous, not")
+        print("  cleared. The one intrinsic signal that reaches HIGH is HARDLINK_MACB_MISMATCH, which a")
+        print("  copy cannot produce; corroborate anything below HIGH with the USN journal.")
         return 0
     finally:
         f.close()
@@ -8258,7 +8270,17 @@ def _extent_hole_ranges(f, ps, cs, exts, file_size):
                 out.append((fstart + (a - istart), b - a))
     finally:
         os.close(fd)
-    return out
+    # W7: the walk is per extent, so one hole crossing an extent boundary arrives as two adjacent
+    # entries (0-4095, 4096-97672). That is a fact about the extent map, not about the hole; merge
+    # them so the reported ranges are the ranges.
+    out.sort()
+    merged = []
+    for off, ln in out:
+        if merged and merged[-1][0] + merged[-1][1] == off:
+            merged[-1][1] += ln
+        else:
+            merged.append([off, ln])
+    return [(o, l) for o, l in merged]
 
 
 def _extent_hole_bytes(f, ps, cs, exts):
@@ -11850,10 +11872,13 @@ def cmd_dataruns(image, remaining, partition_start):
         total_resident = 0
         total_nonresident = 0
         total_with_extents = 0
+        total_shared = 0
+        total_sparse = 0
         all_results = []
 
         def process_dir(dir_oid, path, depth):
             nonlocal total_files, total_resident, total_nonresident, total_with_extents
+            nonlocal total_shared, total_sparse
             results = _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid)
             for info in results:
                 total_files += 1
@@ -11862,8 +11887,13 @@ def cmd_dataruns(image, remaining, partition_start):
                 # E87: count by DATA residency, not by record placement. Keying these on `storage`
                 # (which is the record's placement) reported every embedded record as "resident (inline)",
                 # including the extent-backed ones -- 206 of 219 on one sample volume, one of them 440 KB.
-                if info.get("data_residency") == "inline":
+                _r = info.get("data_residency")
+                if _r == DATA_INLINE:
                     total_resident += 1
+                elif _r == DATA_SNAPSHOT_SHARED:
+                    total_shared += 1
+                elif _r == DATA_SPARSE:
+                    total_sparse += 1
                 else:
                     total_nonresident += 1
                     if info["extents"]:
@@ -11912,6 +11942,10 @@ def cmd_dataruns(image, remaining, partition_start):
         print(f"    Data inline in record:  {total_resident}")
         print(f"    Data in extents:        {total_nonresident}")
         print(f"    With decoded extents:   {total_with_extents}")
+        if total_shared:
+            print(f"    Shared with a snapshot: {total_shared}")
+        if total_sparse:
+            print(f"    Sparse (never written): {total_sparse}")
         print()
 
         print("=" * 78)
@@ -11920,7 +11954,21 @@ def cmd_dataruns(image, remaining, partition_start):
 
         for info in all_results:
             _place = info.get("record_placement", "?")
-            if info.get("data_residency") == "inline":
+            _res = info.get("data_residency")
+            if _res == DATA_SNAPSHOT_SHARED:
+                # W6: the live stream owns no allocation — its bytes are the snapshot's clusters. Saying
+                # "stored in the record" here was wrong in both halves: they are neither inline nor this
+                # stream's. `files` has reported this state since 1.10.0; dataruns now agrees.
+                if verbose:
+                    print(f"  SHARED    {info['path']}")
+                    print(f"            size={info.get('file_size', 0)} — no clusters of its own; the bytes "
+                          f"are owned by the snapshot this stream still shares (record is {_place})")
+            elif _res == DATA_SPARSE:
+                if verbose:
+                    print(f"  SPARSE    {info['path']}")
+                    print(f"            size={info.get('file_size', 0)} — never written; no allocation and "
+                          f"no snapshot to share (record is {_place})")
+            elif _res == DATA_INLINE:
                 if verbose:
                     print(f"  INLINE    {info['path']}")
                     print(f"            size={info['file_size']} (bytes stored in the record; "

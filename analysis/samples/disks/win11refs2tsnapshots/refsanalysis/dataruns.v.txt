@@ -9,19 +9,20 @@ ReFS File Data Extent Analysis
 
   Summary:
     Total files analyzed:   270
-    Resident (inline):      219
-    Non-resident (extents): 51
-    With decoded extents:   51
+    Data inline in record:  9
+    Data in extents:        258
+    With decoded extents:   258
+    Shared with a snapshot: 3
 
 ==============================================================================
 File Data Locations
 ==============================================================================
-  RESIDENT  System Volume Information/FVE2.{8252fd17-a486-4ad4-b1ca-f4fe64d23218}
-            size=0 (data inline in directory entry)
-  RESIDENT  System Volume Information/WPSettings.dat
-            size=12 (data inline in directory entry)
+  INLINE    System Volume Information/FVE2.{8252fd17-a486-4ad4-b1ca-f4fe64d23218}
+            size=0 (bytes stored in the record; record is embedded) — no clusters
+  INLINE    System Volume Information/WPSettings.dat
+            size=12 (bytes stored in the record; record is embedded) — no clusters
   EXTENT    test/xbpt_archive_romeo_596174.txt
-            size=186635, attrs=Archive, extents=5, clusters=46
+            record=split, size=186635, attrs=Archive, extents=5, clusters=46
             created=2026-05-16 16:51:53
             run: fvcn=0 VLCN=0x6712706 PLCN=0x337a706 clusters=1 disk=0x337b706000
             run: fvcn=1 VLCN=0x6711828 PLCN=0x3379828 clusters=34 disk=0x337a828000
@@ -30,19 +31,19 @@ File Data Locations
             run: fvcn=36 VLCN=0x6711c62 PLCN=0x3379c62 clusters=1 disk=0x337ac62000
             (extents in remote OID 0x710)
   EXTENT    test/xbpt_config_hotel_558589.txt
-            size=192688, attrs=Archive, extents=2, clusters=48
+            record=split, size=192688, attrs=Archive, extents=2, clusters=48
             created=2026-05-16 16:51:54
             run: fvcn=0 VLCN=0x67128a0 PLCN=0x337a8a0 clusters=1 disk=0x337b8a0000
             run: fvcn=1 VLCN=0x6711d36 PLCN=0x3379d36 clusters=47 disk=0x337ad36000
             (extents in remote OID 0x715)
   EXTENT    test/xbpt_india_temp_831504.csv
-            size=475328, attrs=Archive, extents=2, clusters=117
+            record=split, size=475328, attrs=Archive, extents=2, clusters=117
             created=2024-04-02 07:16:32
             run: fvcn=0 VLCN=0x67122a9 PLCN=0x337a2a9 clusters=1 disk=0x337b2a9000
             run: fvcn=1 VLCN=0x67122aa PLCN=0x337a2aa clusters=116 disk=0x337b2aa000
             (extents in remote OID 0x706)
   EXTENT    test/xbpt_log_november_496320.csv
-            size=552331, attrs=Archive, extents=6, clusters=135
+            record=split, size=552331, attrs=Archive, extents=6, clusters=135
             created=2026-05-16 16:51:59
             run: fvcn=0 VLCN=0x67124b6 PLCN=0x337a4b6 clusters=1 disk=0x337b4b6000
             run: fvcn=1 VLCN=0x671184c PLCN=0x337984c clusters=110 disk=0x337a84c000
@@ -52,225 +53,426 @@ File Data Locations
             run: fvcn=125 VLCN=0x67139d1 PLCN=0x337b9d1 clusters=10 disk=0x337c9d1000
             (extents in remote OID 0x710)
   EXTENT    test/xbpt_sierra_sync_956584.ini
-            size=19465, attrs=Archive, extents=2, clusters=5
+            record=split, size=19465, attrs=Archive, extents=2, clusters=5
             created=2026-05-16 16:51:54
             run: fvcn=0 VLCN=0x6719af4 PLCN=0x337daf4 clusters=1 disk=0x337eaf4000
             run: fvcn=1 VLCN=0x6719af5 PLCN=0x337daf5 clusters=4 disk=0x337eaf5000
             (extents in remote OID 0x70f)
   EXTENT    test/xbpt_tango_foxtrot_898933.txt
-            size=207263, attrs=Archive, extents=4, clusters=51
+            record=split, size=207263, attrs=Archive, extents=4, clusters=51
             created=2026-05-16 16:51:57
             run: fvcn=0 VLCN=0x6718ebb PLCN=0x337cebb clusters=1 disk=0x337debb000
             run: fvcn=1 VLCN=0x67132e7 PLCN=0x337b2e7 clusters=42 disk=0x337c2e7000
             run: fvcn=44 VLCN=0x6713723 PLCN=0x337b723 clusters=7 disk=0x337c723000
             run: fvcn=43 VLCN=0x6713311 PLCN=0x337b311 clusters=1 disk=0x337c311000
             (extents in remote OID 0x723)
-  RESIDENT  test/xbpt_beta_sierra_570651.json
-            size=71395 (data inline in directory entry)
-  RESIDENT  test/xbpt_config_log_714507.md
-            size=440919 (data inline in directory entry)
-  RESIDENT  test/xbpt_config_log_982725.bin
-            size=159126 (data inline in directory entry)
-  RESIDENT  test/xbpt_draft_tango_958869.bin
-            size=59633 (data inline in directory entry)
-  RESIDENT  test/xbpt_foxtrot_config_966558.log
-            size=298452 (data inline in directory entry)
-  RESIDENT  test/xbpt_gamma_temp_372257.bak
-            size=430306 (data inline in directory entry)
-  RESIDENT  test/xbpt_index_india_423224.csv
-            size=376745 (data inline in directory entry)
-  RESIDENT  test/xbpt_india_papa_801739.json
-            size=305819 (data inline in directory entry)
-  RESIDENT  test/xbpt_india_trace_307426.json
-            size=214075 (data inline in directory entry)
-  RESIDENT  test/xbpt_large_99mb_report_414178.tmp
-            size=103809024 (data inline in directory entry)
-  RESIDENT  test/xbpt_marked_eveliselaurence_670394.txt
-            size=173 (data inline in directory entry)
-  RESIDENT  test/xbpt_symlink_hotel_632659.lnk
-            size=0 (data inline in directory entry)
-  RESIDENT  test/xbpt_symlink_output_831744.lnk
-            size=0 (data inline in directory entry)
-  RESIDENT  test/xbpt_sync_zulu_911953.ini
-            size=349388 (data inline in directory entry)
-  RESIDENT  test/xbpt_tango_archive_828215.dat
-            size=116243 (data inline in directory entry)
-  RESIDENT  test/xbpt_uniform_victor_168724.txt
-            size=186635 (data inline in directory entry)
-  RESIDENT  test/xbpt_victor_lima_251467.cfg
-            size=578777 (data inline in directory entry)
-  RESIDENT  test/xbpt_yankee_audit_433793.xml
-            size=380116 (data inline in directory entry)
-  RESIDENT  test/xbpt_zulu_hotel_479124.bin
-            size=454363 (data inline in directory entry)
+  EXTENT    test/xbpt_beta_sierra_570651.json
+            record=embedded, size=71395, attrs=Archive, extents=2, clusters=18
+            created=2026-05-16 16:51:59
+            run: fvcn=0 VLCN=0x671b795 PLCN=0x337f795 clusters=1 disk=0x3380795000
+            run: fvcn=1 VLCN=0x6718395 PLCN=0x337c395 clusters=17 disk=0x337d395000
+  EXTENT    test/xbpt_config_log_714507.md
+            record=embedded, size=440919, attrs=Archive, extents=4, clusters=108
+            created=2026-05-16 16:51:57
+            run: fvcn=0 VLCN=0x6713116 PLCN=0x337b116 clusters=1 disk=0x337c116000
+            run: fvcn=1 VLCN=0x67128ff PLCN=0x337a8ff clusters=103 disk=0x337b8ff000
+            run: fvcn=104 VLCN=0x6718ec4 PLCN=0x337cec4 clusters=1 disk=0x337dec4000
+            run: fvcn=105 VLCN=0x6713907 PLCN=0x337b907 clusters=3 disk=0x337c907000
+  EXTENT    test/xbpt_config_log_982725.bin
+            record=embedded, size=159126, attrs=Archive, extents=2, clusters=39
+            created=2021-10-15 07:17:19
+            run: fvcn=0 VLCN=0x6712d21 PLCN=0x337ad21 clusters=1 disk=0x337bd21000
+            run: fvcn=1 VLCN=0x6712b6c PLCN=0x337ab6c clusters=38 disk=0x337bb6c000
+  EXTENT    test/xbpt_draft_tango_958869.bin
+            record=embedded, size=59633, attrs=Archive, extents=2, clusters=15
+            created=2026-05-16 16:51:57
+            run: fvcn=0 VLCN=0x67180cf PLCN=0x337c0cf clusters=1 disk=0x337d0cf000
+            run: fvcn=1 VLCN=0x67130e9 PLCN=0x337b0e9 clusters=14 disk=0x337c0e9000
+  EXTENT    test/xbpt_foxtrot_config_966558.log
+            record=embedded, size=298452, attrs=Archive, extents=4, clusters=73
+            created=2025-11-05 07:16:31
+            run: fvcn=0 VLCN=0x6712704 PLCN=0x337a704 clusters=1 disk=0x337b704000
+            run: fvcn=1 VLCN=0x6711a4f PLCN=0x3379a4f clusters=57 disk=0x337aa4f000
+            run: fvcn=58 VLCN=0x6711a88 PLCN=0x3379a88 clusters=1 disk=0x337aa88000
+            run: fvcn=59 VLCN=0x67198ee PLCN=0x337d8ee clusters=14 disk=0x337e8ee000
+  EXTENT    test/xbpt_gamma_temp_372257.bak
+            record=embedded, size=430306, attrs=Archive, extents=2, clusters=106
+            created=2026-05-16 16:51:56
+            run: fvcn=0 VLCN=0x6718cd1 PLCN=0x337ccd1 clusters=1 disk=0x337dcd1000
+            run: fvcn=1 VLCN=0x6718cd2 PLCN=0x337ccd2 clusters=105 disk=0x337dcd2000
+  EXTENT    test/xbpt_index_india_423224.csv
+            record=embedded, size=376745, attrs=Archive, extents=2, clusters=92
+            created=2025-06-06 07:17:11
+            run: fvcn=0 VLCN=0x67134de PLCN=0x337b4de clusters=1 disk=0x337c4de000
+            run: fvcn=1 VLCN=0x67134df PLCN=0x337b4df clusters=91 disk=0x337c4df000
+  EXTENT    test/xbpt_india_papa_801739.json
+            record=embedded, size=305819, attrs=Archive, extents=2, clusters=75
+            created=2025-08-11 07:17:32
+            run: fvcn=0 VLCN=0x671372a PLCN=0x337b72a clusters=1 disk=0x337c72a000
+            run: fvcn=1 VLCN=0x671372b PLCN=0x337b72b clusters=74 disk=0x337c72b000
+  EXTENT    test/xbpt_india_trace_307426.json
+            record=embedded, size=214075, attrs=Archive, extents=2, clusters=53
+            created=2026-05-16 16:51:56
+            run: fvcn=0 VLCN=0x67180c9 PLCN=0x337c0c9 clusters=1 disk=0x337d0c9000
+            run: fvcn=1 VLCN=0x6712d3c PLCN=0x337ad3c clusters=52 disk=0x337bd3c000
+  EXTENT    test/xbpt_large_99mb_report_414178.tmp
+            record=embedded, size=103809024, attrs=Archive, extents=2, clusters=25344
+            created=2026-05-16 16:52:03
+            run: fvcn=0 VLCN=0x671b7d7 PLCN=0x337f7d7 clusters=1 disk=0x33807d7000
+            run: fvcn=1 VLCN=0x1 PLCN=0x1 clusters=25343 disk=0x1001000
+  INLINE    test/xbpt_marked_eveliselaurence_670394.txt
+            size=173 (bytes stored in the record; record is embedded) — no clusters
+  INLINE    test/xbpt_symlink_hotel_632659.lnk
+            size=0 (bytes stored in the record; record is embedded) — no clusters
+  INLINE    test/xbpt_symlink_output_831744.lnk
+            size=0 (bytes stored in the record; record is embedded) — no clusters
+  EXTENT    test/xbpt_sync_zulu_911953.ini
+            record=embedded, size=349388, attrs=Archive, extents=2, clusters=86
+            created=2026-05-16 16:51:51
+            run: fvcn=0 VLCN=0x671134b PLCN=0x337934b clusters=1 disk=0x337a34b000
+            run: fvcn=1 VLCN=0x671134c PLCN=0x337934c clusters=85 disk=0x337a34c000
+  EXTENT    test/xbpt_tango_archive_828215.dat
+            record=embedded, size=116243, attrs=Archive, extents=4, clusters=29
+            created=2026-05-16 16:51:52
+            run: fvcn=0 VLCN=0x6712ec2 PLCN=0x337aec2 clusters=1 disk=0x337bec2000
+            run: fvcn=1 VLCN=0x6712ec3 PLCN=0x337aec3 clusters=20 disk=0x337bec3000
+            run: fvcn=21 VLCN=0x6712ed7 PLCN=0x337aed7 clusters=1 disk=0x337bed7000
+            run: fvcn=22 VLCN=0x6718d94 PLCN=0x337cd94 clusters=7 disk=0x337dd94000
+  EXTENT    test/xbpt_uniform_victor_168724.txt
+            record=embedded, size=186635, attrs=Archive, extents=5, clusters=46
+            created=2026-05-16 16:51:57
+            run: fvcn=0 VLCN=0x6712706 PLCN=0x337a706 clusters=1 disk=0x337b706000
+            run: fvcn=1 VLCN=0x6711828 PLCN=0x3379828 clusters=34 disk=0x337a828000
+            run: fvcn=35 VLCN=0x671184a PLCN=0x337984a clusters=1 disk=0x337a84a000
+            run: fvcn=36 VLCN=0x6711c62 PLCN=0x3379c62 clusters=1 disk=0x337ac62000
+            run: fvcn=37 VLCN=0x6711c63 PLCN=0x3379c63 clusters=9 disk=0x337ac63000
+  EXTENT    test/xbpt_victor_lima_251467.cfg
+            record=embedded, size=578777, attrs=Archive, extents=4, clusters=142
+            created=2026-05-16 16:51:51
+            run: fvcn=0 VLCN=0x6712438 PLCN=0x337a438 clusters=1 disk=0x337b438000
+            run: fvcn=1 VLCN=0x6712439 PLCN=0x337a439 clusters=124 disk=0x337b439000
+            run: fvcn=125 VLCN=0x67124b5 PLCN=0x337a4b5 clusters=1 disk=0x337b4b5000
+            run: fvcn=126 VLCN=0x671338c PLCN=0x337b38c clusters=16 disk=0x337c38c000
+  EXTENT    test/xbpt_yankee_audit_433793.xml
+            record=embedded, size=380116, attrs=Archive, extents=2, clusters=93
+            created=2022-02-12 07:16:16
+            run: fvcn=0 VLCN=0x6710e98 PLCN=0x3378e98 clusters=1 disk=0x3379e98000
+            run: fvcn=1 VLCN=0x6710e99 PLCN=0x3378e99 clusters=92 disk=0x3379e99000
+  EXTENT    test/xbpt_zulu_hotel_479124.bin
+            record=embedded, size=454363, attrs=Archive, extents=2, clusters=111
+            created=2026-05-16 16:51:59
+            run: fvcn=0 VLCN=0x6719068 PLCN=0x337d068 clusters=1 disk=0x337e068000
+            run: fvcn=1 VLCN=0x6719069 PLCN=0x337d069 clusters=110 disk=0x337e069000
   EXTENT    test/elvis_dir_index_149423/xbpt_beta_archive_985685.tmp
-            size=310564, attrs=Archive, extents=2, clusters=76
+            record=split, size=310564, attrs=Archive, extents=2, clusters=76
             created=2023-11-27 07:16:30
             run: fvcn=1 VLCN=0x6712a86 PLCN=0x337aa86 clusters=75 disk=0x337ba86000
             run: fvcn=0 VLCN=0x67180c5 PLCN=0x337c0c5 clusters=1 disk=0x337d0c5000
             (extents in remote OID 0x704)
   EXTENT    test/elvis_dir_index_149423/xbpt_draft_record_749595.cfg
-            size=239973, attrs=Archive, extents=2, clusters=59
+            record=split, size=239973, attrs=Archive, extents=2, clusters=59
             created=2026-05-16 16:51:54
             run: fvcn=0 VLCN=0x6712173 PLCN=0x337a173 clusters=1 disk=0x337b173000
             run: fvcn=1 VLCN=0x6712174 PLCN=0x337a174 clusters=58 disk=0x337b174000
             (extents in remote OID 0x710)
   EXTENT    test/elvis_dir_index_149423/xbpt_victor_gamma_564302.csv
-            size=306493, attrs=Archive, extents=2, clusters=75
+            record=split, size=306493, attrs=Archive, extents=2, clusters=75
             created=2026-05-16 16:51:56
             run: fvcn=0 VLCN=0x67126f8 PLCN=0x337a6f8 clusters=1 disk=0x337b6f8000
             run: fvcn=1 VLCN=0x6710ca3 PLCN=0x3378ca3 clusters=74 disk=0x3379ca3000
             (extents in remote OID 0x706)
   EXTENT    test/elvis_dir_index_149423/xbpt_zulu_kilo_319858.csv
-            size=457030, attrs=Archive, extents=2, clusters=112
+            record=split, size=457030, attrs=Archive, extents=2, clusters=112
             created=2022-05-20 07:16:16
             run: fvcn=1 VLCN=0x671184c PLCN=0x337984c clusters=111 disk=0x337a84c000
             run: fvcn=0 VLCN=0x67124b6 PLCN=0x337a4b6 clusters=1 disk=0x337b4b6000
             (extents in remote OID 0x711)
-  RESIDENT  test/elvis_dir_index_149423/xbpt_config_sync_830891.tmp
-            size=407328 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_index_149423/xbpt_draft_india_626576.tmp
-            size=308061 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_index_149423/xbpt_kilo_draft_550251.bin
-            size=505381 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_index_149423/xbpt_papa_papa_899322.md
-            size=297647 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_index_149423/xbpt_quebec_kilo_982841.tmp
-            size=312142 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_index_149423/xbpt_sync_output_795963.bin
-            size=376478 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_index_149423/xbpt_yankee_draft_816830.dat
-            size=261891 (data inline in directory entry)
+  EXTENT    test/elvis_dir_index_149423/xbpt_config_sync_830891.tmp
+            record=embedded, size=407328, attrs=Archive, extents=2, clusters=100
+            created=2026-05-16 16:52:01
+            run: fvcn=0 VLCN=0x67132dc PLCN=0x337b2dc clusters=1 disk=0x337c2dc000
+            run: fvcn=1 VLCN=0x6712110 PLCN=0x337a110 clusters=99 disk=0x337b110000
+  EXTENT    test/elvis_dir_index_149423/xbpt_draft_india_626576.tmp
+            record=embedded, size=308061, attrs=Archive, extents=2, clusters=76
+            created=2026-05-16 16:51:58
+            run: fvcn=0 VLCN=0x6718ec9 PLCN=0x337cec9 clusters=1 disk=0x337dec9000
+            run: fvcn=1 VLCN=0x6713b5a PLCN=0x337bb5a clusters=75 disk=0x337cb5a000
+  EXTENT    test/elvis_dir_index_149423/xbpt_kilo_draft_550251.bin
+            record=embedded, size=505381, attrs=Archive, extents=2, clusters=124
+            created=2026-05-16 16:51:58
+            run: fvcn=0 VLCN=0x6713b00 PLCN=0x337bb00 clusters=1 disk=0x337cb00000
+            run: fvcn=1 VLCN=0x6712c32 PLCN=0x337ac32 clusters=123 disk=0x337bc32000
+  EXTENT    test/elvis_dir_index_149423/xbpt_papa_papa_899322.md
+            record=embedded, size=297647, attrs=Archive, extents=2, clusters=73
+            created=2026-05-16 16:52:01
+            run: fvcn=0 VLCN=0x671b7bd PLCN=0x337f7bd clusters=1 disk=0x33807bd000
+            run: fvcn=1 VLCN=0x67191f7 PLCN=0x337d1f7 clusters=72 disk=0x337e1f7000
+  EXTENT    test/elvis_dir_index_149423/xbpt_quebec_kilo_982841.tmp
+            record=embedded, size=312142, attrs=Archive, extents=2, clusters=77
+            created=2026-05-16 16:52:00
+            run: fvcn=0 VLCN=0x6719771 PLCN=0x337d771 clusters=1 disk=0x337e771000
+            run: fvcn=1 VLCN=0x671846f PLCN=0x337c46f clusters=76 disk=0x337d46f000
+  EXTENT    test/elvis_dir_index_149423/xbpt_sync_output_795963.bin
+            record=embedded, size=376478, attrs=Archive, extents=2, clusters=92
+            created=2026-05-16 16:52:00
+            run: fvcn=0 VLCN=0x6718575 PLCN=0x337c575 clusters=1 disk=0x337d575000
+            run: fvcn=1 VLCN=0x6718576 PLCN=0x337c576 clusters=91 disk=0x337d576000
+  EXTENT    test/elvis_dir_index_149423/xbpt_yankee_draft_816830.dat
+            record=embedded, size=261891, attrs=Archive, extents=2, clusters=64
+            created=2026-05-16 16:52:02
+            run: fvcn=0 VLCN=0x67196b4 PLCN=0x337d6b4 clusters=1 disk=0x337e6b4000
+            run: fvcn=1 VLCN=0x67196b5 PLCN=0x337d6b5 clusters=63 disk=0x337e6b5000
   EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_hotel_victor_678038.txt
-            size=453197, attrs=Archive, extents=2, clusters=111
+            record=split, size=453197, attrs=Archive, extents=2, clusters=111
             created=2026-05-16 16:52:02
             run: fvcn=0 VLCN=0x671b7c4 PLCN=0x337f7c4 clusters=1 disk=0x33807c4000
             run: fvcn=1 VLCN=0x6719454 PLCN=0x337d454 clusters=110 disk=0x337e454000
             (extents in remote OID 0x707)
   EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_whiskey_delta_922359.tmp
-            size=339532, attrs=Archive, extents=4, clusters=83
+            record=split, size=339532, attrs=Archive, extents=4, clusters=83
             created=2024-11-23 07:17:31
             run: fvcn=0 VLCN=0x67180c0 PLCN=0x337c0c0 clusters=1 disk=0x337d0c0000
             run: fvcn=1 VLCN=0x67129d5 PLCN=0x337a9d5 clusters=75 disk=0x337b9d5000
             run: fvcn=77 VLCN=0x6712ad1 PLCN=0x337aad1 clusters=6 disk=0x337bad1000
             run: fvcn=76 VLCN=0x6712a20 PLCN=0x337aa20 clusters=1 disk=0x337ba20000
             (extents in remote OID 0x718)
-  RESIDENT  test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_hotel_mike_996142.cfg
-            size=36549 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_large_5mb_romeo_293003.dat
-            size=5242880 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_temp_uniform_753565.cfg
-            size=387932 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_zulu_echo_160107.cfg
-            size=71744 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_zulu_papa_839258.bin
-            size=166783 (data inline in directory entry)
+  EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_hotel_mike_996142.cfg
+            record=embedded, size=36549, attrs=Archive, extents=2, clusters=9
+            created=2026-05-16 16:52:02
+            run: fvcn=0 VLCN=0x671b7cc PLCN=0x337f7cc clusters=1 disk=0x33807cc000
+            run: fvcn=1 VLCN=0x67198ab PLCN=0x337d8ab clusters=8 disk=0x337e8ab000
+  EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_large_5mb_romeo_293003.dat
+            record=embedded, size=5242880, attrs=Archive, extents=2, clusters=1280
+            created=2026-05-16 16:52:03
+            run: fvcn=0 VLCN=0x671b7d5 PLCN=0x337f7d5 clusters=1 disk=0x33807d5000
+            run: fvcn=1 VLCN=0x671a491 PLCN=0x337e491 clusters=1279 disk=0x337f491000
+  EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_temp_uniform_753565.cfg
+            record=embedded, size=387932, attrs=Archive, extents=2, clusters=95
+            created=2026-05-16 16:52:01
+            run: fvcn=0 VLCN=0x6719b34 PLCN=0x337db34 clusters=1 disk=0x337eb34000
+            run: fvcn=1 VLCN=0x6719b35 PLCN=0x337db35 clusters=94 disk=0x337eb35000
+  EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_zulu_echo_160107.cfg
+            record=embedded, size=71744, attrs=Archive, extents=4, clusters=18
+            created=2026-05-16 16:52:01
+            run: fvcn=0 VLCN=0x671b7b2 PLCN=0x337f7b2 clusters=1 disk=0x33807b2000
+            run: fvcn=1 VLCN=0x6718de6 PLCN=0x337cde6 clusters=1 disk=0x337dde6000
+            run: fvcn=2 VLCN=0x6718de7 PLCN=0x337cde7 clusters=1 disk=0x337dde7000
+            run: fvcn=3 VLCN=0x671989c PLCN=0x337d89c clusters=15 disk=0x337e89c000
+  EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_zulu_papa_839258.bin
+            record=embedded, size=166783, attrs=Archive, extents=2, clusters=41
+            created=2026-05-16 16:52:00
+            run: fvcn=0 VLCN=0x671b7a4 PLCN=0x337f7a4 clusters=1 disk=0x33807a4000
+            run: fvcn=1 VLCN=0x67189e3 PLCN=0x337c9e3 clusters=40 disk=0x337d9e3000
   EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_cache_sync_352758.ini
-            size=208467, attrs=Archive, extents=2, clusters=51
+            record=split, size=208467, attrs=Archive, extents=2, clusters=51
             created=2026-05-16 16:51:55
             run: fvcn=0 VLCN=0x671321c PLCN=0x337b21c clusters=1 disk=0x337c21c000
             run: fvcn=1 VLCN=0x6712801 PLCN=0x337a801 clusters=50 disk=0x337b801000
             (extents in remote OID 0x704)
-  RESIDENT  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_cache_temp_298348.bak
-            size=348773 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_log_romeo_711888.cfg
-            size=78863 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_november_yankee_663510.csv
-            size=181536 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_trace_gamma_472483.cfg
-            size=519258 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_zulu_audit_805568.ini
-            size=322201 (data inline in directory entry)
+  EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_cache_temp_298348.bak
+            record=embedded, size=348773, attrs=Archive, extents=2, clusters=86
+            created=2026-05-16 16:52:02
+            run: fvcn=0 VLCN=0x671b7cf PLCN=0x337f7cf clusters=1 disk=0x33807cf000
+            run: fvcn=1 VLCN=0x6719a6e PLCN=0x337da6e clusters=85 disk=0x337ea6e000
+  EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_log_romeo_711888.cfg
+            record=embedded, size=78863, attrs=Archive, extents=2, clusters=20
+            created=2026-05-16 16:52:00
+            run: fvcn=0 VLCN=0x671b7a3 PLCN=0x337f7a3 clusters=1 disk=0x33807a3000
+            run: fvcn=1 VLCN=0x67189d0 PLCN=0x337c9d0 clusters=19 disk=0x337d9d0000
+  EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_november_yankee_663510.csv
+            record=embedded, size=181536, attrs=Archive, extents=4, clusters=45
+            created=2026-05-16 16:52:01
+            run: fvcn=0 VLCN=0x6711460 PLCN=0x3379460 clusters=1 disk=0x337a460000
+            run: fvcn=1 VLCN=0x6711461 PLCN=0x3379461 clusters=29 disk=0x337a461000
+            run: fvcn=30 VLCN=0x671147e PLCN=0x337947e clusters=1 disk=0x337a47e000
+            run: fvcn=31 VLCN=0x6711901 PLCN=0x3379901 clusters=14 disk=0x337a901000
+  EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_trace_gamma_472483.cfg
+            record=embedded, size=519258, attrs=Archive, extents=2, clusters=127
+            created=2026-05-16 16:52:01
+            run: fvcn=0 VLCN=0x671b7a6 PLCN=0x337f7a6 clusters=1 disk=0x33807a6000
+            run: fvcn=1 VLCN=0x6718a45 PLCN=0x337ca45 clusters=126 disk=0x337da45000
+  EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_zulu_audit_805568.ini
+            record=embedded, size=322201, attrs=Archive, extents=2, clusters=79
+            created=2026-05-16 16:52:02
+            run: fvcn=0 VLCN=0x671b7cd PLCN=0x337f7cd clusters=1 disk=0x33807cd000
+            run: fvcn=1 VLCN=0x67198fc PLCN=0x337d8fc clusters=78 disk=0x337e8fc000
   EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_audit_echo_178867.tmp
-            size=520031, attrs=Archive, extents=2, clusters=127
+            record=split, size=520031, attrs=Archive, extents=2, clusters=127
             created=2026-01-01 07:16:17
             run: fvcn=0 VLCN=0x671864e PLCN=0x337c64e clusters=1 disk=0x337d64e000
             run: fvcn=1 VLCN=0x671864f PLCN=0x337c64f clusters=126 disk=0x337d64f000
             (extents in remote OID 0x70b)
   EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_output_lima_215617.json
-            size=403765, attrs=Archive, extents=2, clusters=99
+            record=split, size=403765, attrs=Archive, extents=2, clusters=99
             created=2026-05-16 16:51:52
             run: fvcn=1 VLCN=0x6710fb8 PLCN=0x3378fb8 clusters=98 disk=0x3379fb8000
             run: fvcn=0 VLCN=0x67120bb PLCN=0x337a0bb clusters=1 disk=0x337b0bb000
             (extents in remote OID 0x707)
-  RESIDENT  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_log_foxtrot_796125.ini
-            size=264326 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_oscar_foxtrot_866936.json
-            size=179023 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_papa_archive_660135.txt
-            size=209277 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_zulu_india_473528.csv
-            size=472261 (data inline in directory entry)
+  EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_log_foxtrot_796125.ini
+            record=embedded, size=264326, attrs=Archive, extents=2, clusters=65
+            created=2026-05-16 16:52:01
+            run: fvcn=0 VLCN=0x671b7aa PLCN=0x337f7aa clusters=1 disk=0x33807aa000
+            run: fvcn=1 VLCN=0x6718bbd PLCN=0x337cbbd clusters=64 disk=0x337dbbd000
+  EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_oscar_foxtrot_866936.json
+            record=embedded, size=179023, attrs=Archive, extents=2, clusters=44
+            created=2026-05-16 16:52:01
+            run: fvcn=0 VLCN=0x671b7b9 PLCN=0x337f7b9 clusters=1 disk=0x33807b9000
+            run: fvcn=1 VLCN=0x6718fca PLCN=0x337cfca clusters=43 disk=0x337dfca000
+  EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_papa_archive_660135.txt
+            record=embedded, size=209277, attrs=Archive, extents=2, clusters=52
+            created=2026-05-16 16:52:01
+            run: fvcn=0 VLCN=0x671b7bc PLCN=0x337f7bc clusters=1 disk=0x33807bc000
+            run: fvcn=1 VLCN=0x6719195 PLCN=0x337d195 clusters=51 disk=0x337e195000
+  EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_zulu_india_473528.csv
+            record=embedded, size=472261, attrs=Archive, extents=2, clusters=116
+            created=2024-08-03 07:17:33
+            run: fvcn=0 VLCN=0x671b7ba PLCN=0x337f7ba clusters=1 disk=0x33807ba000
+            run: fvcn=1 VLCN=0x6718ff5 PLCN=0x337cff5 clusters=115 disk=0x337dff5000
   EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/elvis_dir_oscar_874075/xbpt_delta_victor_412034.ini
-            size=209311, attrs=Archive, extents=2, clusters=52
+            record=split, size=209311, attrs=Archive, extents=2, clusters=52
             created=2026-05-16 16:51:54
             run: fvcn=0 VLCN=0x67124cb PLCN=0x337a4cb clusters=1 disk=0x337b4cb000
             run: fvcn=1 VLCN=0x67124cc PLCN=0x337a4cc clusters=51 disk=0x337b4cc000
             (extents in remote OID 0x717)
-  RESIDENT  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/elvis_dir_oscar_874075/xbpt_zulu_mike_340372.cfg
-            size=507770 (data inline in directory entry)
+  EXTENT    test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/elvis_dir_oscar_874075/xbpt_zulu_mike_340372.cfg
+            record=embedded, size=507770, attrs=Archive, extents=3, clusters=124
+            created=2026-05-16 16:51:59
+            run: fvcn=0 VLCN=0x6718ed3 PLCN=0x337ced3 clusters=1 disk=0x337ded3000
+            run: fvcn=1 VLCN=0x6713fe2 PLCN=0x337bfe2 clusters=30 disk=0x337cfe2000
+            run: fvcn=31 VLCN=0x6718000 PLCN=0x337c000 clusters=93 disk=0x337d000000
   EXTENT    test/elvis_dir_india_800575/xbpt_foxtrot_zulu_156856.csv
-            size=130777, attrs=Archive, extents=2, clusters=32
+            record=split, size=130777, attrs=Archive, extents=2, clusters=32
             created=2026-05-16 16:51:57
             run: fvcn=1 VLCN=0x67130f7 PLCN=0x337b0f7 clusters=31 disk=0x337c0f7000
             run: fvcn=0 VLCN=0x67180d0 PLCN=0x337c0d0 clusters=1 disk=0x337d0d0000
             (extents in remote OID 0x70f)
   EXTENT    test/elvis_dir_india_800575/xbpt_uniform_lima_155750.md
-            size=145250, attrs=Archive, extents=2, clusters=36
+            record=split, size=145250, attrs=Archive, extents=2, clusters=36
             created=2026-05-16 16:51:54
             run: fvcn=0 VLCN=0x67132d8 PLCN=0x337b2d8 clusters=1 disk=0x337c2d8000
             run: fvcn=1 VLCN=0x671200f PLCN=0x337a00f clusters=35 disk=0x337b00f000
             (extents in remote OID 0x702)
-  RESIDENT  test/elvis_dir_india_800575/xbpt_beta_archive_202282.json
-            size=480555 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_india_800575/xbpt_cache_index_408825.bin
-            size=59633 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_india_800575/xbpt_cache_lima_454391.txt
-            size=388287 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_india_800575/xbpt_delta_lima_807650.tmp
-            size=271776 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_india_800575/xbpt_kilo_config_292054.json
-            size=453499 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_india_800575/xbpt_large_2mb_report_507726.txt
-            size=2097152 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_india_800575/xbpt_log_beta_973172.txt
-            size=171788 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_india_800575/xbpt_oscar_backup_284025.json
-            size=467882 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_india_800575/xbpt_output_config_975939.bak
-            size=92647 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_india_800575/xbpt_output_victor_198806.ini
-            size=412745 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_india_800575/xbpt_report_temp_854937.tmp
-            size=407328 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_india_800575/xbpt_sierra_beta_228555.dat
-            size=340231 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_india_800575/xbpt_sierra_data_271533.bin
-            size=507751 (data inline in directory entry)
+  EXTENT    test/elvis_dir_india_800575/xbpt_beta_archive_202282.json
+            record=embedded, size=480555, attrs=Archive, extents=2, clusters=118
+            created=2026-05-16 16:51:57
+            run: fvcn=0 VLCN=0x67199a1 PLCN=0x337d9a1 clusters=1 disk=0x337e9a1000
+            run: fvcn=1 VLCN=0x67199a2 PLCN=0x337d9a2 clusters=117 disk=0x337e9a2000
+  EXTENT    test/elvis_dir_india_800575/xbpt_cache_index_408825.bin
+            record=embedded, size=59633, attrs=Archive, extents=2, clusters=15
+            created=2026-05-16 16:52:02
+            run: fvcn=0 VLCN=0x67180cf PLCN=0x337c0cf clusters=1 disk=0x337d0cf000
+            run: fvcn=1 VLCN=0x67130e9 PLCN=0x337b0e9 clusters=14 disk=0x337c0e9000
+  EXTENT    test/elvis_dir_india_800575/xbpt_cache_lima_454391.txt
+            record=embedded, size=388287, attrs=Archive, extents=2, clusters=95
+            created=2026-05-16 16:52:01
+            run: fvcn=0 VLCN=0x671b7c0 PLCN=0x337f7c0 clusters=1 disk=0x33807c0000
+            run: fvcn=1 VLCN=0x67192db PLCN=0x337d2db clusters=94 disk=0x337e2db000
+  EXTENT    test/elvis_dir_india_800575/xbpt_delta_lima_807650.tmp
+            record=embedded, size=271776, attrs=Archive, extents=2, clusters=67
+            created=2026-05-16 16:52:02
+            run: fvcn=0 VLCN=0x671b7c6 PLCN=0x337f7c6 clusters=1 disk=0x33807c6000
+            run: fvcn=1 VLCN=0x6719617 PLCN=0x337d617 clusters=66 disk=0x337e617000
+  EXTENT    test/elvis_dir_india_800575/xbpt_kilo_config_292054.json
+            record=embedded, size=453499, attrs=Archive, extents=4, clusters=111
+            created=2026-05-16 16:51:58
+            run: fvcn=0 VLCN=0x67120bb PLCN=0x337a0bb clusters=1 disk=0x337b0bb000
+            run: fvcn=1 VLCN=0x6710fb8 PLCN=0x3378fb8 clusters=97 disk=0x3379fb8000
+            run: fvcn=98 VLCN=0x6718ed0 PLCN=0x337ced0 clusters=1 disk=0x337ded0000
+            run: fvcn=99 VLCN=0x6713fa5 PLCN=0x337bfa5 clusters=12 disk=0x337cfa5000
+  EXTENT    test/elvis_dir_india_800575/xbpt_large_2mb_report_507726.txt
+            record=embedded, size=2097152, attrs=Archive, extents=2, clusters=512
+            created=2026-05-16 16:52:02
+            run: fvcn=0 VLCN=0x671b7d2 PLCN=0x337f7d2 clusters=1 disk=0x33807d2000
+            run: fvcn=1 VLCN=0x6719b93 PLCN=0x337db93 clusters=511 disk=0x337eb93000
+  EXTENT    test/elvis_dir_india_800575/xbpt_log_beta_973172.txt
+            record=embedded, size=171788, attrs=Archive, extents=2, clusters=42
+            created=2026-05-16 16:52:00
+            run: fvcn=0 VLCN=0x671994a PLCN=0x337d94a clusters=1 disk=0x337e94a000
+            run: fvcn=1 VLCN=0x671994b PLCN=0x337d94b clusters=41 disk=0x337e94b000
+  EXTENT    test/elvis_dir_india_800575/xbpt_oscar_backup_284025.json
+            record=embedded, size=467882, attrs=Archive, extents=2, clusters=115
+            created=2026-05-16 16:52:00
+            run: fvcn=0 VLCN=0x671b79a PLCN=0x337f79a clusters=1 disk=0x338079a000
+            run: fvcn=1 VLCN=0x67185d1 PLCN=0x337c5d1 clusters=114 disk=0x337d5d1000
+  EXTENT    test/elvis_dir_india_800575/xbpt_output_config_975939.bak
+            record=embedded, size=92647, attrs=Archive, extents=2, clusters=23
+            created=2026-05-16 16:51:58
+            run: fvcn=0 VLCN=0x6718ec6 PLCN=0x337cec6 clusters=1 disk=0x337dec6000
+            run: fvcn=1 VLCN=0x6713a11 PLCN=0x337ba11 clusters=22 disk=0x337ca11000
+  EXTENT    test/elvis_dir_india_800575/xbpt_output_victor_198806.ini
+            record=embedded, size=412745, attrs=Archive, extents=2, clusters=101
+            created=2026-05-16 16:52:00
+            run: fvcn=0 VLCN=0x671b79c PLCN=0x337f79c clusters=1 disk=0x338079c000
+            run: fvcn=1 VLCN=0x67186ce PLCN=0x337c6ce clusters=100 disk=0x337d6ce000
+  EXTENT    test/elvis_dir_india_800575/xbpt_report_temp_854937.tmp
+            record=embedded, size=407328, attrs=Archive, extents=2, clusters=100
+            created=2026-05-16 16:52:01
+            run: fvcn=0 VLCN=0x67132dc PLCN=0x337b2dc clusters=1 disk=0x337c2dc000
+            run: fvcn=1 VLCN=0x6712110 PLCN=0x337a110 clusters=99 disk=0x337b110000
+  EXTENT    test/elvis_dir_india_800575/xbpt_sierra_beta_228555.dat
+            record=embedded, size=340231, attrs=Archive, extents=2, clusters=84
+            created=2026-05-16 16:51:57
+            run: fvcn=0 VLCN=0x671172e PLCN=0x337972e clusters=1 disk=0x337a72e000
+            run: fvcn=1 VLCN=0x67115f4 PLCN=0x33795f4 clusters=83 disk=0x337a5f4000
+  EXTENT    test/elvis_dir_india_800575/xbpt_sierra_data_271533.bin
+            record=embedded, size=507751, attrs=Archive, extents=4, clusters=124
+            created=2026-05-16 16:51:59
+            run: fvcn=0 VLCN=0x671b78f PLCN=0x337f78f clusters=1 disk=0x338078f000
+            run: fvcn=1 VLCN=0x671812d PLCN=0x337c12d clusters=111 disk=0x337d12d000
+            run: fvcn=112 VLCN=0x671819c PLCN=0x337c19c clusters=1 disk=0x337d19c000
+            run: fvcn=113 VLCN=0x6718643 PLCN=0x337c643 clusters=11 disk=0x337d643000
   EXTENT    test/elvis_dir_papa_805353/xbpt_temp_log_141240.cfg
-            size=185084, attrs=Archive, extents=2, clusters=46
+            record=split, size=185084, attrs=Archive, extents=2, clusters=46
             created=2026-05-16 16:51:58
             run: fvcn=0 VLCN=0x6713dc0 PLCN=0x337bdc0 clusters=1 disk=0x337cdc0000
             run: fvcn=1 VLCN=0x6713dc1 PLCN=0x337bdc1 clusters=45 disk=0x337cdc1000
             (extents in remote OID 0x710)
-  RESIDENT  test/elvis_dir_papa_805353/xbpt_audit_index_229436.csv
-            size=307397 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_papa_805353/xbpt_mike_oscar_154118.csv
-            size=179320 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_papa_805353/xbpt_november_hotel_509136.md
-            size=219663 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_papa_805353/xbpt_november_record_124675.bak
-            size=151966 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_papa_805353/xbpt_november_sierra_312346.xml
-            size=50327 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_papa_805353/xbpt_oscar_archive_362034.json
-            size=191641 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_papa_805353/xbpt_papa_victor_656146.log
-            size=214551 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_papa_805353/xbpt_temp_data_294711.md
-            size=187614 (data inline in directory entry)
+  EXTENT    test/elvis_dir_papa_805353/xbpt_audit_index_229436.csv
+            record=embedded, size=307397, attrs=Archive, extents=2, clusters=76
+            created=2026-05-16 16:52:01
+            run: fvcn=0 VLCN=0x671b7ae PLCN=0x337f7ae clusters=1 disk=0x33807ae000
+            run: fvcn=1 VLCN=0x6718d9b PLCN=0x337cd9b clusters=75 disk=0x337dd9b000
+  EXTENT    test/elvis_dir_papa_805353/xbpt_mike_oscar_154118.csv
+            record=embedded, size=179320, attrs=Archive, extents=4, clusters=44
+            created=2026-05-16 16:51:58
+            run: fvcn=0 VLCN=0x6718ed4 PLCN=0x337ced4 clusters=1 disk=0x337ded4000
+            run: fvcn=1 VLCN=0x671383d PLCN=0x337b83d clusters=28 disk=0x337c83d000
+            run: fvcn=29 VLCN=0x6713859 PLCN=0x337b859 clusters=1 disk=0x337c859000
+            run: fvcn=30 VLCN=0x67184bb PLCN=0x337c4bb clusters=14 disk=0x337d4bb000
+  EXTENT    test/elvis_dir_papa_805353/xbpt_november_hotel_509136.md
+            record=embedded, size=219663, attrs=Archive, extents=2, clusters=54
+            created=2026-05-16 16:52:02
+            run: fvcn=0 VLCN=0x671b7c3 PLCN=0x337f7c3 clusters=1 disk=0x33807c3000
+            run: fvcn=1 VLCN=0x671941f PLCN=0x337d41f clusters=53 disk=0x337e41f000
+  EXTENT    test/elvis_dir_papa_805353/xbpt_november_record_124675.bak
+            record=embedded, size=151966, attrs=Archive, extents=2, clusters=38
+            created=2026-05-16 16:51:59
+            run: fvcn=0 VLCN=0x6713dbf PLCN=0x337bdbf clusters=1 disk=0x337cdbf000
+            run: fvcn=1 VLCN=0x67128cc PLCN=0x337a8cc clusters=37 disk=0x337b8cc000
+  EXTENT    test/elvis_dir_papa_805353/xbpt_november_sierra_312346.xml
+            record=embedded, size=50327, attrs=Archive, extents=2, clusters=13
+            created=2026-05-16 16:52:01
+            run: fvcn=0 VLCN=0x671b7ab PLCN=0x337f7ab clusters=1 disk=0x33807ab000
+            run: fvcn=1 VLCN=0x6718bfd PLCN=0x337cbfd clusters=12 disk=0x337dbfd000
+  EXTENT    test/elvis_dir_papa_805353/xbpt_oscar_archive_362034.json
+            record=embedded, size=191641, attrs=Archive, extents=2, clusters=47
+            created=2026-05-16 16:52:01
+            run: fvcn=0 VLCN=0x671b7b5 PLCN=0x337f7b5 clusters=1 disk=0x33807b5000
+            run: fvcn=1 VLCN=0x6718ed5 PLCN=0x337ced5 clusters=46 disk=0x337ded5000
+  EXTENT    test/elvis_dir_papa_805353/xbpt_papa_victor_656146.log
+            record=embedded, size=214551, attrs=Archive, extents=2, clusters=53
+            created=2026-05-16 16:52:02
+            run: fvcn=0 VLCN=0x671b7cb PLCN=0x337f7cb clusters=1 disk=0x33807cb000
+            run: fvcn=1 VLCN=0x6719868 PLCN=0x337d868 clusters=52 disk=0x337e868000
+  EXTENT    test/elvis_dir_papa_805353/xbpt_temp_data_294711.md
+            record=embedded, size=187614, attrs=Archive, extents=4, clusters=46
+            created=2026-05-16 16:52:02
+            run: fvcn=0 VLCN=0x671b7b4 PLCN=0x337f7b4 clusters=1 disk=0x33807b4000
+            run: fvcn=1 VLCN=0x67196f4 PLCN=0x337d6f4 clusters=40 disk=0x337e6f4000
+            run: fvcn=41 VLCN=0x671971c PLCN=0x337d71c clusters=1 disk=0x337e71c000
+            run: fvcn=42 VLCN=0x6719ac3 PLCN=0x337dac3 clusters=4 disk=0x337eac3000
   EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_backup_mike_407434.log
-            size=140609, attrs=Archive, extents=8, clusters=35
+            record=split, size=140609, attrs=Archive, extents=8, clusters=35
             created=2021-05-18 07:16:04
             run: fvcn=0 VLCN=0x67101c7 PLCN=0x33781c7 clusters=1 disk=0x33791c7000
             run: fvcn=1 VLCN=0x67101c8 PLCN=0x33781c8 clusters=10 disk=0x33791c8000
@@ -282,37 +484,37 @@ File Data Locations
             run: fvcn=29 VLCN=0x67112d0 PLCN=0x33792d0 clusters=1 disk=0x337a2d0000
             (extents in remote OID 0x702)
   EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_hardlink_echo_387599.ini
-            size=237968, attrs=Archive, extents=2, clusters=59
+            record=split, size=237968, attrs=Archive, extents=2, clusters=59
             created=2025-02-09 07:17:09
             run: fvcn=0 VLCN=0x67198b3 PLCN=0x337d8b3 clusters=1 disk=0x337e8b3000
             run: fvcn=1 VLCN=0x67198b4 PLCN=0x337d8b4 clusters=58 disk=0x337e8b4000
             (extents in remote OID 0x70f)
   EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_hotel_kilo_705007.cfg
-            size=239973, attrs=Archive, extents=2, clusters=59
+            record=split, size=239973, attrs=Archive, extents=2, clusters=59
             created=2026-05-16 16:51:58
             run: fvcn=0 VLCN=0x6712173 PLCN=0x337a173 clusters=1 disk=0x337b173000
             run: fvcn=1 VLCN=0x6712174 PLCN=0x337a174 clusters=58 disk=0x337b174000
             (extents in remote OID 0x711)
   EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_index_index_579494.cfg
-            size=113106, attrs=Archive, extents=2, clusters=28
+            record=split, size=113106, attrs=Archive, extents=2, clusters=28
             created=2026-05-16 16:52:00
             run: fvcn=1 VLCN=0x6718a0b PLCN=0x337ca0b clusters=27 disk=0x337da0b000
             run: fvcn=0 VLCN=0x671b7a5 PLCN=0x337f7a5 clusters=1 disk=0x33807a5000
             (extents in remote OID 0x72f)
   EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_log_output_579275.dat
-            size=123468, attrs=Archive, extents=2, clusters=31
+            record=split, size=123468, attrs=Archive, extents=2, clusters=31
             created=2026-05-16 16:51:53
             run: fvcn=0 VLCN=0x6718a26 PLCN=0x337ca26 clusters=1 disk=0x337da26000
             run: fvcn=1 VLCN=0x6718a27 PLCN=0x337ca27 clusters=30 disk=0x337da27000
             (extents in remote OID 0x711)
   EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_quebec_papa_978800.txt
-            size=30711, attrs=Archive, extents=2, clusters=8
+            record=split, size=30711, attrs=Archive, extents=2, clusters=8
             created=2026-05-16 16:52:01
             run: fvcn=0 VLCN=0x6719979 PLCN=0x337d979 clusters=1 disk=0x337e979000
             run: fvcn=1 VLCN=0x671997a PLCN=0x337d97a clusters=7 disk=0x337e97a000
             (extents in remote OID 0x702)
   EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_sierra_echo_921063.xml
-            size=546650, attrs=Archive, extents=4, clusters=134
+            record=split, size=546650, attrs=Archive, extents=4, clusters=134
             created=2025-04-02 07:16:24
             run: fvcn=0 VLCN=0x67132e4 PLCN=0x337b2e4 clusters=1 disk=0x337c2e4000
             run: fvcn=1 VLCN=0x6711f93 PLCN=0x3379f93 clusters=123 disk=0x337af93000
@@ -320,7 +522,7 @@ File Data Locations
             run: fvcn=124 VLCN=0x671200e PLCN=0x337a00e clusters=1 disk=0x337b00e000
             (extents in remote OID 0x715)
   EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_tango_echo_291736.csv
-            size=219586, attrs=Archive, extents=6, clusters=54
+            record=split, size=219586, attrs=Archive, extents=6, clusters=54
             created=2025-04-01 07:16:26
             run: fvcn=0 VLCN=0x6711460 PLCN=0x3379460 clusters=1 disk=0x337a460000
             run: fvcn=1 VLCN=0x6711461 PLCN=0x3379461 clusters=29 disk=0x337a461000
@@ -330,117 +532,260 @@ File Data Locations
             run: fvcn=44 VLCN=0x671b7ad PLCN=0x337f7ad clusters=1 disk=0x33807ad000
             (extents in remote OID 0x711)
   EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_victor_tango_152379.bin
-            size=505381, attrs=Archive, extents=2, clusters=124
+            record=split, size=505381, attrs=Archive, extents=2, clusters=124
             created=2026-05-16 16:51:56
             run: fvcn=1 VLCN=0x6712c32 PLCN=0x337ac32 clusters=123 disk=0x337bc32000
             run: fvcn=0 VLCN=0x6713b00 PLCN=0x337bb00 clusters=1 disk=0x337cb00000
             (extents in remote OID 0x718)
-  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_alpha_cache_742120.dat
-            size=401806 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_archive_trace_798923.cfg
-            size=474347 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_audit_sync_528794.xml
-            size=283618 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_beta_echo_977425.bin
-            size=60673 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_config_log_890790.bak
-            size=216460 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_delta_echo_268401.csv
-            size=516104 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_delta_report_275249.dat
-            size=173269 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_kilo_output_350111.log
-            size=333522 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_lima_temp_514782.csv
-            size=552331 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_lima_victor_941030.cfg
-            size=516237 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_oscar_archive_384713.txt
-            size=163402 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_oscar_foxtrot_635028.xml
-            size=392164 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_papa_index_238422.csv
-            size=188129 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_temp_sierra_130629.tmp
-            size=407328 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_trace_gamma_651618.dat
-            size=462545 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_yankee_victor_114004.ini
-            size=142209 (data inline in directory entry)
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_alpha_cache_742120.dat
+            record=embedded, size=401806, attrs=Archive, extents=2, clusters=99
+            created=2026-05-16 16:52:02
+            run: fvcn=0 VLCN=0x671805d PLCN=0x337c05d clusters=1 disk=0x337d05d000
+            run: fvcn=1 VLCN=0x671805e PLCN=0x337c05e clusters=98 disk=0x337d05e000
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_archive_trace_798923.cfg
+            record=embedded, size=474347, attrs=Archive, extents=4, clusters=116
+            created=2026-05-16 16:51:59
+            run: fvcn=0 VLCN=0x67104da PLCN=0x33784da clusters=1 disk=0x33794da000
+            run: fvcn=1 VLCN=0x67104db PLCN=0x33784db clusters=99 disk=0x33794db000
+            run: fvcn=100 VLCN=0x671053e PLCN=0x337853e clusters=1 disk=0x337953e000
+            run: fvcn=101 VLCN=0x6711a89 PLCN=0x3379a89 clusters=15 disk=0x337aa89000
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_audit_sync_528794.xml
+            record=embedded, size=283618, attrs=Archive, extents=2, clusters=70
+            created=2026-05-16 16:52:00
+            run: fvcn=0 VLCN=0x671b7a2 PLCN=0x337f7a2 clusters=1 disk=0x33807a2000
+            run: fvcn=1 VLCN=0x671898b PLCN=0x337c98b clusters=69 disk=0x337d98b000
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_beta_echo_977425.bin
+            record=embedded, size=60673, attrs=Archive, extents=2, clusters=15
+            created=2026-05-16 16:52:00
+            run: fvcn=0 VLCN=0x671b79d PLCN=0x337f79d clusters=1 disk=0x338079d000
+            run: fvcn=1 VLCN=0x6718809 PLCN=0x337c809 clusters=14 disk=0x337d809000
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_config_log_890790.bak
+            record=embedded, size=216460, attrs=Archive, extents=2, clusters=53
+            created=2026-05-16 16:52:00
+            run: fvcn=0 VLCN=0x671b7a1 PLCN=0x337f7a1 clusters=1 disk=0x33807a1000
+            run: fvcn=1 VLCN=0x671893d PLCN=0x337c93d clusters=52 disk=0x337d93d000
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_delta_echo_268401.csv
+            record=embedded, size=516104, attrs=Archive, extents=2, clusters=127
+            created=2024-01-13 07:17:04
+            run: fvcn=0 VLCN=0x6713cac PLCN=0x337bcac clusters=1 disk=0x337ccac000
+            run: fvcn=1 VLCN=0x6713cad PLCN=0x337bcad clusters=126 disk=0x337ccad000
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_delta_report_275249.dat
+            record=embedded, size=173269, attrs=Archive, extents=4, clusters=43
+            created=2026-05-16 16:51:59
+            run: fvcn=0 VLCN=0x6712e14 PLCN=0x337ae14 clusters=1 disk=0x337be14000
+            run: fvcn=1 VLCN=0x6712e15 PLCN=0x337ae15 clusters=35 disk=0x337be15000
+            run: fvcn=36 VLCN=0x6712e38 PLCN=0x337ae38 clusters=1 disk=0x337be38000
+            run: fvcn=37 VLCN=0x6712f49 PLCN=0x337af49 clusters=6 disk=0x337bf49000
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_kilo_output_350111.log
+            record=embedded, size=333522, attrs=Archive, extents=4, clusters=82
+            created=2026-05-16 16:51:52
+            run: fvcn=0 VLCN=0x67118bb PLCN=0x33798bb clusters=1 disk=0x337a8bb000
+            run: fvcn=1 VLCN=0x67118bc PLCN=0x33798bc clusters=68 disk=0x337a8bc000
+            run: fvcn=69 VLCN=0x671b7af PLCN=0x337f7af clusters=1 disk=0x33807af000
+            run: fvcn=70 VLCN=0x6718de8 PLCN=0x337cde8 clusters=12 disk=0x337dde8000
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_lima_temp_514782.csv
+            record=embedded, size=552331, attrs=Archive, extents=6, clusters=135
+            created=2026-05-16 16:51:55
+            run: fvcn=0 VLCN=0x67124b6 PLCN=0x337a4b6 clusters=1 disk=0x337b4b6000
+            run: fvcn=1 VLCN=0x671184c PLCN=0x337984c clusters=110 disk=0x337a84c000
+            run: fvcn=111 VLCN=0x67180d7 PLCN=0x337c0d7 clusters=1 disk=0x337d0d7000
+            run: fvcn=112 VLCN=0x67128f2 PLCN=0x337a8f2 clusters=12 disk=0x337b8f2000
+            run: fvcn=124 VLCN=0x67128fe PLCN=0x337a8fe clusters=1 disk=0x337b8fe000
+            run: fvcn=125 VLCN=0x67139d1 PLCN=0x337b9d1 clusters=10 disk=0x337c9d1000
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_lima_victor_941030.cfg
+            record=embedded, size=516237, attrs=Archive, extents=2, clusters=127
+            created=2025-07-16 07:17:35
+            run: fvcn=0 VLCN=0x671b7c9 PLCN=0x337f7c9 clusters=1 disk=0x33807c9000
+            run: fvcn=1 VLCN=0x6719772 PLCN=0x337d772 clusters=126 disk=0x337e772000
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_oscar_archive_384713.txt
+            record=embedded, size=163402, attrs=Archive, extents=2, clusters=40
+            created=2026-05-16 16:52:01
+            run: fvcn=0 VLCN=0x671b7be PLCN=0x337f7be clusters=1 disk=0x33807be000
+            run: fvcn=1 VLCN=0x6719263 PLCN=0x337d263 clusters=39 disk=0x337e263000
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_oscar_foxtrot_635028.xml
+            record=embedded, size=392164, attrs=Archive, extents=2, clusters=96
+            created=2026-05-16 16:51:54
+            run: fvcn=0 VLCN=0x6718515 PLCN=0x337c515 clusters=1 disk=0x337d515000
+            run: fvcn=1 VLCN=0x6718516 PLCN=0x337c516 clusters=95 disk=0x337d516000
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_papa_index_238422.csv
+            record=embedded, size=188129, attrs=Archive, extents=2, clusters=46
+            created=2026-05-16 16:52:01
+            run: fvcn=0 VLCN=0x671b7a9 PLCN=0x337f7a9 clusters=1 disk=0x33807a9000
+            run: fvcn=1 VLCN=0x6718b90 PLCN=0x337cb90 clusters=45 disk=0x337db90000
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_temp_sierra_130629.tmp
+            record=embedded, size=407328, attrs=Archive, extents=2, clusters=100
+            created=2022-02-07 07:16:33
+            run: fvcn=0 VLCN=0x67132dc PLCN=0x337b2dc clusters=1 disk=0x337c2dc000
+            run: fvcn=1 VLCN=0x6712110 PLCN=0x337a110 clusters=99 disk=0x337b110000
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_trace_gamma_651618.dat
+            record=embedded, size=462545, attrs=Archive, extents=2, clusters=113
+            created=2026-05-16 16:52:01
+            run: fvcn=0 VLCN=0x67110bb PLCN=0x33790bb clusters=1 disk=0x337a0bb000
+            run: fvcn=1 VLCN=0x67110bc PLCN=0x33790bc clusters=112 disk=0x337a0bc000
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_yankee_victor_114004.ini
+            record=embedded, size=142209, attrs=Archive, extents=2, clusters=35
+            created=2026-05-16 16:51:59
+            run: fvcn=0 VLCN=0x671b790 PLCN=0x337f790 clusters=1 disk=0x3380790000
+            run: fvcn=1 VLCN=0x671819d PLCN=0x337c19d clusters=34 disk=0x337d19d000
   EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/elvis_dir_kilo_751807/xbpt_delta_zulu_595944.bak
-            size=100455, attrs=Archive, extents=4, clusters=25
+            record=split, size=100455, attrs=Archive, extents=4, clusters=25
             created=2026-05-16 16:51:54
             run: fvcn=0 VLCN=0x67132d9 PLCN=0x337b2d9 clusters=1 disk=0x337c2d9000
             run: fvcn=1 VLCN=0x6712032 PLCN=0x337a032 clusters=18 disk=0x337b032000
             run: fvcn=20 VLCN=0x67138bc PLCN=0x337b8bc clusters=5 disk=0x337c8bc000
             run: fvcn=19 VLCN=0x6712044 PLCN=0x337a044 clusters=1 disk=0x337b044000
             (extents in remote OID 0x702)
-  RESIDENT  test/elvis_dir_papa_805353/elvis_dir_november_478580/elvis_dir_kilo_751807/xbpt_temp_backup_816270.cfg
-            size=185084 (data inline in directory entry)
+  EXTENT    test/elvis_dir_papa_805353/elvis_dir_november_478580/elvis_dir_kilo_751807/xbpt_temp_backup_816270.cfg
+            record=embedded, size=185084, attrs=Archive, extents=2, clusters=46
+            created=2026-05-16 16:52:02
+            run: fvcn=0 VLCN=0x6713dc0 PLCN=0x337bdc0 clusters=1 disk=0x337cdc0000
+            run: fvcn=1 VLCN=0x6713dc1 PLCN=0x337bdc1 clusters=45 disk=0x337cdc1000
   EXTENT    test/elvis_dir_record_449015/xbpt_log_india_171227.csv
-            size=189614, attrs=Archive, extents=2, clusters=47
+            record=split, size=189614, attrs=Archive, extents=2, clusters=47
             created=2026-05-16 16:51:52
             run: fvcn=0 VLCN=0x67181df PLCN=0x337c1df clusters=1 disk=0x337d1df000
             run: fvcn=1 VLCN=0x67181e0 PLCN=0x337c1e0 clusters=46 disk=0x337d1e0000
             (extents in remote OID 0x70d)
-  RESIDENT  test/elvis_dir_record_449015/xbpt_alpha_echo_381900.ini
-            size=192974 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/xbpt_archive_audit_104959.tmp
-            size=306574 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/xbpt_backup_delta_809262.csv
-            size=512155 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/xbpt_beta_mike_393018.xml
-            size=204365 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/xbpt_config_uniform_831195.csv
-            size=493766 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/xbpt_delta_log_356379.tmp
-            size=427688 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/xbpt_foxtrot_lima_318386.tmp
-            size=312142 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/xbpt_gamma_archive_952302.cfg
-            size=141514 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/xbpt_india_delta_132534.bak
-            size=450070 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/xbpt_kilo_papa_445436.xml
-            size=30619 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/xbpt_large_14mb_foxtrot_773062.bak
-            size=14680064 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/xbpt_mike_trace_772216.dat
-            size=81506 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/xbpt_november_quebec_231876.bak
-            size=245528 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/xbpt_oscar_victor_509674.md
-            size=266358 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/xbpt_output_papa_412411.log
-            size=416811 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/xbpt_sierra_kilo_206137.json
-            size=403765 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/xbpt_sierra_victor_685719.xml
-            size=451460 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/xbpt_uniform_record_153192.json
-            size=269818 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/xbpt_whiskey_sync_681180.xml
-            size=117140 (data inline in directory entry)
+  EXTENT    test/elvis_dir_record_449015/xbpt_alpha_echo_381900.ini
+            record=embedded, size=192974, attrs=Archive, extents=2, clusters=48
+            created=2026-05-16 16:52:00
+            run: fvcn=0 VLCN=0x67186cd PLCN=0x337c6cd clusters=1 disk=0x337d6cd000
+            run: fvcn=1 VLCN=0x671828a PLCN=0x337c28a clusters=47 disk=0x337d28a000
+  EXTENT    test/elvis_dir_record_449015/xbpt_archive_audit_104959.tmp
+            record=embedded, size=306574, attrs=Archive, extents=4, clusters=75
+            created=2026-05-16 16:51:52
+            run: fvcn=0 VLCN=0x67126fd PLCN=0x337a6fd clusters=1 disk=0x337b6fd000
+            run: fvcn=1 VLCN=0x671141e PLCN=0x337941e clusters=60 disk=0x337a41e000
+            run: fvcn=61 VLCN=0x671145a PLCN=0x337945a clusters=1 disk=0x337a45a000
+            run: fvcn=62 VLCN=0x6713095 PLCN=0x337b095 clusters=13 disk=0x337c095000
+  EXTENT    test/elvis_dir_record_449015/xbpt_backup_delta_809262.csv
+            record=embedded, size=512155, attrs=Archive, extents=4, clusters=126
+            created=2026-05-16 16:52:01
+            run: fvcn=0 VLCN=0x671b7b3 PLCN=0x337f7b3 clusters=1 disk=0x33807b3000
+            run: fvcn=1 VLCN=0x6718c59 PLCN=0x337cc59 clusters=119 disk=0x337dc59000
+            run: fvcn=120 VLCN=0x6718cd0 PLCN=0x337ccd0 clusters=1 disk=0x337dcd0000
+            run: fvcn=121 VLCN=0x6719974 PLCN=0x337d974 clusters=5 disk=0x337e974000
+  EXTENT    test/elvis_dir_record_449015/xbpt_beta_mike_393018.xml
+            record=embedded, size=204365, attrs=Archive, extents=2, clusters=50
+            created=2026-05-16 16:51:59
+            run: fvcn=0 VLCN=0x6718ed1 PLCN=0x337ced1 clusters=1 disk=0x337ded1000
+            run: fvcn=1 VLCN=0x6713fb1 PLCN=0x337bfb1 clusters=49 disk=0x337cfb1000
+  EXTENT    test/elvis_dir_record_449015/xbpt_config_uniform_831195.csv
+            record=embedded, size=493766, attrs=Archive, extents=2, clusters=121
+            created=2026-05-16 16:51:59
+            run: fvcn=0 VLCN=0x671b792 PLCN=0x337f792 clusters=1 disk=0x3380792000
+            run: fvcn=1 VLCN=0x67182b9 PLCN=0x337c2b9 clusters=120 disk=0x337d2b9000
+  EXTENT    test/elvis_dir_record_449015/xbpt_delta_log_356379.tmp
+            record=embedded, size=427688, attrs=Archive, extents=4, clusters=105
+            created=2026-05-16 16:51:54
+            run: fvcn=0 VLCN=0x6711d65 PLCN=0x3379d65 clusters=1 disk=0x337ad65000
+            run: fvcn=1 VLCN=0x6711d66 PLCN=0x3379d66 clusters=98 disk=0x337ad66000
+            run: fvcn=99 VLCN=0x6711dc8 PLCN=0x3379dc8 clusters=1 disk=0x337adc8000
+            run: fvcn=100 VLCN=0x6711f8b PLCN=0x3379f8b clusters=5 disk=0x337af8b000
+  EXTENT    test/elvis_dir_record_449015/xbpt_foxtrot_lima_318386.tmp
+            record=embedded, size=312142, attrs=Archive, extents=2, clusters=77
+            created=2026-05-16 16:52:02
+            run: fvcn=0 VLCN=0x6719771 PLCN=0x337d771 clusters=1 disk=0x337e771000
+            run: fvcn=1 VLCN=0x671846f PLCN=0x337c46f clusters=76 disk=0x337d46f000
+  EXTENT    test/elvis_dir_record_449015/xbpt_gamma_archive_952302.cfg
+            record=embedded, size=141514, attrs=Archive, extents=2, clusters=35
+            created=2026-05-16 16:51:58
+            run: fvcn=0 VLCN=0x6719ad1 PLCN=0x337dad1 clusters=1 disk=0x337ead1000
+            run: fvcn=1 VLCN=0x6719ad2 PLCN=0x337dad2 clusters=34 disk=0x337ead2000
+  EXTENT    test/elvis_dir_record_449015/xbpt_india_delta_132534.bak
+            record=embedded, size=450070, attrs=Archive, extents=2, clusters=110
+            created=2026-05-16 16:51:54
+            run: fvcn=0 VLCN=0x67132da PLCN=0x337b2da clusters=1 disk=0x337c2da000
+            run: fvcn=1 VLCN=0x6712045 PLCN=0x337a045 clusters=109 disk=0x337b045000
+  EXTENT    test/elvis_dir_record_449015/xbpt_kilo_papa_445436.xml
+            record=embedded, size=30619, attrs=Archive, extents=2, clusters=8
+            created=2026-05-16 16:52:00
+            run: fvcn=0 VLCN=0x671b7a0 PLCN=0x337f7a0 clusters=1 disk=0x33807a0000
+            run: fvcn=1 VLCN=0x6718936 PLCN=0x337c936 clusters=7 disk=0x337d936000
+  EXTENT    test/elvis_dir_record_449015/xbpt_large_14mb_foxtrot_773062.bak
+            record=embedded, size=14680064, attrs=Archive, extents=2, clusters=3584
+            created=2026-05-16 16:52:03
+            run: fvcn=0 VLCN=0x671b7d8 PLCN=0x337f7d8 clusters=1 disk=0x33807d8000
+            run: fvcn=1 VLCN=0x671a990 PLCN=0x337e990 clusters=3583 disk=0x337f990000
+  EXTENT    test/elvis_dir_record_449015/xbpt_mike_trace_772216.dat
+            record=embedded, size=81506, attrs=Archive, extents=2, clusters=20
+            created=2026-05-16 16:51:57
+            run: fvcn=0 VLCN=0x67180d1 PLCN=0x337c0d1 clusters=1 disk=0x337d0d1000
+            run: fvcn=1 VLCN=0x6713209 PLCN=0x337b209 clusters=19 disk=0x337c209000
+  EXTENT    test/elvis_dir_record_449015/xbpt_november_quebec_231876.bak
+            record=embedded, size=245528, attrs=Archive, extents=2, clusters=60
+            created=2026-05-16 16:51:57
+            run: fvcn=0 VLCN=0x6718ebe PLCN=0x337cebe clusters=1 disk=0x337debe000
+            run: fvcn=1 VLCN=0x671353a PLCN=0x337b53a clusters=59 disk=0x337c53a000
+  EXTENT    test/elvis_dir_record_449015/xbpt_oscar_victor_509674.md
+            record=embedded, size=266358, attrs=Archive, extents=2, clusters=66
+            created=2026-05-16 16:51:58
+            run: fvcn=0 VLCN=0x6718ec3 PLCN=0x337cec3 clusters=1 disk=0x337dec3000
+            run: fvcn=1 VLCN=0x67138c1 PLCN=0x337b8c1 clusters=65 disk=0x337c8c1000
+  EXTENT    test/elvis_dir_record_449015/xbpt_output_papa_412411.log
+            record=embedded, size=416811, attrs=Archive, extents=2, clusters=102
+            created=2022-06-11 07:16:28
+            run: fvcn=0 VLCN=0x6718818 PLCN=0x337c818 clusters=1 disk=0x337d818000
+            run: fvcn=1 VLCN=0x6718819 PLCN=0x337c819 clusters=101 disk=0x337d819000
+  EXTENT    test/elvis_dir_record_449015/xbpt_sierra_kilo_206137.json
+            record=embedded, size=403765, attrs=Archive, extents=2, clusters=99
+            created=2026-05-16 16:51:54
+            run: fvcn=0 VLCN=0x67120bb PLCN=0x337a0bb clusters=1 disk=0x337b0bb000
+            run: fvcn=1 VLCN=0x6710fb8 PLCN=0x3378fb8 clusters=98 disk=0x3379fb8000
+  EXTENT    test/elvis_dir_record_449015/xbpt_sierra_victor_685719.xml
+            record=embedded, size=451460, attrs=Archive, extents=2, clusters=111
+            created=2026-05-16 16:51:56
+            run: fvcn=0 VLCN=0x67129b7 PLCN=0x337a9b7 clusters=1 disk=0x337b9b7000
+            run: fvcn=1 VLCN=0x67125a9 PLCN=0x337a5a9 clusters=110 disk=0x337b5a9000
+  EXTENT    test/elvis_dir_record_449015/xbpt_uniform_record_153192.json
+            record=embedded, size=269818, attrs=Archive, extents=2, clusters=66
+            created=2026-05-16 16:51:56
+            run: fvcn=0 VLCN=0x67180c7 PLCN=0x337c0c7 clusters=1 disk=0x337d0c7000
+            run: fvcn=1 VLCN=0x6712b92 PLCN=0x337ab92 clusters=65 disk=0x337bb92000
+  EXTENT    test/elvis_dir_record_449015/xbpt_whiskey_sync_681180.xml
+            record=embedded, size=117140, attrs=Archive, extents=2, clusters=29
+            created=2026-05-16 16:51:57
+            run: fvcn=0 VLCN=0x6718ebd PLCN=0x337cebd clusters=1 disk=0x337debd000
+            run: fvcn=1 VLCN=0x671340c PLCN=0x337b40c clusters=28 disk=0x337c40c000
   EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_index_draft_129088.bin
-            size=159126, attrs=Archive, extents=2, clusters=39
+            record=split, size=159126, attrs=Archive, extents=2, clusters=39
             created=2026-05-16 16:51:56
             run: fvcn=0 VLCN=0x6712d21 PLCN=0x337ad21 clusters=1 disk=0x337bd21000
             run: fvcn=1 VLCN=0x6712b6c PLCN=0x337ab6c clusters=38 disk=0x337bb6c000
             (extents in remote OID 0x70f)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_alpha_delta_877195.json
-            size=355665 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_kilo_quebec_845728.bak
-            size=163770 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_tango_record_232127.csv
-            size=296805 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_temp_index_659152.xml
-            size=317120 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_uniform_mike_713257.xml
-            size=217733 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_yankee_report_288078.log
-            size=2590 (data inline in directory entry)
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_alpha_delta_877195.json
+            record=embedded, size=355665, attrs=Archive, extents=2, clusters=87
+            created=2026-05-16 16:52:00
+            run: fvcn=0 VLCN=0x671b79e PLCN=0x337f79e clusters=1 disk=0x338079e000
+            run: fvcn=1 VLCN=0x6718889 PLCN=0x337c889 clusters=86 disk=0x337d889000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_kilo_quebec_845728.bak
+            record=embedded, size=163770, attrs=Archive, extents=2, clusters=40
+            created=2026-05-16 16:52:01
+            run: fvcn=0 VLCN=0x671b7b0 PLCN=0x337f7b0 clusters=1 disk=0x33807b0000
+            run: fvcn=1 VLCN=0x6718e17 PLCN=0x337ce17 clusters=39 disk=0x337de17000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_tango_record_232127.csv
+            record=embedded, size=296805, attrs=Archive, extents=2, clusters=73
+            created=2026-05-16 16:51:59
+            run: fvcn=0 VLCN=0x671b796 PLCN=0x337f796 clusters=1 disk=0x3380796000
+            run: fvcn=1 VLCN=0x67183ee PLCN=0x337c3ee clusters=72 disk=0x337d3ee000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_temp_index_659152.xml
+            record=embedded, size=317120, attrs=Archive, extents=4, clusters=78
+            created=2026-05-16 16:51:59
+            run: fvcn=0 VLCN=0x6718eca PLCN=0x337ceca clusters=1 disk=0x337deca000
+            run: fvcn=1 VLCN=0x6713c52 PLCN=0x337bc52 clusters=75 disk=0x337cc52000
+            run: fvcn=76 VLCN=0x6713c9d PLCN=0x337bc9d clusters=1 disk=0x337cc9d000
+            run: fvcn=77 VLCN=0x6719b02 PLCN=0x337db02 clusters=1 disk=0x337eb02000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_uniform_mike_713257.xml
+            record=embedded, size=217733, attrs=Archive, extents=2, clusters=54
+            created=2026-05-16 16:51:59
+            run: fvcn=0 VLCN=0x6718ecd PLCN=0x337cecd clusters=1 disk=0x337decd000
+            run: fvcn=1 VLCN=0x6713eec PLCN=0x337beec clusters=53 disk=0x337ceec000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_yankee_report_288078.log
+            record=embedded, size=2590, attrs=Archive, extents=1, clusters=1
+            created=2026-05-16 16:51:59
+            run: fvcn=0 VLCN=0x6718ed2 PLCN=0x337ced2 clusters=1 disk=0x337ded2000
   EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_mike_uniform_215836.txt
-            size=236094, attrs=Archive, extents=4, clusters=58
+            record=split, size=236094, attrs=Archive, extents=4, clusters=58
             created=2026-05-16 16:51:51
             run: fvcn=0 VLCN=0x67126f2 PLCN=0x337a6f2 clusters=1 disk=0x337b6f2000
             run: fvcn=1 VLCN=0x671065a PLCN=0x337865a clusters=42 disk=0x337965a000
@@ -448,119 +793,221 @@ File Data Locations
             run: fvcn=43 VLCN=0x6710684 PLCN=0x3378684 clusters=1 disk=0x3379684000
             (extents in remote OID 0x703)
   EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_romeo_output_531365.cfg
-            size=97673, attrs=Archive, extents=2, clusters=24
+            record=split, size=97673, attrs=Archive, extents=2, clusters=24
             created=2022-08-02 07:16:28
             run: fvcn=0 VLCN=0x6712ad7 PLCN=0x337aad7 clusters=1 disk=0x337bad7000
             run: fvcn=1 VLCN=0x6712ad8 PLCN=0x337aad8 clusters=23 disk=0x337bad8000
             (extents in remote OID 0x703)
   EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_zulu_hotel_433348.log
-            size=283500, attrs=Archive, extents=2, clusters=70
+            record=split, size=283500, attrs=Archive, extents=2, clusters=70
             created=2026-05-16 16:51:54
             run: fvcn=0 VLCN=0x67118bb PLCN=0x33798bb clusters=1 disk=0x337a8bb000
             run: fvcn=1 VLCN=0x67118bc PLCN=0x33798bc clusters=69 disk=0x337a8bc000
             (extents in remote OID 0x715)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_backup_echo_585708.csv
-            size=219827 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_beta_archive_448246.ini
-            size=371711 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_draft_oscar_719333.tmp
-            size=408171 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_kilo_beta_246643.bin
-            size=96238 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_large_7mb_india_845613.txt
-            size=7340032 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_large_86mb_india_568540.txt
-            size=90177536 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_log_romeo_319918.txt
-            size=8137 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_mike_trace_484217.ini
-            size=363952 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_report_india_560484.txt
-            size=318104 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_sync_echo_156375.ini
-            size=166671 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_temp_mike_134457.bak
-            size=129835 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_trace_delta_811163.txt
-            size=500541 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_yankee_tango_103961.bin
-            size=490481 (data inline in directory entry)
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_backup_echo_585708.csv
+            record=embedded, size=219827, attrs=Archive, extents=2, clusters=54
+            created=2022-06-17 07:16:38
+            run: fvcn=0 VLCN=0x67132d6 PLCN=0x337b2d6 clusters=1 disk=0x337c2d6000
+            run: fvcn=1 VLCN=0x6711dd1 PLCN=0x3379dd1 clusters=53 disk=0x337add1000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_beta_archive_448246.ini
+            record=embedded, size=371711, attrs=Archive, extents=4, clusters=91
+            created=2026-05-16 16:51:54
+            run: fvcn=0 VLCN=0x6713117 PLCN=0x337b117 clusters=1 disk=0x337c117000
+            run: fvcn=1 VLCN=0x6713118 PLCN=0x337b118 clusters=78 disk=0x337c118000
+            run: fvcn=79 VLCN=0x6713166 PLCN=0x337b166 clusters=1 disk=0x337c166000
+            run: fvcn=80 VLCN=0x67139c6 PLCN=0x337b9c6 clusters=11 disk=0x337c9c6000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_draft_oscar_719333.tmp
+            record=embedded, size=408171, attrs=Archive, extents=2, clusters=100
+            created=2026-05-16 16:51:52
+            run: fvcn=0 VLCN=0x67110ba PLCN=0x33790ba clusters=1 disk=0x337a0ba000
+            run: fvcn=1 VLCN=0x6710c40 PLCN=0x3378c40 clusters=99 disk=0x3379c40000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_kilo_beta_246643.bin
+            record=embedded, size=96238, attrs=Archive, extents=2, clusters=24
+            created=2026-05-16 16:52:02
+            run: fvcn=0 VLCN=0x671b7c8 PLCN=0x337f7c8 clusters=1 disk=0x33807c8000
+            run: fvcn=1 VLCN=0x671971e PLCN=0x337d71e clusters=23 disk=0x337e71e000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_large_7mb_india_845613.txt
+            record=embedded, size=7340032, attrs=Archive, extents=2, clusters=1792
+            created=2026-05-16 16:52:03
+            run: fvcn=0 VLCN=0x671b7d4 PLCN=0x337f7d4 clusters=1 disk=0x33807d4000
+            run: fvcn=1 VLCN=0x6719d92 PLCN=0x337dd92 clusters=1791 disk=0x337ed92000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_large_86mb_india_568540.txt
+            record=embedded, size=90177536, attrs=Archive, extents=2, clusters=22016
+            created=2026-05-16 16:52:03
+            run: fvcn=0 VLCN=0x671b7d3 PLCN=0x337f7d3 clusters=1 disk=0x33807d3000
+            run: fvcn=1 VLCN=0x1 PLCN=0x1 clusters=22015 disk=0x1001000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_log_romeo_319918.txt
+            record=embedded, size=8137, attrs=Archive, extents=2, clusters=2
+            created=2026-05-16 16:51:59
+            run: fvcn=0 VLCN=0x671b794 PLCN=0x337f794 clusters=1 disk=0x3380794000
+            run: fvcn=1 VLCN=0x6718355 PLCN=0x337c355 clusters=1 disk=0x337d355000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_mike_trace_484217.ini
+            record=embedded, size=363952, attrs=Archive, extents=2, clusters=89
+            created=2026-05-16 16:51:58
+            run: fvcn=0 VLCN=0x6718ebf PLCN=0x337cebf clusters=1 disk=0x337debf000
+            run: fvcn=1 VLCN=0x67135d0 PLCN=0x337b5d0 clusters=88 disk=0x337c5d0000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_report_india_560484.txt
+            record=embedded, size=318104, attrs=Archive, extents=2, clusters=78
+            created=2026-05-16 16:52:01
+            run: fvcn=0 VLCN=0x671b7b7 PLCN=0x337f7b7 clusters=1 disk=0x33807b7000
+            run: fvcn=1 VLCN=0x6718f6f PLCN=0x337cf6f clusters=77 disk=0x337df6f000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_sync_echo_156375.ini
+            record=embedded, size=166671, attrs=Archive, extents=2, clusters=41
+            created=2026-05-16 16:52:00
+            run: fvcn=0 VLCN=0x671339c PLCN=0x337b39c clusters=1 disk=0x337c39c000
+            run: fvcn=1 VLCN=0x671339d PLCN=0x337b39d clusters=40 disk=0x337c39d000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_temp_mike_134457.bak
+            record=embedded, size=129835, attrs=Archive, extents=2, clusters=32
+            created=2025-12-30 07:17:16
+            run: fvcn=0 VLCN=0x6718ec7 PLCN=0x337cec7 clusters=1 disk=0x337dec7000
+            run: fvcn=1 VLCN=0x6713ae1 PLCN=0x337bae1 clusters=31 disk=0x337cae1000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_trace_delta_811163.txt
+            record=embedded, size=500541, attrs=Archive, extents=2, clusters=123
+            created=2026-05-16 16:52:01
+            run: fvcn=0 VLCN=0x671b7bb PLCN=0x337f7bb clusters=1 disk=0x33807bb000
+            run: fvcn=1 VLCN=0x671911b PLCN=0x337d11b clusters=122 disk=0x337e11b000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_yankee_tango_103961.bin
+            record=embedded, size=490481, attrs=Archive, extents=2, clusters=120
+            created=2026-05-16 16:51:58
+            run: fvcn=0 VLCN=0x6718ec5 PLCN=0x337cec5 clusters=1 disk=0x337dec5000
+            run: fvcn=1 VLCN=0x6713a6a PLCN=0x337ba6a clusters=119 disk=0x337ca6a000
   EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_cache_zulu_259753.dat
-            size=407804, attrs=Archive, extents=2, clusters=100
+            record=split, size=407804, attrs=Archive, extents=2, clusters=100
             created=2026-03-01 07:16:07
             run: fvcn=0 VLCN=0x6710782 PLCN=0x3378782 clusters=1 disk=0x3379782000
             run: fvcn=1 VLCN=0x67102b3 PLCN=0x33782b3 clusters=99 disk=0x33792b3000
             (extents in remote OID 0x704)
   EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_delta_temp_981764.tmp
-            size=408171, attrs=Archive, extents=2, clusters=100
+            record=split, size=408171, attrs=Archive, extents=2, clusters=100
             created=2023-08-26 07:16:12
             run: fvcn=0 VLCN=0x67110ba PLCN=0x33790ba clusters=1 disk=0x337a0ba000
             run: fvcn=1 VLCN=0x6710c40 PLCN=0x3378c40 clusters=99 disk=0x3379c40000
             (extents in remote OID 0x70b)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_delta_india_877880.dat
-            size=401806 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_mike_quebec_329740.dat
-            size=11844 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509/xbpt_mike_trace_701071.dat
-            size=8103 (data inline in directory entry)
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_delta_india_877880.dat
+            record=embedded, size=401806, attrs=Archive, extents=2, clusters=99
+            created=2026-05-16 16:51:52
+            run: fvcn=0 VLCN=0x671805d PLCN=0x337c05d clusters=1 disk=0x337d05d000
+            run: fvcn=1 VLCN=0x671805e PLCN=0x337c05e clusters=98 disk=0x337d05e000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_mike_quebec_329740.dat
+            record=embedded, size=11844, attrs=Archive, extents=2, clusters=3
+            created=2026-05-16 16:51:52
+            run: fvcn=0 VLCN=0x67124b8 PLCN=0x337a4b8 clusters=1 disk=0x337b4b8000
+            run: fvcn=1 VLCN=0x6713047 PLCN=0x337b047 clusters=2 disk=0x337c047000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509/xbpt_mike_trace_701071.dat
+            record=embedded, size=8103, attrs=Archive, extents=2, clusters=2
+            created=2026-05-16 16:51:55
+            run: fvcn=0 VLCN=0x67180c3 PLCN=0x337c0c3 clusters=1 disk=0x337d0c3000
+            run: fvcn=1 VLCN=0x671278c PLCN=0x337a78c clusters=1 disk=0x337b78c000
   EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_audit_config_255291.dat
-            size=462545, attrs=Archive, extents=2, clusters=113
+            record=split, size=462545, attrs=Archive, extents=2, clusters=113
             created=2021-10-19 07:16:21
             run: fvcn=0 VLCN=0x67110bb PLCN=0x33790bb clusters=1 disk=0x337a0bb000
             run: fvcn=1 VLCN=0x67110bc PLCN=0x33790bc clusters=112 disk=0x337a0bc000
             (extents in remote OID 0x703)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_beta_report_756229.csv
-            size=184020 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_november_cache_127869.dat
-            size=173269 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_zulu_trace_481495.md
-            size=429380 (data inline in directory entry)
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_beta_report_756229.csv
+            record=embedded, size=184020, attrs=Archive, extents=2, clusters=45
+            created=2026-05-16 16:51:56
+            run: fvcn=0 VLCN=0x67184e8 PLCN=0x337c4e8 clusters=1 disk=0x337d4e8000
+            run: fvcn=1 VLCN=0x67184e9 PLCN=0x337c4e9 clusters=44 disk=0x337d4e9000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_november_cache_127869.dat
+            record=embedded, size=173269, attrs=Archive, extents=4, clusters=43
+            created=2026-05-16 16:51:53
+            run: fvcn=0 VLCN=0x6712e14 PLCN=0x337ae14 clusters=1 disk=0x337be14000
+            run: fvcn=1 VLCN=0x6712e15 PLCN=0x337ae15 clusters=35 disk=0x337be15000
+            run: fvcn=36 VLCN=0x6712e38 PLCN=0x337ae38 clusters=1 disk=0x337be38000
+            run: fvcn=37 VLCN=0x6712f49 PLCN=0x337af49 clusters=6 disk=0x337bf49000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_zulu_trace_481495.md
+            record=embedded, size=429380, attrs=Archive, extents=2, clusters=105
+            created=2024-06-07 07:17:11
+            run: fvcn=0 VLCN=0x6713116 PLCN=0x337b116 clusters=1 disk=0x337c116000
+            run: fvcn=1 VLCN=0x67128ff PLCN=0x337a8ff clusters=104 disk=0x337b8ff000
   EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_draft_draft_797325.txt
-            size=396015, attrs=Archive, extents=2, clusters=97
+            record=split, size=396015, attrs=Archive, extents=2, clusters=97
             created=2026-05-16 16:51:57
             run: fvcn=0 VLCN=0x6713965 PLCN=0x337b965 clusters=1 disk=0x337c965000
             run: fvcn=1 VLCN=0x6713966 PLCN=0x337b966 clusters=96 disk=0x337c966000
             (extents in remote OID 0x702)
   EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_foxtrot_cache_816969.xml
-            size=378484, attrs=Archive, extents=2, clusters=93
+            record=split, size=378484, attrs=Archive, extents=2, clusters=93
             created=2026-05-16 16:52:01
             run: fvcn=0 VLCN=0x671937f PLCN=0x337d37f clusters=1 disk=0x337e37f000
             run: fvcn=1 VLCN=0x6719380 PLCN=0x337d380 clusters=92 disk=0x337e380000
             (extents in remote OID 0x710)
   EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_victor_sync_949138.bak
-            size=144033, attrs=Archive, extents=2, clusters=36
+            record=split, size=144033, attrs=Archive, extents=2, clusters=36
             created=2026-05-16 16:51:51
             run: fvcn=0 VLCN=0x671923f PLCN=0x337d23f clusters=1 disk=0x337e23f000
             run: fvcn=1 VLCN=0x6719240 PLCN=0x337d240 clusters=35 disk=0x337e240000
             (extents in remote OID 0x708)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_backup_sierra_949923.ini
-            size=192974 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_delta_log_234524.log
-            size=57215 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_hotel_yankee_781098.log
-            size=339395 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_kilo_sync_474043.csv
-            size=479405 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_lima_config_611703.json
-            size=297107 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_log_mike_997799.bin
-            size=302125 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_output_temp_864816.txt
-            size=444510 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_record_cache_584285.json
-            size=522962 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_sierra_record_710410.bin
-            size=376478 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_temp_foxtrot_475776.md
-            size=288237 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_trace_report_848037.cfg
-            size=431764 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_zulu_hotel_356824.dat
-            size=73763 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_zulu_sync_665668.bin
-            size=194037 (data inline in directory entry)
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_backup_sierra_949923.ini
+            record=embedded, size=192974, attrs=Archive, extents=2, clusters=48
+            created=2026-05-16 16:51:59
+            run: fvcn=0 VLCN=0x67186cd PLCN=0x337c6cd clusters=1 disk=0x337d6cd000
+            run: fvcn=1 VLCN=0x671828a PLCN=0x337c28a clusters=47 disk=0x337d28a000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_delta_log_234524.log
+            record=embedded, size=57215, attrs=Archive, extents=2, clusters=14
+            created=2026-05-16 16:52:00
+            run: fvcn=0 VLCN=0x67128a8 PLCN=0x337a8a8 clusters=1 disk=0x337b8a8000
+            run: fvcn=1 VLCN=0x6712103 PLCN=0x337a103 clusters=13 disk=0x337b103000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_hotel_yankee_781098.log
+            record=embedded, size=339395, attrs=Archive, extents=2, clusters=83
+            created=2026-05-16 16:51:59
+            run: fvcn=0 VLCN=0x6718ecf PLCN=0x337cecf clusters=1 disk=0x337decf000
+            run: fvcn=1 VLCN=0x6713f53 PLCN=0x337bf53 clusters=82 disk=0x337cf53000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_kilo_sync_474043.csv
+            record=embedded, size=479405, attrs=Archive, extents=2, clusters=118
+            created=2026-05-16 16:52:00
+            run: fvcn=0 VLCN=0x671b79b PLCN=0x337f79b clusters=1 disk=0x338079b000
+            run: fvcn=1 VLCN=0x6718792 PLCN=0x337c792 clusters=117 disk=0x337d792000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_lima_config_611703.json
+            record=embedded, size=297107, attrs=Archive, extents=2, clusters=73
+            created=2026-05-16 16:51:59
+            run: fvcn=0 VLCN=0x671b797 PLCN=0x337f797 clusters=1 disk=0x3380797000
+            run: fvcn=1 VLCN=0x67183a6 PLCN=0x337c3a6 clusters=72 disk=0x337d3a6000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_log_mike_997799.bin
+            record=embedded, size=302125, attrs=Archive, extents=2, clusters=74
+            created=2026-05-16 16:52:00
+            run: fvcn=0 VLCN=0x671b79f PLCN=0x337f79f clusters=1 disk=0x338079f000
+            run: fvcn=1 VLCN=0x67188ed PLCN=0x337c8ed clusters=73 disk=0x337d8ed000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_output_temp_864816.txt
+            record=embedded, size=444510, attrs=Archive, extents=2, clusters=109
+            created=2026-05-16 16:52:01
+            run: fvcn=0 VLCN=0x671b7b6 PLCN=0x337f7b6 clusters=1 disk=0x33807b6000
+            run: fvcn=1 VLCN=0x6718f03 PLCN=0x337cf03 clusters=108 disk=0x337df03000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_record_cache_584285.json
+            record=embedded, size=522962, attrs=Archive, extents=2, clusters=128
+            created=2026-05-16 16:51:59
+            run: fvcn=0 VLCN=0x6718ecc PLCN=0x337cecc clusters=1 disk=0x337decc000
+            run: fvcn=1 VLCN=0x6713dee PLCN=0x337bdee clusters=127 disk=0x337cdee000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_sierra_record_710410.bin
+            record=embedded, size=376478, attrs=Archive, extents=2, clusters=92
+            created=2026-05-16 16:51:57
+            run: fvcn=0 VLCN=0x6718575 PLCN=0x337c575 clusters=1 disk=0x337d575000
+            run: fvcn=1 VLCN=0x6718576 PLCN=0x337c576 clusters=91 disk=0x337d576000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_temp_foxtrot_475776.md
+            record=embedded, size=288237, attrs=Archive, extents=2, clusters=71
+            created=2025-04-08 07:17:35
+            run: fvcn=0 VLCN=0x671b7c1 PLCN=0x337f7c1 clusters=1 disk=0x33807c1000
+            run: fvcn=1 VLCN=0x6719339 PLCN=0x337d339 clusters=70 disk=0x337e339000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_trace_report_848037.cfg
+            record=embedded, size=431764, attrs=Archive, extents=4, clusters=106
+            created=2026-05-16 16:52:00
+            run: fvcn=0 VLCN=0x6718817 PLCN=0x337c817 clusters=1 disk=0x337d817000
+            run: fvcn=1 VLCN=0x6713575 PLCN=0x337b575 clusters=90 disk=0x337c575000
+            run: fvcn=91 VLCN=0x671b7b8 PLCN=0x337f7b8 clusters=1 disk=0x33807b8000
+            run: fvcn=92 VLCN=0x6718fbc PLCN=0x337cfbc clusters=14 disk=0x337dfbc000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_zulu_hotel_356824.dat
+            record=embedded, size=73763, attrs=Archive, extents=2, clusters=19
+            created=2026-05-16 16:51:59
+            run: fvcn=0 VLCN=0x67131f6 PLCN=0x337b1f6 clusters=1 disk=0x337c1f6000
+            run: fvcn=1 VLCN=0x67131f7 PLCN=0x337b1f7 clusters=18 disk=0x337c1f7000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_zulu_sync_665668.bin
+            record=embedded, size=194037, attrs=Archive, extents=2, clusters=48
+            created=2026-05-16 16:52:02
+            run: fvcn=0 VLCN=0x671b7d1 PLCN=0x337f7d1 clusters=1 disk=0x33807d1000
+            run: fvcn=1 VLCN=0x6719b03 PLCN=0x337db03 clusters=47 disk=0x337eb03000
   EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_draft_beta_656043.txt
-            size=436357, attrs=Archive, extents=4, clusters=107
+            record=split, size=436357, attrs=Archive, extents=4, clusters=107
             created=2026-05-16 16:51:51
             run: fvcn=0 VLCN=0x67126f3 PLCN=0x337a6f3 clusters=1 disk=0x337b6f3000
             run: fvcn=1 VLCN=0x67105ff PLCN=0x33785ff clusters=90 disk=0x33795ff000
@@ -568,7 +1015,7 @@ File Data Locations
             run: fvcn=91 VLCN=0x6710659 PLCN=0x3378659 clusters=1 disk=0x3379659000
             (extents in remote OID 0x704)
   EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_record_delta_426347.json
-            size=364340, attrs=Archive, extents=4, clusters=89
+            record=split, size=364340, attrs=Archive, extents=4, clusters=89
             created=2026-05-16 16:51:57
             run: fvcn=0 VLCN=0x67180d9 PLCN=0x337c0d9 clusters=1 disk=0x337d0d9000
             run: fvcn=1 VLCN=0x67180da PLCN=0x337c0da clusters=82 disk=0x337d0da000
@@ -576,157 +1023,343 @@ File Data Locations
             run: fvcn=83 VLCN=0x671812c PLCN=0x337c12c clusters=1 disk=0x337d12c000
             (extents in remote OID 0x70f)
   EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_record_index_307951.json
-            size=415474, attrs=Archive, extents=2, clusters=102
+            record=split, size=415474, attrs=Archive, extents=2, clusters=102
             created=2026-05-16 16:51:55
             run: fvcn=0 VLCN=0x67132e3 PLCN=0x337b2e3 clusters=1 disk=0x337c2e3000
             run: fvcn=1 VLCN=0x671268c PLCN=0x337a68c clusters=101 disk=0x337b68c000
             (extents in remote OID 0x71a)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_archive_whiskey_718198.csv
-            size=332344 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_audit_november_543757.cfg
-            size=404255 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_cache_beta_265588.tmp
-            size=277941 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_config_beta_555315.bin
-            size=34068 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_config_india_582905.json
-            size=417040 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_gamma_victor_852781.bak
-            size=360128 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_hotel_sync_810225.ini
-            size=166671 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_index_temp_198731.cfg
-            size=264667 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_india_whiskey_159747.csv
-            size=64539 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_log_whiskey_169575.dat
-            size=407804 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_mike_uniform_966879.xml
-            size=470735 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_oscar_report_193920.cfg
-            size=331810 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_quebec_audit_121864.cfg
-            size=380437 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_report_alpha_806856.csv
-            size=100336 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_temp_echo_351548.json
-            size=254247 (data inline in directory entry)
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_archive_whiskey_718198.csv
+            record=embedded, size=332344, attrs=Archive, extents=2, clusters=82
+            created=2026-05-16 16:51:52
+            run: fvcn=0 VLCN=0x6711ef7 PLCN=0x3379ef7 clusters=1 disk=0x337aef7000
+            run: fvcn=1 VLCN=0x67111c3 PLCN=0x33791c3 clusters=81 disk=0x337a1c3000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_audit_november_543757.cfg
+            record=embedded, size=404255, attrs=Archive, extents=2, clusters=99
+            created=2026-05-16 16:52:02
+            run: fvcn=0 VLCN=0x671b7c5 PLCN=0x337f7c5 clusters=1 disk=0x33807c5000
+            run: fvcn=1 VLCN=0x67194c2 PLCN=0x337d4c2 clusters=98 disk=0x337e4c2000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_cache_beta_265588.tmp
+            record=embedded, size=277941, attrs=Archive, extents=2, clusters=68
+            created=2022-03-06 07:16:22
+            run: fvcn=0 VLCN=0x67126f7 PLCN=0x337a6f7 clusters=1 disk=0x337b6f7000
+            run: fvcn=1 VLCN=0x6710ad8 PLCN=0x3378ad8 clusters=67 disk=0x3379ad8000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_config_beta_555315.bin
+            record=embedded, size=34068, attrs=Archive, extents=2, clusters=9
+            created=2026-05-16 16:51:58
+            run: fvcn=0 VLCN=0x6718ec2 PLCN=0x337cec2 clusters=1 disk=0x337dec2000
+            run: fvcn=1 VLCN=0x67138b4 PLCN=0x337b8b4 clusters=8 disk=0x337c8b4000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_config_india_582905.json
+            record=embedded, size=417040, attrs=Archive, extents=2, clusters=102
+            created=2026-05-16 16:51:53
+            run: fvcn=0 VLCN=0x6712703 PLCN=0x337a703 clusters=1 disk=0x337b703000
+            run: fvcn=1 VLCN=0x6711975 PLCN=0x3379975 clusters=101 disk=0x337a975000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_gamma_victor_852781.bak
+            record=embedded, size=360128, attrs=Archive, extents=2, clusters=88
+            created=2026-05-16 16:52:02
+            run: fvcn=0 VLCN=0x671b7ce PLCN=0x337f7ce clusters=1 disk=0x33807ce000
+            run: fvcn=1 VLCN=0x6719a17 PLCN=0x337da17 clusters=87 disk=0x337ea17000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_hotel_sync_810225.ini
+            record=embedded, size=166671, attrs=Archive, extents=2, clusters=41
+            created=2026-05-16 16:51:52
+            run: fvcn=0 VLCN=0x671339c PLCN=0x337b39c clusters=1 disk=0x337c39c000
+            run: fvcn=1 VLCN=0x671339d PLCN=0x337b39d clusters=40 disk=0x337c39d000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_index_temp_198731.cfg
+            record=embedded, size=264667, attrs=Archive, extents=2, clusters=65
+            created=2022-02-28 07:17:26
+            run: fvcn=0 VLCN=0x671b7ac PLCN=0x337f7ac clusters=1 disk=0x33807ac000
+            run: fvcn=1 VLCN=0x6718c19 PLCN=0x337cc19 clusters=64 disk=0x337dc19000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_india_whiskey_159747.csv
+            record=embedded, size=64539, attrs=Archive, extents=4, clusters=16
+            created=2026-05-16 16:51:57
+            run: fvcn=0 VLCN=0x67131c0 PLCN=0x337b1c0 clusters=1 disk=0x337c1c0000
+            run: fvcn=1 VLCN=0x6712b66 PLCN=0x337ab66 clusters=5 disk=0x337bb66000
+            run: fvcn=6 VLCN=0x6712b6b PLCN=0x337ab6b clusters=1 disk=0x337bb6b000
+            run: fvcn=7 VLCN=0x671348c PLCN=0x337b48c clusters=9 disk=0x337c48c000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_log_whiskey_169575.dat
+            record=embedded, size=407804, attrs=Archive, extents=2, clusters=100
+            created=2022-12-26 07:16:15
+            run: fvcn=0 VLCN=0x6710782 PLCN=0x3378782 clusters=1 disk=0x3379782000
+            run: fvcn=1 VLCN=0x67102b3 PLCN=0x33782b3 clusters=99 disk=0x33792b3000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_mike_uniform_966879.xml
+            record=embedded, size=470735, attrs=Archive, extents=2, clusters=115
+            created=2026-05-16 16:52:01
+            run: fvcn=0 VLCN=0x671b7a7 PLCN=0x337f7a7 clusters=1 disk=0x33807a7000
+            run: fvcn=1 VLCN=0x6718ae1 PLCN=0x337cae1 clusters=114 disk=0x337dae1000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_oscar_report_193920.cfg
+            record=embedded, size=331810, attrs=Archive, extents=2, clusters=82
+            created=2026-05-16 16:52:01
+            run: fvcn=0 VLCN=0x671b7bf PLCN=0x337f7bf clusters=1 disk=0x33807bf000
+            run: fvcn=1 VLCN=0x671928a PLCN=0x337d28a clusters=81 disk=0x337e28a000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_quebec_audit_121864.cfg
+            record=embedded, size=380437, attrs=Archive, extents=6, clusters=93
+            created=2024-10-16 07:17:27
+            run: fvcn=0 VLCN=0x67180d5 PLCN=0x337c0d5 clusters=1 disk=0x337d0d5000
+            run: fvcn=1 VLCN=0x67130a2 PLCN=0x337b0a2 clusters=70 disk=0x337c0a2000
+            run: fvcn=71 VLCN=0x67130e8 PLCN=0x337b0e8 clusters=1 disk=0x337c0e8000
+            run: fvcn=72 VLCN=0x67133c5 PLCN=0x337b3c5 clusters=9 disk=0x337c3c5000
+            run: fvcn=81 VLCN=0x67133ce PLCN=0x337b3ce clusters=1 disk=0x337c3ce000
+            run: fvcn=82 VLCN=0x6719996 PLCN=0x337d996 clusters=11 disk=0x337e996000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_report_alpha_806856.csv
+            record=embedded, size=100336, attrs=Archive, extents=2, clusters=25
+            created=2026-05-16 16:51:57
+            run: fvcn=0 VLCN=0x67180d3 PLCN=0x337c0d3 clusters=1 disk=0x337d0d3000
+            run: fvcn=1 VLCN=0x671326c PLCN=0x337b26c clusters=24 disk=0x337c26c000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_temp_echo_351548.json
+            record=embedded, size=254247, attrs=Archive, extents=2, clusters=63
+            created=2026-05-16 16:51:56
+            run: fvcn=0 VLCN=0x67180cc PLCN=0x337c0cc clusters=1 disk=0x337d0cc000
+            run: fvcn=1 VLCN=0x6712f57 PLCN=0x337af57 clusters=62 disk=0x337bf57000
   EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_beta_cache_861983.json
-            size=308742, attrs=Archive, extents=2, clusters=76
+            record=split, size=308742, attrs=Archive, extents=2, clusters=76
             created=2025-06-11 07:16:10
             run: fvcn=0 VLCN=0x671184b PLCN=0x337984b clusters=1 disk=0x337a84b000
             run: fvcn=1 VLCN=0x67108d2 PLCN=0x33788d2 clusters=75 disk=0x33798d2000
             (extents in remote OID 0x704)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_alpha_victor_250409.ini
-            size=88203 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_audit_data_566396.txt
-            size=179268 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_audit_india_563500.bin
-            size=417431 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_audit_log_130131.ini
-            size=208467 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_lima_lima_890070.dat
-            size=286139 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_lima_oscar_843603.tmp
-            size=4780 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_mike_tango_822153.dat
-            size=498061 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_romeo_gamma_831931.dat
-            size=518777 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_tango_victor_844323.json
-            size=213498 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_temp_output_522138.tmp
-            size=345054 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_trace_quebec_127743.bin
-            size=316740 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_archive_704644/xbpt_uniform_oscar_320878.log
-            size=170417 (data inline in directory entry)
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_alpha_victor_250409.ini
+            record=embedded, size=88203, attrs=Archive, extents=4, clusters=22
+            created=2026-02-23 07:17:05
+            run: fvcn=0 VLCN=0x67132de PLCN=0x337b2de clusters=1 disk=0x337c2de000
+            run: fvcn=1 VLCN=0x671220f PLCN=0x337a20f clusters=18 disk=0x337b20f000
+            run: fvcn=19 VLCN=0x6712221 PLCN=0x337a221 clusters=1 disk=0x337b221000
+            run: fvcn=20 VLCN=0x6718807 PLCN=0x337c807 clusters=2 disk=0x337d807000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_audit_data_566396.txt
+            record=embedded, size=179268, attrs=Archive, extents=2, clusters=44
+            created=2026-05-16 16:51:55
+            run: fvcn=0 VLCN=0x67132e0 PLCN=0x337b2e0 clusters=1 disk=0x337c2e0000
+            run: fvcn=1 VLCN=0x671257e PLCN=0x337a57e clusters=43 disk=0x337b57e000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_audit_india_563500.bin
+            record=embedded, size=417431, attrs=Archive, extents=2, clusters=102
+            created=2026-05-16 16:51:55
+            run: fvcn=0 VLCN=0x6712e39 PLCN=0x337ae39 clusters=1 disk=0x337be39000
+            run: fvcn=1 VLCN=0x6712e3a PLCN=0x337ae3a clusters=101 disk=0x337be3a000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_audit_log_130131.ini
+            record=embedded, size=208467, attrs=Archive, extents=2, clusters=51
+            created=2021-10-14 07:17:10
+            run: fvcn=0 VLCN=0x671321c PLCN=0x337b21c clusters=1 disk=0x337c21c000
+            run: fvcn=1 VLCN=0x6712801 PLCN=0x337a801 clusters=50 disk=0x337b801000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_lima_lima_890070.dat
+            record=embedded, size=286139, attrs=Archive, extents=2, clusters=70
+            created=2026-05-16 16:51:52
+            run: fvcn=0 VLCN=0x6713346 PLCN=0x337b346 clusters=1 disk=0x337c346000
+            run: fvcn=1 VLCN=0x6713347 PLCN=0x337b347 clusters=69 disk=0x337c347000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_lima_oscar_843603.tmp
+            record=embedded, size=4780, attrs=Archive, extents=2, clusters=2
+            created=2026-05-16 16:51:53
+            run: fvcn=0 VLCN=0x6719b32 PLCN=0x337db32 clusters=1 disk=0x337eb32000
+            run: fvcn=1 VLCN=0x6719b33 PLCN=0x337db33 clusters=1 disk=0x337eb33000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_mike_tango_822153.dat
+            record=embedded, size=498061, attrs=Archive, extents=2, clusters=122
+            created=2026-05-16 16:51:53
+            run: fvcn=0 VLCN=0x67126fe PLCN=0x337a6fe clusters=1 disk=0x337b6fe000
+            run: fvcn=1 VLCN=0x6711532 PLCN=0x3379532 clusters=121 disk=0x337a532000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_romeo_gamma_831931.dat
+            record=embedded, size=518777, attrs=Archive, extents=2, clusters=127
+            created=2025-02-23 07:17:23
+            run: fvcn=0 VLCN=0x67132d3 PLCN=0x337b2d3 clusters=1 disk=0x337c2d3000
+            run: fvcn=1 VLCN=0x6711a98 PLCN=0x3379a98 clusters=126 disk=0x337aa98000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_tango_victor_844323.json
+            record=embedded, size=213498, attrs=Archive, extents=2, clusters=53
+            created=2025-03-31 07:17:11
+            run: fvcn=0 VLCN=0x67128f1 PLCN=0x337a8f1 clusters=1 disk=0x337b8f1000
+            run: fvcn=1 VLCN=0x6712649 PLCN=0x337a649 clusters=52 disk=0x337b649000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_temp_output_522138.tmp
+            record=embedded, size=345054, attrs=Archive, extents=2, clusters=85
+            created=2026-05-16 16:51:56
+            run: fvcn=0 VLCN=0x67180cd PLCN=0x337c0cd clusters=1 disk=0x337d0cd000
+            run: fvcn=1 VLCN=0x6712f95 PLCN=0x337af95 clusters=84 disk=0x337bf95000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_trace_quebec_127743.bin
+            record=embedded, size=316740, attrs=Archive, extents=2, clusters=78
+            created=2026-05-16 16:51:57
+            run: fvcn=0 VLCN=0x6713917 PLCN=0x337b917 clusters=1 disk=0x337c917000
+            run: fvcn=1 VLCN=0x6713918 PLCN=0x337b918 clusters=77 disk=0x337c918000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_archive_704644/xbpt_uniform_oscar_320878.log
+            record=embedded, size=170417, attrs=Archive, extents=2, clusters=42
+            created=2026-05-16 16:51:57
+            run: fvcn=0 VLCN=0x6718ebc PLCN=0x337cebc clusters=1 disk=0x337debc000
+            run: fvcn=1 VLCN=0x671331d PLCN=0x337b31d clusters=41 disk=0x337c31d000
   EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_tango_mike_573093.dat
-            size=414625, attrs=Archive, extents=2, clusters=102
+            record=split, size=414625, attrs=Archive, extents=2, clusters=102
             created=2026-05-16 16:51:51
             run: fvcn=0 VLCN=0x6710701 PLCN=0x3378701 clusters=1 disk=0x3379701000
             run: fvcn=1 VLCN=0x6710702 PLCN=0x3378702 clusters=101 disk=0x3379702000
             (extents in remote OID 0x703)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_config_archive_855545.dat
-            size=340231 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_data_victor_588744.ini
-            size=498204 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_delta_sierra_216359.bin
-            size=193275 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_hotel_data_899354.bak
-            size=499196 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_index_zulu_828859.bak
-            size=23113 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_lima_mike_622053.csv
-            size=442099 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_papa_audit_649170.md
-            size=238043 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_sierra_log_210965.log
-            size=116615 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_temp_audit_764882.bak
-            size=459389 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_uniform_alpha_203203.json
-            size=344917 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_whiskey_kilo_275488.json
-            size=190655 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_whiskey_romeo_757926.txt
-            size=192688 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_yankee_foxtrot_727835.bak
-            size=360608 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790/xbpt_delta_delta_676812.xml
-            size=163495 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790/xbpt_draft_india_571157.ini
-            size=498204 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/xbpt_india_temp_254875.bak
-            size=259142 (data inline in directory entry)
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_config_archive_855545.dat
+            record=embedded, size=340231, attrs=Archive, extents=2, clusters=84
+            created=2026-05-16 16:51:55
+            run: fvcn=0 VLCN=0x671172e PLCN=0x337972e clusters=1 disk=0x337a72e000
+            run: fvcn=1 VLCN=0x67115f4 PLCN=0x33795f4 clusters=83 disk=0x337a5f4000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_data_victor_588744.ini
+            record=embedded, size=498204, attrs=Archive, extents=4, clusters=122
+            created=2026-05-16 16:51:54
+            run: fvcn=0 VLCN=0x6712437 PLCN=0x337a437 clusters=1 disk=0x337b437000
+            run: fvcn=1 VLCN=0x6711e65 PLCN=0x3379e65 clusters=108 disk=0x337ae65000
+            run: fvcn=109 VLCN=0x6711ed1 PLCN=0x3379ed1 clusters=1 disk=0x337aed1000
+            run: fvcn=110 VLCN=0x6712222 PLCN=0x337a222 clusters=12 disk=0x337b222000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_delta_sierra_216359.bin
+            record=embedded, size=193275, attrs=Archive, extents=4, clusters=48
+            created=2024-04-04 07:17:02
+            run: fvcn=0 VLCN=0x6712d21 PLCN=0x337ad21 clusters=1 disk=0x337bd21000
+            run: fvcn=1 VLCN=0x6712b6c PLCN=0x337ab6c clusters=37 disk=0x337bb6c000
+            run: fvcn=38 VLCN=0x671b7d0 PLCN=0x337f7d0 clusters=1 disk=0x33807d0000
+            run: fvcn=39 VLCN=0x6719af9 PLCN=0x337daf9 clusters=9 disk=0x337eaf9000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_hotel_data_899354.bak
+            record=embedded, size=499196, attrs=Archive, extents=2, clusters=122
+            created=2026-05-16 16:51:51
+            run: fvcn=0 VLCN=0x671959d PLCN=0x337d59d clusters=1 disk=0x337e59d000
+            run: fvcn=1 VLCN=0x671959e PLCN=0x337d59e clusters=121 disk=0x337e59e000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_index_zulu_828859.bak
+            record=embedded, size=23113, attrs=Archive, extents=2, clusters=6
+            created=2026-05-16 16:51:51
+            run: fvcn=0 VLCN=0x6710f32 PLCN=0x3378f32 clusters=1 disk=0x3379f32000
+            run: fvcn=1 VLCN=0x6710f33 PLCN=0x3378f33 clusters=5 disk=0x3379f33000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_lima_mike_622053.csv
+            record=embedded, size=442099, attrs=Archive, extents=2, clusters=108
+            created=2026-05-16 16:51:56
+            run: fvcn=0 VLCN=0x67180ca PLCN=0x337c0ca clusters=1 disk=0x337d0ca000
+            run: fvcn=1 VLCN=0x6712da9 PLCN=0x337ada9 clusters=107 disk=0x337bda9000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_papa_audit_649170.md
+            record=embedded, size=238043, attrs=Archive, extents=2, clusters=59
+            created=2026-05-16 16:51:53
+            run: fvcn=0 VLCN=0x67132d4 PLCN=0x337b2d4 clusters=1 disk=0x337c2d4000
+            run: fvcn=1 VLCN=0x6711b16 PLCN=0x3379b16 clusters=58 disk=0x337ab16000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_sierra_log_210965.log
+            record=embedded, size=116615, attrs=Archive, extents=6, clusters=29
+            created=2026-05-16 16:51:52
+            run: fvcn=0 VLCN=0x67101c7 PLCN=0x33781c7 clusters=1 disk=0x33791c7000
+            run: fvcn=1 VLCN=0x67101c8 PLCN=0x33781c8 clusters=10 disk=0x33791c8000
+            run: fvcn=11 VLCN=0x67101d2 PLCN=0x33781d2 clusters=1 disk=0x33791d2000
+            run: fvcn=12 VLCN=0x6710bba PLCN=0x3378bba clusters=14 disk=0x3379bba000
+            run: fvcn=26 VLCN=0x6711ef8 PLCN=0x3379ef8 clusters=1 disk=0x337aef8000
+            run: fvcn=27 VLCN=0x6710e96 PLCN=0x3378e96 clusters=2 disk=0x3379e96000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_temp_audit_764882.bak
+            record=embedded, size=459389, attrs=Archive, extents=2, clusters=113
+            created=2026-05-16 16:51:53
+            run: fvcn=0 VLCN=0x6712ed8 PLCN=0x337aed8 clusters=1 disk=0x337bed8000
+            run: fvcn=1 VLCN=0x6712ed9 PLCN=0x337aed9 clusters=112 disk=0x337bed9000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_uniform_alpha_203203.json
+            record=embedded, size=344917, attrs=Archive, extents=4, clusters=85
+            created=2026-05-16 16:51:53
+            run: fvcn=0 VLCN=0x671184b PLCN=0x337984b clusters=1 disk=0x337a84b000
+            run: fvcn=1 VLCN=0x67108d2 PLCN=0x33788d2 clusters=74 disk=0x33798d2000
+            run: fvcn=75 VLCN=0x67132d5 PLCN=0x337b2d5 clusters=1 disk=0x337c2d5000
+            run: fvcn=76 VLCN=0x6711c6c PLCN=0x3379c6c clusters=9 disk=0x337ac6c000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_whiskey_kilo_275488.json
+            record=embedded, size=190655, attrs=Archive, extents=2, clusters=47
+            created=2026-05-16 16:51:52
+            run: fvcn=0 VLCN=0x67191c8 PLCN=0x337d1c8 clusters=1 disk=0x337e1c8000
+            run: fvcn=1 VLCN=0x67191c9 PLCN=0x337d1c9 clusters=46 disk=0x337e1c9000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_whiskey_romeo_757926.txt
+            record=embedded, size=192688, attrs=Archive, extents=2, clusters=48
+            created=2026-05-16 16:51:55
+            run: fvcn=0 VLCN=0x67128a0 PLCN=0x337a8a0 clusters=1 disk=0x337b8a0000
+            run: fvcn=1 VLCN=0x6711d36 PLCN=0x3379d36 clusters=47 disk=0x337ad36000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_yankee_foxtrot_727835.bak
+            record=embedded, size=360608, attrs=Archive, extents=2, clusters=89
+            created=2022-04-19 07:16:47
+            run: fvcn=0 VLCN=0x6712f4f PLCN=0x337af4f clusters=1 disk=0x337bf4f000
+            run: fvcn=1 VLCN=0x671234d PLCN=0x337a34d clusters=88 disk=0x337b34d000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790/xbpt_delta_delta_676812.xml
+            record=embedded, size=163495, attrs=Archive, extents=6, clusters=40
+            created=2026-05-16 16:51:55
+            run: fvcn=0 VLCN=0x67132e2 PLCN=0x337b2e2 clusters=1 disk=0x337c2e2000
+            run: fvcn=1 VLCN=0x671267d PLCN=0x337a67d clusters=14 disk=0x337b67d000
+            run: fvcn=15 VLCN=0x671268b PLCN=0x337a68b clusters=1 disk=0x337b68b000
+            run: fvcn=16 VLCN=0x6713a08 PLCN=0x337ba08 clusters=8 disk=0x337ca08000
+            run: fvcn=24 VLCN=0x6713a10 PLCN=0x337ba10 clusters=1 disk=0x337ca10000
+            run: fvcn=25 VLCN=0x67181bf PLCN=0x337c1bf clusters=15 disk=0x337d1bf000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790/xbpt_draft_india_571157.ini
+            record=embedded, size=498204, attrs=Archive, extents=4, clusters=122
+            created=2026-05-16 16:51:55
+            run: fvcn=0 VLCN=0x6712437 PLCN=0x337a437 clusters=1 disk=0x337b437000
+            run: fvcn=1 VLCN=0x6711e65 PLCN=0x3379e65 clusters=108 disk=0x337ae65000
+            run: fvcn=109 VLCN=0x6711ed1 PLCN=0x3379ed1 clusters=1 disk=0x337aed1000
+            run: fvcn=110 VLCN=0x6712222 PLCN=0x337a222 clusters=12 disk=0x337b222000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/xbpt_india_temp_254875.bak
+            record=embedded, size=259142, attrs=Archive, extents=4, clusters=64
+            created=2026-05-16 16:51:56
+            run: fvcn=0 VLCN=0x67180d8 PLCN=0x337c0d8 clusters=1 disk=0x337d0d8000
+            run: fvcn=1 VLCN=0x6712d70 PLCN=0x337ad70 clusters=56 disk=0x337bd70000
+            run: fvcn=57 VLCN=0x6712da8 PLCN=0x337ada8 clusters=1 disk=0x337bda8000
+            run: fvcn=58 VLCN=0x6713b03 PLCN=0x337bb03 clusters=6 disk=0x337cb03000
   EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_hardlink_audit_219848.cfg
-            size=97673, attrs=Archive, extents=2, clusters=24
+            record=split, size=97673, attrs=Archive, extents=2, clusters=24
             created=2026-05-16 16:51:51
             run: fvcn=0 VLCN=0x6712ad7 PLCN=0x337aad7 clusters=1 disk=0x337bad7000
             run: fvcn=1 VLCN=0x6712ad8 PLCN=0x337aad8 clusters=23 disk=0x337bad8000
             (extents in remote OID 0x703)
   EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_report_audit_396522.txt
-            size=241654, attrs=Archive, extents=4, clusters=59
+            record=split, size=241654, attrs=Archive, extents=4, clusters=59
             created=2021-09-29 07:16:41
             run: fvcn=0 VLCN=0x67126f6 PLCN=0x337a6f6 clusters=1 disk=0x337b6f6000
             run: fvcn=1 VLCN=0x67109f1 PLCN=0x33789f1 clusters=42 disk=0x33799f1000
             run: fvcn=44 VLCN=0x67184c9 PLCN=0x337c4c9 clusters=15 disk=0x337d4c9000
             run: fvcn=43 VLCN=0x6710a1b PLCN=0x3378a1b clusters=1 disk=0x3379a1b000
             (extents in remote OID 0x702)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_alpha_delta_830163.ini
-            size=330404 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_backup_draft_411674.log
-            size=57215 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_delta_cache_147912.bin
-            size=105712 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_log_backup_939898.json
-            size=63909 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_symlink_gamma_582874.lnk
-            size=0 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083/xbpt_yankee_echo_729349.tmp
-            size=336685 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_index_uniform_409576.json
-            size=244817 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_victor_echo_578793.cfg
-            size=373180 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_zulu_output_293634.cfg
-            size=474347 (data inline in directory entry)
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_alpha_delta_830163.ini
+            record=embedded, size=330404, attrs=Archive, extents=2, clusters=81
+            created=2026-05-16 16:51:52
+            run: fvcn=0 VLCN=0x6713b09 PLCN=0x337bb09 clusters=1 disk=0x337cb09000
+            run: fvcn=1 VLCN=0x6713b0a PLCN=0x337bb0a clusters=80 disk=0x337cb0a000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_backup_draft_411674.log
+            record=embedded, size=57215, attrs=Archive, extents=2, clusters=14
+            created=2026-05-16 16:51:54
+            run: fvcn=0 VLCN=0x67128a8 PLCN=0x337a8a8 clusters=1 disk=0x337b8a8000
+            run: fvcn=1 VLCN=0x6712103 PLCN=0x337a103 clusters=13 disk=0x337b103000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_delta_cache_147912.bin
+            record=embedded, size=105712, attrs=Archive, extents=2, clusters=26
+            created=2021-09-26 07:16:24
+            run: fvcn=0 VLCN=0x6718971 PLCN=0x337c971 clusters=1 disk=0x337d971000
+            run: fvcn=1 VLCN=0x6718972 PLCN=0x337c972 clusters=25 disk=0x337d972000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_log_backup_939898.json
+            record=embedded, size=63909, attrs=Archive, extents=4, clusters=16
+            created=2026-05-16 16:51:54
+            run: fvcn=0 VLCN=0x67132e6 PLCN=0x337b2e6 clusters=1 disk=0x337c2e6000
+            run: fvcn=1 VLCN=0x67120b3 PLCN=0x337a0b3 clusters=7 disk=0x337b0b3000
+            run: fvcn=8 VLCN=0x67120ba PLCN=0x337a0ba clusters=1 disk=0x337b0ba000
+            run: fvcn=9 VLCN=0x6712f50 PLCN=0x337af50 clusters=7 disk=0x337bf50000
+  INLINE    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_symlink_gamma_582874.lnk
+            size=0 (bytes stored in the record; record is embedded) — no clusters
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083/xbpt_yankee_echo_729349.tmp
+            record=embedded, size=336685, attrs=Archive, extents=2, clusters=83
+            created=2026-05-16 16:51:54
+            run: fvcn=0 VLCN=0x67136d0 PLCN=0x337b6d0 clusters=1 disk=0x337c6d0000
+            run: fvcn=1 VLCN=0x67136d1 PLCN=0x337b6d1 clusters=82 disk=0x337c6d1000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_index_uniform_409576.json
+            record=embedded, size=244817, attrs=Archive, extents=2, clusters=60
+            created=2024-12-12 07:16:57
+            run: fvcn=0 VLCN=0x6719735 PLCN=0x337d735 clusters=1 disk=0x337e735000
+            run: fvcn=1 VLCN=0x6719736 PLCN=0x337d736 clusters=59 disk=0x337e736000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_victor_echo_578793.cfg
+            record=embedded, size=373180, attrs=Archive, extents=2, clusters=92
+            created=2023-10-15 07:17:00
+            run: fvcn=0 VLCN=0x6718817 PLCN=0x337c817 clusters=1 disk=0x337d817000
+            run: fvcn=1 VLCN=0x6713575 PLCN=0x337b575 clusters=91 disk=0x337c575000
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_zulu_output_293634.cfg
+            record=embedded, size=474347, attrs=Archive, extents=4, clusters=116
+            created=2023-11-21 07:17:13
+            run: fvcn=0 VLCN=0x67104da PLCN=0x33784da clusters=1 disk=0x33794da000
+            run: fvcn=1 VLCN=0x67104db PLCN=0x33784db clusters=99 disk=0x33794db000
+            run: fvcn=100 VLCN=0x671053e PLCN=0x337853e clusters=1 disk=0x337953e000
+            run: fvcn=101 VLCN=0x6711a89 PLCN=0x3379a89 clusters=15 disk=0x337aa89000
   EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899/xbpt_config_record_746941.dat
-            size=73763, attrs=Archive, extents=2, clusters=19
+            record=split, size=73763, attrs=Archive, extents=2, clusters=19
             created=2024-05-06 07:17:31
             run: fvcn=0 VLCN=0x67131f6 PLCN=0x337b1f6 clusters=1 disk=0x337c1f6000
             run: fvcn=1 VLCN=0x67131f7 PLCN=0x337b1f7 clusters=18 disk=0x337c1f7000
             (extents in remote OID 0x702)
   EXTENT    test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_whiskey_835215/xbpt_alpha_romeo_974930.bin
-            size=478670, attrs=Archive, extents=2, clusters=117
+            record=split, size=478670, attrs=Archive, extents=2, clusters=117
             created=2026-05-16 16:51:58
             run: fvcn=1 VLCN=0x671365c PLCN=0x337b65c clusters=116 disk=0x337c65c000
             run: fvcn=0 VLCN=0x6718ec1 PLCN=0x337cec1 clusters=1 disk=0x337dec1000
             (extents in remote OID 0x706)
-  RESIDENT  test/elvis_dir_record_449015/elvis_dir_tango_434284/xbpt_data_config_437965.csv
-            size=82819 (data inline in directory entry)
+  EXTENT    test/elvis_dir_record_449015/elvis_dir_tango_434284/xbpt_data_config_437965.csv
+            record=embedded, size=82819, attrs=Archive, extents=2, clusters=21
+            created=2026-05-16 16:52:02
+            run: fvcn=0 VLCN=0x6719981 PLCN=0x337d981 clusters=1 disk=0x337e981000
+            run: fvcn=1 VLCN=0x6719982 PLCN=0x337d982 clusters=20 disk=0x337e982000
   EXTENT    test/elvis_dir_victor_783323/xbpt_report_quebec_867569.md
-            size=540829, attrs=Archive, extents=4, clusters=133
+            record=split, size=540829, attrs=Archive, extents=4, clusters=133
             created=2025-05-12 07:17:04
             run: fvcn=0 VLCN=0x671222e PLCN=0x337a22e clusters=1 disk=0x337b22e000
             run: fvcn=1 VLCN=0x671222f PLCN=0x337a22f clusters=121 disk=0x337b22f000
@@ -734,64 +1367,140 @@ File Data Locations
             run: fvcn=122 VLCN=0x67122a8 PLCN=0x337a2a8 clusters=1 disk=0x337b2a8000
             (extents in remote OID 0x708)
   EXTENT    test/elvis_dir_victor_783323/xbpt_trace_cache_289808.json
-            size=40965, attrs=Archive, extents=2, clusters=11
+            record=split, size=40965, attrs=Archive, extents=2, clusters=11
             created=2026-05-16 16:51:59
             run: fvcn=1 VLCN=0x6718280 PLCN=0x337c280 clusters=10 disk=0x337d280000
             run: fvcn=0 VLCN=0x671b791 PLCN=0x337f791 clusters=1 disk=0x3380791000
             (extents in remote OID 0x72b)
-  RESIDENT  test/elvis_dir_victor_783323/xbpt_audit_november_550810.ini
-            size=417862 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_victor_783323/xbpt_cache_alpha_953426.ini
-            size=68356 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_victor_783323/xbpt_cache_quebec_319176.xml
-            size=7493 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_victor_783323/xbpt_data_romeo_946788.bin
-            size=406857 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_victor_783323/xbpt_delta_echo_626074.json
-            size=273437 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_victor_783323/xbpt_draft_november_935526.json
-            size=151318 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_victor_783323/xbpt_hotel_yankee_684408.cfg
-            size=239973 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_victor_783323/xbpt_india_quebec_883273.bak
-            size=495518 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_victor_783323/xbpt_large_149mb_alpha_610845.dat
-            size=156237824 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_victor_783323/xbpt_november_quebec_999278.md
-            size=495412 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_victor_783323/xbpt_oscar_delta_192166.ini
-            size=237378 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_victor_783323/xbpt_quebec_echo_201709.md
-            size=251331 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_victor_783323/xbpt_record_mike_276675.tmp
-            size=267437 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_victor_783323/xbpt_romeo_quebec_189040.ini
-            size=8369 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_victor_783323/xbpt_romeo_yankee_383561.cfg
-            size=474347 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_victor_783323/xbpt_sierra_echo_709659.md
-            size=278186 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_victor_783323/xbpt_sierra_gamma_615567.ini
-            size=492715 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_victor_783323/xbpt_trace_config_794136.tmp
-            size=234937 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_victor_783323/xbpt_trace_hotel_502150.xml
-            size=277218 (data inline in directory entry)
-  RESIDENT  test/elvis_dir_victor_783323/xbpt_yankee_output_781405.csv
-            size=414030 (data inline in directory entry)
-  RESIDENT  testsnapshots/arg.txt
-            size=15 (data inline in directory entry)
-  RESIDENT  testsnapshots/arg.txt.bak.20260516191516
-            size=15 (data inline in directory entry)
-  RESIDENT  testsnapshots/arg.txt.bak.20260516191620
-            size=15 (data inline in directory entry)
-  RESIDENT  testsnapshots/lasttest.txt
-            size=201 (data inline in directory entry)
-  RESIDENT  testsnapshots/test.txt
-            size=5 (data inline in directory entry)
-  RESIDENT  testsnapshots/testads.txt
-            size=12 (data inline in directory entry)
-  RESIDENT  testsnapshots/testxyz.txt
-            size=5 (data inline in directory entry)
-  RESIDENT  testsnapshots/xbpt_beta_sierra_570651.json
-            size=3201078 (data inline in directory entry)
+  EXTENT    test/elvis_dir_victor_783323/xbpt_audit_november_550810.ini
+            record=embedded, size=417862, attrs=Archive, extents=4, clusters=103
+            created=2026-05-16 16:51:54
+            run: fvcn=0 VLCN=0x67132e5 PLCN=0x337b2e5 clusters=1 disk=0x337c2e5000
+            run: fvcn=1 VLCN=0x6711f2c PLCN=0x3379f2c clusters=94 disk=0x337af2c000
+            run: fvcn=95 VLCN=0x6711f8a PLCN=0x3379f8a clusters=1 disk=0x337af8a000
+            run: fvcn=96 VLCN=0x67128a1 PLCN=0x337a8a1 clusters=7 disk=0x337b8a1000
+  EXTENT    test/elvis_dir_victor_783323/xbpt_cache_alpha_953426.ini
+            record=embedded, size=68356, attrs=Archive, extents=2, clusters=17
+            created=2026-05-16 16:52:00
+            run: fvcn=0 VLCN=0x671b799 PLCN=0x337f799 clusters=1 disk=0x3380799000
+            run: fvcn=1 VLCN=0x67184d8 PLCN=0x337c4d8 clusters=16 disk=0x337d4d8000
+  EXTENT    test/elvis_dir_victor_783323/xbpt_cache_quebec_319176.xml
+            record=embedded, size=7493, attrs=Archive, extents=2, clusters=2
+            created=2026-05-16 16:52:02
+            run: fvcn=0 VLCN=0x671b7c7 PLCN=0x337f7c7 clusters=1 disk=0x33807c7000
+            run: fvcn=1 VLCN=0x671971d PLCN=0x337d71d clusters=1 disk=0x337e71d000
+  EXTENT    test/elvis_dir_victor_783323/xbpt_data_romeo_946788.bin
+            record=embedded, size=406857, attrs=Archive, extents=2, clusters=100
+            created=2026-05-16 16:51:56
+            run: fvcn=0 VLCN=0x67180c8 PLCN=0x337c0c8 clusters=1 disk=0x337d0c8000
+            run: fvcn=1 VLCN=0x6712cbe PLCN=0x337acbe clusters=99 disk=0x337bcbe000
+  EXTENT    test/elvis_dir_victor_783323/xbpt_delta_echo_626074.json
+            record=embedded, size=273437, attrs=Archive, extents=2, clusters=67
+            created=2025-04-19 07:17:09
+            run: fvcn=0 VLCN=0x67132dd PLCN=0x337b2dd clusters=1 disk=0x337c2dd000
+            run: fvcn=1 VLCN=0x67121ae PLCN=0x337a1ae clusters=66 disk=0x337b1ae000
+  EXTENT    test/elvis_dir_victor_783323/xbpt_draft_november_935526.json
+            record=embedded, size=151318, attrs=Archive, extents=2, clusters=37
+            created=2026-05-16 16:51:59
+            run: fvcn=0 VLCN=0x671b793 PLCN=0x337f793 clusters=1 disk=0x3380793000
+            run: fvcn=1 VLCN=0x6718331 PLCN=0x337c331 clusters=36 disk=0x337d331000
+  EXTENT    test/elvis_dir_victor_783323/xbpt_hotel_yankee_684408.cfg
+            record=embedded, size=239973, attrs=Archive, extents=2, clusters=59
+            created=2026-05-16 16:51:54
+            run: fvcn=0 VLCN=0x6712173 PLCN=0x337a173 clusters=1 disk=0x337b173000
+            run: fvcn=1 VLCN=0x6712174 PLCN=0x337a174 clusters=58 disk=0x337b174000
+  EXTENT    test/elvis_dir_victor_783323/xbpt_india_quebec_883273.bak
+            record=embedded, size=495518, attrs=Archive, extents=2, clusters=121
+            created=2026-05-16 16:51:55
+            run: fvcn=0 VLCN=0x6719524 PLCN=0x337d524 clusters=1 disk=0x337e524000
+            run: fvcn=1 VLCN=0x6719525 PLCN=0x337d525 clusters=120 disk=0x337e525000
+  EXTENT    test/elvis_dir_victor_783323/xbpt_large_149mb_alpha_610845.dat
+            record=embedded, size=156237824, attrs=Archive, extents=2, clusters=38144
+            created=2026-05-16 16:52:03
+            run: fvcn=0 VLCN=0x671b7d6 PLCN=0x337f7d6 clusters=1 disk=0x33807d6000
+            run: fvcn=1 VLCN=0x1 PLCN=0x1 clusters=38143 disk=0x1001000
+  EXTENT    test/elvis_dir_victor_783323/xbpt_november_quebec_999278.md
+            record=embedded, size=495412, attrs=Archive, extents=2, clusters=121
+            created=2026-05-16 16:52:02
+            run: fvcn=0 VLCN=0x671b7ca PLCN=0x337f7ca clusters=1 disk=0x33807ca000
+            run: fvcn=1 VLCN=0x67197f0 PLCN=0x337d7f0 clusters=120 disk=0x337e7f0000
+  EXTENT    test/elvis_dir_victor_783323/xbpt_oscar_delta_192166.ini
+            record=embedded, size=237378, attrs=Archive, extents=2, clusters=58
+            created=2026-05-16 16:51:59
+            run: fvcn=0 VLCN=0x671b798 PLCN=0x337f798 clusters=1 disk=0x3380798000
+            run: fvcn=1 VLCN=0x6718436 PLCN=0x337c436 clusters=57 disk=0x337d436000
+  EXTENT    test/elvis_dir_victor_783323/xbpt_quebec_echo_201709.md
+            record=embedded, size=251331, attrs=Archive, extents=2, clusters=62
+            created=2026-05-16 16:52:01
+            run: fvcn=0 VLCN=0x671b7a8 PLCN=0x337f7a8 clusters=1 disk=0x33807a8000
+            run: fvcn=1 VLCN=0x6718b53 PLCN=0x337cb53 clusters=61 disk=0x337db53000
+  EXTENT    test/elvis_dir_victor_783323/xbpt_record_mike_276675.tmp
+            record=embedded, size=267437, attrs=Archive, extents=2, clusters=66
+            created=2025-12-01 07:17:11
+            run: fvcn=0 VLCN=0x67123c0 PLCN=0x337a3c0 clusters=1 disk=0x337b3c0000
+            run: fvcn=1 VLCN=0x671177a PLCN=0x337977a clusters=65 disk=0x337a77a000
+  EXTENT    test/elvis_dir_victor_783323/xbpt_romeo_quebec_189040.ini
+            record=embedded, size=8369, attrs=Archive, extents=2, clusters=3
+            created=2026-05-16 16:51:58
+            run: fvcn=0 VLCN=0x6718ec8 PLCN=0x337cec8 clusters=1 disk=0x337dec8000
+            run: fvcn=1 VLCN=0x6713b01 PLCN=0x337bb01 clusters=2 disk=0x337cb01000
+  EXTENT    test/elvis_dir_victor_783323/xbpt_romeo_yankee_383561.cfg
+            record=embedded, size=474347, attrs=Archive, extents=4, clusters=116
+            created=2022-05-31 07:17:29
+            run: fvcn=0 VLCN=0x67104da PLCN=0x33784da clusters=1 disk=0x33794da000
+            run: fvcn=1 VLCN=0x67104db PLCN=0x33784db clusters=99 disk=0x33794db000
+            run: fvcn=100 VLCN=0x671053e PLCN=0x337853e clusters=1 disk=0x337953e000
+            run: fvcn=101 VLCN=0x6711a89 PLCN=0x3379a89 clusters=15 disk=0x337aa89000
+  EXTENT    test/elvis_dir_victor_783323/xbpt_sierra_echo_709659.md
+            record=embedded, size=278186, attrs=Archive, extents=2, clusters=68
+            created=2026-05-16 16:52:02
+            run: fvcn=0 VLCN=0x671b7c2 PLCN=0x337f7c2 clusters=1 disk=0x33807c2000
+            run: fvcn=1 VLCN=0x67193dc PLCN=0x337d3dc clusters=67 disk=0x337e3dc000
+  EXTENT    test/elvis_dir_victor_783323/xbpt_sierra_gamma_615567.ini
+            record=embedded, size=492715, attrs=Archive, extents=2, clusters=121
+            created=2026-05-16 16:52:01
+            run: fvcn=0 VLCN=0x671b7b1 PLCN=0x337f7b1 clusters=1 disk=0x33807b1000
+            run: fvcn=1 VLCN=0x6718e3e PLCN=0x337ce3e clusters=120 disk=0x337de3e000
+  EXTENT    test/elvis_dir_victor_783323/xbpt_trace_config_794136.tmp
+            record=embedded, size=234937, attrs=Archive, extents=4, clusters=58
+            created=2021-10-04 07:16:49
+            run: fvcn=0 VLCN=0x67132e1 PLCN=0x337b2e1 clusters=1 disk=0x337c2e1000
+            run: fvcn=1 VLCN=0x6712617 PLCN=0x337a617 clusters=49 disk=0x337b617000
+            run: fvcn=50 VLCN=0x6712648 PLCN=0x337a648 clusters=1 disk=0x337b648000
+            run: fvcn=51 VLCN=0x6713775 PLCN=0x337b775 clusters=7 disk=0x337c775000
+  EXTENT    test/elvis_dir_victor_783323/xbpt_trace_hotel_502150.xml
+            record=embedded, size=277218, attrs=Archive, extents=2, clusters=68
+            created=2026-05-16 16:51:59
+            run: fvcn=0 VLCN=0x67190d7 PLCN=0x337d0d7 clusters=1 disk=0x337e0d7000
+            run: fvcn=1 VLCN=0x67190d8 PLCN=0x337d0d8 clusters=67 disk=0x337e0d8000
+  EXTENT    test/elvis_dir_victor_783323/xbpt_yankee_output_781405.csv
+            record=embedded, size=414030, attrs=Archive, extents=2, clusters=102
+            created=2025-09-04 07:16:57
+            run: fvcn=0 VLCN=0x67180c2 PLCN=0x337c0c2 clusters=1 disk=0x337d0c2000
+            run: fvcn=1 VLCN=0x671271c PLCN=0x337a71c clusters=101 disk=0x337b71c000
+  EXTENT    testsnapshots/arg.txt
+            record=embedded, size=15, attrs=Archive, extents=1, clusters=1
+            created=2026-05-16 16:55:20
+            run: fvcn=0 VLCN=0x67120b2 PLCN=0x337a0b2 clusters=1 disk=0x337b0b2000
+  INLINE    testsnapshots/arg.txt.bak.20260516191516
+            size=15 (bytes stored in the record; record is embedded) — no clusters
+  INLINE    testsnapshots/arg.txt.bak.20260516191620
+            size=15 (bytes stored in the record; record is embedded) — no clusters
+  SHARED    testsnapshots/lasttest.txt
+            size=201 — no clusters of its own; the bytes are owned by the snapshot this stream still shares (record is embedded)
+  SHARED    testsnapshots/test.txt
+            size=5 — no clusters of its own; the bytes are owned by the snapshot this stream still shares (record is embedded)
+  SHARED    testsnapshots/testads.txt
+            size=12 — no clusters of its own; the bytes are owned by the snapshot this stream still shares (record is embedded)
+  INLINE    testsnapshots/testxyz.txt
+            size=5 (bytes stored in the record; record is embedded) — no clusters
+  EXTENT    testsnapshots/xbpt_beta_sierra_570651.json
+            record=embedded, size=3201078, attrs=Archive, extents=7, clusters=782
+            created=2026-05-16 17:30:57
+            run: fvcn=0 VLCN=0x6712707 PLCN=0x337a707 clusters=18 disk=0x337b707000
+            run: fvcn=18 VLCN=0x6711b50 PLCN=0x3379b50 clusters=238 disk=0x337ab50000
+            run: fvcn=256 VLCN=0x6710783 PLCN=0x3378783 clusters=256 disk=0x3379783000
+            run: fvcn=512 VLCN=0x6711c75 PLCN=0x3379c75 clusters=18 disk=0x337ac75000
+            run: fvcn=530 VLCN=0x6710ced PLCN=0x3378ced clusters=238 disk=0x3379ced000
+            run: fvcn=768 VLCN=0x671390a PLCN=0x337b90a clusters=13 disk=0x337c90a000
+            run: fvcn=781 VLCN=0x67180c6 PLCN=0x337c0c6 clusters=1 disk=0x337d0c6000

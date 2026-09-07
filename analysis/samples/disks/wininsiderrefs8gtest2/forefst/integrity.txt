@@ -28,6 +28,11 @@ Page Statistics
   B+-tree struct errors:   0
 
 ------------------------------------------------------------------------------
+Page-reference checksums (parent -> child binding)
+------------------------------------------------------------------------------
+  not checked — add `--checksums` (one 4-cluster read per object; ~27,000 on a real volume)
+
+------------------------------------------------------------------------------
 Redundancy / Backup Copies
 ------------------------------------------------------------------------------
   Boot sector (primary):   LBA 0 — OK
