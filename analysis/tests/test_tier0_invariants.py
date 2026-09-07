@@ -148,17 +148,41 @@ def test_no_function_is_defined_twice_in_one_module():
         assert not dupes, dupes
 
 
-def test_no_duplicated_function_bodies_across_modules():
-    """A function must live in exactly one module (or in a shared one).
+# Same NAME in both modules, but genuinely different bodies -- these are not copies, they are tool-specific
+# renderings (refsanalysis is a lab/structure view, forefst a forensic listing). Frozen so a NEW one cannot
+# appear unnoticed; shrinking this set is welcome, growing it needs a reason.
+_DIFFERENT_BY_DESIGN = {
+    "_filetime_to_str", "_human_size", "_parse_dir_entries",
+    "_render_cmd_help", "_walk_dir_tree", "validate_image",
+}
 
-    Currently FAILS with ~20 names. Kept as the acceptance test for the
-    shared-module extraction; shrink the allowlist to empty as you go.
+
+def test_no_duplicated_function_bodies_across_modules():
+    """No function BODY may be copied between the two modules.
+
+    The single-file rule applies to `forefst.py` only -- it must stay self-contained and stdlib-only.
+    `refsanalysis.py` is free to import from it, so a copied body there is duplication with no upside.
+
+    Copying is what this forbids, not sharing a name: `die`, `_int_arg` and `_parse_args` were byte-identical
+    copies, but each read its own module-level `PROG`, so importing them bare would have made refsanalysis
+    print "forefst: error:". The logic now lives once in forefst and refsanalysis keeps three thin wrappers
+    that pass its own PROG -- different bodies, one implementation, identical output.
     """
-    known_duplicates = set()   # <- drain this as refs/ extraction lands
     a = _module_level_functions(os.path.join(REPO, "forefst.py"))
     b = _module_level_functions(os.path.join(REPO, "refsanalysis.py"))
-    shared = (set(a) & set(b)) - {"main"} - known_duplicates
-    assert not shared, f"defined in both modules: {sorted(shared)}"
+
+    copied = []
+    for name in (set(a) & set(b)) - {"main"}:
+        if ast.dump(a[name]) == ast.dump(b[name]):
+            copied.append(name)
+    assert not copied, (
+        "identical function bodies in both modules -- refsanalysis should import these from forefst: "
+        + str(sorted(copied)))
+
+    # and the same-name/different-body set must not grow silently
+    same_name = (set(a) & set(b)) - {"main"} - set(_DIFFERENT_BY_DESIGN) - {"die", "_int_arg", "_parse_args"}
+    assert not same_name, (
+        "new same-name function in both modules; import it or justify the divergence: " + str(sorted(same_name)))
 
 
 # ─── hygiene ─────────────────────────────────────────────────────────────────

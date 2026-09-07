@@ -7,7 +7,7 @@ run; treat them as the latest evidence snapshot, not a stable reference.
 
 | File | Produced by | What it shows |
 |------|-------------|---------------|
-| `report_static_claims.txt` | `verify_docs_static.py` | Static-claim checks (function/symbol counts, version gating) — PASS/WARN/FAIL |
+| `report_static_claims.txt` | `verify_static_claims.py` | Static-claim checks (function/symbol counts, version gating) — PASS/WARN/FAIL |
 | `report_tool_execution.txt` | `verify_docs_tools.py` | Tool execution log (commands, exit codes, timing) over the image corpus |
 | `report_tool_claims.txt` | `verify_docs_tools.py` | Tool-verified claim results — PASS/FAIL/SKIP |
 | `report_summary.txt` | manual roll-up | Pre-publication summary |
@@ -18,7 +18,7 @@ Regenerate (from the repo root): `python3 analysis/reports/verify_static_claims.
 
 > Regeneration runs only against the private disk corpus and the Ghidra / decompiled exports, which are **not** bundled in this repository; point the scripts at a local copy via `REFS_DISKS` / `REFS_CORPUS` / `REFS_GHIDRA` / `REFS_DECOMPILED` / `REFS_FUNC_CATALOG`.
 >
-> The ~29,761-row function catalog is not bundled. `verify_docs_static.py` resolves it in order: `REFS_FUNC_CATALOG` → `forefst/analysis/function_catalog.csv` (drop a copy here) → `<corpus>/forclaude/intelligence/function_catalog.csv` (the workspace copy). If none is found it exits non-zero with a message naming the env override — it no longer aborts with a traceback.
+> The ~29,761-row function catalog is not bundled. `verify_static_claims.py` resolves it in order: `REFS_FUNC_CATALOG` → `forefst/analysis/function_catalog.csv` (drop a copy here) → `<corpus>/forclaude/intelligence/function_catalog.csv` (the workspace copy). If none is found it exits non-zero with a message naming the env override — it no longer aborts with a traceback.
 
 A third gate, **`verify_tool_tables.py`** (in this directory) — reference-table consistency, asserts the tools' embedded opcode/schema/
 OID/flag name maps against the master + decompilation), is **stdout-only** and writes no report file here; run it

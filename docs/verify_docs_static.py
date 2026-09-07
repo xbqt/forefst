@@ -130,6 +130,10 @@ def check_offsets(root, pages):
 # in a clone); skipped, not failed, when it cannot.
 COLDOC = "tools/forefst.md"
 COLROW = re.compile(r"^\|\s*(\d+)\s*\|\s*([A-Za-z][A-Za-z0-9 ()/_]*?)\s*\|", re.M)
+# Any page may STATE the column count in prose ("a 41-column CSV"). Checking only the table let three pages
+# keep saying 40 after the count changed -- including tools/forefst.md itself, which contradicted its own
+# table twenty lines further down. Every stated count is checked, on every page.
+COLCOUNT = re.compile(r"(\d+)[- ]column\b|\b(\d+) columns\b", re.I)
 
 
 def check_csv_columns(root, pages):
@@ -152,17 +156,28 @@ def check_csv_columns(root, pages):
         return 0
     doc = {int(n): name.strip() for n, name in COLROW.findall(text)}
     bad = []
+    stated = []
+    for rel, ptext in pages:
+        if rel == "changelog.md":
+            continue                      # released entries legitimately quote the count of their own release
+        for m in COLCOUNT.finditer(ptext):
+            v = int(m.group(1) or m.group(2))
+            if 20 <= v <= 99 and v != len(cols):     # a plausible CSV-column claim that disagrees
+                line = ptext.count("\n", 0, m.start()) + 1
+                stated.append((rel, line, v))
     for i, c in enumerate(cols, 1):
         d = doc.get(i)
         if d is None:
             bad.append((i, c, "missing from the table"))
         elif d.split(" (")[0].strip() != c.split(" (")[0].strip():
             bad.append((i, c, d))
-    print("CSV column table: %d column(s) in the tool, %d row(s) documented; %d mismatch(es)"
-          % (len(cols), len(doc), len(bad)))
+    print("CSV column table: %d column(s) in the tool, %d row(s) documented; %d mismatch(es); "
+          "%d stale count(s) stated elsewhere" % (len(cols), len(doc), len(bad), len(stated)))
     for i, c, d in bad:
         print("   col %d: tool says %r, %s says %r" % (i, c, COLDOC, d))
-    return 1 if bad else 0
+    for rel, line, v in stated:
+        print("   %s:%d says %d columns, the tool has %d" % (rel, line, v, len(cols)))
+    return 1 if (bad or stated) else 0
 
 
 # ── citation gate ───────────────────────────────────────────────────────────

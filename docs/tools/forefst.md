@@ -42,7 +42,7 @@ forefst.py disk.raw security --audit                  # tamper-check security de
 
 ### `files` — list files and directories
 
-Walks the directory B+-tree from the root object (OID `0x600`) and emits one enriched row per file/directory. Default output is the 40-column CSV described [below](#csv-output-fields).
+Walks the directory B+-tree from the root object (OID `0x600`) and emits one enriched row per file/directory. Default output is the 41-column CSV described [below](#csv-output-fields).
 
 | Option | Description |
 |--------|-------------|
@@ -225,13 +225,47 @@ Flags timestamp tampering by comparing intrinsic $SI MACB against USN-journal ev
 | `--csv [FILE]` / `--json [FILE]` | machine output (exports ALL tiers unless `--min` is explicit); `--csv -` → stdout |
 | `--depth N` | max recursion depth (default: full) |
 
-The default screen view shows **HIGH-confidence rows only**, with a trailer noting the lower-tier suspects; `--min
-MEDIUM`/`--min LOW` reveals them. The CSV/JSON exports include every tier unless you pass `--min`. Authoritative
-HIGH signals are `USN_BASIC_INFO_CHANGE`, `USN_CREATE_MISMATCH` and `HARDLINK_MACB_MISMATCH`; intrinsic signals
-are `CHANGE_LATE`, `PRE_FORMAT`, `FUTURE` and `CREATE_GT_MODIFY`. `ROUND_TIMESTAMPS` (whole-second `.0000000`
-Created + Modified) is a **LOW-only** signal that never rises above LOW and never upgrades another tier — whole-
-second stamps are also produced by driver packages (VirtIO/QEMU) and archive extraction, so round-ness suggests a
-set date but is not proof; corroborate with USN or hard-link evidence.
+The default screen view shows **HIGH-confidence rows only**, with a trailer noting the lower tiers; `--min
+MEDIUM` / `--min LOW` reveals them. The CSV/JSON exports include every tier unless you pass `--min`.
+
+**What each signal means, and how often it fires.** Base rates measured over the **full corpus — 96 volumes /
+521,060 files**. Read them as a floor, not as a typical volume: the corpus is mostly small purpose-built lab
+volumes. On its one **real Windows installation** (120,617 files) the copy signature fires on **95.7 %** of
+files, because that is what installing an operating system looks like.
+
+| Signal | Meaning | Base rate | Weight |
+|---|---|---|---|
+| `HARDLINK_MACB_MISMATCH` | one name of a multi-name file keeps a different birth time — ReFS keeps `$SI` **per name**, so a sibling preserves the truth. Journal-independent | **0.04 %** | **HIGH** |
+| `USN_BASIC_INFO_CHANGE` | the change journal recorded a basic-information write on this file | — | **HIGH** |
+| `USN_CREATE_MISMATCH` | the journal's create record disagrees with `$SI` | — | **HIGH** |
+| `CHANGE_LATE` | change time post-dates create/modify | 22.32 % | MEDIUM **only without** `PRE_FORMAT` |
+| `PRE_FORMAT` | created before this volume existed | 22.67 % | **INFO** (ambiguous — see below) |
+| `CREATE_GT_MODIFY` | created after the last write | 1.04 % | **INFO** |
+| `FUTURE` | created after the volume's last metadata write | 4 files | MEDIUM |
+| `ROUND_TIMESTAMPS` | whole-second Created **and** Modified | — | never lifts a tier |
+
+**Why `PRE_FORMAT` and `CHANGE_LATE` together are INFO — ambiguous, not cleared.** A timestamp-preserving
+copy (`robocopy /COPY:T`, a restore, an archive extraction) writes the original create/modify — before this
+volume existed, so `PRE_FORMAT` — and sets the change time to the moment of the copy, so `CHANGE_LATE`. They
+are two halves of **one event**, not two agreeing sources, which is why tiering their co-occurrence as
+corroboration is wrong.
+
+**But the pair does not tell you what that event was.** Deliberately **backdating a creation time** produces
+exactly the same two signals — a lab volume whose generator log records **74 `SetCreationTimeUtc` calls**
+carries this signature — so INFO must not be read as "a copy, therefore innocent". INFO means **ambiguous:
+a copy and a backdated creation are indistinguishable here; corroborate with the USN journal**, which is an
+independent source and the only thing that separates them. It is a lowered tier, not an exoneration. Measured: they occur together **115,936** times, and
+`CHANGE_LATE` occurs **without** `PRE_FORMAT` on **384** files — 0.33 %, all on one real Windows volume.
+Treating the pair as corroboration marked **22 %** of the corpus, and **95.4 %** of that real Windows volume,
+as tampered — which teaches an examiner to ignore the column. Under the current tiers that same volume yields
+**385** files at MEDIUM or above instead of roughly 115,000.
+
+What survives as evidence is that 0.33 % — `CHANGE_LATE` **without** `PRE_FORMAT`, created on *this* volume and
+altered afterwards, which a copy cannot produce — plus the hard-link and journal signals. On the Windows volume
+those 384 are system components whose change time post-dates their content, consistent with servicing writes; a
+MEDIUM tier says *look*, not *tampered*. `ROUND_TIMESTAMPS` is also
+produced by driver packages (VirtIO/QEMU) and archive extraction, so round-ness suggests a set date but is not
+proof.
 
 ```sh
 forefst.py disk.raw timestomp                          # HIGH-confidence suspects (default)
@@ -239,18 +273,50 @@ forefst.py disk.raw timestomp --min MEDIUM             # reveal the MEDIUM tier 
 forefst.py disk.raw timestomp --csv suspects.csv       # export ALL tiers to CSV
 ```
 
-> The `files --timestomp` column is a quick $SI-only heuristic; the `timestomp` subcommand is the USN-corroborated analysis.
+> The column and this subcommand share one function, so they cannot disagree: the column's verdict is this
+> one minus journal corroboration, which the listing does not read. It is never *higher* than this command's,
+> and with no journal evidence the two are identical.
+
+> **Page-reference checksums (`integrity --checksums`).** This recomputes the checksum every Object-Table row records for the
+> page it points at, which is what binds the metadata tree together — so it answers "is the tree I just
+> walked the tree the volume recorded?". The digest covers the whole page, after container translation. It
+> is one 4-cluster read per object, and a real Windows volume has ~27,000 of them (~38 s), so it is gated on
+> `--checksums` like the other deep verification — the default `integrity` stays about a second.
 
 ### `extract` — extract a file's content (or one ADS)
 
 Recovers a file's bytes and writes them to stdout (redirect to a file): **extent-backed** files from their extents — whether the extent map is held **inline** in the directory record (the common 3.14 case, listed as `DataResidency=extents`) or in a separate record — **inline** files from the `$DATA` bytes in the record — including a file whose record was split out of its name row by a move or a hard link but whose bytes stayed inline inside that record — and **snapshot-shared files unmodified since a snapshot** from the blocks they share with the latest snapshot. Address by bare name, absolute `/path`, or `--path`; use `name:stream` to pull an ADS (a small ADS from its inline bytes, or a large ≥2 KiB ADS reassembled from its on-disk extents). Only a rare oversized/overflow extent table falls back to `dataruns`; a modified-CoW file's prior versions are in `snapshots --extract`.
 
-**Sparse holes** in a file's extent map are reconstructed as zeros (never read from disk). **Integrity streams**
-(3.14, 4 KiB clusters, CRC32-C) are verified as they are recovered: each cluster's stored CRC32-C is recomputed
-and `extract` reports `integrity: N/N clusters CRC32-C-verified`. A mismatch — on-disk corruption or tampering —
-is flagged prominently with the offending cluster and stored-vs-actual CRC, and the bytes are still written; pass
-`--no-verify-integrity` to skip the check. (SHA-256 and 64 KiB-cluster volumes keep checksums out of line, so
-there is nothing to verify inline.)
+**Bytes that came from image holes are reported, not withheld.** Raw images are stored sparsely — this
+project's corpus is 55 TB apparent against 58 GB allocated — and a sparse image stores a file's **own zero
+content** exactly the way it stores a range that was never captured: as a hole. `cp --sparse=always` alone
+takes a 67 MB sample to 40 MB by converting real zero clusters into holes. A hole is therefore **not**
+evidence that data is missing, and the tool makes no such claim.
+
+When any part of a file's data comes from a hole, `extract` **writes the bytes** and tells you which ranges
+they came from, then exits **2** so a script can branch on it. With `-o FILE` it also writes
+`FILE.holes.json` listing the exact ranges. The wording is deliberately neutral: the image cannot distinguish
+"never written" from "not captured", so neither can the report — it says the zeros are unconfirmed in both
+directions and to corroborate them.
+
+Pass **`--refuse-holes`** for a strict run: same report, same exit code, nothing written.
+
+**The exact trigger.** The check fires when **any** byte of the file's data range lies in a hole of the image
+file, tested with `SEEK_DATA`/`SEEK_HOLE` against the decoded extent list and clipped to `[0, file_size)` so
+allocation slack past EOF is never counted. If the platform cannot answer, the result is *unknown* and the
+check does not fire — never silently read as "no holes". It reports the true hole intervals, not the extents
+containing them.
+
+Expect it often on a sparsely-stored image: on one lab volume 996 of 1,020 files have holes inside their
+data range, and all of them are correct — the generator writes a 10-byte marker and then sets the file
+length, so the tail is genuinely zero. `rc == 2` from `extract` therefore means *read the note*, not
+*something is wrong*.
+
+**What it does not use.** It does not consult a valid-data-length, so it cannot separate *allocated but never
+written* from *written but not captured*. ReFS records a VDL, but at `$DATA` value `+0x40` (v3.4: `+0x44`) in
+the **MI `$DATA` record** — a different structure from the extent **holder** this path decodes (size `+0x58`,
+allocation `+0x60`, runs from `+0xA8`), whose bytes at those offsets are timestamps and zeros. Reading it
+means resolving each file's MI record first; that is a planned improvement, not something this release does.
 
 Addressing by a full `/path` resolves it directly from the root (no depth limit); a **bare name** is searched
 across the tree (to `--depth`) and the first match is extracted — pass the full path to pick a specific file when
@@ -263,6 +329,7 @@ the name is not unique.
 | `--oid O` | re-root a **bare-name** search at object O |
 | `--depth N` | max depth for a **bare-name** search (default: full; a full path ignores this) |
 | `--no-verify-integrity` | skip the per-cluster CRC32-C check on integrity-stream files |
+| `--refuse-holes` | strict: report hole-sourced ranges and write nothing (default is to write the bytes and report) |
 
 ```sh
 forefst.py disk.raw extract /specials/gamma.bak > out.bak   # carve by absolute path (any depth, direct)
@@ -431,6 +498,15 @@ forefst.py disk.raw integrity --fullchecksums -v       # full sweep + page detai
 
 `export <what>` consolidates every "get data out" path. `extract` stays a working alias for `export file`; a bare `export -o DIR` (no subverb) is the metadata bundle (back-compat).
 
+> **Zeros that may not be the file's.** A raw image is normally a *sparse* file, and a region the
+> acquisition never wrote reads back as zeros — indistinguishable from a file that genuinely contains zeros.
+> When a file's content is entirely zero **and** its whole allocation lies in a hole of the image, `extract`
+> says so. It does **not** suppress the bytes: zeros may well be the real content. Measured across the
+> corpus this fires on **15 of 105,889** extent-backed files, most of them legitimately pre-allocated
+> (`DumpStack.log.tmp`, `.regtrans-ms` transaction containers). An overlap alone means nothing — a 791 MB
+> ISO and a 1-second silent WAV both overlap holes and both extract correctly — which is why only the
+> all-zero, fully-holed case is reported.
+
 **Output convention.** A **single-value** subverb (`file` / `ads` / `reparse`) prints to the **screen** and reminds you to add `-o FILE` to save it. A **bulk** subverb (`resident-all` / `snapshots` / `deleted` / `recyclebin` / `metadata`) writes to a **directory** — and if you omit the directory it auto-creates a timestamped `forefst_export_<what>_<YYYYMMDD-HHMMSS>/` (and tells you where), so a forgotten path never errors or dumps binary to your terminal.
 
 | Subverb | Gets out |
@@ -533,7 +609,7 @@ The `files` CSV has **41 columns**, one row per file/directory, in this order (m
 | 38 | AllocatedSize | on-disk allocated size (blank when unresolved) |
 | 39 | InternalFlags | `$SI` internal flags (e.g. `DeleteDisposition`); blank unless a confidently-named bit is set |
 | 40 | IsMoved | `True` when the file currently sits **outside its creation directory** (CreationDirOID ≠ ParentOID with a single name) — a genuine move, as distinct from a hard link into another directory. A moved file may still report `IsResident True`: the move relocates the *record*, not the *bytes* |
-| 41 | TimestompFlags | timestamp-anomaly flags as `TIER:SIGNAL` — **HIGH** is authoritative (a hard-link sibling keeps the true birth); MEDIUM/LOW are $SI heuristics that also fire on timestamp-preserving copies. Computed by default; `--no-timestomp` omits it |
+| 41 | TimestompFlags | timestamp-anomaly verdict as `TIER:SIGNAL\|SIGNAL`. Same tier the [`timestomp`](#timestomp--timestamp-anomaly-detection) subcommand gives, from the same function — minus journal corroboration, which the listing does not read. **HIGH** is authoritative; **INFO** is a timestamp-preserving copy, reported rather than suspected. Computed by default; `--no-timestomp` leaves it blank |
 
 > **Column changes in this release** (for saved Timeline Explorer / spreadsheet layouts): two columns are
 > **added** after `ADSNames` — `RecordPlacement` (23) and `DataResidency` (24) — so every column from
@@ -638,15 +714,18 @@ Python 3.7+ standard library only. No pip packages.
 | Code | Meaning |
 |------|---------|
 | `0` | Success — the command ran and flagged nothing. |
-| `1` | Error — the input could not be read or parsed (not a ReFS/GPT image, file missing, corrupt bootstrap), or an invalid argument/target was given. |
-| `2` | Either a **finding of interest** (`integrity` found a checksum/structural failure, or `security --audit` found descriptor tampering) **or** a **usage error** on the native argparse commands (an unrecognised flag on `files` / `summary` / `search` / `details`). |
+| `1` | Error — the input could not be read or parsed (not a ReFS/GPT image, file missing, corrupt bootstrap), or a **usage error**: an unrecognised flag, a missing option value, or a bad subcommand. Uniform across all 19 commands. |
+| `2` | A **finding of interest**, and nothing else: `integrity` found a checksum/structural failure, `security --audit` found descriptor tampering, or `extract` refused a file that is not in the image. |
 
-Two rough edges worth knowing when scripting:
+`rc == 2` therefore has exactly one meaning: **the command ran and found something you should look at.** A
+mistyped flag can never produce it, on any command, so `if rc == 2` is a safe branch in a script. Every command
+prints the offending flag to stderr when it rejects one.
 
-- **Code `2` is overloaded** — it means both "this volume has an integrity/tamper finding" and "you mistyped a flag on a native command." Tell them apart by context: a usage error prints a `usage:` line to stderr and no report to stdout, whereas a finding prints its report to stdout.
-- **A bad flag is reported differently by command family** — the native commands (`files`, `summary`, `search`, `details`) exit `2` (their parser rejects it), while the forensic commands (`usn`, `mlog`, `deleted`, …) exit `1`. Both print the offending flag to stderr.
-
-For portable automation the most reliable tests are `rc == 0` (clean) and `rc != 0` (something to look at); and for `integrity` / `security --audit` specifically, `rc == 2` means a genuine finding, since those two commands only reach `2` on a real finding, never on a usage error.
+These codes are **frozen for the 1.10 line** and locked by the test suite, which measures all 19 commands.
+An audit proposed renumbering every usage error *to* `2`; that was rejected, because `2` is already the finding
+code and the change would have made a mistyped flag indistinguishable from a real integrity failure. The
+overload was removed the other way instead — usage errors moved to `1` everywhere — which is why `2` is now
+unambiguous.
 
 ## Cross-References
 

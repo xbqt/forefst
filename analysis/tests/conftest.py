@@ -169,11 +169,6 @@ def tiny_image(tmp_image):
 import os as _os
 
 _XFAIL_REASON = {
-    "test_unknown_flag_is_always_exit_2":
-        "2.13 exit-code renumbering DEFERRED — 2 is a documented, scriptable 'findings' code; forensic commands "
-        "exit 1 on a bad flag. Contract documented + locked instead of renumbered.",
-    "test_missing_option_value_says_so":
-        "2.9 exit code is part of 2.13 (DEFERRED) — the message is fixed; the exit code stays 1.",
     "test_all_sanitizers_produce_the_same_result":
         "2.11 three-way sanitizer unification REJECTED — _safe_relpath must stay a path sanitizer (traversal "
         "safety), so it cannot equal a component sanitizer on a slash-bearing name.",
@@ -181,8 +176,6 @@ _XFAIL_REASON = {
         "2.11 extraction NEVER truncates (fidelity) — a name over the FS limit is surfaced, not capped.",
     "test_csv_cells_never_start_with_a_formula_prefix":
         "2.10 CSV formula-guard is OPT-IN (--csv-safe); default output is byte-faithful (fidelity).",
-    "test_no_duplicated_function_bodies_across_modules":
-        "4.5 refs/ package REJECTED — forefst.py stays one self-contained file; some duplication is intentional.",
 }
 
 def _node_key(nodeid):
@@ -195,7 +188,11 @@ def _load_deferred_nodes():
     f = _os.path.join(_os.path.dirname(__file__), "deferred_xfail_nodes.txt")
     if not _os.path.exists(f):
         return set()
-    return {_node_key(ln.strip()) for ln in open(f) if ln.strip()}
+    # `#` lines are section headers and rationale. Every node listed is DECIDED — intentional behaviour kept
+    # only as a strict-xfail alarm that fires if the decision is ever silently reversed. There is no deferred
+    # debt left here (the exit-code renumbering was closed "won't change" on 2026-09-06 and its tests deleted).
+    return {_node_key(ln.strip()) for ln in open(f)
+            if ln.strip() and not ln.lstrip().startswith("#")}
 
 _DEFERRED_NODES = _load_deferred_nodes()
 

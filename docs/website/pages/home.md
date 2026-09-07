@@ -41,11 +41,11 @@ A handful of ideas explain most of what ReFS writes to disk:
   separate **Container Table** translates those virtual clusters to physical ones (VLCN → **PLCN**).
   Almost every address on the volume is virtual and resolved through it — which is also what lets ReFS
   relocate and tier data underneath a file. See [Virtual Addressing](virtual_addressing.md).
-- **Resident vs non-resident storage.** A small stream sits *inline* in its B+-tree row (resident); a
-  larger one lives in on-disk **extents**. The inline ceiling is **2 KiB** on modern volumes (format 3.11
+- **Where a file's bytes live.** A small stream sits **inline** in its B+-tree row; a larger one lives in
+  on-disk **extents**. The inline ceiling is **2 KiB** on modern volumes (format 3.11
   and later); below it, a whole small file sits inside a metadata row where a cluster carver never looks.
   On older formats main file data is never inline at all — there, only an *alternate data stream* can hide
-  in a row, up to a hard 128 KiB. See [Resident Storage](resident_storage.md).
+  in a row, up to a hard 128 KiB. See [Record placement and data residency](resident_storage.md).
 - **Checksums, integrity, and self-healing.** Every metadata page carries a checksum, and optional
   *integrity streams* checksum file data too. Core metadata is kept in **failover pairs**, so a mismatch
   is caught at mount and the good copy heals the bad one. See
@@ -77,7 +77,7 @@ same image.
 Think of it as MFTECmd for ReFS: point it at an image and get analyst-ready output. It can:
 
 - **List every file and directory** with full metadata — MACB timestamps, sizes, attributes, owner/group
-  **SID**, hard-link names, reparse targets, alternate data streams — as a **40-column CSV**, a **Sleuthkit
+  **SID**, hard-link names, reparse targets, alternate data streams — as a **41-column CSV**, a **Sleuthkit
   body file** (for mactime / super-timelines), or **JSON**.
 - **Recover deleted files** by five independent methods (Trash table, checkpoint differencing, orphan-page
   scan, stream-snapshot reconstruction, B+-tree node-slack carving), plus **prior versions** of existing
@@ -86,7 +86,7 @@ Think of it as MFTECmd for ReFS: point it at an image and get analyst-ready outp
   transaction log — and **flag timestamp anomalies** (timestomping).
 - **Read the change history** — decode the USN journal and the durable MLog log into readable
   create / write / rename / move / delete events.
-- **Extract content and artifacts** — pull a file's data (resident, CoW-shared, or non-resident extents);
+- **Extract content and artifacts** — pull a file's data (inline, snapshot-shared, or from extents);
   decode **security descriptors** (with a tamper audit), **reparse points / WSL nodes**, **stream
   snapshots**, and **`$RECYCLE.BIN`** items; and **verify integrity-stream checksums**.
 

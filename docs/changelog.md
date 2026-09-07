@@ -1,5 +1,129 @@
 # Changelog
 
+## v1.10.1 — 2026-09-06 — one timestamp verdict, and two checks that say what they can prove
+
+**Everything here is relative to v1.10.0.** A consolidation release: no new decoders and no new columns. The
+listing and the `timestomp` command stop disagreeing, two checks that existed only in the maintainer's gate
+become visible to the reader, and three claims are corrected by measuring the whole corpus rather than a
+sample.
+
+### The timestamp column and the timestomp command gave different answers
+
+- **They now share one function.** Each used to compute its own confidence tier, and on three volumes
+  **101 of 184, 62 of 151 and 50 of 114** flagged files got a different answer depending on which one you
+  ran — the column said MEDIUM where the command said HIGH for the identical signal set. `timestomp_verdict()`
+  is now the only place a tier is decided. Verified across the corpus: **122,929 flagged rows on 100 volumes,
+  0 disagreements**, with the column never rating a file higher than the command and their signal sets nested.
+- **A copy is no longer reported as suspicion.** `PRE_FORMAT` (created before this volume existed) and
+  `CHANGE_LATE` (change time after create/modify) were tiered as two agreeing signals. They are not
+  independent: a timestamp-preserving copy — `robocopy /COPY:T`, a restore, an archive extraction — produces
+  **both**, which is why across 521,060 files they occur together 115,936 times and `CHANGE_LATE` appears
+  without `PRE_FORMAT` only 384 times. Tiering the pair as corroboration was worst exactly where it mattered
+  most: on the corpus's one **real Windows installation**, 115,488 of 120,617 files — **95.7 %** — carried the
+  copy signature, because that is what installing an operating system looks like. The old tiering called
+  almost every file on it MEDIUM. That pair alone is now the new **INFO** tier. HIGH is unchanged, and on
+  that volume the actionable set is **385 files instead of ~115,000**.
+- **INFO means ambiguous, not innocent.** The two signals are halves of one event — but they do not identify
+  that event as a copy: **backdating a creation time produces exactly the same pair**, and a lab volume whose
+  generator log records **74 `SetCreationTimeUtc` calls** carries this signature. So INFO is documented as
+  *a copy and a backdated creation are indistinguishable here; corroborate with the USN journal*, never as
+  "not suspicion". It lowers the tier; it does not clear the file.
+- **Each signal is documented with its measured base rate**, so a reader can judge what a flag is worth. Over
+  521,060 files: `PRE_FORMAT` 22.67 %, `CHANGE_LATE` 22.32 %, `CREATE_GT_MODIFY` 1.04 %,
+  `HARDLINK_MACB_MISMATCH` 0.04 %. Those averages are dominated by small purpose-built lab volumes — the rate
+  on a real installed system is far higher, which is the reason the tier changed.
+
+### Two checks the tool could already make but never reported
+
+- **Metadata page checksums.** Every Object-Table row records a checksum of the page it points at, binding
+  the metadata tree together. **`integrity --checksums`** now recomputes them, so you can tell whether the
+  tree a listing was built from is the tree the volume recorded. The digest covers the whole page, after
+  container translation. It is gated on the flag, and kept out of `summary` entirely, because it is one
+  4-cluster read per object — 26,681 of them on a real Windows volume, 427 MB and ~38 s. No default path
+  got slower. A reference is reported in one of four ways, kept apart because they mean different things:
+  **verified**, **failed** (the page changed since the checksum was written), **absent** (the page is not in
+  this image — a partial acquisition, not an alteration), and **superseded** (the Object Table holds a newer
+  row for that object; on one volume 107 of 200 references are of this kind). Reporting an absent page as a
+  failure would have read as evidence of tampering on any partial image.
+- **Bytes that came from image holes are reported, not withheld.** Raw images are stored sparsely — this
+  project's corpus is 55 TB apparent against 58 GB allocated — and a sparse image stores a file's **own zero
+  content** exactly the way it stores a range that was never captured: as a hole. (`cp --sparse=always`
+  alone takes a 67 MB sample to 40 MB by converting real zero clusters into holes.) A hole is therefore
+  **not** evidence that data is missing, and the tool no longer says it is. When any part of a file's data
+  comes from a hole, `extract` writes the bytes, names the ranges, exits `2`, and with `-o FILE` leaves
+  `FILE.holes.json`. The wording is neutral in both directions: the image cannot tell "never written" from
+  "not captured", so the report does not pretend to. `--refuse-holes` gives a strict run that writes nothing.
+  The check now fires on **any** hole in the data range, not only on an all-zero file — a partial gap inside
+  a file with real content is the case that previously passed in silence. Expect it often on a sparse image
+  (996 of 1,020 files on one lab volume, all of them correct), so `rc == 2` here means *read the note*.
+
+### `dataruns` was still using the retired model
+
+- **It reported record placement as if it were data residency.** `dataruns` keyed its whole output on one
+  field and printed every **embedded** record as `RESIDENT — data inline in directory entry`. On one sample
+  volume that mislabelled **475 of 1,010** so-called inline files: they are extent-backed, the largest 149 MB,
+  and `extract` decodes their runs perfectly well — `dataruns` simply never asked. The command whose job is to
+  show clusters was contradicting the two axes the same release introduced. It now reports both:
+  `record=embedded|split` beside `INLINE`/`EXTENT`, prints the runs for embedded extent-backed files, and
+  counts by data residency. Files with decoded extents on that volume: **284 → 759**. The machine formats
+  gain `record_placement` and `data_residency` columns, and `storage` now carries the data axis.
+
+### Known, and deferred to 1.11
+
+Two label/formatting residuals found in testing, neither affecting recovered bytes:
+
+- **`dataruns -v` prints a snapshot-shared file as `INLINE`.** Three files on one volume
+  (`testsnapshots/test.txt`, `testads.txt`, `lasttest.txt`) hold their bytes in a snapshot's cluster, which
+  `files` reports correctly as `snapshot-shared`; `dataruns` has only two data states and calls them
+  "bytes stored in the record". It is the same label-mismatch class as the embedded/extent-backed fix above,
+  one state further on: `dataruns` needs the full residency vocabulary, not just inline vs extents.
+- **`FILE.holes.json` splits one contiguous hole at extent boundaries.** A hole spanning two adjacent
+  extents is written as two entries (`0–4095`, `4096–97672`) instead of one; the byte total is right, the
+  range list is more fragmented than the truth. Adjacent ranges should be merged before they are reported.
+
+### Documentation and the register
+
+- The published tree had three pages still saying **40-column** and a home page still using the retired
+  vocabulary; the tool page contradicted its own column table. All corrected, and the gate now compares the
+  two documentation trees and checks every stated column count on every page, not just the table.
+- The test suite moved to `analysis/tests/`, where the repo already keeps lab material, and no longer carries
+  a maintainer's absolute path or a plugin-dependent `pytest.ini`.
+- **The two extent decoders are now asserted to agree**, as the safety net for a merge that has not happened
+  yet. `_decode_holder_extents` tries an embedded B+-tree index array first and falls back to a
+  contiguous-array **scan** — but the naming is misleading: the scan produces **60,938 of 74,258** accepted
+  covers (82 %) against the index array's 13,320, so **the scan decoder is the primary decoder in practice**
+  and the index array is the special case. A merge cannot treat the scan as removable.
+
+  Where both return a map they almost always return the same one: of 11,560 such values, all but **18** map
+  every file offset to the same cluster, once list order and run fragmentation are ignored (the scan starts
+  mid-record, and the index array may split a run the scan reports whole). For those 18 the covers genuinely
+  disagree. **Four are now settled against the operator's own SHA-256 inventory**: on `win11bidule`,
+  `secret.txt`, `vmmemctl.sys`, `fvevol.sys.mui` and `winnat.sys.mui` reproduce the operator's hash exactly
+  from the cover the tool uses and *not* from the other one, so the alternative is a false candidate there.
+  The remaining **14 have no byte-exact ground truth and are content-unverified** — they are named in the
+  release notes and are first on the 1.11 list. The count is pinned so it cannot grow unnoticed.
+- **Three helper bodies that were copied between the two tools now live once.** `die`, `_int_arg` and
+  `_parse_args` were byte-identical in both files, but each read its own module-level program name, so
+  importing them would have made `refsanalysis` report errors as `forefst:`. The logic moved to `forefst.py`
+  and `refsanalysis.py` keeps three one-line wrappers that pass its own name — identical output, one
+  implementation. The test that guards this compares function **bodies** now, not names.
+- **Known weakness in the maintainer's golden, stated rather than hidden:** 22 of its 3,598 rows are
+  fingerprints of output that passed through shell command substitution, which silently drops NUL bytes. For
+  those rows the hash does not cover NULs, so they are weaker evidence than the rest. It is the hazard the
+  generator already documents for `extract` (which writes to a temp file to avoid it); routing every command
+  the same way is a 1.11 change, since it costs a re-bless.
+- A **public golden** for the four sample volumes ships with the repo, so the published claims can be
+  reproduced from a clone without the private corpus. Its fingerprints no longer depend on where you keep
+  the images: several commands print the image's absolute path, and hashing that made the golden match only
+  in the tree it was blessed in. The path is normalised out, so a clone with the images anywhere verifies.
+- **`rc == 2` now means a finding, and nothing else.** An audit proposed renumbering every usage error *to*
+  `2`. That was rejected — `2` is already the scriptable "finding of interest" code for `integrity` and
+  `security --audit`, so it would have made a mistyped flag indistinguishable from a real integrity failure.
+  The overload is removed the other way instead: **usage errors now exit `1` on all 19 commands**, where
+  before the four argparse-backed ones (`files`, `summary`, `search`, `details`) exited `2`. So `0` success,
+  `1` runtime *or* usage error, `2` a finding — `if rc == 2` is now a safe branch in a script. Measured
+  across every command and locked by tests.
+
 ## v1.10.0 — 2026-09-05 — one word meant two things: record placement and data residency are now separate
 
 **Everything here is relative to v1.9.0.** One word — *resident* — was doing two jobs. It named **where a

@@ -53,7 +53,7 @@ Body file format (Sleuthkit/mactime compatible):
 """
 
 from __future__ import annotations
-import argparse, atexit, csv, datetime, hashlib, json, os, struct, sys
+import argparse, atexit, csv, datetime, errno, hashlib, json, os, struct, sys
 
 # ─── Shared utilities (formerly in refs_common.py) ───────────────────
 SECTOR = 512
@@ -243,7 +243,7 @@ def validate_image(path, die_fn=None):
 
 # ─── Constants ────────────────────────────────────────────────────────
 PROG = "forefst"
-VERSION = "1.10.0"
+VERSION = "1.10.1"
 # Phase 3 (4.D): directory walks default to FULL depth (no artificial cap); `--depth N` overrides. The real
 # recursion depth equals the actual directory nesting (ReFS trees are shallow — tens of levels), so this
 # constant is never the binding limit; it just means "don't truncate". main() also raises the interpreter
@@ -416,6 +416,72 @@ def timestomp_intrinsic_flags(create, modify, change, access,
     if _ft_valid(vol_modify) and create > vol_modify + margin:
         flags.append("FUTURE")             # created after the volume's last metadata write
     return flags
+
+# ─── timestomp verdict — ONE source for both surfaces ────────────────────────
+# The `TimestompFlags` column and the `timestomp` command each computed their own tier. They disagreed on
+# 40-55 % of flagged files (101/184, 62/151, 50/114 on three volumes): the column called
+# CHANGE_LATE|PRE_FORMAT "MEDIUM", the command called it "HIGH — two independent intrinsic signals".
+#
+# Measured over the full corpus -- 96 images / 521,060 files -- the command's premise is false. The two are
+# NOT independent:
+#
+#     PRE_FORMAT        22.67 % of all files   (created before the volume existed)
+#     CHANGE_LATE       22.32 %                (change time post-dates create/modify)
+#     CREATE_GT_MODIFY   1.04 %
+#     HARDLINK_MACB_MISMATCH 0.04 %
+#
+#     CHANGE_LATE together with PRE_FORMAT : 115,936
+#     CHANGE_LATE WITHOUT PRE_FORMAT       :     384  (0.33 %, all on one real Windows volume)
+#
+# A timestamp-preserving copy (robocopy /COPY:T, restore, archive extraction) sets create/modify to the
+# original values -- before this volume existed -- and the change time to the copy moment. That fires BOTH
+# signals, which is why they never appear apart. They are two halves of ONE event, not corroborating
+# evidence, and tiering their co-occurrence HIGH marks 12 % of an ordinary volume as tampered.
+#
+# But the pair does NOT identify that event as a copy. Deliberately backdating a creation time produces the
+# same two signals, and a lab volume whose generator log records 74 SetCreationTimeUtc calls carries exactly
+# this signature -- so "INFO = a copy" asserts a cause the bytes cannot establish. INFO means AMBIGUOUS:
+# one event that a copy and a backdated creation both produce, to be separated by the journal, not by the
+# timestamps. It is a lowered tier, never an exoneration. What DOES survive as evidence is
+# CHANGE_LATE *without* PRE_FORMAT -- born on this volume, metadata altered afterwards, which a copy cannot
+# produce -- plus the ReFS-specific per-name HARDLINK_MACB_MISMATCH and journal corroboration. (A 27-image
+# subset showed 0 of that residual and an earlier draft called the rule witness-less; the full corpus has
+# 384, so measure on everything before describing a cohort as empty.)
+TIMESTOMP_TIERS = ("HIGH", "MEDIUM", "LOW", "INFO", "NONE")
+_TS_COPY_SIGNATURE = {"PRE_FORMAT", "CHANGE_LATE", "CREATE_GT_MODIFY", "ROUND_TIMESTAMPS"}
+
+
+def timestomp_verdict(flags, usn_conf=False, hl_conf=False, round_ts=False):
+    """(tier, signals) for one file. The ONLY place a timestomp tier is decided.
+
+    `flags`    intrinsic signals from timestomp_intrinsic_flags(), plus any USN_* the caller established.
+    `usn_conf` the change journal corroborates (authoritative, independent source).
+    `hl_conf`  a hard-link sibling preserves the true birth (structural, journal-independent).
+    `round_ts` whole-second Created AND Modified -- a weak hint that never lifts a tier on its own.
+
+    A caller with less evidence gets a tier no HIGHER than one with more: the column passes usn_conf=False
+    because the walk does not read the journal, so its verdict is the command's minus journal corroboration.
+    """
+    sig = list(flags)
+    if round_ts and "ROUND_TIMESTAMPS" not in sig:
+        sig.append("ROUND_TIMESTAMPS")
+    if hl_conf and "HARDLINK_MACB_MISMATCH" not in sig:
+        sig.append("HARDLINK_MACB_MISMATCH")
+    has = set(sig)
+    if not has:
+        return "NONE", sig
+    if hl_conf or "HARDLINK_MACB_MISMATCH" in has:
+        return "HIGH", sig                      # ReFS-only, journal-independent (0.31 % base rate)
+    if usn_conf:
+        return "HIGH", sig                      # the journal is an independent source
+    if "CHANGE_LATE" in has and "PRE_FORMAT" not in has:
+        return "MEDIUM", sig                    # created on THIS volume, metadata altered later
+    if "FUTURE" in has:
+        return "MEDIUM", sig                    # created after the volume's last metadata write
+    if has <= _TS_COPY_SIGNATURE:
+        return "INFO", sig                      # ambiguous: a copy AND a backdate both produce this
+    return "LOW", sig
+
 
 def attrs_to_str(attrs, full=True, hex_if_empty=False):
     """Render file-attribute bits as 'Flag|Flag'. full=False uses the short subset.
@@ -4293,14 +4359,13 @@ def annotate_timestomp(results, f, ps, cs, tr, obj_map, margin=TS_MARGIN_100NS):
         _c, _m = r.get("create_time", 0), r.get("modify_time", 0)
         if _ft_valid(_c) and _ft_valid(_m) and _c % 10000000 == 0 and _m % 10000000 == 0:
             flags.append("ROUND_TIMESTAMPS")
-        if flags:
-            if "HARDLINK_MACB_MISMATCH" in flags:
-                tier = "HIGH"
-            elif any(s in flags for s in ("CHANGE_LATE", "PRE_FORMAT", "FUTURE")):
-                tier = "MEDIUM"
-            else:
-                tier = "LOW"
-            r["timestomp_flags"] = tier + ":" + "|".join(flags)
+        # The column has no journal (the walk does not read $J), so usn_conf is False here and its verdict
+        # is the command's minus journal corroboration -- never higher. Same function, so the two surfaces
+        # cannot drift apart again.
+        tier, sig = timestomp_verdict(flags, usn_conf=False,
+                                      hl_conf="HARDLINK_MACB_MISMATCH" in flags, round_ts=False)
+        if tier != "NONE":
+            r["timestomp_flags"] = tier + ":" + "|".join(sig)
     return results
 
 # ─── Output formatters ───────────────────────────────────────────────
@@ -4664,7 +4729,8 @@ def _hash_image(path, log_fn=None):
     return h.hexdigest()
 
 def cmd_fastsummary(f, ps, cs, tr, roots, obj_map, vmaj, vmin, chkp_lcns,
-                    image_path, plus_mode=False, json_mode=False, hash_image=False, log_fn=None):
+                    image_path, plus_mode=False, json_mode=False, hash_image=False, log_fn=None,
+                    verify_page_refs=False):
     hs = _human_size
 
     # VBR fields + hash
@@ -4744,6 +4810,15 @@ def cmd_fastsummary(f, ps, cs, tr, roots, obj_map, vmaj, vmin, chkp_lcns,
         "root_table_rows": {_ROOT_LABELS[i]: root_counts.get(i, 0)
                             for i in range(min(13, len(roots)))},
     }
+
+    # GN_PREF_RA_004 lives in `integrity`, NOT here. Verifying every Object-Table page reference means one
+    # 4-cluster read per object, and a real Windows volume has 26,681 of them -- 427 MB and ~38 s, which took
+    # `summary` from 4.7 s to 42.2 s and `fastsummary` from 0.36 s to 36.7 s. The ~385-reference corpus
+    # average that made it look free came from small lab volumes. Doing it for free needs the lazy design
+    # (verify each root page at the first walk that reads it anyway), which is more than a point release
+    # should carry; until then it belongs to the diagnostic command, where the reader is asking for depth.
+    if verify_page_refs:
+        summary["page_refs"] = verify_page_references(f, ps, cs, tr, roots)
 
     if plus_mode:
         if vol_detail:
@@ -5629,8 +5704,31 @@ _forefst_parse_vbr = parse_vbr
 _forefst_parse_supb = parse_supb
 _forefst_parse_chkp = parse_chkp
 
-def die(msg):
-    print(f"{PROG}: error: {msg}", file=sys.stderr)
+class _UsageExit1Parser(argparse.ArgumentParser):
+    """argparse parser whose usage errors exit 1, like every hand-parsed command.
+
+    argparse's default is 2, which is ALSO this tool's scriptable "finding of interest" code (`integrity`
+    and `security --audit` return it on a real finding). That made a mistyped flag on `files` indistinguish-
+    able from a genuine integrity failure. Renumbering the finding code would break every caller that
+    branches on it, so the usage error moves instead: 1 on all 19 commands, and 2 now means a finding and
+    nothing else. `--help` and `--version` still exit 0 -- they go through exit(), not error().
+    """
+
+    def error(self, message):
+        self.print_usage(sys.stderr)
+        print(f"{self.prog}: error: {message}", file=sys.stderr)
+        sys.exit(1)
+
+
+def die(msg, prog=None):
+    """Fatal usage/runtime error: one line to stderr, exit 1 (the frozen contract -- 2 means a finding).
+
+    `prog` exists so refsanalysis can reuse this body while still printing its OWN name. The two tools had
+    byte-identical copies of this function, but each closed over its own module-level PROG, so importing it
+    naively would have made refsanalysis say "forefst: error:" -- identical source is not the same as
+    interchangeable when the body reads a module global.
+    """
+    print(f"{prog or PROG}: error: {msg}", file=sys.stderr)
     sys.exit(1)
 
 def _looks_text(b, sample=8192):
@@ -5662,7 +5760,7 @@ def _filetime_to_str(ft):
     except (OSError, ValueError):
         return f"0x{ft:x}"
 
-def _parse_args(remaining, flags=None, valued=None):
+def _parse_args(remaining, flags=None, valued=None, prog=None):
     flags = flags or []
     valued = valued or []
     result = {f.lstrip("-").replace("-", "_"): False for f in flags}
@@ -5675,21 +5773,21 @@ def _parse_args(remaining, flags=None, valued=None):
             result[a.lstrip("-").replace("-", "_")] = True
         elif a in valued:
             if i + 1 >= len(remaining):
-                die(f"option {a} requires a value")
+                die(f"option {a} requires a value", prog)
             result[a.lstrip("-").replace("-", "_")] = remaining[i + 1]; i += 1
         elif a.startswith("-"):
             # reject typos / unsupported flags instead of silently treating them as a positional
-            die(f"unknown option: {a}")
+            die(f"unknown option: {a}", prog)
         else:
             result["_rest"].append(a)
         i += 1
     return result
 
-def _int_arg(val, name, base=10):
+def _int_arg(val, name, base=10, prog=None):
     try:
         return int(val, base) if isinstance(val, str) else int(val)
     except (ValueError, TypeError):
-        die(f"invalid value for {name}: '{val}'")
+        die(f"invalid value for {name}: '{val}'", prog)
 
 def _check_unknown_flags(remaining, known_flags, valued_flags=()):
     """Reject unrecognised -flags for the manually-parsed commands (usn/mlog), matching the rejection the
@@ -7595,6 +7693,7 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
                 "file_size": file_size, "alloc_size": alloc_size,
                 "file_attrs": file_attrs, "timestamps": ts,
                 "extents": [], "storage": "resident", "extent_source": source,
+                "record_placement": "split", "data_residency": "inline",
                 "stale_name_size": stale_name_size, "ads": [],
                 "resident_content": _inline,
             })
@@ -7605,6 +7704,8 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
             "file_attrs": file_attrs, "timestamps": ts,
             "extents": ext_info["extents"] if ext_info else [],
             "storage": "non-resident",
+            "record_placement": "split",
+            "data_residency": "extents",
             "extent_source": source if ext_info else "unresolved",
             "stale_name_size": stale_name_size,
             "ads": [],
@@ -7641,6 +7742,7 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
                 "file_attrs": le32(vd, 0x48) if len(vd) >= 0x4C else 0,
                 "timestamps": [le64(vd, 0x28), le64(vd, 0x30), le64(vd, 0x38), le64(vd, 0x40)] if len(vd) >= 0x48 else [],
                 "extents": exts, "storage": "non-resident",
+                "record_placement": "embedded", "data_residency": "extents",
                 "extent_source": "inline-holder", "ads": _parse_ads_from_value(vd, (f, ps, cs, tr)) if len(vd) > 0xA8 else [],
             })
             continue
@@ -7670,6 +7772,11 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
         entry = {
             "name": name, "file_size": file_size, "alloc_size": alloc_size,
             "storage": "resident", "extents": extents,
+            # E87 two axes: this record is EMBEDDED in its directory entry, which says nothing about where
+            # its BYTES are. `extents` is non-empty exactly when the map resolved (including the E86 nested
+            # node), so data residency follows the bytes, not the record.
+            "record_placement": "embedded",
+            "data_residency": "extents" if extents else "inline",
             "file_attrs": file_attrs, "timestamps": ts,
             "ads": ads_list,
             # Q7: inline $DATA bytes so `extract` can write a resident file's content (None if non-inline).
@@ -7810,7 +7917,8 @@ def cmd_timestomp(image, remaining, partition_start):
     margin = int(args["margin_days"]) * 24 * 3600 * 10**7 if args["margin_days"] else TS_MARGIN_100NS
     max_depth = _int_arg(args["depth"], "--depth") if args["depth"] else DEFAULT_DEPTH
     csv_arg = out_dest if out_fmt == "csv" else None
-    rank = {"HIGH": 3, "MEDIUM": 2, "LOW": 1, "NONE": 0}
+    # INFO sits BELOW LOW: it is a reported observation (a timestamp-preserving copy), not a suspicion.
+    rank = {"HIGH": 4, "MEDIUM": 3, "LOW": 2, "INFO": 1, "NONE": 0}
 
     try:
         f, ps, cs, tr, roots, obj_map, vmaj, vmin, _ = bootstrap(image, partition_start)
@@ -7901,24 +8009,11 @@ def cmd_timestomp(image, remaining, partition_start):
             round_ts = (_ft_valid(ct) and ct % 10_000_000 == 0 and _ft_valid(mt) and mt % 10_000_000 == 0)
             if round_ts:
                 evidence.append("ROUND_TIMESTAMPS")
-            intrinsic = any(x in flags for x in ("CHANGE_LATE", "PRE_FORMAT", "CREATE_GT_MODIFY", "FUTURE"))
-            # Tiering: independent-source agreement = higher confidence.
-            if (usn_conf or hl_conf) and intrinsic:
-                tier = "HIGH"          # journal / hard-link sibling + intrinsic agree
-            elif hl_conf:
-                tier = "HIGH"          # F6: a sibling hard-link preserves the true birth (journal-independent proof)
-            elif "CHANGE_LATE" in flags and "PRE_FORMAT" in flags:
-                tier = "HIGH"          # two independent intrinsic signals
-            elif usn_conf:
-                tier = "HIGH"          # journal is authoritative
-            elif "CHANGE_LATE" in flags or "PRE_FORMAT" in flags:
-                tier = "MEDIUM"        # one solid signal (benign-copy caveat applies)
-            elif intrinsic:
-                tier = "LOW"           # FUTURE / CREATE_GT_MODIFY alone (weak, copy-plausible)
-            elif round_ts:
-                tier = "LOW"           # 1.C: whole-second Created+Modified alone — weak (also legit driver/archive)
-            else:
-                tier = "NONE"
+            # Single source (timestomp_verdict) -- the same call the TimestompFlags column makes, with the
+            # journal evidence this command additionally has. The old local ladder tiered
+            # CHANGE_LATE+PRE_FORMAT as HIGH on a false independence premise; see timestomp_verdict.
+            tier, evidence = timestomp_verdict(evidence, usn_conf=usn_conf, hl_conf=hl_conf,
+                                               round_ts=round_ts)
             return tier, evidence
 
         rows = []
@@ -7938,7 +8033,7 @@ def cmd_timestomp(image, remaining, partition_start):
         rows.sort(key=lambda x: (-rank[x["tier"]], x["path"]))
         flagged = [x for x in rows if x["tier"] != "NONE"]
         suspects = [x for x in flagged if rank[x["tier"]] >= rank.get(min_conf, 1)]
-        counts = {t: sum(1 for x in flagged if x["tier"] == t) for t in ("HIGH", "MEDIUM", "LOW")}
+        counts = {t: sum(1 for x in flagged if x["tier"] == t) for t in ("HIGH", "MEDIUM", "LOW", "INFO")}
         # CSV/JSON export ALL flagged tiers by default (complete artifact); a screen view defaults to HIGH.
         export_rows = suspects if _explicit_min else flagged
 
@@ -7976,7 +8071,9 @@ def cmd_timestomp(image, remaining, partition_start):
         print(f"  Volume modified: {_filetime_to_str(vol_modify).replace(' UTC','')}")
         print(f"  USN journal:     {'present (authoritative cross-check ON)' if journal else 'absent (intrinsic signals only)'}")
         print(f"  Files examined:  {len(files)}")
-        print(f"  Flagged:         {len(flagged)}  (HIGH {counts['HIGH']} / MEDIUM {counts['MEDIUM']} / LOW {counts['LOW']})")
+        print(f"  Flagged:         {len(flagged)}  (HIGH {counts['HIGH']} / MEDIUM {counts['MEDIUM']} / "
+              f"LOW {counts['LOW']} / INFO {counts['INFO']} — INFO = ambiguous: a timestamp-preserving "
+              f"copy and a backdated creation produce the same signals; corroborate with USN)")
         print()
         print("  This flags timestamps that LOOK anomalous — it is investigative INFORMATION, not proof of")
         print("  tampering. Weigh the BASIS of each row: a journal/hardlink signal is authoritative; an")
@@ -7985,7 +8082,7 @@ def cmd_timestomp(image, remaining, partition_start):
         print("  intrinsic; LOW = a weak/single hint.")
         print()
         if not suspects and not show_all:
-            hidden = counts["MEDIUM"] + counts["LOW"] if min_conf == "HIGH" else 0
+            hidden = counts["MEDIUM"] + counts["LOW"] + counts["INFO"] if min_conf == "HIGH" else 0
             if hidden:
                 print(f"  No HIGH-confidence timestamp anomalies. {hidden} lower-tier row(s) exist "
                       f"(MEDIUM {counts['MEDIUM']} / LOW {counts['LOW']}) — `--min MEDIUM` or `--min LOW` to see them.")
@@ -8000,7 +8097,7 @@ def cmd_timestomp(image, remaining, partition_start):
             basis = "journal/link" if any(s in _AUTH_SIGS for s in sigs) else "intrinsic"
             print(f"  {x['tier']:<6} {basis:<13} {x['created']:<21} {x['changed']:<21} {x['path']}")
             print(f"  {'':<6} signals: {', '.join(sigs) or '(none)'}")
-        if not show_all and min_conf == "HIGH" and (counts["MEDIUM"] or counts["LOW"]):
+        if not show_all and min_conf == "HIGH" and (counts["MEDIUM"] or counts["LOW"] or counts["INFO"]):
             print()
             print(f"  ({counts['MEDIUM']} MEDIUM + {counts['LOW']} LOW row(s) hidden — `--min MEDIUM` / `--min LOW` "
                   f"to show; CSV/JSON already include every tier.)")
@@ -8053,6 +8150,138 @@ def _resolve_id_entry(f, ps, cs, tr, obj_map, home_oid, file_id):
             return e
     return None
 
+# ─── image holes (D13) ───────────────────────────────────────────────────────
+# A raw image is usually a SPARSE file, and a region the acquisition never wrote reads back as zeros. So a
+# file whose data was not captured extracts at the right LENGTH with zero CONTENT, silently -- the shape of
+# E83, with an acquisition cause instead of a decode one. Found by the content proof on
+# win11refs2t64ksha256checksums: a well-formed 8-cluster map for a 505,381-byte file, every cluster in a
+# hole, 505,381 zero bytes emitted with no warning.
+#
+# BUT a hole is NOT by itself evidence of missing data, and an earlier version of this check assumed it was.
+# A sparse image legitimately stores a file's own zero-runs as holes: measured, a 791 MB ISO, a 1-second
+# silent WAV and 245 files with correct `GFSAREPLAY` content all overlap holes and all extract CORRECTLY.
+# Warning on any overlap would cry wolf on ordinary volumes.
+#
+# The signal that survives is narrow and is the one the content proof actually found: the content is
+# ENTIRELY zero *and* the whole allocation lies in holes. Even then it is "the image may not contain this",
+# not proof -- a genuinely zero-filled file looks the same. SEEK_DATA is not available everywhere, so the
+# answer is three-valued: a byte count, or None for "could not determine" -- never 0, which would be a
+# silent false negative.
+
+def _hole_bytes_in(fd, start, end):
+    """Bytes of [start, end) that lie in a sparse hole. None when the platform cannot tell."""
+    if end <= start:
+        return 0
+    total = 0
+    pos = start
+    try:
+        while pos < end:
+            try:
+                nxt = os.lseek(fd, pos, os.SEEK_DATA)
+            except OSError as e:
+                if e.errno == errno.ENXIO:      # no data at or after pos: the rest is hole/EOF
+                    return total + (end - pos)
+                raise
+            if nxt >= end:
+                return total + (end - pos)
+            if nxt > pos:
+                total += nxt - pos
+            try:
+                dend = os.lseek(fd, nxt, os.SEEK_HOLE)
+            except OSError:
+                return total
+            if dend <= nxt:                     # no forward progress: stop rather than spin
+                return total
+            pos = min(dend, end)
+    except (OSError, AttributeError, ValueError):
+        return None                             # SEEK_DATA unsupported here -- unknown, not "none"
+    return total
+
+
+def _hole_ranges_in(fd, start, end):
+    """Hole intervals of [start, end) as [(a, b)] in IMAGE coordinates. None when the platform cannot tell."""
+    if end <= start:
+        return []
+    out = []
+    pos = start
+    try:
+        while pos < end:
+            try:
+                nxt = os.lseek(fd, pos, os.SEEK_DATA)
+            except OSError as e:
+                if e.errno == errno.ENXIO:          # no data at or after pos: the rest is hole/EOF
+                    out.append((pos, end))
+                    return out
+                raise
+            if nxt >= end:
+                out.append((pos, end))
+                return out
+            if nxt > pos:
+                out.append((pos, nxt))
+            try:
+                dend = os.lseek(fd, nxt, os.SEEK_HOLE)
+            except OSError:
+                return out
+            if dend <= nxt:                          # no forward progress: stop rather than spin
+                return out
+            pos = min(dend, end)
+    except (OSError, AttributeError, ValueError):
+        return None                                  # SEEK_DATA unsupported here -- unknown, not "none"
+    return out
+
+
+def _extent_hole_ranges(f, ps, cs, exts, file_size):
+    """Holes inside the file's DATA range, as [(file_offset, length)]. None when undeterminable.
+
+    Reports the ACTUAL hole intervals, not the extents that contain them, and clips to [0, file_size) so
+    allocation slack past EOF is never reported: slack is not content.
+    """
+    name = getattr(f, "name", None)
+    if not isinstance(name, str) or not exts or not file_size:
+        return None if (exts and file_size) else []
+    try:
+        fd = os.open(name, os.O_RDONLY)
+    except OSError:
+        return None
+    out = []
+    try:
+        for ext in sorted(exts, key=lambda e: e["file_vcn"]):
+            fstart = ext["file_vcn"] * cs
+            fend = min(fstart + ext["clusters"] * cs, file_size)
+            if fend <= fstart:
+                continue
+            istart = ps + ext["plcn"] * cs
+            holes = _hole_ranges_in(fd, istart, istart + (fend - fstart))
+            if holes is None:
+                return None
+            for a, b in holes:
+                out.append((fstart + (a - istart), b - a))
+    finally:
+        os.close(fd)
+    return out
+
+
+def _extent_hole_bytes(f, ps, cs, exts):
+    """Bytes of `exts` that fall in image holes, or None when undeterminable. Read-only, own fd."""
+    name = getattr(f, "name", None)
+    if not isinstance(name, str) or not exts:
+        return None if exts else 0
+    try:
+        fd = os.open(name, os.O_RDONLY)
+    except OSError:
+        return None
+    try:
+        total = 0
+        for ext in exts:
+            n = _hole_bytes_in(fd, ps + ext["plcn"] * cs, ps + (ext["plcn"] + ext["clusters"]) * cs)
+            if n is None:
+                return None
+            total += n
+        return total
+    finally:
+        os.close(fd)
+
+
 def get_file_content(f, ps, cs, tr, info, verify_integrity=False):
     """Return (bytes | None, meta) — a file's $DATA content resolved for ANY residency, using the SAME cascade
     `cmd_extract` runs. `info` is an `_analyze_dir_extents` entry (fields: storage, file_size, extents,
@@ -8104,11 +8333,19 @@ def get_file_content(f, ps, cs, tr, info, verify_integrity=False):
             chunk = f.read(cs)
             off = (ext["file_vcn"] + i) * cs
             buf[off:off + len(chunk)] = chunk          # length-safe (a short/past-EOF read must not shrink buf)
-    return bytes(buf[:file_size]), {"source": "extents", "size": file_size, "n_extents": len(sorted_exts)}
+    out = bytes(buf[:file_size])
+    meta = {"source": "extents", "size": file_size, "n_extents": len(sorted_exts)}
+    # Only ask about holes when the content is entirely zero -- that is the only case where a hole changes
+    # the answer, and it keeps the syscalls off the path for every normal file.
+    if file_size and not any(out):
+        hb = _extent_hole_bytes(f, ps, cs, sorted_exts)
+        meta["hole_bytes"] = hb
+        meta["zeros_from_image_hole"] = None if hb is None else (hb >= alloc)
+    return out, meta
 
 
 def cmd_extract(image, remaining, partition_start):
-    args = _parse_args(remaining, flags=["--no-verify-integrity"],
+    args = _parse_args(remaining, flags=["--no-verify-integrity", "--refuse-holes"],
                        valued=["--oid", "--depth", "--path", "--id", "-o", "--output"])
     # accept a bare name, an absolute /dir/file path, --path, or --id HomeOid:FileId (symmetric with `details`)
     id_arg = args["id"]
@@ -8369,9 +8606,52 @@ def cmd_extract(image, remaining, partition_start):
             print(f"[{PROG}] WARNING: extracted {written} of {file_size} declared bytes for "
                   f"'{target['name']}' — decoded extents cover less than the file size (coverage gap "
                   f"or a sparse file). Verify before relying on the output.", file=sys.stderr)
-        _emit(bytes(buf[:file_size]))
+        _out = bytes(buf[:file_size])
+        # D13. A hole in the image is NOT evidence that the data is missing. Raw images are stored
+        # sparsely -- this corpus is 55 TB apparent / 58 GB allocated, and `cp --sparse=always` alone took
+        # one 67 MB sample to 40 MB by turning REAL zero clusters into holes -- so on a sparse-stored image
+        # "every cluster in a hole" is exactly what a genuinely all-zero file looks like. An earlier version
+        # of this check refused such files as "an acquisition gap, not a zero-filled file"; that wording was
+        # false in both halves for the two files it fired on here. The image cannot tell the two apart, so
+        # the tool must not claim to.
+        #
+        # What it does instead: emit the bytes, say which ranges came from holes, and exit 2 so a script can
+        # branch on it. The check runs on ANY hole inside the file's data range, not only on an all-zero
+        # file -- a partial gap inside a file with real content is the case that used to pass silently.
+        _hranges = _extent_hole_ranges(f, ps, cs, sorted_exts, file_size) if file_size else []
+        _rc_holes = 0
+        if _hranges:
+            _hbytes = sum(n for _o, n in _hranges)
+            _rtxt = ", ".join(f"{o}-{o + n - 1}" for o, n in _hranges[:8])
+            if len(_hranges) > 8:
+                _rtxt += f", … ({len(_hranges)} ranges)"
+            _verb = "would be written from" if args["refuse_holes"] else "were written from"
+            print(f"[{PROG}] NOTE: {_hbytes} of {file_size} bytes of '{target['name']}' {_verb} ranges the "
+                  f"image stores as holes, which read back as zeros: {_rtxt}. A sparse image stores a file's "
+                  f"own zero content the same way it stores a range that was never captured, so this does "
+                  f"not by itself mean the data is missing — and does not confirm the zeros are the file's. "
+                  f"Corroborate before relying on them.", file=sys.stderr)
+            if outp and not args["refuse_holes"]:      # no sidecar beside a file we are not writing
+                _sidecar = outp + ".holes.json"
+                try:
+                    with open(_sidecar, "w", encoding="utf-8") as _sf:
+                        json.dump({"file": target["name"], "size": file_size,
+                                   "hole_bytes": _hbytes,
+                                   "note": "Ranges read back as zeros because the image stores them as "
+                                           "holes. On a sparsely-stored image that is also how genuine "
+                                           "zero content is stored; the image cannot distinguish them.",
+                                   "ranges": [{"offset": o, "length": n} for o, n in _hranges]},
+                                  _sf, indent=2)
+                    print(f"[{PROG}] wrote {_sidecar} listing those ranges.", file=sys.stderr)
+                except OSError as _e:
+                    print(f"[{PROG}] WARNING: could not write {_sidecar}: {_e}", file=sys.stderr)
+            _rc_holes = 2
+            if args["refuse_holes"]:
+                print(f"[{PROG}] --refuse-holes: nothing written.", file=sys.stderr)
+                return 2
+        _emit(_out)
 
-        return 0
+        return _rc_holes
 
     finally:
         f.close()
@@ -11005,6 +11285,87 @@ def cmd_snapshots(image, remaining, partition_start):
     finally:
         f.close()
 
+def verify_page_references(f, ps, cs, tr, roots, limit=None):
+    """Recompute every Object-Table page-reference digest (GN_PREF_RA_004). Returns a dict of counts.
+
+    A page reference binds a child page's address to a digest of that page's contents, chaining the metadata
+    tree into a Merkle tree anchored at the checkpoint. The digest covers the WHOLE page -- every valid LCN
+    slot concatenated, read AFTER container translation, nothing excluded. Slot count follows the cluster
+    size: 4 on 4 KiB, 1 on 64 KiB, both making one page.
+
+    Scoped to the row the reader USES. An Object Table may hold more than one row per object id -- an earlier
+    generation and a current one -- and build_object_map keeps the LAST. A superseded row may point at a page
+    since freed or reallocated, so whether it still verifies says nothing about the volume. Measured that way
+    the invariant holds with no carve-out: 33,883/33,883 across 89 corpus images, both algorithms.
+    """
+    # `algorithms` is a sorted LIST, not a set: a set reaches --json as the Python repr "{'CRC64'}", which is
+    # not parseable by a consumer.
+    algs = set()
+    # `absent` is separated from `failed`: a page that reads ALL ZERO at a correctly translated,
+    # in-bounds address is one the IMAGE does not contain, which is an acquisition fact. Counting it as
+    # "failed" would report a partial image as an altered volume -- the two need different actions.
+    out = {"checked": 0, "verified": 0, "failed": 0, "absent": 0, "superseded": 0, "skipped": 0,
+           "algorithms": []}
+    try:
+        ot = _select_ot_root(f, ps, cs, tr, roots)
+        rows = [(kd, vd) for kd, vd in walk_bplus(f, ps, cs, tr, ot)
+                if len(kd) >= 16 and len(vd) >= 0x50]
+    except Exception as e:
+        _skip_note("page references", "object table not walkable", e)
+        out["algorithms"] = sorted(algs)
+        return out
+    used = {}
+    for i, (kd, _vd) in enumerate(rows):
+        used[le64(kd, 8)] = i                      # same rule as build_object_map: the LAST row wins
+    for i, (kd, vd) in enumerate(rows):
+        if limit and out["checked"] >= limit:
+            break
+        if used[le64(kd, 8)] != i:
+            out["superseded"] += 1
+            continue
+        lcns = [le64(vd, 0x20 + 8 * j) for j in range(4)]
+        lcns = [x for x in lcns if x not in (0, 0xFFFFFFFFFFFFFFFF)]
+        clen = le32(vd, 0x44)
+        if not lcns or clen not in (8, 32) or 0x48 + clen > len(vd):
+            out["skipped"] += 1
+            continue
+        data = b""
+        try:
+            for x in lcns:
+                f.seek(ps + tr.tr(x) * cs)
+                data += f.read(cs)
+        except OSError as e:
+            _skip_note("page references", f"read of oid 0x{le64(kd, 8):x}", e)
+            out["skipped"] += 1
+            continue
+        if len(data) != len(lcns) * cs:
+            out["skipped"] += 1
+            continue
+        out["checked"] += 1
+        if clen == 8:
+            algs.add("CRC64")
+            good = refs_crc64(data) == le64(vd, 0x48)
+        else:
+            algs.add("SHA-256")
+            good = hashlib.sha256(data).digest() == bytes(vd[0x48:0x48 + clen])
+        if good:
+            out["verified"] += 1
+        elif not any(data):
+            out["absent"] += 1
+            if out["absent"] <= 3:
+                print(f"[{PROG}] WARNING: the page for object 0x{le64(kd, 8):x} reads as all zeros — this "
+                      f"image does not contain it (the address translates and is in bounds).",
+                      file=sys.stderr)
+        else:
+            out["failed"] += 1
+            if out["failed"] <= 3:
+                print(f"[{PROG}] WARNING: metadata page for object 0x{le64(kd, 8):x} does not match its "
+                      f"recorded checksum — the page has been altered since the checksum was written.",
+                      file=sys.stderr)
+    out["algorithms"] = sorted(algs)
+    return out
+
+
 def cmd_integrity(image, remaining, partition_start):
     # integrity is a multi-section diagnostic REPORT, not a record list — only --json applies (a structured
     # report object); --csv/--jsonl are not offered. The human text is captured and replaced by the object.
@@ -11104,6 +11465,37 @@ def cmd_integrity(image, remaining, partition_start):
         print(f"  B+-tree inner nodes OK:  {report['btree_inner_ok']}")
         print(f"  B+-tree leaf nodes OK:   {report['btree_leaf_ok']}")
         print(f"  B+-tree struct errors:   {report['btree_struct_error']}")
+        print()
+
+        # GN_PREF_RA_004: every Object-Table row records a checksum of the page it points at. Recomputing
+        # them answers "is the tree I just walked the tree the volume recorded?" -- independent of the page
+        # self-checks above, which only say a page is internally well-formed.
+        # Gated on --checksums like the page self-checks below: one 4-cluster read per object, and a real
+        # Windows volume has 26,681 of them (427 MB, ~38 s). Running it unconditionally took `integrity`
+        # from 1.4 s to 38.2 s. Cheap by default, deep on request -- the contract this command already had.
+        _pr = verify_page_references(f, ps, cs, tr, roots) if do_checksums else None
+        report["page_references"] = _pr
+        print("-" * 78)
+        print("Page-reference checksums (parent -> child binding)")
+        print("-" * 78)
+        if _pr is None:
+            print("  not checked — add `--checksums` (one 4-cluster read per object; ~27,000 on a real volume)")
+        elif not _pr["checked"]:
+            print("  no Object-Table page references could be read")
+        else:
+            _algs = "/".join(_pr["algorithms"]) or "-"
+            print(f"  Verified:                {_pr['verified']} of {_pr['checked']}  ({_algs})")
+            print(f"  Mismatched:              {_pr['failed']}"
+                  + ("   <-- the page differs from what the parent recorded" if _pr["failed"] else ""))
+            print(f"  Absent from this image:  {_pr['absent']}"
+                  + ("   <-- reads as all zeros; an acquisition gap, not an altered page"
+                     if _pr["absent"] else ""))
+            if _pr["superseded"]:
+                print(f"  Superseded rows skipped: {_pr['superseded']}  (an earlier generation of the same "
+                      f"object; the reader uses the current row)")
+            if _pr["skipped"]:
+                print(f"  Not checkable:           {_pr['skipped']}")
+            print("  The digest covers the WHOLE page — every cluster of it, after container translation.")
         print()
 
         # F1: cryptographic page-checksum verification (CRC64 / SHA-256)
@@ -11467,7 +11859,10 @@ def cmd_dataruns(image, remaining, partition_start):
                 total_files += 1
                 full_path = f"{path}/{info['name']}" if path else info['name']
                 info["path"] = full_path
-                if info["storage"] == "resident":
+                # E87: count by DATA residency, not by record placement. Keying these on `storage`
+                # (which is the record's placement) reported every embedded record as "resident (inline)",
+                # including the extent-backed ones -- 206 of 219 on one sample volume, one of them 440 KB.
+                if info.get("data_residency") == "inline":
                     total_resident += 1
                 else:
                     total_nonresident += 1
@@ -11489,13 +11884,18 @@ def cmd_dataruns(image, remaining, partition_start):
         process_dir(start_oid, "", max_depth)
 
         if out_fmt:
-            cols = ["path", "storage", "file_size", "extent_count", "clusters", "extents"]
+            cols = ["path", "storage", "record_placement", "data_residency",
+                    "file_size", "extent_count", "clusters", "extents"]
             recs = []
             for info in all_results:
                 runs = info.get("extents") or []
                 recs.append({
                     "path": info["path"],
-                    "storage": info["storage"],
+                    # `storage` now reports DATA residency (inline / extents), which is what a reader of a
+                    # data-run listing means by it. `record_placement` carries the other axis explicitly.
+                    "storage": info.get("data_residency", info["storage"]),
+                    "record_placement": info.get("record_placement", ""),
+                    "data_residency": info.get("data_residency", ""),
                     "file_size": info.get("file_size", 0),
                     "extent_count": len(runs),
                     "clusters": sum(e["clusters"] for e in runs),
@@ -11509,8 +11909,8 @@ def cmd_dataruns(image, remaining, partition_start):
 
         print("  Summary:")
         print(f"    Total files analyzed:   {total_files}")
-        print(f"    Resident (inline):      {total_resident}")
-        print(f"    Non-resident (extents): {total_nonresident}")
+        print(f"    Data inline in record:  {total_resident}")
+        print(f"    Data in extents:        {total_nonresident}")
         print(f"    With decoded extents:   {total_with_extents}")
         print()
 
@@ -11519,15 +11919,18 @@ def cmd_dataruns(image, remaining, partition_start):
         print("=" * 78)
 
         for info in all_results:
-            if info["storage"] == "resident":
+            _place = info.get("record_placement", "?")
+            if info.get("data_residency") == "inline":
                 if verbose:
-                    print(f"  RESIDENT  {info['path']}")
-                    print(f"            size={info['file_size']} (data inline in directory entry)")
+                    print(f"  INLINE    {info['path']}")
+                    print(f"            size={info['file_size']} (bytes stored in the record; "
+                          f"record is {_place}) — no clusters")
             else:
                 if info["extents"]:
                     total_ext_clusters = sum(e["clusters"] for e in info["extents"])
                     print(f"  EXTENT    {info['path']}")
-                    print(f"            size={info.get('file_size',0)}, "
+                    print(f"            record={_place}, "
+                          f"size={info.get('file_size',0)}, "
                           f"attrs={_attrs_to_str(info['file_attrs'], full=False)}, "
                           f"extents={len(info['extents'])}, "
                           f"clusters={total_ext_clusters}")
@@ -11545,7 +11948,7 @@ def cmd_dataruns(image, remaining, partition_start):
                             print(f"            (extents in remote OID {_hx(info.get('target_oid', 0))})")
                 elif verbose:
                     print(f"  NOEXTENT  {info['path']}")
-                    print(f"            size={info.get('file_size',0)} "
+                    print(f"            record={_place}, size={info.get('file_size',0)} "
                           f"(extents not decoded — may be in remote OID {_hx(info.get('target_oid', 0))})")
 
         return 0
@@ -12027,14 +12430,21 @@ CMD_HELP = {
            "match is extracted — pass the full path to pick a specific file when the name is not unique.",
            "On integrity-stream files (v3.14, 4K clusters, CRC32-C) each cluster's stored CRC32-C is verified",
            "against the recovered bytes and reported; a mismatch (corruption/tampering) is flagged but the",
-           "bytes are still written (disable with --no-verify-integrity)."],
+           "bytes are still written (disable with --no-verify-integrity).",
+           "Raw images are stored sparsely, and a sparse image stores a file's OWN zero content the same way",
+           "it stores a range that was never captured: as a hole. So a hole is not evidence that data is",
+           "missing. When any byte of a file comes from a hole, extract WRITES the bytes, reports which",
+           "ranges they came from and exits 2; with -o it also writes FILE.holes.json listing them. Expect",
+           "this often on a sparse image — rc 2 here means read the note, not that something is wrong.",
+           "Use --refuse-holes for a strict run: same report, nothing written."],
   "opts": [("filename | /path", "(positional) the file to extract (full path = direct, no depth limit)"),
            ("--path P", "address the file by path (symmetric with details; resolved directly, no depth limit)"),
            ("--id HomeOid:FileId", "address the file by its reference (e.g. 0x760:0xc) — no path needed "
                                    "(recycle-bin/$-name/duplicates); == the usn FileRef"),
            ("--oid O", "re-root a BARE-NAME search at object O (0x hex or decimal)"),
            ("--depth N", "max depth for a BARE-NAME search (default: full; a full path ignores this)"),
-           ("--no-verify-integrity", "skip the per-cluster CRC32-C integrity check on integrity-stream files")],
+           ("--no-verify-integrity", "skip the per-cluster CRC32-C integrity check on integrity-stream files"),
+           ("--refuse-holes", "strict: report hole-sourced ranges and write nothing (default writes them)")],
   "ex": [("extract /specials/gamma.bak > out.bak", "carve a file by absolute path (any depth)"),
          ("extract report.dat:hidden_6247 > s.bin", "extract one inline ADS"),
          ("extract deep.log --oid 0x73c", "scope a bare-name search to a subtree")],
@@ -12481,9 +12891,9 @@ def main():
         except OSError as e:
             print(f"{PROG}: error: cannot read image: {e}", file=sys.stderr); sys.exit(1)
 
-    ap = argparse.ArgumentParser(prog=PROG,
-                                 description="ReFS forensic file lister",
-                                 epilog=VERSION_NOTE)
+    ap = _UsageExit1Parser(prog=PROG,
+                           description="ReFS forensic file lister",
+                           epilog=VERSION_NOTE)
     ap.add_argument("--version", action="version", version=f"forefst.py v{VERSION} — ReFS forensic file lister")
     ap.add_argument("image", help="Path to disk image")
     ap.add_argument("command", nargs="?", choices=list(SUBCOMMANDS) + list(HIDDEN_SUBCOMMANDS), default=None,
@@ -12642,8 +13052,12 @@ def main():
         is_fast = (args.command == "fastsummary")
         is_plus = True
         log(f"[{PROG}] Running {'fast ' if is_fast else ''}summary...")
+        # `plus_mode` is True for BOTH commands, so it cannot gate this: the page-reference verification
+        # belongs to `summary` only. It reads ~385 metadata pages, which took `fastsummary` from 0.36 s to
+        # 36.70 s on a real Windows volume -- a 100x regression on the command whose contract is speed.
         fast_data = cmd_fastsummary(f, ps, cs, tr, roots, obj_map, vmaj, vmin, chkp_lcns,
-                                     args.image, plus_mode=is_plus, hash_image=args.hash_image, log_fn=log)
+                                     args.image, plus_mode=is_plus, hash_image=args.hash_image, log_fn=log,
+                                     verify_page_refs=False)
         if is_fast:
             if args.json is not None:
                 _emit_json_obj(fast_data, _native_fmt_dest(args)[1], "fast summary")

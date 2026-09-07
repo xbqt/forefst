@@ -48,3 +48,31 @@ def test_report_extract_failures_indexes_and_warns(tmp_path, capsys):
     assert "could not be written" in err
     idx = tmp_path / "_extract_failures.json"
     assert idx.exists() and len(json.load(idx.open())) == 1
+
+
+def test_single_file_extract_reports_a_name_the_host_refuses(tmp_path):
+    """`extract -o` with a name the host filesystem rejects: an explicit error, never a truncation.
+
+    The bulk path records the failure and continues (above). The single-file path has one output name and
+    nothing to continue to, so it must fail loudly instead: a clear message naming the problem, a non-zero
+    exit, and no partial file left behind. Truncating the name to make it fit is the one thing forbidden --
+    a shortened name is a different name, and the examiner would not know.
+
+    (1.11 will offer a surrogate name plus a `names.map` sidecar so an unwritable name can still be
+    extracted without renaming it silently.)
+    """
+    if not _fs_enforces_name_limit(tmp_path):
+        pytest.skip("host filesystem does not enforce a name-length limit")
+    failures = []
+    longname = str(tmp_path / ("B" * 300 + ".bin"))
+    r = F._guarded_extract_write(longname, b"payload", failures)
+    assert r is None, "an unwritable name must not report success"
+    assert len(failures) == 1
+    rec = failures[0]
+    assert rec["name"].startswith("B" * 10), "the failure must name the ORIGINAL name, untruncated"
+    assert len(rec["name"]) == len("B" * 300 + ".bin"), "the recorded name must not be shortened"
+    assert rec.get("error"), "the failure must carry the host's reason"
+    # nothing partial left behind, and no truncated sibling created
+    assert not os.path.exists(longname)
+    leftovers = [p for p in os.listdir(str(tmp_path)) if p.startswith("B")]
+    assert leftovers == [], f"a refused name must create no file at all, found {leftovers}"

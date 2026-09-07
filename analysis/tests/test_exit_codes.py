@@ -127,13 +127,21 @@ def test_partition_start_no_value_is_nonzero(refs_image):
     assert _rc(refs_image, "deleted", "--partition-start") != EXIT_OK
 
 
-# ── the two documented rough edges (locked so a fix is a conscious change) ────
-def test_bad_flag_native_command_is_two(refs_image):
-    """Native argparse commands reject an unknown flag with 2 (argparse convention)."""
-    assert _rc(refs_image, "files", "--definitely-not-a-flag") == EXIT_2
+# ── the contract cleanup: one usage code for both families ───────────────────
+def test_bad_flag_native_command_is_one(refs_image):
+    """The argparse commands used to exit 2 here (argparse's default) — the SAME code `integrity` and
+    `security --audit` return on a real finding, so a typo looked like a finding. `_UsageExit1Parser` moves
+    it to 1, matching the hand-parsed commands."""
+    assert _rc(refs_image, "files", "--definitely-not-a-flag") == EXIT_ERROR
 
 
 def test_bad_flag_forensic_command_is_one(refs_image):
-    """Forensic commands (manual flag parsing) currently exit 1 on an unknown flag — inconsistent with the
-    native commands' 2. Locked here; a contract cleanup would change both to the same code."""
+    """The hand-parsed commands were already 1; both families now agree."""
     assert _rc(refs_image, "usn", "--definitely-not-a-flag") == EXIT_ERROR
+
+
+def test_a_usage_error_is_never_the_findings_code(refs_image):
+    """The point of the cleanup: 2 must be reachable only by a finding, never by a CLI mistake."""
+    for cmd in ("files", "summary", "search", "details", "usn", "integrity", "extract"):
+        assert _rc(refs_image, cmd, "--definitely-not-a-flag") != EXIT_2, (
+            f"{cmd}: a mistyped flag produced the findings code")

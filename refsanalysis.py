@@ -30,7 +30,7 @@ Usage:
   python3 refsanalysis.py <image> objects               # object-ID table
   python3 refsanalysis.py <image> schema                # schema table
   python3 refsanalysis.py <image> containers            # container table / allocator
-  python3 refsanalysis.py <image> bootedit repair --dry-run  # diagnose fixboot damage
+  python3 refsanalysis.py <image> bootedit repair --dry-run  # scan/restore corrupt VBR/SUPB copies + fixboot
   python3 refsanalysis.py <image> all                   # run all structure tools
   python3 refsanalysis.py --list                        # list all subcommands
 
@@ -47,6 +47,7 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
+import forefst as _forefst
 from forefst import (
     DEFAULT_DEPTH,
     FILE_ATTR_FLAGS, SUPB_LCN, Translator, _CHKP_FLAG_BITS, _parse_ads_from_value, _select_ct_root, attrs_to_str,
@@ -61,7 +62,7 @@ from forefst import (
 )
 
 PROG = "refsanalysis"
-VERSION = "1.10.0"
+VERSION = "1.10.1"
 
 
 
@@ -122,7 +123,8 @@ SUBCOMMANDS = [
     ("bootedit",    "[DANGEROUS] Boot sector editor and repair",
      ["read: display boot sector (read-only)",
       "export -o FILE: export VBR to binary file",
-      "repair [--dry-run]: diagnose and repair fixboot damage",
+      "repair [--dry-run]: restore a corrupt VBR/SUPB copy from a good redundant sibling (self-checksum);",
+      "        also diagnoses/fixes fixboot damage. Default writes a repaired sparse copy; --inplace edits the original.",
       "set --field FIELD --value VALUE [--dry-run]: modify VBR field",
       "import -i FILE [--dry-run]: replace boot sector from a 512-byte file",
       "sparse -o FILE: create sparse image copy",
@@ -131,11 +133,6 @@ SUBCOMMANDS = [
 ]
 
 # ─── Shared helpers ──────────────────────────────────────────────────
-
-def die(msg):
-    print(f"{PROG}: error: {msg}", file=sys.stderr)
-    sys.exit(1)
-
 
 def validate_image(path):
     _validate_image(path, die_fn=die)
@@ -209,35 +206,20 @@ def _find_boot_offset(image, partition_start):
     die(msg)
 
 
-def _parse_args(remaining, flags=None, valued=None):
-    flags = flags or []
-    valued = valued or []
-    result = {f.lstrip("-").replace("-", "_"): False for f in flags}
-    result.update({v.lstrip("-").replace("-", "_"): None for v in valued})
-    result["_rest"] = []
-    i = 0
-    while i < len(remaining):
-        a = remaining[i]
-        if a in flags:
-            result[a.lstrip("-").replace("-", "_")] = True
-        elif a in valued:
-            if i + 1 >= len(remaining):
-                die(f"option {a} requires a value")
-            result[a.lstrip("-").replace("-", "_")] = remaining[i + 1]; i += 1
-        elif a.startswith("-"):
-            # reject typos / unsupported flags instead of silently dropping them (matches forefst)
-            die(f"unknown option: {a}")
-        else:
-            result["_rest"].append(a)
-        i += 1
-    return result
+# ── C1.8: these three were byte-identical copies of forefst's. The logic now lives ONCE in forefst; the
+# wrappers below exist only to pass this tool's PROG, because each body reads the module-level program name
+# and importing them bare would make refsanalysis print "forefst: error:". Identical source is not the same
+# as interchangeable when the body reads a module global.
+def die(msg):
+    return _forefst.die(msg, PROG)
 
 
 def _int_arg(val, name, base=10):
-    try:
-        return int(val, base) if isinstance(val, str) else int(val)
-    except (ValueError, TypeError):
-        die(f"invalid value for {name}: '{val}'")
+    return _forefst._int_arg(val, name, base, PROG)
+
+
+def _parse_args(remaining, flags=None, valued=None):
+    return _forefst._parse_args(remaining, flags, valued, PROG)
 
 
 _CHKP_ROOT_INFO = [
@@ -571,7 +553,6 @@ def cmd_summary(image, remaining, partition_start, plus_mode=False):
                     "source": "allocator summary (Medium tier root page)",
                 }
 
-
             # Extended file attribute counts
             summary["non_resident_files"] = nfiles - nresident   # D1: resident + non-resident = files
             if ext is not None:
@@ -709,7 +690,6 @@ def cmd_summary(image, remaining, partition_start, plus_mode=False):
                 if _c["outside_allocator_bytes"]:
                     print(f"                      + {hs(_c['outside_allocator_bytes'])} past the last container, "
                           f"outside the allocator (not free space)")
-
 
         return 0
 
@@ -4073,17 +4053,17 @@ CMD_HELP = {
    "opts": [("-v", "detailed per-row dump")],
    "ex": [("oid30", "session-activity summary"), ("oid30 -v", "+ per-row decoded fields")]},
  "bootedit": {"tag": "[DANGEROUS] Boot sector editor & repair",
-   "desc": ["Inspect or repair the ReFS VBR. ACTIONS: read (display), export -o FILE (dump VBR), repair",
-            "(fix refsutil fixboot damage), set --field F --value V (edit one field), import -i FILE,",
-            "sparse -o FILE (sparse image copy). Writes go to a SPARSE COPY unless --inplace is given.",
-            "ALWAYS preview with --dry-run first; --inplace modifies the ORIGINAL image."],
+   "desc": ["Inspect or repair the ReFS VBR + bootstrap copies. ACTIONS: read (display), export -o FILE, repair",
+            "(restore a corrupt VBR/SUPB copy from a good redundant sibling via its self-checksum, and fix",
+            "refsutil fixboot damage), set --field F --value V, import -i FILE, sparse -o FILE (sparse image copy).",
+            "Writes go to a repaired SPARSE COPY unless --inplace is given; ALWAYS preview with --dry-run."],
    "opts": [("read | export | repair | set | import | sparse", "the action (positional)"),
             ("--field F / --value V", "set: which VBR field and its new value"),
             ("-i FILE / -o FILE", "import input / export-sparse-write output path"),
             ("--dry-run", "repair/set/import: preview byte changes, write nothing"),
             ("--inplace", "DANGEROUS: modify the original image instead of a copy")],
    "ex": [("bootedit read", "display & validate the VBR (read-only)"),
-          ("bootedit repair --dry-run", "diagnose fixboot damage, preview the fix"),
+          ("bootedit repair --dry-run", "scan the VBR/SUPB/CHKP copies + preview any restore"),
           ("bootedit set --field checksum_algo --value 2 --dry-run", "preview a field change")]},
  "forefst": {"tag": "Run any forefst subcommand (passthrough to the forensic tool)",
    "desc": ["`refsanalysis <image> forefst <cmd> [options]` delegates to forefst — so every forefst",
@@ -4249,7 +4229,7 @@ Examples:
   refsanalysis.py disk.raw details /dir/file.txt      # full per-file details by path
   refsanalysis.py disk.raw objects                    # object-ID table
   refsanalysis.py disk.raw schema                     # schema table
-  refsanalysis.py disk.raw bootedit repair --dry-run  # diagnose fixboot damage
+  refsanalysis.py disk.raw bootedit repair --dry-run  # scan/restore corrupt VBR/SUPB copies + fixboot
   refsanalysis.py disk.raw all                        # run all structure tools
   refsanalysis.py disk.raw forefst usn --stats        # run any forefst command via the passthrough
 

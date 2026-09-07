@@ -1,12 +1,19 @@
 """Tier 2 — CLI contract: exit codes, flag rejection, and output safety.
 
-The exit-code table below is a PROPOSAL, not a description of current behaviour.
-Agree it, document it in the README, then let this file enforce it.
+The exit-code contract is FROZEN. The auditor's renumbering (every usage error ->
+2) was rejected: 2 is already the scriptable "finding of interest" code, and
+moving it would break every caller that branches on it. The overload was removed
+the OTHER way instead -- usage errors now exit 1 on all 19 commands -- so 2 is
+unambiguous. `docs/tools/forefst.md` documents it.
 
-    0  success
-    1  runtime error (unreadable image, unparseable structure)
-    2  usage error (unknown flag, missing value, bad subcommand)
-    3  completed, findings of interest (tamper / checksum failure)
+    0  success -- ran and flagged nothing (also --help)
+    1  runtime error (missing file, unparseable image, bad target) OR any usage
+       error, on all 19 commands
+    2  a FINDING OF INTEREST and nothing else: integrity / security --audit
+       found something, or extract refused a file absent from the image
+
+Tests below LOCK this. If a code changes, they fail -- which is the point of
+freezing rather than deleting.
 """
 import csv
 import io
@@ -24,6 +31,7 @@ REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 TOOL = os.path.join(REPO, "forefst.py")
 
 EXIT_OK, EXIT_ERROR, EXIT_USAGE, EXIT_FINDINGS = 0, 1, 2, 3
+EXIT_FINDINGS_OVERLOAD = 2   # what a usage error must NEVER be: 2 is reserved for findings
 
 ALL_COMMANDS = sorted(set(F.SUBCOMMANDS) | set(F.FORENSIC_SUBCOMMANDS))
 
@@ -43,9 +51,25 @@ def test_missing_file_is_always_exit_1(cmd, tmp_path):
 
 
 @pytest.mark.parametrize("cmd", ALL_COMMANDS)
-def test_unknown_flag_is_always_exit_2(cmd, raw_refs_image):
+def test_unknown_flag_exit_code_is_frozen(cmd, raw_refs_image):
+    """FROZEN: a usage error exits 1 on EVERY command, so 2 can only mean a finding.
+
+    The four argparse-backed commands (files, summary, search, details) used to exit 2 here, because that is
+    argparse's default -- the same code `integrity` and `security --audit` return on a real finding. A
+    mistyped flag was therefore indistinguishable from a genuine integrity failure. `_UsageExit1Parser`
+    moves the usage error to 1; measured across all 19 commands.
+    """
     r = run(raw_refs_image, cmd, "--definitely-not-a-flag")
-    assert r.returncode == EXIT_USAGE, f"{cmd}: rc={r.returncode}\n{r.stderr[:300]}"
+    assert r.returncode == EXIT_ERROR, (
+        f"{cmd}: rc={r.returncode}, a usage error must exit 1\n{r.stderr[:300]}")
+    assert r.returncode != EXIT_FINDINGS_OVERLOAD, f"{cmd}: a typo must never look like a finding"
+
+
+@pytest.mark.parametrize("cmd", ALL_COMMANDS)
+def test_a_bad_flag_never_exits_zero(cmd, raw_refs_image):
+    """The part of the contract that actually protects a script: rc != 0."""
+    r = run(raw_refs_image, cmd, "--definitely-not-a-flag")
+    assert r.returncode != EXIT_OK, f"{cmd} accepted an unknown flag"
 
 
 @pytest.mark.parametrize("cmd", ALL_COMMANDS)
@@ -61,11 +85,18 @@ def test_unknown_flag_is_reported_before_the_image_is_read(cmd, tiny_image):
 
 
 def test_missing_option_value_says_so(raw_refs_image):
-    """Finding 1.7: --partition-start with no value is not an 'unknown option'."""
+    """Finding 1.7: --partition-start with no value is not an 'unknown option'.
+
+    The diagnostic half is enforced; the exit code follows the frozen contract -- 1 for both families.
+    """
     r = run(raw_refs_image, "deleted", "--partition-start")
-    assert r.returncode == EXIT_USAGE
+    assert r.returncode == EXIT_ERROR
     assert "unknown option" not in r.stderr.lower(), r.stderr[:300]
     assert "requires a value" in r.stderr.lower() or "expected" in r.stderr.lower()
+
+    r = run(raw_refs_image, "files", "--partition-start")
+    assert r.returncode == EXIT_ERROR, "argparse's own usage error is remapped to 1 as well"
+    assert "unknown option" not in r.stderr.lower(), r.stderr[:300]
 
 
 @pytest.mark.parametrize("cmd", ALL_COMMANDS)
@@ -126,6 +157,43 @@ def test_csv_cells_never_start_with_a_formula_prefix(prefix):
     assert not offenders, f"unescaped formula cells: {offenders}"
 
 
+@pytest.mark.parametrize("prefix", DANGEROUS_PREFIXES)
+def test_csv_safe_neutralises_the_formula_prefix(prefix):
+    """The POSITIVE half of the opt-in guard: `--csv-safe` must actually neutralise the cell.
+
+    The default stays byte-faithful (a forensic tool must not rewrite a name), which is why the strict-xfail
+    above records that default as intentional. That decision is only defensible if the opt-in works, so this
+    asserts it does: every dangerous cell gains a leading quote and the ORIGINAL text survives after it.
+    """
+    payload = prefix + "cmd|'/c calc.exe'!A1"
+    rec = {"path": payload, "parent_path": ".", "parent_oid": 0x600,
+           "name": payload, "oid": 0, "is_dir": False, "is_resident": True,
+           "file_size": 1, "create_time": 0, "modify_time": 0,
+           "change_time": 0, "access_time": 0, "file_attrs": 0x20,
+           "security_id": 0, "usn": 0, "internal_flags": 0,
+           "allocated_size": None, "file_id": 1, "home_oid": 0x600,
+           "reparse_target": payload, "ads_names": payload}
+    buf = io.StringIO()
+    prev = F._CSV_GUARD                       # the CLI sets this module flag from --csv-safe
+    F._CSV_GUARD = True
+    try:
+        F.emit_csv([rec], {}, "3.14", buf)
+    finally:
+        F._CSV_GUARD = prev
+    # Exactness is asserted on the guard itself: a CSV round-trip legitimately rewrites a bare CR inside a
+    # quoted field, so comparing post-parse text would test the csv module, not the guard.
+    assert F._csv_safe(payload) == "'" + payload, "the guard prefixes a quote and changes nothing else"
+
+    # And the emitted file must carry that prefix on every cell that held the payload. Parse the WHOLE
+    # buffer -- splitlines() would cut the row in half on the CR payload.
+    row = list(csv.reader(io.StringIO(buf.getvalue())))[1]
+    tail = "cmd|'/c calc.exe'!A1"
+    guarded = [c for c in row if tail in c]
+    assert guarded, "the payload must still be present -- the guard prefixes, it does not delete"
+    for c in guarded:
+        assert c.startswith("'"), f"--csv-safe must prefix a quote, got {c!r}"
+
+
 # ─── Finding 1.9 — one filename sanitizer ────────────────────────────────────
 
 SANITIZER_CASES = [
@@ -165,7 +233,8 @@ def test_sanitized_names_fit_the_filesystem_limit(name):
                 f"{len(component.encode('utf-8'))} bytes")
 
 
-@pytest.mark.parametrize("name", ["../../etc/passwd", "/abs/path", "a/../../b"])
+@pytest.mark.parametrize("name", ["../../etc/passwd", "/abs/path", "a/../../b",
+                                  "..", ".", "=cmd|'/c calc'!A1", "../" * 40 + "etc/shadow"])
 def test_relpath_never_escapes_the_output_directory(name, tmp_path):
     rel = F._safe_relpath(name)
     resolved = os.path.realpath(os.path.join(str(tmp_path), rel))
