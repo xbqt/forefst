@@ -1787,7 +1787,7 @@ ReFS Deleted File Finder
     xbpt_archive_uniform_576352.log  (live-slack @ cluster 6196 off 0x880) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_archive_whiskey_718198.csv  (live-slack @ cluster 8740 off 0x1878) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_archive_whiskey_718198.csv  (live-slack @ cluster 5632 off 0x2e48) — metadata only (non-resident — file data is NOT in this remnant)
-    xbpt_audit_beta_288370.bak  (live-slack @ cluster 9780 off 0x378) — FULL FILE recoverable (resident — 128 B stored inline in the record)
+    xbpt_audit_beta_288370.bak  (live-slack @ cluster 9780 off 0x378) — content zero or absent (indistinguishable in the remnant) — the $DATA descriptor survives and declares 128 inline bytes, and that region reads as zeros: the file held zeros, or the deletion took the bytes
     xbpt_audit_config_499105.bin  (live-slack @ cluster 13368 off 0x800) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_audit_delta_565315.ini  (live-slack @ cluster 4112 off 0x388) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_audit_echo_178867.tmp  (live-slack @ cluster 15920 off 0x1be0) — metadata only (non-resident — file data is NOT in this remnant)  [former location — the live file is in a different directory]
@@ -1899,7 +1899,7 @@ ReFS Deleted File Finder
     xbpt_echo_draft_592182.txt  (live-slack @ cluster 11804 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_echo_india_632713.json  (live-slack @ cluster 15360 off 0x2718) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)  [former location — the live file is in a different directory]
     xbpt_echo_mike_896940.xml  (live-slack @ cluster 6192 off 0xc28) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
-    xbpt_echo_yankee_322941.dat  (live-slack @ cluster 544 off 0x1bf8) — FULL FILE recoverable (resident — 128 B stored inline in the record)
+    xbpt_echo_yankee_322941.dat  (live-slack @ cluster 544 off 0x1bf8) — content zero or absent (indistinguishable in the remnant) — the $DATA descriptor survives and declares 128 inline bytes, and that region reads as zeros: the file held zeros, or the deletion took the bytes
     xbpt_foxtrot_config_966558.log  (live-slack @ cluster 12836 off 0x2bb8) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_foxtrot_draft_521951.md  (live-slack @ cluster 532 off 0x1df8) — FULL FILE recoverable (resident — 0 B stored inline in the record)
     xbpt_foxtrot_log_666445.ini  (live-slack @ cluster 11332 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
@@ -1909,7 +1909,7 @@ ReFS Deleted File Finder
     xbpt_foxtrot_trace_228877.md  (live-slack @ cluster 12852 off 0x2e30) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_foxtrot_zulu_156856.csv  (live-slack @ cluster 12832 off 0x1b98) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_foxtrot_zulu_156856.csv  (live-slack @ cluster 4644 off 0x270) — metadata only (non-resident — file data is NOT in this remnant)
-    xbpt_gamma_archive_952302.cfg  (live-slack @ cluster 8768 off 0x1c10) — FULL FILE recoverable (resident — 1754 B stored inline in the record)  [former location — the live file is in a different directory]
+    xbpt_gamma_archive_952302.cfg  (live-slack @ cluster 8768 off 0x1c10) — content zero or absent (indistinguishable in the remnant) — the $DATA descriptor survives and declares 1754 inline bytes, and that region reads as zeros: the file held zeros, or the deletion took the bytes  [former location — the live file is in a different directory]
     xbpt_gamma_data_115091.json  (live-slack @ cluster 108 off 0x1770) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)  [former location — the live file is in a different directory]
     xbpt_gamma_india_998655.txt  (live-slack @ cluster 13344 off 0x2970) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_gamma_lima_441465.tmp  (live-slack @ cluster 12352 off 0x2ff0) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
@@ -2004,7 +2004,7 @@ ReFS Deleted File Finder
     xbpt_hotel_delta_477921.bak  (live-slack @ cluster 12856 off 0x1e80) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_hotel_delta_836210.csv  (live-slack @ cluster 10808 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_hotel_delta_989051.cfg  (live-slack @ cluster 8760 off 0x15f8) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
-    xbpt_hotel_draft_601421.tmp  (live-slack @ cluster 4128 off 0xdd8) — FULL FILE recoverable (resident — 128 B stored inline in the record)
+    xbpt_hotel_draft_601421.tmp  (live-slack @ cluster 4128 off 0xdd8) — content zero or absent (indistinguishable in the remnant) — the $DATA descriptor survives and declares 128 inline bytes, and that region reads as zeros: the file held zeros, or the deletion took the bytes
     xbpt_hotel_draft_936205.md  (live-slack @ cluster 12348 off 0x738) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`) [extent map from a type-0x40 backing recovered in slack — bytes may be stale]
     xbpt_hotel_echo_893421.bak  (live-slack @ cluster 108 off 0x1ed0) — metadata only (non-resident — file data is NOT in this remnant)  [former location — the live file is in a different directory]
     xbpt_hotel_india_607832.cfg  (live-slack @ cluster 11352 off 0x428) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
@@ -2116,7 +2116,7 @@ ReFS Deleted File Finder
     xbpt_mike_tango_822153.dat  (live-slack @ cluster 536 off 0x26c0) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_mike_trace_484217.ini  (live-slack @ cluster 1048 off 0x18f0) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_mike_trace_484217.ini  (live-slack @ cluster 14884 off 0x2f50) — metadata only (non-resident — file data is NOT in this remnant)
-    xbpt_mike_trace_623952.md  (live-slack @ cluster 9792 off 0x24b0) — FULL FILE recoverable (resident — 128 B stored inline in the record)
+    xbpt_mike_trace_623952.md  (live-slack @ cluster 9792 off 0x24b0) — content zero or absent (indistinguishable in the remnant) — the $DATA descriptor survives and declares 128 inline bytes, and that region reads as zeros: the file held zeros, or the deletion took the bytes
     xbpt_mike_trace_701071.dat  (live-slack @ cluster 11796 off 0x8f0) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_mike_uniform_215836.txt  (live-slack @ cluster 1048 off 0x270) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_mike_uniform_215836.txt  (live-slack @ cluster 14884 off 0x1550) — metadata only (non-resident — file data is NOT in this remnant)
@@ -2124,7 +2124,7 @@ ReFS Deleted File Finder
     xbpt_november_cache_127869.dat  (live-slack @ cluster 6184 off 0x420) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_november_cache_127869.dat  (live-slack @ cluster 7184 off 0x420) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_november_draft_998387.lnk  (live-slack @ cluster 15932 off 0x758) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
-    xbpt_november_foxtrot_605893.md  (live-slack @ cluster 104 off 0x1b00) — FULL FILE recoverable (resident — 128 B stored inline in the record)
+    xbpt_november_foxtrot_605893.md  (live-slack @ cluster 104 off 0x1b00) — content zero or absent (indistinguishable in the remnant) — the $DATA descriptor survives and declares 128 inline bytes, and that region reads as zeros: the file held zeros, or the deletion took the bytes
     xbpt_november_hotel_509136.md  (live-slack @ cluster 13372 off 0x1410) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_november_hotel_509136.md  (live-slack @ cluster 15372 off 0x1dd0) — metadata only (non-resident — file data is NOT in this remnant)  [former location — the live file is in a different directory]
     xbpt_november_oscar_193407.log  (live-slack @ cluster 100 off 0x2da0) — metadata only (non-resident — file data is NOT in this remnant)
@@ -2147,7 +2147,7 @@ ReFS Deleted File Finder
     xbpt_oscar_kilo_205997.json  (live-slack @ cluster 100 off 0x690) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_oscar_oscar_602596.txt  (live-slack @ cluster 4168 off 0x2278) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_oscar_papa_463922.bak  (live-slack @ cluster 3112 off 0x378) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
-    xbpt_oscar_record_687661.cfg  (live-slack @ cluster 7224 off 0xb18) — FULL FILE recoverable (resident — 128 B stored inline in the record)
+    xbpt_oscar_record_687661.cfg  (live-slack @ cluster 7224 off 0xb18) — content zero or absent (indistinguishable in the remnant) — the $DATA descriptor survives and declares 128 inline bytes, and that region reads as zeros: the file held zeros, or the deletion took the bytes
     xbpt_oscar_temp_699653.ini  (live-slack @ cluster 2596 off 0x10d0) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_oscar_victor_788752.tmp  (live-slack @ cluster 9784 off 0x718) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_oscar_zulu_627251.tmp  (live-slack @ cluster 14928 off 0xfd8) — metadata only (non-resident — file data is NOT in this remnant)
@@ -2200,14 +2200,14 @@ ReFS Deleted File Finder
     xbpt_record_tango_546969.txt  (live-slack @ cluster 15928 off 0x2bd0) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)  [former location — the live file is in a different directory]
     xbpt_report_alpha_806856.csv  (live-slack @ cluster 8740 off 0x2f68) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_report_alpha_882071.bin  (live-slack @ cluster 15932 off 0x3740) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
-    xbpt_report_config_901264.tmp  (live-slack @ cluster 108 off 0x20b8) — FULL FILE recoverable (resident — 128 B stored inline in the record)  [former location — the live file is in a different directory]
+    xbpt_report_config_901264.tmp  (live-slack @ cluster 108 off 0x20b8) — content zero or absent (indistinguishable in the remnant) — the $DATA descriptor survives and declares 128 inline bytes, and that region reads as zeros: the file held zeros, or the deletion took the bytes  [former location — the live file is in a different directory]
     xbpt_report_november_461960.lnk  (live-slack @ cluster 7756 off 0x618) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_report_record_751638.tmp  (live-slack @ cluster 3120 off 0x1608) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_report_sync_621631.ini  (live-slack @ cluster 4132 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_report_temp_854937.tmp  (live-slack @ cluster 4644 off 0x2cc0) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_report_uniform_552965.xml  (live-slack @ cluster 10836 off 0x2ab0) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_report_yankee_766592.xml  (live-slack @ cluster 12852 off 0x39e0) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
-    xbpt_romeo_backup_498646.log  (live-slack @ cluster 532 off 0x3938) — FULL FILE recoverable (resident — 128 B stored inline in the record)
+    xbpt_romeo_backup_498646.log  (live-slack @ cluster 532 off 0x3938) — content zero or absent (indistinguishable in the remnant) — the $DATA descriptor survives and declares 128 inline bytes, and that region reads as zeros: the file held zeros, or the deletion took the bytes
     xbpt_romeo_hotel_637270.lnk  (live-slack @ cluster 14924 off 0xeb8) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_romeo_lima_920456.bin  (live-slack @ cluster 14924 off 0x378) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_romeo_output_226175.xml  (live-slack @ cluster 7756 off 0x1db8) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
@@ -2434,7 +2434,7 @@ ReFS Deleted File Finder
     xbpt_temp_echo_636607.bak  (live-slack @ cluster 12348 off 0x918) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_temp_index_659152.xml  (live-slack @ cluster 1056 off 0x18e0) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)  [former location — the live file is in a different directory]
     xbpt_temp_index_659152.xml  (live-slack @ cluster 5656 off 0x1510) — metadata only (non-resident — file data is NOT in this remnant)
-    xbpt_temp_mike_389982.tmp  (live-slack @ cluster 10792 off 0x2568) — FULL FILE recoverable (resident — 128 B stored inline in the record)  [former location — the live file is in a different directory]
+    xbpt_temp_mike_389982.tmp  (live-slack @ cluster 10792 off 0x2568) — content zero or absent (indistinguishable in the remnant) — the $DATA descriptor survives and declares 128 inline bytes, and that region reads as zeros: the file held zeros, or the deletion took the bytes  [former location — the live file is in a different directory]
     xbpt_temp_output_522138.tmp  (live-slack @ cluster 8716 off 0x2430) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)  [former location — the live file is in a different directory]
     xbpt_temp_output_635532.lnk  (live-slack @ cluster 14372 off 0x1098) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)  [former location — the live file is in a different directory]
     xbpt_temp_papa_480015.cfg  (live-slack @ cluster 6176 off 0xcf0) — metadata only (non-resident — file data is NOT in this remnant)
@@ -2492,7 +2492,7 @@ ReFS Deleted File Finder
     xbpt_yankee_record_478613.cfg  (live-slack @ cluster 10792 off 0x2a20) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)  [former location — the live file is in a different directory]
     xbpt_yankee_report_288078.log  (live-slack @ cluster 5656 off 0x1b8) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)
     xbpt_yankee_report_288078.log  (live-slack @ cluster 1056 off 0x1440) — metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)  [former location — the live file is in a different directory]
-    xbpt_yankee_report_685069.xml  (live-slack @ cluster 7232 off 0x3670) — FULL FILE recoverable (resident — 128 B stored inline in the record)
+    xbpt_yankee_report_685069.xml  (live-slack @ cluster 7232 off 0x3670) — content zero or absent (indistinguishable in the remnant) — the $DATA descriptor survives and declares 128 inline bytes, and that region reads as zeros: the file held zeros, or the deletion took the bytes
     xbpt_yankee_tango_103961.bin  (live-slack @ cluster 1048 off 0x2918) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_yankee_victor_114004.ini  (live-slack @ cluster 528 off 0x3888) — metadata only (non-resident — file data is NOT in this remnant)
     xbpt_yankee_victor_249801.ini  (live-slack @ cluster 10304 off 0x1718) — metadata only (non-resident — file data is NOT in this remnant)
@@ -2531,7 +2531,7 @@ ReFS Deleted File Finder
   Prior versions of files that still exist: `snapshots`.  Windows Recycle Bin: `recyclebin`.
 
   DELETED files: 6 of 355 are RESIDENT with full content recoverable; 87 are non-resident (carve-able with --carve).
-  PRIOR versions of live files: 117 of 812 decode to a file.
+  PRIOR versions of live files: 106 of 812 decode to a file.
   Restorability: a RESIDENT deleted file's FULL content is recovered exactly (content/<name>).
        A NON-RESIDENT file keeps its data in on-disk extents — if the extent map survives
        ('extent_backed'), --full/--carve reconstructs it best-effort (content/<name>.carved,

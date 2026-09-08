@@ -168,7 +168,12 @@ reparse data. The names a forensic tool should recognise:
 | `$LXMOD` | 4 | mode bits (file-type `S_IFMT` plus permissions) |
 | `$LXDEV` | 8 | device number (u32 major + u32 minor) — only on device nodes |
 
-The file attribute flag 0x40000 in the type-0x30 value flags the presence of extended attributes. WSL
+The file attribute flag `0x40000` marks the presence of extended attributes. Read it from the object's
+own `$SI` — the type-0x10 row for an embedded record, or the
+[type-0x40 backing record](../structures/extent_descriptors.md) at value+0x48 for a split one. The
+attribute copy cached in a type-0x30 index entry (value+0x40) is an **incomplete** copy: it can be
+missing this bit, and it never sets one the backing does not, so it is a lower bound. A tool that reads
+the directory entry alone reports no extended attributes for some files that have them. WSL
 special files (FIFOs, sockets, character/block devices) additionally appear as
 [reparse points](../structures/reparse_points.md) whose tag encodes the Linux file type, with the type
 also reflected in the upper bits of `$LXMOD`. See [WSL metadata](wsl_metadata.md) for the full mapping.
@@ -204,6 +209,10 @@ plus RD on the images where the journal is active. The 0xB0 snapshot/ADS discrim
 (`RefsCreateStreamSnapshot`, `HasSnapshot`) confirmed across the snapshot/ADS corpus (RD). The directory
 attribute flag 0x10000000 is finding **MD_DDIR_005**. Findings: **FS_SNAP_RA_001** (the complete
 dual-marker taxonomy), **FS_SCHM_RA_005/006/007** (schemas 0x1B0–0x200), **MD_ATTR_005/008/010** (`$DATA`,
-`$REPARSE_POINT`, EA), **MD_ATTR_RA_003** (the 0x40000 EA-present flag). See
+`$REPARSE_POINT`, EA), **MD_ATTR_RA_003** (the 0x40000 EA-present flag) and **MD_ATTR_RA_019** (read it
+from the backing, not the index entry). Breadth is narrow and stated as measured: exactly one corpus
+volume carries extended attributes on split records, and on it the cached copy drops the bit for 8,141
+names, agrees for 14,207, and never sets a bit the backing lacks; the only two bits that ever differ
+between the two copies are 0x40000 and the transient Archive bit 0x20. See
 [how this was verified](../methodology.md) to trace these to the exact images and measurements in
 `analysis/`.

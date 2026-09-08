@@ -160,8 +160,23 @@ populated on any given row.
 **Index entry / backing record**
 : An **index entry** is a directory name row whose object record was split out; the **backing record** is the type-0x40 row in the object's home directory that actually holds it. Several index entries — the names of a hard-linked file — can point at one backing record. See [Directory Entries](structures/directory_entries.md).
 
+**Record placement**
+: Where a file's *record* lives: **embedded** in its directory name row, or **split** out into a backing record in the object's home directory. A move or a hard link forces the split — and moves no data. Reported as `RecordPlacement`. See [Record placement and data residency](concepts/placement_and_residency.md).
+
+**Data residency**
+: Where a file's *bytes* live: **inline** in the record, in on-disk **extents**, **snapshot-shared** (the stream owns no allocation and the bytes are still the snapshot's), or **sparse** (no allocation and no snapshot — never written). Reported as `DataResidency`. Independent of record placement. See [Record placement and data residency](concepts/placement_and_residency.md).
+
+**Embedded / split**
+: The two values of record placement. An embedded record sits in the name row (`key_flags` 0x01); a split one is reached through it (`key_flags` 0x02) and lives in a type-0x40 backing record. Neither value tells you where the bytes are — a 149 MB file can be embedded, and a hard-linked file can keep its bytes inline. See [Directory Entries](structures/directory_entries.md).
+
+**Inline / extent-backed**
+: The two ordinary values of data residency. **Inline** bytes are stored in the `$DATA` descriptor itself; **extent-backed** bytes are on disk, described by an extent list. Which one the driver chooses depends on the *volume's format version* and the stream kind, never on the record's placement.
+
+**Snapshot-shared**
+: A stream that owns no allocation because its bytes are still those of the snapshot it has not diverged from. Writing to it gives it clusters of its own. See [Snapshots and Versioning](concepts/snapshots_versioning.md).
+
 **Resident / Non-resident**
-: Older wording for two *different* properties that a single word cannot express — prefer **record placement** and **data residency** below. Where it is still used, "resident" means the stream's bytes are inline. See [Resident Storage](concepts/resident_storage.md).
+: Retired wording for two *different* properties that a single word cannot express — use **record placement** and **data residency**. Where it survives, "resident" means the stream's bytes are inline; `IsResident` is kept as a deprecated column that is `True` exactly when `DataResidency` is `inline`. See [Record placement and data residency](concepts/placement_and_residency.md).
 
 **Row type**
 : The type marker on a B+-tree key/row: **0x10** = an object's own-row (carries `$SI`); **0x30** = a filename / directory entry (and a resident file's value); **0x40** = an extent record (a non-resident file's data runs); **0x20** = the reverse index (FileId → name / home directory). See [Directory Entries](structures/directory_entries.md).

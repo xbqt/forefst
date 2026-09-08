@@ -5,7 +5,7 @@ ReFS special-attribute inventory — win11refs2tspecials.raw (ReFS 3.14)
 ======================================================================
   TYPE           COUNT   run `specials <type>` for the list
   ------------------------------------------------------------
-  ads               76   named data streams
+  ads              254   named data streams
   reparse          508   symlinks / junctions / WSL links
   wsl                0   WSL / Linux-metadata links
   hardlink         533   multi-linked files (link groups)
@@ -16,7 +16,7 @@ ReFS special-attribute inventory — win11refs2tspecials.raw (ReFS 3.14)
   ea                 0   extended attributes / WSL EA
   snapshot           0   CoW prior-version streams
   ------------------------------------------------------------
-  861 distinct objects carry >=1 special attribute.
+  865 distinct objects carry >=1 special attribute.
   (per-type counts OVERLAP — one object can be several types at once, so the
    rows above sum to more than this de-duplicated total.)
   Deep ops: reparse --index · snapshots --extract · dataruns · export ads "file:stream"

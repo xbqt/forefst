@@ -91,10 +91,12 @@ python3 forefst.py "$IMG" deleted --full   # --full adds the whole-volume orphan
   STILL PRESENT — a live file with this name + creation time exists (CoW remnants, and former locations of moved/renamed files): 5  [5 with valid timestamps]
     $RECYCLE.BIN  (orphan-slack @ cluster 52 off 0x360) — metadata only (non-resident — file data is NOT in this remnant)
     IndexerVolumeGuid  (orphan-slack @ cluster 1540 off 0x80) — FULL FILE recoverable (resident — 76 B stored inline in the record)
-    WPSettings.dat  (live-slack @ cluster 3072 off 0x378) — FULL FILE recoverable (resident — 12 B stored inline in the record)
+    System Volume Information  (orphan-slack @ cluster 52 off 0x2c0) — metadata only (non-resident — file data is NOT in this remnant)
+    WPSettings.dat  (live-slack @ cluster 3072 off 0x378) — content zero or absent (indistinguishable in the remnant) — the $DATA descriptor survives and declares 12 inline bytes, and that region reads as zeros: the file held zeros, or the deletion took the bytes
     desktop.ini  (live-slack @ cluster 14852 off 0x378) — FULL FILE recoverable (resident — 129 B stored inline in the record)
 
-  DELETED files: 2 of 25 are RESIDENT with full content recoverable; 18 are extent-backed (carve-able with --carve).
+  DELETED files: 2 of 25 are RESIDENT with full content recoverable; 18 are non-resident (carve-able with --carve).
+  PRIOR versions of live files: 2 of 5 decode to a file.
 ```
 
 The plain `deleted` run (live pages only, seconds) recovers 16 of these 25. The other 9 sit in **orphan

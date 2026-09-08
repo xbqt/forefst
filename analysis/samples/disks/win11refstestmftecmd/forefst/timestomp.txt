@@ -13,8 +13,15 @@ ReFS Timestamp-Anomaly (Timestomp) Detection
   This flags timestamps that LOOK anomalous — it is investigative INFORMATION, not proof of
   tampering. Weigh the BASIS of each row: a journal/hardlink signal is authoritative; an
   intrinsic ($SI-only) signal is a heuristic that also fires on legitimate timestamp-preserving
-  copies/restores. Tiers: HIGH = >=2 independent signals or 1 authoritative; MEDIUM = 1 strong
-  intrinsic; LOW = a weak/single hint.
+  copies/restores. Tiers, exactly as timestomp_verdict() decides them:
+    HIGH   — an AUTHORITATIVE corroboration: the change journal, or a hard-link sibling that
+             preserves the true birth. A count of intrinsic signals never reaches HIGH.
+    MEDIUM — CHANGE_LATE without PRE_FORMAT (created on THIS volume, metadata altered later),
+             or FUTURE (created after the volume's last metadata write).
+    INFO   — every signal present is one a timestamp-preserving copy also produces
+             (PRE_FORMAT / CHANGE_LATE / CREATE_GT_MODIFY / ROUND_TIMESTAMPS), so a copy and a
+             backdate are indistinguishable here however many of them fire.
+    LOW    — anything else.
 
   Conf   Basis         Claimed birth         Last real write       Path
   ------------------------------------------------------------------------------------------------

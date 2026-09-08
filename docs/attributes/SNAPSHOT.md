@@ -91,6 +91,6 @@ three (0x1C00). See [$NAMED_DATA](NAMED_DATA.md) for the ADS-specific parsing.
 
 Type 0xB0 / schema 0x1B0 and the value layout are confirmed in the decompiled driver (E2 —
 `RefsCreateStreamSnapshot`, `GetResidentStreamSummaryFromDisk`, `RefsUpdateScbFromAttribute`); the
-extent table and the byte-for-byte content recovery are raw-disk verified (RD). Findings: **MD_SNAP_RA_005, FS_SNAP_RA_001**,
+extent table and the byte-for-byte content recovery are raw-disk verified (RD). That the `0x4C` FILETIME is the snapshot moment and not a frozen copy of the file's `$SI` is **MD_SNAP_RA_010**, measured on a file snapshotted between its own creation and modification. Findings: **MD_SNAP_RA_005, FS_SNAP_RA_001**,
 **MD_SNAP_RA_002, MD_SNAP_RA_003, CT_DRNT_RA_001, GN_SNAP_SA_001** (snapshot content recovery). See
 [how this was verified](../methodology.md).

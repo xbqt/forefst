@@ -1,5 +1,7 @@
 # NTFS vs ReFS Comparison
 
+> NTFS settles the question with one property; ReFS needs two independent ones — the record's location, and the bytes' location — explained in [Record placement and data residency](placement_and_residency.md).
+
 Almost every ReFS forensic mistake is really an NTFS habit applied to the wrong file system. NTFS is a
 flat **Master File Table** updated **in place**, with a **redo *and* undo** journal; ReFS is a forest of
 per-object **B+-trees** updated by **copy-on-write**, with a **redo-only** log. Those two structural
@@ -15,6 +17,8 @@ consequence.
 | Volume bootstrap | BPB → $MFT → metadata files | VBR → SUPB → CHKP → 13 B+-tree roots |
 | File identification | MFT record number (reusable) | Object ID (64-bit, monotonic, never reused) |
 | Metadata storage | MFT records (fixed 1 KiB) | B+-tree entries (variable size) |
+| Where the *record* is | One MFT record per file, always in `$MFT` | **Record placement**: `embedded` in the directory name row, or `split` into a backing record — a move or a hard link relocates it |
+| Where the *bytes* are | "Resident" if they fit the MFT record's slack — one question, one answer | **Data residency**: `inline`, `extents`, `snapshot-shared` or `sparse` — decided by the descriptor's form, independently of placement |
 | Directory index | B-tree ($INDEX_ROOT / $INDEX_ALLOCATION) | Per-directory B+-tree |
 | Address translation | Data runs in $DATA (one level: VCN → LCN) | Two levels: extents (VCN → VLCN), then Container Table (VLCN → PLCN) |
 | Attribute model | Named/typed within an MFT record | Named/typed within a B+-tree entry |
@@ -70,7 +74,7 @@ line under-counts inline files on a **v3.14** volume, where anything under 2 KiB
 **v3.4** volume there is nothing to under-count, because no file's main data is inline there at all —
 the smallest extent-backed file measured is 5 bytes occupying a whole 4 KiB cluster. What v3.4 *can* hide
 in a record is a **named stream**, up to that 128 KiB cap. See
-[Record placement and data residency](resident_storage.md) for the full rule.
+[Record placement and data residency](placement_and_residency.md) for the full rule.
 
 ## Slack space takes a different form
 
@@ -279,7 +283,7 @@ to. Concretely retired techniques:
 - [Copy-on-Write](copy_on_write.md) — why ReFS needs no undo log and why prior pages survive on disk
 - [Transactions and Crash Consistency](transactions_crash_consistency.md) — the redo-only MLog model and
   the checkpoint-flush commit point
-- [Record placement and data residency](resident_storage.md) — the format-gated residency rule versus NTFS's
+- [Record placement and data residency](placement_and_residency.md) — the format-gated residency rule versus NTFS's
   ~700-byte line
 - [Deletion Recovery](deletion_recovery.md) — recovering stale B+-tree rows, the ReFS analogue of
   MFT-record slack

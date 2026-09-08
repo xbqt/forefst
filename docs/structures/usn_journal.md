@@ -143,6 +143,32 @@ surviving record have been overwritten and are gone.
 | Active journaling | 3+ | Present (type 0x30, "Change Journal") |
 | Deactivated | Varies | May persist with zeroed extents |
 
+### Recreation: a journal that starts at USN 0 on a volume that has been used
+
+`fsutil usn createjournal` does not resize the journal on ReFS and it does not merely reset a counter — it
+**discards the existing history**. The size arguments are not honoured: a request for a 1 MiB journal with a
+256 KiB allocation delta produced a **32 MiB** journal with delta **0**, the same allocation every volume in
+this project's corpus carries. Because the window never filled, nothing was lost to wrapping — and yet no
+record of any operation performed before the call survives.
+
+That gives the examiner a signal worth checking early, because it is cheap and it changes what the journal
+can be used for:
+
+| What you see | What it means |
+|---|---|
+| USN range starts at **0** on a volume with substantial prior activity | The journal was **recreated**. Everything before that point is gone; the volume is not young |
+| USN range starts at a **non-zero** value, spanning about one allocation | A normal rolling window that has wrapped once or more — the oldest records aged out |
+| USN range starts at 0 and the volume is genuinely new | Nothing to conclude |
+
+The middle row is what a busy volume looks like: on one Insider system volume the range runs 40,906,752 →
+74,459,840 across a 32 MiB allocation — a span of exactly one window. The first row is what a recreated
+journal looks like: range 0 → 3,146,304 in the same 32 MiB, under a tenth of the window used, on a volume
+that had already had thousands of files written and deleted.
+
+A recreated journal is not proof of intent — installers and management tools call `createjournal` too — but
+it does mean **absence of a record in the journal is not evidence the operation did not happen**, and any
+timeline built from it starts at the recreation, not at the volume's birth.
+
 ## Tooling
 
 USN Journal parsing is integrated into `forefst.py` (parsing + display).
@@ -194,6 +220,10 @@ because they are structurally 0 on every ReFS record and are retained only for c
 - [File IDs](../concepts/file_ids.md) — how the 128-bit File ID maps to a B+-tree location
 
 ## Evidence
+
+The recreation signal is **MD_USN_RA_009**, measured in the lab: 1 MiB requested, 32 MiB
+and delta 0 granted, no wrap, and no pre-call record surviving; contrasted against an Insider system
+volume whose range spans exactly one allocation.
 
 The `USN_RECORD_V3` layout, the 128-bit File ID split (upper = the creation/home directory OID, lower =
 entry ordinal), and the reason-code catalog are raw-disk decoded across the corpus (RD). That the upper

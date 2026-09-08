@@ -1,8 +1,8 @@
 # How the Analysis Was Done, and How Every Claim Was Validated
 
 This is the page behind every other page. The structure, attribute, and concept references state facts in
-clean prose, and record their **finding IDs** and evidence grades in the central register
-([`audit_dates.tsv`](audit_dates.tsv)) — with a prose `## Evidence` section on each page. This page
+clean prose, and record their **finding IDs** and evidence grades in a prose `## Evidence` section on
+each page, against the central claim register. This page
 explains where those facts come from, the standard each had to meet, and exactly how to follow any one of them to the byte-level
 measurement and decompiled code it rests on. Nothing in this reference is asserted on authority — every
 load-bearing claim is traceable to evidence you can re-inspect in the project's `analysis/` tree.
@@ -81,7 +81,7 @@ observation. Counts in the register's notes (e.g. *112/112*, *409,514 files*) ar
 
 ## 4. Evidence levels
 
-Every claim carries one or more grades, recorded per page in the central register (`audit_dates.tsv`) and summarized in each page's `## Evidence` section:
+Every claim carries one or more grades, recorded in the central claim register and summarized in each page's `## Evidence` section:
 
 | Level | Meaning |
 |-------|---------|
@@ -94,7 +94,7 @@ Load-bearing claims prefer **E2 + RD** — confirmed in both the code and the by
 
 ## 5. The claim register — `reference_table.csv`
 
-Every claim is one row in **`analysis/reference_table.csv`** (469 rows), keyed by a stable **finding ID**
+Every claim is one row in **`analysis/reference_table.csv`** (482 rows), keyed by a stable **finding ID**
 of the form `<CATEGORY>_<STRUCTURE>[_RA|_SA]_<NNN>` (e.g. `FS_CHKP_RA_001`, `MD_SI_RA_015`,
 `GN_ALLC_SA_001`). The categories map to Carrier's five data categories (`FS` file system, `CT` content,
 `MD` metadata, `FN` file name, `AP` application), plus `GN` for general/cross-cutting findings; `RA` marks a raw-disk-anchored finding,
@@ -135,8 +135,15 @@ finding ID.
 ## 8. How to link a fact to its verified evidence
 
 This is the recipe a reader follows from any page to the proof. Take a **finding ID** from a page's
-`## Evidence` section or the central register (`audit_dates.tsv`) (e.g. `FS_CHKP_RA_001`) and walk the
+`## Evidence` section (e.g. `FS_CHKP_RA_001`) and walk the
 chain — all of it ships in `analysis/`:
+
+> **Going the other way — [KNOWLEDGE_MAP.md](KNOWLEDGE_MAP.md).** The chain below runs from a finding to its
+> proof. The knowledge map runs sideways: page → the findings behind it, and finding → every page that
+> documents it. Consult it **before changing a fact**, so the correction reaches all of them — a claim fixed
+> in one place and left standing in three others is the failure this project has repeated most. It is
+> generated, and `build_docs_index.py --check` fails if it has drifted.
+
 
 1. **`analysis/reference_table.csv`** — find the row for that ID: the claim, the static status + notes, the
    raw-disk status + notes, and the evidence level. *(This row exists for every cited finding.)*

@@ -6,23 +6,25 @@ NOTE: CONTENT_DIRS is empty by default, so this script regenerates ONLY KNOWLEDG
 per-directory READMEs are hand-written prose and are left untouched (see the guard in main()).
 
 Provenance model:
-  - Pages carry NO provenance footer. Verification status, evidence grades, and finding
-    IDs live centrally in `audit_dates.tsv` (the audit register); pages keep only a body
-    `## Evidence` prose section.
+  - Pages carry NO provenance footer and there is NO hand-maintained companion register.
+    A page's evidence is the `## Evidence` prose section it carries; a page's audit date is
+    its git history. Everything in KNOWLEDGE_MAP.md is derived at generation time.
   - Per-directory READMEs stay CLEAN (no evidence/status columns):
       structures -> 'System tables' + 'On-disk formats & row types'
       attributes -> Attribute, Type ID, Schema, Versions, Function
       tools      -> Tool, Purpose, Key subcommands
       concepts   -> Page, Summary
-  - KNOWLEDGE_MAP.md keeps the provenance columns (Master / Findings / Evidence / Status),
-    now sourced from `audit_dates.tsv` — it is the where-every-fact-lives index.
+  - KNOWLEDGE_MAP.md is REPO-ONLY (never published to the website, no finding id ever
+    reaches a reader) and exists for drift detection: which pages cite a finding
+    (owner-page consolidation) and which register rows no page cites (triage).
 
 Stdlib only.
   python3 build_docs_index.py            # regenerate KNOWLEDGE_MAP.md (per-dir READMEs only for CONTENT_DIRS)
   python3 build_docs_index.py --check    # verify-only (non-zero exit if drift / register mismatch)
   python3 build_docs_index.py --preview  # print proposed READMEs to stdout, write nothing
 """
-import os, re, sys, glob, csv, io
+import os
+import re as _re, re, sys, glob, csv, io
 
 DOCS_ROOT = os.environ.get("DOCS_ROOT") or os.path.dirname(os.path.abspath(__file__))
 HERE = DOCS_ROOT
@@ -34,35 +36,6 @@ MAP_ONLY_DIRS = ["attributes", "structures", "concepts", "tools", "examples"]
 BOLD_PREAMBLE_RE = re.compile(r"^\*\*[^*]+:")   # a '**Key:** value' metadata preamble line
 # a '**Key:** value' line whose value IS the summary (prose), not a metadata field
 SUMMARY_LABEL_RE = re.compile(r"^\*\*(?:Description|Purpose|Summary|Overview):\*\*\s*(.+)$")
-
-AUDIT_REGISTER = f"{HERE}/audit_dates.tsv"
-
-def audit_register():
-    """page -> {status, evidence, findings, last_audited, note} from the central register
-    (excludes comment/header lines). This is where the per-page provenance now lives."""
-    reg = {}
-    if not os.path.exists(AUDIT_REGISTER):
-        return reg
-    for ln in open(AUDIT_REGISTER, encoding="utf-8"):
-        if ln.startswith("#") or ln.startswith("page\t") or not ln.strip():
-            continue
-        p = ln.rstrip("\n").split("\t")
-        p += [""] * (6 - len(p))
-        reg[p[0]] = {"status": p[1], "evidence": p[2], "findings": p[3],
-                     "last_audited": p[4], "note": p[5]}
-    return reg
-
-def tracked_pages():
-    """every docs/*.md whose provenance is tracked in the register — i.e. all pages except
-    the _templates/ scaffolding and the auto-generated KNOWLEDGE_MAP.md."""
-    out = set()
-    for p in glob.glob(f"{HERE}/**/*.md", recursive=True):
-        rel = os.path.relpath(p, HERE)
-        if (rel.startswith("_templates/") or rel.startswith("website/")
-                or os.path.basename(p) == "KNOWLEDGE_MAP.md"):
-            continue                            # website/ = the Hugo site source, not a doc page
-        out.add(rel)
-    return out
 
 def load_index_meta():
     """basename -> {group, root_oid, table_id, schema, subcommands}. Missing file => {}."""
@@ -177,27 +150,136 @@ def gen_readme(d, plist, meta):
     lines += ["", "See also: [Knowledge Map](../KNOWLEDGE_MAP.md) · [root index](../README.md) · [how this was verified](../methodology.md) · [conventions](../CONTRIBUTING.md)", ""]
     return "\n".join(lines)
 
-def gen_knowledge_map(pages, reg):
-    lines = ["# Knowledge Map — where every ReFS fact lives", "",
-             "The single index from a topic/page to its authoritative sources: the master reference section",
-             "(`structure_reference.md`, the byte-level source of truth), the finding/erratum ids, and the evidence level.",
-             "**Auto-generated** by `build_docs_index.py` from each page's intro + the central `audit_dates.tsv` register — regenerate after edits.", "",
-             "When a fact changes, this map shows every page that documents it (the cross-doc-drift defence).", ""]
+ALPHA_ID = _re.compile(r"\b(?:GN|FS|CT|MD|FN|AP)_[A-Z0-9]+(?:_[A-Z0-9]+)*_\d{3}\b")
+
+
+def page_findings(path):
+    """Finding ids CITED BY THE PAGE ITSELF -- derived, never typed.
+
+    A hand-kept companion list supplied this once and drifted -- it held an id that did not exist until
+    the citation gate caught it. The page is the fact; scan the page.
+    """
+    try:
+        with open(path, encoding="utf-8", errors="replace") as fh:
+            return sorted(set(ALPHA_ID.findall(fh.read())))
+    except OSError:
+        return []
+
+
+def register_tiers():
+    """ref_id -> (static evidence, disk status), in register order, straight from the claim
+    register (the authority on evidence).
+
+    Both values are reproduced AS WRITTEN, only clipped at a parenthetical. They are free text
+    (15 distinct static values, 9 disk values), so composing them into one grade would invent a
+    ranking the register does not state — e.g. CONTRADICTED and NOT_TESTED are not the same
+    absence of evidence. The index shows what the register says and lets the reader judge.
+
+    Insertion order is meaningful: the uncited-row list reads in register order, so it can be
+    worked through against the CSV top to bottom.
+    """
+    import csv as _csv
+
+    def clip(v):
+        v = (v or "").strip()
+        if v in ("", "N/A"):
+            return "—"
+        head = _re.split(r"\s*[(;]", v, 1)[0].strip()
+        return head + " …" if head != v else v
+
+    for cand in (f"{HERE}/../analysis/reference_table.csv",
+                 "/workspace/refs/forclaude/reference/reference_table.csv"):
+        if os.path.exists(cand):
+            out = {}
+            with open(cand, encoding="utf-8", newline="") as fh:
+                for r in _csv.DictReader(fh):
+                    out[r["ref_id"].strip()] = (clip(r.get("static_evidence_level")),
+                                                clip(r.get("raw_analysis_status")))
+            return out
+    return {}
+
+
+def gen_knowledge_map(pages):
+    tiers = register_tiers()
+    lines = [
+      "# Knowledge Map — where every ReFS fact lives", "",
+      "**This page is an index, never a source.** Every fact it points at is stated on the page or in the",
+      "claim register; nothing is documented only here.", "",
+      "It is **repo-only**: it is not published to the website, is not in the site menu, and no finding id it",
+      "contains ever reaches a reader — the site's leak gate stays absolute and has no exemption. Its audience",
+      "is someone auditing the documentation against the evidence. A reader wanting the narrative starts from",
+      "the [documentation index](README.md).", "",
+      "Its purpose is **drift detection**, in the two directions prose cannot read:", "",
+      "1. **I am about to change a fact — which pages depend on it?** Section 2. A claim corrected in one",
+      "   place and left standing in three others is this project's most repeated documentation failure.",
+      "   A finding cited on several pages needs one *owner* page that states it and others that link.",
+      "2. **Which register rows does no page document?** Section 3 — the triage list.", "",
+      "**Every column is derived, none is typed.** Findings are the ids the page itself cites, scanned from",
+      "the page; tiers come from the claim register. There is no hand-maintained companion file: one used to",
+      "supply these columns and it drifted, holding an id that did not exist until the citation gate caught",
+      "it. A page's audit date is its git history. Regenerate with `build_docs_index.py`; `--check` verifies",
+      "only, and the sync step regenerates.", ""]
+
     total = 0
     for d in CONTENT_DIRS + MAP_ONLY_DIRS:
-        lines += [f"## {d}/", "", "| Page | Topic | Master § | Findings | Evidence | Status |",
-                  "|------|-------|----------|----------|----------|--------|"]
+        lines += [f"## 1. Pages in {d}/", "", "| Page | Topic | Findings cited on the page |",
+                  "|------|-------|----------------------------|"]
         for p in pages[d]:
             rel = f"{d}/{os.path.basename(p['path'])}"
-            r = reg.get(rel, {})
-            lines.append(f"| [{os.path.basename(p['path'])}]({rel}) | {p['summary'] or '—'} | "
-                         f"{r.get('master') or '—'} | {r.get('findings') or '—'} | "
-                         f"{r.get('evidence') or '—'} | {r.get('status') or '—'} |")
+            # The summary is a page intro clipped to a sentence; a mid-sentence cut reads as broken text,
+            # so clip on a boundary and mark it, rather than leaving a dangling clause.
+            topic = (p['summary'] or '').strip()
+            if topic and topic[-1] not in ".!?":
+                cut = max(topic.rfind(". "), topic.rfind("; "))
+                topic = (topic[:cut + 1] if cut > 40 else topic.rstrip(" ,;:") + " …")
+            fids = page_findings(p["path"])
+            lines.append(f"| [{os.path.basename(p['path'])}]({rel}) | {topic or '—'} | "
+                         f"{', '.join(fids) if fids else '—'} |")
             total += 1
         lines.append("")
+
+    # ---- section 2: the inverse index -------------------------------------------------------
+    by_finding = {}
+    for d in CONTENT_DIRS + MAP_ONLY_DIRS:
+        for p in pages[d]:
+            rel = f"{d}/{os.path.basename(p['path'])}"
+            for fid in page_findings(p["path"]):
+                by_finding.setdefault(fid, set()).add(rel)
+    multi = {f: v for f, v in by_finding.items() if len(v) > 1}
+    lines += ["## 2. Findings → the pages that cite them", "",
+              "Before changing a finding, correct every page listed on its row in the same commit. The",
+              f"**{len(multi)} rows with more than one page** are the owner-page consolidation candidates: one",
+              "page should state the fact and the rest should link to it.", "",
+              "| Finding | Static | Disk | Pages | Cited on |",
+              "|---------|--------|------|-------|----------|"]
+    for fid in sorted(by_finding):
+        where = ", ".join(f"[{os.path.basename(r)}]({r})" for r in sorted(by_finding[fid]))
+        n = len(by_finding[fid])
+        st, dk = tiers.get(fid, ("—", "not in the register"))
+        lines.append(f"| `{fid}` | {st} | {dk} | {n if n > 1 else ''} | {where} |")
+    lines.append("")
+
+    # ---- section 3: the triage list ---------------------------------------------------------
+    uncited = [f for f in tiers if f not in by_finding]
+    scanned = "/, ".join(CONTENT_DIRS + MAP_ONLY_DIRS) + "/"
+    lines += ["## 3. Register rows no page cites", "",
+              f"The triage list: **{len(uncited)} of {len(tiers)}** register rows are cited by no page in",
+              f"`{scanned}` — the denominator is the content directories, because those are the",
+              "pages a reader reaches. A row here is one of three things, and the triage decides which:", "",
+              "- **internal-only** — a tool/verification fact with no reader-facing statement to make;",
+              "- **undocumented** — reader-facing knowledge with no page, so a page (or a paragraph) is owed;",
+              "- **duplicate** — the same fact as a cited row, to be merged into it.", "",
+              "Rows read in register order. A mention in `changelog.md` does not count as documentation.", "",
+              "| Finding | Static | Disk |", "|---------|--------|------|"]
+    for fid in uncited:
+        st, dk = tiers[fid]
+        lines.append(f"| `{fid}` | {st} | {dk} |")
+    lines.append("")
+
     lines += ["---",
-              f"*{total} pages indexed. Provenance (status · evidence · findings · date): `audit_dates.tsv`. "
-              "Claim register: `analysis/reference_table.csv` (repo root). Per-claim proof harness: `analysis/reports/audit/`.*", ""]
+              f"*Generated by `build_docs_index.py` — {total} pages indexed, {len(by_finding)} of "
+              f"{len(tiers)} register rows cited, {len(multi)} cited on more than one page. The claim "
+              "register is `analysis/reference_table.csv`.*", ""]
     return "\n".join(lines)
 
 def main():
@@ -210,7 +292,6 @@ def main():
     preview = "--preview" in sys.argv
     pages = collect()
     meta = load_index_meta()
-    reg = audit_register()
     if preview:
         for d in CONTENT_DIRS:
             print("=" * 80)
@@ -228,25 +309,20 @@ def main():
         if new != old:
             drift += 1
             if not check: open(rp, "w").write(new)
-    km = gen_knowledge_map(pages, reg)
+    km = gen_knowledge_map(pages)
     kp = f"{HERE}/KNOWLEDGE_MAP.md"
     old = open(kp).read() if os.path.exists(kp) else ""
     if km != old:
         drift += 1
         if not check: open(kp, "w").write(km)
-    tp = tracked_pages()
-    missing = sorted(tp - set(reg))     # tracked page absent from the register
-    orphan  = sorted(set(reg) - tp)     # register row with no matching page on disk
-    if missing:
-        print("PAGES MISSING FROM audit_dates.tsv:", *missing, sep="\n  ")
-    if orphan:
-        print("audit_dates.tsv ROWS WITH NO MATCHING PAGE:", *orphan, sep="\n  ")
+    # NOTE: cited-id-vs-register validation is NOT duplicated here — verify_docs_static.py's
+    # citation gate owns it (it is what caught an invented id). This --check is drift only.
     if check:
-        if drift or missing or orphan:
-            print(f"DRIFT: {drift} index file(s) out of date; {len(missing)} page(s) missing from the "
-                  f"register; {len(orphan)} orphan register row(s).")
+        if drift:
+            print(f"DRIFT: {drift} index file(s) out of date — run build_docs_index.py "
+                  f"(the sync step regenerates; this gate only verifies).")
             sys.exit(1)
-        print("indexes up to date; every page is in the audit register.")
+        print("indexes up to date (regenerating would change nothing).")
     else:
         print(f"regenerated {len(CONTENT_DIRS)} READMEs + KNOWLEDGE_MAP.md "
               f"({sum(len(pages[d]) for d in CONTENT_DIRS + MAP_ONLY_DIRS)} pages indexed).")

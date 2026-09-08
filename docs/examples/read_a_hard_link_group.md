@@ -60,7 +60,7 @@ into a shared backing — that is what lets several names resolve to one object.
 *bytes*: for a small file those stay inline, which is exactly what these rows report. Placement and residency
 are separate questions, so a hard-linked file showing **inline** data *and* a link count above one is not a
 contradiction (see [Hard Links](../concepts/hard_links.md) and
-[Record placement and data residency](../concepts/resident_storage.md)).
+[Record placement and data residency](../concepts/placement_and_residency.md)).
 
 ### Step 2 — Prove it by hand: decode the value, then resolve the content record
 
@@ -186,6 +186,6 @@ it would report "no hard links" on a volume that demonstrably has them.
 - [Hard Links](../concepts/hard_links.md) — the identity-tuple join, the `$SI+0x70` decoy, and the v3.14 gating
 - [Directory Entries](../structures/directory_entries.md) — the type-0x30 key + the C.3 index-entry value layout decoded in Step 2
 - [Standard Information](../attributes/STANDARD_INFORMATION.md) — the `$SI+0x70` "HardLinkCount" field and the `$SI+0x58` NextFileId ordinal source
-- [Record placement and data residency](../concepts/resident_storage.md) — why hard-linking splits the record out of the name row, and why the data stays put
+- [Record placement and data residency](../concepts/placement_and_residency.md) — why hard-linking splits the record out of the name row, and why the data stays put
 - [Object Table](../structures/object_table.md) — resolving the `value+0x08` home backref OID
 - Master reference: `structure_reference.md` §J (Hard Links), §C.3 (index-entry value), §C.7 (`$SI+0x70`)

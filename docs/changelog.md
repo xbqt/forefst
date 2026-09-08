@@ -1,5 +1,64 @@
 # Changelog
 
+## v1.10.3 — 2026-09-07 — three defects the purpose-built lab volumes found
+
+**Everything here is relative to v1.10.2.** No new decoders and no new columns. Seven lab tests were read
+against volumes built to create cases the corpus did not contain; four confirmed the documented model and
+three found defects. All three are fixed here.
+
+### `export deleted` no longer writes content it does not hold
+
+A deleted file's remnant can keep its `$DATA` descriptor while losing the bytes the descriptor describes.
+The recoverability verdict was decided by the value's *length*, so such a remnant was graded
+`recoverable_inline`, reported as **"FULL FILE recoverable … EXACT"**, and written out as a file of zeros.
+
+- A new outcome, **`content_zero_or_absent`** — *"content zero or absent (indistinguishable in the
+  remnant)"*, reliability `NO CONTENT` — covers it. The verdict names **both** explanations because the
+  remnant cannot separate them: the file held zeros, or the deletion took the bytes. The record, its name,
+  size and timestamps are still reported; no content file is written either way.
+- Measured before → after, content files written / all-zero among them: `winsider` **8,459 / 6,110 → 2,349 /
+  0**, `lab314_main` 877 / 228 → 649 / 0, `win11refs8g` 72 / 57 → 15 / 0, `win11refstestmftecmd` 15 / 11 →
+  4 / 0. On every image the number withheld equals the previous all-zero count, so **no populated content
+  was lost**.
+- The proof that those zeros were fabricated rather than real: the lab generator wrote the same 300
+  non-zero bytes to every one of 8,000 files, and 214 of the 849 recovered came back as 300 zeros.
+- **A genuinely zero-filled resident file is withheld too.** That cost is measured — 1 of 4,037 live
+  resident files on one volume, 1 of 33,263 on another — and it is the right side to err on: the metadata
+  is still reported, and an evidence tool should not assert bytes it never read.
+
+### Named streams on moved and hard-linked files are visible again
+
+Stream enumeration read only the directory-entry row. When a move or a hard link splits a file's record,
+its `0xB0` stream sub-records live in the type-0x40 backing, which nothing inspected — so those files
+reported **no streams at all**, in `files`, in `specials ads`, and in `extract "file:stream"`.
+
+- All three now enumerate from the backing. `extract "…:s500"` on a moved host returns the stream's bytes,
+  SHA-256-identical to the value recorded on the volume when it was made.
+- Split-record rows carrying streams, before → after: **0 → 178**, **0 → 179**, **0 → 95** on three
+  volumes. Corpus-wide, 655 backing records on 28 of 102 images held streams no command could reach.
+- The code asserted this path was complete, citing a corpus recount that agreed exactly (678 == 678). The
+  recount was sound; the conclusion was not. No corpus image had a stream on a moved file, so the case the
+  branch could not handle was simply absent from the evidence.
+
+### The timestomp legend now describes the tiers the tool actually assigns
+
+The printed legend promised *"HIGH = >=2 independent signals or 1 authoritative"*. `timestomp_verdict()`
+awards HIGH **only** for an authoritative corroboration — the change journal, or a hard-link sibling — and
+never for a count of heuristic signals. On a controlled set of eight files with one known manipulation
+each, six are flagged and all six are INFO, which is correct: every signal they carry is one a
+timestamp-preserving copy also produces.
+
+- All **three** descriptions are rewritten from the verdict function: the table header, the subcommand help
+  text, and the docstring. **The tier logic is unchanged** — only the descriptions were wrong.
+
+### Documentation
+
+- `usn_journal.md` gains the **journal-recreation signal**. `fsutil usn createjournal` does not resize the
+  journal on ReFS and does not merely reset a counter: it discards the history. A request for 1 MiB
+  produced a 32 MiB journal with delta 0, nothing wrapped, and no pre-call record survived. A USN range
+  starting at **0** on a volume with prior activity means the journal was recreated — so absence of a
+  record in it is not evidence the operation did not happen.
+
 ## v1.10.2 — 2026-09-07 — release hygiene: what the tool says, what the docs say, and what the site serves
 
 **Everything here is relative to v1.10.1.** No new decoders and no new columns. This release closes the gap

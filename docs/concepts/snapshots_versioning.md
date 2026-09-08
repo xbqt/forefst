@@ -1,5 +1,7 @@
 # Stream Snapshots and File Versioning
 
+> A stream that has not diverged from its snapshot owns **no allocation of its own** — `DataResidency` reports it as `snapshot-shared`. See [Record placement and data residency](placement_and_residency.md).
+
 A ReFS stream snapshot freezes a file's current content under a new stream identity, so that later
 writes leave the snapshotted bytes intact and exactly recoverable from a single disk image. For a
 forensic analyst this is the strongest recovery path on a ReFS volume: unlike carving free space or

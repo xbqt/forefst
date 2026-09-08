@@ -1,5 +1,7 @@
 # Directory Entries
 
+> `key_flags` records the **record's** location, never the **bytes'** location — the two are explained in [Record placement and data residency](../concepts/placement_and_residency.md).
+
 Directory entries (type 0x30) are B+-tree rows within a per-directory B+-tree. Each file or subdirectory appears as a type 0x30 row in its parent directory's tree. The record placement (embedded vs split) determines the value layout, and a parser must resolve that mode from the key flags before reading any field.
 
 ## B+-tree row header — 16 bytes
@@ -39,7 +41,7 @@ Only **two** key_flags values exist on disk (distribution {0x01, 0x02} only, zer
 > most common way to mis-parse this structure. Every kf=0x01 *file* row is extent-backed on ReFS 3.4–3.10
 > (1,120 / 250 / 386 / 236 rows measured, none inline); on 3.14 about 93 % are inline but 16,809 are not.
 > Determine residency from the `$DATA` attribute's storage — see
-> [Record placement and data residency](../concepts/resident_storage.md).
+> [Record placement and data residency](../concepts/placement_and_residency.md).
 
 A directory is stored with **key_flags 0x02** (the index-entry value layout) and is identified by the directory attribute bit `0x10000000` at value+0x40: `RefsAddFileNameIndexEntry` ORs the `0x10000000` bit into the attribute word. There is no separate 0x04 = directory flag.
 
@@ -74,7 +76,7 @@ both layouts, so testing the length as a **range** is both correct and version-i
 | 0x80 | 8 | NextFileId (u64) | Directory child-creation ordinal (mirrors $SI+0x58). |
 | 0xA8+ | var | Embedded sub-record chain | $DATA / ADS / snapshot / EA / $EFS rows. **There is NO embedded $SI sub-record**: the type-0x30 value **mirrors** the $SI fields and carries the USN-journal fields inline at 0x68/0x70. Version-dependent; see below. |
 
-The embedded value **mirrors** the file's own type-0x10 $STANDARD_INFORMATION at every offset **except 0x58/0x60**, where it carries FileSize / AllocatedSize instead of the $SI's (always-0) USN / DataSize fields. The own-row $SI total size is 116 bytes (0x74) on Win10 and 124 bytes (0x7C) on Win11. See [Standard Information](../attributes/STANDARD_INFORMATION.md) for that separate structure, and [Record placement and data residency](../concepts/resident_storage.md) for the rule that decides whether the bytes sit inline.
+The embedded value **mirrors** the file's own type-0x10 $STANDARD_INFORMATION at every offset **except 0x58/0x60**, where it carries FileSize / AllocatedSize instead of the $SI's (always-0) USN / DataSize fields. The own-row $SI total size is 116 bytes (0x74) on Win10 and 124 bytes (0x7C) on Win11. See [Standard Information](../attributes/STANDARD_INFORMATION.md) for that separate structure, and [Record placement and data residency](../concepts/placement_and_residency.md) for the rule that decides whether the bytes sit inline.
 
 ### Sub-record row count (offset 0x20 in the embedded value)
 
@@ -206,7 +208,7 @@ controlled before/after move of a whole volume: of 9,521 files present in both i
 placement and 0 changed data residency**, and the moved 16-byte file's `$DATA` sub-record was
 **byte-identical** either side — read out of the name row before the move and out of its backing record
 after, with `value+0x08` still pointing at its creation directory. See
-[Record placement and data residency](../concepts/resident_storage.md) for the two axes.
+[Record placement and data residency](../concepts/placement_and_residency.md) for the two axes.
 
 ## Critical layout differences
 
@@ -243,7 +245,7 @@ A directory's tree also carries type 0x20 rows: a per-object FileId-resolution i
 - [Extent Descriptors](extent_descriptors.md) -- extent-backed files link to type 0x40 extent rows
 - [Object Table](object_table.md) -- the home-dir backref in index entries resolves via the Object Table
 - [Standard Information](../attributes/STANDARD_INFORMATION.md) -- $SI layout differs by version
-- [Record placement and data residency](../concepts/resident_storage.md) -- the two independent axes
+- [Record placement and data residency](../concepts/placement_and_residency.md) -- the two independent axes
 - [Hard Links](../concepts/hard_links.md) -- multi-name files and the size-matched link count
 
 ## Evidence

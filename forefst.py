@@ -243,7 +243,7 @@ def validate_image(path, die_fn=None):
 
 # ─── Constants ────────────────────────────────────────────────────────
 PROG = "forefst"
-VERSION = "1.10.2"
+VERSION = "1.10.3"
 # Phase 3 (4.D): directory walks default to FULL depth (no artificial cap); `--depth N` overrides. The real
 # recursion depth equals the actual directory nesting (ReFS trees are shallow — tens of levels), so this
 # constant is never the binding limit; it just means "don't truncate". main() also raises the interpreter
@@ -1618,7 +1618,11 @@ def _t40_record_tuple(vd, ctx=None):
     _bfa = le32(vd, 0x48) if len(vd) >= 0x4C else 0
     _inl = _backing_inline_data(vd, ctx) is not None
     _form = _stream_data_form(vd, ctx)
-    return (_a, _s, _u, _j, _sid, _if, _tag, _tgt, _bfa, _inl, _form)
+    # T9 / MD_ADS_RA_005: a named stream on a SPLIT record lives HERE, in the backing, not in the type-0x30
+    # name row -- so the enumeration that reads only the name row never sees it. Appended last so every
+    # existing rec[N] index is unchanged.
+    _ads = detect_ads_in_resident(vd, ctx)[1]
+    return (_a, _s, _u, _j, _sid, _if, _tag, _tgt, _bfa, _inl, _form, _ads)
 
 
 def _backing_inline_data(vd, ctx=None):
@@ -4222,6 +4226,13 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
             if len(rec) >= 9 and (rec[8] & 0x40000):
                 e["file_attrs"] = e.get("file_attrs", 0) | 0x40000
                 e["has_ea"] = True
+            # T9: the same reasoning for named streams. The walk's ADS branch is gated on the type-0x30 value
+            # being the long embedded form, so a split record's 0xB0 sub-records were never inspected -- 655
+            # backing records on 28 of 102 corpus images carried streams no command could see (MD_ADS_RA_005 /
+            # E93). The backing is resolved here, so enumerate from it.
+            if len(rec) >= 12 and rec[11] and not e.get("ads_names"):
+                e["has_ads"] = True
+                e["ads_names"] = ";".join(rec[11])
             # E82: the resolved backing keeps this file's data INLINE, so the current $DATA stream is
             # resident even though the record was split out of the name row.
             if len(rec) >= 10 and rec[9]:
@@ -7698,7 +7709,11 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
                 "record_placement": "split",
                 "data_residency": (_stream_data_form(ext_info["raw"], (f, ps, cs, tr))
                                    if ext_info and ext_info.get("raw") else DATA_INLINE),
-                "stale_name_size": stale_name_size, "ads": [],
+                "stale_name_size": stale_name_size,
+                # T9 / MD_ADS_RA_005: a split record's named streams live in the BACKING, which is the value
+                # already read here -- not in the type-0x30 name row this branch came from.
+                "ads": (_parse_ads_from_value(ext_info["raw"], (f, ps, cs, tr))
+                        if ext_info and ext_info.get("raw") else []),
                 "resident_content": _inline,
             })
             continue
@@ -7715,7 +7730,8 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
                                if ext_info and ext_info.get("raw") else DATA_EXTENTS),
             "extent_source": source if ext_info else "unresolved",
             "stale_name_size": stale_name_size,
-            "ads": [],
+            "ads": (_parse_ads_from_value(ext_info["raw"], (f, ps, cs, tr))   # T9, as above
+                    if ext_info and ext_info.get("raw") else []),
         }
         for ext in info["extents"]:
             ext["disk_offset"] = ps + ext["plcn"] * cs
@@ -7911,7 +7927,10 @@ def cmd_timestomp(image, remaining, partition_start):
       • the USN journal (authoritative): a standalone BASIC_INFO_CHANGE record is a
         deliberate timestamp/attribute edit with no content change; FILE_CREATE gives
         the true creation time to compare against $SI.
-    Confidence tiers HIGH/MEDIUM/LOW reflect how many independent sources agree."""
+    Tiers come from timestomp_verdict(), the single source: HIGH only where an AUTHORITATIVE source
+    corroborates (the journal, or a hard-link sibling); MEDIUM for CHANGE_LATE without PRE_FORMAT or for
+    FUTURE; INFO where every signal present is one a timestamp-preserving copy also produces; LOW
+    otherwise. A count of intrinsic signals never reaches HIGH."""
     import csv as _csv
     # Phase 2: standardized --csv/--json [FILE] (bare = stdout). Pulled out before the command's own parser.
     out_fmt, out_dest, remaining = _extract_output_fmt(remaining, allow=("--csv", "--json"))
@@ -8087,8 +8106,15 @@ def cmd_timestomp(image, remaining, partition_start):
         print("  This flags timestamps that LOOK anomalous — it is investigative INFORMATION, not proof of")
         print("  tampering. Weigh the BASIS of each row: a journal/hardlink signal is authoritative; an")
         print("  intrinsic ($SI-only) signal is a heuristic that also fires on legitimate timestamp-preserving")
-        print("  copies/restores. Tiers: HIGH = >=2 independent signals or 1 authoritative; MEDIUM = 1 strong")
-        print("  intrinsic; LOW = a weak/single hint.")
+        print("  copies/restores. Tiers, exactly as timestomp_verdict() decides them:")
+        print("    HIGH   — an AUTHORITATIVE corroboration: the change journal, or a hard-link sibling that")
+        print("             preserves the true birth. A count of intrinsic signals never reaches HIGH.")
+        print("    MEDIUM — CHANGE_LATE without PRE_FORMAT (created on THIS volume, metadata altered later),")
+        print("             or FUTURE (created after the volume's last metadata write).")
+        print("    INFO   — every signal present is one a timestamp-preserving copy also produces")
+        print("             (PRE_FORMAT / CHANGE_LATE / CREATE_GT_MODIFY / ROUND_TIMESTAMPS), so a copy and a")
+        print("             backdate are indistinguishable here however many of them fire.")
+        print("    LOW    — anything else.")
         print()
         if not suspects and not show_all:
             hidden = counts["MEDIUM"] + counts["LOW"] + counts["INFO"] if min_conf == "HIGH" else 0
@@ -10316,6 +10342,9 @@ _RECOVER_LABEL = {
     "recoverable_inline": "FULL FILE recoverable (resident — {n} B stored inline in the record)",
     "extent_backed":      "metadata + carve (non-resident — data is in on-disk extents; `export deleted --carve`)",
     "metadata_only":      "metadata only (non-resident — file data is NOT in this remnant)",
+    "content_zero_or_absent": ("content zero or absent (indistinguishable in the remnant) — the $DATA "
+                               "descriptor survives and declares {n} inline bytes, and that region reads "
+                               "as zeros: the file held zeros, or the deletion took the bytes"),
     "fragment_only":      "fragment only (Trash-table key/value)",
 }
 # Feature C: a non-resident deleted file whose extents live in a SEPARATE type-0x40 backing (not inline in the
@@ -10367,6 +10396,17 @@ def _deleted_recoverability(e, cs=None, tr=None):
             return ("extent_backed", _T40_CARVE_LABEL, None)
         return ("metadata_only", _RECOVER_LABEL["metadata_only"], None)
     decoded = get_resident_data_content(vd)
+    if decoded is not None and len(decoded) > 0 and not any(decoded):
+        # The descriptor survived the deletion but its inline data region did not: every declared byte is
+        # zero. Returning these as recovered content would emit bytes the remnant does not hold -- measured
+        # on lab314_main T17, where a moved-then-deleted 500 B file yielded 500 zeros labelled EXACT, and on
+        # the T16 set where 214 of 849 recovered f_*.bin were all zeros although the generator wrote 300
+        # non-zero bytes to every one of them (MD_DEL_RA_004 / E93).
+        # A genuinely zero-filled resident file is classified here too. That false negative is measured and
+        # tiny -- 1 of 4,037 live resident files on lab314_main, 1 of 33,263 on winsider -- and its cost is
+        # withholding a file of zeros whose metadata is still reported, against the alternative of asserting
+        # content that was never read. Withholding is the correct side to err on for an evidence tool.
+        return ("content_zero_or_absent", _RECOVER_LABEL["content_zero_or_absent"].format(n=len(decoded)), None)
     if decoded is not None:                         # truly resident: $DATA inline in the record
         label = _RECOVER_LABEL["recoverable_inline"].format(n=len(decoded))
         attrs = e.get("file_attrs", 0)
@@ -10538,7 +10578,7 @@ DELETED_CSV_COLUMNS = ["FileName", "IsDirectory", "RecoverySource", "RecoveredFr
 # Reliability of the RECOVERED CONTENT (not "un-overwritten"): EXACT = a resident file's full content was inside
 # the metadata remnant; BEST-EFFORT = a non-resident file carved from a surviving extent MAP (clusters may have
 # been reused — verify); NONE = metadata only.
-_RELIABILITY = {"recoverable_inline": "EXACT", "extent_backed": "BEST-EFFORT",
+_RELIABILITY = {"recoverable_inline": "EXACT", "content_zero_or_absent": "NO CONTENT", "extent_backed": "BEST-EFFORT",
                 "metadata_only": "NONE", "fragment_only": "NONE"}
 
 def _deleted_category(name):
@@ -10907,7 +10947,8 @@ def cmd_deleted(image, remaining, partition_start):
                     for name, e in deleted:
                         kind = "DIR " if e.get("is_dir", False) else "FILE"
                         _venum, _vlabel, _ = _deleted_recoverability(e, cs, tr)   # B5: header residency from the verdict, not len(vd)>84
-                        _hdr_res = "resident" if _venum == "recoverable_inline" else "non-resident"
+                        _hdr_res = ("resident" if _venum in ("recoverable_inline", "content_zero_or_absent")
+                                    else "non-resident")   # a resident record either way; only its bytes are unreadable
                         print(f"    {kind} {name}  ({_hdr_res})")
                         if "create_time" in e: print(f"      Created:  {_filetime_to_str(e['create_time'])}")
                         if "modify_time" in e: print(f"      Modified: {_filetime_to_str(e['modify_time'])}")
@@ -10977,7 +11018,8 @@ def cmd_deleted(image, remaining, partition_start):
                 for e in d_solid:
                     kind = "DIR " if e.get("is_dir") else "FILE"
                     tsane = "" if e["confidence"] == "high" else "  [one timestamp only]"
-                    _hdr_res = "resident" if _deleted_recoverability(e, cs, tr)[0] == "recoverable_inline" else "non-resident"  # B5
+                    _hdr_res = ("resident" if _deleted_recoverability(e, cs, tr)[0]
+                                in ("recoverable_inline", "content_zero_or_absent") else "non-resident")  # B5
                     print(f"    {kind} {e['name']}  ({_hdr_res}, "
                           f"{e['tag']} @ cluster {e['plcn']} off {_hx(e['page_off'])}){tsane}")
                     # Q6: which directory the row was deleted FROM (owning-table OID -> path).
@@ -11105,9 +11147,14 @@ def cmd_deleted(image, remaining, partition_start):
         if _view_verdicts or _prior_verdicts:
             _rc = lambda lst: sum(1 for v in lst if v == "recoverable_inline")
             _ec = lambda lst: sum(1 for v in lst if v == "extent_backed")
+            _zc = lambda lst: sum(1 for v in lst if v == "content_zero_or_absent")
             if _view_verdicts:
                 print(f"  DELETED files: {_rc(_view_verdicts)} of {len(_view_verdicts)} are RESIDENT with full "
                       f"content recoverable; {_ec(_view_verdicts)} are non-resident (carve-able with --carve).")
+                if _zc(_view_verdicts):
+                    print(f"    {_zc(_view_verdicts)} more have a resident record whose declared inline region "
+                          f"reads as zeros — the file held zeros, or the deletion took the bytes, and the two "
+                          f"cannot be told apart from the remnant. Metadata only; no content is written.")
             if _prior_verdicts:
                 print(f"  PRIOR versions of live files: {_rc(_prior_verdicts)} of {len(_prior_verdicts)} "
                       f"decode to a file.")
@@ -12451,10 +12498,13 @@ CMD_HELP = {
            "ReFS-native HARDLINK_MACB_MISMATCH where two names of one file have divergent Created — only the",
            "back-dated name is flagged, the sibling keeps the true birth) vs a HEURISTIC $SI-only signal",
            "(CHANGE_LATE / PRE_FORMAT / CREATE_GT_MODIFY / FUTURE) that also fires on legitimate timestamp-",
-           "preserving copies. Tiers HIGH/MEDIUM/LOW by how many independent sources agree. The `files",
-           "--timestomp` column shows only the $SI heuristic; this subcommand adds the authoritative checks.",
-           "The screen view defaults to HIGH-confidence rows; --min reveals lower tiers; CSV/JSON keep ALL",
-           "tiers unless --min is given. ROUND_TIMESTAMPS (whole-second created+modified) is a LOW-only hint."],
+           "preserving copies. HIGH requires an AUTHORITATIVE source (the journal, or a hard-link sibling) --",
+           "a count of heuristic signals never reaches it. MEDIUM is CHANGE_LATE without PRE_FORMAT, or FUTURE.",
+           "INFO means every signal present is one a timestamp-preserving copy also produces, so a copy and a",
+           "backdate cannot be told apart however many fire. The `files --timestomp` column shows only the $SI",
+           "heuristic; this subcommand adds the authoritative checks. The screen view defaults to HIGH-confidence",
+           "rows; --min reveals lower tiers; CSV/JSON keep ALL tiers unless --min is given. ROUND_TIMESTAMPS",
+           "(whole-second created AND modified) never lifts a tier on its own."],
   "opts": [("--all", "include every file, even those with no anomaly (NONE tier)"),
            ("--min LEVEL", "lowest confidence to show on screen: HIGH | MEDIUM | LOW (default HIGH; CSV/JSON "
                            "export every tier unless this is set)"),

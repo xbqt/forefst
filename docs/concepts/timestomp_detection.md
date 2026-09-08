@@ -32,6 +32,25 @@ ReFS gives the analyst three things to lean on, in increasing order of strength:
 
 The `forefst.py <image> timestomp` subcommand combines all three and ranks suspects by confidence.
 
+### Two more witnesses, when the journal is gone
+
+The journal is the anchor an anti-forensic step removes first — and `fsutil usn createjournal` discards it
+outright while looking like a resize (see [USN journal](../structures/usn_journal.md)). Two other
+structures record a time independently, and both survive that:
+
+- **The transaction log.** A `SetFileTime` writes no log record of its own, so the *act* of stomping is not
+  there. But the file's **creation** is: an MLog `CREATE` transaction carries an embedded timestamp, and a
+  creation time in `$SI` that disagrees with it is a contradiction between two structures. Measured on a
+  volume whose journal had been destroyed, this caught every backdated birth present and flagged nothing
+  else. It speaks to the **birth time only** — a forged last-write agrees with the `CREATE` record — and
+  the log is a rolling buffer, so an old enough creation has aged out of it.
+- **A stream snapshot.** A snapshot descriptor timestamps the moment it was taken, not the file
+  (see [`$SNAPSHOT`](../attributes/SNAPSHOT.md)). A creation time backdated below a snapshot of the same
+  file is impossible.
+
+Both are cross-checks an analyst runs today by reading `mlog --parse` and `snapshots` beside `timestomp`;
+folding them into the tool's own corroboration column is planned work, not current behaviour.
+
 ## Why the change time is the key intrinsic anchor
 
 A ReFS `$SI` holds four FILETIMEs, all at fixed offsets in the type-0x10 own-row's value (see
@@ -220,7 +239,10 @@ be hidden simply by moving the file afterward. See [File IDs](file_ids.md).
 The four-FILETIME `$SI` layout, the NextFileId ordinal, and the per-handle "caller supplied this time
 explicitly" tracking are confirmed in the driver (E2): `RefsComputeStandardInformationInternalFromFcb`
 builds the `$SI` fields from the FCB, `RefsMoveFile` writes the directory child-creation ordinal, and the
-driver honours an explicit `FILE_BASIC_INFORMATION.ChangeTime`. The detection itself is validated on the
+driver honours an explicit `FILE_BASIC_INFORMATION.ChangeTime`. The two journal-independent witnesses are
+**MD_TS_RA_009** (the MLog `CREATE` embedded timestamp measured against `$SI` on a controlled set whose
+journal had been destroyed) and **MD_SNAP_RA_010** (the snapshot descriptor records the snapshot moment,
+not a copy of `$SI`). The detection itself is validated on the
 raw-disk corpus (RD) against a controlled ground-truth image built by a replay log of `SET_TIMESTAMPS`
 operations that back-date creation by years on a freshly formatted volume: every HIGH-tier file has a
 provable basis (created before the volume existed and/or a journal-confirmed deliberate edit), the clean

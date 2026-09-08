@@ -1,5 +1,7 @@
 # Resident vs Non-Resident Storage
 
+> **Start here if you are new to this:** [Record placement and data residency](placement_and_residency.md) is the short explanation with a diagram and worked examples. This page is the byte-level detail behind it.
+
 The single most consequential question a ReFS recovery tool can get wrong is *where a file's bytes
 actually are*. ReFS stores file content in one of two modes, chosen per file: **resident**
 content lives **inline**, packed into the file's own row inside a directory's
@@ -157,6 +159,19 @@ attributes, the directory value's inline sub-record tree gains a level and the r
 a child page, leaving the value holding only an index node. A reader that stops at the inline table then sees
 nothing and reports "no alternate data streams" for a file that has plenty. See
 [Directory Entries](../structures/directory_entries.md).
+
+## Measured in the lab (2026-09-07)
+
+Three volumes built for the purpose — 4 KiB, 64 KiB and 4Kn clusters, all format 3.14 — settle three
+questions that the corpus could only answer by inference:
+
+- the inline ceiling is **exactly 2 KiB and fixed**: a 1,900-byte stream is inline and a 2,100-byte one
+  is extent-backed, *identically on all three cluster sizes*. It is not cluster-relative; on the 64 KiB
+  volume a 2,100-byte stream occupies a whole 64 KiB cluster;
+- the same boundary governs a **named stream** on 3.14, and a **131,073-byte ADS exists** there — so the
+  128 KiB cap is a property of format ≤ 3.10, not of ReFS;
+- the **ratchet** is visible as two 0-byte files with different residency: one grown to 3,000 bytes and
+  truncated back to 0 keeps `extents`; one that never held data is `inline`. History decides, not size.
 
 ## The forensic stakes
 

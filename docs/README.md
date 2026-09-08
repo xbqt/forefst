@@ -23,7 +23,8 @@ Reverse engineering documentation for the Resilient File System (ReFS), covering
 | [Cluster and Page Size](concepts/cluster_page_size.md) | 4 KiB vs 64 KiB clusters, page size derivation |
 | [Copy-on-Write](concepts/copy_on_write.md) | Fundamental update model and forensic implications |
 | [Checksum Architecture](concepts/checksum_architecture.md) | CRC64/SHA-256 Merkle tree, page reference sizes |
-| [Resident Storage](concepts/resident_storage.md) | Inline vs extent-based content storage |
+| [Record placement and data residency](concepts/placement_and_residency.md) | **Start here** — where a file's record is, where its bytes are, and why they are two questions |
+| [Resident Storage](concepts/resident_storage.md) | The byte-level detail behind those two axes |
 | [$STANDARD_INFORMATION](attributes/STANDARD_INFORMATION.md) | Timestamp fields and version-dependent layout |
 | [Timestomping Detection](concepts/timestomp_detection.md) | Multi-source timestamp-tamper detection ($SI change-time + USN journal + volume bound) |
 | [Attributes](concepts/attributes.md) | The ReFS attribute schemas — 12 on v3.4, 16 on v3.14 (18 distinct across all versions) |

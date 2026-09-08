@@ -1,5 +1,7 @@
 # Hard Links
 
+> A hard link splits the file's **record** out of the name row and moves **no data**: its bytes stay wherever they were, inline or in extents. The two properties are explained on [Record placement and data residency](placement_and_residency.md).
+
 A hard link is a second (or third, ...) directory name that points at one physical file. On ReFS the
 mechanism is unusual enough that a parser written for NTFS will get the link count wrong every time:
 there is **no explicit `HardLinkCount` field anywhere on disk**, and the value at
@@ -34,7 +36,7 @@ Linking a file performs three changes to its on-disk representation:
    file's bytes can stay *inside* that backing record, and for small files they usually do — the three
    names `hl1_a/b/c` in the lab corpus share a single 400-byte stream held inline. So a hard-linked file
    is commonly reported as a **split record holding inline data, with a link count above one** — not a
-   contradiction. See [Record placement and data residency](resident_storage.md).
+   contradiction. See [Record placement and data residency](placement_and_residency.md).
 
 2. **It creates one type-0x30 directory entry per name.** Each name is a fully independent row in its
    own parent directory, carrying its own filename in the key. The names need not share a parent — that
@@ -152,7 +154,7 @@ This cannot arise on **ReFS 3.4**, which has no type-0x40 backings and no index-
   `0x02`, 84-byte value) is a fingerprint of having been moved or hard-linked at some point. Read it as a
   statement about the *record*, not the data: such a file very often still holds its bytes **inline** in
   the backing record — 16,191 rows across the corpus do — so the split changes no byte of the data and is
-  not a change of data residency. See [Record placement and data residency](resident_storage.md).
+  not a change of data residency. See [Record placement and data residency](placement_and_residency.md).
 
 - **Each name carries its own MACB — a hard-link-specific tamper check.** ReFS keeps one
   [`$SI`](../attributes/STANDARD_INFORMATION.md) timestamp set *per name*, not per file: every name's
@@ -206,7 +208,7 @@ field rather than reading any `$SI` field directly.
   index-entry value carries the child ordinal (`+0x00`) and home backref (`+0x08`) the join depends on
 - [Standard Information](../attributes/STANDARD_INFORMATION.md) — the `$SI+0x70` "HardLinkCount" decoy
   and the `$SI+0x58` NextFileId ordinal that seeds the child ordinal
-- [Record placement and data residency](resident_storage.md) — why hard-linking splits the record out of the
+- [Record placement and data residency](placement_and_residency.md) — why hard-linking splits the record out of the
   name row, and why that leaves the data where it was
 - [Extent Descriptors](../structures/extent_descriptors.md) — the type-0x40 stream record each name is
   resolved to

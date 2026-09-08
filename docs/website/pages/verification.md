@@ -100,6 +100,11 @@ source repository:
   protocol, the evidence model, and a worked example following one fact from hypothesis to register.
 - **[The claim register](https://github.com/xbqt/forefst/blob/main/analysis/reference_table.csv)** — one
   row per fact: the claim, the static and raw-disk checks, and the evidence grade.
+- **[Knowledge map](https://github.com/xbqt/forefst/blob/main/docs/KNOWLEDGE_MAP.md)** — the index between
+  the two, generated from the pages and the register with nothing typed by hand: for each documentation
+  page, the findings behind it and their evidence level; for each finding, every page that cites it; and
+  the register rows no page cites yet. Useful for checking that a correction reached all of them, and for
+  seeing what is measured but not yet written up.
 - **[Audit &amp; verification](https://github.com/xbqt/forefst/blob/main/analysis/reports/audit/README.md)** —
   how the claims and tools were independently audited, with links onward to the per-claim dossiers and the
   measured proofs.

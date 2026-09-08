@@ -135,7 +135,8 @@ cares.
 | Page | What it is / why it matters |
 |------|------------------------------|
 | [Hard Links](hard_links.md) | Multi-name files: the shared FileId, and why `$SI+0x70` is a decoy counter |
-| [Resident vs Non-Resident Storage](resident_storage.md) | The inline-vs-extent threshold — why small-file content hides in the metadata tree |
+| [Record placement and data residency](placement_and_residency.md) | **Start here** — the two independent questions ReFS answers about every file, with a diagram and eight measured examples |
+| [Resident vs Non-Resident Storage](resident_storage.md) | The byte-level detail: `key_flags`, the descriptor forms, the corpus counts |
 | [Compression](compression.md) | Per-container 24H2 volume compression (not the NTFS per-file model) |
 | [Tiered Storage](tiering.md) | Fast/slow tier relocation and the heat engine |
 | [WSL / Linux Metadata](wsl_metadata.md) | The `$LX*` EAs and `LX_*` reparse tags — high-confidence evidence of WSL use |

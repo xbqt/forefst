@@ -71,8 +71,15 @@ it. When you edit a page:
   leave a "previously X" / "was mislabelled" note in the page; that history belongs in the change description,
   not the reader-facing doc.
 - Keep a body **`## Evidence`** section (which driver functions / disk measurements back the page) and a
-  **Cross-References** section (no orphan pages). Per-page provenance — status, evidence level, finding ids,
-  last-audited date — lives centrally in [`audit_dates.tsv`](audit_dates.tsv); add a row for every new page.
+  **Cross-References** section (no orphan pages). There is **no companion provenance file to update**: a
+  page's evidence is that section, its finding ids are the ids it cites, and its audit date is its git
+  history. [`KNOWLEDGE_MAP.md`](KNOWLEDGE_MAP.md) derives all of it from the pages and the claim register.
+- **Finding ids belong in the `## Evidence` section and nowhere else.** Not in the prose, not in a table
+  cell, not in a heading. The body tells the reader what is true; the Evidence section tells them what
+  backs it. This is also what makes the index reliable: the map reads a page's ids by scanning it, so an
+  id dropped into a sentence would silently become that page's "evidence" for the whole page. When a
+  finding turns out to be documented on a page that never cited it, the fix is one line added to that
+  page's Evidence section — never a marker inserted next to the sentence.
 - Use **relative** markdown links and run the link check before opening the PR.
 - One directory = one `README.md` index; add your page's row when you create it. Use
   [`KNOWLEDGE_MAP.md`](KNOWLEDGE_MAP.md) to find where a topic already lives before adding a new page.

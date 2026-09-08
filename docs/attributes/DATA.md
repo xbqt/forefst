@@ -1,5 +1,7 @@
 # $DATA
 
+> The descriptor's *form* — not the record's placement, and not the file's size — decides data residency. See [Record placement and data residency](../concepts/placement_and_residency.md).
+
 `$DATA` is a file's **default data stream** (embedded type 0x80, schema 0x180). Its bytes are stored either
 **inline** in the B+-tree row or in on-disk **extents**, and *which* is a property of the **volume format**:
 

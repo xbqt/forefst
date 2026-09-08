@@ -48,5 +48,5 @@
 
 <Prose: the driver functions (E2) and/or raw-disk measurements (RD) that back this page's claims; name the key finding IDs.>
 
-<!-- No provenance footer. Add this page's row to ../audit_dates.tsv
-     (page · status · evidence · findings · last_audited · note) — provenance lives there, not on the page. -->
+<!-- No provenance footer, and nothing to register by hand: a page's evidence is its ## Evidence
+     section, its finding ids are the ids it cites, its audit date is its git history. -->

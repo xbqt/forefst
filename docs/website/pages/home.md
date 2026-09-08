@@ -45,7 +45,7 @@ A handful of ideas explain most of what ReFS writes to disk:
   on-disk **extents**. The inline ceiling is **2 KiB** on modern volumes (format 3.11
   and later); below it, a whole small file sits inside a metadata row where a cluster carver never looks.
   On older formats main file data is never inline at all — there, only an *alternate data stream* can hide
-  in a row, up to a hard 128 KiB. See [Record placement and data residency](resident_storage.md).
+  in a row, up to a hard 128 KiB. See [Record placement and data residency](placement_and_residency.md).
 - **Checksums, integrity, and self-healing.** Every metadata page carries a checksum, and optional
   *integrity streams* checksum file data too. Core metadata is kept in **failover pairs**, so a mismatch
   is caught at mount and the good copy heals the bad one. See

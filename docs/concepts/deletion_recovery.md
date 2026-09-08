@@ -1,5 +1,7 @@
 # Deletion Recovery
 
+> What is recoverable depends on **where the bytes were**, not on where the record was: inline content is in the remnant, extent-backed content needs its map. See [Record placement and data residency](placement_and_residency.md).
+
 When a file is deleted on ReFS, the question for an analyst is not *whether* an entry was scrubbed in
 place — ReFS rarely overwrites anything — but *where the prior bytes still live and for how long*.
 Because [copy-on-write](copy_on_write.md) writes new data to new clusters and deletion is deferred to a
@@ -325,6 +327,12 @@ coverage, never asserted.
 - [Type-0x20 FileId index](../structures/reverse_index.md) — a second copy of the filename for name-fallback recovery
 
 ## Evidence
+
+A deletion can leave a file's record behind while taking its bytes: the `$DATA` descriptor still declares
+an inline stream, and the region it points at reads as zeros. So does a file that genuinely held zeros,
+and nothing in the remnant separates the two — so the tool reports its own outcome naming both, yields the
+name, size and timestamps, and writes no content either way — **MD_DEL_RA_004**, measured on a lab volume
+built for it and re-measured across the corpus.
 
 The deletion flow — `RefsDeleteFile` / `DeleteFileOnDisk` → `MsDeleteRow` →
 `MsReparentFileToTrash` → `CmsTrashTable::AddFileTable` (OID 0x0D) → background
