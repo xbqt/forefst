@@ -198,6 +198,21 @@ on a schema ID. These are not attributes — do not feed them through the attrib
 - [Extent Descriptors](../structures/extent_descriptors.md) — where a non-resident file's `$DATA` content lives
 - [WSL metadata](wsl_metadata.md) — the `$LX*` extended-attribute mapping
 
+## When the attribute set outgrows one node
+
+A file's attributes normally sit in one embedded node inside its record. When they no longer fit, that
+node becomes an **index node**: its level byte goes non-zero, and a row with an *empty key* points at a
+child page holding the rest. A parser that reads only the outer level then finds nothing and reports the
+file as having no attributes at all — confidently, and wrongly.
+
+Two NTFS names that have no ReFS structure behind them are worth stating: `$OBJECT_ID` has no schema
+slot (object identity *is* the OID, mapped by the Object Table), and `$INDEX_ROOT` is handled at
+object-create time and never persisted as a file sub-record.
+
+Inside an embedded node the key and value **overlap by construction**: `key[0:8]` is the value length as
+a little-endian u64 and `key[8:]` is the start of the value itself. It is one buffer written once, not
+two fields that happen to agree.
+
 ## Evidence
 
 The four outer key types and the ten genuine sub-record codes (with the 0x50/0x60/0xA0 non-members)
@@ -213,6 +228,8 @@ dual-marker taxonomy), **FS_SCHM_RA_005/006/007** (schemas 0x1B0–0x200), **MD_
 from the backing, not the index entry). Breadth is narrow and stated as measured: exactly one corpus
 volume carries extended attributes on split records, and on it the cached copy drops the bit for 8,141
 names, agrees for 14,207, and never sets a bit the backing lacks; the only two bits that ever differ
-between the two copies are 0x40000 and the transient Archive bit 0x20. See
+between the two copies are 0x40000 and the transient Archive bit 0x20. Also registered for statements on this page: **MD_ATTR_006**. The multi-level embedded attribute tree is **MD_ATTR_RA_020**, the key/value overlap inside an embedded node is **MD_ATTR_RA_007**, and `$OBJECT_ID`'s absence of a schema slot is **MD_ATTR_004**. See
 [how this was verified](../methodology.md) to trace these to the exact images and measurements in
 `analysis/`.
+
+The remaining field-level statements on this page are registered as **MD_ATTR_002**, **MD_ATTR_008**, **MD_ATTR_009**, **MD_ATTR_RA_004**, **MD_ATTR_RA_016** — each with its own evidence tier and witness in the claim register.

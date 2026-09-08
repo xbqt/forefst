@@ -326,6 +326,16 @@ coverage, never asserted.
 - [Parent-Child Table](../structures/parent_child_table.md) — root #4 dir edges; OID-exact ancestry for deleted directories
 - [Type-0x20 FileId index](../structures/reverse_index.md) — a second copy of the filename for name-fallback recovery
 
+## Two deletion paths leave different traces
+
+**Explorer** routes the file through `$RECYCLE.BIN`: the `$R` entry links back to the source directory,
+and a small `$I` metadata file — 188 bytes, stored inline — records the original full path and the
+deletion time. Both survive until the bin is emptied, and `forefst recyclebin` decodes them.
+
+**PowerShell `Remove-Item` does not.** It deletes permanently, bypassing the bin entirely, and shows up
+in the change journal as reason `0x80000200`. There is no `$I` to recover an original path from — which
+is why an absent recycle-bin trace is not evidence that a file was never deleted. Measured on 3.14.
+
 ## Evidence
 
 A deletion can leave a file's record behind while taking its bytes: the `$DATA` descriptor still declares
@@ -353,6 +363,8 @@ identically to the live extract path — validated on live files, and on deleted
 generator's `GFSAREPLAY` content signature at their original clusters); and the **deleted-directory grouping**
 under `$DELETED/DIR_OID_0x<oid>/` (present on 30 of the corpus's ReFS images; the name-candidate ambiguity is
 corroborated against the fsactivity generation logs, which record the `RENAME_DIR` events that leave multiple
-names per OID in slack). The survival metrics and recovery categories are RD on a 266-transaction gap analysis. OID monotonicity, no-reuse, and the 55–79% worked-volume density are RD. See
+names per OID in slack). The survival metrics and recovery categories are RD on a 266-transaction gap analysis. OID monotonicity, no-reuse, and the 55–79% worked-volume density are RD. The `$R`/`$I` structure and the 188-byte inline `$I` are **MD_DISK_RA_008**; that `Remove-Item` bypasses the bin under USN reason `0x80000200` is **MD_DEL_RA_003**. See
 [how this was verified](../methodology.md) to trace these to the exact images and measurements in
 `analysis/`.
+
+Also registered for statements on this page: **FN_PATH_001**, **MD_DEL_RA_001**.

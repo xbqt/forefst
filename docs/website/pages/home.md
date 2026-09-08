@@ -77,7 +77,7 @@ same image.
 Think of it as MFTECmd for ReFS: point it at an image and get analyst-ready output. It can:
 
 - **List every file and directory** with full metadata — MACB timestamps, sizes, attributes, owner/group
-  **SID**, hard-link names, reparse targets, alternate data streams — as a **41-column CSV**, a **Sleuthkit
+  **SID**, hard-link names, reparse targets, alternate data streams — as a **40-column CSV**, a **Sleuthkit
   body file** (for mactime / super-timelines), or **JSON**.
 - **Recover deleted files** by five independent methods (Trash table, checkpoint differencing, orphan-page
   scan, stream-snapshot reconstruction, B+-tree node-slack carving), plus **prior versions** of existing

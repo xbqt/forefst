@@ -172,6 +172,17 @@ the file as though it were the current one.
 - [Directory Entries](directory_entries.md) — non-resident file values link to type 0x40 extent rows
 - [Resident Storage](../concepts/resident_storage.md) — small files are stored inline, not in extents
 
+## Sparse files: the ratio is the signal
+
+A sparse region is **unallocated**, so the gap between a file's logical size and its allocated size is
+what identifies one. A 64 KiB file with a punched middle was measured at 65,536 logical against **8,192
+allocated** — two clusters backing a sixteen-cluster file — carrying `Archive|SparseFile`. A *fully*
+sparse file goes further: its allocated size is **0**. Both measured on format 3.14.
+
+Extraction fills the hole with zeros, which is what the volume holds there. On a sparsely-stored raw
+image those zeros are indistinguishable from a region the acquisition never captured — see the note on
+image holes in [what survives](../concepts/what_survives.md).
+
 ## Evidence
 
 The 24-byte extent entry layout (VLCN@0x00, flags@0x08, file_VCN@0x0C, padding@0x10, run_length@0x14) is
@@ -199,5 +210,5 @@ Findings: **MD_DATA_RA_001** (24-byte extent entry), **MD_DATA_RA_007** (integri
 **MD_DATA_RA_013** (inline CRC32-C element, poly 0x82f63b78), **MD_DATA_RA_014** (sparse VLCN==0 hole),
 **MD_DATA_RA_002** (single-extent shortcut retracted), **MD_DATA_RA_009** (MI $DATA sub-record),
 **MD_SNAP_RA_003** / **CT_DRNT_RA_001** (snapshot extents reuse the format), **MD_DATA_RA_011** (version-count
-field). See [how this was verified](../methodology.md) to trace these to the exact images and measurements
+field). The remaining field-level statements on this page are registered as **CT_DRNT_001**, **CT_DRNT_003**, **MD_DATA_RA_023**, **MD_DATA_RA_024** — each with its own evidence tier and witness in the claim register. The logical-versus-allocated signal is **MD_SF_RA_005**, and the `alloc_size = 0` case for a fully sparse file is **MD_SF_RA_004**. The extent-record key shape that identifies a non-inline stream's own extent sub-record — key offset `0x10`, key size `0x50` — is **MD_ADS_RA_002**. See [how this was verified](../methodology.md) to trace these to the exact images and measurements
 in `analysis/`.

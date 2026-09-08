@@ -243,7 +243,7 @@ def validate_image(path, die_fn=None):
 
 # ─── Constants ────────────────────────────────────────────────────────
 PROG = "forefst"
-VERSION = "1.10.3"
+VERSION = "1.11.0"
 # Phase 3 (4.D): directory walks default to FULL depth (no artificial cap); `--depth N` overrides. The real
 # recursion depth equals the actual directory nesting (ReFS trees are shallow — tens of levels), so this
 # constant is never the binding limit; it just means "don't truncate". main() also raises the interpreter
@@ -418,7 +418,8 @@ def timestomp_intrinsic_flags(create, modify, change, access,
     return flags
 
 # ─── timestomp verdict — ONE source for both surfaces ────────────────────────
-# The `TimestompFlags` column and the `timestomp` command each computed their own tier. They disagreed on
+# HISTORY, kept because it explains why this function exists at all. The `files` TimestompFlags column
+# (removed in v1.11.0) and the `timestomp` command each computed their own tier. They disagreed on
 # 40-55 % of flagged files (101/184, 62/151, 50/114 on three volumes): the column called
 # CHANGE_LATE|PRE_FORMAT "MEDIUM", the command called it "HIGH — two independent intrinsic signals".
 #
@@ -1499,8 +1500,11 @@ def get_resident_file_size(vd, ctx=None):
 #
 # A 0-byte file is decided by descriptor form like any other: an inline-form record that
 # happens to carry no bytes is `inline`; an extent-form one is `extents`.
+# `unallocated`, not `sparse`: the residency state says the stream's range has NO allocation behind it.
+# `sparse` already names something else here -- the FILE_ATTRIBUTE_SPARSE_FILE bit, which `--filter sparse`
+# and `specials` report -- and one word meaning two things in the same output is how a reader is misled.
 DATA_INLINE, DATA_EXTENTS, DATA_SNAPSHOT_SHARED, DATA_SPARSE, DATA_UNKNOWN = (
-    "inline", "extents", "snapshot-shared", "sparse", "unknown")
+    "inline", "extents", "snapshot-shared", "unallocated", "unknown")
 
 
 def _stream_data_form(rec, ctx=None):
@@ -1622,7 +1626,8 @@ def _t40_record_tuple(vd, ctx=None):
     # name row -- so the enumeration that reads only the name row never sees it. Appended last so every
     # existing rec[N] index is unchanged.
     _ads = detect_ads_in_resident(vd, ctx)[1]
-    return (_a, _s, _u, _j, _sid, _if, _tag, _tgt, _bfa, _inl, _form, _ads)
+    _adsst = _ads_storage_map(vd, ctx) if _ads else {}
+    return (_a, _s, _u, _j, _sid, _if, _tag, _tgt, _bfa, _inl, _form, _ads, _adsst)
 
 
 def _backing_inline_data(vd, ctx=None):
@@ -4083,6 +4088,7 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
                     if has_ads:
                         entry["has_ads"] = True
                         entry["ads_names"] = ";".join(ads_list)
+                        entry["ads_storage"] = _ads_storage_map(vd, (f, ps, cs, tr))
 
             # Snapshot count -- snapshots are likewise embedded 0xB0 sub-records in the resident (value > 84 B)
             # entry, so this resident path is complete (same corpus proof as ADS above). A non-resident file
@@ -4173,17 +4179,51 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
         rem = t40_content.get((home, fid))
         if rem is None and home and not legacy_link_join:
             rem = _home_t40(home).get(fid)   # E89: the home object was not traversed by the walk
-        if loc and loc[1] == S and loc[0] > 0:            # living here: local stream size+alloc match
-            sig = ("obj", P, fid); rec = loc
-        elif rem and rem[1] == S:                          # content at home: home stream size matches
+        # C1.4 -- ONE resolution path: the object's HOME. `file_id` is a PER-DIRECTORY ordinal, so a lookup
+        # keyed on (parent_oid, file_id) can land on a different object that merely holds that ordinal in the
+        # same directory. The home key cannot: it names the object itself.
+        #
+        # This is a SIMPLIFICATION, not a correction. Removing the local branches leaves the release golden
+        # byte-identical over the whole corpus -- they were reachable but never decisive, because an earlier
+        # branch had already won every time.
+        #
+        # An earlier checker reported that the local branch disagreed on 1,582 names. It re-implemented these
+        # branch conditions to predict this ladder's choice and OR-ed them, losing the elif precedence, so it
+        # counted branches that were reachable but never reached. The empirical diff is 0. Do not restore
+        # that figure, and note there is no erratum or register row for it: it never happened. See
+        # analysis/reports/d12_1/README.md, "a checker that modelled the tool instead of exercising it".
+        #
+        # What IS measured, by asking the driver instead of a second implementation of ours: every split name
+        # this walk resolves is listed by its resolved backing's own type-0x39 link set -- 83,521 names on
+        # the 64 corpus images that contain one (124 in scope), 0 exceptions (verify_claim.py,
+        # assert_resolved_backing_lists_the_name).
+        if legacy_link_join:
+            # Pre-1.11 ladder, kept for one release so a result can be reproduced against the old behaviour.
+            if loc and loc[1] == S and loc[0] > 0:
+                sig = ("obj", P, fid); rec = loc
+            elif rem and rem[1] == S:
+                sig = ("obj", home, fid); rec = rem
+            elif loc and loc[1] == S:
+                sig = ("obj", P, fid); rec = loc
+            elif S == 0 and rem is not None and rem[1] == 0:
+                sig = ("obj", home, fid, 0); rec = rem
+            elif S == 0 and loc is not None and loc[1] == 0:
+                sig = ("obj", P, fid, 0); rec = loc
+            else:
+                _lk = (P, (e.get("name", "") or "").lower())
+                if rem is not None and _lk in t40_links.get((home, fid), ()):
+                    sig = ("obj", home, fid); rec = rem
+                elif loc is not None and _lk in t40_links.get((P, fid), ()):
+                    sig = ("obj", P, fid); rec = loc
+                else:
+                    sig = ("solo", e["path"], i); rec = None
+        elif rem and rem[1] == S:
+            # Exactly the old branch-2 predicate. The old ladder's separate `S == 0 and rem[1] == 0` branch
+            # was unreachable -- this one already matches when both are zero -- so reproducing it would
+            # CHANGE behaviour rather than preserve it: an `or S == 0` here regrouped two winsider names
+            # whose home backing has a non-zero size, moving the hard-link census by 2.
             sig = ("obj", home, fid); rec = rem
-        elif loc and loc[1] == S:                          # local size matches (alloc 0 edge)
-            sig = ("obj", P, fid); rec = loc
-        elif S == 0 and rem is not None and rem[1] == 0:   # empty file: canonical empty home stream
-            sig = ("obj", home, fid, 0); rec = rem
-        elif S == 0 and loc is not None and loc[1] == 0:
-            sig = ("obj", P, fid, 0); rec = loc
-        else:                                              # no size-matching stream: try the 0x39 fallback
+        else:                                              # no size-matching home stream: 0x39 fallback
             # F-1 hardening: a STALE `value+0x38` (e.g. 0 on a non-primary hard-link name — the SplashScreen
             # case) defeats the size-match above. Fall back to the object's authoritative name list: if the
             # home- (or local-) owned (owner, file_id) backing's embedded type-0x39 back-pointers name THIS
@@ -4193,8 +4233,6 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
             _lk = (P, (e.get("name", "") or "").lower())
             if rem is not None and _lk in t40_links.get((home, fid), ()):
                 sig = ("obj", home, fid); rec = rem
-            elif loc is not None and _lk in t40_links.get((P, fid), ()):
-                sig = ("obj", P, fid); rec = loc
             else:                                          # not a confident member -> solo, count 1
                 sig = ("solo", e["path"], i); rec = None
         # Per-file USN (#327): the file's LastUsn is in its OWN resolved backing record (val+0x68 =
@@ -4233,6 +4271,8 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
             if len(rec) >= 12 and rec[11] and not e.get("ads_names"):
                 e["has_ads"] = True
                 e["ads_names"] = ";".join(rec[11])
+                if len(rec) >= 13 and rec[12]:
+                    e["ads_storage"] = rec[12]
             # E82: the resolved backing keeps this file's data INLINE, so the current $DATA stream is
             # resident even though the record was split out of the name row.
             if len(rec) >= 10 and rec[9]:
@@ -4322,72 +4362,12 @@ def _volume_times(f, ps, cs, tr, obj_map):
         pass
     return (0, 0)
 
-def annotate_timestomp(results, f, ps, cs, tr, obj_map, margin=TS_MARGIN_100NS):
-    """Attach timestamp-anomaly flags to each non-directory record, in place.
+# `annotate_timestomp` lived here. It computed a per-row tier for the `files` TimestompFlags column,
+# using the SAME verdict function as the `timestomp` subcommand but without the change journal --
+# so the column could only ever carry the weaker half of the answer, and a reader who saw it in a
+# listing had no way to know that. v1.11.0 removes the column and the flag; timestamp-anomaly
+# information comes from `timestomp` alone, which reads the journal and states its corroboration.
 
-    The column used to carry only the four intrinsic `$SI` signals — the weakest evidence the tool has. Those
-    fire on ordinary creation-time-preserving copies as readily as on tampering (on one corpus volume 576 files
-    are flagged and only 2 have real evidence), so a reader could not tell a lead from a finding.
-
-    Two signals are added here, both free because the walk has already computed what they need:
-
-    * **HARDLINK_MACB_MISMATCH** — AUTHORITATIVE, and specific to ReFS: `$SI` is stored per NAME, so a
-      name-scoped SetFileTime rewrites only the opened name while a sibling hard-link keeps the true birth.
-      Two names of one object disagreeing on Created is structural proof, independent of any journal. Only the
-      back-dated name is flagged; the sibling holding the latest (authentic) Created stays clean.
-    * **ROUND_TIMESTAMPS** — created AND modified both whole-second, which a tool setting a date tends to
-      produce. Weak alone (archive extraction does it too), so it never raises the tier by itself.
-
-    Each flagged record also carries a tier: HIGH with an authoritative signal, else MEDIUM for a strong
-    intrinsic one, else LOW. The USN-journal signals stay in the `timestomp` command, which reads the
-    journal; this runs inside a plain `files` walk and must not."""
-    vc, vm = _volume_times(f, ps, cs, tr, obj_map)
-    groups = {}
-    for r in results:
-        if r.get("is_dir"):
-            continue
-        key = (r.get("home_oid") or 0, r.get("file_id") or 0)
-        if key != (0, 0) and (r.get("hard_link_count", 1) or 1) > 1:
-            groups.setdefault(key, []).append(r)
-    hl_backdated = set()
-    for _key, members in groups.items():
-        cts = [m.get("create_time", 0) for m in members if _ft_valid(m.get("create_time", 0))]
-        if len(cts) < 2 or max(cts) - min(cts) <= margin:
-            continue
-        authentic = max(cts)                      # the LATEST sibling birth is the authentic one
-        for m in members:
-            if _ft_valid(m.get("create_time", 0)) and m["create_time"] < authentic - margin:
-                hl_backdated.add(id(m))
-    for r in results:
-        if r.get("is_dir"):
-            continue
-        flags = timestomp_intrinsic_flags(
-            r.get("create_time", 0), r.get("modify_time", 0),
-            r.get("change_time", 0), r.get("access_time", 0),
-            vc, vm, margin)
-        if id(r) in hl_backdated:
-            flags.insert(0, "HARDLINK_MACB_MISMATCH")
-        _c, _m = r.get("create_time", 0), r.get("modify_time", 0)
-        if _ft_valid(_c) and _ft_valid(_m) and _c % 10000000 == 0 and _m % 10000000 == 0:
-            flags.append("ROUND_TIMESTAMPS")
-        # The column has no journal (the walk does not read $J), so usn_conf is False here and its verdict
-        # is the command's minus journal corroboration -- never higher. Same function, so the two surfaces
-        # cannot drift apart again.
-        tier, sig = timestomp_verdict(flags, usn_conf=False,
-                                      hl_conf="HARDLINK_MACB_MISMATCH" in flags, round_ts=False)
-        if tier != "NONE":
-            r["timestomp_flags"] = tier + ":" + "|".join(sig)
-    return results
-
-# ─── Output formatters ───────────────────────────────────────────────
-# Column order is defined once in CSV_COLUMNS and emitted via a per-row dict (_csv_fields), so header and row
-# can never drift and positional indices are NOT load-bearing — reference columns by NAME. RecoveredChild
-# carries the recovered type-0x30 child name of a deleted-directory orphan (find_orphan_objects/chkp-diff/cow);
-# empty for all non-orphan rows.
-# Identity columns lead: OID (0 for files — ReFS files have no own OID), FileRef (the stable 128-bit file
-# reference = HomeOid:FileId, == the USN FileReferenceNumber), then HomeOid (owner dir = the FileId "home",
-# constant across a file's hard-link names) and FileId (per-home ordinal), then the name and its namespace
-# parent (ParentOID/ParentPath — differ from HomeOid for hard-links & recycle-bin/deleted entries), then
 def _record_placement(r):
     """RECORD PLACEMENT (E87): is the object's record embedded in this name row, or split out
     into a type-0x40 backing? A move or a hard link forces the split -- and moves no data.
@@ -4427,7 +4407,7 @@ CSV_COLUMNS = [
     "IsEncrypted", "IsCompressed", "HasIntegrity", "HasEA",
     "HardLinkCount", "HardLinkNames", "SnapshotCount", "SnapshotNames",
     "ReparseTag", "ReparseTarget", "IsSparse", "AllocatedSize",
-    "InternalFlags", "IsMoved", "TimestompFlags",
+    "InternalFlags", "IsMoved",
     # P6 (2026-08-16): reordered + renamed (HomeOid→HomeOID, FileId→FileID, HasAds→HasADS, AdsNames→ADSNames);
     # NEW CreationDir (resolved HomeOID path), DACLSummary, IsMoved; the 3 recovery columns (IsDeleted/
     # DeletionSource/RecoveredChild) were dropped from `files` (always blank without deleted-recovery — that
@@ -4481,9 +4461,11 @@ def _csv_fields(r, sd_map, version_str, oid2path=None):
     _home = r.get("home_oid") or 0
     creation_dir = (oid2path.get(_home, "") if (oid2path and _home) else "")
     return {
-        # ONE identity column: a directory has an OID and no FileRef; a file has a FileRef and no OID — the two
-        # were never populated together. The journal agrees: a directory's own reference is `OID:0x0`.
-        "ObjectRef": (f"0x{oid:x}" if oid else _file_ref(r)),
+        # ONE identity column, in ONE format: `<home>:<ordinal>`. A directory is its own home with ordinal
+        # 0 -- which is exactly what the change journal writes for a directory's self-reference -- so it
+        # renders `0x600:0x0`, not a bare `0x600`. Before this, a directory row and a file row carried
+        # different shapes in the same column and a consumer had to branch on which it was looking at.
+        "ObjectRef": (f"0x{oid:x}:0x0" if oid else _file_ref(r)),
         "FullPath": _full_path(r),
         "FileName": r["name"],
         "Extension": ext_from_name(r["name"]),
@@ -4533,7 +4515,6 @@ def _csv_fields(r, sd_map, version_str, oid2path=None):
         "IsMoved": _is_moved(r),
         # Named "informational" in the header itself: the intrinsic $SI signals fire on ordinary
         # creation-time-preserving copies as often as on tampering, so the column is a lead, not a finding.
-        "TimestompFlags": r.get("timestomp_flags", ""),
     }
 
 def _build_oid2path(results):
@@ -4674,7 +4655,6 @@ def _build_record(r, sd_map, version_str, oid2path=None):
         "hard_link_names": r.get("hard_link_names") or None,
         "snapshot_count": r.get("snapshot_count", 0) if r.get("snapshot_count", 0) > 0 else None,
         "snapshot_names": (r.get("snapshot_names") or None) if r.get("snapshot_count", 0) > 0 else None,
-        "timestomp_flags": r.get("timestomp_flags", "") or None,
         "group_sid": _sid_display_or_none(group_sid),
         "dacl_summary": dacl_summary or None,
         "allocated_size": r.get("allocated_size"),
@@ -5338,7 +5318,7 @@ def _print_oid_detail(detail, path=None, sd_map=None):
     print("=" * w)
     print(f"Directory Detail: {path or detail['oid']}")
     print("=" * w)
-    print(f"  ObjectRef:          {detail['oid']}   (this object's own OID)")
+    print(f"  ObjectRef:          {detail['oid']}:0x0   (a directory is its own home, ordinal 0)")
     if path:
         print(f"  Path:               {path}")
     print(f"  Created:            {_si('create_time')}")
@@ -5453,7 +5433,7 @@ def _print_file_detail(r, sd_map, version_str, raw_value=None, oid2path=None):
     # a FileRef; they were never both populated.
     _fref = _file_ref(r)
     if oid:
-        print(f"  ObjectRef:          0x{oid:x}   (this object's own OID)")
+        print(f"  ObjectRef:          0x{oid:x}:0x0   (a directory is its own home, ordinal 0)")
     elif _fref:
         print(f"  ObjectRef:          {_fref}   (FileRef = HomeOID:FileID, the directory the file was CREATED in)")
     else:
@@ -5496,8 +5476,6 @@ def _print_file_detail(r, sd_map, version_str, raw_value=None, oid2path=None):
     print(f"  File attributes:    0x{fa:08x} ({attrs_to_str(fa)})")
     if r.get("internal_flags"):
         print(f"  Internal flags:     0x{r['internal_flags']:02x}")
-    if r.get("timestomp_flags"):
-        print(f"  Timestomp flags:    {r['timestomp_flags']}   (informational — corroborate with `timestomp`)")
     print(f"  Security ID:        {sec if sec else ''}")
     print(f"  Owner SID:          {_sid_display(owner)}")
     print(f"  Group SID:          {_sid_display(group)}")
@@ -5507,9 +5485,13 @@ def _print_file_detail(r, sd_map, version_str, raw_value=None, oid2path=None):
     if r.get("has_ads"):
         _adsn = [n for n in str(r.get("ads_names", "")).split(";") if n]
         _pp = r.get("path") or r.get("name")
+        _adsst = r.get("ads_storage") or {}
         print(f"  Alternate streams:  {'; '.join(_adsn)}")
         for _nm in _adsn:
-            print(f"                        read one:  export ads \"{_pp}:{_nm}\"")
+            # Say where each stream's bytes are. An ADS at or above 2 KiB is extent-backed, and a name on
+            # its own reads as though the content were in the record.
+            print(f"                        {_nm} — {_adsst.get(_nm, 'unknown')}"
+                  f"   ·  read it:  export ads \"{_pp}:{_nm}\"")
     flags = [n for n, k in (("Encrypted", "is_encrypted"), ("Compressed", "is_compressed"),
                             ("IntegrityStream", "has_integrity")) if r.get(k)]
     if r.get("file_attrs", 0) & 0x200:            # FILE_ATTRIBUTE_SPARSE_FILE — matches files.IsSparse
@@ -5531,8 +5513,6 @@ def _print_file_detail(r, sd_map, version_str, raw_value=None, oid2path=None):
         print(f"  Snapshot count:     {r['snapshot_count']}   (preview: snapshots --file {r['name']} --show · extract: export snapshots DIR --file {r['name']})")
         if r.get("snapshot_names"):
             print(f"  Snapshot names:     {r['snapshot_names']}")
-    if r.get("timestomp_flags"):
-        print(f"  Timestomp flags:    {r['timestomp_flags']}")
     ifl = internal_flags_str(r.get("internal_flags", 0))
     if ifl:
         print(f"  Internal flags:     {ifl}")
@@ -7163,6 +7143,24 @@ def _read_vlcn_extents(f, ps_off, cs, tr, exts, size):
             buf[off:off + cs] = f.read(cs)
     return bytes(buf[:size])
 
+def _ads_storage_map(vd, ctx=None):
+    """{stream name: residency} for one record's named streams, from the SAME parser `export ads` uses.
+
+    An ADS is not always inline. Below 2 KiB it usually is; at or above it the bytes live in a type-0x0
+    extent record and the name row holds only the descriptor (E61). Reporting a stream without saying which
+    invites the reader to assume the content is in the record -- so `details` and `specials ads` print it.
+    """
+    out = {}
+    try:
+        for a in _parse_ads_from_value(vd, ctx):
+            out[a["name"]] = a.get("storage") or "unknown"
+    except Exception as _e:
+        # Counted, not swallowed. A stream whose residency could not be read is a gap in the evidence and
+        # the reader is told; `pass` here would report the stream as though its storage were simply unknown.
+        _skip_note("ADS residency", "one record", _e)
+    return out
+
+
 def _parse_ads_from_value(vd, ctx=None):
     """Extract Alternate Data Stream entries (name + inline content) from a resident directory-entry value.
 
@@ -8037,9 +8035,10 @@ def cmd_timestomp(image, remaining, partition_start):
             round_ts = (_ft_valid(ct) and ct % 10_000_000 == 0 and _ft_valid(mt) and mt % 10_000_000 == 0)
             if round_ts:
                 evidence.append("ROUND_TIMESTAMPS")
-            # Single source (timestomp_verdict) -- the same call the TimestompFlags column makes, with the
-            # journal evidence this command additionally has. The old local ladder tiered
-            # CHANGE_LATE+PRE_FORMAT as HIGH on a false independence premise; see timestomp_verdict.
+            # Single source (timestomp_verdict). This is now the ONLY surface that tiers a timestamp
+            # anomaly: v1.11.0 removed the `files` TimestompFlags column, which called the same function
+            # without the journal and so could only ever report the weaker half. The old local ladder here
+            # tiered CHANGE_LATE+PRE_FORMAT as HIGH on a false independence premise; see timestomp_verdict.
             tier, evidence = timestomp_verdict(evidence, usn_conf=usn_conf, hl_conf=hl_conf,
                                                round_ts=round_ts)
             return tier, evidence
@@ -10078,9 +10077,14 @@ def _specials_print_type(typ, files):
         print("  (none)")
         return 0
     if typ == "ads":
-        print(f"  {'STREAMS':<28} HOST FILE")
+        # One row per STREAM, not per host, and each says where its bytes are: an ADS at or above 2 KiB is
+        # extent-backed, and printing only the name invites the reader to assume the content is inline.
+        print(f"  {'STREAM':<26} {'RESIDENCY':<14} HOST FILE")
         for r in rows:
-            print(f"    {(r.get('ads_names') or ''):<26} {_specials_path(r)}")
+            st = r.get("ads_storage") or {}
+            for nm in (r.get("ads_names") or "").split(";"):
+                if nm:
+                    print(f"    {nm:<24} {st.get(nm, 'unknown'):<14} {_specials_path(r)}")
         print("\n  Extract one:  forefst IMG export ads \"<file>:<stream>\"")
     elif typ in ("reparse", "wsl"):
         print(f"  {'TAG':<26} {'TARGET':<40} PATH")
@@ -11992,7 +11996,7 @@ def cmd_dataruns(image, remaining, partition_start):
         if total_shared:
             print(f"    Shared with a snapshot: {total_shared}")
         if total_sparse:
-            print(f"    Sparse (never written): {total_sparse}")
+            print(f"    Unallocated (never written): {total_sparse}")
         print()
 
         print("=" * 78)
@@ -12012,7 +12016,7 @@ def cmd_dataruns(image, remaining, partition_start):
                           f"are owned by the snapshot this stream still shares (record is {_place})")
             elif _res == DATA_SPARSE:
                 if verbose:
-                    print(f"  SPARSE    {info['path']}")
+                    print(f"  UNALLOC   {info['path']}")
                     print(f"            size={info.get('file_size', 0)} — never written; no allocation and "
                           f"no snapshot to share (record is {_place})")
             elif _res == DATA_INLINE:
@@ -12347,7 +12351,6 @@ CMD_HELP = {
            ("--filter CATEGORY", "keep only one category: reparse, encrypted, compressed, integrity, ea,"),
            ("", "ads, wsl, sparse, snapshot, directory, resident, hardlink"),
            ("--cow-before IMAGE", "recover prior CoW versions by diffing against an earlier image"),
-           ("--no-timestomp", "omit the TimestompFlags column (computed by default)"),
            ("", "flags read TIER:SIGNAL — HIGH = authoritative (a hard-link sibling keeps the true"),
            ("", "birth); MEDIUM/LOW are $SI heuristics that also fire on timestamp-preserving copies"),
            ("--depth N", "cap directory recursion depth (default: full)"),
@@ -13025,14 +13028,11 @@ def main():
                     help="search: treat PATTERN as a regular expression")
     ap.add_argument("--filter", default=None, metavar="CATEGORY",
                     help="files: subset by attribute category — " + "/".join(FILE_FILTERS))
-    ap.add_argument("--timestomp", dest="timestomp", action="store_true", default=True,
-                    help=argparse.SUPPRESS)      # now the default; kept so existing commands keep working
     ap.add_argument("--legacy-link-join", action="store_true",
-                    help="resolve split names only against backings the walk traversed "
-                         "(pre-E89 behaviour, one release)")
-    ap.add_argument("--no-timestomp", dest="timestomp", action="store_false",
-                    help="files: omit the TimestompFlags column (it is computed by default; the cost is "
-                         "negligible, but the intrinsic signals also fire on timestamp-preserving copies)")
+                    help="restore the pre-1.11 name→record resolution: the six-branch ladder that tried the "
+                         "local (parent, file_id) key first, and no on-demand home lookup. Kept for one "
+                         "release so an earlier result can be reproduced; it resolves the same records on "
+                         "every corpus image")
     ap.add_argument("--depth", type=int, default=DEFAULT_DEPTH, help="Max directory recursion depth (default: full)")
     ap.add_argument("--partition-start", type=lambda x: int(x, 0), default=None,
                     help="Override partition start offset in bytes")
@@ -13383,8 +13383,6 @@ def main():
     log(f"[{PROG}] Walking directory tree...")
     results = walk_directory_tree(f, ps, cs, tr, obj_map, 0x600, args.depth,
                                   True, trash_set)
-    if args.timestomp:
-        annotate_timestomp(results, f, ps, cs, tr, obj_map)
     ndirs = sum(1 for r in results if r["is_dir"])
     nfiles = sum(1 for r in results if not r["is_dir"])
     nresident = sum(1 for r in results if not r["is_dir"] and r.get("is_resident"))

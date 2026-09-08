@@ -173,7 +173,7 @@ files rather than roughly 115,000.
 deliberately set date but are **not proof**: VirtIO/QEMU driver packages and archive extraction also write
 whole-second times, so the signal never lifts another tier's verdict.
 
-The same four tiers appear in the `TimestompFlags` column of `files` and in the `timestomp` command, which
+The four tiers are assigned in one place, by the `timestomp` command, which
 share one function — see the [tool reference](../tools/forefst.md) for the command-line surface and
 `--min TIER` filtering. The column reaches a tier no higher than the command, because the listing does not
 read the journal.
@@ -197,13 +197,16 @@ Two tempting shortcuts do not hold up and should not be treated as primary signa
 
 ## How the tool is wired
 
-The two parts of the detector live in different places for a reason. The lister `forefst.py` defines the
-shared `timestomp_intrinsic_flags()` helper, which computes only the `$SI`-intrinsic signals
-(`CHANGE_LATE`, `PRE_FORMAT`, `CREATE_GT_MODIFY`, `FUTURE`) without touching the journal — invoking the
-lister attaches these by default as a per-row `TimestompFlags` column (CSV) or `timestomp_flags`
-field (JSON). The full cross-source verdict, which loads the [USN journal](../structures/usn_journal.md)
-and adds the `BASIC_INFO_CHANGE` and create-mismatch signals, lives in
-`forefst.py <image> timestomp`, which imports the same helper so the intrinsic logic is identical:
+The detector has two parts, but **one surface**. `timestomp_intrinsic_flags()` computes the `$SI`-intrinsic
+signals (`CHANGE_LATE`, `PRE_FORMAT`, `CREATE_GT_MODIFY`, `FUTURE`) without touching the journal, and
+`timestomp_verdict()` turns signals into a tier. Both are reached only through
+`forefst.py <image> timestomp`, which loads the [USN journal](../structures/usn_journal.md) and adds the
+`BASIC_INFO_CHANGE` and create-mismatch signals before deciding:
+
+Earlier releases also attached the intrinsic half to every `files` row as a `TimestompFlags` column. That
+column was removed, because a listing cannot read the journal: it could only ever carry the half of the
+answer that a timestamp-preserving copy also produces, while sitting in a column that looked like a
+verdict. Timestamp-anomaly information now comes from this subcommand alone.
 
 ```sh
 forefst.py <image> timestomp                # flagged files, ranked by confidence
@@ -234,6 +237,16 @@ be hidden simply by moving the file afterward. See [File IDs](file_ids.md).
 - [Copy-on-Write](copy_on_write.md) — why a content-preserving copy can keep an old creation time and trip the intrinsic signals
 - [What Survives](what_survives.md) — the format-time immutables that fix the volume creation floor
 
+## Two things that do not help
+
+**SetMace and tools like it do not work on ReFS.** They edit `$MFT` records, and ReFS has no `$MFT`.
+A stomp on ReFS goes through the ordinary Windows API, which is why the change time is left behind.
+
+**A write to a named stream moves the parent file's times.** An ADS write updates the host file's
+LastWrite *and* LastAccess, so a file whose content never changed can still carry a fresh modification
+time. Measured on format 3.14. Before reading a modification time as evidence of a content change,
+check whether the file has streams.
+
 ## Evidence
 
 The four-FILETIME `$SI` layout, the NextFileId ordinal, and the per-handle "caller supplied this time
@@ -252,5 +265,5 @@ journal's standalone `BASIC_INFO_CHANGE` records sit on the timestomp image at t
 while `$SI` shows the forged time. The per-name MACB behind `HARDLINK_MACB_MISMATCH` is a documented
 correction (RD): `$SI` is stored per name entry (per hard link), not per inode, so a name-scoped stomp on
 one of two hard links leaves the sibling name at the true birth — measured directly on a two-name file
-where the opened name reads a back-dated Created and its sibling reads the real creation moment. See [how this was verified](../methodology.md) to
+where the opened name reads a back-dated Created and its sibling reads the real creation moment. Also registered for statements on this page: **MD_TS_RA_007**. The controlled-set calibration — eight files with one known cause each, six flagged and all six at INFO — is **MD_TS_RA_008**; that an ADS write updates the parent's LastWrite and LastAccess is **MD_TS_RA_003**; that `$MFT`-editing tools cannot work here is **MD_MISC_001**. See [how this was verified](../methodology.md) to
 trace these to the exact images and measurements in `analysis/`.

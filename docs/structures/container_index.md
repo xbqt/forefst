@@ -47,6 +47,10 @@ empty-on-disk result are raw-disk verified across the corpus (RD) and corroborat
 `CmsVolumeContainer::InitializeIndex` (with the salvage-path twin `CsalvVolumeContainer::InitializeIndex`)
 builds the index, and the `CmsContainerRangeMap` class manages the in-memory container ranges it is
 derived from; the table name also appears as a binary string literal (E1). The 0-row state was
-re-confirmed by reading CHKP root #10 directly on v3.4 and v3.14 images. See
+re-confirmed by reading CHKP root #10 directly on v3.4 and v3.14 images — the root-index identity and
+its presence on both formats are **FS_CHKP_019** and **CT_CNTX_001**, both raw-disk confirmed on 3.4 and
+3.14. See
 [how this was verified](../methodology.md) to trace these to the exact images and measurements in
 `analysis/`.
+
+Also registered for statements on this page: **GN_CROT_SA_001**.

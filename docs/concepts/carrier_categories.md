@@ -246,3 +246,5 @@ identically after clean unmount), **FS_DEL_RA_005** (node-slack deleted-name rec
 counts by version). See
 [how this was verified](../methodology.md) to trace these to the exact images and measurements in
 `analysis/`.
+
+Also registered for statements on this page: **AP_CHJN_003**.

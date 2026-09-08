@@ -180,3 +180,5 @@ to identical root-pointer lists on cleanly-unmounted and corrupted-but-remountab
 refcount-≥2 / unreferenced / reallocated split is measured on real images. See
 [how this was verified](../methodology.md) to trace these to the exact images and measurements in
 `analysis/`.
+
+Also registered for statements on this page: **GN_FOPS_SA_002**.

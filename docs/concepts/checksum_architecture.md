@@ -315,5 +315,5 @@ SUPB/CHKP self-checksum's cluster-size-dependent rule (CRC32-C/4B · CRC64/8B ·
 validation, and the self-heal are E2 from `ComputeOrVerifySelfChecksumBlock` / `ValidateSuperBlock` /
 `ChooseCheckpointRecord` and RD-proven by recomputation across all cluster sizes (**FS_SUPB_001, FS_SUPB_007, FS_CHKP_005, FS_SUPB_005, FS_SUPB_RA_003**). The MLog
 +0x04 field is a format magic, not a CRC. The verification class is `CmsChecksum` on v3.14, not
-`CmsCrc64` — that class is v3.4-only. See [how this was verified](../methodology.md)
+`CmsCrc64` — that class is v3.4-only. Also registered for statements on this page: **FS_SUPB_RA_002**. See [how this was verified](../methodology.md)
 to trace these to the exact images and measurements in `analysis/`.

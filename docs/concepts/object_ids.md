@@ -121,3 +121,5 @@ difference is from the decompiled driver (E2). That a directory keeps its OID ac
 disk (RD): in a journal-rich image, 93 recorded cross-parent directory moves left the directory's own
 identifier unchanged, with only the parent reference changing. The Object Table value-format split (legacy
 200/208 B vs compact 80/88 B) is disk-decoded (RD).
+
+Also registered for statements on this page: **FS_OTBL_SA_002**.

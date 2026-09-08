@@ -245,3 +245,5 @@ linear scan position, the USN from the record body. Findings:
 **MD_SI_RA_013**, **MD_SI_RA_015**, **FS_OTBL_005**. See
 [how this was verified](../methodology.md) to trace these to the exact images and measurements in
 `analysis/`.
+
+The remaining field-level statements on this page are registered as **AP_CHJN_002**, **AP_CHJN_004**, **GN_ARCH_RA_002**, **MD_EFS_RA_001**, **MD_EFS_RA_002**, **MD_LK_RA_003**, **MD_LK_RA_004**, **MD_SF_RA_002**, **MD_USN_RA_007** — each with its own evidence tier and witness in the claim register.

@@ -42,7 +42,7 @@ forefst.py disk.raw security --audit                  # tamper-check security de
 
 ### `files` — list files and directories
 
-Walks the directory B+-tree from the root object (OID `0x600`) and emits one enriched row per file/directory. Default output is the 41-column CSV described [below](#csv-output-fields).
+Walks the directory B+-tree from the root object (OID `0x600`) and emits one enriched row per file/directory. Default output is the 40-column CSV described [below](#csv-output-fields).
 
 | Option | Description |
 |--------|-------------|
@@ -51,7 +51,6 @@ Walks the directory B+-tree from the root object (OID `0x600`) and emits one enr
 | `-o, --output FILE` | alias for `--csv FILE` (and the `--body` target) |
 | `--filter CATEGORY` | keep only one [attribute category](#files---filter-categories) |
 | `--cow-before IMAGE` | recover prior CoW versions by diffing against an earlier image |
-| `--no-timestomp` | leave the `TimestompFlags` column **blank** rather than computing it (it is computed by default). The column stays in place, so the schema does not change with the flag |
 | `--csv-safe` | prefix any CSV cell that starts with `=`, `+`, `-` or `@` with a single quote, so a spreadsheet treats it as text (see the warning below). **Off by default** — it alters the reported name |
 | `-q, --quiet` | silence the progress lines on stderr |
 | `--depth N` | max directory recursion depth (default: the full tree) |
@@ -555,6 +554,7 @@ and `record=embedded|split`.
 | `EXTENT` | the bytes are in on-disk extents; the runs follow |
 | `INLINE` | the bytes are stored in the record itself — no clusters |
 | `SHARED` | the stream owns **no allocation**: its bytes are still the snapshot's. Not inline, and not this stream's clusters |
+| `UNALLOC` | the stream owns no allocation and has no snapshot to share — nothing was ever written there |
 | `NOEXTENT` | extent-backed, but the map did not decode (may live in a remote object) |
 
 An embedded record is frequently extent-backed — placement does not imply residency — so a file listed as
@@ -576,16 +576,16 @@ forefst.py disk.raw dataruns --oid 0x705 -v            # scope to one subtree
 
 ## CSV Output Fields
 
-The `files` CSV has **41 columns**, one row per file/directory, in this order (matching `CSV_COLUMNS` in `forefst.py`):
+The `files` CSV has **40 columns**, one row per file/directory, in this order (matching `CSV_COLUMNS` in `forefst.py`):
 
 > **These 41 header names are frozen for the whole 1.10 line.** Every header is a plain identifier — no
-> slash, space or bracket — so a consumer can key on it (`df["TimestompFlags"]`, a Timeline Explorer
+> slash, space or bracket — so a consumer can key on it (`df["HomeOID"]`, a Timeline Explorer
 > column filter). **No header will be renamed, added, removed or reordered in any 1.10.x release**, so a
 > script written against this table stays correct for the line.
 >
 > Coming from **v1.9**, exactly one name changed: its `OID` and `FileRef` columns are now the single
 > `ObjectRef`. `RecordPlacement` and `DataResidency` are new. Every other v1.9 name is unchanged,
-> `HomeOID` and `TimestompFlags` included. The `--json` output is unaffected and always has been — it
+> `HomeOID` included. The `--json` output is unaffected and always has been — it
 > uses its own snake_case keys (`id`, `oid`, `file_ref`, …), not these names.
 
 | # | Column | Description |
@@ -613,7 +613,7 @@ The `files` CSV has **41 columns**, one row per file/directory, in this order (m
 | 21 | HasADS | alternate data stream present |
 | 22 | ADSNames | names of detected ADS |
 | 23 | RecordPlacement | `embedded` when the file's record sits inside its name row, `split` when it lives in its own type-0x40 backing record. **A move or a hard link forces the split** — and moves no data. Blank for directories |
-| 24 | DataResidency | where the current `$DATA` bytes actually are: `inline` (in the record), `extents` (on disk), `snapshot-shared` (the live stream owns no allocation; its bytes are the latest snapshot's, and `extract` still recovers them) or `sparse` (owns no allocation and has no snapshot — nothing was ever written). Blank for directories |
+| 24 | DataResidency | where the current `$DATA` bytes actually are: `inline` (in the record), `extents` (on disk), `snapshot-shared` (the live stream owns no allocation; its bytes are the latest snapshot's, and `extract` still recovers them) or `unallocated` (owns no allocation and has no snapshot — nothing was ever written there). Blank for directories |
 | 25 | IsResident | **Deprecated alias**, kept for one release: `True` exactly when `DataResidency` is `inline`. Prefer `DataResidency`, which distinguishes the four cases this boolean collapses |
 | 26 | IsDirectory | `True` if the entry is a directory |
 | 27 | IsEncrypted | EFS encryption flag |
@@ -626,18 +626,17 @@ The `files` CSV has **41 columns**, one row per file/directory, in this order (m
 | 34 | SnapshotNames | `;`-joined snapshot version labels (e.g. `v3;v2;v1`) |
 | 35 | ReparseTag | `IO_REPARSE_TAG_* (0xTAG)` for reparse points |
 | 36 | ReparseTarget | symlink/junction target |
-| 37 | IsSparse | `FILE_ATTRIBUTE_SPARSE_FILE` (0x200) set — corroborated by AllocatedSize < FileSize. Distinct from `DataResidency = sparse`, which is derived from the `$DATA` descriptor (extent form owning no allocation and no snapshot) rather than from the attribute bit. The two are independent readings and agree on the corpus |
+| 37 | IsSparse | `FILE_ATTRIBUTE_SPARSE_FILE` (0x200) set — corroborated by AllocatedSize < FileSize. Distinct from `DataResidency = unallocated`, which is derived from the `$DATA` descriptor (extent form owning no allocation and no snapshot) rather than from the attribute bit. The two are independent readings and agree on the corpus |
 | 38 | AllocatedSize | on-disk allocated size (blank when unresolved) |
 | 39 | InternalFlags | `$SI` internal flags (e.g. `DeleteDisposition`); blank unless a confidently-named bit is set |
 | 40 | IsMoved | `True` when the file currently sits **outside its creation directory** (CreationDirOID ≠ ParentOID with a single name) — a genuine move, as distinct from a hard link into another directory. A moved file may still report `IsResident True`: the move relocates the *record*, not the *bytes* |
-| 41 | TimestompFlags | timestamp-anomaly verdict as `TIER:SIGNAL\|SIGNAL`. Same tier the [`timestomp`](#timestomp--timestamp-anomaly-detection) subcommand gives, from the same function — minus journal corroboration, which the listing does not read. **HIGH** is authoritative; **INFO** is a timestamp-preserving copy, reported rather than suspected. Computed by default; `--no-timestomp` leaves it blank |
 
 > **Column changes in this release** (for saved Timeline Explorer / spreadsheet layouts): two columns are
 > **added** after `ADSNames` — `RecordPlacement` (23) and `DataResidency` (24) — so every column from
 > `IsResident` onward shifts right by two. `IsResident` keeps its name and position relative to the others
 > but changes meaning: it is now exactly `DataResidency == inline`. It previously ORed the record-placement
 > flag with an inline-data flag, so a 0-byte file whose record is in the *extent* form read `True`; 1,098 such
-> rows across the corpus now read `False`, as do the 9 rows whose residency is `snapshot-shared` or `sparse`.
+> rows across the corpus now read `False`, as do the 9 rows whose residency is `snapshot-shared` or `unallocated`.
 > No file that holds its bytes inline changed. `--filter resident` is now `--filter inline`; the old spelling
 > still works and both select on `DataResidency == inline`.
 

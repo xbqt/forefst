@@ -207,3 +207,5 @@ attribute-schema growth (12 → 16, 18 distinct) is confirmed both in the driver
 row counts measured across the disk corpus. Findings:
 **GN_ARCH_001** (Minstore B+-tree engine), **GN_ARCH_002** (copy-on-write update policy). See
 [how this was verified](../methodology.md) to trace these to the exact images and measurements in `analysis/`.
+
+The remaining field-level statements on this page are registered as **FN_OPEN_SA_001**, **GN_ARCH_SA_001**, **GN_FOPS_SA_001**, **GN_INS_SA_003**, **GN_IRP_SA_001**, **GN_OOP_SA_001**, **GN_WSL_SA_001**, **MD_ATTR_SA_001** — each with its own evidence tier and witness in the claim register.

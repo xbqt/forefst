@@ -165,3 +165,5 @@ cluster-size-dependent self-checksum (CRC32-C 4 B on 4K, CRC64 8 B on 64K, SHA-2
 that the two checkpoints decode to identical roots is finding **FS_CHKP_RA_014**. See
 [how this was verified](../methodology.md) to trace these to the exact images and measurements in
 `analysis/`.
+
+Also registered for statements on this page: **CT_MISC_001**.

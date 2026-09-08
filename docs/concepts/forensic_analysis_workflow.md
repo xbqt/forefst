@@ -300,5 +300,5 @@ on the raw-disk corpus (RD). Specifically:
   an independent type-0x30 row with its own four FILETIMEs; a name-scoped timestomp rewrites only the
   opened name, so sibling hard-link names retain the true birth and diverge from the stomped one.
 
-See [how this was verified](../methodology.md) to trace these to the exact images and measurements in
+Also registered for statements on this page: **FS_SUPB_RA_005**. See [how this was verified](../methodology.md) to trace these to the exact images and measurements in
 `analysis/`.

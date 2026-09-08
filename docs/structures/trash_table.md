@@ -56,6 +56,13 @@ Present on all versions from v3.4 through Insider.
 - [Schema Table](schema_table.md) — schema 0xe0d0
 - [System OIDs](system_oids.md) — OID 0x0D
 
+## A prior-work claim this project cannot confirm
+
+Prior work reports that large deleted files are retained here, with the threshold set by data-run count.
+**No corpus image has ever held a non-empty Trash table**, so there is nothing to measure it against.
+The claim is recorded and left untested rather than repeated as fact; a volume imaged mid-deletion would
+settle it.
+
 ## Evidence
 
-The OID 0x0D / schema 0xe0d0 identity and the deletion pipeline are confirmed by the decompiled driver (E2): `CmsTrashTable::InitializeTable` sets the OID to 0x0D and schema to 0xe0d0, and the `RefsDeleteFile → MsDeleteRow → MsReparentFileToTrash → CmsTrashTable::AddFileTable → TrashCleanerWorkItemMethod → CmsTrashTable::DeleteFileTable` chain is decompiled end to end. The empty-on-disk result is raw-disk verified across the corpus (RD), re-confirmed by reading the Object Table at OID 0x0D directly on v3.4 and v3.14 images. See [how this was verified](../methodology.md) to trace these to the exact images and measurements in `analysis/`.
+The OID 0x0D / schema 0xe0d0 identity and the deletion pipeline are confirmed by the decompiled driver (E2): `CmsTrashTable::InitializeTable` sets the OID to 0x0D and schema to 0xe0d0, and the `RefsDeleteFile → MsDeleteRow → MsReparentFileToTrash → CmsTrashTable::AddFileTable → TrashCleanerWorkItemMethod → CmsTrashTable::DeleteFileTable` chain is decompiled end to end. The empty-on-disk result is raw-disk verified across the corpus (RD), re-confirmed by reading the Object Table at OID 0x0D directly on v3.4 and v3.14 images. The retention-by-data-run-count claim, still untested for want of a non-empty instance, is **CT_MISC_002**. See [how this was verified](../methodology.md) to trace these to the exact images and measurements in `analysis/`.

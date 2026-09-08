@@ -150,5 +150,5 @@ three v3.14 integrity volumes with 0 mismatches, a cross-algorithm control rulin
 **MD_INTG_RA_001** (the integrity-bit marker), **CT_INTS_001** (Integrity State Table invariance), **MD_DATA_RA_010** (the
 `$DATA` stream-flags selector), **MD_DATA_RA_013** (inline per-cluster CRC32-C element),
 **GN_PREF_002** (metadata vs data checksum distinction), **CT_INTS_002** (inheritance not
-cleared on disable). See [how this was verified](../methodology.md) to trace these to the exact images and
+cleared on disable). Also registered for statements on this page: **CT_DRNT_004**, **MD_SI_RA_006**. See [how this was verified](../methodology.md) to trace these to the exact images and
 measurements in `analysis/`.

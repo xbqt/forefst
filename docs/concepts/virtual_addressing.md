@@ -131,3 +131,5 @@ across the corpus, including the roots-7/8/12 real-LCN exception. The **15**-clu
 clusters (11 for 64 KiB) is `CPC.bit_length()`. See
 [how this was verified](../methodology.md) to trace these to the exact images and measurements in
 `analysis/`.
+
+Also registered for statements on this page: **CT_ALLC_003**.

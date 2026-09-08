@@ -215,5 +215,5 @@ under integrity streams, reparse points from the earliest
 version with hard links gated to native v3.14, and the absence of a flat metadata table or an on-disk
 hard-link count — are each established, with their evidence levels and finding IDs, on the linked page
 that owns them (`copy_on_write.md`, `checksum_architecture.md`, `integrity_streams.md`, `hard_links.md`,
-`ntfs_comparison.md`). See [how this was verified](../methodology.md) for the corpus and method behind
+`ntfs_comparison.md`). Also registered for statements on this page: **MD_LK_RA_001**. See [how this was verified](../methodology.md) for the corpus and method behind
 those pages.

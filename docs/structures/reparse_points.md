@@ -81,6 +81,19 @@ len(target)`.
 - [File IDs](../concepts/file_ids.md) — the FileRef whose home half the index key's 0x10 field records
 - [$STANDARD_INFORMATION](../attributes/STANDARD_INFORMATION.md) — the reparse tag mirrored at `$SI+0x54`
 
+## Where a split record keeps its reparse buffer
+
+When the object's record has been split out of its name row, the `REPARSE_DATA_BUFFER` goes with it: it
+is embedded in the file's own type-0x40 backing record, the one keyed by (owner directory, file id), and
+the reparse tag is mirrored at `backing +0x7C`. A reader that looks only at the directory entry finds a
+reparse flag with no buffer behind it.
+
+## How a symlink is stored
+
+A symlink is an embedded-record entry carrying attributes `0x420` for a file link or `0x10000400` for a
+directory link, and its target path appears **twice** in the sub-record — once as the substitute name and
+once as the print name. Measured on format 3.14.
+
 ## Evidence
 
 The 24-byte index key, the empty-value/pure-existence behavior, and the byte-identical 0x540 ↔ 0x541
@@ -88,5 +101,5 @@ mirror are raw-disk decoded across the corpus (RD). That the key's 0x10 field is
 OID (frozen when the file is relocated), not merely the current parent, is disk-proven on 881 relocated
 reparse objects — all indexed at their creation directory, none at their current parent. The index identity (OIDs 0x540 / 0x541, schema 0x160,
 durable-failover creation) and the driver functions are confirmed in the decompiled driver (E2):
-`InitializeReparseIndexTable` builds the pair with `MsCreateDurableFailoverTableObject`. See [how this was verified](../methodology.md) to trace these to the exact
+`InitializeReparseIndexTable` builds the pair with `MsCreateDurableFailoverTableObject`. Also registered for statements on this page: **FS_OTBL_RA_004**. A split record's reparse buffer living in its type-0x40 backing, tag mirrored at `+0x7C`, is **FS_REPS_RA_004**. The symlink attribute values and the doubled target path are **MD_LK_RA_002**. See [how this was verified](../methodology.md) to trace these to the exact
 images and measurements in `analysis/`.

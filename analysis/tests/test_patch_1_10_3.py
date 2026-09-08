@@ -54,9 +54,12 @@ def test_backing_tuple_carries_named_streams():
     src = inspect.getsource(F._t40_record_tuple)
     assert "detect_ads_in_resident" in src, \
         "the backing tuple must enumerate the streams the backing holds"
-    # appended last, so every existing rec[N] index keeps its meaning
+    # appended, never inserted, so every existing rec[N] index keeps its meaning. v1.11.0 appends the
+    # per-stream residency map after it, so the list is second-to-last rather than last.
     ret = [l for l in src.splitlines() if l.strip().startswith("return (")][-1]
-    assert ret.rstrip().endswith("_ads)"), "the stream list must be appended, not inserted"
+    fields = [f.strip() for f in ret.split("(", 1)[1].rstrip(")").split(",")]
+    assert "_ads" in fields, "the stream list must still be on the tuple"
+    assert fields.index("_ads") >= 11, "the stream list must be appended after the original fields"
 
 
 def test_extract_resolves_streams_on_a_split_record():

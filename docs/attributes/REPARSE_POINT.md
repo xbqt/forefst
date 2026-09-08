@@ -97,4 +97,4 @@ So a WSL device node carries both: a reparse point (the `LX_CHR` / `LX_BLK` tag)
 Type 0xC0 / schema 0x1C0 and the value layout are confirmed in the decompiled driver (E2) and raw-disk
 decoded across the corpus (RD); the recognize-vs-store-verbatim behavior is from the driver's reparse
 handling (only 0xA0000003 / 0xA000000C are interpreted). Findings: **FS_REPS_RA_003, FS_REPS_RA_002, MD_ATTR_RA_010, MD_ATTR_RA_012** (WSL) and the corrected
-reparse-tag table. See [how this was verified](../methodology.md).
+reparse-tag table. Also registered for statements on this page: **FS_REPS_RA_005**. See [how this was verified](../methodology.md).

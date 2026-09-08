@@ -98,7 +98,7 @@ is why the truncate row does not go back.
 | Stream | format ≤ 3.10 | format ≥ 3.11 | Evidence |
 |---|---|---|---|
 | main `$DATA` | never `inline` | `inline` below 2 KiB, else `extents` | RD (corpus-wide; the boundary is **fixed at 2 KiB**, not cluster-relative — 1,900 B inline / 2,100 B extents on 4 KiB, 64 KiB and 4Kn alike) |
-| named stream (ADS) | `inline` up to a hard 128 KiB cap | `inline` below 2 KiB, else `extents` | RD ≥ 3.11 (measured on 4 KiB, 64 KiB **and** 4Kn volumes; a 131,073-byte ADS exists there, so the cap is not a 3.14 rule); **the ≤ 3.10 cap is E2 + vendor documentation, not yet witnessed on disk** |
+| named stream (ADS) | `inline` up to a hard 128 KiB cap | `inline` below 2 KiB, else `extents` | driver gate is format ≥ 3.11 (E2). Volumes measured: 3.14 only, on 4 KiB, 64 KiB **and** 4Kn — no image of 3.11–3.13 exists, so the lower bound comes from the driver, not from a measurement; a 131,073-byte ADS exists there, so the cap is not a 3.14 rule); **the ≤ 3.10 cap is E2 + vendor documentation, not yet witnessed on disk** |
 
 The format version is the volume's, not the driver's: a v3.4 volume mounted by a v3.14 driver keeps v3.4
 behaviour. The evidence column is deliberately per row — an upgrade of the second row is a lab result,
@@ -159,3 +159,20 @@ Prefer the two named columns.
   [Extent descriptors](../structures/extent_descriptors.md)
 - [Hard links](hard_links.md) · [Snapshots and versioning](snapshots_versioning.md) ·
   [NTFS comparison](ntfs_comparison.md)
+
+## A snapshot changes what residency reports
+
+Residency is not a function of size alone. Take a stream snapshot of a small file and leave the file
+completely untouched, and its live stream stops reporting `inline` and starts reporting
+`snapshot-shared` — because the stream now owns no allocation of its own; the bytes are the snapshot's.
+Measured on format 3.14 with a **600-byte** file, far below the 2 KiB inline ceiling.
+
+So `snapshot-shared` is not a state reserved for large, extent-backed files, and a file can move between
+reported states without any write to it at all.
+
+Related, and worth knowing before you rely on a snapshot: a file snapshotted while inline and then grown
+past the inline ceiling was measured to retain **no snapshot record at all**.
+
+## Evidence
+
+That a snapshot alone moves an unmodified inline stream to `snapshot-shared` is **MD_SNAP_RA_009**; that the order of a rename and a cross-directory move leaves no distinguishable trace in the record is **FS_MOVE_RA_003**; that `SetEndOfFile` before any write does not force extent-backing is **MD_DATA_RA_027**. All three were measured on format 3.14 lab volumes against ground truth written on the volume itself.

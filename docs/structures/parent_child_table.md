@@ -97,5 +97,5 @@ v3.4–v3.14. The parent-child tracking mechanism is corroborated in the driver 
 behaviour is caller-side: `AddParentChildLink` passes the same 32-byte buffer as key and
 value, and `CmsHashTable::InitializeIndexEntry` collapses the duplicate by setting
 `value_offset = key_offset`; the schema `u32[7]=0x08` is the key-comparison-rules selector
-(`8 → CmsRulesPARENT_CHILD_LINK`), not a value-overlap bitfield. Findings: **FS_PCTB_RA_001**, **FS_PCHL_001**, **FS_OTBL_SA_010**. See [how this was verified](../methodology.md) to trace these to the exact images
+(`8 → CmsRulesPARENT_CHILD_LINK`), not a value-overlap bitfield. Findings: **FS_PCTB_RA_001**, **FS_PCHL_001**, **FS_OTBL_SA_010**. The remaining field-level statements on this page are registered as **FN_DTBL_004**, **FS_OTBL_004**, **GN_IENT_005** — each with its own evidence tier and witness in the claim register. See [how this was verified](../methodology.md) to trace these to the exact images
 and measurements in `analysis/`.

@@ -120,6 +120,16 @@ for how to tell the two cases apart and follow the child.
 - [$DATA](DATA.md) — the default data stream uses the same stream-summary format
 - [$SNAPSHOT](SNAPSHOT.md) — snapshot entries share the type-0xB0 code; the corrected value format and discriminators
 
+## Where a split record keeps its streams
+
+A move or a hard link splits a file's record out of its name row. The `0xB0` stream sub-records go with
+it, into the [type-0x40 backing record](../structures/extent_descriptors.md) — **not** into the name row
+that stays behind. A reader that enumerates streams from the directory entry alone therefore reports a
+moved or hard-linked file as having none, however many it has.
+
+Measured on a purpose-built volume: a 500-byte file with a 500-byte stream, moved to another directory,
+keeps the stream in its backing and reads back byte-for-byte from there.
+
 ## Evidence
 
 Type 0xB0 / descriptor 0x000500B0 and the value layout are confirmed in the decompiled driver (E2 —
@@ -127,4 +137,4 @@ Type 0xB0 / descriptor 0x000500B0 and the value layout are confirmed in the deco
 decoded across the corpus (RD). Findings: **MD_SNAP_RA_005, FS_SNAP_RA_001** (ADS census), **MD_SNAP_RA_005**
 (`val[0x38]` is the checksum selector, not residency). The **extent-backed (>= 2 KiB, format 3.11+) ADS** layout — the
 2 KiB threshold and the type-0x0 extent record — was decoded and reconstructed **byte-exact on 161 large
-ADS** (256 B → 2 MB size sweep). See [how this was verified](../methodology.md).
+ADS** (256 B → 2 MB size sweep). The remaining field-level statements on this page are registered as **MD_ADS_RA_001**, **MD_ADS_RA_004**, **MD_ATTR_007**, **MD_FTBL_007**, **MD_INTG_RA_005** — each with its own evidence tier and witness in the claim register. That a named stream on a **split** record lives in the type-0x40 backing, not in the name row, is **MD_ADS_RA_005** (format 3.14) — the case a stream enumeration that reads only the name row cannot see. See [how this was verified](../methodology.md).

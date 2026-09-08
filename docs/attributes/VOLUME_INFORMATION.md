@@ -50,4 +50,4 @@ Insider build has mounted the volume, not on a generic upgrade.
 
 Schema 0x150 / type 0x50, the OID 0x500/0x501 storage, and the blob layout are confirmed in the
 decompiled driver (E2 — `RefsGetVolumeInformation`, `SetVolumeMounted`) and on the raw-disk corpus (RD).
-Finding: **FS_VOLI_RA_001** (the version-stamp semantics). See [how this was verified](../methodology.md).
+Finding: **FS_VOLI_RA_001** (the version-stamp semantics). Also registered for statements on this page: **FS_VINF_001**. See [how this was verified](../methodology.md).

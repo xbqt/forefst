@@ -91,4 +91,4 @@ Upgraded v3.4→v3.14 volumes keep the old 0x38 rows.
 
 Type 0x38 / 0x39 and the layouts are confirmed in the decompiled driver (E2 — `RefsInitializeObjLinkRow`,
 `RefsBackpointerValueFromFileName`) and raw-disk decoded across the corpus (RD); `$OBJ_LINK` is present on
-nearly every user object. See [how this was verified](../methodology.md).
+nearly every user object. The remaining field-level statements on this page are registered as **GN_AMGR_SA_001**, **MD_ATTR_003**, **MD_ATTR_RA_006**, **MD_LK_RA_005–009** — each with its own evidence tier and witness in the claim register. See [how this was verified](../methodology.md).

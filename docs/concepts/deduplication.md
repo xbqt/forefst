@@ -145,7 +145,7 @@ adds `CmsBlockRefcount::BreakWeakReferences` (redo opcode `0x28`). The 16-byte k
 (`0x820`) value, the `TotalRefCount = Σ(entry & 0x3FFF)` invariant at value+0x18, the `u16[1024]` array at
 0x1C..0x81B, and the Subtable B.6a bit fields (count `0x3FFF`, metadata `0x4000`, managed `0x8000`) are
 raw-disk decoded (RD). The dedup-enabled checkpoint flag bits (`0x010 / 0x020 / 0x100`, composite
-`0x07b2`) are likewise raw-disk confirmed. See [how this was verified](../methodology.md) to trace these
+`0x07b2`) are likewise raw-disk confirmed. The remaining field-level statements on this page are registered as **CT_BKRC_RA_001–003** — each with its own evidence tier and witness in the claim register. See [how this was verified](../methodology.md) to trace these
 to the exact images and measurements in `analysis/`. Findings: **FS_CHKP_015, CT_BKRC_001** (schema `0xe0b0` = Block Refcount
 Table), **CT_BKRC_001, FS_CHKP_015** (block-level dedup sharing in root #6), **FS_CHKP_RA_001** (dedup checkpoint flags),
 **FS_CHKP_RA_001** (volume-state flags including `0x07b2`).

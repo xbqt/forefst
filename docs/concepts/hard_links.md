@@ -240,5 +240,5 @@ multi-name groups preserved. Findings: **FN_LINK_002** (mechanism), **FS_OTBL_RA
 **MD_DATA_RA_004** (type-0x40 stream key), **MD_DATA_RA_006** (`alloc=0` stub form); the size match
 defeats the colliding-ordinal over-merge. The per-name MACB divergence was proven on disk against a
 two-name file whose one name was name-scoped timestomped while its sibling kept the true birth
-(**FN_LINK_003 / E59**). See [how this was verified](../methodology.md) to trace these to the exact images
+(**FN_LINK_003 / E59**). Also registered for statements on this page: **FN_LINK_001**, **FN_LINK_004**. See [how this was verified](../methodology.md) to trace these to the exact images
 and measurements in `analysis/`.

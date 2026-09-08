@@ -4,7 +4,7 @@
 **The residency-vocabulary check.** One word, "resident", was used for two independent properties —
 where a file's *record* sits and where its *bytes* are — and that conflation produced wrong pages and a
 wrong tool column. The vocabulary is now `embedded` / `split` for record placement and
-`inline` / `extents` / `snapshot-shared` / `sparse` for data residency. This check fails on the bare word
+`inline` / `extents` / `snapshot-shared` / `unallocated` for data residency. This check fails on the bare word
 so it cannot creep back.
 
 Four kinds of use are legitimate and exempt:
@@ -317,7 +317,7 @@ def main(root="forefstdev/docs"):
           % (len(bad), len(per_page), sum(known.values())))
     if grown:
         print("FAIL — say `embedded`/`split` for record placement, or "
-              "`inline`/`extents`/`snapshot-shared`/`sparse` for data residency:")
+              "`inline`/`extents`/`snapshot-shared`/`unallocated` for data residency:")
         for page, (now, was) in sorted(grown.items()):
             print("   %-52s %d use(s), baseline %d" % (page, now, was))
             for rel, line, word in bad:

@@ -88,3 +88,5 @@ a before/after cross-directory move, a hard-linked 300-byte pair whose two names
 and an integrity-streams on/off pair built from the same base volume; the snapshot and encryption
 witnesses are file populations rather than controlled pairs. Findings `MD_DATA_RA_025`, `FS_MOVE_RA_002`, `FS_RESD_SA_001`,
 `FS_RESD_SA_002`, `GN_VCB_SA_001`, `MD_ADS_RA_003`.
+
+Also registered for statements on this page: **MD_EFS_RA_003**, **MD_SI_RA_007**.

@@ -77,11 +77,10 @@ a file cannot predate its own filesystem. The note is the reason the tier matter
 either signal alone could be an innocent creation-preserving copy; only their
 agreement (or a USN confirmation) is conclusive.
 
-### Step 3 — Pull a single flagged record from the lister
+### Step 3 — Pull a single flagged record
 
 ```sh
-python3 forefst.py \
- image.raw --timestomp --jsonl
+python3 forefst.py image.raw timestomp --json
 ```
 
 Actual flagged row (one JSONL object, abridged to the fields that matter):
@@ -107,8 +106,8 @@ This is the same file as the first HIGH row in Step 1 — identical path, identi
 of a common-tool stomp is laid bare here: **B = M = A** were all rewritten to the
 forged 2024 instant in one `SetFileTime`-style call, while **C** (`changed`) stayed at
 the real 2026 write — because the high-level API has no `ChangeTime` parameter to
-reach it. The `TimestompFlags` column (`timestomp_flags` in JSONL) carries the two
-intrinsic indicators computed straight from the `$SI` MACB times, no journal needed.
+reach it. The two intrinsic indicators are computed straight from the `$SI` MACB times; the journal, when
+present, is what raises the row above INFO.
 
 ## What this tells you
 
@@ -123,8 +122,9 @@ intrinsic indicators computed straight from the `$SI` MACB times, no journal nee
  `forefst.py timestomp` HIGH tier means **two independent anchors agree**, which
  on this one ground-truth image produced 114 HIGH detections, all true positives (0 false positives on
  the clean control) — a single-image datapoint, not a measured accuracy rate.
-- `forefst.py --timestomp` is the fast intrinsic pass (`$SI`-only flags on every row);
- `forefst.py timestomp` is the full cross-source verdict that adds the journal.
+- **There is one surface.** `forefst.py timestomp` is where a timestamp anomaly is judged; `files` carries
+ no verdict column. Earlier releases had both, and the listing column — which cannot read the journal —
+ could only ever report the weaker half of the answer while looking like the answer.
 
 ## See also
 

@@ -1,5 +1,102 @@
 # Changelog
 
+## v1.11.0 — 2026-09-08 — one identity format, one timestomp surface, one resolution path
+
+**Everything here is relative to [v1.10.3].** Four output changes are **breaking**; each is listed below
+with what a consumer must do.
+
+### Breaking: `files` is a fixed 40 columns
+
+`TimestompFlags` **and** the `--timestomp` flag are removed. The column carried a tier computed without the
+change journal — the walk does not read `$J` — so it could only ever report the half of the answer that a
+timestamp-preserving copy also produces, while sitting in a column that looked like a verdict.
+Timestamp-anomaly information now comes from `timestomp` alone.
+
+The schema is now **fixed** at 40 columns rather than 40-or-41 depending on a flag. That was the point of
+removing the flag as well as the column: an earlier fix had already made `--no-timestomp` *blank* the
+column rather than drop it, precisely to keep the schema stable, and re-introducing a flag that changes the
+column count would have undone it.
+
+- **What to change:** read the tier from `forefst.py IMG timestomp --csv`. `--timestomp` and
+  `--no-timestomp` now exit 1 as unknown options.
+- The regression assertion that pinned *column == command* retires with the column: with one surface there
+  is no second ladder to guard. The unit assertions on `timestomp_verdict()` remain.
+
+### Breaking: `DataResidency` says `unallocated`, not `sparse`
+
+One word named two different things in the same output — the residency state (*this stream has no
+allocation behind it*) and the `FILE_ATTRIBUTE_SPARSE_FILE` bit that `IsSparse`, `--filter sparse` and
+`specials sparse` report. Those three are unchanged; only the residency value is renamed. `dataruns` prints
+`UNALLOC` for the same state, and that label is now documented — it never was.
+
+- **What to change:** a filter on `DataResidency == "sparse"` matches nothing; use `"unallocated"`.
+
+### Breaking: a directory's `ObjectRef` is `0x600:0x0`
+
+The column now carries one format for every row. A directory is its own home with ordinal 0 — which is
+exactly what the change journal writes for a directory's self-reference — so it renders `0x70e:0x0` rather
+than a bare `0x70e`. Previously a consumer had to branch on row type to parse a single column.
+
+### Named streams say where their bytes are
+
+`details` and `specials ads` now print each stream's residency beside its name, from the same parser
+`export ads` uses. An ADS below 2 KiB is inline; at or above it the bytes are in a type-0x0 extent record
+and the name row holds only the descriptor. Printing a name alone invited the reader to assume the content
+was in the record. No column was added; `files` stays at 40.
+
+### One name→record resolution path
+
+`walk_directory_tree` resolved a split name through a six-branch ladder that tried the local
+`(parent_oid, file_id)` key before the object's home. `file_id` is a **per-directory ordinal**, so the local
+key can name a different object that merely holds that ordinal in the same directory.
+
+The local branches were reachable but never decisive: removing them changes **no output on any corpus
+image** — the release golden is byte-identical across it. This is a simplification, not a correction: six
+branches become one, and `--legacy-link-join` restores the old ladder for one release.
+
+- **A new regression assertion** checks the resolution against the driver rather than against a second
+  implementation: every split name must be listed by its resolved backing's own type-0x39 link set — the
+  list ReFS itself writes. **83,521 names, on the 64 corpus images that contain a split name, 0
+  exceptions.** It catches something the
+  existing path-agreement assertion cannot: two implementations can agree and both be wrong. It also
+  outlives the other one, which stops testing anything once `--legacy-link-join` is removed — **that
+  assertion retires in the next release, with the flag.**
+
+### The register's evidence columns are machine-readable
+
+`reference_table.csv` gains seven derived columns and keeps both old ones unchanged, so nothing that read
+it before reads differently: `static_evidence` · `static_scope` · `disk_examined` · `disk_status` ·
+`origin` · `format_claimed` · `format_verified`.
+
+Two of those exist because the data required them. `refs_version` says what a claim is **about** and
+`verified_on` says what it was **checked on**, and on **69 rows** the claim names a format the
+verification never covered — so they are two columns, and the support matrix builds from
+`format_verified` alone. And an `RD` marker in the old static column meant *the disk was read*,
+which is not what the reading concluded: of the 116 rows that carry it, 10 have a non-confirmed
+outcome, and 221 rows are disk-confirmed without carrying it — so neither ever implied the other.
+
+`format_verified` reads `unknown` on **79 rows** whose `verified_on` holds an audit date rather than a
+version. Those are treated as **not verified**, and recorded as a data-quality item.
+
+### Documentation
+
+Every register row that a page's text already supported is now cited there: **16 of 482** rows are
+still uncited, against the **299 of 473** the 2026-09-07 triage measured on the same scope (the five
+content directories, each `README.md` excluded). All 16 are internal-only — tool defects, superseded
+prior work, censuses — which are owed nothing. New material where the citation had nowhere to land:
+the `_SmsIndexRoot` root descriptor and how it differs from the node header on the same page; prior
+work's seven MLog operation patterns re-measured (three reproduce exactly, one is mislabelled, one
+does not occur as a single transaction, two are reordered); where a split record keeps its streams
+and its reparse buffer; what a snapshot does to reported residency; sparse ratios; image holes; EFS
+on disk; the two deletion paths.
+
+**One register row corrected.** `MD_DATA_RA_026` described a reader defect as *not fixed*. It was fixed
+in v1.10 — its own erratum (E89) has said so since — and the row never caught up. Re-measured before
+this release by running the walk with and without `--legacy-link-join`, which disables the fix: 1,012
+rows differ over 124 images, including the 548 on `winsider` that E89 reports, to the digit.
+
+**A new gate** fails when a page claims verification on a format its cited findings were never verified on.
+
 ## v1.10.3 — 2026-09-07 — three defects the purpose-built lab volumes found
 
 **Everything here is relative to v1.10.2.** No new decoders and no new columns. Seven lab tests were read

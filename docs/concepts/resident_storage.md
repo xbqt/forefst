@@ -262,5 +262,5 @@ against the 0x800 / 0x20000 limits, and `RefsConvertToNonResident` accepts types
 ADS (< 2 KiB) is inline; a large ADS (>= 2 KiB) is extent-backed via a type-0x0 record (E2 + RD, reconstructed
 byte-exact across a 256 B → 2 MB size sweep). The val+0x38 field is a checksum-type selector, not a
 residency field.
-See [how this was verified](../methodology.md) to trace these to the exact images and measurements in the
+The remaining field-level statements on this page are registered as **FN_DTBL_005**, **FS_MOVE_RA_001**, **MD_DATA_RA_022** — each with its own evidence tier and witness in the claim register. See [how this was verified](../methodology.md) to trace these to the exact images and measurements in the
 analysis archive.

@@ -208,6 +208,8 @@ Block-refcount maintenance is `IncrementRefcount` / `DecrementRefcount` against 
 `IncrementRefcount` and handle refcount-down via a signed delta (with
 `MsKmeBlockRefCountUnderflowEventNotification`). The value-layout offsets, the `data_sub_id` namespace,
 the snapshot-vs-ADS discriminators, and byte-for-byte content recovery are raw-disk verified (RD).
-Findings: MD_SNAP_RA_002, MD_SNAP_RA_003, CT_DRNT_RA_001, GN_SNAP_SA_001, MD_SNAP_RA_006, MD_SNAP_RA_005, FS_SNAP_RA_001, MD_SNAP_RA_007, MD_ATTR_RA_018, FS_OTBL_RA_008, FS_CHKP_015, CT_BKRC_001, FS_SCHM_RA_008, FS_SCHM_RA_005. See
+Findings: MD_SNAP_RA_002, MD_SNAP_RA_003, CT_DRNT_RA_001, GN_SNAP_SA_001, MD_SNAP_RA_006, MD_SNAP_RA_005, FS_SNAP_RA_001, MD_SNAP_RA_007, MD_ATTR_RA_018, FS_OTBL_RA_008, FS_CHKP_015, CT_BKRC_001, FS_SCHM_RA_008, FS_SCHM_RA_005. Also registered for statements on this page: **MD_SNAP_RA_008**. See
 [how this was verified](../methodology.md) to trace these to the exact images and measurements in
 `analysis/`.
+
+Also registered for statements on this page: **MD_SNAP_RA_001**.

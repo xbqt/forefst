@@ -2,260 +2,914 @@
 # ----------------------------------------------------------------------------
 
 ── ads  (254) — named data streams ──
-  STREAMS                      HOST FILE
-    hidden_7357                test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_romeo_gamma_831931.dat
-    hidden_1514                test/xbpt_tango_archive_828215.dat
-    hidden_5547;hidden_3867    testspecials/alpha_backup_597620.dat
-    hidden_7872;hidden_3651;hidden_3552;hidden_1129;hidden_3552;hidden_1129 testspecials/cache_romeo_901499.xml
-    hidden_8889                testspecials/dir_gamma_163068/alpha_tango_859870.md
-    hidden_7614                testspecials/dir_gamma_163068/dir_alpha_598099/dir_index_953906/hardlink_uniform_706791.bin
-    hidden_9715;hidden_7804;hidden_7667 testspecials/dir_gamma_163068/dir_alpha_598099/dir_index_953906/lima_tango_491721.txt
-    hidden_3867                testspecials/dir_gamma_163068/dir_alpha_598099/dir_trace_251622/draft_sierra_832267.lnk
-    hidden_7872;hidden_3651;hidden_3552;hidden_1129;hidden_3552;hidden_1129 testspecials/dir_gamma_163068/dir_alpha_598099/dir_trace_251622/hardlink_papa_427429.xml
-    hidden_9499;hidden_8676;hidden_8640;hidden_7016;hidden_6488;hidden_5139;hidden_4405;hidden_3513;hidden_3101;hidden_1611;hidden_1219;hidden_1205;hidden_4405 testspecials/dir_gamma_163068/dir_config_495144/dir_quebec_465938/hardlink_victor_353055.csv
-    hidden_7217                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/data_log_228205.json
-    hidden_6527;hidden_1809    testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/hardlink_cache_865140.log
-    hidden_7872;hidden_3651;hidden_3552;hidden_1129;hidden_3552;hidden_1129 testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/hardlink_sync_617075.xml
-    hidden_9715;hidden_7804;hidden_7667;hidden_7444;hidden_6528;hidden_7444 testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/hardlink_sync_966265.txt
-    hidden_9345;hidden_8537;hidden_7989;hidden_5535;hidden_2674 testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/hotel_whiskey_254415.xml
-    hidden_4493;hidden_2163    testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/foxtrot_hotel_894969.txt
-    hidden_9631;hidden_4921    testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/gamma_delta_622114.tmp
-    hidden_8219;hidden_7800;hidden_6996;hidden_6391;hidden_6227;hidden_5587;hidden_4099;hidden_2646;hidden_1815;hidden_4099;hidden_2646 testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_backup_321041.tmp
-    hidden_9715;hidden_7804;hidden_7667;hidden_7444;hidden_6528;hidden_7444 testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_beta_807149.txt
-    hidden_9715;hidden_7804;hidden_7667;hidden_7444;hidden_6528;hidden_7444 testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_data_601823.txt
-    hidden_7217                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_output_296985.csv
-    hidden_9499;hidden_8676;hidden_8640;hidden_7016;hidden_6488;hidden_5139;hidden_4405;hidden_3513;hidden_3101;hidden_1611;hidden_1219;hidden_1205;hidden_4405 testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/yankee_echo_107376.csv
-    hidden_9739;hidden_5920;hidden_4629 testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_beta_159096/hardlink_india_222831.dat
-    hidden_9302;hidden_6150    testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/dir_yankee_435831/hardlink_data_386321.txt
-    hidden_7590                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/dir_yankee_435831/romeo_tango_661051.md
-    hidden_1036                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/dir_yankee_435831/uniform_config_149232.bin
-    hidden_8219;hidden_7800;hidden_6996;hidden_6391;hidden_6227;hidden_5587;hidden_4099;hidden_2646;hidden_1815;hidden_4099;hidden_2646 testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_foxtrot_829175.tmp
-    hidden_9739;hidden_5920;hidden_4629 testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_oscar_678275.dat
-    hidden_9499;hidden_8676;hidden_8640;hidden_7016;hidden_6488;hidden_5139;hidden_4405;hidden_3513;hidden_3101;hidden_1611;hidden_1219;hidden_1205;hidden_4405 testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_trace_280509.csv
-    hidden_9492                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/log_papa_718682.dat
-    hidden_4483                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/yankee_mike_675054.md
-    hidden_3604                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/zulu_november_980765.csv
-    hidden_3933                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_foxtrot_394781/hardlink_data_621977.json
-    hidden_4066                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_foxtrot_394781/hardlink_india_710018.bak
-    hidden_6601                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_foxtrot_394781/hardlink_mike_331995.ini
-    hidden_9715;hidden_7804;hidden_7667;hidden_7444;hidden_6528;hidden_7444 testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/data_temp_866006.txt
-    hidden_9715;hidden_7804;hidden_7667;hidden_7444;hidden_6528;hidden_7444 testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416/hardlink_romeo_901991.txt
-    hidden_7614                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416/india_index_571205.bin
-    hidden_7217                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416/papa_victor_867137.csv
-    hidden_8935;hidden_6543;hidden_5767;hidden_4857;hidden_1662 testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/hardlink_cache_174893.bin
-    hidden_8219;hidden_7800;hidden_6996;hidden_6391;hidden_6227;hidden_5587;hidden_4099;hidden_2646;hidden_1815;hidden_4099;hidden_2646 testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/hardlink_mike_455666.tmp
-    hidden_5791                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/hotel_record_407322.log
-    hidden_9266                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/mike_november_838527.csv
-    hidden_8982;hidden_6726;hidden_3590 testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/report_india_525082.ini
-    hidden_7872;hidden_3651;hidden_3552;hidden_1129;hidden_3552;hidden_1129 testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/hardlink_alpha_563527.xml
-    hidden_3933                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/hardlink_backup_970136.json
-    hidden_9499;hidden_8676;hidden_8640;hidden_7016;hidden_6488;hidden_5139;hidden_4405;hidden_3513;hidden_3101;hidden_1611;hidden_1219;hidden_1205;hidden_4405 testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/hardlink_november_860521.csv
-    hidden_3933                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/hardlink_report_763630.json
-    hidden_2402                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/beta_whiskey_211785.json
-    hidden_7217                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/dir_india_917272/dir_tango_488439/alpha_papa_542985.csv
-    hidden_9715;hidden_7804;hidden_7667;hidden_7444;hidden_6528;hidden_7444 testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/dir_india_917272/dir_tango_488439/hardlink_tango_128794.txt
-    hidden_7217                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/hardlink_hotel_423014.csv
-    hidden_9936                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/november_output_172167.log
-    hidden_2811                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_tango_400582/config_november_887191.bin
-    hidden_9631;hidden_4921    testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_tango_400582/hardlink_foxtrot_552848.tmp
-    hidden_2241                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_tango_400582/kilo_beta_797319.dat
-    hidden_6527;hidden_1809    testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_uniform_329376/foxtrot_oscar_943219.log
-    hidden_6601                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_uniform_329376/hardlink_november_543825.ini
-    hidden_8219;hidden_7800;hidden_6996;hidden_6391;hidden_6227;hidden_5587;hidden_4099;hidden_2646;hidden_1815;hidden_4099;hidden_2646 testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/backup_beta_229699.tmp
-    hidden_3170                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/dir_config_947995/backup_gamma_994458.xml
-    hidden_8457                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/dir_data_954098/zulu_echo_260795.txt
-    hidden_7217                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/hardlink_audit_733110.csv
-    hidden_7217                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/hardlink_quebec_170707.csv
-    hidden_4066                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/log_mike_670440.bak
-    hidden_9302;hidden_6150    testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/foxtrot_data_307933.txt
-    hidden_4808                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/foxtrot_delta_292770.ini
-    hidden_8935;hidden_6543;hidden_5767;hidden_4857;hidden_1662 testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/hardlink_romeo_645285.bin
-    hidden_4855                testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/trace_delta_680793.cfg
-    hidden_8202                testspecials/dir_gamma_163068/dir_echo_659970/oscar_sierra_156386.txt
-    hidden_7614                testspecials/dir_gamma_163068/hardlink_papa_658266.bin
-    hidden_8935;hidden_6543;hidden_5767;hidden_4857;hidden_1662 testspecials/dir_gamma_163068/hardlink_yankee_389124.bin
-    hidden_6601                testspecials/dir_november_947335/alpha_index_636390.ini
-    hidden_8935;hidden_6543;hidden_5767;hidden_4857;hidden_1662 testspecials/dir_november_947335/dir_archive_582163/foxtrot_beta_882942.bin
-    hidden_3933                testspecials/dir_november_947335/dir_draft_325504/beta_november_982688.json
-    hidden_7872;hidden_3651;hidden_3552;hidden_1129;hidden_3552;hidden_1129 testspecials/dir_november_947335/dir_draft_325504/hardlink_mike_930037.xml
-    hidden_7985;hidden_5835;hidden_4280;hidden_3485 testspecials/dir_november_947335/dir_draft_325504/hardlink_sierra_921561.lnk
-    hidden_2471                testspecials/dir_november_947335/dir_draft_325504/uniform_foxtrot_780105.dat
-    hidden_3867                testspecials/dir_november_947335/dir_draft_325504/yankee_papa_632137.lnk
-    hidden_8219;hidden_7800;hidden_6391;hidden_6227;hidden_5587;hidden_4099;hidden_2646;hidden_1815 testspecials/dir_november_947335/dir_india_538407/dir_draft_269665/hardlink_mike_592787.tmp
-    hidden_5859;hidden_2097    testspecials/dir_november_947335/dir_india_538407/dir_draft_269665/log_quebec_308911.dat
-    hidden_2096                testspecials/dir_november_947335/dir_india_538407/dir_draft_269665/sync_record_864216.md
-    hidden_7131                testspecials/dir_november_947335/dir_india_538407/dir_lima_396840/dir_draft_855171/data_oscar_221687.dat
-    hidden_7131;hidden_6098    testspecials/dir_november_947335/dir_india_538407/dir_lima_396840/dir_draft_855171/dir_lima_128289/whiskey_delta_401155.lnk
-    hidden_7872;hidden_3651;hidden_3552;hidden_1129;hidden_3552;hidden_1129 testspecials/dir_november_947335/dir_india_538407/dir_lima_396840/dir_draft_855171/hardlink_uniform_178955.xml
-    hidden_7217                testspecials/dir_november_947335/dir_india_538407/hardlink_config_676528.csv
-    hidden_3867;hidden_3437    testspecials/dir_november_947335/dir_india_538407/hardlink_data_610096.lnk
-    hidden_8982;hidden_6726;hidden_3590 testspecials/dir_november_947335/dir_india_538407/hardlink_echo_843063.ini
-    hidden_8982;hidden_6726;hidden_3590 testspecials/dir_november_947335/dir_mike_527964/hardlink_record_756488.ini
-    hidden_6543;hidden_4857;hidden_1662 testspecials/dir_november_947335/dir_mike_527964/papa_romeo_945623.bin
-    hidden_9715;hidden_7804;hidden_7667 testspecials/dir_november_947335/dir_sync_924581/archive_india_740208.lnk
-    hidden_4853;hidden_4055    testspecials/dir_november_947335/dir_sync_924581/cache_beta_965254.ini
-    hidden_7217                testspecials/dir_november_947335/dir_sync_924581/cache_output_350817.lnk
-    hidden_9753                testspecials/dir_november_947335/dir_sync_924581/dir_backup_133264/echo_backup_486937.cfg
-    hidden_5883                testspecials/dir_november_947335/dir_sync_924581/dir_backup_133264/india_log_375930.dat
-    hidden_3867;hidden_3437    testspecials/dir_november_947335/dir_sync_924581/dir_backup_133264/mike_romeo_954357.lnk
-    hidden_7131                testspecials/dir_november_947335/dir_sync_924581/dir_mike_306826/hardlink_cache_325845.dat
-    hidden_7614                testspecials/dir_november_947335/dir_sync_924581/dir_mike_306826/hardlink_sierra_792479.bin
-    hidden_1036                testspecials/dir_november_947335/dir_sync_924581/dir_mike_306826/temp_alpha_479281.bin
-    hidden_7217                testspecials/dir_november_947335/dir_sync_924581/hardlink_november_224111.csv
-    hidden_9698                testspecials/dir_november_947335/hardlink_beta_859345.lnk
-    hidden_8219;hidden_7800;hidden_6996;hidden_6391;hidden_6227;hidden_5587;hidden_4099;hidden_2646;hidden_1815;hidden_4099;hidden_2646 testspecials/dir_november_947335/hardlink_echo_752214.tmp
-    hidden_8219;hidden_7800;hidden_6996;hidden_6391;hidden_6227;hidden_5587;hidden_4099;hidden_2646;hidden_1815;hidden_4099;hidden_2646 testspecials/dir_november_947335/hardlink_log_446439.tmp
-    hidden_8982;hidden_6726;hidden_3590 testspecials/dir_november_947335/hardlink_mike_216457.ini
-    hidden_6601                testspecials/dir_november_947335/hardlink_oscar_269153.ini
-    hidden_6601                testspecials/dir_november_947335/hardlink_trace_748877.ini
-    hidden_8935;hidden_6543;hidden_5767;hidden_4857;hidden_1662 testspecials/dir_november_947335/hardlink_uniform_287325.bin
-    hidden_7103                testspecials/dir_november_947335/oscar_november_944503.cfg
-    hidden_4187                testspecials/dir_november_947335/oscar_uniform_234600.tmp
-    hidden_7611                testspecials/dir_november_947335/trace_report_277987.json
-    hidden_9715;hidden_7804;hidden_7667;hidden_7444;hidden_6528;hidden_7444 testspecials/dir_uniform_195248/hardlink_temp_982613.txt
-    hidden_6601                testspecials/dir_uniform_544837/dir_cache_866824/victor_log_335120.ini
-    hidden_7211                testspecials/dir_uniform_544837/dir_output_654155/draft_output_343220.txt
-    hidden_8219;hidden_7800;hidden_6391;hidden_6227;hidden_5587;hidden_4099;hidden_2646;hidden_1815 testspecials/dir_uniform_544837/dir_output_654155/november_sierra_162462.tmp
-    hidden_7872;hidden_3651;hidden_3552;hidden_1129;hidden_3552;hidden_1129 testspecials/dir_uniform_544837/dir_output_654155/papa_sierra_190261.xml
-    hidden_7590                testspecials/dir_uniform_544837/hardlink_cache_388702.md
-    hidden_7211                testspecials/dir_uniform_544837/hardlink_papa_582242.txt
-    hidden_9715;hidden_7804;hidden_7667;hidden_7444;hidden_6528;hidden_7444 testspecials/draft_uniform_166420.txt
-    hidden_7217                testspecials/foxtrot_romeo_101133.csv
-    hidden_4493;hidden_2163    testspecials/hardlink_alpha_836959.txt
-    hidden_7985;hidden_5835;hidden_4280;hidden_3485 testspecials/hardlink_draft_507334.lnk
-    hidden_7217                testspecials/hardlink_mike_576693.csv
-    hidden_7217                testspecials/hardlink_uniform_425955.csv
-    hidden_5920;hidden_4629    testspecials/november_draft_655043.lnk
-    hidden_8943;hidden_5230;hidden_4046 testspecials/tango_lima_351713.tmp
-    hidden_9345;hidden_7989;hidden_2674;hidden_2162 testspecials/temp_gamma_969300.xml
-    hidden_2817                testspecials2/backup_whiskey_151615.bak
-    hidden_3629;hidden_3314    testspecials2/dir_kilo_616914/audit_delta_706583.json
-    hidden_4071                testspecials2/dir_kilo_616914/dir_backup_630871/alpha_delta_986365.bak
-    hidden_8724;hidden_7109    testspecials2/dir_kilo_616914/dir_backup_630871/alpha_sync_934987.bak
-    hidden_1740;hidden_1850;hidden_2020;hidden_2565;hidden_3195;hidden_4633;hidden_6038;hidden_8052;hidden_8332;hidden_8348;hidden_9224;hidden_9677;hidden_9725 testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_cache_865974.xml
-    hidden_9994                testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_lima_842582.json
-    hidden_1866;hidden_1982;hidden_2033;hidden_2544;hidden_2703;hidden_4201;hidden_5841;hidden_7645;hidden_7907 testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_whiskey_549936.md
-    hidden_8658;hidden_6796    testspecials2/dir_kilo_616914/dir_backup_630871/hotel_tango_211756.txt
-    hidden_3401                testspecials2/dir_kilo_616914/dir_backup_630871/kilo_draft_266948.cfg
-    hidden_4719;hidden_2781    testspecials2/dir_kilo_616914/dir_backup_630871/sierra_kilo_783752.tmp
-    hidden_1740;hidden_1850;hidden_2020;hidden_2565;hidden_3195;hidden_4633;hidden_6038;hidden_8052;hidden_8332;hidden_8348;hidden_9224;hidden_9677;hidden_9725 testspecials2/dir_kilo_616914/dir_backup_630871/trace_foxtrot_918703.xml
-    hidden_1740;hidden_1850;hidden_2020;hidden_2565;hidden_3195;hidden_4633;hidden_6038;hidden_8052;hidden_8332;hidden_8348;hidden_9224;hidden_9677;hidden_9725 testspecials2/dir_kilo_616914/dir_hotel_911814/hardlink_uniform_712558.xml
-    hidden_5888;hidden_3735;hidden_2583 testspecials2/dir_kilo_616914/dir_index_179689/dir_yankee_777638/hardlink_log_206798.log
-    hidden_5379                testspecials2/dir_kilo_616914/dir_index_179689/hotel_zulu_522360.txt
-    hidden_6977;hidden_4578    testspecials2/dir_kilo_616914/dir_india_415253/hardlink_draft_118833.log
-    hidden_5888;hidden_3735;hidden_2583 testspecials2/dir_kilo_616914/dir_papa_668661/hardlink_romeo_734888.log
-    hidden_8040                testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_archive_113008/tango_config_159789.csv
-    hidden_9109;hidden_3347    testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/hardlink_config_800823.md
-    hidden_5629                testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/hardlink_tango_661477.bin
-    hidden_4750                testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/log_echo_397510.cfg
-    hidden_1740;hidden_1850;hidden_2020;hidden_2565;hidden_3195;hidden_4633;hidden_6038;hidden_8052;hidden_8332;hidden_8348;hidden_9224;hidden_9677;hidden_9725 testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/report_backup_871173.xml
-    hidden_1866;hidden_1982;hidden_2033;hidden_2544;hidden_2703;hidden_4201;hidden_5841;hidden_7645;hidden_7907 testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/hardlink_hotel_462218.md
-    hidden_1866;hidden_1982;hidden_2033;hidden_2544;hidden_2703;hidden_4201;hidden_5841;hidden_7645;hidden_7907 testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/hardlink_yankee_126039.md
-    hidden_5118                testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/november_alpha_101476.dat
-    hidden_7933                testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/echo_mike_940162.md
-    hidden_9398;hidden_8123;hidden_7684;hidden_7309;hidden_1869;hidden_1833;hidden_1118 testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_gamma_863368.log
-    hidden_1866;hidden_1982;hidden_2033;hidden_2544;hidden_2703;hidden_4201;hidden_5841;hidden_7645;hidden_7907 testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_romeo_377680.md
-    hidden_1740;hidden_1850;hidden_2020;hidden_2565;hidden_3195;hidden_4633;hidden_6038;hidden_8052;hidden_8332;hidden_8348;hidden_9224;hidden_9677;hidden_9725 testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_victor_213450.xml
-    hidden_4465                testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/sync_india_619591.md
-    hidden_6165                testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/delta_backup_731274.md
-    hidden_1866;hidden_1982;hidden_2033;hidden_2544;hidden_2703;hidden_4201;hidden_5841;hidden_7645;hidden_7907 testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/hardlink_cache_241053.md
-    hidden_1866;hidden_1982;hidden_2033;hidden_2544;hidden_2703;hidden_4201;hidden_5841;hidden_7645;hidden_7907 testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/hardlink_sync_127557.md
-    hidden_5444                testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/quebec_romeo_967260.xml
-    hidden_9867;hidden_8724;hidden_7425;hidden_6537 testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_papa_820469/dir_papa_622200/backup_gamma_194787.bak
-    hidden_5888;hidden_3735;hidden_2583 testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_papa_820469/dir_papa_622200/hardlink_cache_824366.log
-    hidden_7753;hidden_2527    testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_papa_820469/dir_papa_622200/report_beta_720652.ini
-    hidden_3844                testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_papa_820469/quebec_data_104204.txt
-    hidden_8267                testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/cache_romeo_160364.tmp
-    hidden_5888;hidden_3735;hidden_2583 testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/hardlink_output_553502.log
-    hidden_1866;hidden_1982;hidden_2033;hidden_2544;hidden_2703;hidden_4201;hidden_5841;hidden_7645;hidden_7907 testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/hardlink_trace_911678.md
-    hidden_1300                testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/index_cache_892295.bak
-    hidden_1866;hidden_1982;hidden_2033;hidden_2544;hidden_2703;hidden_4201;hidden_5841;hidden_7645;hidden_7907 testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_audit_985925.md
-    hidden_9745;hidden_5521;hidden_4983 testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_backup_499752.json
-    hidden_1740;hidden_1850;hidden_2020;hidden_2565;hidden_3195;hidden_4633;hidden_6038;hidden_8052;hidden_8332;hidden_8348;hidden_9224;hidden_9677;hidden_9725 testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_quebec_144962.xml
-    hidden_1866;hidden_1982;hidden_2033;hidden_2544;hidden_2703;hidden_4201;hidden_5841;hidden_7645;hidden_7907 testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_sierra_747286.md
-    hidden_3844                testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/victor_lima_445610.txt
-    hidden_3844                testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/victor_whiskey_810580.txt
-    hidden_1740;hidden_1850;hidden_2020;hidden_2565;hidden_3195;hidden_4633;hidden_6038;hidden_8052;hidden_8332;hidden_8348;hidden_9224;hidden_9677;hidden_9725 testspecials2/dir_kilo_616914/dir_victor_389261/hardlink_delta_453509.xml
-    hidden_4750                testspecials2/dir_kilo_616914/hardlink_audit_267723.cfg
-    hidden_9857;hidden_4729    testspecials2/dir_kilo_616914/hardlink_draft_949950.txt
-    hidden_9745;hidden_5521;hidden_4983 testspecials2/dir_kilo_616914/hardlink_oscar_842417.json
-    hidden_8690                testspecials2/dir_kilo_616914/hardlink_output_187329.bin
-    hidden_1866;hidden_1982;hidden_2033;hidden_2544;hidden_2703;hidden_4201;hidden_5841;hidden_7645;hidden_7907 testspecials2/dir_kilo_616914/hardlink_uniform_692622.md
-    hidden_9971;hidden_9063;hidden_7867;hidden_6012;hidden_5377;hidden_5019;hidden_4306;hidden_3677;hidden_2460;hidden_1757 testspecials2/dir_kilo_616914/hardlink_yankee_674597.log
-    hidden_1010                testspecials2/dir_kilo_616914/output_tango_240535.csv
-    hidden_9745;hidden_5521;hidden_4983 testspecials2/dir_kilo_616914/tango_log_555645.json
-    hidden_1866;hidden_1982;hidden_2033;hidden_2544;hidden_2703;hidden_4201;hidden_5841;hidden_7645;hidden_7907 testspecials2/dir_kilo_616914/uniform_sierra_103233.md
-    hidden_7649                testspecials2/dir_kilo_616914/yankee_india_996670.tmp
-    hidden_8099;hidden_5657    testspecials2/dir_log_298284/archive_sierra_385249.dat
-    hidden_8869;hidden_1205    testspecials2/dir_log_298284/cache_victor_115152.csv
-    hidden_2710                testspecials2/dir_log_298284/dir_draft_685915/dir_alpha_727718/index_november_943856.log
-    hidden_9857;hidden_4729    testspecials2/dir_log_298284/dir_draft_685915/dir_papa_627382/hardlink_record_651864.txt
-    hidden_5118                testspecials2/dir_log_298284/dir_draft_685915/dir_papa_627382/hardlink_zulu_120968.dat
-    hidden_6977;hidden_4578    testspecials2/dir_log_298284/dir_draft_685915/dir_papa_627382/romeo_output_468862.log
-    hidden_9994                testspecials2/dir_log_298284/dir_draft_685915/dir_papa_627382/zulu_tango_592986.json
-    hidden_2583                testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/delta_index_239633.lnk
-    hidden_1866;hidden_1982;hidden_2033;hidden_2544;hidden_2703;hidden_4201;hidden_5841;hidden_7645;hidden_7907 testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/hardlink_cache_491864.md
-    hidden_1866;hidden_1982;hidden_2033;hidden_2544;hidden_2703;hidden_4201;hidden_5841;hidden_7645;hidden_7907 testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/hardlink_romeo_332955.md
-    hidden_6165                testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/yankee_gamma_992075.md
-    hidden_2768                testspecials2/dir_log_298284/dir_draft_685915/hardlink_kilo_662149.bak
-    hidden_6012;hidden_2460    testspecials2/dir_log_298284/dir_draft_685915/tango_trace_182690.lnk
-    hidden_9109;hidden_3347    testspecials2/dir_log_298284/dir_hotel_354514/dir_draft_263211/dir_papa_245702/hardlink_quebec_163025.md
-    hidden_3207                testspecials2/dir_log_298284/dir_hotel_354514/dir_draft_263211/dir_papa_245702/whiskey_romeo_368520.ini
-    hidden_1866;hidden_1982;hidden_2033;hidden_2544;hidden_2703;hidden_4201;hidden_5841;hidden_7645;hidden_7907 testspecials2/dir_log_298284/dir_hotel_354514/hardlink_output_748297.md
-    hidden_4750                testspecials2/dir_log_298284/dir_hotel_354514/hardlink_record_579332.cfg
-    hidden_3196                testspecials2/dir_log_298284/echo_delta_245447.xml
-    hidden_9745;hidden_5521;hidden_4983 testspecials2/dir_log_298284/hardlink_config_217238.json
-    hidden_9857;hidden_4729    testspecials2/dir_log_298284/hardlink_zulu_445780.txt
-    hidden_9867;hidden_8724;hidden_7425;hidden_6537 testspecials2/dir_log_298284/india_romeo_106206.bak
-    hidden_1740;hidden_1850;hidden_2020;hidden_2565;hidden_3195;hidden_4633;hidden_6038;hidden_8052;hidden_8332;hidden_8348;hidden_9224;hidden_9677;hidden_9725 testspecials2/dir_log_298284/zulu_foxtrot_464678.xml
-    hidden_2445                testspecials2/dir_log_298284/zulu_romeo_832791.csv
-    hidden_8416                testspecials2/dir_oscar_397968/alpha_echo_382340.dat
-    hidden_2583                testspecials2/dir_oscar_397968/dir_oscar_522053/dir_sync_436503/hardlink_india_396154.lnk
-    hidden_1740;hidden_1850;hidden_2020;hidden_2565;hidden_3195;hidden_4633;hidden_6038;hidden_8052;hidden_8332;hidden_8348;hidden_9224;hidden_9677;hidden_9725 testspecials2/dir_oscar_397968/dir_oscar_522053/hardlink_foxtrot_457455.xml
-    hidden_5888;hidden_3735;hidden_2583 testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/dir_echo_972255/hardlink_log_887909.log
-    hidden_3754                testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/dir_echo_972255/oscar_backup_931632.md
-    hidden_2496                testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/dir_echo_972255/sierra_foxtrot_400120.json
-    hidden_9994                testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/hardlink_cache_647318.json
-    hidden_5118                testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/hardlink_config_909188.dat
-    hidden_1866;hidden_1982;hidden_2033;hidden_2544;hidden_2703;hidden_4201;hidden_5841;hidden_7645;hidden_7907 testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/hardlink_record_634135.md
-    hidden_9857;hidden_4729    testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/papa_sierra_191801.txt
-    hidden_9994                testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/hardlink_alpha_942016.json
-    hidden_1740;hidden_1850;hidden_2020;hidden_2565;hidden_3195;hidden_4633;hidden_6038;hidden_8052;hidden_8332;hidden_8348;hidden_9224;hidden_9677;hidden_9725 testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/hardlink_victor_749942.xml
-    hidden_6977;hidden_4578    testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/report_tango_970124.log
-    hidden_5629                testspecials2/dir_oscar_397968/dir_romeo_329803/hardlink_alpha_573983.bin
-    hidden_8690                testspecials2/dir_oscar_397968/dir_romeo_329803/hardlink_backup_157370.bin
-    hidden_6012;hidden_2460    testspecials2/dir_oscar_397968/dir_romeo_329803/hardlink_data_609326.lnk
-    hidden_1740;hidden_1850;hidden_2020;hidden_2565;hidden_3195;hidden_4633;hidden_6038;hidden_8052;hidden_8332;hidden_8348;hidden_9224;hidden_9677;hidden_9725 testspecials2/dir_oscar_397968/dir_romeo_329803/hardlink_uniform_951667.xml
-    hidden_8220;hidden_7631;hidden_6334 testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/dir_archive_157527/archive_output_434698.txt
-    hidden_2858                testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/dir_archive_157527/delta_backup_764167.json
-    hidden_4430                testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/dir_archive_157527/dir_november_114427/echo_sync_445777.tmp
-    hidden_9857;hidden_4729    testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/dir_archive_157527/hardlink_zulu_203183.txt
-    hidden_9867;hidden_8724;hidden_7425;hidden_6537 testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/hardlink_gamma_171073.bak
-    hidden_5888;hidden_3735;hidden_2583 testspecials2/dir_oscar_397968/dir_zulu_210476/hardlink_hotel_135884.log
-    hidden_1866;hidden_1982;hidden_2033;hidden_2544;hidden_2703;hidden_4201;hidden_5841;hidden_7645;hidden_7907 testspecials2/dir_oscar_397968/dir_zulu_210476/log_data_141232.md
-    hidden_5674                testspecials2/dir_oscar_397968/draft_echo_360869.dat
-    hidden_1866;hidden_1982;hidden_2033;hidden_2544;hidden_2703;hidden_4201;hidden_5841;hidden_7645;hidden_7907 testspecials2/dir_oscar_397968/hardlink_gamma_652358.md
-    hidden_5888;hidden_3735;hidden_2583 testspecials2/dir_oscar_397968/output_yankee_438536.log
-    hidden_6977;hidden_4578    testspecials2/dir_sync_303009/dir_foxtrot_191463/hardlink_foxtrot_600465.log
-    hidden_3844                testspecials2/dir_trace_120580/dir_india_806622/hardlink_temp_444830.txt
-    hidden_9265                testspecials2/dir_yankee_474982/dir_mike_734231/kilo_temp_256282.bin
-    hidden_5444                testspecials2/dir_yankee_474982/hardlink_audit_459489.xml
-    hidden_1866;hidden_1982;hidden_2033;hidden_2544;hidden_2703;hidden_4201;hidden_5841;hidden_7645;hidden_7907 testspecials2/dir_yankee_474982/hardlink_draft_276129.md
-    hidden_6349                testspecials2/dir_yankee_474982/papa_sierra_887773.txt
-    hidden_9398;hidden_8123;hidden_7684;hidden_7309;hidden_1869;hidden_1833;hidden_1118 testspecials2/draft_romeo_843020.log
-    hidden_3629;hidden_3314    testspecials2/foxtrot_backup_112225.json
-    hidden_3962                testspecials2/foxtrot_romeo_528126.cfg
-    hidden_1866;hidden_1982;hidden_2033;hidden_2544;hidden_2703;hidden_4201;hidden_5841;hidden_7645;hidden_7907 testspecials2/hardlink_backup_438537.md
-    hidden_1740;hidden_1850;hidden_2020;hidden_2565;hidden_3195;hidden_4633;hidden_6038;hidden_8052;hidden_8332;hidden_8348;hidden_9224;hidden_9677;hidden_9725 testspecials2/hardlink_hotel_900638.xml
-    hidden_5888;hidden_3735;hidden_2583 testspecials2/hardlink_uniform_628960.log
-    hidden_9109;hidden_3347    testspecials2/india_zulu_632200.md
-    hidden_2768                testspecials2/mike_cache_429213.bak
-    hidden_9063;hidden_6012;hidden_5019;hidden_2460 testspecials2/mike_index_889080.lnk
-    hidden_9589;hidden_8241    testspecials2/output_zulu_513021.log
-    hidden_9971;hidden_9063;hidden_7867;hidden_6012;hidden_5377;hidden_5019;hidden_4306;hidden_3677;hidden_2460;hidden_1757 testspecials2/romeo_india_410311.log
-    hidden_5118                testspecials2/sync_lima_360177.dat
-    hidden_8690                testspecials2/tango_yankee_206279.bin
-    hidden_5629                testspecials2/trace_output_728574.bin
-    hidden_5888;hidden_3735;hidden_2583 testspecials2/trace_trace_495265.log
+  STREAM                     RESIDENCY      HOST FILE
+    hidden_7357              inline         test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_romeo_gamma_831931.dat
+    hidden_1514              inline         test/xbpt_tango_archive_828215.dat
+    hidden_5547              inline         testspecials/alpha_backup_597620.dat
+    hidden_3867              inline         testspecials/alpha_backup_597620.dat
+    hidden_7872              inline         testspecials/cache_romeo_901499.xml
+    hidden_3651              inline         testspecials/cache_romeo_901499.xml
+    hidden_3552              inline         testspecials/cache_romeo_901499.xml
+    hidden_1129              inline         testspecials/cache_romeo_901499.xml
+    hidden_3552              inline         testspecials/cache_romeo_901499.xml
+    hidden_1129              inline         testspecials/cache_romeo_901499.xml
+    hidden_8889              inline         testspecials/dir_gamma_163068/alpha_tango_859870.md
+    hidden_7614              inline         testspecials/dir_gamma_163068/dir_alpha_598099/dir_index_953906/hardlink_uniform_706791.bin
+    hidden_9715              inline         testspecials/dir_gamma_163068/dir_alpha_598099/dir_index_953906/lima_tango_491721.txt
+    hidden_7804              inline         testspecials/dir_gamma_163068/dir_alpha_598099/dir_index_953906/lima_tango_491721.txt
+    hidden_7667              inline         testspecials/dir_gamma_163068/dir_alpha_598099/dir_index_953906/lima_tango_491721.txt
+    hidden_3867              inline         testspecials/dir_gamma_163068/dir_alpha_598099/dir_trace_251622/draft_sierra_832267.lnk
+    hidden_7872              inline         testspecials/dir_gamma_163068/dir_alpha_598099/dir_trace_251622/hardlink_papa_427429.xml
+    hidden_3651              inline         testspecials/dir_gamma_163068/dir_alpha_598099/dir_trace_251622/hardlink_papa_427429.xml
+    hidden_3552              inline         testspecials/dir_gamma_163068/dir_alpha_598099/dir_trace_251622/hardlink_papa_427429.xml
+    hidden_1129              inline         testspecials/dir_gamma_163068/dir_alpha_598099/dir_trace_251622/hardlink_papa_427429.xml
+    hidden_3552              inline         testspecials/dir_gamma_163068/dir_alpha_598099/dir_trace_251622/hardlink_papa_427429.xml
+    hidden_1129              inline         testspecials/dir_gamma_163068/dir_alpha_598099/dir_trace_251622/hardlink_papa_427429.xml
+    hidden_9499              inline         testspecials/dir_gamma_163068/dir_config_495144/dir_quebec_465938/hardlink_victor_353055.csv
+    hidden_8676              inline         testspecials/dir_gamma_163068/dir_config_495144/dir_quebec_465938/hardlink_victor_353055.csv
+    hidden_8640              inline         testspecials/dir_gamma_163068/dir_config_495144/dir_quebec_465938/hardlink_victor_353055.csv
+    hidden_7016              inline         testspecials/dir_gamma_163068/dir_config_495144/dir_quebec_465938/hardlink_victor_353055.csv
+    hidden_6488              inline         testspecials/dir_gamma_163068/dir_config_495144/dir_quebec_465938/hardlink_victor_353055.csv
+    hidden_5139              inline         testspecials/dir_gamma_163068/dir_config_495144/dir_quebec_465938/hardlink_victor_353055.csv
+    hidden_4405              inline         testspecials/dir_gamma_163068/dir_config_495144/dir_quebec_465938/hardlink_victor_353055.csv
+    hidden_3513              inline         testspecials/dir_gamma_163068/dir_config_495144/dir_quebec_465938/hardlink_victor_353055.csv
+    hidden_3101              inline         testspecials/dir_gamma_163068/dir_config_495144/dir_quebec_465938/hardlink_victor_353055.csv
+    hidden_1611              inline         testspecials/dir_gamma_163068/dir_config_495144/dir_quebec_465938/hardlink_victor_353055.csv
+    hidden_1219              inline         testspecials/dir_gamma_163068/dir_config_495144/dir_quebec_465938/hardlink_victor_353055.csv
+    hidden_1205              inline         testspecials/dir_gamma_163068/dir_config_495144/dir_quebec_465938/hardlink_victor_353055.csv
+    hidden_4405              inline         testspecials/dir_gamma_163068/dir_config_495144/dir_quebec_465938/hardlink_victor_353055.csv
+    hidden_7217              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/data_log_228205.json
+    hidden_6527              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/hardlink_cache_865140.log
+    hidden_1809              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/hardlink_cache_865140.log
+    hidden_7872              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/hardlink_sync_617075.xml
+    hidden_3651              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/hardlink_sync_617075.xml
+    hidden_3552              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/hardlink_sync_617075.xml
+    hidden_1129              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/hardlink_sync_617075.xml
+    hidden_3552              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/hardlink_sync_617075.xml
+    hidden_1129              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/hardlink_sync_617075.xml
+    hidden_9715              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/hardlink_sync_966265.txt
+    hidden_7804              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/hardlink_sync_966265.txt
+    hidden_7667              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/hardlink_sync_966265.txt
+    hidden_7444              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/hardlink_sync_966265.txt
+    hidden_6528              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/hardlink_sync_966265.txt
+    hidden_7444              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/hardlink_sync_966265.txt
+    hidden_9345              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/hotel_whiskey_254415.xml
+    hidden_8537              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/hotel_whiskey_254415.xml
+    hidden_7989              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/hotel_whiskey_254415.xml
+    hidden_5535              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/hotel_whiskey_254415.xml
+    hidden_2674              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/dir_romeo_975581/hotel_whiskey_254415.xml
+    hidden_4493              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/foxtrot_hotel_894969.txt
+    hidden_2163              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/foxtrot_hotel_894969.txt
+    hidden_9631              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/gamma_delta_622114.tmp
+    hidden_4921              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/gamma_delta_622114.tmp
+    hidden_8219              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_backup_321041.tmp
+    hidden_7800              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_backup_321041.tmp
+    hidden_6996              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_backup_321041.tmp
+    hidden_6391              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_backup_321041.tmp
+    hidden_6227              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_backup_321041.tmp
+    hidden_5587              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_backup_321041.tmp
+    hidden_4099              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_backup_321041.tmp
+    hidden_2646              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_backup_321041.tmp
+    hidden_1815              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_backup_321041.tmp
+    hidden_4099              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_backup_321041.tmp
+    hidden_2646              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_backup_321041.tmp
+    hidden_9715              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_beta_807149.txt
+    hidden_7804              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_beta_807149.txt
+    hidden_7667              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_beta_807149.txt
+    hidden_7444              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_beta_807149.txt
+    hidden_6528              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_beta_807149.txt
+    hidden_7444              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_beta_807149.txt
+    hidden_9715              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_data_601823.txt
+    hidden_7804              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_data_601823.txt
+    hidden_7667              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_data_601823.txt
+    hidden_7444              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_data_601823.txt
+    hidden_6528              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_data_601823.txt
+    hidden_7444              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_data_601823.txt
+    hidden_7217              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_output_296985.csv
+    hidden_9499              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/yankee_echo_107376.csv
+    hidden_8676              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/yankee_echo_107376.csv
+    hidden_8640              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/yankee_echo_107376.csv
+    hidden_7016              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/yankee_echo_107376.csv
+    hidden_6488              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/yankee_echo_107376.csv
+    hidden_5139              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/yankee_echo_107376.csv
+    hidden_4405              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/yankee_echo_107376.csv
+    hidden_3513              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/yankee_echo_107376.csv
+    hidden_3101              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/yankee_echo_107376.csv
+    hidden_1611              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/yankee_echo_107376.csv
+    hidden_1219              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/yankee_echo_107376.csv
+    hidden_1205              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/yankee_echo_107376.csv
+    hidden_4405              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/yankee_echo_107376.csv
+    hidden_9739              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_beta_159096/hardlink_india_222831.dat
+    hidden_5920              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_beta_159096/hardlink_india_222831.dat
+    hidden_4629              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_beta_159096/hardlink_india_222831.dat
+    hidden_9302              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/dir_yankee_435831/hardlink_data_386321.txt
+    hidden_6150              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/dir_yankee_435831/hardlink_data_386321.txt
+    hidden_7590              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/dir_yankee_435831/romeo_tango_661051.md
+    hidden_1036              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/dir_yankee_435831/uniform_config_149232.bin
+    hidden_8219              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_foxtrot_829175.tmp
+    hidden_7800              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_foxtrot_829175.tmp
+    hidden_6996              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_foxtrot_829175.tmp
+    hidden_6391              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_foxtrot_829175.tmp
+    hidden_6227              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_foxtrot_829175.tmp
+    hidden_5587              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_foxtrot_829175.tmp
+    hidden_4099              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_foxtrot_829175.tmp
+    hidden_2646              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_foxtrot_829175.tmp
+    hidden_1815              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_foxtrot_829175.tmp
+    hidden_4099              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_foxtrot_829175.tmp
+    hidden_2646              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_foxtrot_829175.tmp
+    hidden_9739              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_oscar_678275.dat
+    hidden_5920              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_oscar_678275.dat
+    hidden_4629              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_oscar_678275.dat
+    hidden_9499              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_trace_280509.csv
+    hidden_8676              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_trace_280509.csv
+    hidden_8640              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_trace_280509.csv
+    hidden_7016              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_trace_280509.csv
+    hidden_6488              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_trace_280509.csv
+    hidden_5139              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_trace_280509.csv
+    hidden_4405              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_trace_280509.csv
+    hidden_3513              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_trace_280509.csv
+    hidden_3101              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_trace_280509.csv
+    hidden_1611              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_trace_280509.csv
+    hidden_1219              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_trace_280509.csv
+    hidden_1205              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_trace_280509.csv
+    hidden_4405              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/hardlink_trace_280509.csv
+    hidden_9492              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/log_papa_718682.dat
+    hidden_4483              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/yankee_mike_675054.md
+    hidden_3604              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/zulu_november_980765.csv
+    hidden_3933              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_foxtrot_394781/hardlink_data_621977.json
+    hidden_4066              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_foxtrot_394781/hardlink_india_710018.bak
+    hidden_6601              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_foxtrot_394781/hardlink_mike_331995.ini
+    hidden_9715              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/data_temp_866006.txt
+    hidden_7804              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/data_temp_866006.txt
+    hidden_7667              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/data_temp_866006.txt
+    hidden_7444              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/data_temp_866006.txt
+    hidden_6528              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/data_temp_866006.txt
+    hidden_7444              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/data_temp_866006.txt
+    hidden_9715              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416/hardlink_romeo_901991.txt
+    hidden_7804              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416/hardlink_romeo_901991.txt
+    hidden_7667              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416/hardlink_romeo_901991.txt
+    hidden_7444              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416/hardlink_romeo_901991.txt
+    hidden_6528              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416/hardlink_romeo_901991.txt
+    hidden_7444              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416/hardlink_romeo_901991.txt
+    hidden_7614              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416/india_index_571205.bin
+    hidden_7217              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416/papa_victor_867137.csv
+    hidden_8935              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/hardlink_cache_174893.bin
+    hidden_6543              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/hardlink_cache_174893.bin
+    hidden_5767              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/hardlink_cache_174893.bin
+    hidden_4857              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/hardlink_cache_174893.bin
+    hidden_1662              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/hardlink_cache_174893.bin
+    hidden_8219              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/hardlink_mike_455666.tmp
+    hidden_7800              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/hardlink_mike_455666.tmp
+    hidden_6996              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/hardlink_mike_455666.tmp
+    hidden_6391              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/hardlink_mike_455666.tmp
+    hidden_6227              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/hardlink_mike_455666.tmp
+    hidden_5587              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/hardlink_mike_455666.tmp
+    hidden_4099              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/hardlink_mike_455666.tmp
+    hidden_2646              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/hardlink_mike_455666.tmp
+    hidden_1815              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/hardlink_mike_455666.tmp
+    hidden_4099              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/hardlink_mike_455666.tmp
+    hidden_2646              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/hardlink_mike_455666.tmp
+    hidden_5791              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/hotel_record_407322.log
+    hidden_9266              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/mike_november_838527.csv
+    hidden_8982              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/report_india_525082.ini
+    hidden_6726              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/report_india_525082.ini
+    hidden_3590              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/report_india_525082.ini
+    hidden_7872              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/hardlink_alpha_563527.xml
+    hidden_3651              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/hardlink_alpha_563527.xml
+    hidden_3552              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/hardlink_alpha_563527.xml
+    hidden_1129              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/hardlink_alpha_563527.xml
+    hidden_3552              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/hardlink_alpha_563527.xml
+    hidden_1129              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/hardlink_alpha_563527.xml
+    hidden_3933              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/hardlink_backup_970136.json
+    hidden_9499              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/hardlink_november_860521.csv
+    hidden_8676              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/hardlink_november_860521.csv
+    hidden_8640              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/hardlink_november_860521.csv
+    hidden_7016              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/hardlink_november_860521.csv
+    hidden_6488              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/hardlink_november_860521.csv
+    hidden_5139              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/hardlink_november_860521.csv
+    hidden_4405              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/hardlink_november_860521.csv
+    hidden_3513              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/hardlink_november_860521.csv
+    hidden_3101              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/hardlink_november_860521.csv
+    hidden_1611              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/hardlink_november_860521.csv
+    hidden_1219              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/hardlink_november_860521.csv
+    hidden_1205              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/hardlink_november_860521.csv
+    hidden_4405              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/hardlink_november_860521.csv
+    hidden_3933              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/hardlink_report_763630.json
+    hidden_2402              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/beta_whiskey_211785.json
+    hidden_7217              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/dir_india_917272/dir_tango_488439/alpha_papa_542985.csv
+    hidden_9715              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/dir_india_917272/dir_tango_488439/hardlink_tango_128794.txt
+    hidden_7804              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/dir_india_917272/dir_tango_488439/hardlink_tango_128794.txt
+    hidden_7667              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/dir_india_917272/dir_tango_488439/hardlink_tango_128794.txt
+    hidden_7444              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/dir_india_917272/dir_tango_488439/hardlink_tango_128794.txt
+    hidden_6528              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/dir_india_917272/dir_tango_488439/hardlink_tango_128794.txt
+    hidden_7444              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/dir_india_917272/dir_tango_488439/hardlink_tango_128794.txt
+    hidden_7217              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/hardlink_hotel_423014.csv
+    hidden_9936              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/november_output_172167.log
+    hidden_2811              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_tango_400582/config_november_887191.bin
+    hidden_9631              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_tango_400582/hardlink_foxtrot_552848.tmp
+    hidden_4921              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_tango_400582/hardlink_foxtrot_552848.tmp
+    hidden_2241              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_tango_400582/kilo_beta_797319.dat
+    hidden_6527              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_uniform_329376/foxtrot_oscar_943219.log
+    hidden_1809              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_uniform_329376/foxtrot_oscar_943219.log
+    hidden_6601              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_uniform_329376/hardlink_november_543825.ini
+    hidden_8219              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/backup_beta_229699.tmp
+    hidden_7800              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/backup_beta_229699.tmp
+    hidden_6996              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/backup_beta_229699.tmp
+    hidden_6391              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/backup_beta_229699.tmp
+    hidden_6227              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/backup_beta_229699.tmp
+    hidden_5587              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/backup_beta_229699.tmp
+    hidden_4099              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/backup_beta_229699.tmp
+    hidden_2646              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/backup_beta_229699.tmp
+    hidden_1815              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/backup_beta_229699.tmp
+    hidden_4099              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/backup_beta_229699.tmp
+    hidden_2646              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/backup_beta_229699.tmp
+    hidden_3170              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/dir_config_947995/backup_gamma_994458.xml
+    hidden_8457              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/dir_data_954098/zulu_echo_260795.txt
+    hidden_7217              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/hardlink_audit_733110.csv
+    hidden_7217              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/hardlink_quebec_170707.csv
+    hidden_4066              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/log_mike_670440.bak
+    hidden_9302              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/foxtrot_data_307933.txt
+    hidden_6150              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/foxtrot_data_307933.txt
+    hidden_4808              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/foxtrot_delta_292770.ini
+    hidden_8935              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/hardlink_romeo_645285.bin
+    hidden_6543              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/hardlink_romeo_645285.bin
+    hidden_5767              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/hardlink_romeo_645285.bin
+    hidden_4857              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/hardlink_romeo_645285.bin
+    hidden_1662              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/hardlink_romeo_645285.bin
+    hidden_4855              inline         testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/trace_delta_680793.cfg
+    hidden_8202              inline         testspecials/dir_gamma_163068/dir_echo_659970/oscar_sierra_156386.txt
+    hidden_7614              inline         testspecials/dir_gamma_163068/hardlink_papa_658266.bin
+    hidden_8935              inline         testspecials/dir_gamma_163068/hardlink_yankee_389124.bin
+    hidden_6543              inline         testspecials/dir_gamma_163068/hardlink_yankee_389124.bin
+    hidden_5767              inline         testspecials/dir_gamma_163068/hardlink_yankee_389124.bin
+    hidden_4857              inline         testspecials/dir_gamma_163068/hardlink_yankee_389124.bin
+    hidden_1662              inline         testspecials/dir_gamma_163068/hardlink_yankee_389124.bin
+    hidden_6601              inline         testspecials/dir_november_947335/alpha_index_636390.ini
+    hidden_8935              inline         testspecials/dir_november_947335/dir_archive_582163/foxtrot_beta_882942.bin
+    hidden_6543              inline         testspecials/dir_november_947335/dir_archive_582163/foxtrot_beta_882942.bin
+    hidden_5767              inline         testspecials/dir_november_947335/dir_archive_582163/foxtrot_beta_882942.bin
+    hidden_4857              inline         testspecials/dir_november_947335/dir_archive_582163/foxtrot_beta_882942.bin
+    hidden_1662              inline         testspecials/dir_november_947335/dir_archive_582163/foxtrot_beta_882942.bin
+    hidden_3933              inline         testspecials/dir_november_947335/dir_draft_325504/beta_november_982688.json
+    hidden_7872              inline         testspecials/dir_november_947335/dir_draft_325504/hardlink_mike_930037.xml
+    hidden_3651              inline         testspecials/dir_november_947335/dir_draft_325504/hardlink_mike_930037.xml
+    hidden_3552              inline         testspecials/dir_november_947335/dir_draft_325504/hardlink_mike_930037.xml
+    hidden_1129              inline         testspecials/dir_november_947335/dir_draft_325504/hardlink_mike_930037.xml
+    hidden_3552              inline         testspecials/dir_november_947335/dir_draft_325504/hardlink_mike_930037.xml
+    hidden_1129              inline         testspecials/dir_november_947335/dir_draft_325504/hardlink_mike_930037.xml
+    hidden_7985              inline         testspecials/dir_november_947335/dir_draft_325504/hardlink_sierra_921561.lnk
+    hidden_5835              inline         testspecials/dir_november_947335/dir_draft_325504/hardlink_sierra_921561.lnk
+    hidden_4280              inline         testspecials/dir_november_947335/dir_draft_325504/hardlink_sierra_921561.lnk
+    hidden_3485              inline         testspecials/dir_november_947335/dir_draft_325504/hardlink_sierra_921561.lnk
+    hidden_2471              inline         testspecials/dir_november_947335/dir_draft_325504/uniform_foxtrot_780105.dat
+    hidden_3867              inline         testspecials/dir_november_947335/dir_draft_325504/yankee_papa_632137.lnk
+    hidden_8219              inline         testspecials/dir_november_947335/dir_india_538407/dir_draft_269665/hardlink_mike_592787.tmp
+    hidden_7800              inline         testspecials/dir_november_947335/dir_india_538407/dir_draft_269665/hardlink_mike_592787.tmp
+    hidden_6391              inline         testspecials/dir_november_947335/dir_india_538407/dir_draft_269665/hardlink_mike_592787.tmp
+    hidden_6227              inline         testspecials/dir_november_947335/dir_india_538407/dir_draft_269665/hardlink_mike_592787.tmp
+    hidden_5587              inline         testspecials/dir_november_947335/dir_india_538407/dir_draft_269665/hardlink_mike_592787.tmp
+    hidden_4099              inline         testspecials/dir_november_947335/dir_india_538407/dir_draft_269665/hardlink_mike_592787.tmp
+    hidden_2646              inline         testspecials/dir_november_947335/dir_india_538407/dir_draft_269665/hardlink_mike_592787.tmp
+    hidden_1815              inline         testspecials/dir_november_947335/dir_india_538407/dir_draft_269665/hardlink_mike_592787.tmp
+    hidden_5859              inline         testspecials/dir_november_947335/dir_india_538407/dir_draft_269665/log_quebec_308911.dat
+    hidden_2097              inline         testspecials/dir_november_947335/dir_india_538407/dir_draft_269665/log_quebec_308911.dat
+    hidden_2096              inline         testspecials/dir_november_947335/dir_india_538407/dir_draft_269665/sync_record_864216.md
+    hidden_7131              inline         testspecials/dir_november_947335/dir_india_538407/dir_lima_396840/dir_draft_855171/data_oscar_221687.dat
+    hidden_7131              inline         testspecials/dir_november_947335/dir_india_538407/dir_lima_396840/dir_draft_855171/dir_lima_128289/whiskey_delta_401155.lnk
+    hidden_6098              inline         testspecials/dir_november_947335/dir_india_538407/dir_lima_396840/dir_draft_855171/dir_lima_128289/whiskey_delta_401155.lnk
+    hidden_7872              inline         testspecials/dir_november_947335/dir_india_538407/dir_lima_396840/dir_draft_855171/hardlink_uniform_178955.xml
+    hidden_3651              inline         testspecials/dir_november_947335/dir_india_538407/dir_lima_396840/dir_draft_855171/hardlink_uniform_178955.xml
+    hidden_3552              inline         testspecials/dir_november_947335/dir_india_538407/dir_lima_396840/dir_draft_855171/hardlink_uniform_178955.xml
+    hidden_1129              inline         testspecials/dir_november_947335/dir_india_538407/dir_lima_396840/dir_draft_855171/hardlink_uniform_178955.xml
+    hidden_3552              inline         testspecials/dir_november_947335/dir_india_538407/dir_lima_396840/dir_draft_855171/hardlink_uniform_178955.xml
+    hidden_1129              inline         testspecials/dir_november_947335/dir_india_538407/dir_lima_396840/dir_draft_855171/hardlink_uniform_178955.xml
+    hidden_7217              inline         testspecials/dir_november_947335/dir_india_538407/hardlink_config_676528.csv
+    hidden_3867              inline         testspecials/dir_november_947335/dir_india_538407/hardlink_data_610096.lnk
+    hidden_3437              inline         testspecials/dir_november_947335/dir_india_538407/hardlink_data_610096.lnk
+    hidden_8982              inline         testspecials/dir_november_947335/dir_india_538407/hardlink_echo_843063.ini
+    hidden_6726              inline         testspecials/dir_november_947335/dir_india_538407/hardlink_echo_843063.ini
+    hidden_3590              inline         testspecials/dir_november_947335/dir_india_538407/hardlink_echo_843063.ini
+    hidden_8982              inline         testspecials/dir_november_947335/dir_mike_527964/hardlink_record_756488.ini
+    hidden_6726              inline         testspecials/dir_november_947335/dir_mike_527964/hardlink_record_756488.ini
+    hidden_3590              inline         testspecials/dir_november_947335/dir_mike_527964/hardlink_record_756488.ini
+    hidden_6543              inline         testspecials/dir_november_947335/dir_mike_527964/papa_romeo_945623.bin
+    hidden_4857              inline         testspecials/dir_november_947335/dir_mike_527964/papa_romeo_945623.bin
+    hidden_1662              inline         testspecials/dir_november_947335/dir_mike_527964/papa_romeo_945623.bin
+    hidden_9715              inline         testspecials/dir_november_947335/dir_sync_924581/archive_india_740208.lnk
+    hidden_7804              inline         testspecials/dir_november_947335/dir_sync_924581/archive_india_740208.lnk
+    hidden_7667              inline         testspecials/dir_november_947335/dir_sync_924581/archive_india_740208.lnk
+    hidden_4853              inline         testspecials/dir_november_947335/dir_sync_924581/cache_beta_965254.ini
+    hidden_4055              inline         testspecials/dir_november_947335/dir_sync_924581/cache_beta_965254.ini
+    hidden_7217              inline         testspecials/dir_november_947335/dir_sync_924581/cache_output_350817.lnk
+    hidden_9753              inline         testspecials/dir_november_947335/dir_sync_924581/dir_backup_133264/echo_backup_486937.cfg
+    hidden_5883              inline         testspecials/dir_november_947335/dir_sync_924581/dir_backup_133264/india_log_375930.dat
+    hidden_3867              inline         testspecials/dir_november_947335/dir_sync_924581/dir_backup_133264/mike_romeo_954357.lnk
+    hidden_3437              inline         testspecials/dir_november_947335/dir_sync_924581/dir_backup_133264/mike_romeo_954357.lnk
+    hidden_7131              inline         testspecials/dir_november_947335/dir_sync_924581/dir_mike_306826/hardlink_cache_325845.dat
+    hidden_7614              inline         testspecials/dir_november_947335/dir_sync_924581/dir_mike_306826/hardlink_sierra_792479.bin
+    hidden_1036              inline         testspecials/dir_november_947335/dir_sync_924581/dir_mike_306826/temp_alpha_479281.bin
+    hidden_7217              inline         testspecials/dir_november_947335/dir_sync_924581/hardlink_november_224111.csv
+    hidden_9698              inline         testspecials/dir_november_947335/hardlink_beta_859345.lnk
+    hidden_8219              inline         testspecials/dir_november_947335/hardlink_echo_752214.tmp
+    hidden_7800              inline         testspecials/dir_november_947335/hardlink_echo_752214.tmp
+    hidden_6996              inline         testspecials/dir_november_947335/hardlink_echo_752214.tmp
+    hidden_6391              inline         testspecials/dir_november_947335/hardlink_echo_752214.tmp
+    hidden_6227              inline         testspecials/dir_november_947335/hardlink_echo_752214.tmp
+    hidden_5587              inline         testspecials/dir_november_947335/hardlink_echo_752214.tmp
+    hidden_4099              inline         testspecials/dir_november_947335/hardlink_echo_752214.tmp
+    hidden_2646              inline         testspecials/dir_november_947335/hardlink_echo_752214.tmp
+    hidden_1815              inline         testspecials/dir_november_947335/hardlink_echo_752214.tmp
+    hidden_4099              inline         testspecials/dir_november_947335/hardlink_echo_752214.tmp
+    hidden_2646              inline         testspecials/dir_november_947335/hardlink_echo_752214.tmp
+    hidden_8219              inline         testspecials/dir_november_947335/hardlink_log_446439.tmp
+    hidden_7800              inline         testspecials/dir_november_947335/hardlink_log_446439.tmp
+    hidden_6996              inline         testspecials/dir_november_947335/hardlink_log_446439.tmp
+    hidden_6391              inline         testspecials/dir_november_947335/hardlink_log_446439.tmp
+    hidden_6227              inline         testspecials/dir_november_947335/hardlink_log_446439.tmp
+    hidden_5587              inline         testspecials/dir_november_947335/hardlink_log_446439.tmp
+    hidden_4099              inline         testspecials/dir_november_947335/hardlink_log_446439.tmp
+    hidden_2646              inline         testspecials/dir_november_947335/hardlink_log_446439.tmp
+    hidden_1815              inline         testspecials/dir_november_947335/hardlink_log_446439.tmp
+    hidden_4099              inline         testspecials/dir_november_947335/hardlink_log_446439.tmp
+    hidden_2646              inline         testspecials/dir_november_947335/hardlink_log_446439.tmp
+    hidden_8982              inline         testspecials/dir_november_947335/hardlink_mike_216457.ini
+    hidden_6726              inline         testspecials/dir_november_947335/hardlink_mike_216457.ini
+    hidden_3590              inline         testspecials/dir_november_947335/hardlink_mike_216457.ini
+    hidden_6601              inline         testspecials/dir_november_947335/hardlink_oscar_269153.ini
+    hidden_6601              inline         testspecials/dir_november_947335/hardlink_trace_748877.ini
+    hidden_8935              inline         testspecials/dir_november_947335/hardlink_uniform_287325.bin
+    hidden_6543              inline         testspecials/dir_november_947335/hardlink_uniform_287325.bin
+    hidden_5767              inline         testspecials/dir_november_947335/hardlink_uniform_287325.bin
+    hidden_4857              inline         testspecials/dir_november_947335/hardlink_uniform_287325.bin
+    hidden_1662              inline         testspecials/dir_november_947335/hardlink_uniform_287325.bin
+    hidden_7103              inline         testspecials/dir_november_947335/oscar_november_944503.cfg
+    hidden_4187              inline         testspecials/dir_november_947335/oscar_uniform_234600.tmp
+    hidden_7611              inline         testspecials/dir_november_947335/trace_report_277987.json
+    hidden_9715              inline         testspecials/dir_uniform_195248/hardlink_temp_982613.txt
+    hidden_7804              inline         testspecials/dir_uniform_195248/hardlink_temp_982613.txt
+    hidden_7667              inline         testspecials/dir_uniform_195248/hardlink_temp_982613.txt
+    hidden_7444              inline         testspecials/dir_uniform_195248/hardlink_temp_982613.txt
+    hidden_6528              inline         testspecials/dir_uniform_195248/hardlink_temp_982613.txt
+    hidden_7444              inline         testspecials/dir_uniform_195248/hardlink_temp_982613.txt
+    hidden_6601              inline         testspecials/dir_uniform_544837/dir_cache_866824/victor_log_335120.ini
+    hidden_7211              inline         testspecials/dir_uniform_544837/dir_output_654155/draft_output_343220.txt
+    hidden_8219              inline         testspecials/dir_uniform_544837/dir_output_654155/november_sierra_162462.tmp
+    hidden_7800              inline         testspecials/dir_uniform_544837/dir_output_654155/november_sierra_162462.tmp
+    hidden_6391              inline         testspecials/dir_uniform_544837/dir_output_654155/november_sierra_162462.tmp
+    hidden_6227              inline         testspecials/dir_uniform_544837/dir_output_654155/november_sierra_162462.tmp
+    hidden_5587              inline         testspecials/dir_uniform_544837/dir_output_654155/november_sierra_162462.tmp
+    hidden_4099              inline         testspecials/dir_uniform_544837/dir_output_654155/november_sierra_162462.tmp
+    hidden_2646              inline         testspecials/dir_uniform_544837/dir_output_654155/november_sierra_162462.tmp
+    hidden_1815              inline         testspecials/dir_uniform_544837/dir_output_654155/november_sierra_162462.tmp
+    hidden_7872              inline         testspecials/dir_uniform_544837/dir_output_654155/papa_sierra_190261.xml
+    hidden_3651              inline         testspecials/dir_uniform_544837/dir_output_654155/papa_sierra_190261.xml
+    hidden_3552              inline         testspecials/dir_uniform_544837/dir_output_654155/papa_sierra_190261.xml
+    hidden_1129              inline         testspecials/dir_uniform_544837/dir_output_654155/papa_sierra_190261.xml
+    hidden_3552              inline         testspecials/dir_uniform_544837/dir_output_654155/papa_sierra_190261.xml
+    hidden_1129              inline         testspecials/dir_uniform_544837/dir_output_654155/papa_sierra_190261.xml
+    hidden_7590              inline         testspecials/dir_uniform_544837/hardlink_cache_388702.md
+    hidden_7211              inline         testspecials/dir_uniform_544837/hardlink_papa_582242.txt
+    hidden_9715              inline         testspecials/draft_uniform_166420.txt
+    hidden_7804              inline         testspecials/draft_uniform_166420.txt
+    hidden_7667              inline         testspecials/draft_uniform_166420.txt
+    hidden_7444              inline         testspecials/draft_uniform_166420.txt
+    hidden_6528              inline         testspecials/draft_uniform_166420.txt
+    hidden_7444              inline         testspecials/draft_uniform_166420.txt
+    hidden_7217              inline         testspecials/foxtrot_romeo_101133.csv
+    hidden_4493              inline         testspecials/hardlink_alpha_836959.txt
+    hidden_2163              inline         testspecials/hardlink_alpha_836959.txt
+    hidden_7985              inline         testspecials/hardlink_draft_507334.lnk
+    hidden_5835              inline         testspecials/hardlink_draft_507334.lnk
+    hidden_4280              inline         testspecials/hardlink_draft_507334.lnk
+    hidden_3485              inline         testspecials/hardlink_draft_507334.lnk
+    hidden_7217              inline         testspecials/hardlink_mike_576693.csv
+    hidden_7217              inline         testspecials/hardlink_uniform_425955.csv
+    hidden_5920              inline         testspecials/november_draft_655043.lnk
+    hidden_4629              inline         testspecials/november_draft_655043.lnk
+    hidden_8943              inline         testspecials/tango_lima_351713.tmp
+    hidden_5230              inline         testspecials/tango_lima_351713.tmp
+    hidden_4046              inline         testspecials/tango_lima_351713.tmp
+    hidden_9345              inline         testspecials/temp_gamma_969300.xml
+    hidden_7989              inline         testspecials/temp_gamma_969300.xml
+    hidden_2674              inline         testspecials/temp_gamma_969300.xml
+    hidden_2162              inline         testspecials/temp_gamma_969300.xml
+    hidden_2817              inline         testspecials2/backup_whiskey_151615.bak
+    hidden_3629              inline         testspecials2/dir_kilo_616914/audit_delta_706583.json
+    hidden_3314              inline         testspecials2/dir_kilo_616914/audit_delta_706583.json
+    hidden_4071              inline         testspecials2/dir_kilo_616914/dir_backup_630871/alpha_delta_986365.bak
+    hidden_8724              inline         testspecials2/dir_kilo_616914/dir_backup_630871/alpha_sync_934987.bak
+    hidden_7109              inline         testspecials2/dir_kilo_616914/dir_backup_630871/alpha_sync_934987.bak
+    hidden_1740              inline         testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_cache_865974.xml
+    hidden_1850              inline         testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_cache_865974.xml
+    hidden_2020              inline         testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_cache_865974.xml
+    hidden_2565              inline         testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_cache_865974.xml
+    hidden_3195              inline         testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_cache_865974.xml
+    hidden_4633              inline         testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_cache_865974.xml
+    hidden_6038              inline         testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_cache_865974.xml
+    hidden_8052              inline         testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_cache_865974.xml
+    hidden_8332              inline         testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_cache_865974.xml
+    hidden_8348              inline         testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_cache_865974.xml
+    hidden_9224              inline         testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_cache_865974.xml
+    hidden_9677              inline         testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_cache_865974.xml
+    hidden_9725              inline         testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_cache_865974.xml
+    hidden_9994              inline         testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_lima_842582.json
+    hidden_1866              inline         testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_whiskey_549936.md
+    hidden_1982              inline         testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_whiskey_549936.md
+    hidden_2033              inline         testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_whiskey_549936.md
+    hidden_2544              inline         testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_whiskey_549936.md
+    hidden_2703              inline         testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_whiskey_549936.md
+    hidden_4201              inline         testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_whiskey_549936.md
+    hidden_5841              inline         testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_whiskey_549936.md
+    hidden_7645              inline         testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_whiskey_549936.md
+    hidden_7907              inline         testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_whiskey_549936.md
+    hidden_8658              inline         testspecials2/dir_kilo_616914/dir_backup_630871/hotel_tango_211756.txt
+    hidden_6796              inline         testspecials2/dir_kilo_616914/dir_backup_630871/hotel_tango_211756.txt
+    hidden_3401              inline         testspecials2/dir_kilo_616914/dir_backup_630871/kilo_draft_266948.cfg
+    hidden_4719              inline         testspecials2/dir_kilo_616914/dir_backup_630871/sierra_kilo_783752.tmp
+    hidden_2781              inline         testspecials2/dir_kilo_616914/dir_backup_630871/sierra_kilo_783752.tmp
+    hidden_1740              inline         testspecials2/dir_kilo_616914/dir_backup_630871/trace_foxtrot_918703.xml
+    hidden_1850              inline         testspecials2/dir_kilo_616914/dir_backup_630871/trace_foxtrot_918703.xml
+    hidden_2020              inline         testspecials2/dir_kilo_616914/dir_backup_630871/trace_foxtrot_918703.xml
+    hidden_2565              inline         testspecials2/dir_kilo_616914/dir_backup_630871/trace_foxtrot_918703.xml
+    hidden_3195              inline         testspecials2/dir_kilo_616914/dir_backup_630871/trace_foxtrot_918703.xml
+    hidden_4633              inline         testspecials2/dir_kilo_616914/dir_backup_630871/trace_foxtrot_918703.xml
+    hidden_6038              inline         testspecials2/dir_kilo_616914/dir_backup_630871/trace_foxtrot_918703.xml
+    hidden_8052              inline         testspecials2/dir_kilo_616914/dir_backup_630871/trace_foxtrot_918703.xml
+    hidden_8332              inline         testspecials2/dir_kilo_616914/dir_backup_630871/trace_foxtrot_918703.xml
+    hidden_8348              inline         testspecials2/dir_kilo_616914/dir_backup_630871/trace_foxtrot_918703.xml
+    hidden_9224              inline         testspecials2/dir_kilo_616914/dir_backup_630871/trace_foxtrot_918703.xml
+    hidden_9677              inline         testspecials2/dir_kilo_616914/dir_backup_630871/trace_foxtrot_918703.xml
+    hidden_9725              inline         testspecials2/dir_kilo_616914/dir_backup_630871/trace_foxtrot_918703.xml
+    hidden_1740              inline         testspecials2/dir_kilo_616914/dir_hotel_911814/hardlink_uniform_712558.xml
+    hidden_1850              inline         testspecials2/dir_kilo_616914/dir_hotel_911814/hardlink_uniform_712558.xml
+    hidden_2020              inline         testspecials2/dir_kilo_616914/dir_hotel_911814/hardlink_uniform_712558.xml
+    hidden_2565              inline         testspecials2/dir_kilo_616914/dir_hotel_911814/hardlink_uniform_712558.xml
+    hidden_3195              inline         testspecials2/dir_kilo_616914/dir_hotel_911814/hardlink_uniform_712558.xml
+    hidden_4633              inline         testspecials2/dir_kilo_616914/dir_hotel_911814/hardlink_uniform_712558.xml
+    hidden_6038              inline         testspecials2/dir_kilo_616914/dir_hotel_911814/hardlink_uniform_712558.xml
+    hidden_8052              inline         testspecials2/dir_kilo_616914/dir_hotel_911814/hardlink_uniform_712558.xml
+    hidden_8332              inline         testspecials2/dir_kilo_616914/dir_hotel_911814/hardlink_uniform_712558.xml
+    hidden_8348              inline         testspecials2/dir_kilo_616914/dir_hotel_911814/hardlink_uniform_712558.xml
+    hidden_9224              inline         testspecials2/dir_kilo_616914/dir_hotel_911814/hardlink_uniform_712558.xml
+    hidden_9677              inline         testspecials2/dir_kilo_616914/dir_hotel_911814/hardlink_uniform_712558.xml
+    hidden_9725              inline         testspecials2/dir_kilo_616914/dir_hotel_911814/hardlink_uniform_712558.xml
+    hidden_5888              inline         testspecials2/dir_kilo_616914/dir_index_179689/dir_yankee_777638/hardlink_log_206798.log
+    hidden_3735              inline         testspecials2/dir_kilo_616914/dir_index_179689/dir_yankee_777638/hardlink_log_206798.log
+    hidden_2583              inline         testspecials2/dir_kilo_616914/dir_index_179689/dir_yankee_777638/hardlink_log_206798.log
+    hidden_5379              inline         testspecials2/dir_kilo_616914/dir_index_179689/hotel_zulu_522360.txt
+    hidden_6977              inline         testspecials2/dir_kilo_616914/dir_india_415253/hardlink_draft_118833.log
+    hidden_4578              inline         testspecials2/dir_kilo_616914/dir_india_415253/hardlink_draft_118833.log
+    hidden_5888              inline         testspecials2/dir_kilo_616914/dir_papa_668661/hardlink_romeo_734888.log
+    hidden_3735              inline         testspecials2/dir_kilo_616914/dir_papa_668661/hardlink_romeo_734888.log
+    hidden_2583              inline         testspecials2/dir_kilo_616914/dir_papa_668661/hardlink_romeo_734888.log
+    hidden_8040              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_archive_113008/tango_config_159789.csv
+    hidden_9109              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/hardlink_config_800823.md
+    hidden_3347              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/hardlink_config_800823.md
+    hidden_5629              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/hardlink_tango_661477.bin
+    hidden_4750              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/log_echo_397510.cfg
+    hidden_1740              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/report_backup_871173.xml
+    hidden_1850              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/report_backup_871173.xml
+    hidden_2020              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/report_backup_871173.xml
+    hidden_2565              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/report_backup_871173.xml
+    hidden_3195              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/report_backup_871173.xml
+    hidden_4633              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/report_backup_871173.xml
+    hidden_6038              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/report_backup_871173.xml
+    hidden_8052              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/report_backup_871173.xml
+    hidden_8332              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/report_backup_871173.xml
+    hidden_8348              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/report_backup_871173.xml
+    hidden_9224              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/report_backup_871173.xml
+    hidden_9677              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/report_backup_871173.xml
+    hidden_9725              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/report_backup_871173.xml
+    hidden_1866              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/hardlink_hotel_462218.md
+    hidden_1982              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/hardlink_hotel_462218.md
+    hidden_2033              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/hardlink_hotel_462218.md
+    hidden_2544              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/hardlink_hotel_462218.md
+    hidden_2703              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/hardlink_hotel_462218.md
+    hidden_4201              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/hardlink_hotel_462218.md
+    hidden_5841              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/hardlink_hotel_462218.md
+    hidden_7645              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/hardlink_hotel_462218.md
+    hidden_7907              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/hardlink_hotel_462218.md
+    hidden_1866              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/hardlink_yankee_126039.md
+    hidden_1982              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/hardlink_yankee_126039.md
+    hidden_2033              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/hardlink_yankee_126039.md
+    hidden_2544              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/hardlink_yankee_126039.md
+    hidden_2703              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/hardlink_yankee_126039.md
+    hidden_4201              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/hardlink_yankee_126039.md
+    hidden_5841              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/hardlink_yankee_126039.md
+    hidden_7645              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/hardlink_yankee_126039.md
+    hidden_7907              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/hardlink_yankee_126039.md
+    hidden_5118              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/november_alpha_101476.dat
+    hidden_7933              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/echo_mike_940162.md
+    hidden_9398              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_gamma_863368.log
+    hidden_8123              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_gamma_863368.log
+    hidden_7684              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_gamma_863368.log
+    hidden_7309              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_gamma_863368.log
+    hidden_1869              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_gamma_863368.log
+    hidden_1833              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_gamma_863368.log
+    hidden_1118              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_gamma_863368.log
+    hidden_1866              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_romeo_377680.md
+    hidden_1982              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_romeo_377680.md
+    hidden_2033              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_romeo_377680.md
+    hidden_2544              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_romeo_377680.md
+    hidden_2703              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_romeo_377680.md
+    hidden_4201              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_romeo_377680.md
+    hidden_5841              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_romeo_377680.md
+    hidden_7645              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_romeo_377680.md
+    hidden_7907              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_romeo_377680.md
+    hidden_1740              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_victor_213450.xml
+    hidden_1850              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_victor_213450.xml
+    hidden_2020              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_victor_213450.xml
+    hidden_2565              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_victor_213450.xml
+    hidden_3195              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_victor_213450.xml
+    hidden_4633              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_victor_213450.xml
+    hidden_6038              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_victor_213450.xml
+    hidden_8052              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_victor_213450.xml
+    hidden_8332              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_victor_213450.xml
+    hidden_8348              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_victor_213450.xml
+    hidden_9224              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_victor_213450.xml
+    hidden_9677              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_victor_213450.xml
+    hidden_9725              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_victor_213450.xml
+    hidden_4465              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/sync_india_619591.md
+    hidden_6165              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/delta_backup_731274.md
+    hidden_1866              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/hardlink_cache_241053.md
+    hidden_1982              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/hardlink_cache_241053.md
+    hidden_2033              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/hardlink_cache_241053.md
+    hidden_2544              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/hardlink_cache_241053.md
+    hidden_2703              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/hardlink_cache_241053.md
+    hidden_4201              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/hardlink_cache_241053.md
+    hidden_5841              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/hardlink_cache_241053.md
+    hidden_7645              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/hardlink_cache_241053.md
+    hidden_7907              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/hardlink_cache_241053.md
+    hidden_1866              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/hardlink_sync_127557.md
+    hidden_1982              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/hardlink_sync_127557.md
+    hidden_2033              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/hardlink_sync_127557.md
+    hidden_2544              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/hardlink_sync_127557.md
+    hidden_2703              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/hardlink_sync_127557.md
+    hidden_4201              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/hardlink_sync_127557.md
+    hidden_5841              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/hardlink_sync_127557.md
+    hidden_7645              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/hardlink_sync_127557.md
+    hidden_7907              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/hardlink_sync_127557.md
+    hidden_5444              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/quebec_romeo_967260.xml
+    hidden_9867              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_papa_820469/dir_papa_622200/backup_gamma_194787.bak
+    hidden_8724              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_papa_820469/dir_papa_622200/backup_gamma_194787.bak
+    hidden_7425              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_papa_820469/dir_papa_622200/backup_gamma_194787.bak
+    hidden_6537              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_papa_820469/dir_papa_622200/backup_gamma_194787.bak
+    hidden_5888              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_papa_820469/dir_papa_622200/hardlink_cache_824366.log
+    hidden_3735              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_papa_820469/dir_papa_622200/hardlink_cache_824366.log
+    hidden_2583              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_papa_820469/dir_papa_622200/hardlink_cache_824366.log
+    hidden_7753              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_papa_820469/dir_papa_622200/report_beta_720652.ini
+    hidden_2527              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_papa_820469/dir_papa_622200/report_beta_720652.ini
+    hidden_3844              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_papa_820469/quebec_data_104204.txt
+    hidden_8267              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/cache_romeo_160364.tmp
+    hidden_5888              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/hardlink_output_553502.log
+    hidden_3735              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/hardlink_output_553502.log
+    hidden_2583              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/hardlink_output_553502.log
+    hidden_1866              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/hardlink_trace_911678.md
+    hidden_1982              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/hardlink_trace_911678.md
+    hidden_2033              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/hardlink_trace_911678.md
+    hidden_2544              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/hardlink_trace_911678.md
+    hidden_2703              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/hardlink_trace_911678.md
+    hidden_4201              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/hardlink_trace_911678.md
+    hidden_5841              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/hardlink_trace_911678.md
+    hidden_7645              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/hardlink_trace_911678.md
+    hidden_7907              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/hardlink_trace_911678.md
+    hidden_1300              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/index_cache_892295.bak
+    hidden_1866              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_audit_985925.md
+    hidden_1982              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_audit_985925.md
+    hidden_2033              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_audit_985925.md
+    hidden_2544              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_audit_985925.md
+    hidden_2703              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_audit_985925.md
+    hidden_4201              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_audit_985925.md
+    hidden_5841              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_audit_985925.md
+    hidden_7645              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_audit_985925.md
+    hidden_7907              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_audit_985925.md
+    hidden_9745              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_backup_499752.json
+    hidden_5521              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_backup_499752.json
+    hidden_4983              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_backup_499752.json
+    hidden_1740              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_quebec_144962.xml
+    hidden_1850              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_quebec_144962.xml
+    hidden_2020              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_quebec_144962.xml
+    hidden_2565              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_quebec_144962.xml
+    hidden_3195              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_quebec_144962.xml
+    hidden_4633              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_quebec_144962.xml
+    hidden_6038              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_quebec_144962.xml
+    hidden_8052              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_quebec_144962.xml
+    hidden_8332              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_quebec_144962.xml
+    hidden_8348              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_quebec_144962.xml
+    hidden_9224              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_quebec_144962.xml
+    hidden_9677              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_quebec_144962.xml
+    hidden_9725              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_quebec_144962.xml
+    hidden_1866              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_sierra_747286.md
+    hidden_1982              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_sierra_747286.md
+    hidden_2033              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_sierra_747286.md
+    hidden_2544              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_sierra_747286.md
+    hidden_2703              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_sierra_747286.md
+    hidden_4201              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_sierra_747286.md
+    hidden_5841              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_sierra_747286.md
+    hidden_7645              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_sierra_747286.md
+    hidden_7907              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_sierra_747286.md
+    hidden_3844              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/victor_lima_445610.txt
+    hidden_3844              inline         testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/victor_whiskey_810580.txt
+    hidden_1740              inline         testspecials2/dir_kilo_616914/dir_victor_389261/hardlink_delta_453509.xml
+    hidden_1850              inline         testspecials2/dir_kilo_616914/dir_victor_389261/hardlink_delta_453509.xml
+    hidden_2020              inline         testspecials2/dir_kilo_616914/dir_victor_389261/hardlink_delta_453509.xml
+    hidden_2565              inline         testspecials2/dir_kilo_616914/dir_victor_389261/hardlink_delta_453509.xml
+    hidden_3195              inline         testspecials2/dir_kilo_616914/dir_victor_389261/hardlink_delta_453509.xml
+    hidden_4633              inline         testspecials2/dir_kilo_616914/dir_victor_389261/hardlink_delta_453509.xml
+    hidden_6038              inline         testspecials2/dir_kilo_616914/dir_victor_389261/hardlink_delta_453509.xml
+    hidden_8052              inline         testspecials2/dir_kilo_616914/dir_victor_389261/hardlink_delta_453509.xml
+    hidden_8332              inline         testspecials2/dir_kilo_616914/dir_victor_389261/hardlink_delta_453509.xml
+    hidden_8348              inline         testspecials2/dir_kilo_616914/dir_victor_389261/hardlink_delta_453509.xml
+    hidden_9224              inline         testspecials2/dir_kilo_616914/dir_victor_389261/hardlink_delta_453509.xml
+    hidden_9677              inline         testspecials2/dir_kilo_616914/dir_victor_389261/hardlink_delta_453509.xml
+    hidden_9725              inline         testspecials2/dir_kilo_616914/dir_victor_389261/hardlink_delta_453509.xml
+    hidden_4750              inline         testspecials2/dir_kilo_616914/hardlink_audit_267723.cfg
+    hidden_9857              inline         testspecials2/dir_kilo_616914/hardlink_draft_949950.txt
+    hidden_4729              inline         testspecials2/dir_kilo_616914/hardlink_draft_949950.txt
+    hidden_9745              inline         testspecials2/dir_kilo_616914/hardlink_oscar_842417.json
+    hidden_5521              inline         testspecials2/dir_kilo_616914/hardlink_oscar_842417.json
+    hidden_4983              inline         testspecials2/dir_kilo_616914/hardlink_oscar_842417.json
+    hidden_8690              inline         testspecials2/dir_kilo_616914/hardlink_output_187329.bin
+    hidden_1866              inline         testspecials2/dir_kilo_616914/hardlink_uniform_692622.md
+    hidden_1982              inline         testspecials2/dir_kilo_616914/hardlink_uniform_692622.md
+    hidden_2033              inline         testspecials2/dir_kilo_616914/hardlink_uniform_692622.md
+    hidden_2544              inline         testspecials2/dir_kilo_616914/hardlink_uniform_692622.md
+    hidden_2703              inline         testspecials2/dir_kilo_616914/hardlink_uniform_692622.md
+    hidden_4201              inline         testspecials2/dir_kilo_616914/hardlink_uniform_692622.md
+    hidden_5841              inline         testspecials2/dir_kilo_616914/hardlink_uniform_692622.md
+    hidden_7645              inline         testspecials2/dir_kilo_616914/hardlink_uniform_692622.md
+    hidden_7907              inline         testspecials2/dir_kilo_616914/hardlink_uniform_692622.md
+    hidden_9971              inline         testspecials2/dir_kilo_616914/hardlink_yankee_674597.log
+    hidden_9063              inline         testspecials2/dir_kilo_616914/hardlink_yankee_674597.log
+    hidden_7867              inline         testspecials2/dir_kilo_616914/hardlink_yankee_674597.log
+    hidden_6012              inline         testspecials2/dir_kilo_616914/hardlink_yankee_674597.log
+    hidden_5377              inline         testspecials2/dir_kilo_616914/hardlink_yankee_674597.log
+    hidden_5019              inline         testspecials2/dir_kilo_616914/hardlink_yankee_674597.log
+    hidden_4306              inline         testspecials2/dir_kilo_616914/hardlink_yankee_674597.log
+    hidden_3677              inline         testspecials2/dir_kilo_616914/hardlink_yankee_674597.log
+    hidden_2460              inline         testspecials2/dir_kilo_616914/hardlink_yankee_674597.log
+    hidden_1757              inline         testspecials2/dir_kilo_616914/hardlink_yankee_674597.log
+    hidden_1010              inline         testspecials2/dir_kilo_616914/output_tango_240535.csv
+    hidden_9745              inline         testspecials2/dir_kilo_616914/tango_log_555645.json
+    hidden_5521              inline         testspecials2/dir_kilo_616914/tango_log_555645.json
+    hidden_4983              inline         testspecials2/dir_kilo_616914/tango_log_555645.json
+    hidden_1866              inline         testspecials2/dir_kilo_616914/uniform_sierra_103233.md
+    hidden_1982              inline         testspecials2/dir_kilo_616914/uniform_sierra_103233.md
+    hidden_2033              inline         testspecials2/dir_kilo_616914/uniform_sierra_103233.md
+    hidden_2544              inline         testspecials2/dir_kilo_616914/uniform_sierra_103233.md
+    hidden_2703              inline         testspecials2/dir_kilo_616914/uniform_sierra_103233.md
+    hidden_4201              inline         testspecials2/dir_kilo_616914/uniform_sierra_103233.md
+    hidden_5841              inline         testspecials2/dir_kilo_616914/uniform_sierra_103233.md
+    hidden_7645              inline         testspecials2/dir_kilo_616914/uniform_sierra_103233.md
+    hidden_7907              inline         testspecials2/dir_kilo_616914/uniform_sierra_103233.md
+    hidden_7649              inline         testspecials2/dir_kilo_616914/yankee_india_996670.tmp
+    hidden_8099              inline         testspecials2/dir_log_298284/archive_sierra_385249.dat
+    hidden_5657              inline         testspecials2/dir_log_298284/archive_sierra_385249.dat
+    hidden_8869              inline         testspecials2/dir_log_298284/cache_victor_115152.csv
+    hidden_1205              inline         testspecials2/dir_log_298284/cache_victor_115152.csv
+    hidden_2710              inline         testspecials2/dir_log_298284/dir_draft_685915/dir_alpha_727718/index_november_943856.log
+    hidden_9857              inline         testspecials2/dir_log_298284/dir_draft_685915/dir_papa_627382/hardlink_record_651864.txt
+    hidden_4729              inline         testspecials2/dir_log_298284/dir_draft_685915/dir_papa_627382/hardlink_record_651864.txt
+    hidden_5118              inline         testspecials2/dir_log_298284/dir_draft_685915/dir_papa_627382/hardlink_zulu_120968.dat
+    hidden_6977              inline         testspecials2/dir_log_298284/dir_draft_685915/dir_papa_627382/romeo_output_468862.log
+    hidden_4578              inline         testspecials2/dir_log_298284/dir_draft_685915/dir_papa_627382/romeo_output_468862.log
+    hidden_9994              inline         testspecials2/dir_log_298284/dir_draft_685915/dir_papa_627382/zulu_tango_592986.json
+    hidden_2583              inline         testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/delta_index_239633.lnk
+    hidden_1866              inline         testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/hardlink_cache_491864.md
+    hidden_1982              inline         testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/hardlink_cache_491864.md
+    hidden_2033              inline         testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/hardlink_cache_491864.md
+    hidden_2544              inline         testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/hardlink_cache_491864.md
+    hidden_2703              inline         testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/hardlink_cache_491864.md
+    hidden_4201              inline         testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/hardlink_cache_491864.md
+    hidden_5841              inline         testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/hardlink_cache_491864.md
+    hidden_7645              inline         testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/hardlink_cache_491864.md
+    hidden_7907              inline         testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/hardlink_cache_491864.md
+    hidden_1866              inline         testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/hardlink_romeo_332955.md
+    hidden_1982              inline         testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/hardlink_romeo_332955.md
+    hidden_2033              inline         testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/hardlink_romeo_332955.md
+    hidden_2544              inline         testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/hardlink_romeo_332955.md
+    hidden_2703              inline         testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/hardlink_romeo_332955.md
+    hidden_4201              inline         testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/hardlink_romeo_332955.md
+    hidden_5841              inline         testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/hardlink_romeo_332955.md
+    hidden_7645              inline         testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/hardlink_romeo_332955.md
+    hidden_7907              inline         testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/hardlink_romeo_332955.md
+    hidden_6165              inline         testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/yankee_gamma_992075.md
+    hidden_2768              inline         testspecials2/dir_log_298284/dir_draft_685915/hardlink_kilo_662149.bak
+    hidden_6012              inline         testspecials2/dir_log_298284/dir_draft_685915/tango_trace_182690.lnk
+    hidden_2460              inline         testspecials2/dir_log_298284/dir_draft_685915/tango_trace_182690.lnk
+    hidden_9109              inline         testspecials2/dir_log_298284/dir_hotel_354514/dir_draft_263211/dir_papa_245702/hardlink_quebec_163025.md
+    hidden_3347              inline         testspecials2/dir_log_298284/dir_hotel_354514/dir_draft_263211/dir_papa_245702/hardlink_quebec_163025.md
+    hidden_3207              inline         testspecials2/dir_log_298284/dir_hotel_354514/dir_draft_263211/dir_papa_245702/whiskey_romeo_368520.ini
+    hidden_1866              inline         testspecials2/dir_log_298284/dir_hotel_354514/hardlink_output_748297.md
+    hidden_1982              inline         testspecials2/dir_log_298284/dir_hotel_354514/hardlink_output_748297.md
+    hidden_2033              inline         testspecials2/dir_log_298284/dir_hotel_354514/hardlink_output_748297.md
+    hidden_2544              inline         testspecials2/dir_log_298284/dir_hotel_354514/hardlink_output_748297.md
+    hidden_2703              inline         testspecials2/dir_log_298284/dir_hotel_354514/hardlink_output_748297.md
+    hidden_4201              inline         testspecials2/dir_log_298284/dir_hotel_354514/hardlink_output_748297.md
+    hidden_5841              inline         testspecials2/dir_log_298284/dir_hotel_354514/hardlink_output_748297.md
+    hidden_7645              inline         testspecials2/dir_log_298284/dir_hotel_354514/hardlink_output_748297.md
+    hidden_7907              inline         testspecials2/dir_log_298284/dir_hotel_354514/hardlink_output_748297.md
+    hidden_4750              inline         testspecials2/dir_log_298284/dir_hotel_354514/hardlink_record_579332.cfg
+    hidden_3196              inline         testspecials2/dir_log_298284/echo_delta_245447.xml
+    hidden_9745              inline         testspecials2/dir_log_298284/hardlink_config_217238.json
+    hidden_5521              inline         testspecials2/dir_log_298284/hardlink_config_217238.json
+    hidden_4983              inline         testspecials2/dir_log_298284/hardlink_config_217238.json
+    hidden_9857              inline         testspecials2/dir_log_298284/hardlink_zulu_445780.txt
+    hidden_4729              inline         testspecials2/dir_log_298284/hardlink_zulu_445780.txt
+    hidden_9867              inline         testspecials2/dir_log_298284/india_romeo_106206.bak
+    hidden_8724              inline         testspecials2/dir_log_298284/india_romeo_106206.bak
+    hidden_7425              inline         testspecials2/dir_log_298284/india_romeo_106206.bak
+    hidden_6537              inline         testspecials2/dir_log_298284/india_romeo_106206.bak
+    hidden_1740              inline         testspecials2/dir_log_298284/zulu_foxtrot_464678.xml
+    hidden_1850              inline         testspecials2/dir_log_298284/zulu_foxtrot_464678.xml
+    hidden_2020              inline         testspecials2/dir_log_298284/zulu_foxtrot_464678.xml
+    hidden_2565              inline         testspecials2/dir_log_298284/zulu_foxtrot_464678.xml
+    hidden_3195              inline         testspecials2/dir_log_298284/zulu_foxtrot_464678.xml
+    hidden_4633              inline         testspecials2/dir_log_298284/zulu_foxtrot_464678.xml
+    hidden_6038              inline         testspecials2/dir_log_298284/zulu_foxtrot_464678.xml
+    hidden_8052              inline         testspecials2/dir_log_298284/zulu_foxtrot_464678.xml
+    hidden_8332              inline         testspecials2/dir_log_298284/zulu_foxtrot_464678.xml
+    hidden_8348              inline         testspecials2/dir_log_298284/zulu_foxtrot_464678.xml
+    hidden_9224              inline         testspecials2/dir_log_298284/zulu_foxtrot_464678.xml
+    hidden_9677              inline         testspecials2/dir_log_298284/zulu_foxtrot_464678.xml
+    hidden_9725              inline         testspecials2/dir_log_298284/zulu_foxtrot_464678.xml
+    hidden_2445              inline         testspecials2/dir_log_298284/zulu_romeo_832791.csv
+    hidden_8416              inline         testspecials2/dir_oscar_397968/alpha_echo_382340.dat
+    hidden_2583              inline         testspecials2/dir_oscar_397968/dir_oscar_522053/dir_sync_436503/hardlink_india_396154.lnk
+    hidden_1740              inline         testspecials2/dir_oscar_397968/dir_oscar_522053/hardlink_foxtrot_457455.xml
+    hidden_1850              inline         testspecials2/dir_oscar_397968/dir_oscar_522053/hardlink_foxtrot_457455.xml
+    hidden_2020              inline         testspecials2/dir_oscar_397968/dir_oscar_522053/hardlink_foxtrot_457455.xml
+    hidden_2565              inline         testspecials2/dir_oscar_397968/dir_oscar_522053/hardlink_foxtrot_457455.xml
+    hidden_3195              inline         testspecials2/dir_oscar_397968/dir_oscar_522053/hardlink_foxtrot_457455.xml
+    hidden_4633              inline         testspecials2/dir_oscar_397968/dir_oscar_522053/hardlink_foxtrot_457455.xml
+    hidden_6038              inline         testspecials2/dir_oscar_397968/dir_oscar_522053/hardlink_foxtrot_457455.xml
+    hidden_8052              inline         testspecials2/dir_oscar_397968/dir_oscar_522053/hardlink_foxtrot_457455.xml
+    hidden_8332              inline         testspecials2/dir_oscar_397968/dir_oscar_522053/hardlink_foxtrot_457455.xml
+    hidden_8348              inline         testspecials2/dir_oscar_397968/dir_oscar_522053/hardlink_foxtrot_457455.xml
+    hidden_9224              inline         testspecials2/dir_oscar_397968/dir_oscar_522053/hardlink_foxtrot_457455.xml
+    hidden_9677              inline         testspecials2/dir_oscar_397968/dir_oscar_522053/hardlink_foxtrot_457455.xml
+    hidden_9725              inline         testspecials2/dir_oscar_397968/dir_oscar_522053/hardlink_foxtrot_457455.xml
+    hidden_5888              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/dir_echo_972255/hardlink_log_887909.log
+    hidden_3735              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/dir_echo_972255/hardlink_log_887909.log
+    hidden_2583              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/dir_echo_972255/hardlink_log_887909.log
+    hidden_3754              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/dir_echo_972255/oscar_backup_931632.md
+    hidden_2496              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/dir_echo_972255/sierra_foxtrot_400120.json
+    hidden_9994              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/hardlink_cache_647318.json
+    hidden_5118              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/hardlink_config_909188.dat
+    hidden_1866              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/hardlink_record_634135.md
+    hidden_1982              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/hardlink_record_634135.md
+    hidden_2033              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/hardlink_record_634135.md
+    hidden_2544              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/hardlink_record_634135.md
+    hidden_2703              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/hardlink_record_634135.md
+    hidden_4201              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/hardlink_record_634135.md
+    hidden_5841              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/hardlink_record_634135.md
+    hidden_7645              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/hardlink_record_634135.md
+    hidden_7907              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/hardlink_record_634135.md
+    hidden_9857              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/papa_sierra_191801.txt
+    hidden_4729              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/papa_sierra_191801.txt
+    hidden_9994              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/hardlink_alpha_942016.json
+    hidden_1740              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/hardlink_victor_749942.xml
+    hidden_1850              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/hardlink_victor_749942.xml
+    hidden_2020              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/hardlink_victor_749942.xml
+    hidden_2565              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/hardlink_victor_749942.xml
+    hidden_3195              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/hardlink_victor_749942.xml
+    hidden_4633              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/hardlink_victor_749942.xml
+    hidden_6038              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/hardlink_victor_749942.xml
+    hidden_8052              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/hardlink_victor_749942.xml
+    hidden_8332              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/hardlink_victor_749942.xml
+    hidden_8348              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/hardlink_victor_749942.xml
+    hidden_9224              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/hardlink_victor_749942.xml
+    hidden_9677              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/hardlink_victor_749942.xml
+    hidden_9725              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/hardlink_victor_749942.xml
+    hidden_6977              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/report_tango_970124.log
+    hidden_4578              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/report_tango_970124.log
+    hidden_5629              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/hardlink_alpha_573983.bin
+    hidden_8690              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/hardlink_backup_157370.bin
+    hidden_6012              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/hardlink_data_609326.lnk
+    hidden_2460              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/hardlink_data_609326.lnk
+    hidden_1740              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/hardlink_uniform_951667.xml
+    hidden_1850              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/hardlink_uniform_951667.xml
+    hidden_2020              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/hardlink_uniform_951667.xml
+    hidden_2565              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/hardlink_uniform_951667.xml
+    hidden_3195              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/hardlink_uniform_951667.xml
+    hidden_4633              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/hardlink_uniform_951667.xml
+    hidden_6038              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/hardlink_uniform_951667.xml
+    hidden_8052              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/hardlink_uniform_951667.xml
+    hidden_8332              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/hardlink_uniform_951667.xml
+    hidden_8348              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/hardlink_uniform_951667.xml
+    hidden_9224              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/hardlink_uniform_951667.xml
+    hidden_9677              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/hardlink_uniform_951667.xml
+    hidden_9725              inline         testspecials2/dir_oscar_397968/dir_romeo_329803/hardlink_uniform_951667.xml
+    hidden_8220              inline         testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/dir_archive_157527/archive_output_434698.txt
+    hidden_7631              inline         testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/dir_archive_157527/archive_output_434698.txt
+    hidden_6334              inline         testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/dir_archive_157527/archive_output_434698.txt
+    hidden_2858              inline         testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/dir_archive_157527/delta_backup_764167.json
+    hidden_4430              inline         testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/dir_archive_157527/dir_november_114427/echo_sync_445777.tmp
+    hidden_9857              inline         testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/dir_archive_157527/hardlink_zulu_203183.txt
+    hidden_4729              inline         testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/dir_archive_157527/hardlink_zulu_203183.txt
+    hidden_9867              inline         testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/hardlink_gamma_171073.bak
+    hidden_8724              inline         testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/hardlink_gamma_171073.bak
+    hidden_7425              inline         testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/hardlink_gamma_171073.bak
+    hidden_6537              inline         testspecials2/dir_oscar_397968/dir_zulu_210476/dir_beta_287500/hardlink_gamma_171073.bak
+    hidden_5888              inline         testspecials2/dir_oscar_397968/dir_zulu_210476/hardlink_hotel_135884.log
+    hidden_3735              inline         testspecials2/dir_oscar_397968/dir_zulu_210476/hardlink_hotel_135884.log
+    hidden_2583              inline         testspecials2/dir_oscar_397968/dir_zulu_210476/hardlink_hotel_135884.log
+    hidden_1866              inline         testspecials2/dir_oscar_397968/dir_zulu_210476/log_data_141232.md
+    hidden_1982              inline         testspecials2/dir_oscar_397968/dir_zulu_210476/log_data_141232.md
+    hidden_2033              inline         testspecials2/dir_oscar_397968/dir_zulu_210476/log_data_141232.md
+    hidden_2544              inline         testspecials2/dir_oscar_397968/dir_zulu_210476/log_data_141232.md
+    hidden_2703              inline         testspecials2/dir_oscar_397968/dir_zulu_210476/log_data_141232.md
+    hidden_4201              inline         testspecials2/dir_oscar_397968/dir_zulu_210476/log_data_141232.md
+    hidden_5841              inline         testspecials2/dir_oscar_397968/dir_zulu_210476/log_data_141232.md
+    hidden_7645              inline         testspecials2/dir_oscar_397968/dir_zulu_210476/log_data_141232.md
+    hidden_7907              inline         testspecials2/dir_oscar_397968/dir_zulu_210476/log_data_141232.md
+    hidden_5674              inline         testspecials2/dir_oscar_397968/draft_echo_360869.dat
+    hidden_1866              inline         testspecials2/dir_oscar_397968/hardlink_gamma_652358.md
+    hidden_1982              inline         testspecials2/dir_oscar_397968/hardlink_gamma_652358.md
+    hidden_2033              inline         testspecials2/dir_oscar_397968/hardlink_gamma_652358.md
+    hidden_2544              inline         testspecials2/dir_oscar_397968/hardlink_gamma_652358.md
+    hidden_2703              inline         testspecials2/dir_oscar_397968/hardlink_gamma_652358.md
+    hidden_4201              inline         testspecials2/dir_oscar_397968/hardlink_gamma_652358.md
+    hidden_5841              inline         testspecials2/dir_oscar_397968/hardlink_gamma_652358.md
+    hidden_7645              inline         testspecials2/dir_oscar_397968/hardlink_gamma_652358.md
+    hidden_7907              inline         testspecials2/dir_oscar_397968/hardlink_gamma_652358.md
+    hidden_5888              inline         testspecials2/dir_oscar_397968/output_yankee_438536.log
+    hidden_3735              inline         testspecials2/dir_oscar_397968/output_yankee_438536.log
+    hidden_2583              inline         testspecials2/dir_oscar_397968/output_yankee_438536.log
+    hidden_6977              inline         testspecials2/dir_sync_303009/dir_foxtrot_191463/hardlink_foxtrot_600465.log
+    hidden_4578              inline         testspecials2/dir_sync_303009/dir_foxtrot_191463/hardlink_foxtrot_600465.log
+    hidden_3844              inline         testspecials2/dir_trace_120580/dir_india_806622/hardlink_temp_444830.txt
+    hidden_9265              inline         testspecials2/dir_yankee_474982/dir_mike_734231/kilo_temp_256282.bin
+    hidden_5444              inline         testspecials2/dir_yankee_474982/hardlink_audit_459489.xml
+    hidden_1866              inline         testspecials2/dir_yankee_474982/hardlink_draft_276129.md
+    hidden_1982              inline         testspecials2/dir_yankee_474982/hardlink_draft_276129.md
+    hidden_2033              inline         testspecials2/dir_yankee_474982/hardlink_draft_276129.md
+    hidden_2544              inline         testspecials2/dir_yankee_474982/hardlink_draft_276129.md
+    hidden_2703              inline         testspecials2/dir_yankee_474982/hardlink_draft_276129.md
+    hidden_4201              inline         testspecials2/dir_yankee_474982/hardlink_draft_276129.md
+    hidden_5841              inline         testspecials2/dir_yankee_474982/hardlink_draft_276129.md
+    hidden_7645              inline         testspecials2/dir_yankee_474982/hardlink_draft_276129.md
+    hidden_7907              inline         testspecials2/dir_yankee_474982/hardlink_draft_276129.md
+    hidden_6349              inline         testspecials2/dir_yankee_474982/papa_sierra_887773.txt
+    hidden_9398              inline         testspecials2/draft_romeo_843020.log
+    hidden_8123              inline         testspecials2/draft_romeo_843020.log
+    hidden_7684              inline         testspecials2/draft_romeo_843020.log
+    hidden_7309              inline         testspecials2/draft_romeo_843020.log
+    hidden_1869              inline         testspecials2/draft_romeo_843020.log
+    hidden_1833              inline         testspecials2/draft_romeo_843020.log
+    hidden_1118              inline         testspecials2/draft_romeo_843020.log
+    hidden_3629              inline         testspecials2/foxtrot_backup_112225.json
+    hidden_3314              inline         testspecials2/foxtrot_backup_112225.json
+    hidden_3962              inline         testspecials2/foxtrot_romeo_528126.cfg
+    hidden_1866              inline         testspecials2/hardlink_backup_438537.md
+    hidden_1982              inline         testspecials2/hardlink_backup_438537.md
+    hidden_2033              inline         testspecials2/hardlink_backup_438537.md
+    hidden_2544              inline         testspecials2/hardlink_backup_438537.md
+    hidden_2703              inline         testspecials2/hardlink_backup_438537.md
+    hidden_4201              inline         testspecials2/hardlink_backup_438537.md
+    hidden_5841              inline         testspecials2/hardlink_backup_438537.md
+    hidden_7645              inline         testspecials2/hardlink_backup_438537.md
+    hidden_7907              inline         testspecials2/hardlink_backup_438537.md
+    hidden_1740              inline         testspecials2/hardlink_hotel_900638.xml
+    hidden_1850              inline         testspecials2/hardlink_hotel_900638.xml
+    hidden_2020              inline         testspecials2/hardlink_hotel_900638.xml
+    hidden_2565              inline         testspecials2/hardlink_hotel_900638.xml
+    hidden_3195              inline         testspecials2/hardlink_hotel_900638.xml
+    hidden_4633              inline         testspecials2/hardlink_hotel_900638.xml
+    hidden_6038              inline         testspecials2/hardlink_hotel_900638.xml
+    hidden_8052              inline         testspecials2/hardlink_hotel_900638.xml
+    hidden_8332              inline         testspecials2/hardlink_hotel_900638.xml
+    hidden_8348              inline         testspecials2/hardlink_hotel_900638.xml
+    hidden_9224              inline         testspecials2/hardlink_hotel_900638.xml
+    hidden_9677              inline         testspecials2/hardlink_hotel_900638.xml
+    hidden_9725              inline         testspecials2/hardlink_hotel_900638.xml
+    hidden_5888              inline         testspecials2/hardlink_uniform_628960.log
+    hidden_3735              inline         testspecials2/hardlink_uniform_628960.log
+    hidden_2583              inline         testspecials2/hardlink_uniform_628960.log
+    hidden_9109              inline         testspecials2/india_zulu_632200.md
+    hidden_3347              inline         testspecials2/india_zulu_632200.md
+    hidden_2768              inline         testspecials2/mike_cache_429213.bak
+    hidden_9063              inline         testspecials2/mike_index_889080.lnk
+    hidden_6012              inline         testspecials2/mike_index_889080.lnk
+    hidden_5019              inline         testspecials2/mike_index_889080.lnk
+    hidden_2460              inline         testspecials2/mike_index_889080.lnk
+    hidden_9589              inline         testspecials2/output_zulu_513021.log
+    hidden_8241              inline         testspecials2/output_zulu_513021.log
+    hidden_9971              inline         testspecials2/romeo_india_410311.log
+    hidden_9063              inline         testspecials2/romeo_india_410311.log
+    hidden_7867              inline         testspecials2/romeo_india_410311.log
+    hidden_6012              inline         testspecials2/romeo_india_410311.log
+    hidden_5377              inline         testspecials2/romeo_india_410311.log
+    hidden_5019              inline         testspecials2/romeo_india_410311.log
+    hidden_4306              inline         testspecials2/romeo_india_410311.log
+    hidden_3677              inline         testspecials2/romeo_india_410311.log
+    hidden_2460              inline         testspecials2/romeo_india_410311.log
+    hidden_1757              inline         testspecials2/romeo_india_410311.log
+    hidden_5118              inline         testspecials2/sync_lima_360177.dat
+    hidden_8690              inline         testspecials2/tango_yankee_206279.bin
+    hidden_5629              inline         testspecials2/trace_output_728574.bin
+    hidden_5888              inline         testspecials2/trace_trace_495265.log
+    hidden_3735              inline         testspecials2/trace_trace_495265.log
+    hidden_2583              inline         testspecials2/trace_trace_495265.log
 
   Extract one:  forefst IMG export ads "<file>:<stream>"

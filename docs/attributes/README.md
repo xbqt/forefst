@@ -167,6 +167,6 @@ The attribute type codes and schemas are confirmed in both the decompiled driver
 `RefsCheckValidAttributeAccess`, `RefsLookupEasOnFile`) and on the raw-disk corpus (`RD`), and are
 recorded in `structure_reference.md` §F.2. Key findings behind this page: the type-0x90/`$I30_INDEX`
 vs `$SI` distinction (MD_ATTR_RA_015/FS_SNAP_RA_001), the `$EFS` metadata decoding, the WSL `$EA` chain
-(FS_REPS_RA_003, FS_REPS_RA_002, MD_ATTR_RA_010, MD_ATTR_RA_012), and the per-file USN link (MD_SI_RA_013). See [how this was verified](../methodology.md) for the
+(FS_REPS_RA_003, FS_REPS_RA_002, MD_ATTR_RA_010, MD_ATTR_RA_012), and the per-file USN link (MD_SI_RA_013). Also registered for statements on this page: **MD_ATTR_004**, **MD_ATTR_006**. See [how this was verified](../methodology.md) for the
 methodology, the evidence levels, and how to trace any of these to the exact images and measurements in
 the project's `analysis/` tree.

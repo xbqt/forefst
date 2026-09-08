@@ -182,5 +182,5 @@ record+0x28. The four-layer record framing, the 56-vs-64-byte entry-header discr
 per-version opcode counts are decoded from the driver (E2) and re-measured on the raw-disk corpus (RD)
 across v3.4 through Insider; the dual-checkpoint divergence on dirty volumes and the CoW-version-recovery
 results are raw-disk validated (RD). Findings: **AP_LGFL_RA_004, AP_LGFL_002, AP_LGFL_001, AP_LGFL_RA_007, AP_LGFL_RA_008, AP_REDO_001–039, AP_LGFL_RA_009, AP_LGFL_005, FS_DEL_RA_001**.
-See [how this was verified](../methodology.md) to trace these to the exact images and measurements in
+Also registered for statements on this page: **FS_SUPB_RA_006**. See [how this was verified](../methodology.md) to trace these to the exact images and measurements in
 `analysis/`.

@@ -196,6 +196,13 @@ counter — it is a child-creation ordinal, nothing more.
   moves and renames
 - [Timestomp Detection](timestomp_detection.md) — pulling a file's full timestamp history by FileRef
 
+## The 128-bit id Windows reports is this pair
+
+`fsutil file queryfileid` prints a 128-bit value, and it decomposes **exactly** into the two halves this
+page describes: the high 64 bits are the home directory's OID, the low 64 bits the per-home ordinal.
+The root directory is OID `0x600`. So the identifier an examiner reads from a live Windows system and
+the identifier recovered from the image are the same number, expressed the same way.
+
 ## Evidence
 
 The two halves are grounded in the driver (E2) and on disk (RD). `RefsPackFileId` builds the 16-byte file
@@ -219,3 +226,7 @@ indexed at the creation directory, none at the current parent). The unique-objec
 type-0x40 backing per ordinal — is the B+-tree key-uniqueness property, re-verified across the corpus with
 no counterexample (finding FN_LINK_002). The `version < 0x30b` persist gate that zeroes the own-row on
 native v3.14 is decompiled (E2) and disk-confirmed (findings MD_SI_RA_010, MD_SI_RA_008).
+
+Also registered for statements on this page: **MD_DISK_RA_010**, **MD_USN_RA_006**.
+
+The 128-bit split into home OID and ordinal, with the root at `0x600`, is **FN_ADDR_001**; that Windows' own `queryfileid` value decomposes into exactly that pair is **GN_IDENT_RA_001**.

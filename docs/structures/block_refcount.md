@@ -83,3 +83,5 @@ on valid MSB+ pages. The key/value layout, the per-cluster bitfields, and the
 corpus and corroborated by the decompiled access functions named above. See
 [how this was verified](../methodology.md) to trace these to the exact images and measurements in
 `analysis/`.
+
+Also registered for statements on this page: **GN_DEDUP_SA_001**.

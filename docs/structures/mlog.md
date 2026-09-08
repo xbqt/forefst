@@ -451,6 +451,33 @@ on 64K-cluster volumes.
 - [Copy-on-Write](../concepts/copy_on_write.md) — why redo-only logging is sufficient
 - [System OIDs](system_oids.md) — OID 0x9/0xA (Logfile Information Table) stores the MLog LCN range
 
+## Operation patterns from prior work, re-measured
+
+Lee's journal analysis published seven opcode sequences, one per filesystem operation. Re-running them
+against three v3.4 images is a good illustration of how far a published pattern travels: three reproduce
+exactly, one is mislabelled, one does not occur as a single transaction at all, and two carry the right
+opcodes in a different order.
+
+| Operation, as published | What three v3.4 images show |
+|---|---|
+| directory creation `0x00 0x00 0x04 0x10 …` | **exact** — all 35 `CREATE` transactions begin `OPEN OPEN UPD_DATA SET_OBJREC` |
+| file deletion `0x0F 0x02 0x0F 0x02 0x04` | **core confirmed** — `DEL_TABLE DELETE DEL_TABLE DELETE` 23× |
+| directory renaming `0x02 0x02 0x01 0x01 0x04 0x04` | **core confirmed** — `DELETE DELETE INSERT INSERT` 22× |
+| file creation `0x01 0x04 0x01 0x00 …` | **mislabelled** — this sequence is a **write**, 163× |
+| file renaming `0x02 0x05 0x01 0x04 0x04` | first four match a **move**, 23× |
+| directory deletion `0x02 0x02 0x0F 0x02 …` | same opcodes, **different order** — `DEL_TABLE DELETE …` dominates |
+| file modification `0x06 0x04 0x04 0x04 0x04 0x08` | **not found** as one transaction; its parts occur separately |
+
+The practical lesson for an examiner is that a sequence identifies an operation only up to its first few
+opcodes, and that a published label may name the wrong operation. `forefst mlog --parse` classifies from
+the opcodes it actually reads rather than from a fixed table of sequences.
+
+## What the log physically contains
+
+The data area holds **page images**, not field-level edits: a scan finds 58–94 whole `MSB+` pages in it.
+Combined with copy-on-write, that means a logged page is recoverable in full rather than as a diff — which
+is why the redo-only design needs no undo records.
+
 ## Evidence
 
 The four-layer record format was decoded byte-for-byte from `LogCoreWriteDataRecord` (write),
@@ -460,5 +487,5 @@ cross-confirmed in v3.4 (Win10), v3.14 (Win11) and Insider 29574, and raw-disk v
 branching to a PDB-named handler) is decompiled from `CmsLogRedoQueue::PerformRedo` (E2); the 64K-cluster
 4 KiB-block packing and the compact-control-header (≈93% zero) results are raw-disk decoded (RD). The
 recovery passes come from the `CmsRestarter` class (E2). Findings: **AP_REDO_001–040** (contiguous opcode ranges), **AP_LGFL_RA_008** (compact control header). The format magic is a per-volume
-constant, not a CRC. See [how this was verified](../methodology.md) to trace these to the exact images
+constant, not a CRC. The remaining field-level statements on this page are registered as **AP_EVNT_006**, **AP_LGFL_003**, **AP_LGFL_004**, **AP_LGFL_RA_005**, **AP_LGFL_RA_006**, **AP_LGFL_RA_010**, **AP_LGTB_001–003** — each with its own evidence tier and witness in the claim register. The published operation patterns and their re-measurement are **AP_EVNT_001–007**; the physical page-image logging model is **AP_LGFL_RA_003**, and the second control entry's LCN is **AP_LGTB_005**. See [how this was verified](../methodology.md) to trace these to the exact images
 and measurements in `analysis/`.

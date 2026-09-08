@@ -1,20 +1,19 @@
-"""The TimestompFlags column and the `timestomp` command must not disagree.
+"""`timestomp_verdict()` is the only place a timestamp-anomaly tier is decided.
 
 They used to. Each computed its own tier, and on three volumes 101/184, 62/151 and 50/114 flagged files got
 a different confidence depending on which one you ran -- the column said MEDIUM where the command said HIGH
 for the identical signal set. One body of evidence, two answers.
 
-`timestomp_verdict()` is now the only place a tier is decided. The column calls it without journal evidence
-(the walk does not read $J), so its verdict is the command's minus journal corroboration. That gives three
-properties, asserted here on unit inputs (always) and on a corpus image when one is present:
+It used to be two places. The `files` TimestompFlags column computed its own tier and disagreed with the
+command on 40-55 % of flagged files. v1.11.0 removed the column outright, so the disagreement is now
+impossible by construction rather than merely tested for. What remains worth pinning is the function's own
+behaviour, asserted here on unit inputs:
 
   1. the column never rates a file HIGHER than the command;
   2. the column's signals are a subset of the command's;
   3. with no USN evidence the two tiers are IDENTICAL.
 """
-import csv
 import os
-import subprocess
 import sys
 
 import pytest
@@ -103,26 +102,8 @@ def _corpus_image():
     return None
 
 
-def test_column_and_command_agree_on_a_real_volume(tmp_path):
-    img = _corpus_image()
-    if img is None:
-        pytest.skip("corpus image not present (a clone ships no images)")
-    tool = os.path.join(REPO, "forefst.py")
-    fcsv = tmp_path / "f.csv"
-    tcsv = tmp_path / "t.csv"
-    for args, dest in ((["files", "--csv", str(fcsv)], fcsv), (["timestomp", "--csv", str(tcsv)], tcsv)):
-        r = subprocess.run([sys.executable, tool, img] + args, capture_output=True, text=True, timeout=900)
-        assert r.returncode == 0, r.stderr[-400:]
-        assert dest.exists()
-    col = {r["FullPath"]: r["TimestompFlags"].strip()
-           for r in csv.DictReader(open(fcsv, encoding="utf-8")) if (r.get("TimestompFlags") or "").strip()}
-    cmd = {r["path"]: (r["confidence"], r["signals"]) for r in csv.DictReader(open(tcsv, encoding="utf-8"))}
-    both = set(col) & set(cmd)
-    assert both, "no flagged files in common — the comparison would be vacuous"
-    for p in both:
-        ctier, _, csig = col[p].partition(":")
-        ttier, tsig = cmd[p]
-        assert RANK[ctier] <= RANK[ttier], f"{p}: column {ctier} > command {ttier}"
-        assert set(csig.split("|")) <= set(tsig.split("|")), f"{p}: column signals not a subset"
-        if "USN_" not in tsig:
-            assert ctier == ttier, f"{p}: no journal evidence yet tiers differ ({ctier} vs {ttier})"
+# `test_column_and_command_agree_on_a_real_volume` stood here. It walked a corpus image and asserted that
+# the `files` TimestompFlags column never rated a file higher than the `timestomp` command, and that its
+# signals were a subset. v1.11.0 REMOVED that column, so there is no second surface left to disagree --
+# the property is now structural rather than tested. The unit assertions above stay: they pin the tier
+# function itself, which is still the single source for the one remaining surface.

@@ -138,5 +138,5 @@ SecurityId resolves through `RefsLoadSecurityDescriptor` / `RefsSecurityGetDescr
 self-relative SD layout, the content-hash identity (SecurityId-low = SD hash, ROL-3 NTFS algorithm),
 and the per-file compound SecurityId `(generation << 32) | hash32(SD)` are all confirmed byte-for-byte
 on disk. The schema-0x160 disambiguation (0x160 belongs to the Reparse Point Index, not to OID 0x530)
-is a static naming correction. See [how this was verified](../methodology.md) to trace these to
+is a static naming correction. Also registered for statements on this page: **FS_OTBL_SA_006**, **MD_DDIR_006**. See [how this was verified](../methodology.md) to trace these to
 the exact images and measurements in `analysis/`.

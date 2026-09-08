@@ -264,5 +264,5 @@ dedup-engine-required behaviours are **CT_COMP_RA_001** and **CT_COMP_RA_002** (
 `_SmsContainerCompressionHeader` layout, the `+0x40` length array, the flag bits, and the read/decompress
 flow are byte-accurately decoded from the driver constructor and read path (E2) but **not yet validated
 against an on-disk compressed image**, and no real cluster has been round-tripped — **open question B3
-remains partially open**. See [how this was verified](../methodology.md) to trace these to the exact
+remains partially open**. Also registered for statements on this page: **CT_COMP_RA_003**. See [how this was verified](../methodology.md) to trace these to the exact
 images and measurements in `analysis/`.

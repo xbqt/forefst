@@ -153,5 +153,5 @@ validated by `RefsIsBootSectorOurs` (read by `ReadBootSectorForMount`, geometry 
 flag patterns were confirmed invariant within each category across the corpus, and the wider flag set
 (`0x0082`, `0x07b2`, `0x2682` / `0x2602`) was observed but does not disturb the discriminating bits.
 Findings: **FS_CHKP_RA_013** (the three forensically distinguishable states), **FS_CHKP_RA_001** (the
-full CHKP-flags decomposition). See [how this was verified](../methodology.md) to trace these to the exact images and
+full CHKP-flags decomposition). Also registered for statements on this page: **FS_CHKP_RA_007**, **MD_ATTR_RA_002**. See [how this was verified](../methodology.md) to trace these to the exact images and
 measurements in `analysis/`.

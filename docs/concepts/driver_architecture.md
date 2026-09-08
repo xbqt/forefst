@@ -237,5 +237,5 @@ rebuilt and catalog-verified against `function_catalog.csv` (audit 3); the named
 checkpoint ops (`ValidateCheckpointRecord` / `ChooseCheckpointRecord`), and the checksum stub
 (`CmsChecksumNone::VerifyChecksum`) are all catalog-verified. The configuration-register offsets are
 raw-disk corroborated (RD). The "Insider-only" corrections to `CmsRollbackProtection` and
-`CmsVolumeHeatEngine` are catalog-verified (audit 3). See [how this was verified](../methodology.md) to
+`CmsVolumeHeatEngine` are catalog-verified (audit 3). The remaining field-level statements on this page are registered as **FS_VBR_RA_011**, **GN_ARCH_006**, **GN_ARCH_SA_002**, **GN_BIN_SA_001**, **GN_HEAT_SA_001**, **GN_IMP_SA_001**, **GN_INS_SA_002**, **GN_KSR_SA_001** — each with its own evidence tier and witness in the claim register. See [how this was verified](../methodology.md) to
 trace these to the exact builds and measurements in `analysis/`.

@@ -149,12 +149,21 @@ From a v3.14 image, the VBR at the partition start (byte offset `0x1000000`):
 - [Page References](page_references.md) -- format depends on VBR checksum algorithm selector
 - [Container Table](container_table.md) -- the bytes-per-container constant feeds VLCN to PLCN translation
 
+## An encrypted volume shows a different signature
+
+When BitLocker encrypts the volume, the ReFS signature at `+0x03` is replaced by the FVE marker
+`-FVE-FS-`. A reader that keys on the ReFS signature alone will call such a volume unrecognised rather
+than encrypted; the distinction matters, because one means "not this filesystem" and the other means
+"this filesystem, behind a lock". Measured on format 3.14.
+
 ## Evidence
 
 The field layout, signatures, and checksum loop are confirmed by the string literals (E1) and the
 decompiled driver (E2) -- `RefsIsBootSectorOurs` validates the boot sector and computes the 0x16
 checksum, and `InitializeVcbFromBootSector` extracts the geometry; the field values, the immutable
 format-time fields on upgrade, and the `refsutil fixboot` effects are raw-disk verified across the
-corpus (RD). The custom CRC64 polynomial (not ECMA-182) is finding GN_PREF_002. See
+corpus (RD). The custom CRC64 polynomial (not ECMA-182) is finding GN_PREF_002. Also registered for statements on this page: **FS_VBR_RA_005**, **FS_VBR_RA_006**. The BitLocker `-FVE-FS-` marker replacing the signature at `+0x03` is **FS_VBR_RA_004**. See
 [how this was verified](../methodology.md) to trace these to the exact images and measurements in
 `analysis/`.
+
+The remaining field-level statements on this page are registered as **FS_VBR_001–007**, **FS_VBR_009**, **FS_VBR_010**, **FS_VBR_012**, **FS_VBR_013**, **FS_VBR_RA_002**, **FS_VBR_RA_007**, **FS_VBR_RA_010**, **FS_VBR_RA_012**, **FS_VBR_SA_013**, **GN_INS_SA_001** — each with its own evidence tier and witness in the claim register.

@@ -181,6 +181,17 @@ Three differences change *how* a carve must be coded, not whether the artifact s
 - [Object Table](../structures/object_table.md) — where OID gaps and orphan entries become deletion evidence
 - [Allocators](../structures/allocators.md) — the allocator whose reuse decisions set the survival deadline for every dereferenced cluster
 
+## A hole in the image is not the same as a hole in the file
+
+Raw images are usually stored sparsely, and a sparse image cannot distinguish a file that genuinely held
+zeros from a region the acquisition never captured: both read back as zeros. That ambiguity is a property
+of **how the image was stored**, not of the evidence, and two byte-identical images stored differently
+can disagree about which files are affected.
+
+`forefst extract` reports it rather than hiding it: bytes that came from image holes are written, the
+note names the ranges, a `.holes.json` sidecar lists them, and the exit code is 2. The note says what it
+can and cannot decide — it does not claim the data is missing.
+
 ## Evidence
 
 The three governing mechanisms are static-analysis confirmed (E2) and raw-disk corroborated
@@ -200,5 +211,5 @@ is finding FS_OTBL_RA_008. The MLog control-page per-volume magic, and its stabi
 findings AP_LGFL_RA_008 and AP_LGFL_RA_004 (E2+RD). Version splits involve the $SI non-backward-compatible change at
 v3.14, the legacy-vs-compact Object-Table entry sizes, and the attribute schema gating — with the
 type-0xF0 $Max attribute being v3.4-era and the schema
-entry 0x1F0 being v3.14+. See [how this was verified](../methodology.md) to trace these to the
+entry 0x1F0 being v3.14+. That a sparse image conflates a file's own zeros with an uncaptured region is **GN_IMG_RA_001**. See [how this was verified](../methodology.md) to trace these to the
 exact images and measurements in `analysis/`.

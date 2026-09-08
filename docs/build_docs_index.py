@@ -153,17 +153,30 @@ def gen_readme(d, plist, meta):
 ALPHA_ID = _re.compile(r"\b(?:GN|FS|CT|MD|FN|AP)_[A-Z0-9]+(?:_[A-Z0-9]+)*_\d{3}\b")
 
 
+ID_RANGE = _re.compile(r"\b((?:GN|FS|CT|MD|FN|AP)_[A-Z0-9]+(?:_[A-Z0-9]+)*)_(\d{3})\s*[\u2013\u2014-]\s*(\d{3})\b")
+
+
 def page_findings(path):
     """Finding ids CITED BY THE PAGE ITSELF -- derived, never typed.
 
     A hand-kept companion list supplied this once and drifted -- it held an id that did not exist until
     the citation gate caught it. The page is the fact; scan the page.
+
+    A RANGE counts as a citation of every id in it. Pages write `AP_REDO_001-040` and `CT_CTBL_001-011`
+    where listing forty ids would be unreadable, and a literal-only scan called all forty uncited: 41 of
+    the 244 "citation gaps" in the 2026-09-07 triage were this, already cited and merely written compactly.
     """
     try:
         with open(path, encoding="utf-8", errors="replace") as fh:
-            return sorted(set(ALPHA_ID.findall(fh.read())))
+            text = fh.read()
     except OSError:
         return []
+    ids = set(ALPHA_ID.findall(text))
+    for m in ID_RANGE.finditer(text):
+        fam, lo, hi = m.group(1), int(m.group(2)), int(m.group(3))
+        if 0 < hi - lo < 200:                      # a sane range, not two unrelated numbers
+            ids |= {f"{fam}_{n:03d}" for n in range(lo, hi + 1)}
+    return sorted(ids)
 
 
 def register_tiers():

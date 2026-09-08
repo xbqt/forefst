@@ -171,6 +171,8 @@ LX_SYMLINK on a v3.14 8 GiB image, 2026-07-03). See
 [how this was verified](../methodology.md) to trace these to the exact images and measurements in
 `analysis/`.
 
+Also registered for statements on this page: **FS_SCHM_RA_006**.
+
 ## Finding WSL files with the tools — two different lenses
 
 The two mechanisms above mean there are **two distinct ways to select "WSL files"**, and the tools use one

@@ -86,6 +86,12 @@ tested.
 - [VBR](vbr.md) — volume serial number (separate from volume label)
 - [Object Table](object_table.md) — OID resolution for 0x500/0x501
 
+## The general-information row
+
+Beside the label, the Volume Information table carries a general-information row holding the volume's
+creation and mount times and its version. It is the volume's own record of when it was made and last
+brought online, independent of any file's timestamps.
+
 ## Evidence
 
 Identity (OID 0x500/0x501, schema 0x150) and the failover-pair creation are confirmed in the driver
@@ -93,6 +99,8 @@ Identity (OID 0x500/0x501, schema 0x150) and the failover-pair creation are conf
 schema 0x150, and `MsCreateDurableFailoverTableObject`. The `$VOLUME_INFORMATION` / `$VOLUME_NAME`
 string literals are present in the binary (E1). The three key-type layouts (0x0510 label, 0x0520
 metadata/version/timestamps, 0x0540 schema count + flags) and the raw-UTF-16LE no-length-header label
-form are raw-disk decoded across the corpus (RD), present on v3.4, v3.14, and Insider. See
+form are raw-disk decoded across the corpus (RD), present on v3.4, v3.14, and Insider. The general-information row's contents are **FS_VINF_002**. See
 [how this was verified](../methodology.md) to trace these to the exact images and measurements in
 `analysis/`.
+
+Also registered for statements on this page: **FS_VINF_RA_001**.

@@ -74,3 +74,5 @@ length. WSL EAs require a `-o metadata` mount.
 the decompiled driver (E2 — `RefsLookupEasOnFile`, `RefsReplaceFileEas`, `RefsQueryLxMetadataEa`) and
 raw-disk decoded across the corpus (RD). Finding: **FS_REPS_RA_003, FS_REPS_RA_002, MD_ATTR_RA_010, MD_ATTR_RA_011, MD_ATTR_RA_012** (WSL `$LX*`). See
 [how this was verified](../methodology.md).
+
+Also registered for statements on this page: **MD_ATTR_RA_013**.

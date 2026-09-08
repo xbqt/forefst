@@ -239,5 +239,5 @@ v3.14) are catalog-verified; the named IRP handlers `RefsCommonCreate` (`IRP_MJ_
 VCB → FCB → SCB → CCB is catalog-verified; and the recognition/mount functions `RefsIsBootSectorOurs`
 (signature + version check) and `InitializeVcbFromBootSector` (geometry into the VCB) are catalog-verified
 boot/mount functions. The Refs-vs-Minstore namespace partition that makes ReFS a peer driver is master
-§G.1. See [how this was verified](../methodology.md) to trace these to the exact builds and measurements in
+§G.1. Also registered for statements on this page: **GN_HIER_SA_001**. See [how this was verified](../methodology.md) to trace these to the exact builds and measurements in
 `analysis/`.

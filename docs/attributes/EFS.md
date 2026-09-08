@@ -86,11 +86,19 @@ to target.
 - [Attributes — Forensic Reference](../attributes/README.md) — the attribute catalog and on-disk layout
 - [Driver Interface](../concepts/driver_architecture.md) — the `cng.sys` import for EFS support
 
+## What an encrypted file looks like on disk
+
+An EFS-encrypted file carries **three streams**, and the `$EFS` named stream — around 720 bytes — holds
+the certificate material, with the literal `$EFS` visible in UTF-16. Even a small encrypted file takes a
+minimum 4,096-byte allocation. Measured on format 3.14.
+
 ## Evidence
 
 Schema 0x200 / type 0x100 and the `$EFS` stream name are confirmed by the string literal (E1) and the
 decompiled driver (E2); the value layout, the DDF/FEK offsets, and the *no `$CBW4` / no `EFSS` / no DRF*
 facts are raw-disk decoded (RD) across the corpus EFS records (value sizes 676 and 732). Findings:
-**MD_ATTR_RA_009**, **MD_EFS_RA_005** (value sizes). See
+**MD_ATTR_RA_009**, **MD_EFS_RA_005** (value sizes). The three-stream shape and the ~720-byte `$EFS` stream are **MD_DISK_RA_006**. See
 [how this was verified](../methodology.md) to trace these to the exact images and measurements in
 `analysis/`.
+
+The remaining field-level statements on this page are registered as **GN_EFS_SA_001**, **MD_EFS_RA_004**, **MD_EFS_RA_006** — each with its own evidence tier and witness in the claim register.

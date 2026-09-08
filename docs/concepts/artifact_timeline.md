@@ -222,7 +222,8 @@ signal/tier model, the base rates and their validation live on the
 
 | Need | Command |
 |------|---------|
-| Per-file MACB + intrinsic timestomp flags | `forefst.py <image> files` (`TimestompFlags` / `timestomp_flags`, on by default) |
+| Per-file MACB | `forefst.py <image> files` |
+| Timestamp-anomaly verdict | `forefst.py <image> timestomp` — the one surface that judges one |
 | Full cross-source timestomp verdict (adds USN) | `forefst.py <image> timestomp [--min HIGH] [--json] [--csv out.csv]` |
 | USN event log (the history) | `forefst.py <image> usn [--csv] [--json] [--stats] [--info]` |
 | MLog transaction times | `forefst.py <image> mlog --parse` / `--csv FILE` (seq, timestamp, action, path, oid) |
@@ -252,5 +253,5 @@ timestamp; the only times are the operation FILETIMEs embedded in `_SmsRedoRecor
 dispatched by `CmsLogRedoQueue::PerformRedo`, with the time-bearing opcodes (`0x01`/`0x03`/`0x04`)
 stable across v3.4 and v3.14. The per-name `$SI` storage that makes a hard-linked file's names an
 intrinsic cross-check is disk-proven: a name-scoped stomp of one name left the sibling name at the
-true birth (FN_LINK_003 / E59). See [how this was verified](../methodology.md) to trace these to the
+true birth (FN_LINK_003 / E59). Also registered for statements on this page: **MD_ATTR_001**, **MD_TS_RA_004**. See [how this was verified](../methodology.md) to trace these to the
 exact images and measurements in `analysis/`.

@@ -180,5 +180,5 @@ The container flag *values* are RD-observed but the per-bit *meanings* are infer
 flag constant tied to them). The 0x28 field is a u32 (high dword always 0). The 24H2 compression policy header at 0xA0 (prefix/format/level/chunk)
 is raw-disk verified clean before/after.
 Findings: GN_ARCH_003, FS_CHKP_016, FS_CHKP_017, CT_CTBL_001–011, CT_CTBL_RA_003, CT_CTBL_RA_004,
-GN_ARCH_RA_001, AP_REDO_037 (compression). See [how this was verified](../methodology.md) to trace these to the
+GN_ARCH_RA_001, AP_REDO_037 (compression). Also registered for statements on this page: **FS_CHKP_019**. See [how this was verified](../methodology.md) to trace these to the
 exact images and measurements in `analysis/`.

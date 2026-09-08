@@ -82,3 +82,5 @@ it for directory key comparison. The logical-array shape (65,536 × 2-byte entri
 content across versions are raw-disk decoded (RD) across the corpus. See
 [how this was verified](../methodology.md) to trace these to the exact images and measurements in
 `analysis/`.
+
+Also registered for statements on this page: **MD_CS_RA_001**.

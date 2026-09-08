@@ -154,3 +154,5 @@ hard-link exception (each name carries its own MACB, so hard-link names can dive
 
 Findings: **FS_SCHM_RA_008, FS_SECD_RA_003, FS_SCHM_RA_005, FS_SCHM_RA_010** (naming corrections 0x160/0x1B0), **MD_TS_RA_005, MD_UNSUP_RA_001** (no 8.3 short names), **FS_SCHM_001**,
 **FS_SCHM_RA_008** (36 schema IDs), **FS_PCTB_RA_001** (`u32[7]` key-rules selector).
+
+The remaining field-level statements on this page are registered as **FS_SCHM_RA_002**, **FS_SCHM_RA_003**, **FS_SCHM_RA_009**, **FS_SCHM_RA_011** — each with its own evidence tier and witness in the claim register.

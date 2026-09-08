@@ -18,6 +18,31 @@ Each row in the data area begins with this header. The header points to where th
 
 Rows are written sequentially in insertion order (not necessarily sorted); the sorted key index below restores order for lookups.
 
+## The root descriptor — a second structure on the same page
+
+A **root** page carries two structures, and confusing them is the single most productive mistake in this
+area: an earlier correction refuted a prior-work claim by measuring the wrong one, and had to be retracted.
+
+`_SmsIndexRoot` sits at a fixed **`page + 0x50`** and describes the *table*. The node header below
+describes *one page* of it. They overlap in offsets and disagree in meaning:
+
+| Offset | `_SmsIndexRoot` descriptor (page+0x50, root pages only) | the node header at `thoff` |
+|--------|--------------------------------------------------------|-----------------------------|
+| +0x00 | offset from here to the node header — this is what locates `thoff` | — |
+| +0x04 | descriptor size, `0x28` | — |
+| +0x0C | **the table's schema id** (`0xe0c0` Container Table, `0xe030` Object Table, `0x130` directory …) | node level: 0 = leaf |
+| +0x14 | 2 | rows on **this page** |
+| +0x18 | **leaf-page / extent count for the whole table** | a u64, 0 on disk |
+| +0x20 | **row count for the whole table** | end of the row-pointer array |
+
+The two row counts are the clearest illustration: on a multi-level table the descriptor's `+0x20` counts
+every row in the table while the node header's `+0x14` counts only the current page — measured at **387
+versus 10** on one object tree, and **245,759 versus 2** on a large container table. A reader that takes
+the node figure for the table total under-reports by whatever the tree's fan-out happens to be.
+
+Read the descriptor when you want to know what a table *is* — its schema, its size — and the node header
+when you are walking one page.
+
 ## Page layout
 
 ### 1. Page header (80 bytes)
@@ -41,7 +66,7 @@ The header is reached at `page + 0x50 + u32@(page + 0x50)`, and the fields a rea
 | Offset | Size | Field | Notes |
 |--------|------|-------|-------|
 | +0x0C | 1 | Node level | 0 = leaf; non-zero = internal / index node |
-| +0x0D | 1 | Node flags | Bit 0 marks an index page (its rows point at child pages) |
+| +0x0D | 1 | Node flags | Bit 0 marks an index page (its rows point at child pages). Prior work also assigns `0x2` = root and `0x4` = stream; only bit 0 has been re-measured here, so treat the other two as unconfirmed |
 | +0x10 | 4 | Key-index array **start** | Offset, relative to the header, of the row-pointer array |
 | +0x14 | 4 | Row count | Rows on **this page** |
 | +0x20 | 4 | Key-index array **end** | One past the last entry |
@@ -117,4 +142,4 @@ When copy-on-write replaces a page, the old page becomes orphaned but retains it
 
 ## Evidence
 
-The B+-tree storage engine and the MSB+ page model are confirmed in the driver (E2: the `CmsBPlusTable` / `CmsTable` classes) and raw-disk verified across the corpus (RD: every metadata page carries the `MSB+` signature). The row header, node header, and index-root descriptor offsets are decompiled-confirmed (E2) and re-measured on disk (RD): the node-type byte and the per-node count at header +0x14 hold on every leaf/inner page measured, the key-index array length agrees with that count on **118,351 pages across all seven versions with zero violations**, and the index-root total-row count tracks an independent leaf-walk. The 0x40/0x48 table-OID split (always-0 high half, numeric low half) is the same. The insert/delete/lookup/enumerate/allocate functions are PDB symbols in the driver. Findings: **GN_ARCH_001**, **GN_ARCH_005**, **GN_PAGE_007**, **GN_IDXR_004**. See [how this was verified](../methodology.md) to trace these to the exact images and measurements in `analysis/`.
+The B+-tree storage engine and the MSB+ page model are confirmed in the driver (E2: the `CmsBPlusTable` / `CmsTable` classes) and raw-disk verified across the corpus (RD: every metadata page carries the `MSB+` signature). The row header, node header, and index-root descriptor offsets are decompiled-confirmed (E2) and re-measured on disk (RD): the node-type byte and the per-node count at header +0x14 hold on every leaf/inner page measured, the key-index array length agrees with that count on **118,351 pages across all seven versions with zero violations**, and the index-root total-row count tracks an independent leaf-walk. The 0x40/0x48 table-OID split (always-0 high half, numeric low half) is the same. The insert/delete/lookup/enumerate/allocate functions are PDB symbols in the driver. Findings: **GN_ARCH_001**, **GN_ARCH_005**, **GN_PAGE_007**, **GN_IDXR_004**. The remaining field-level statements on this page are registered as **GN_BPT_RA_001**, **GN_IDXH_002**, **GN_IENT_002**, **GN_IENT_003**, **GN_TREE_RP_003**, **GN_UTIL_SA_001** — each with its own evidence tier and witness in the claim register. The `_SmsIndexRoot` descriptor is **GN_IDXR_001** (size), **GN_IDXR_002** (schema), **GN_IDXR_003** (leaf-page count) and **GN_IDXR_004** (whole-table rows), all confirmed both in the decompiled `CmsBPlusTable::CreateIndex` path and across 113 images / 34,207 tables; **GN_IDXH_001** is the descriptor field that locates the node header. The row-header fields are **GN_IENT_001–003**, **GN_IENT_005**, **GN_IENT_006**, and the node-flags byte is **GN_IDXH_003** — whose `0x2`/`0x4` bit meanings come from prior work and are not re-measured here. See [how this was verified](../methodology.md) to trace these to the exact images and measurements in `analysis/`.

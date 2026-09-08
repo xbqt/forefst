@@ -2,133 +2,251 @@
 # ----------------------------------------------------------------------------
 
 ── ads  (127) — named data streams ──
-  STREAMS                      HOST FILE
-    hidden_7357                testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_romeo_gamma_831931.dat
-    hidden_1514                testintegrity/xbpt_tango_archive_828215.dat
-    hidden_6206;hidden_3341    testspecials/archive_alpha_661055.txt
-    hidden_9882                testspecials/backup_hotel_570010.cfg
-    hidden_9722                testspecials/dir_config_384571/dir_backup_503994/dir_romeo_941465/dir_mike_372259/draft_quebec_381663.json
-    hidden_8375;hidden_6236;hidden_6095;hidden_4462;hidden_1772 testspecials/dir_config_384571/dir_backup_503994/dir_romeo_941465/dir_mike_372259/hardlink_config_512301.tmp
-    hidden_7007                testspecials/dir_config_384571/dir_backup_503994/dir_romeo_941465/dir_mike_372259/hardlink_romeo_113831.xml
-    hidden_4114;hidden_4096    testspecials/dir_config_384571/dir_backup_503994/dir_romeo_941465/hardlink_index_436101.tmp
-    hidden_5242                testspecials/dir_config_384571/dir_backup_503994/dir_romeo_941465/hardlink_temp_263040.bin
-    hidden_6158;hidden_5402;hidden_3772 testspecials/dir_config_384571/dir_beta_813541/hardlink_gamma_947676.ini
-    hidden_6594                testspecials/dir_config_384571/dir_beta_813541/hardlink_quebec_375122.cfg
-    hidden_5600                testspecials/dir_config_384571/hardlink_india_943651.dat
-    hidden_1719                testspecials/dir_config_384571/mike_delta_729757.bak
-    hidden_7568                testspecials/dir_config_384571/record_log_195552.md
-    hidden_9741;hidden_8233;hidden_7075;hidden_5402;hidden_3626;hidden_3303;hidden_2747;hidden_1817 testspecials/dir_gamma_666805/dir_data_621988/echo_output_850558.lnk
-    hidden_3384;hidden_3227    testspecials/dir_gamma_666805/dir_data_621988/hardlink_kilo_772228.ini
-    hidden_5164;hidden_3890    testspecials/dir_gamma_666805/dir_temp_510750/hardlink_audit_903158.dat
-    hidden_9278;hidden_6568;hidden_2445 testspecials/dir_gamma_666805/dir_temp_510750/hardlink_lima_186391.ini
-    hidden_7481;hidden_6918;hidden_2510 testspecials/dir_gamma_666805/dir_temp_510750/hardlink_sierra_246559.dat
-    hidden_2939                testspecials/dir_gamma_666805/dir_temp_510750/sierra_draft_521559.tmp
-    hidden_5760;hidden_4489;hidden_3168;hidden_1926 testspecials/dir_gamma_666805/dir_temp_510750/zulu_audit_175089.bak
-    hidden_9931;hidden_9767;hidden_6223 testspecials/dir_gamma_666805/uniform_trace_241041.tmp
-    hidden_6158;hidden_5402;hidden_3772 testspecials/dir_oscar_288048/dir_beta_718060/hardlink_audit_861536.ini
-    hidden_9404;hidden_3417;hidden_3048 testspecials/dir_oscar_288048/dir_sync_959703/dir_alpha_459840/dir_alpha_750125/hardlink_echo_743629.md
-    hidden_5206;hidden_3890;hidden_1724 testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/backup_alpha_645894.dat
-    hidden_8117;hidden_7926    testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/cache_zulu_982585.lnk
-    hidden_4396                testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/delta_kilo_576687.bak
-    hidden_4114;hidden_4096    testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/hardlink_audit_724286.tmp
-    hidden_6594                testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/hardlink_record_867042.cfg
-    hidden_9931;hidden_9767;hidden_6223 testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/india_quebec_345898.tmp
-    hidden_3551                testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/report_echo_372097.ini
-    hidden_5828                testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/romeo_delta_145414.tmp
-    hidden_6144                testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/sierra_draft_742380.md
-    hidden_5600                testspecials/dir_oscar_288048/dir_sync_959703/hardlink_november_679445.dat
-    hidden_2302                testspecials/dir_oscar_288048/dir_sync_959703/romeo_temp_182346.md
-    hidden_4114;hidden_4096    testspecials/dir_oscar_288048/hardlink_alpha_603577.tmp
-    hidden_9931;hidden_9767;hidden_6223;hidden_3014 testspecials/dir_oscar_288048/hardlink_draft_430596.tmp
-    hidden_6594                testspecials/dir_oscar_288048/hardlink_log_997700.cfg
-    hidden_6520                testspecials/dir_oscar_288048/hardlink_quebec_858121.json
-    hidden_8092;hidden_7219    testspecials/dir_oscar_288048/hardlink_tango_422351.bin
-    hidden_1638                testspecials/dir_oscar_288048/hardlink_temp_340568.bin
-    hidden_2331                testspecials/dir_oscar_738992/dir_november_183978/backup_beta_366494.dat
-    hidden_8117;hidden_7926;hidden_6281 testspecials/dir_oscar_738992/dir_november_183978/hardlink_gamma_342160.dat
-    hidden_5164;hidden_3890    testspecials/dir_oscar_738992/hardlink_india_108996.dat
-    hidden_5242                testspecials/dir_oscar_738992/hotel_audit_578337.bin
-    hidden_5038;hidden_1594;hidden_1313 testspecials/dir_record_119518/alpha_gamma_177832.tmp
-    hidden_9602                testspecials/dir_record_119518/dir_delta_826049/config_report_394730.ini
-    hidden_7490;hidden_5556    testspecials/dir_record_119518/dir_delta_826049/data_sync_366687.json
-    hidden_4109                testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/dir_oscar_729924/hardlink_temp_721267.txt
-    hidden_7568                testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/dir_oscar_729924/sierra_index_671660.md
-    hidden_3384;hidden_3227    testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/hardlink_archive_724863.ini
-    hidden_6144                testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/hardlink_audit_912023.md
-    hidden_6936;hidden_4025    testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/hardlink_cache_175395.ini
-    hidden_7568                testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/hardlink_sync_327886.md
-    hidden_6594                testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/hardlink_tango_475592.cfg
-    hidden_6158;hidden_5402;hidden_3772 testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/india_archive_894856.ini
-    hidden_4135                testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/mike_hotel_728582.ini
-    hidden_8243                testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/output_alpha_291862.bak
-    hidden_5600                testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/romeo_log_907741.dat
-    hidden_9078                testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/temp_archive_630229.cfg
-    hidden_1638                testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/trace_config_291509.bin
-    hidden_6594                testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/zulu_cache_218906.cfg
-    hidden_8117;hidden_7926;hidden_6281 testspecials/dir_record_119518/dir_delta_826049/dir_index_888328/hardlink_beta_635608.dat
-    hidden_6230                testspecials/dir_record_119518/dir_delta_826049/dir_index_888328/hotel_draft_765897.cfg
-    hidden_4868                testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/audit_whiskey_314436.md
-    hidden_7265                testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/audit_zulu_568637.md
-    hidden_7607                testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/cache_uniform_583408.lnk
-    hidden_4202                testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/config_audit_702864.bin
-    hidden_8117;hidden_7926;hidden_6281 testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/delta_trace_378613.dat
-    hidden_5819                testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/echo_kilo_397175.xml
-    hidden_5164;hidden_3890    testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/hardlink_log_183973.dat
-    hidden_9404;hidden_3417;hidden_3048 testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/india_delta_293705.md
-    hidden_9558;hidden_6812    testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/lima_victor_651923.ini
-    hidden_3384;hidden_3227    testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/uniform_india_385054.ini
-    hidden_5038;hidden_1594;hidden_1313 testspecials/dir_record_119518/dir_delta_826049/dir_record_790212/dir_alpha_340360/hardlink_uniform_891010.tmp
-    hidden_6594                testspecials/dir_record_119518/dir_delta_826049/hardlink_gamma_400394.cfg
-    hidden_6594                testspecials/dir_record_119518/dir_delta_826049/hardlink_kilo_521074.cfg
-    hidden_9278;hidden_6568;hidden_2445 testspecials/dir_record_119518/dir_delta_826049/hardlink_romeo_346873.ini
-    hidden_5760;hidden_4489;hidden_3168;hidden_1926 testspecials/dir_record_119518/dir_delta_826049/hardlink_trace_466793.bak
-    hidden_5164;hidden_3890    testspecials/dir_record_119518/dir_delta_826049/hotel_cache_529895.dat
-    hidden_7607;hidden_5685;hidden_4514 testspecials/dir_record_119518/dir_delta_826049/november_backup_124237.lnk
-    hidden_9532;hidden_6669    testspecials/dir_record_119518/dir_delta_826049/temp_echo_693194.ini
-    hidden_7007                testspecials/dir_record_119518/dir_delta_826049/whiskey_india_888307.xml
-    hidden_8164                testspecials/dir_record_119518/dir_mike_657912/dir_sync_665841/delta_tango_675653.json
-    hidden_3384;hidden_3227    testspecials/dir_record_119518/dir_mike_657912/dir_sync_665841/hardlink_echo_826536.ini
-    hidden_4396                testspecials/dir_record_119518/dir_mike_657912/dir_sync_665841/hardlink_kilo_867718.bak
-    hidden_9931;hidden_9767;hidden_6223;hidden_3014 testspecials/dir_record_119518/dir_mike_657912/hardlink_tango_828621.tmp
-    hidden_5694                testspecials/dir_record_119518/dir_mike_657912/output_sierra_516344.cfg
-    hidden_8091                testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/cache_sync_474079.txt
-    hidden_4344                testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/config_whiskey_965635.json
-    hidden_9931;hidden_9767;hidden_6223;hidden_3014 testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/data_india_940478.tmp
-    hidden_8164                testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_november_945195/hardlink_config_885287.json
-    hidden_4114;hidden_4096    testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_november_945195/hardlink_india_498309.tmp
-    hidden_1638                testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_november_945195/hardlink_papa_317847.bin
-    hidden_2632                testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_november_945195/hardlink_papa_595979.tmp
-    hidden_8375;hidden_6236;hidden_6095;hidden_4462;hidden_1772 testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_november_945195/hardlink_whiskey_245743.tmp
-    hidden_8019                testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_november_945195/papa_trace_470127.dat
-    hidden_9865                testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_record_422737/echo_delta_498773.xml
-    hidden_9931;hidden_9767;hidden_6223;hidden_3014 testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_record_422737/hardlink_tango_858988.tmp
-    hidden_4109                testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_record_422737/india_india_100633.txt
-    hidden_6594                testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/hardlink_audit_209541.cfg
-    hidden_5760;hidden_4489;hidden_3168;hidden_1926 testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/hardlink_hotel_300727.bak
-    hidden_8375;hidden_6236;hidden_6095;hidden_4462;hidden_1772 testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/hardlink_index_642331.tmp
-    hidden_2632                testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/index_oscar_826244.tmp
-    hidden_3794;hidden_3737;hidden_2008 testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/lima_papa_877687.dat
-    hidden_7122;hidden_6177;hidden_2880 testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/record_sync_846406.ini
-    hidden_6520                testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/zulu_delta_907109.json
-    hidden_5038;hidden_1594;hidden_1313 testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/hardlink_beta_759546.tmp
-    hidden_3384;hidden_3227    testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/hardlink_cache_455415.ini
-    hidden_3890                testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/oscar_zulu_682719.dat
-    hidden_8300                testspecials/dir_record_119518/dir_yankee_902047/oscar_temp_183561.log
-    hidden_5220                testspecials/dir_record_119518/dir_yankee_902047/sync_output_400218.log
-    hidden_6936;hidden_4025    testspecials/dir_record_119518/echo_tango_543769.ini
-    hidden_9532;hidden_6669    testspecials/dir_record_119518/hardlink_archive_763665.ini
-    hidden_7481;hidden_6918;hidden_2510 testspecials/dir_record_119518/hardlink_foxtrot_594825.dat
-    hidden_3794;hidden_3737;hidden_2008 testspecials/dir_record_119518/hardlink_index_487959.dat
-    hidden_4868                testspecials/dir_record_119518/hardlink_yankee_328609.md
-    hidden_9457;hidden_4690    testspecials/dir_record_119518/lima_config_497416.csv
-    hidden_4114;hidden_4096    testspecials/dir_record_119518/mike_log_136531.tmp
-    hidden_7490;hidden_5556    testspecials/hardlink_foxtrot_477973.json
-    hidden_6594                testspecials/hardlink_quebec_943171.cfg
-    hidden_6594                testspecials/hardlink_whiskey_635602.cfg
-    hidden_7481;hidden_6918;hidden_2510 testspecials/mike_mike_632034.dat
-    hidden_9278;hidden_6568;hidden_2445 testspecials/report_gamma_256416.ini
-    hidden_8375;hidden_6236;hidden_6095;hidden_4462;hidden_1772 testspecials/temp_draft_653529.tmp
-    hidden_6594                testspecials/temp_record_466333.cfg
-    hidden_5047;hidden_3522    testspecials/whiskey_oscar_373774.log
+  STREAM                     RESIDENCY      HOST FILE
+    hidden_7357              inline         testintegrity/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_romeo_gamma_831931.dat
+    hidden_1514              inline         testintegrity/xbpt_tango_archive_828215.dat
+    hidden_6206              inline         testspecials/archive_alpha_661055.txt
+    hidden_3341              inline         testspecials/archive_alpha_661055.txt
+    hidden_9882              inline         testspecials/backup_hotel_570010.cfg
+    hidden_9722              inline         testspecials/dir_config_384571/dir_backup_503994/dir_romeo_941465/dir_mike_372259/draft_quebec_381663.json
+    hidden_8375              inline         testspecials/dir_config_384571/dir_backup_503994/dir_romeo_941465/dir_mike_372259/hardlink_config_512301.tmp
+    hidden_6236              inline         testspecials/dir_config_384571/dir_backup_503994/dir_romeo_941465/dir_mike_372259/hardlink_config_512301.tmp
+    hidden_6095              inline         testspecials/dir_config_384571/dir_backup_503994/dir_romeo_941465/dir_mike_372259/hardlink_config_512301.tmp
+    hidden_4462              inline         testspecials/dir_config_384571/dir_backup_503994/dir_romeo_941465/dir_mike_372259/hardlink_config_512301.tmp
+    hidden_1772              inline         testspecials/dir_config_384571/dir_backup_503994/dir_romeo_941465/dir_mike_372259/hardlink_config_512301.tmp
+    hidden_7007              inline         testspecials/dir_config_384571/dir_backup_503994/dir_romeo_941465/dir_mike_372259/hardlink_romeo_113831.xml
+    hidden_4114              inline         testspecials/dir_config_384571/dir_backup_503994/dir_romeo_941465/hardlink_index_436101.tmp
+    hidden_4096              inline         testspecials/dir_config_384571/dir_backup_503994/dir_romeo_941465/hardlink_index_436101.tmp
+    hidden_5242              inline         testspecials/dir_config_384571/dir_backup_503994/dir_romeo_941465/hardlink_temp_263040.bin
+    hidden_6158              inline         testspecials/dir_config_384571/dir_beta_813541/hardlink_gamma_947676.ini
+    hidden_5402              inline         testspecials/dir_config_384571/dir_beta_813541/hardlink_gamma_947676.ini
+    hidden_3772              inline         testspecials/dir_config_384571/dir_beta_813541/hardlink_gamma_947676.ini
+    hidden_6594              inline         testspecials/dir_config_384571/dir_beta_813541/hardlink_quebec_375122.cfg
+    hidden_5600              inline         testspecials/dir_config_384571/hardlink_india_943651.dat
+    hidden_1719              inline         testspecials/dir_config_384571/mike_delta_729757.bak
+    hidden_7568              inline         testspecials/dir_config_384571/record_log_195552.md
+    hidden_9741              inline         testspecials/dir_gamma_666805/dir_data_621988/echo_output_850558.lnk
+    hidden_8233              inline         testspecials/dir_gamma_666805/dir_data_621988/echo_output_850558.lnk
+    hidden_7075              inline         testspecials/dir_gamma_666805/dir_data_621988/echo_output_850558.lnk
+    hidden_5402              inline         testspecials/dir_gamma_666805/dir_data_621988/echo_output_850558.lnk
+    hidden_3626              inline         testspecials/dir_gamma_666805/dir_data_621988/echo_output_850558.lnk
+    hidden_3303              inline         testspecials/dir_gamma_666805/dir_data_621988/echo_output_850558.lnk
+    hidden_2747              inline         testspecials/dir_gamma_666805/dir_data_621988/echo_output_850558.lnk
+    hidden_1817              inline         testspecials/dir_gamma_666805/dir_data_621988/echo_output_850558.lnk
+    hidden_3384              inline         testspecials/dir_gamma_666805/dir_data_621988/hardlink_kilo_772228.ini
+    hidden_3227              inline         testspecials/dir_gamma_666805/dir_data_621988/hardlink_kilo_772228.ini
+    hidden_5164              inline         testspecials/dir_gamma_666805/dir_temp_510750/hardlink_audit_903158.dat
+    hidden_3890              inline         testspecials/dir_gamma_666805/dir_temp_510750/hardlink_audit_903158.dat
+    hidden_9278              inline         testspecials/dir_gamma_666805/dir_temp_510750/hardlink_lima_186391.ini
+    hidden_6568              inline         testspecials/dir_gamma_666805/dir_temp_510750/hardlink_lima_186391.ini
+    hidden_2445              inline         testspecials/dir_gamma_666805/dir_temp_510750/hardlink_lima_186391.ini
+    hidden_7481              inline         testspecials/dir_gamma_666805/dir_temp_510750/hardlink_sierra_246559.dat
+    hidden_6918              inline         testspecials/dir_gamma_666805/dir_temp_510750/hardlink_sierra_246559.dat
+    hidden_2510              inline         testspecials/dir_gamma_666805/dir_temp_510750/hardlink_sierra_246559.dat
+    hidden_2939              inline         testspecials/dir_gamma_666805/dir_temp_510750/sierra_draft_521559.tmp
+    hidden_5760              inline         testspecials/dir_gamma_666805/dir_temp_510750/zulu_audit_175089.bak
+    hidden_4489              inline         testspecials/dir_gamma_666805/dir_temp_510750/zulu_audit_175089.bak
+    hidden_3168              inline         testspecials/dir_gamma_666805/dir_temp_510750/zulu_audit_175089.bak
+    hidden_1926              inline         testspecials/dir_gamma_666805/dir_temp_510750/zulu_audit_175089.bak
+    hidden_9931              inline         testspecials/dir_gamma_666805/uniform_trace_241041.tmp
+    hidden_9767              inline         testspecials/dir_gamma_666805/uniform_trace_241041.tmp
+    hidden_6223              inline         testspecials/dir_gamma_666805/uniform_trace_241041.tmp
+    hidden_6158              inline         testspecials/dir_oscar_288048/dir_beta_718060/hardlink_audit_861536.ini
+    hidden_5402              inline         testspecials/dir_oscar_288048/dir_beta_718060/hardlink_audit_861536.ini
+    hidden_3772              inline         testspecials/dir_oscar_288048/dir_beta_718060/hardlink_audit_861536.ini
+    hidden_9404              inline         testspecials/dir_oscar_288048/dir_sync_959703/dir_alpha_459840/dir_alpha_750125/hardlink_echo_743629.md
+    hidden_3417              inline         testspecials/dir_oscar_288048/dir_sync_959703/dir_alpha_459840/dir_alpha_750125/hardlink_echo_743629.md
+    hidden_3048              inline         testspecials/dir_oscar_288048/dir_sync_959703/dir_alpha_459840/dir_alpha_750125/hardlink_echo_743629.md
+    hidden_5206              inline         testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/backup_alpha_645894.dat
+    hidden_3890              inline         testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/backup_alpha_645894.dat
+    hidden_1724              inline         testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/backup_alpha_645894.dat
+    hidden_8117              inline         testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/cache_zulu_982585.lnk
+    hidden_7926              inline         testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/cache_zulu_982585.lnk
+    hidden_4396              inline         testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/delta_kilo_576687.bak
+    hidden_4114              inline         testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/hardlink_audit_724286.tmp
+    hidden_4096              inline         testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/hardlink_audit_724286.tmp
+    hidden_6594              inline         testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/hardlink_record_867042.cfg
+    hidden_9931              inline         testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/india_quebec_345898.tmp
+    hidden_9767              inline         testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/india_quebec_345898.tmp
+    hidden_6223              inline         testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/india_quebec_345898.tmp
+    hidden_3551              inline         testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/report_echo_372097.ini
+    hidden_5828              inline         testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/romeo_delta_145414.tmp
+    hidden_6144              inline         testspecials/dir_oscar_288048/dir_sync_959703/dir_echo_270344/sierra_draft_742380.md
+    hidden_5600              inline         testspecials/dir_oscar_288048/dir_sync_959703/hardlink_november_679445.dat
+    hidden_2302              inline         testspecials/dir_oscar_288048/dir_sync_959703/romeo_temp_182346.md
+    hidden_4114              inline         testspecials/dir_oscar_288048/hardlink_alpha_603577.tmp
+    hidden_4096              inline         testspecials/dir_oscar_288048/hardlink_alpha_603577.tmp
+    hidden_9931              inline         testspecials/dir_oscar_288048/hardlink_draft_430596.tmp
+    hidden_9767              inline         testspecials/dir_oscar_288048/hardlink_draft_430596.tmp
+    hidden_6223              inline         testspecials/dir_oscar_288048/hardlink_draft_430596.tmp
+    hidden_3014              inline         testspecials/dir_oscar_288048/hardlink_draft_430596.tmp
+    hidden_6594              inline         testspecials/dir_oscar_288048/hardlink_log_997700.cfg
+    hidden_6520              inline         testspecials/dir_oscar_288048/hardlink_quebec_858121.json
+    hidden_8092              inline         testspecials/dir_oscar_288048/hardlink_tango_422351.bin
+    hidden_7219              inline         testspecials/dir_oscar_288048/hardlink_tango_422351.bin
+    hidden_1638              inline         testspecials/dir_oscar_288048/hardlink_temp_340568.bin
+    hidden_2331              inline         testspecials/dir_oscar_738992/dir_november_183978/backup_beta_366494.dat
+    hidden_8117              inline         testspecials/dir_oscar_738992/dir_november_183978/hardlink_gamma_342160.dat
+    hidden_7926              inline         testspecials/dir_oscar_738992/dir_november_183978/hardlink_gamma_342160.dat
+    hidden_6281              inline         testspecials/dir_oscar_738992/dir_november_183978/hardlink_gamma_342160.dat
+    hidden_5164              inline         testspecials/dir_oscar_738992/hardlink_india_108996.dat
+    hidden_3890              inline         testspecials/dir_oscar_738992/hardlink_india_108996.dat
+    hidden_5242              inline         testspecials/dir_oscar_738992/hotel_audit_578337.bin
+    hidden_5038              inline         testspecials/dir_record_119518/alpha_gamma_177832.tmp
+    hidden_1594              inline         testspecials/dir_record_119518/alpha_gamma_177832.tmp
+    hidden_1313              inline         testspecials/dir_record_119518/alpha_gamma_177832.tmp
+    hidden_9602              inline         testspecials/dir_record_119518/dir_delta_826049/config_report_394730.ini
+    hidden_7490              inline         testspecials/dir_record_119518/dir_delta_826049/data_sync_366687.json
+    hidden_5556              inline         testspecials/dir_record_119518/dir_delta_826049/data_sync_366687.json
+    hidden_4109              inline         testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/dir_oscar_729924/hardlink_temp_721267.txt
+    hidden_7568              inline         testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/dir_oscar_729924/sierra_index_671660.md
+    hidden_3384              inline         testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/hardlink_archive_724863.ini
+    hidden_3227              inline         testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/hardlink_archive_724863.ini
+    hidden_6144              inline         testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/hardlink_audit_912023.md
+    hidden_6936              inline         testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/hardlink_cache_175395.ini
+    hidden_4025              inline         testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/hardlink_cache_175395.ini
+    hidden_7568              inline         testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/hardlink_sync_327886.md
+    hidden_6594              inline         testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/hardlink_tango_475592.cfg
+    hidden_6158              inline         testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/india_archive_894856.ini
+    hidden_5402              inline         testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/india_archive_894856.ini
+    hidden_3772              inline         testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/india_archive_894856.ini
+    hidden_4135              inline         testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/mike_hotel_728582.ini
+    hidden_8243              inline         testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/output_alpha_291862.bak
+    hidden_5600              inline         testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/romeo_log_907741.dat
+    hidden_9078              inline         testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/temp_archive_630229.cfg
+    hidden_1638              inline         testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/trace_config_291509.bin
+    hidden_6594              inline         testspecials/dir_record_119518/dir_delta_826049/dir_index_393008/zulu_cache_218906.cfg
+    hidden_8117              inline         testspecials/dir_record_119518/dir_delta_826049/dir_index_888328/hardlink_beta_635608.dat
+    hidden_7926              inline         testspecials/dir_record_119518/dir_delta_826049/dir_index_888328/hardlink_beta_635608.dat
+    hidden_6281              inline         testspecials/dir_record_119518/dir_delta_826049/dir_index_888328/hardlink_beta_635608.dat
+    hidden_6230              inline         testspecials/dir_record_119518/dir_delta_826049/dir_index_888328/hotel_draft_765897.cfg
+    hidden_4868              inline         testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/audit_whiskey_314436.md
+    hidden_7265              inline         testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/audit_zulu_568637.md
+    hidden_7607              inline         testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/cache_uniform_583408.lnk
+    hidden_4202              inline         testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/config_audit_702864.bin
+    hidden_8117              inline         testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/delta_trace_378613.dat
+    hidden_7926              inline         testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/delta_trace_378613.dat
+    hidden_6281              inline         testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/delta_trace_378613.dat
+    hidden_5819              inline         testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/echo_kilo_397175.xml
+    hidden_5164              inline         testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/hardlink_log_183973.dat
+    hidden_3890              inline         testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/hardlink_log_183973.dat
+    hidden_9404              inline         testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/india_delta_293705.md
+    hidden_3417              inline         testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/india_delta_293705.md
+    hidden_3048              inline         testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/india_delta_293705.md
+    hidden_9558              inline         testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/lima_victor_651923.ini
+    hidden_6812              inline         testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/lima_victor_651923.ini
+    hidden_3384              inline         testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/uniform_india_385054.ini
+    hidden_3227              inline         testspecials/dir_record_119518/dir_delta_826049/dir_record_396651/uniform_india_385054.ini
+    hidden_5038              inline         testspecials/dir_record_119518/dir_delta_826049/dir_record_790212/dir_alpha_340360/hardlink_uniform_891010.tmp
+    hidden_1594              inline         testspecials/dir_record_119518/dir_delta_826049/dir_record_790212/dir_alpha_340360/hardlink_uniform_891010.tmp
+    hidden_1313              inline         testspecials/dir_record_119518/dir_delta_826049/dir_record_790212/dir_alpha_340360/hardlink_uniform_891010.tmp
+    hidden_6594              inline         testspecials/dir_record_119518/dir_delta_826049/hardlink_gamma_400394.cfg
+    hidden_6594              inline         testspecials/dir_record_119518/dir_delta_826049/hardlink_kilo_521074.cfg
+    hidden_9278              inline         testspecials/dir_record_119518/dir_delta_826049/hardlink_romeo_346873.ini
+    hidden_6568              inline         testspecials/dir_record_119518/dir_delta_826049/hardlink_romeo_346873.ini
+    hidden_2445              inline         testspecials/dir_record_119518/dir_delta_826049/hardlink_romeo_346873.ini
+    hidden_5760              inline         testspecials/dir_record_119518/dir_delta_826049/hardlink_trace_466793.bak
+    hidden_4489              inline         testspecials/dir_record_119518/dir_delta_826049/hardlink_trace_466793.bak
+    hidden_3168              inline         testspecials/dir_record_119518/dir_delta_826049/hardlink_trace_466793.bak
+    hidden_1926              inline         testspecials/dir_record_119518/dir_delta_826049/hardlink_trace_466793.bak
+    hidden_5164              inline         testspecials/dir_record_119518/dir_delta_826049/hotel_cache_529895.dat
+    hidden_3890              inline         testspecials/dir_record_119518/dir_delta_826049/hotel_cache_529895.dat
+    hidden_7607              inline         testspecials/dir_record_119518/dir_delta_826049/november_backup_124237.lnk
+    hidden_5685              inline         testspecials/dir_record_119518/dir_delta_826049/november_backup_124237.lnk
+    hidden_4514              inline         testspecials/dir_record_119518/dir_delta_826049/november_backup_124237.lnk
+    hidden_9532              inline         testspecials/dir_record_119518/dir_delta_826049/temp_echo_693194.ini
+    hidden_6669              inline         testspecials/dir_record_119518/dir_delta_826049/temp_echo_693194.ini
+    hidden_7007              inline         testspecials/dir_record_119518/dir_delta_826049/whiskey_india_888307.xml
+    hidden_8164              inline         testspecials/dir_record_119518/dir_mike_657912/dir_sync_665841/delta_tango_675653.json
+    hidden_3384              inline         testspecials/dir_record_119518/dir_mike_657912/dir_sync_665841/hardlink_echo_826536.ini
+    hidden_3227              inline         testspecials/dir_record_119518/dir_mike_657912/dir_sync_665841/hardlink_echo_826536.ini
+    hidden_4396              inline         testspecials/dir_record_119518/dir_mike_657912/dir_sync_665841/hardlink_kilo_867718.bak
+    hidden_9931              inline         testspecials/dir_record_119518/dir_mike_657912/hardlink_tango_828621.tmp
+    hidden_9767              inline         testspecials/dir_record_119518/dir_mike_657912/hardlink_tango_828621.tmp
+    hidden_6223              inline         testspecials/dir_record_119518/dir_mike_657912/hardlink_tango_828621.tmp
+    hidden_3014              inline         testspecials/dir_record_119518/dir_mike_657912/hardlink_tango_828621.tmp
+    hidden_5694              inline         testspecials/dir_record_119518/dir_mike_657912/output_sierra_516344.cfg
+    hidden_8091              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/cache_sync_474079.txt
+    hidden_4344              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/config_whiskey_965635.json
+    hidden_9931              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/data_india_940478.tmp
+    hidden_9767              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/data_india_940478.tmp
+    hidden_6223              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/data_india_940478.tmp
+    hidden_3014              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/data_india_940478.tmp
+    hidden_8164              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_november_945195/hardlink_config_885287.json
+    hidden_4114              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_november_945195/hardlink_india_498309.tmp
+    hidden_4096              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_november_945195/hardlink_india_498309.tmp
+    hidden_1638              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_november_945195/hardlink_papa_317847.bin
+    hidden_2632              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_november_945195/hardlink_papa_595979.tmp
+    hidden_8375              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_november_945195/hardlink_whiskey_245743.tmp
+    hidden_6236              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_november_945195/hardlink_whiskey_245743.tmp
+    hidden_6095              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_november_945195/hardlink_whiskey_245743.tmp
+    hidden_4462              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_november_945195/hardlink_whiskey_245743.tmp
+    hidden_1772              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_november_945195/hardlink_whiskey_245743.tmp
+    hidden_8019              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_november_945195/papa_trace_470127.dat
+    hidden_9865              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_record_422737/echo_delta_498773.xml
+    hidden_9931              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_record_422737/hardlink_tango_858988.tmp
+    hidden_9767              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_record_422737/hardlink_tango_858988.tmp
+    hidden_6223              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_record_422737/hardlink_tango_858988.tmp
+    hidden_3014              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_record_422737/hardlink_tango_858988.tmp
+    hidden_4109              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/dir_record_422737/india_india_100633.txt
+    hidden_6594              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/hardlink_audit_209541.cfg
+    hidden_5760              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/hardlink_hotel_300727.bak
+    hidden_4489              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/hardlink_hotel_300727.bak
+    hidden_3168              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/hardlink_hotel_300727.bak
+    hidden_1926              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/hardlink_hotel_300727.bak
+    hidden_8375              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/hardlink_index_642331.tmp
+    hidden_6236              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/hardlink_index_642331.tmp
+    hidden_6095              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/hardlink_index_642331.tmp
+    hidden_4462              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/hardlink_index_642331.tmp
+    hidden_1772              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/hardlink_index_642331.tmp
+    hidden_2632              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/index_oscar_826244.tmp
+    hidden_3794              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/lima_papa_877687.dat
+    hidden_3737              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/lima_papa_877687.dat
+    hidden_2008              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/lima_papa_877687.dat
+    hidden_7122              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/record_sync_846406.ini
+    hidden_6177              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/record_sync_846406.ini
+    hidden_2880              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/record_sync_846406.ini
+    hidden_6520              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193/zulu_delta_907109.json
+    hidden_5038              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/hardlink_beta_759546.tmp
+    hidden_1594              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/hardlink_beta_759546.tmp
+    hidden_1313              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/hardlink_beta_759546.tmp
+    hidden_3384              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/hardlink_cache_455415.ini
+    hidden_3227              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/hardlink_cache_455415.ini
+    hidden_3890              inline         testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/oscar_zulu_682719.dat
+    hidden_8300              inline         testspecials/dir_record_119518/dir_yankee_902047/oscar_temp_183561.log
+    hidden_5220              inline         testspecials/dir_record_119518/dir_yankee_902047/sync_output_400218.log
+    hidden_6936              inline         testspecials/dir_record_119518/echo_tango_543769.ini
+    hidden_4025              inline         testspecials/dir_record_119518/echo_tango_543769.ini
+    hidden_9532              inline         testspecials/dir_record_119518/hardlink_archive_763665.ini
+    hidden_6669              inline         testspecials/dir_record_119518/hardlink_archive_763665.ini
+    hidden_7481              inline         testspecials/dir_record_119518/hardlink_foxtrot_594825.dat
+    hidden_6918              inline         testspecials/dir_record_119518/hardlink_foxtrot_594825.dat
+    hidden_2510              inline         testspecials/dir_record_119518/hardlink_foxtrot_594825.dat
+    hidden_3794              inline         testspecials/dir_record_119518/hardlink_index_487959.dat
+    hidden_3737              inline         testspecials/dir_record_119518/hardlink_index_487959.dat
+    hidden_2008              inline         testspecials/dir_record_119518/hardlink_index_487959.dat
+    hidden_4868              inline         testspecials/dir_record_119518/hardlink_yankee_328609.md
+    hidden_9457              inline         testspecials/dir_record_119518/lima_config_497416.csv
+    hidden_4690              inline         testspecials/dir_record_119518/lima_config_497416.csv
+    hidden_4114              inline         testspecials/dir_record_119518/mike_log_136531.tmp
+    hidden_4096              inline         testspecials/dir_record_119518/mike_log_136531.tmp
+    hidden_7490              inline         testspecials/hardlink_foxtrot_477973.json
+    hidden_5556              inline         testspecials/hardlink_foxtrot_477973.json
+    hidden_6594              inline         testspecials/hardlink_quebec_943171.cfg
+    hidden_6594              inline         testspecials/hardlink_whiskey_635602.cfg
+    hidden_7481              inline         testspecials/mike_mike_632034.dat
+    hidden_6918              inline         testspecials/mike_mike_632034.dat
+    hidden_2510              inline         testspecials/mike_mike_632034.dat
+    hidden_9278              inline         testspecials/report_gamma_256416.ini
+    hidden_6568              inline         testspecials/report_gamma_256416.ini
+    hidden_2445              inline         testspecials/report_gamma_256416.ini
+    hidden_8375              inline         testspecials/temp_draft_653529.tmp
+    hidden_6236              inline         testspecials/temp_draft_653529.tmp
+    hidden_6095              inline         testspecials/temp_draft_653529.tmp
+    hidden_4462              inline         testspecials/temp_draft_653529.tmp
+    hidden_1772              inline         testspecials/temp_draft_653529.tmp
+    hidden_6594              inline         testspecials/temp_record_466333.cfg
+    hidden_5047              inline         testspecials/whiskey_oscar_373774.log
+    hidden_3522              inline         testspecials/whiskey_oscar_373774.log
 
   Extract one:  forefst IMG export ads "<file>:<stream>"
