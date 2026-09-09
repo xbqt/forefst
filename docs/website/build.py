@@ -549,9 +549,18 @@ def build():
         _, text = transform(gl)
         write(os.path.join(CONTENT, "glossary.md"), text)
 
+    # Format support (generated from the claim register; see gen_support_matrix.py).
+    # Published deliberately: it states where the evidence is thin as plainly as where it is strong, and
+    # a reader calibrating trust in a forensic reference needs the first as much as the second.
+    fs = os.path.join(DOCS, "format_support.md")
+    if os.path.isfile(fs):
+        _, text = transform(fs)
+        write(os.path.join(CONTENT, "format_support.md"), text)
+
     # Home + About (site-only Markdown)
     # NOTE: pages/forensics_101.md is intentionally kept in the repo but NOT published yet (no copy here,
     # no nav entry, no inbound link). Re-add it to this list + a menu entry in hugo.toml to publish it.
+    #
     for src, dst in [("home.md", "_index.md"), ("about.md", "about.md"), ("verification.md", "verification.md")]:
         p = os.path.join(PAGES, src)
         if os.path.isfile(p):

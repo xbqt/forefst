@@ -152,7 +152,7 @@ populated on any given row.
 : A file carrying an `IO_REPARSE_TAG_*` that redirects or annotates it — symlink, junction, mount point, WSL `LX_SYMLINK`, or a WOF-compressed file. The tag sits at `$SI+0x54`; the target/data follows in the `$REPARSE_POINT` attribute. See [Reparse Points](structures/reparse_points.md).
 
 **Data residency**
-: Where a stream's bytes actually live, read from the `$DATA` descriptor's own form: **inline** (in the record), **extents** (on-disk clusters), **snapshot-shared** (the live stream owns no allocation and its bytes are a snapshot's — still recoverable), or **sparse** (owns no allocation and has no snapshot; nothing was ever written). Independent of record placement. See [Resident Storage](concepts/resident_storage.md).
+: Where a stream's bytes actually live, read from the `$DATA` descriptor's own form: **inline** (in the record), **extents** (on-disk clusters), **snapshot-shared** (the live stream owns no allocation and its bytes are a snapshot's — still recoverable), or **unallocated** (owns no allocation and has no snapshot; nothing was ever written). Independent of record placement. See [Resident Storage](concepts/resident_storage.md).
 
 **Record placement**
 : Whether an object's record is **embedded** in its directory name row (`key_flags` 0x01) or **split** out into its own type-0x40 backing record (`key_flags` 0x02). A move or a hard link forces the split, and the split is one-way. It says **nothing** about where the file's bytes are — a split record commonly still holds its data inline. See [Resident Storage](concepts/resident_storage.md).
@@ -164,7 +164,7 @@ populated on any given row.
 : Where a file's *record* lives: **embedded** in its directory name row, or **split** out into a backing record in the object's home directory. A move or a hard link forces the split — and moves no data. Reported as `RecordPlacement`. See [Record placement and data residency](concepts/placement_and_residency.md).
 
 **Data residency**
-: Where a file's *bytes* live: **inline** in the record, in on-disk **extents**, **snapshot-shared** (the stream owns no allocation and the bytes are still the snapshot's), or **sparse** (no allocation and no snapshot — never written). Reported as `DataResidency`. Independent of record placement. See [Record placement and data residency](concepts/placement_and_residency.md).
+: Where a file's *bytes* live: **inline** in the record, in on-disk **extents**, **snapshot-shared** (the stream owns no allocation and the bytes are still the snapshot's), or **unallocated** (no allocation and no snapshot — never written). Reported as `DataResidency`. Not to be confused with the `FILE_ATTRIBUTE_SPARSE_FILE` bit, which `IsSparse` and `--filter sparse` report and which is a different fact. Independent of record placement. See [Record placement and data residency](concepts/placement_and_residency.md).
 
 **Embedded / split**
 : The two values of record placement. An embedded record sits in the name row (`key_flags` 0x01); a split one is reached through it (`key_flags` 0x02) and lives in a type-0x40 backing record. Neither value tells you where the bytes are — a 149 MB file can be embedded, and a hard-linked file can keep its bytes inline. See [Directory Entries](structures/directory_entries.md).

@@ -79,9 +79,15 @@ not in the prose.
 
 ## Scope
 
-The reference covers ReFS **3.4 through 3.14** plus an Insider preview; facts are versioned where they
+The reference covers ReFS **3.4 through 3.15** plus an Insider preview; facts are versioned where they
 change. Where neither the code nor the disk could settle a question, it is left as an open question rather
 than asserted — and no claim rests on a single image.
+
+Coverage is not uniform, and pretending otherwise would undercut everything above. **[Format
+support](format_support.md)** shows, per area of the reference, which formats a measurement was actually
+taken on — including the statements whose verification scope was never recorded, in a column of their
+own. It is a floor, not a ceiling: a fact can be true of a format no image here covers, and the table
+will not claim it.
 
 ## A note on tooling
 

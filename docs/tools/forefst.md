@@ -516,7 +516,7 @@ forefst.py disk.raw integrity --fullchecksums -v       # full sweep + page detai
 
 | Subverb | Gets out |
 |--------|-------------|
-| `export file <path>` \[`-o FILE`\] \| `--oid O` | one file's live `$DATA` (inline / CoW-shared / extents) — same as `extract`; stdout or `-o` |
+| `export file <path>` \[`-o FILE`\] \| `--oid O` | one file's live `$DATA` (inline / snapshot-shared / extents) — same as `extract`; stdout or `-o` |
 | `export ads "<path>:<stream>"` \[`-o FILE`\] | one alternate data stream — inline (small) or reassembled from extents (on format 3.11+, ≥ 2 KiB) — stdout or `-o` |
 | `export reparse` \[`--json`\] \[`-o FILE`\] | the reparse-point inventory (decoded targets/tags/kind) — text by default (same as `reparse`), or `--json` — stdout or `-o` |
 | `export resident-all [dir]` | every file's inline `$DATA` to a folder, tree preserved (skips 0-byte / non-inline) |

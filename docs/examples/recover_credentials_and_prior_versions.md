@@ -68,7 +68,9 @@ password:in the other file
 
 ```text
   20 deleted entries indexed → ./out/deleted_files.csv  (+ .json)
-    Content recovered: 14 resident (exact) + 0 non-resident carved = 14 files → ./out/content/
+    Content recovered: 14 inline (exact) + 0 extent-backed carved = 14 files → ./out/content/
+    Recovery log → ./out/recovery_log.txt
+    108 extent-backed file(s) have a recoverable extent map — re-run with --full to carve their content (best-effort).
 ```
 
 We have the **username: `bat`** — and a pointer to a second file.
@@ -82,9 +84,11 @@ python3 forefst.py "$IMG" search passphrase
 ```
 
 ```text
-OID          Parent       Type          Size  Res  Modified             Path
-───────────  ───────────  ────  ──────────── ────  ───────────────────  ──────────────────────
-(resident)   0x703        File         104 B  Yes  2026-09-01 10:39:30  tests/passphrase.txt
+ObjectRef      Type          Size  Data             Modified             Path
+─────────────  ────  ────────────  ───────────────  ───────────────────  ────────────────────────────────────────
+0x703:0x2b     File         104 B  inline           2026-09-01 10:39:30  tests/passphrase.txt
+
+1 match. Use `details <path>`, `details --id FileRef` (HomeOID:FileID) or `details --id OID` for full detail.
 ```
 
 ```sh

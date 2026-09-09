@@ -27,30 +27,46 @@ Actual output (header + first suspects):
 ==============================================================================
 ReFS Timestamp-Anomaly (Timestomp) Detection
 ==============================================================================
- Image: <image>.raw (ReFS 3.14)
- Volume created: 2026-05-23 06:04:52
- Volume modified: 2026-05-23 11:15:52
- USN journal: present (authoritative cross-check ON)
- Files examined: 1507
- Flagged: 184 (HIGH 114 / MEDIUM 62 / LOW 8)
+  Image:           <image>.raw  (ReFS 3.14)
+  Volume created:  2026-09-01 09:32:39
+  Volume modified: 2026-09-02 08:06:05
+  USN journal:     present (authoritative cross-check ON)
+  Files examined:  636
+  Flagged:         576  (HIGH 2 / MEDIUM 0 / LOW 0 / INFO 574 — INFO = ambiguous: a timestamp-preserving copy and a backdated creation produce the same signals; corroborate with USN)
 
- Conf Created (forged?) Changed (real write) Path
- ----------------------------------------------------------------------------------------------
- HIGH 2024-08-03 07:17:33 2026-05-23 07:34:05 test/.../elvis_dir_output_358165/xbpt_zulu_india_473528.csv
- signals: CHANGE_LATE, PRE_FORMAT
- HIGH 2024-11-23 07:17:31 2026-05-23 07:34:05 test/.../xbpt_whiskey_delta_922359.tmp
- signals: CHANGE_LATE, PRE_FORMAT
- HIGH 2023-11-27 07:16:30 2026-05-23 07:34:03 test/.../xbpt_beta_archive_985685.tmp
- signals: CHANGE_LATE, PRE_FORMAT
+  This flags timestamps that LOOK anomalous — it is investigative INFORMATION, not proof of
+  tampering. Weigh the BASIS of each row: a journal/hardlink signal is authoritative; an
+  intrinsic ($SI-only) signal is a heuristic that also fires on legitimate timestamp-preserving
+  copies/restores. Tiers, exactly as timestomp_verdict() decides them:
+    HIGH   — an AUTHORITATIVE corroboration: the change journal, or a hard-link sibling that
+             preserves the true birth. A count of intrinsic signals never reaches HIGH.
+    MEDIUM — CHANGE_LATE without PRE_FORMAT (created on THIS volume, metadata altered later),
+             or FUTURE (created after the volume's last metadata write).
+    INFO   — every signal present is one a timestamp-preserving copy also produces
+             (PRE_FORMAT / CHANGE_LATE / CREATE_GT_MODIFY / ROUND_TIMESTAMPS), so a copy and a
+             backdate are indistinguishable here however many of them fire.
+    LOW    — anything else.
+
+  Conf   Basis         Claimed birth         Last real write       Path
+  ------------------------------------------------------------------------------------------------
+  HIGH   journal/link  2026-09-01 09:45:26   2026-09-01 09:45:26   tests/forefst-tools/forefst.py
+         signals: CREATE_GT_MODIFY, USN_BASIC_INFO_CHANGE
+  HIGH   journal/link  2026-09-01 09:45:26   2026-09-01 09:45:26   tests/forefst-tools/refsanalysis.py
+         signals: CREATE_GT_MODIFY, USN_BASIC_INFO_CHANGE
 ```
 
-The header pins the **volume creation bound** (`2026-05-23 06:04:52`) read from
-`$VOLUME_INFORMATION +0x90`, and confirms the USN journal is present so the
-authoritative cross-check is on. Each HIGH row shows a forged `Created` in 2023–2024
-sitting *before* the volume existed, while the real metadata-write (`Changed`,
-`$SI +0x10` MACB-block-relative = `value+0x38` in the master's value-relative
-numbering, §C.2) is the true 2026-05-23 moment the stomp ran. Two independent intrinsic
-signals — `CHANGE_LATE` and `PRE_FORMAT` — agree, which is what earns the HIGH tier.
+The header pins the **volume creation bound** read from `$VOLUME_INFORMATION +0x90`, and
+confirms the USN journal is present so the authoritative cross-check is on.
+
+Read the `Basis` column before the `Conf` column. Both HIGH rows here say **`journal/link`**:
+the USN journal independently recorded a deliberate basic-info edit
+(`USN_BASIC_INFO_CHANGE`), which is evidence outside the timestamps themselves. That is what
+earns HIGH — **a count of intrinsic signals never does**, however many fire.
+
+The other 574 rows are `INFO`, and the distinction matters more than the number. A
+timestamp-preserving copy (`robocopy /COPY:T`, a restore, an archive extraction) produces
+exactly the same `$SI`-only signals as a deliberate backdate, so on those rows the volume
+cannot separate the two. `INFO` means *ambiguous*, not *cleared* — and not *suspicious*.
 
 ### Step 2 — Read the full verdict and signal legend
 
@@ -58,24 +74,39 @@ Running the same subcommand without `--min` lists every tier and prints the lege
 the analyst needs to read the signals. Actual tail of the output:
 
 ```text
- Signal legend:
- CHANGE_LATE $SI change-time post-dates created/modified — common timestomp
- tools (SetFileTime/PowerShell/.NET) can't reach it; defeated by a
- native-API/raw-disk stomp that also sets the change time
- USN_BASIC_INFO_CHANGE journal recorded a deliberate basic-info edit (no content change)
- USN_CREATE_MISMATCH $SI created differs from the FILE_CREATE journal record
- PRE_FORMAT / FUTURE created before the volume existed / after its last write
- CREATE_GT_MODIFY created after last write
- Note: CHANGE_LATE / PRE_FORMAT also fire on creation-time-preserving copies
- (robocopy /COPY:T, restore); HIGH requires independent-source agreement.
+  Signal legend  (AUTHORITATIVE = independent evidence · HEURISTIC = suggestive $SI-only):
+    [AUTHORITATIVE]
+      USN_BASIC_INFO_CHANGE  the USN journal recorded a deliberate basic-info edit (no content change)
+      USN_CREATE_MISMATCH    $SI created differs from the FILE_CREATE journal record (true birth known)
+      HARDLINK_MACB_MISMATCH one hard-link name's $SI created diverges from a sibling's (ReFS per-name
+                             MACB); the LATEST sibling created is the authentic birth — only the
+                             back-dated name is flagged, never the clean sibling
+    [HEURISTIC — $SI only, corroborate]
+      CHANGE_LATE            $SI change-time post-dates created/modified (SetFileTime/PowerShell/.NET
+                             can't reach change-time) — defeated by a native-API/raw-disk stomp
+      PRE_FORMAT / FUTURE    created before the volume existed / after its last write
+      CREATE_GT_MODIFY       created after last write
+      ROUND_TIMESTAMPS       created AND modified are whole-second (.0000000) — a tool often sets a
+                             date with no sub-second time; LOW only (driver packages / archive
+                             extraction also produce whole-second times)
+  Note: PRE_FORMAT / CHANGE_LATE / CREATE_GT_MODIFY also fire on a legitimate
+  timestamp-preserving copy (robocopy /COPY:T, a restore, an archive extraction) — and
+  equally on a deliberately backdated creation. That pair alone is INFO: ambiguous, not
+  cleared. The one intrinsic signal that reaches HIGH is HARDLINK_MACB_MISMATCH, which a
+  copy cannot produce; corroborate anything below HIGH with the USN journal.
 ```
 
 `CHANGE_LATE` is the ReFS analogue of NTFS's `$SI`-vs-`$FN` check: ReFS keeps only one
 timestamp set, so instead of a second set we use the **not-normally-reachable change
-time** (`$SI +0x10`) as the reference. `PRE_FORMAT` is a hard physical impossibility —
-a file cannot predate its own filesystem. The note is the reason the tier matters:
-either signal alone could be an innocent creation-preserving copy; only their
-agreement (or a USN confirmation) is conclusive.
+time** (`$SI +0x10`) as the reference. `PRE_FORMAT` looks like a hard physical
+impossibility — a file cannot predate its own filesystem — but that reasoning is about
+the *file*, not about the *copy*: a timestamp-preserving copy carries a birth from the
+volume it came from, which naturally predates this one.
+
+That is why **their agreement is not conclusive**, and why the pair rates `INFO`.
+Accumulating heuristic signals does not make them authoritative; it only makes the same
+ambiguity fire more often. What lifts a row to HIGH is evidence from outside the
+timestamps — the change journal, or a hard-link sibling that preserves the true birth.
 
 ### Step 3 — Pull a single flagged record
 

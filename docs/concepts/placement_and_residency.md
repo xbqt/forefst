@@ -7,7 +7,7 @@ them as one.
 | The question | The answer is called | Its values |
 |---|---|---|
 | **Where is the file's *record*?** | `RecordPlacement` | `embedded` · `split` |
-| **Where are the file's *bytes*?** | `DataResidency` | `inline` · `extents` · `snapshot-shared` · `sparse` |
+| **Where are the file's *bytes*?** | `DataResidency` | `inline` · `extents` · `snapshot-shared` · `unallocated` |
 
 A single word — `resident` — used to name both, which is why it names neither any more.
 

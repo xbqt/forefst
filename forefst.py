@@ -243,7 +243,7 @@ def validate_image(path, die_fn=None):
 
 # ─── Constants ────────────────────────────────────────────────────────
 PROG = "forefst"
-VERSION = "1.11.0"
+VERSION = "1.11.1"
 # Phase 3 (4.D): directory walks default to FULL depth (no artificial cap); `--depth N` overrides. The real
 # recursion depth equals the actual directory nesting (ReFS trees are shallow — tens of levels), so this
 # constant is never the binding limit; it just means "don't truncate". main() also raises the interpreter
@@ -366,7 +366,11 @@ def filetime_to_iso(ft):
         frac = total_100ns % 10000000
         dt = datetime.datetime.fromtimestamp(seconds, tz=datetime.timezone.utc)
         return dt.strftime("%Y-%m-%d %H:%M:%S") + f".{frac:07d}"
-    except (OSError, ValueError, OverflowError):
+    except (OSError, ValueError, OverflowError) as _e:
+        # The absent cases (0, all-ones) already returned above, so reaching here means the volume
+        # HOLDS a value that will not render -- itself an anomaly worth seeing. Rendering "" keeps the
+        # column shape, but the reader is told rather than shown a blank that looks like "no timestamp".
+        _skip_note("FILETIME conversion", f"raw 0x{ft:x}", _e)
         return ""
 
 def filetime_to_unix(ft):
@@ -376,7 +380,8 @@ def filetime_to_unix(ft):
         # integer // (not float /) — float division rounds up at ~0.9999999 s, giving a Unix second
         # 1 too high; filetime_to_iso already uses //. (fix 2026-06-20)
         return (ft - 116444736000000000) // 10000000
-    except (ValueError, OverflowError):
+    except (ValueError, OverflowError) as _e:
+        _skip_note("FILETIME conversion", f"raw 0x{ft:x}", _e)
         return 0
 
 # ── Timestamp-anomaly (timestomp) detection ────────────────────────────────
@@ -707,7 +712,8 @@ def alloc_capacity(f, ps, cs, tr, roots):
     """
     try:
         vol = (f.seek(0, 2) - ps) // cs
-    except (OSError, OverflowError):
+    except (OSError, OverflowError) as _e:
+        _skip_note("allocator capacity", "image size", _e)
         return None
     s = alloc_read_summary(f, ps, cs, tr, roots, 1, table_id=0x21, volume_clusters=vol)
     if not s:
@@ -862,7 +868,16 @@ def _warn_translator(tr):
 atexit.register(lambda: [_warn_translator(t) for t in _ALL_TRS])
 # Skipped work is reported at exit whatever the command did, for the same reason as the
 # translator caveat above: an incomplete answer must not look like a complete one.
+def _defer_summary():
+    """One line if any content path declined. Separate from the skip summary: a SKIP is work not done,
+    a DEFERRAL is an answer deliberately withheld, and a reader needs to tell them apart."""
+    if _DEFERRALS:
+        print(f"[{PROG}] {len(_DEFERRALS)} stream(s) were DECLINED rather than reassembled; "
+              f"no bytes were written for them.", file=sys.stderr)
+
+
 atexit.register(lambda: _skip_summary())
+atexit.register(lambda: _defer_summary())
 
 # ─── B+ tree walker ──────────────────────────────────────────────────
 def walk_bplus(f, ps, cs, tr, vlcns, max_depth=5):
@@ -1275,7 +1290,9 @@ def get_object_si(f, ps, cs, tr, vlcns):
     """Walk an object's B+ tree and extract $STANDARD_INFORMATION (type 0x10)."""
     try:
         rows = walk_bplus(f, ps, cs, tr, vlcns)
-    except Exception:
+    except Exception as _e:
+        # Indistinguishable from "this object has no $SI" unless the failure is recorded.
+        _skip_note("$STANDARD_INFORMATION", "object tree", _e)
         return None
     for kd, vd in rows:
         if len(kd) >= 2 and le16(kd, 0) == 0x10:
@@ -1564,8 +1581,32 @@ def _stream_data_form(rec, ctx=None):
 # with a count -- and anything that would otherwise emit BYTES raises instead (never invent data).
 _SKIP_NOTES = {}
 
-# Set by --legacy-link-join; see walk_directory_tree.
-LEGACY_LINK_JOIN = False
+
+
+class IncompleteEvidence(Exception):
+    """A decode failed on a path whose caller would otherwise fill the gap with a default.
+
+    Raised instead of returning a partial answer, so the caller can DEFER rather than emit bytes,
+    a size or a verdict that the volume does not support. Distinct from a parse error the caller is
+    entitled to ignore: this one says "what I return would be wrong, not merely incomplete".
+    """
+
+
+_DEFERRALS = []
+
+
+def _defer_note(where, reason):
+    """Record that a CONTENT path declined to answer, and say so.
+
+    Deferring is correct -- it is how the reassembler avoids emitting bytes the volume does not support.
+    But a deferral that only shows up as a missing file is the silent-default class wearing another hat:
+    the caller exits 0, no file appears, and nothing says which file or why. Callers that were ASKED for a
+    specific file (extract / export) report these and exit 2.
+    """
+    _DEFERRALS.append((where, reason))
+    print(f"[{PROG}] WARNING: declined to reassemble {where}: {reason} — no bytes written for it.",
+          file=sys.stderr)
+    return len(_DEFERRALS)
 
 
 def _skip_note(stage, where, exc, limit=3):
@@ -1807,7 +1848,11 @@ def fetch_t40_backing(f, ps, cs, tr, obj_map, dir_oid, file_id, file_size=None):
         for kd, vd in walk_bplus(f, ps, cs, tr, obj_map[dir_oid]):
             if len(kd) >= 0x10 and le16(kd, 0) == 0x40 and le64(kd, 0x08) == file_id:
                 cands.append(bytes(vd))
-    except Exception:
+    except Exception as _e:
+        # `None` below also means "no such backing", a legitimate answer. A walk FAILURE returning the
+        # same value makes the two indistinguishable -- and this record feeds residency, USN, SecurityId
+        # and the attribute flags for the file.
+        _skip_note("type-0x40 backing", f"dir 0x{dir_oid:x} file_id {file_id}", _e)
         return None
     if not cands:
         return None
@@ -1950,7 +1995,9 @@ def count_snapshots_from_btree(f, ps, cs, tr, vlcns):
     """Count true snapshot entries in an object's B+-tree."""
     try:
         rows = walk_bplus(f, ps, cs, tr, vlcns)
-    except Exception:
+    except Exception as _e:
+        # "0 snapshots" is a statement about the object, not about the walk. Callers print it as a count.
+        _skip_note("snapshot count", "object tree", _e)
         return 0
     count = 0
     for kd, vd in rows:
@@ -2124,6 +2171,11 @@ def recover_cow_current_content(f, ps_off, cs, tr, vd):
     alloc = max((fv + run) for fv, _vl, run in exts) * cs
     if alloc > 64 * 1024 * 1024:   # CoW resident streams are small; guard anyway
         return None
+    # NB on `bytes(memoryview(buf)[:N])` here and in the other reassemblers: the slice is LOAD-BEARING
+    # (buf is allocated at `alloc`, the cluster-rounded size, and N is the logical size), so it cannot be
+    # dropped the way `_recover_inline_extent_content`'s could -- that one allocated at exactly its slice
+    # bound. Taking the slice through a memoryview avoids the intermediate bytearray copy, so the peak is
+    # one copy of the file instead of two: measured 400 -> 200 MiB on a 200 MiB buffer.
     buf = bytearray(alloc)
     for fvcn, vlcn, run in sorted(exts, key=lambda e: e[0]):
         for j in range(run):
@@ -2135,7 +2187,7 @@ def recover_cow_current_content(f, ps_off, cs, tr, vd):
             chunk = f.read(cs)
             off = (fvcn + j) * cs
             buf[off:off + cs] = chunk
-    return bytes(buf[:cur_size])
+    return bytes(memoryview(buf)[:cur_size])
 
 
 def _snapshot_shared_blocks(vd, ctx, ncl, exclude=0x1000, older_than=None):
@@ -2160,8 +2212,12 @@ def _snapshot_shared_blocks(vd, ctx, ncl, exclude=0x1000, older_than=None):
     tr = ctx[3] if ctx and len(ctx) > 3 else None      # the translator, for virtual-LCN plausibility (E85)
     try:
         rows = parse_resident_btree_rows(vd, ctx)
-    except (ValueError, struct.error, IndexError):
-        return {}
+    except (ValueError, struct.error, IndexError) as _e:
+        # `return {}` here is indistinguishable from "this file shares no blocks", and the callers
+        # reassemble content from the result: every shared VCN would silently come back zero. Same
+        # defect as the per-stream failure below, reached one level earlier.
+        _skip_note("snapshot shared blocks", "row decode", _e)
+        raise IncompleteEvidence("snapshot rows did not decode") from _e
     for k, v in rows:
         if len(k) < 0x18 or le16(k, 0x0C) != 0x80:
             continue
@@ -2175,8 +2231,13 @@ def _snapshot_shared_blocks(vd, ctx, ncl, exclude=0x1000, older_than=None):
             continue
         try:
             streams[sub] = parse_snapshot_data_entry(v, ncl, tr)
-        except (ValueError, struct.error, IndexError):
-            continue
+        except (ValueError, struct.error, IndexError) as _e:
+            # Dropping this stream would SHRINK the shared-block map, and both callers reassemble file
+            # content from it: every VCN this stream would have supplied then stays zero in the output.
+            # That is E83's defect (snapshot CoW blocks read as holes) arriving through an exception
+            # path. The map is all-or-nothing, so say so and let the caller defer.
+            _skip_note("snapshot shared blocks", f"sub-stream 0x{sub:x}", _e)
+            raise IncompleteEvidence(f"snapshot sub-stream 0x{sub:x} did not parse") from _e
     shared = {}
     for sub in sorted(streams, reverse=True):        # newest first; an older snapshot never overrides it
         for fv, vlcn, run in (streams[sub][2] or []):
@@ -2187,7 +2248,7 @@ def _snapshot_shared_blocks(vd, ctx, ncl, exclude=0x1000, older_than=None):
     return shared
 
 
-def _recover_inline_extent_content(f, ps, cs, tr, vd):
+def _recover_inline_extent_content(f, ps, cs, tr, vd, _defer_ctx=None):
     """Reassemble the LIVE content of a NON-RESIDENT file whose CURRENT $DATA stream (sub_id 0x1000) holds its
     extent map INLINE in a 0x10028 holder — the F5 'extent-backed' case (disk_alloc>0) that
     `recover_cow_current_content` deliberately defers. Returns the bytes (trimmed to stream_size), or None to
@@ -2235,7 +2296,11 @@ def _recover_inline_extent_content(f, ps, cs, tr, vd):
     # E83: blocks this stream does not own may be SHARED with a stream snapshot rather than being sparse
     # holes. Resolve those to the clusters that actually hold them; a VCN no stream owns stays zero-filled,
     # which is the genuine sparse case. Empty (and therefore a no-op) for a file without snapshots.
-    shared = _snapshot_shared_blocks(vd, (f, ps, cs, tr), ncl)
+    try:
+        shared = _snapshot_shared_blocks(vd, (f, ps, cs, tr), ncl)
+    except IncompleteEvidence as _e:
+        _defer_note(_defer_ctx or "a stream", f"snapshot shared-block map incomplete ({_e})")
+        return None                     # defer: a truncated shared map would be emitted as zero blocks
     if shared:
         for fv in range(size_cl):
             if fv in covered or fv not in shared:
@@ -2243,12 +2308,19 @@ def _recover_inline_extent_content(f, ps, cs, tr, vd):
             off = fv * cs
             try:
                 plcn = tr.tr(shared[fv]) if tr else shared[fv]
-            except Exception:
-                continue
+            except Exception as _e:
+                # This VCN never reaches `exts`, so the buffer below leaves it ZERO and the file is
+                # emitted anyway -- fabricated content, in a function that promises to defer instead.
+                _skip_note("shared block translate", f"vcn {fv}", _e)
+                _defer_note(_defer_ctx or "a stream",
+                            f"shared block at VCN {fv} could not be translated ({type(_e).__name__})")
+                return None
             f.seek(ps + plcn * cs)
             chunk = f.read(cs)
             if len(chunk) < min(cs, stream_size - off):
-                continue
+                _skip_note("shared block read", f"vcn {fv}", IOError("short read"))
+                _defer_note(_defer_ctx or "a stream", f"short read on the shared block at VCN {fv}")
+                return None
             exts = exts + [(fv, shared[fv], 1)]
 
     buf = bytearray(stream_size)            # holes stay zero (sparse)
@@ -2269,7 +2341,12 @@ def _recover_inline_extent_content(f, ps, cs, tr, vd):
             if len(chunk) < n:
                 return None
             buf[off:off + n] = chunk[:n]
-    return bytes(buf[:stream_size])
+    # `bytes(buf)`, not `bytes(buf[:stream_size])`: buf is allocated at exactly stream_size and every
+    # write above is bounded by it (`off >= stream_size` skipped, `n = min(cs, stream_size - off)`), so
+    # the slice can only ever copy the whole buffer. It made a large reassembly hold THREE copies of the
+    # file at once -- on a 2,556 MiB stream that is ~7.6 GiB, which is what took a verification worker
+    # over the limit on a 7 GiB host. Same bytes, one copy fewer.
+    return bytes(buf)
 
 
 def _verify_inline_integrity(f, ps, cs, tr, vd):
@@ -2363,8 +2440,11 @@ def recover_snapshot_streams(f, ps_off, cs, tr, vd):
         snapshots, which is why concatenating its own extents produced a short, offset-shifted file. Missing
         VCNs are resolved from snapshots strictly older than this one — never newer, which could hold content
         written after the version being recovered. A VCN no stream owns stays zero (a genuine sparse hole)."""
-        shared = (_snapshot_shared_blocks(vd, (f, ps_off, cs, tr), ncl, exclude=sub_id, older_than=sub_id)
-                  if sub_id else {})
+        try:
+            shared = (_snapshot_shared_blocks(vd, (f, ps_off, cs, tr), ncl, exclude=sub_id, older_than=sub_id)
+                      if sub_id else {})
+        except IncompleteEvidence:
+            return None                 # defer: same reason as the live-stream path
         nblocks = (stream_size + cs - 1) // cs
         blocks = {}
         for fvcn, vlcn, run in exts:
@@ -3815,7 +3895,10 @@ def _embedded_reparse_target(vd, ctx=None):
         return ""
     try:
         rows = parse_resident_btree_rows(bytes(vd), ctx)
-    except Exception:
+    except Exception as _e:
+        # "" is how a file with NO reparse target renders. A decode failure must not be reported as
+        # the absence of a target -- that is the fact E81 exists to establish.
+        _skip_note("reparse target (embedded)", "attribute rows", _e)
         return ""
     for k, v in rows:
         if len(k) < 0x0E or le16(k, 0x0C) != 0xC0 or len(v) < 0x18:
@@ -3836,7 +3919,8 @@ def get_reparse_target(f, ps, cs, tr, vlcns):
     object record's embedded attribute tree instead, so both levels are searched (P4-2)."""
     try:
         rows = walk_bplus(f, ps, cs, tr, vlcns)
-    except Exception:
+    except Exception as _e:
+        _skip_note("reparse target", "object tree", _e)
         return ""
     for kd, vd in rows:
         if len(kd) >= 2 and le16(kd, 0) == 0xC0 and len(vd) >= 8:
@@ -3851,15 +3935,8 @@ def get_reparse_target(f, ps, cs, tr, vlcns):
     return ""
 
 # ─── Directory tree walk ─────────────────────────────────────────────
-def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, trash_set,
-                        legacy_link_join=None):
-    """Walk the directory tree and collect file metadata.
-
-    `legacy_link_join` restores the pre-E89 behaviour for one release: resolve a split name
-    only against backings the walk happened to traverse, instead of looking its home object
-    up on demand. Kept so a regression can be attributed rather than argued about."""
-    if legacy_link_join is None:
-        legacy_link_join = LEGACY_LINK_JOIN
+def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, trash_set):
+    """Walk the directory tree and collect file metadata."""
     results = []
     visited = set()
     t40_content = {}     # (owner_dir_oid, file_id) -> has_real_content (alloc>0 or size>0); alloc=0 stubs map to False
@@ -4154,7 +4231,7 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
     # home tree on demand, so `files` and `extract` disagreed about the same file.
     #
     # The home tree is reachable from obj_map whether or not the walk visited it, so look it up on
-    # demand and cache it. `--legacy-link-join` restores the old behaviour for one release.
+    # demand and cache it.
     _home_t40_cache = {}
 
     def _home_t40(oid):
@@ -4175,9 +4252,8 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
 
     for i, e in enumerate(nonres_files):
         P = e["parent_oid"]; fid = e["file_id"]; home = e.get("home_oid", 0); S = e.get("file_size", 0)
-        loc = t40_content.get((P, fid))      # (alloc, size, last_usn, journal_id) or None
         rem = t40_content.get((home, fid))
-        if rem is None and home and not legacy_link_join:
+        if rem is None and home:
             rem = _home_t40(home).get(fid)   # E89: the home object was not traversed by the walk
         # C1.4 -- ONE resolution path: the object's HOME. `file_id` is a PER-DIRECTORY ordinal, so a lookup
         # keyed on (parent_oid, file_id) can land on a different object that merely holds that ordinal in the
@@ -4197,31 +4273,11 @@ def walk_directory_tree(f, ps, cs, tr, obj_map, start_oid, max_depth, enrich, tr
         # this walk resolves is listed by its resolved backing's own type-0x39 link set -- 83,521 names on
         # the 64 corpus images that contain one (124 in scope), 0 exceptions (verify_claim.py,
         # assert_resolved_backing_lists_the_name).
-        if legacy_link_join:
-            # Pre-1.11 ladder, kept for one release so a result can be reproduced against the old behaviour.
-            if loc and loc[1] == S and loc[0] > 0:
-                sig = ("obj", P, fid); rec = loc
-            elif rem and rem[1] == S:
-                sig = ("obj", home, fid); rec = rem
-            elif loc and loc[1] == S:
-                sig = ("obj", P, fid); rec = loc
-            elif S == 0 and rem is not None and rem[1] == 0:
-                sig = ("obj", home, fid, 0); rec = rem
-            elif S == 0 and loc is not None and loc[1] == 0:
-                sig = ("obj", P, fid, 0); rec = loc
-            else:
-                _lk = (P, (e.get("name", "") or "").lower())
-                if rem is not None and _lk in t40_links.get((home, fid), ()):
-                    sig = ("obj", home, fid); rec = rem
-                elif loc is not None and _lk in t40_links.get((P, fid), ()):
-                    sig = ("obj", P, fid); rec = loc
-                else:
-                    sig = ("solo", e["path"], i); rec = None
-        elif rem and rem[1] == S:
-            # Exactly the old branch-2 predicate. The old ladder's separate `S == 0 and rem[1] == 0` branch
-            # was unreachable -- this one already matches when both are zero -- so reproducing it would
-            # CHANGE behaviour rather than preserve it: an `or S == 0` here regrouped two winsider names
-            # whose home backing has a non-zero size, moving the hard-link census by 2.
+        if rem and rem[1] == S:
+            # The pre-1.11 ladder's branch-2 predicate, unchanged. Its separate `S == 0 and rem[1] == 0`
+            # branch was unreachable -- this one already matches when both are zero -- so "restoring" it
+            # would CHANGE behaviour rather than preserve it: an `or S == 0` here regrouped two winsider
+            # names whose home backing has a non-zero size, moving the hard-link census by 2.
             sig = ("obj", home, fid); rec = rem
         else:                                              # no size-matching home stream: 0x39 fallback
             # F-1 hardening: a STALE `value+0x38` (e.g. 0 on a non-primary hard-link name — the SplashScreen
@@ -4379,7 +4435,7 @@ def _record_placement(r):
 
 def _data_residency(r):
     """DATA RESIDENCY (E87): where the current $DATA stream's bytes are, read from the
-    descriptor's own form -- `inline`, `extents`, `snapshot-shared` or `sparse`.
+    descriptor's own form -- `inline`, `extents`, `snapshot-shared` or `unallocated`.
 
     Independent of placement. A 0-byte file is decided by descriptor form like any other:
     an inline-form record carrying no bytes is `inline`; an extent-form one is `extents`.
@@ -4746,7 +4802,7 @@ def cmd_fastsummary(f, ps, cs, tr, roots, obj_map, vmaj, vmin, chkp_lcns,
             if vc >= best_vc:
                 best_vc = vc; best_flags = flags
                 chkp_sha = _hash_page(f, ps + cl * cs, cs)
-        except Exception: pass
+        except Exception as _e: _skip_note("fastsummary: checkpoint", f"lcn {cl}", _e)
 
     # Root table row counts
     root_counts = {}
@@ -4775,7 +4831,7 @@ def cmd_fastsummary(f, ps, cs, tr, roots, obj_map, vmaj, vmin, chkp_lcns,
                     vol_detail["drv_minor"] = vd[0x83]
                     vol_detail["vol_create_time"] = le64(vd, 0x90)
                     vol_detail["vol_modify_time"] = le64(vd, 0xA0)
-        except Exception: pass
+        except Exception as _e: _skip_note("fastsummary: volume info", "table 0x520", _e)
 
     checksum_types = {0: "None", 2: "CRC64", 4: "SHA-256"}
     volume_bytes = total_sectors * 512
@@ -4865,21 +4921,21 @@ def cmd_fastsummary(f, ps, cs, tr, roots, obj_map, vmaj, vmin, chkp_lcns,
         sec_count = 0
         if 0x530 in obj_map:
             try: sec_count = len(list(walk_bplus(f, ps, cs, tr, obj_map[0x530])))
-            except Exception: pass
+            except Exception as _e: _skip_note("fastsummary: security descriptors", "table 0x530", _e)
         summary["security_descriptors"] = sec_count
 
         # Reparse index
         reparse_count = 0
         if 0x540 in obj_map:
             try: reparse_count = len(list(walk_bplus(f, ps, cs, tr, obj_map[0x540])))
-            except Exception: pass
+            except Exception as _e: _skip_note("fastsummary: reparse index", "table 0x540", _e)
         summary["reparse_index_entries"] = reparse_count
 
         # Trash table
         trash_count = 0
         if 0xD in obj_map:
             try: trash_count = len(list(walk_bplus(f, ps, cs, tr, obj_map[0xD])))
-            except Exception: pass
+            except Exception as _e: _skip_note("fastsummary: trash table", "table 0xD", _e)
         summary["trash_table_entries"] = trash_count
 
         # Container utilization
@@ -4921,7 +4977,7 @@ def cmd_fastsummary(f, ps, cs, tr, roots, obj_map, vmaj, vmin, chkp_lcns,
                         except Exception: name = "(decode error)"
                         if name == "Change Journal": fs_meta["usn_journal"] = True
                         fs_meta["children"].append(name)
-            except Exception: pass
+            except Exception as _e: _skip_note("fastsummary: system metadata", "object tree", _e)
         summary["fs_metadata"] = fs_meta
         # UsnJournalId (volume-constant journal epoch) is injected by the full `summary` path from the
         # walk (each file's $SI val+0x70 carries it; the $Max stream is unreliable — often no extents).
@@ -5036,8 +5092,9 @@ def _print_fastsummary(summary, plus_mode=False, is_summary=False):
     try:
         for _line in chkp_flags_decoded(int(str(summary['checkpoint_flags']), 16)):
             print(f"                        · {_line}")
-    except (ValueError, TypeError):
-        pass
+    except (ValueError, TypeError) as _e:
+        # Printing nothing here reads as "this checkpoint has no flags set".
+        _skip_note("fastsummary: checkpoint flag decode", "flags field", _e)
     # 7summary: "Containers mapped" removed here — it duplicated the container count now shown once in
     # Volume Detail (below).
     print()
@@ -5574,7 +5631,10 @@ def cmd_search(f, ps, cs, tr, obj_map, vmaj, vmin, pattern, regex_mode=False, ma
         if _pred is not None and not _pred(r):
             continue
         matches.append({
-            "oid": f"0x{r['oid']:x}" if r["oid"] else ("(resident)" if r.get("is_resident") else "(non-res)"),
+            # E87 vocabulary: `is_resident` is the DATA axis (it is refined by F5 from the $DATA
+            # descriptor), so the words here are the data-residency words. They were "(resident)" and
+            # "(non-res)", which named the axis ambiguously and did not match any value `files` prints.
+            "oid": f"0x{r['oid']:x}" if r["oid"] else ("(inline)" if r.get("is_resident") else "(extents)"),
             # Phase C: the single identity a reader can act on — a directory's OID, or a file's FileRef.
             "id": (f"0x{r['oid']:x}" if r["oid"] else (_file_ref(r) or "")),
             "parent_oid": f"0x{r['parent_oid']:x}" if r.get("parent_oid") else "",
@@ -7141,7 +7201,7 @@ def _read_vlcn_extents(f, ps_off, cs, tr, exts, size):
                 break
             f.seek(ps_off + plcn * cs)
             buf[off:off + cs] = f.read(cs)
-    return bytes(buf[:size])
+    return bytes(memoryview(buf)[:size])
 
 def _ads_storage_map(vd, ctx=None):
     """{stream name: residency} for one record's named streams, from the SAME parser `export ads` uses.
@@ -7602,7 +7662,10 @@ def _embedded_data_extents(vd, cs, ctx):
             for e in exts:                      # resolve only an accepted cover (see _extent_node_map)
                 try:
                     e["plcn"] = tr.tr(e["vlcn"]) if tr else e["vlcn"]
-                except Exception:
+                except Exception as _e:
+                    # [] is the documented "fail cleanly" answer, but it also means "this stream has no
+                    # embedded extents" -- so a translation failure would be read as a fact about the file.
+                    _skip_note("embedded extent translate", f"vlcn {e.get('vlcn')}", _e)
                     return []
             return exts
     return []
@@ -8049,7 +8112,9 @@ def cmd_timestomp(image, remaining, partition_start):
             if tier == "NONE" and not show_all:
                 continue
             rows.append({
-                "path": r["path"], "storage": _hx(r["oid"]) if r.get("oid") else ("(resident)" if r.get("resident") else "(non-res)"),
+                # Same E87 vocabulary as `search`: this is the DATA axis, so the data words.
+                "path": r["path"],
+                "storage": _hx(r["oid"]) if r.get("oid") else ("(inline)" if r.get("resident") else "(extents)"),
                 "tier": tier, "signals": evidence,
                 "created": _filetime_to_str(r.get("create_time", 0)).replace(" UTC", ""),
                 "modified": _filetime_to_str(r.get("modify_time", 0)).replace(" UTC", ""),
@@ -8344,7 +8409,7 @@ def get_file_content(f, ps, cs, tr, info, verify_integrity=False):
     storage = info.get("storage")
     file_size = info.get("file_size", 0)
     extents = info.get("extents") or []
-    # (A) resident-storage with no extent list: inline $DATA / CoW-shared / inline-0x10028-holder (§C.3b).
+    # (A) resident-storage with no extent list: inline $DATA / snapshot-shared / inline-0x10028-holder (§C.3b).
     if file_size == 0 and not extents:
         return b"", {"source": "empty", "size": 0}
     if storage == "resident" and not extents:
@@ -8380,7 +8445,7 @@ def get_file_content(f, ps, cs, tr, info, verify_integrity=False):
             chunk = f.read(cs)
             off = (ext["file_vcn"] + i) * cs
             buf[off:off + len(chunk)] = chunk          # length-safe (a short/past-EOF read must not shrink buf)
-    out = bytes(buf[:file_size])
+    out = bytes(memoryview(buf)[:file_size])
     meta = {"source": "extents", "size": file_size, "n_extents": len(sorted_exts)}
     # Only ask about holes when the content is entirely zero -- that is the only case where a hole changes
     # the answer, and it keeps the syscalls off the path for every normal file.
@@ -8574,7 +8639,17 @@ def cmd_extract(image, remaining, partition_start):
                 # coverage gate; sparse-aware; integrity CRC32-C checksums skipped). Returns None to DEFER only
                 # when the extents don't fully+cleanly cover the allocation (large/overflow holders) — then we
                 # keep the honest "not supported" message rather than emit anything wrong.
-                _ic = _recover_inline_extent_content(f, ps, cs, tr, target.get("raw_value", b""))
+                _before = len(_DEFERRALS)
+                _ic = _recover_inline_extent_content(f, ps, cs, tr, target.get("raw_value", b""),
+                                                     _defer_ctx=f"'{target['name']}'")
+                if _ic is None and len(_DEFERRALS) > _before:
+                    # A REQUESTED file was declined for an evidence reason (not the structural "this
+                    # holder form is not supported" defer). Exiting 0 here would leave the caller with a
+                    # missing file and a clean status -- the silent-default class in another form.
+                    print(f"[{PROG}] '{target['name']}' was NOT written: the volume does not support "
+                          f"reassembling it (see the warning above). Nothing was fabricated.",
+                          file=sys.stderr)
+                    return 2
                 if _ic is not None:
                     fsz = target.get("file_size", 0)
                     print(f"Extracting '{target['name']}' ({len(_ic)} bytes — extent-backed, inline extent map):",
@@ -8609,7 +8684,7 @@ def cmd_extract(image, remaining, partition_start):
                       file=sys.stderr)
                 return 1
             # A CoW'd / snapshotted resident file keeps its live bytes in a 0x10028 holder.
-            print(f"File '{target['name']}' is resident but its $DATA is not a plain inline stream "
+            print(f"File '{target['name']}' has no extent map, but its $DATA is not a plain inline stream "
                   f"({target.get('file_size',0)} bytes) — for a CoW/snapshotted file use `snapshots --extract`.",
                   file=sys.stderr)
             return 1
@@ -8653,7 +8728,7 @@ def cmd_extract(image, remaining, partition_start):
             print(f"[{PROG}] WARNING: extracted {written} of {file_size} declared bytes for "
                   f"'{target['name']}' — decoded extents cover less than the file size (coverage gap "
                   f"or a sparse file). Verify before relying on the output.", file=sys.stderr)
-        _out = bytes(buf[:file_size])
+        _out = bytes(memoryview(buf)[:file_size])
         # D13. A hole in the image is NOT evidence that the data is missing. Raw images are stored
         # sparsely -- this corpus is 55 TB apparent / 58 GB allocated, and `cp --sparse=always` alone took
         # one 67 MB sample to 40 MB by turning REAL zero clusters into holes -- so on a sparse-stored image
@@ -8667,6 +8742,40 @@ def cmd_extract(image, remaining, partition_start):
         # file -- a partial gap inside a file with real content is the case that used to pass silently.
         _hranges = _extent_hole_ranges(f, ps, cs, sorted_exts, file_size) if file_size else []
         _rc_holes = 0
+        if _hranges is None:
+            # UNDETERMINABLE is not "no holes". `if _hranges:` treated the two the same, so a file whose
+            # hole coverage could not be read was written with no note, exit 0 -- and `--refuse-holes`,
+            # whose whole purpose is to withhold content that may come from image holes, did not refuse.
+            #
+            # The default exit stays 0 on purpose: the usual cause is a filesystem without SEEK_DATA/
+            # SEEK_HOLE, which says nothing about the evidence, and exiting 2 there would report a finding
+            # on every extract. The strict flag is a different question -- it cannot confirm, so it refuses.
+            print(f"[{PROG}] WARNING: could not determine whether any of '{target['name']}' comes from "
+                  f"ranges the image stores as holes (the host could not be queried). The bytes are "
+                  f"written as read; treat their completeness as unverified.", file=sys.stderr)
+            if args["refuse_holes"]:
+                print(f"[{PROG}] --refuse-holes: hole coverage is undeterminable, so nothing written.",
+                      file=sys.stderr)
+                return 2
+            if outp:
+                # The sidecar is written for this case TOO. An examiner who keeps sidecars beside
+                # extracted files should not have to infer, from the absence of one, whether the file was
+                # checked and clean or never checkable -- those are different evidential positions.
+                _sidecar = outp + ".holes.json"
+                try:
+                    with open(_sidecar, "w", encoding="utf-8") as _sf:
+                        json.dump({"file": target["name"], "size": file_size,
+                                   "status": "undeterminable",
+                                   "hole_bytes": None, "ranges": [],
+                                   "note": "Whether any of this file's bytes come from ranges the image "
+                                           "stores as holes could not be determined (the host could not "
+                                           "be queried for hole coverage). The bytes were written as "
+                                           "read; their completeness is unverified, not verified."},
+                                  _sf, indent=2)
+                    print(f"[{PROG}] wrote {_sidecar} recording that hole coverage is undeterminable.",
+                          file=sys.stderr)
+                except OSError as _e:
+                    print(f"[{PROG}] WARNING: could not write {_sidecar}: {_e}", file=sys.stderr)
         if _hranges:
             _hbytes = sum(n for _o, n in _hranges)
             _rtxt = ", ".join(f"{o}-{o + n - 1}" for o, n in _hranges[:8])
@@ -8683,6 +8792,7 @@ def cmd_extract(image, remaining, partition_start):
                 try:
                     with open(_sidecar, "w", encoding="utf-8") as _sf:
                         json.dump({"file": target["name"], "size": file_size,
+                                   "status": "holes_present",
                                    "hole_bytes": _hbytes,
                                    "note": "Ranges read back as zeros because the image stores them as "
                                            "holes. On a sparsely-stored image that is also how genuine "
@@ -9692,7 +9802,7 @@ def _slack_recover(f, ps, cs, tr, roots, obj_map, max_scan, log, scan_orphans=Tr
         + (f" + {orphans} orphan pages" if scan_orphans
            else " (orphan-page scan skipped — add --full to also scan the freed pages of older deletions)")
         + " with recoverable slack rows"
-        + (f"; {joined} non-resident file(s) matched a type-0x40 extent map in slack" if joined else ""))
+        + (f"; {joined} split-record file(s) matched a type-0x40 extent map in slack" if joined else ""))
     if scan_orphans and stats and stats.get("bounded"):
         log(f"  WARNING: the orphan-page scan was bounded by --max-scan "
             f"({stats['scanned_clusters']:,} of {stats['total_clusters']:,} clusters). This run is INCOMPLETE — "
@@ -9794,13 +9904,19 @@ def _read_full_page(f, ps, cs, slots, use_tr):
         try:
             plcn = use_tr.tr(s) if use_tr else s
             if plcn is None or plcn < 0:
-                return b""
+                _skip_note("integrity page read", f"lcn {s}", ValueError("no physical mapping"))
+                return None
             f.seek(ps + plcn * cs)
             chunk = f.read(cs)
-        except (KeyError, OSError, OverflowError, TypeError, ValueError):
-            return b""
+        except (KeyError, OSError, OverflowError, TypeError, ValueError) as _e:
+            # `return b""` made an UNREADABLE page indistinguishable from one that is simply not a B+
+            # page: the caller tests `pg[:4] != b"MSB+"` and returns, so the page was neither checked
+            # nor counted, and `integrity` reported a clean verdict over a volume it had not fully read.
+            _skip_note("integrity page read", f"lcn {s}", _e)
+            return None
         if len(chunk) < cs:
-            return b""
+            _skip_note("integrity page read", f"lcn {s}", IOError("short read"))
+            return None
         pg += chunk
     return pg
 
@@ -9925,7 +10041,8 @@ def _verify_page_checksums(f, ps, cs, tr, chk, dl, root_count, max_pages=300000,
     indirect form is used by native v3.14)."""
     import hashlib
     st = {"crc64_ok": 0, "crc64_bad": 0, "sha_ok": 0, "sha_bad": 0,
-          "none": 0, "pages": 0, "objects": 0, "capped": False, "mismatches": []}
+          "none": 0, "pages": 0, "objects": 0, "capped": False, "mismatches": [],
+          "unreadable": 0}
     visited = set()
 
     def verify_ref(rec, use_tr, is_ot=False, depth=0):
@@ -9945,6 +10062,9 @@ def _verify_page_checksums(f, ps, cs, tr, chk, dl, root_count, max_pages=300000,
         visited.add(key)
         cktype = rec[0x22]
         pg = _read_full_page(f, ps, cs, slots, use_tr)
+        if pg is None:                      # could not READ it -- not the same as "not a B+ page"
+            st["unreadable"] += 1
+            return
         if pg[:4] != b"MSB+":
             return
         st["pages"] += 1
@@ -10309,7 +10429,7 @@ def cmd_reparse(image, remaining, partition_start):
                     # non-resident / hard-linked reparse: rich buffer lives in the backing record; show the
                     # resolved tag + target from the shared walk (same values `files --filter reparse` shows).
                     _tv = entry.get("reparse_tag_value", 0)
-                    print(f"    Reparse:   {_tag_name(_tv)} ({_hx(_tv)})  [non-resident]")
+                    print(f"    Reparse:   {_tag_name(_tv)} ({_hx(_tv)})  [split record]")
                     if entry.get("reparse_target"):
                         print(f"    Target:    {entry['reparse_target']}")
                 else:
@@ -10531,7 +10651,7 @@ def _carve_extent_backed(f, ps_off, cs, tr, vd, t40_backing=None):
                         off = (fvcn + j) * cs
                         chunk = f.read(cs)              # len(chunk)==cs on a normal read; a short/past-EOF read
                         buf[off:off + len(chunk)] = chunk   # must NOT shrink buf (slice-assign len-safe) -> zero-pad
-                return (bytes(buf[:stream_size]), stream_size)
+                return (bytes(memoryview(buf)[:stream_size]), stream_size)
     # (2) type-0x40 backing recovered from slack — extents already VLCN->PLCN translated by the parser.
     if t40_backing is not None:
         info = _parse_extents_from_type40(t40_backing, cs, tr)
@@ -10549,7 +10669,7 @@ def _carve_extent_backed(f, ps_off, cs, tr, vd, t40_backing=None):
                     o = (fvcn + j) * cs
                     chunk = f.read(cs)                  # len-safe assign (a past-EOF read must not shrink buf)
                     buf[o:o + len(chunk)] = chunk
-            return (bytes(buf[:stream_size]), stream_size)
+            return (bytes(memoryview(buf)[:stream_size]), stream_size)
     # (3) inline-holder MULTI-LEVEL extent map (v3.4 / v3.7 / v3.9 / upgraded): the current stream's runs live in
     # THIS row as an embedded B+-tree index array that step (1)'s parse_resident_btree_rows can't reach — the same
     # case cmd_extract/dataruns decode via the cover-guarded index-array walk (§C.3b, #640). Byte-exact or [] (the
@@ -10572,7 +10692,7 @@ def _carve_extent_backed(f, ps_off, cs, tr, vd, t40_backing=None):
                     o = (fvcn + j) * cs
                     buf[o:o + len(chunk)] = chunk
             if got:                                 # nothing readable (extent map points outside the volume) -> no carve
-                return (bytes(buf[:stream_size]), stream_size)
+                return (bytes(memoryview(buf)[:stream_size]), stream_size)
     return None
 
 DELETED_CSV_COLUMNS = ["FileName", "IsDirectory", "RecoverySource", "RecoveredFrom",
@@ -10819,7 +10939,7 @@ def cmd_deleted(image, remaining, partition_start):
         print(f"\n  {n_idx} deleted entr{'y' if n_idx == 1 else 'ies'} indexed → {idx}  (+ .json)")
         if n_content:
             _st = f"; the {carved} carved are BEST-EFFORT (may be stale — verify)" if carved else ""
-            print(f"    Content recovered: {resident} resident (exact) + {carved} non-resident carved = "
+            print(f"    Content recovered: {resident} inline (exact) + {carved} extent-backed carved = "
                   f"{n_content} file{'s' if n_content != 1 else ''} → {os.path.join(extract_dir, 'content')}/{_st}")
         elif not write_content:
             print("    Content: not written (--rows-only) — see rows/ for the raw remnants")
@@ -10834,7 +10954,7 @@ def cmd_deleted(image, remaining, partition_start):
                   f"churn — add --no-system to hide.)")
         _eb = sum(1 for m in _manifest if m["recoverable"] == "extent_backed" and not m["content_file"])
         if not carve and _eb:
-            print(f"    {_eb} non-resident file(s) have a recoverable extent map — re-run with --full to carve "
+            print(f"    {_eb} extent-backed file(s) have a recoverable extent map — re-run with --full to carve "
                   f"their content (best-effort).")
 
     try:
@@ -11133,7 +11253,7 @@ def cmd_deleted(image, remaining, partition_start):
         print(f"  Mode: {_mode}.  Ran: {', '.join(_ran)}.")
         if do_slack and not full_mode:
             print("  This is `recovery` (quick, seconds): live-page slack only. Run `deleted --full` to ALSO scan")
-            print("  orphan pages (the freed pages of deleted objects) and carve non-resident content — that reads")
+            print("  orphan pages (the freed pages of deleted objects) and carve extent-backed content — that reads")
             print("  the WHOLE volume once (about a minute per 60-100 GB), but it typically finds far more.")
         elif full_mode:
             print("  This was `--full` (complete): live + whole-volume orphan-page slack + carve. `deleted` (no")
@@ -11153,10 +11273,10 @@ def cmd_deleted(image, remaining, partition_start):
             _ec = lambda lst: sum(1 for v in lst if v == "extent_backed")
             _zc = lambda lst: sum(1 for v in lst if v == "content_zero_or_absent")
             if _view_verdicts:
-                print(f"  DELETED files: {_rc(_view_verdicts)} of {len(_view_verdicts)} are RESIDENT with full "
-                      f"content recoverable; {_ec(_view_verdicts)} are non-resident (carve-able with --carve).")
+                print(f"  DELETED files: {_rc(_view_verdicts)} of {len(_view_verdicts)} are INLINE with full "
+                      f"content recoverable; {_ec(_view_verdicts)} are extent-backed (carve-able with --carve).")
                 if _zc(_view_verdicts):
-                    print(f"    {_zc(_view_verdicts)} more have a resident record whose declared inline region "
+                    print(f"    {_zc(_view_verdicts)} more have an inline record whose declared region "
                           f"reads as zeros — the file held zeros, or the deletion took the bytes, and the two "
                           f"cannot be told apart from the remnant. Metadata only; no content is written.")
             if _prior_verdicts:
@@ -11168,7 +11288,7 @@ def cmd_deleted(image, remaining, partition_start):
             print("       may be stale); otherwise only METADATA survives (name/size/timestamps).")
             if not extract_dir:
                 print("  Next: `export deleted <DIR>` writes a deleted_files.csv/.json index + the readable content")
-                print("        files (content/); add --full to carve non-resident files, --rows for the raw remnants.")
+                print("        files (content/); add --full to carve extent-backed files, --rows for the raw remnants.")
         _write_manifest()
 
         # Recovery log — a forensic audit trail, written ONLY when something is actually exported/recovered
@@ -11594,6 +11714,12 @@ def cmd_integrity(image, remaining, partition_start):
             print(f"  SHA256 match / mismatch: {ck_stats['sha_ok']} / {ck_stats['sha_bad']}")
             if ck_stats["none"]:
                 print(f"  Unchecksummed pages:     {ck_stats['none']}")
+            if ck_stats.get("unreadable"):
+                # A page the reader could not READ is not a page that passed. It used to be dropped
+                # silently (an empty buffer failed the "MSB+" test and returned), so the verdict below
+                # was pronounced over a volume that had not been fully read.
+                print(f"  UNREADABLE pages:        {ck_stats['unreadable']} "
+                      f"(not checked — see the warnings above)")
             if ck_stats.get("capped"):
                 print(f"  NOTE: page cap ({max_pages}) reached — coverage truncated; "
                       f"rerun with --max-pages N for full fidelity")
@@ -11604,6 +11730,9 @@ def cmd_integrity(image, remaining, partition_start):
                     coff = ps + plcn * cs
                     cstr = _hx(cont) if cont is not None else "physical"
                     print(f"    {_hx(s0):>12}  {cstr:>9}  {_hx(plcn):>12}  {_hx(coff):>14}  {kind:<6}  {stored} != {calc}")
+            elif ck_stats.get("unreadable"):
+                print(f"  VERDICT: the {tot_ok} checksummed pages that COULD be read VERIFIED — "
+                      f"{ck_stats['unreadable']} page(s) were unreadable and are NOT covered")
             else:
                 print(f"  VERDICT: all {tot_ok} checksummed pages VERIFIED — no tampering/corruption")
             print()
@@ -12087,7 +12216,7 @@ def _safe_relpath(path):
     return os.path.join(*[_safe_filename(p) for p in parts]) if parts else "unnamed"   # faithful sanitizer per path segment
 
 def cmd_export_resident(image, remaining, partition_start):
-    """export resident-all <dir>: write every RESIDENT file's inline $DATA (and CoW-shared resident content)
+    """export resident-all <dir>: write every RESIDENT file's inline $DATA (and snapshot-shared resident content)
     to <dir>, preserving the directory tree. Reuses the same content path as `extract` (get_resident_data_content
     / recover_cow_current_content); skips 0-byte and non-inline entries."""
     args = _parse_args(remaining, valued=["--oid", "--depth"])
@@ -12127,8 +12256,9 @@ def cmd_export_resident(image, remaining, partition_start):
         if start_oid not in obj_map:
             die(f"OID {_hx(start_oid)} not found")
         walk(start_oid, "", max_depth)
-        print(f"[{PROG}] export resident-all: wrote {written} resident files to {out_dir} "
-              f"({skipped} skipped: 0-byte or non-inline). source: inline $DATA / CoW-shared.", file=sys.stderr)
+        print(f"[{PROG}] export resident-all: wrote {written} file(s) with inline $DATA to {out_dir} "
+              f"({skipped} skipped: 0-byte or non-inline). source: inline $DATA / snapshot-shared.",
+              file=sys.stderr)
         _report_extract_failures(_res_failures, out_dir)   # audit 4.1
         return 0
     finally:
@@ -12702,7 +12832,7 @@ CMD_HELP = {
            ("resident-all [dir]", "every resident file's inline content, tree preserved (auto-dir if omitted)"),
            ("snapshots [dir]", "each stream-snapshot version (alias: snapshot / prior-versions; auto-dir if omitted)"),
            ("deleted [dir] [--carve] [--rows-only|--content-only]",
-            "deleted remnants: raw .row + .recovered (resident) [+ .carved non-resident with --carve] + manifest"),
+            "deleted remnants: raw .row + .recovered (inline) [+ .carved extent-backed with --carve] + manifest"),
            ("recyclebin [dir]", "surviving $R payloads, named by their decoded original filename (auto-dir if omitted)"),
            ("metadata -o <dir>", "the hash-verified metadata bundle (--what vbr,chkp,supb,mlog,usn,btree · --btree-mode packed|per-object)")],
   "ex": [("export file /dir/report.docx -o out.docx", "one file, saved"),
@@ -13028,11 +13158,6 @@ def main():
                     help="search: treat PATTERN as a regular expression")
     ap.add_argument("--filter", default=None, metavar="CATEGORY",
                     help="files: subset by attribute category — " + "/".join(FILE_FILTERS))
-    ap.add_argument("--legacy-link-join", action="store_true",
-                    help="restore the pre-1.11 name→record resolution: the six-branch ladder that tried the "
-                         "local (parent, file_id) key first, and no on-demand home lookup. Kept for one "
-                         "release so an earlier result can be reproduced; it resolves the same records on "
-                         "every corpus image")
     ap.add_argument("--depth", type=int, default=DEFAULT_DEPTH, help="Max directory recursion depth (default: full)")
     ap.add_argument("--partition-start", type=lambda x: int(x, 0), default=None,
                     help="Override partition start offset in bytes")
@@ -13044,9 +13169,6 @@ def main():
                          "(otherwise both auto-detect). NOTE: the CoW-recovery path is lightly tested.")
     ap.add_argument("-q", "--quiet", action="store_true", help="Suppress progress to stderr")
     args = ap.parse_args()
-    if getattr(args, "legacy_link_join", False):
-        global LEGACY_LINK_JOIN
-        LEGACY_LINK_JOIN = True
     if args.command is None:
         # Phase 3 (4.A): a bare `forefst <image>` gives the volume SUMMARY (orientation first); run
         # `forefst <image> files` for the full CSV listing.
@@ -13389,7 +13511,7 @@ def main():
     nnonres = nfiles - nresident
     # D1: the file partition (resident + non-resident = files). The hard-link/special counts go on their own
     # line below so nothing looks like a partition it isn't.
-    log(f"[{PROG}] {ndirs} dirs, {nfiles} files ({nresident} resident + {nnonres} non-resident)")
+    log(f"[{PROG}] {ndirs} dirs, {nfiles} files ({nresident} inline + {nnonres} extent-backed)")
     # Special-file categories — SAME predicates as `specials` (A3 consistency), so the counts always agree.
     _spc = {name: sum(1 for r in results if pred(r)) for name, _d, pred in SPECIALS_TYPES}
     _hlg = len({tuple(sorted(r.get("hard_link_names") or [f"oid:{r.get('oid')}"]))

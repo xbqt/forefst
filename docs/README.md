@@ -158,4 +158,5 @@ Byte-level detail pages: [$DATA](attributes/DATA.md) · [$STANDARD_INFORMATION](
 |------|---------|
 | [Methodology](methodology.md) | How every claim was verified; evidence levels; tracing provenance |
 | [Glossary](glossary.md) | Key terms and definitions |
+| [Format support](format_support.md) | Which ReFS formats each area was **verified on** — a floor, with the statements whose scope was never recorded counted in their own column |
 | [Changelog](changelog.md) | Release history |

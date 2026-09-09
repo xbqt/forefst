@@ -31,7 +31,7 @@ python3 forefst.py "$IMG" usn --csv - | awk -F, '$7=="0x959e:0x30"'
 ```
 
 ```text
-reason                         file_ref     home_oid  file_id  parent_oid  name
+reason                         file_ref     home_oid  file_id  parent_oid  filename
 FILE_CREATE                    0x959e:0x30  0x959e    0x30     0x959e      tmpCF1F.tmp
 DATA_EXTEND|DATA_TRUNCATION    0x959e:0x30  0x959e    0x30     0x959e      tmpCF1F.tmp
 RENAME_OLD_NAME                0x959e:0x30  0x959e    0x30     0x959e      tmpCF1F.tmp
@@ -56,12 +56,15 @@ The journal is a sliding window, so a move made long ago may have aged out of it
 back-reference. Take a file that was created in one directory and later moved under `\tools`:
 
 ```sh
-python3 forefst.py "$IMG" files --csv - | awk -F, '$5=="Generate-FSActivity.ps1"'
+# ObjectRef=1  FileName=3  FileSize=5  ParentPath=10  ParentOID=11  HardLinkCount=31
+python3 forefst.py "$IMG" files --csv - \
+  | awk -F, 'NR==1 || $3=="Generate-FSActivity.ps1"' \
+  | cut -d, -f1,3,10,11,5,31
 ```
 
 ```text
-FileRef      HomeOid  FileId  FileName                 ParentOID  ParentPath  FileSize  HardLinkCount
-0x9586:0x3   0x9586   0x3     Generate-FSActivity.ps1  0x9e25     tools       72305     1
+ObjectRef,FileName,FileSize,ParentPath,ParentOID,HardLinkCount
+0x9586:0x3,Generate-FSActivity.ps1,72305,tools,0x9e25,1
 ```
 
 `HomeOid` (`0x9586`) is **not** the same as `ParentOID` (`0x9e25`) — the file sits in `\tools` now, but it

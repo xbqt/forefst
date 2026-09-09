@@ -58,11 +58,12 @@ from forefst import (
     validate_image as _validate_image, walk_bplus, walk_directory_tree,
     _current_stream_extent_backed, _multilevel_extent_backed_size,
     _attrs_to_str, _find_snapshot_files, _guid_str, _hx, _parse_extended_attributes, _vbr_checksum,   # 5.1: single-source helpers
+    _skip_note,          # A2: a summary count that silently defaults to 0 reads as "none present"
     alloc_capacity, alloc_decode_row, alloc_read_summary, alloc_row_counts, _ALLOC_TIERS,
 )
 
 PROG = "refsanalysis"
-VERSION = "1.11.0"
+VERSION = "1.11.1"
 
 
 
@@ -373,7 +374,7 @@ def cmd_summary(image, remaining, partition_start, plus_mode=False):
             try:
                 vc, flags, _ = _forefst_parse_chkp(f, ps, cs, cl)
                 if vc >= best_vc: best_vc = vc; best_flags = flags
-            except Exception: pass
+            except Exception as _e: _skip_note("summary: checkpoint", f"lcn {cl}", _e)
 
         # Root table row counts
         root_counts = {}
@@ -392,7 +393,7 @@ def cmd_summary(image, remaining, partition_start, plus_mode=False):
                         # C15: the schema value is an 80-byte BINARY definition, not UTF-16 text; only the
                         # count of distinct schema ids is consumed ('schema_tables' below). Don't decode.
                         schema_names[le32(kd, 0)] = None
-            except Exception: pass
+            except Exception as _e: _skip_note("summary: schema table", "table 3", _e)
 
         # Volume metadata from OID 0x500
         vol_label = ""; vol_detail = {}
@@ -413,7 +414,7 @@ def cmd_summary(image, remaining, partition_start, plus_mode=False):
                     elif kt == 0x0540 and len(vd) >= 8:
                         vol_detail["schema_count"] = le32(vd, 0)
                         vol_detail["vol_flags_540"] = le32(vd, 4) if len(vd) >= 8 else 0
-            except Exception: pass
+            except Exception as _e: _skip_note("summary: volume info", "table 0x520/0x540", _e)
 
         # File/dir counts + extended feature counts come from forefst's authoritative walk
         # (fs_content_summary): single source of truth for is_resident (F5+B2) and the hard-link grouping
@@ -432,7 +433,7 @@ def cmd_summary(image, remaining, partition_start, plus_mode=False):
         sec_count = 0
         if 0x530 in obj_map:
             try: sec_count = len(walk_bplus(f, ps, cs, tr, obj_map[0x530]))
-            except Exception: pass
+            except Exception as _e: _skip_note("summary: security descriptors", "table 0x530", _e)
 
         # Container table size
         ct_size = root_counts.get(7, 0)
@@ -452,8 +453,10 @@ def cmd_summary(image, remaining, partition_start, plus_mode=False):
                         fmt_map = {0: "None", 1: "LZ4", 2: "Zstd", 3: "LZ4QAT"}
                         comp_fmt = le16(ct_page, 0xA4)
                         compression = fmt_map.get(comp_fmt, f"Unknown({comp_fmt})")
-            except Exception:
-                pass
+            except Exception as _e:
+                # "Not configured" is what the reader sees if this fails -- a statement about the
+                # volume, not about the read.
+                _skip_note("summary: compression format", "container table page", _e)
 
         checksum_types = {0: "None", 2: "CRC64", 4: "SHA-256"}
         volume_bytes = total_sectors * 512
@@ -500,14 +503,14 @@ def cmd_summary(image, remaining, partition_start, plus_mode=False):
             reparse_count = 0
             if 0x540 in obj_map:
                 try: reparse_count = len(walk_bplus(f, ps, cs, tr, obj_map[0x540]))
-                except Exception: pass
+                except Exception as _e: _skip_note("summary: reparse index", "table 0x540", _e)
             summary["reparse_index_entries"] = reparse_count
 
             # Trash table
             trash_count = 0
             if 0xD in obj_map:
                 try: trash_count = len(walk_bplus(f, ps, cs, tr, obj_map[0xD]))
-                except Exception: pass
+                except Exception as _e: _skip_note("summary: trash table", "table 0xD", _e)
             summary["trash_table_entries"] = trash_count
 
             # FS Metadata directory (OID 0x520)
@@ -526,8 +529,8 @@ def cmd_summary(image, remaining, partition_start, plus_mode=False):
                                 if len(vd) >= 0x28:
                                     child["stream_count"] = le64(vd, 0x20)
                             fs_meta["children"].append(child)
-                except Exception:
-                    pass
+                except Exception as _e:
+                    _skip_note("summary: system metadata children", "object tree", _e)
             summary["fs_metadata"] = fs_meta
 
             # Container utilization
@@ -574,14 +577,16 @@ def cmd_summary(image, remaining, partition_start, plus_mode=False):
                     for kd, vd in walk_bplus(f, ps, cs, tr, obj_map[0x540]):
                         if len(kd) >= 8 and le32(kd, 4) == 0xA000000C:
                             symlink_count += 1
-                except Exception: pass
+                except Exception as _e:
+                    _skip_note("summary: symlink count", "table 0x540", _e)
             summary["symlinks"] = symlink_count
 
             # Snapshot + ADS counts
             snap_results = []
             try:
                 _find_snapshot_files(f, ps, cs, tr, obj_map, 0x600, "", 0, 10, snap_results)
-            except Exception: pass
+            except Exception as _e:
+                _skip_note("summary: snapshot scan", "tree walk", _e)
             total_snaps = total_ads = 0
             for r in snap_results:
                 for s in r.get("snapshots", []):
@@ -2349,8 +2354,8 @@ def cmd_containers(image, remaining, partition_start):
             try:
                 vc, fl, rts = _forefst_parse_chkp(f, ps, cs, cl)
                 if vc >= best_vc: best_vc = vc; best_roots = rts
-            except Exception:
-                pass
+            except Exception as _e:
+                _skip_note("containers: checkpoint", f"lcn {cl}", _e)
         if not best_roots:
             die("no valid checkpoint found")
 
@@ -3652,6 +3657,7 @@ def _bootedit_prepare_write(image, args):
     print(f"  Working on copy: {out}\n")
     return out, _find_boot_offset(out, ps)
 
+
 def _bootedit_main(image, remaining, partition_start):
     """Handle bootedit subcommand internally."""
     if not remaining:
@@ -3718,6 +3724,7 @@ def _bootedit_main(image, remaining, partition_start):
             _make_sparse_copy(image, args["output"])
 
         elif action == "repair":
+            # --- Phase 2: fixboot VBR-field repair (no redundant copy could restore the primary VBR) ---
             bo = _find_boot_offset(image, args["partition_start"])
             with open(image, "rb") as f: sector = bytearray(_read_at(f, bo, 512))
             _validate_vbr(sector, bo)

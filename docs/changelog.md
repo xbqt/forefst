@@ -1,5 +1,112 @@
 # Changelog
 
+## v1.11.1 — 2026-09-09 — the flag 1.11.0 promised for one release, and the end of the label vocabulary
+
+**Everything here is relative to v1.11.0.** One breaking output change (`search`'s `oid` placeholder) and
+one label pass; everything else is output-neutral.
+
+### `--legacy-link-join` is removed
+
+v1.11.0 kept the pre-1.11 six-branch resolution ladder behind the flag "for one release". It is gone,
+along with the ladder and the now-dead local `(parent_oid, file_id)` lookup that only it consumed. The
+object's home is the only resolution path.
+
+The flag had in fact been promised for one release **twice** — v1.10.0 introduced it for the E89
+on-demand home lookup and said the same thing. It survived five releases.
+
+- **What to change:** `--legacy-link-join` now exits 1 as an unknown option. It resolved the same records
+  as the default on every corpus image, so no result produced with it differs from one produced without.
+
+### Correction: the second resolution assertion does *not* retire
+
+The 1.11.0 changelog said the older path-agreement assertion "stops testing anything once
+`--legacy-link-join` is removed". **That was wrong.** It compares `walk_directory_tree`/`_home_t40`
+against `_analyze_dir_extents`/`_home_streams` — two separate implementations that both still exist, and
+that removing a CLI option does not merge. It stays, and retires when those two paths merge.
+
+Stated here rather than by editing the 1.11.0 entry, which is a record of what that release shipped.
+
+### Breaking: `search` says `(inline)` / `(extents)`, and the label vocabulary is finished
+
+E87 established that *resident* named two different things: **record placement** (embedded vs split) and
+**data residency** (inline vs extents). 1.11.0 renamed the `DataResidency` value; **thirteen** output labels
+still used the ambiguous word. They are now assigned by axis:
+
+- **placement** — the reparse tag reads `[split record]`; the slack join reports `split-record file(s)`
+- **data** — the walk log, the deleted-recovery counts and the carve hints read `inline` / `extent-backed`
+
+**Two of the thirteen are structured values, and both are breaking:**
+
+- **`search`'s `oid` field** emitted `(resident)` / `(non-res)` for a row with no OID; now `(inline)` /
+  `(extents)`. The `id` field beside it is unchanged and remains the identity to parse.
+- **`timestomp`'s `storage` column** (text and `--csv`) emitted the same pair; now the same replacements.
+
+Both carry the DATA axis — the walk sets `record_embedded` as placement and refines `is_resident` from
+the `$DATA` descriptor — so the words now match what `files` prints.
+
+**This completes the rename begun in 1.11.0. No further label change is planned.**
+
+Defects fixed with it, in the vocabulary's own documentation: `_data_residency`'s docstring — the function
+that *defines* the vocabulary — still listed `sparse`, a value 1.11.0 had renamed; `export resident-all`
+printed `CoW-shared` where the tool's value is `snapshot-shared`; and four pages, **including the glossary
+and the residency value table**, still named the residency value `sparse`.
+
+`--filter sparse`, `specials sparse` and the `IsSparse` column are untouched — they report the
+`FILE_ATTRIBUTE_SPARSE_FILE` bit, a different fact from the residency state.
+
+### Large sparse files no longer reassemble at three times their size
+
+`_recover_inline_extent_content` allocated a buffer at exactly the stream size, then returned
+`bytes(buf[:stream_size])` — a slice copy of a buffer already that length, so a reassembly held **three**
+copies of the file at once. On a 2,556 MiB stream that is roughly 7.6 GiB of live memory.
+
+This is on the extraction path: anyone reassembling a large sparse file paid it. The bytes returned are
+identical; only the peak allocation changes.
+
+### Evidence paths no longer answer with a default
+
+A path that produces bytes, a size or a verdict must not swallow a failure and return a plausible value.
+Four cases where it did — none of which fires on a healthy image, which is exactly why they went unseen:
+
+- **`integrity` could report a clean verdict over a volume it had not fully read.** A page that could not
+  be *read* took the same exit as a page that is not a B+ page: unchecked, uncounted, unmentioned. The
+  command now counts unreadable pages and says so — `the N checksummed pages that COULD be read
+  VERIFIED — M page(s) were unreadable and are NOT covered`.
+- **`--refuse-holes` did not refuse when hole coverage could not be determined.** "I cannot tell" was
+  treated as "no holes". It now refuses, and the ordinary path warns. The default exit stays 0: the usual
+  cause is a filesystem without `SEEK_DATA`/`SEEK_HOLE`, which says nothing about the evidence.
+- **A file could be written with zero-filled clusters where a snapshot-shared block failed to resolve.**
+  Four paths in the live-content reassembler ended that way; they now defer rather than emit.
+- **Counts that read as facts** — security descriptors, reparse entries, trash rows, symlinks, snapshots
+  and an unrenderable timestamp all defaulted silently. Each now records the failure and reports it at
+  exit.
+
+### Documentation now has to match the tool
+
+Three worked examples showed output the tool no longer produces — one of them for three releases. The
+`search` example predated the `ObjectRef` rename; a `files --csv` example told the reader to filter on
+field 5, which is `FileSize` rather than `FileName`, so the documented command matched nothing; and the
+timestomping example claimed two agreeing heuristic signals *earn* the HIGH tier when the tool rates that
+pair **INFO**. All three are regenerated from real runs.
+
+Four pages, including the glossary and the residency value table, still named the residency value
+`sparse` after 1.11.0 renamed it `unallocated`.
+
+Two checks now run in the gate: documented labels must be ones the tool can emit, and documented column
+headers must match what the tool prints. Both read the tool rather than a frozen list, so a rename cannot
+leave them asserting the past.
+
+### Smaller
+
+- `details` gained golden coverage — 1.11.0's per-stream ADS residency had shipped through a command no
+  fingerprint touched.
+- The claim register gains a machine-readable verification scope for five more rows; 74 remain unrecorded
+  and are counted as unverified rather than assumed.
+- **New: `docs/format_support.md`** — a generated table of which ReFS formats each area of the project has
+  been *verified on*, built from the register's verification scope alone rather than from what a claim
+  asserts. Rows whose scope was never recorded get their own column instead of being dropped, so coverage
+  is not overstated where it is least documented. Repo-facing for now; not published to the website.
+
 ## v1.11.0 — 2026-09-08 — one identity format, one timestomp surface, one resolution path
 
 **Everything here is relative to [v1.10.3].** Four output changes are **breaking**; each is listed below

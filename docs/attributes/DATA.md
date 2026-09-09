@@ -13,7 +13,8 @@
 Two further states exist on ≥ 3.11 and are neither of the above: a live stream whose descriptor is the
 extent form but which owns **no allocation** (`disk_alloc` at `+0x48` is 0). If a snapshot sub-record
 exists for the same stream, its bytes are the snapshot's — **snapshot-shared**, and still recoverable; if
-none does, nothing was ever written — a **sparse** file. Both were previously indistinguishable.
+none does, nothing was ever written — reported as **`unallocated`**. (The word *sparse* is reserved for
+the `FILE_ATTRIBUTE_SPARSE_FILE` bit, which is a different fact.) Both were previously indistinguishable.
 
 Where the *record* sits (embedded in the name row, or split into a type-0x40 backing) is a **separate
 question** — see [Resident vs Non-Resident Storage](../concepts/resident_storage.md). On disk it appears as embedded sub-records inside the type-0x10 / type-0x30 rows: one

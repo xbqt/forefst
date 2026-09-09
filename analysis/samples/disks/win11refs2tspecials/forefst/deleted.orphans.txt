@@ -20,7 +20,7 @@ ReFS Deleted File Finder
 ── B+-tree Node Slack Scan (Method 5) ──
   Recovering deleted directory entries from metadata-page free space
   (ReFS deletion removes only the row's index slot; the row body persists).
-  Scanned 1125 live pages (orphan-page scan skipped — add --full to also scan the freed pages of older deletions) with recoverable slack rows; 112 non-resident file(s) matched a type-0x40 extent map in slack
+  Scanned 1125 live pages (orphan-page scan skipped — add --full to also scan the freed pages of older deletions) with recoverable slack rows; 112 split-record file(s) matched a type-0x40 extent map in slack
 
   DELETED (no live file with this name + creation time remains on the volume): 349  [300 with valid timestamps, 49 partial remnants]
 
@@ -2326,18 +2326,18 @@ ReFS Deleted File Finder
 ── Recovery methods ──
   Mode: recovery.  Ran: Trash table (0xD), checkpoint diff, B+-tree node-slack scan (live pages only), orphan-object scan (low confidence).
   This is `recovery` (quick, seconds): live-page slack only. Run `deleted --full` to ALSO scan
-  orphan pages (the freed pages of deleted objects) and carve non-resident content — that reads
+  orphan pages (the freed pages of deleted objects) and carve extent-backed content — that reads
   the WHOLE volume once (about a minute per 60-100 GB), but it typically finds far more.
   Fine-grained: --no-slack · --scan-pages · --orphans · --carve · --search SUB · --csv/--json/--jsonl FILE · `export deleted DIR`.
   --max-scan N stops the orphan scan early (faster, but the run is then INCOMPLETE); `help deleted` lists what each option costs.
   Prior versions of files that still exist: `snapshots`.  Windows Recycle Bin: `recyclebin`.
 
-  DELETED files: 16 of 349 are RESIDENT with full content recoverable; 107 are non-resident (carve-able with --carve).
+  DELETED files: 16 of 349 are INLINE with full content recoverable; 107 are extent-backed (carve-able with --carve).
   PRIOR versions of live files: 182 of 698 decode to a file.
   Restorability: a RESIDENT deleted file's FULL content is recovered exactly (content/<name>).
        A NON-RESIDENT file keeps its data in on-disk extents — if the extent map survives
        ('extent_backed'), --full/--carve reconstructs it best-effort (content/<name>.carved,
        may be stale); otherwise only METADATA survives (name/size/timestamps).
   Next: `export deleted <DIR>` writes a deleted_files.csv/.json index + the readable content
-        files (content/); add --full to carve non-resident files, --rows for the raw remnants.
+        files (content/); add --full to carve extent-backed files, --rows for the raw remnants.
 

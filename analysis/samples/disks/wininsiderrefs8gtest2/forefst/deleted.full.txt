@@ -21,7 +21,7 @@ ReFS Deleted File Finder
   Recovering deleted directory entries from metadata-page free space
   (ReFS deletion removes only the row's index slot; the row body persists).
   Orphan-page scan: scanned 8,000 of 130,816 clusters (6.12% of the volume) -- INCOMPLETE: bounded by --max-scan; deleted data outside this range was NOT examined
-  Scanned 151 live pages + 0 orphan pages with recoverable slack rows; 12 non-resident file(s) matched a type-0x40 extent map in slack
+  Scanned 151 live pages + 0 orphan pages with recoverable slack rows; 12 split-record file(s) matched a type-0x40 extent map in slack
   WARNING: the orphan-page scan was bounded by --max-scan (8,000 of 130,816 clusters). This run is INCOMPLETE — drop --max-scan to scan the whole volume.
 
   DELETED (no live file with this name + creation time remains on the volume): 219  [219 with valid timestamps, 0 partial remnants]
@@ -1544,12 +1544,12 @@ ReFS Deleted File Finder
   Also: `deleted --orphans` adds a low-confidence tier for OID-Table objects unlinked from the tree.
   Prior versions of files that still exist: `snapshots`.  Windows Recycle Bin: `recyclebin`.
 
-  DELETED files: 5 of 219 are RESIDENT with full content recoverable; 35 are non-resident (carve-able with --carve).
+  DELETED files: 5 of 219 are INLINE with full content recoverable; 35 are extent-backed (carve-able with --carve).
   PRIOR versions of live files: 114 of 408 decode to a file.
   Restorability: a RESIDENT deleted file's FULL content is recovered exactly (content/<name>).
        A NON-RESIDENT file keeps its data in on-disk extents — if the extent map survives
        ('extent_backed'), --full/--carve reconstructs it best-effort (content/<name>.carved,
        may be stale); otherwise only METADATA survives (name/size/timestamps).
   Next: `export deleted <DIR>` writes a deleted_files.csv/.json index + the readable content
-        files (content/); add --full to carve non-resident files, --rows for the raw remnants.
+        files (content/); add --full to carve extent-backed files, --rows for the raw remnants.
 
