@@ -145,3 +145,46 @@ def test_a_usage_error_is_never_the_findings_code(refs_image):
     for cmd in ("files", "summary", "search", "details", "usn", "integrity", "extract"):
         assert _rc(refs_image, cmd, "--definitely-not-a-flag") != EXIT_2, (
             f"{cmd}: a mistyped flag produced the findings code")
+
+
+# ── bulk exports: the 1.11.2 contract ────────────────────────────────────────
+# Before 1.11.2 a bulk export could only exit 0: hole-sourced bytes were a note with no exit code and no
+# artifact, so a script could not branch on them. The contract is now the same as `extract`'s. It is locked
+# as a BICONDITIONAL rather than a fixed code, because whether a given corpus image has holes inside a
+# file's data range is a property of how the image was stored -- asserting 2 outright would pass or fail by
+# accident. What must always hold: the sidecar exists, and the exit code agrees with what it says.
+@pytest.mark.parametrize("what", ["deleted", "snapshots", "resident-all", "recyclebin", "metadata"])
+def test_bulk_export_exit_agrees_with_its_sidecar(refs_image, tmp_path, what):
+    import json
+    out = tmp_path / what
+    rc = subprocess.run([sys.executable, FOREFST, refs_image, "export", what, str(out)],
+                        capture_output=True, timeout=1800).returncode
+    sidecar = out / "holes.json"
+    assert sidecar.exists(), f"export {what} wrote no holes.json — 'checked and clean' must be recorded"
+    doc = json.loads(sidecar.read_text())
+    assert doc["status"] in ("holes_present", "none")
+    if doc["status"] == "holes_present":
+        assert rc == EXIT_2, f"export {what} found holes but did not exit 2"
+        assert doc["streams_with_holes"] > 0 and doc["hole_bytes"] > 0
+    else:
+        assert rc == EXIT_OK, f"export {what} found no holes but did not exit 0 (rc={rc})"
+        assert doc["streams_with_holes"] == 0
+
+
+def test_refuse_holes_writes_nothing_it_flagged(refs_image, tmp_path):
+    """--refuse-holes must withhold exactly the flagged streams, and say which ones."""
+    import json
+    plain, strict = tmp_path / "plain", tmp_path / "strict"
+    subprocess.run([sys.executable, FOREFST, refs_image, "export", "deleted", str(plain), "--carve"],
+                   capture_output=True, timeout=1800)
+    subprocess.run([sys.executable, FOREFST, refs_image, "export", "deleted", str(strict), "--carve",
+                    "--refuse-holes"], capture_output=True, timeout=1800)
+    a = json.loads((plain / "holes.json").read_text())
+    b = json.loads((strict / "holes.json").read_text())
+    assert a["streams_with_holes"] == b["streams_with_holes"], \
+        "the same streams must be FLAGGED with and without --refuse-holes"
+    assert len(b["refused"]) == b["streams_with_holes"], \
+        "--refuse-holes must refuse exactly the flagged streams"
+    assert a["refused"] == [], "without the flag nothing may be refused"
+    for rel in b["refused"]:
+        assert not (strict / rel).exists(), f"{rel} was refused but written anyway"

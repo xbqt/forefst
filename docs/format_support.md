@@ -14,7 +14,7 @@ that area was checked on it — which is a gap in the evidence, not a statement 
 
 | Area | 3.4 | 3.7 | 3.9 | 3.10 | 3.14 | 3.15 | insider | scope not recorded |
 |---|---|---|---|---|---|---|---|---|
-| File records & attributes | 55 | 9 | 7 | 7 | 73 | 2 | 11 | 24 |
+| File records & attributes | 55 | 9 | 7 | 7 | 74 | 2 | 11 | 24 |
 | Journals & log | 48 | 3 |  | 1 | 54 |  | 2 | 8 |
 | B+-tree structure | 44 | 7 | 4 | 7 | 45 | 1 | 22 | 4 |
 | Object & container tables | 39 | 1 | 1 | 2 | 37 |  | 11 | 11 |

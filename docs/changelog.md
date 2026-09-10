@@ -1,5 +1,62 @@
 # Changelog
 
+## v1.11.2 — 2026-09-10 — a wrong-bytes fix, and the hole check on every producer
+
+**Everything here is relative to v1.11.1.** One correctness fix that can change which bytes you get, and
+one behaviour change: the bulk export commands can now exit **2**.
+
+### Fixed: two files differing only by case could serve each other's bytes
+
+A directory carrying the per-directory case-sensitivity flag (`fsutil file setCaseSensitiveInfo`) can hold
+two names that differ only by case; the B+-tree then compares keys binary rather than case-folded. Path
+resolution folded case for every comparison and took the **first** matching row, so on such a directory
+every spelling resolved to whichever name came first in tree order.
+
+`extract /dir/hi.txt` could therefore write `/dir/HI.txt`'s bytes — the wrong file, under the requested
+name, with exit 0 and no warning. `--id` resolves through the same code and was wrong in the same way.
+Listing was never affected: `files` showed both names with their distinct ObjectRefs throughout.
+
+- **What to change:** nothing. An exact spelling now wins; a case-insensitive match is still accepted as a
+  fallback, so wrong-case paths keep resolving on ordinary directories.
+- **Where it could bite:** only volumes with a case-sensitive directory — rare, and the reason this
+  survived: no corpus image exercised it until one with an operator SHA-256 inventory did.
+
+### The hole check covers every content producer
+
+1.11.1 reported hole-sourced bytes for `extract` only. Every content path now reports them with the same
+wording: prior-version (copy-on-write) content, snapshot versions, extent-backed alternate data streams,
+carved content, the inline-holder reassembler, and the shared reader behind `recyclebin` and
+`export recyclebin` — which reassembled extents on its own and asked about holes only when its output was
+entirely zero, so a partially unacquired file was never flagged.
+
+Every producer now clips to the stream's logical size, so a hole in a file's **tail slack** is no longer
+reported: slack is not content. On the shipped sample this took one snapshot version from 69,632 to 67,299
+reported bytes, all of the difference being padding past end-of-file.
+
+The bulk export commands now report holes the way `extract` always has: a note, a `holes.json` sidecar in
+the export directory, and **exit 2**. `--refuse-holes` works on them too.
+
+- **What to change:** if a script treats any non-zero exit from `export deleted`, `export snapshots`,
+  `export resident-all`, `export recyclebin` or `export metadata` as failure, it will now see **2** on a
+  sparsely-stored image where some bytes came from image holes. As with `extract`, `rc == 2` means *read
+  the note*, not *something went wrong*; usage errors are still 1.
+- `--refuse-holes` withholds **per stream**: affected outputs are not written, clean ones still are, and
+  the refused list is in the sidecar. Refusing a whole run because one file was affected would discard
+  good evidence.
+- The sidecar is written even when nothing drew from holes (`"status": "none"`), so a missing sidecar
+  never has to be read as "checked and clean".
+
+### One more producer, and a lint that finds the next one
+
+`export metadata` writes the USN `$J` change-journal stream to `usn_J.bin`. Those bytes are read from
+clusters and were never hole-checked, so on a sparsely-stored image a punched cluster became a zero-filled
+stretch of journal presented as the volume's own record. It now goes through the same check.
+
+It was found by strengthening the check that is supposed to catch this: instead of only verifying a
+declared list, the lint now **discovers** candidates — any function that reads the image and returns bytes
+must be a declared producer or carry a written exemption. The declared list had been the only defence, and
+it had already missed one producer.
+
 ## v1.11.1 — 2026-09-09 — the flag 1.11.0 promised for one release, and the end of the label vocabulary
 
 **Everything here is relative to v1.11.0.** One breaking output change (`search`'s `oid` placeholder) and

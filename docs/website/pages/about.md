@@ -1,6 +1,6 @@
 ---
 title: "About"
-description: "About forefst — an open-source forensic reference and toolset for Microsoft's Resilient File System (ReFS). Validated on 3.14; parses 3.4–3.15."
+description: "About forefst — an open-source forensic reference and toolset for Microsoft's Resilient File System (ReFS). Validated on ReFS 3.14 · parses 3.4–3.15."
 ---
 
 <p align="center"><img src="https://xbpt.gitlab.io/images/forefst.png" alt="forefst" width="360"></p>

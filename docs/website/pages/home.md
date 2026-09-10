@@ -1,6 +1,6 @@
 ---
 title: "ReFS Forensics Reference"
-description: "The most complete public forensic reference for Microsoft's Resilient File System (ReFS) — the on-disk format decoded byte by byte, with two open-source tools (forefst) to parse a raw volume. Validated on 3.14; parses 3.4–3.15."
+description: "The most complete public forensic reference for Microsoft's Resilient File System (ReFS) — the on-disk format decoded byte by byte, with two open-source tools (forefst) to parse a raw volume. Validated on ReFS 3.14 · parses 3.4–3.15."
 ---
 
 A structural and forensic reference for Microsoft's **Resilient File System (ReFS)**, versions

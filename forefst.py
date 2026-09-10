@@ -243,7 +243,7 @@ def validate_image(path, die_fn=None):
 
 # ─── Constants ────────────────────────────────────────────────────────
 PROG = "forefst"
-VERSION = "1.11.1"
+VERSION = "1.11.2"
 # Phase 3 (4.D): directory walks default to FULL depth (no artificial cap); `--depth N` overrides. The real
 # recursion depth equals the actual directory nesting (ReFS trees are shallow — tens of levels), so this
 # constant is never the binding limit; it just means "don't truncate". main() also raises the interpreter
@@ -1949,8 +1949,10 @@ def internal_flags_str(flags):
 
 def resolve_path(f, ps, cs, tr, obj_map, path):
     """Resolve a '/dir/sub/file' path to (parent_oid, key, value) of its type-0x30 row.
-    Case-insensitive (ReFS default). Files have no OID — they are found by name in the
-    parent directory's tree. Returns (None, None, None) if not found."""
+    Case-insensitive (ReFS default), but an EXACT spelling always wins: a directory carrying the per-directory
+    case-sensitivity flag (`fsutil file setCaseSensitiveInfo`) can hold two names that differ only by case, and
+    taking the first case-insensitive hit served one file's bytes under the other's name. Files have no OID —
+    they are found by name in the parent directory's tree. Returns (None, None, None) if not found."""
     parts = [p for p in path.replace("\\", "/").split("/") if p and p != "."]
     if not parts:
         return (None, None, None)
@@ -1973,9 +1975,11 @@ def resolve_path(f, ps, cs, tr, obj_map, path):
                 nm = kd[4:].decode("utf-16-le").rstrip("\x00")
             except UnicodeDecodeError:
                 continue          # a name that will not decode cannot be the one asked for
-            if nm.lower() == part.lower():
-                found = (kd, vd)
+            if nm == part:
+                found = (kd, vd)      # exact spelling wins outright
                 break
+            if found is None and nm.lower() == part.lower():
+                found = (kd, vd)      # remember the first case-insensitive hit, keep looking for an exact one
         if found is None:
             return (None, None, None)
         kd, vd = found
@@ -2141,7 +2145,7 @@ def parse_snapshot_data_entry(v, ncl=None, tr=None):
     return (stream_size, disk_alloc, exts)
 
 
-def recover_cow_current_content(f, ps_off, cs, tr, vd):
+def recover_cow_current_content(f, ps_off, cs, tr, vd, _content_what=None):
     """Q7/CoW: recover the LIVE content of a resident file whose current stream (sub_id 0x1000) is a 0x10028
     holder with disk_alloc==0 and no own extents — i.e. UNMODIFIED since the last snapshot, so its bytes are
     shared with the newest snapshot. Returns bytes (trimmed to size) or None. STRICTLY the safe case only:
@@ -2177,16 +2181,26 @@ def recover_cow_current_content(f, ps_off, cs, tr, vd):
     # bound. Taking the slice through a memoryview avoids the intermediate bytearray copy, so the peak is
     # one copy of the file instead of two: measured 400 -> 200 MiB on a 200 MiB buffer.
     buf = bytearray(alloc)
+    _runs = []
     for fvcn, vlcn, run in sorted(exts, key=lambda e: e[0]):
         for j in range(run):
             try:
                 plcn = tr.tr(vlcn + j)
             except Exception:
                 plcn = vlcn + j
+            off = (fvcn + j) * cs
+            _runs.append((plcn, 1, off))
             f.seek(ps_off + plcn * cs)
             chunk = f.read(cs)
-            off = (fvcn + j) * cs
             buf[off:off + cs] = chunk
+    # These bytes become OUTPUT (cmd_extract emits them as "snapshot-shared with the latest snapshot"),
+    # so the clusters behind them must be present in the image. A punched cluster here produced five
+    # zero bytes under that label with rc=0 -- see analysis/reports/d13_gap_2026-09-09/.
+    if _content_what:
+        # Only when the caller says these bytes will be EMITTED. The directory walk precomputes
+        # cow_content for every file to fill a column; running a hole scan there would cost a syscall
+        # sweep per file for a check nobody reads. Extract asks again, by name, for the one file.
+        content_holes(f, ps_off, cs, _runs, _content_what, stream_size=cur_size)
     return bytes(memoryview(buf)[:cur_size])
 
 
@@ -2296,6 +2310,7 @@ def _recover_inline_extent_content(f, ps, cs, tr, vd, _defer_ctx=None):
     # E83: blocks this stream does not own may be SHARED with a stream snapshot rather than being sparse
     # holes. Resolve those to the clusters that actually hold them; a VCN no stream owns stays zero-filled,
     # which is the genuine sparse case. Empty (and therefore a no-op) for a file without snapshots.
+    _runs = []                          # every PHYSICAL cluster whose bytes end up in `buf`
     try:
         shared = _snapshot_shared_blocks(vd, (f, ps, cs, tr), ncl)
     except IncompleteEvidence as _e:
@@ -2308,6 +2323,7 @@ def _recover_inline_extent_content(f, ps, cs, tr, vd, _defer_ctx=None):
             off = fv * cs
             try:
                 plcn = tr.tr(shared[fv]) if tr else shared[fv]
+                _runs.append((plcn, 1, off))
             except Exception as _e:
                 # This VCN never reaches `exts`, so the buffer below leaves it ZERO and the file is
                 # emitted anyway -- fabricated content, in a function that promises to defer instead.
@@ -2335,12 +2351,17 @@ def _recover_inline_extent_content(f, ps, cs, tr, vd, _defer_ctx=None):
                 plcn = tr.tr(vlcn + j) if tr else (vlcn + j)
             except Exception:
                 return None
+            _runs.append((plcn, 1, off))
             f.seek(ps + plcn * cs)
             chunk = f.read(cs)
             n = min(cs, stream_size - off)
             if len(chunk) < n:
                 return None
             buf[off:off + n] = chunk[:n]
+    if _defer_ctx:
+        # Only when these bytes are destined for OUTPUT. `files` calls this for residency classification
+        # on every record; a hole sweep there would cost syscalls for an answer nobody reads.
+        content_holes(f, ps, cs, _runs, _defer_ctx, stream_size=stream_size)
     # `bytes(buf)`, not `bytes(buf[:stream_size])`: buf is allocated at exactly stream_size and every
     # write above is bounded by it (`off >= stream_size` skipped, `n = min(cs, stream_size - off)`), so
     # the slice can only ever copy the whole buffer. It made a large reassembly hold THREE copies of the
@@ -2433,7 +2454,7 @@ def recover_snapshot_streams(f, ps_off, cs, tr, vd):
         elif typ == 0x80 and len(v) >= 0x50 and le32(v, 4) == SNAP_DATA_DESC:
             data[le64(k, 0x10)] = parse_snapshot_data_entry(v, ncl, tr)
 
-    def _read_extents(stream_size, exts, sub_id=None):
+    def _read_extents(stream_size, exts, sub_id=None, name_for_msg=None):
         """Assemble one version, placing every block at its own file VCN.
 
         E83: a version owns only the blocks that were copied out for it; the rest it SHARES with OLDER
@@ -2461,6 +2482,7 @@ def recover_snapshot_streams(f, ps_off, cs, tr, vd):
         if len(blocks) < nblocks:
             return b""
         buf = bytearray(stream_size)
+        _runs = []
         for fvcn in range(nblocks):
             vlcn = blocks.get(fvcn)
             if not vlcn:
@@ -2469,13 +2491,20 @@ def recover_snapshot_streams(f, ps_off, cs, tr, vd):
                 plcn = tr.tr(vlcn)
             except Exception:
                 plcn = vlcn
+            off = fvcn * cs
+            _runs.append((plcn, 1, off))
             f.seek(ps_off + plcn * cs)
             chunk = f.read(cs)
-            off = fvcn * cs
             n = min(cs, stream_size - off)
             if len(chunk) < n:
                 return b""
             buf[off:off + n] = chunk[:n]
+        # Snapshot VERSIONS are output too. Punching one cluster behind a version produced a 5-byte
+        # all-zero `test.txt__last` sitting beside five correct versions -- which reads as "the file was
+        # zeroed in its last version", a forensic conclusion invented by the reader.
+        content_holes(f, ps_off, cs, _runs,
+                      f"snapshot version '{name_for_msg}' (0x{sub_id or 0:x})" if name_for_msg
+                      else f"snapshot version 0x{sub_id or 0:x}", stream_size=stream_size)
         return bytes(buf)
 
     out = []
@@ -2490,9 +2519,12 @@ def recover_snapshot_streams(f, ps_off, cs, tr, vd):
             out.append({"name": name, "sub_id": sub_id, "stream_size": ssize,
                         "ts": ts, "content": None, "inline": True, "n_extents": 0})
         else:
+            # _holes_mark is taken BEFORE this version is assembled, so the writer can tell which
+            # version drew from holes: every version is produced here, long before any is written.
+            _hm = len(_CONTENT_HOLES)
             out.append({"name": name, "sub_id": sub_id, "stream_size": ssize, "ts": ts,
-                        "content": _read_extents(ssize, exts, sub_id), "inline": False,
-                        "n_extents": len(exts)})
+                        "content": _read_extents(ssize, exts, sub_id, name), "inline": False,
+                        "n_extents": len(exts), "_holes_mark": _hm})
     return out
 
 # ═══════════════════════════════════════════════════════════════════════
@@ -3769,7 +3801,7 @@ def parse_usn_journal_streams(vd, cs, tr):
     }
 
 
-def read_usn_j_stream(f_handle, ps, cs, extents, stream_size=0):
+def read_usn_j_stream(f_handle, ps, cs, extents, stream_size=0, _content_what=None):
     """Read the USN $J data stream from disk following its extent descriptors.
 
     The read length is the **allocated size** (Σ of the extents' clusters). The `$J` journal fills its
@@ -3784,14 +3816,23 @@ def read_usn_j_stream(f_handle, ps, cs, extents, stream_size=0):
         return b""
     alloc_size = sum(e["clusters"] for e in extents) * cs
     buf = bytearray(alloc_size)
+    _runs = []
     for ext in extents:
         file_off = ext["file_vcn"] * cs
         if file_off >= alloc_size:
             continue
         nbytes = min(ext["clusters"] * cs, alloc_size - file_off)
+        _runs.append((ext["plcn"], ext["clusters"], file_off))
         f_handle.seek(ps + ext["plcn"] * cs)
         data = f_handle.read(nbytes)
         buf[file_off:file_off + len(data)] = data
+    # `export metadata` writes these bytes to disk as usn_J.bin, a forensic artifact. A punched cluster
+    # there is a zero-filled stretch of journal presented as the volume's own record, so it goes through
+    # the same check as every other producer. Clipped to the ALLOCATION, which for $J is the real length
+    # (the journal fills its allocation; see the docstring) -- not to `stream_size`, which is a descriptor
+    # constant and not a length at all.
+    if _content_what:
+        content_holes(f_handle, ps, cs, _runs, _content_what, stream_size=alloc_size)
     return bytes(buf)
 
 
@@ -7182,7 +7223,7 @@ def _stream_extent_records(vd, ctx=None):
             recs[le64(v, 0x38)] = sorted(exts)     # keyed by stream_size
     return recs
 
-def _read_vlcn_extents(f, ps_off, cs, tr, exts, size):
+def _read_vlcn_extents(f, ps_off, cs, tr, exts, size, _content_what=None):
     """Reassemble a stream from its (file_vcn, vlcn, run_length) extent list (24-byte type-0x40 format):
     place each run at file_vcn*cs, VLCN->PLCN via the Container Table, trim to `size`. Reuses the proven
     snapshot/CoW read path. Bytes may be stale for a recovered/deleted stream (no freshness check)."""
@@ -7190,6 +7231,7 @@ def _read_vlcn_extents(f, ps_off, cs, tr, exts, size):
         return b""
     alloc = min(max(fv + run for fv, _vl, run in exts) * cs, 512 * 1024 * 1024)
     buf = bytearray(alloc)
+    _runs = []
     for fvcn, vlcn, run in sorted(exts):
         for j in range(run):
             try:
@@ -7199,8 +7241,12 @@ def _read_vlcn_extents(f, ps_off, cs, tr, exts, size):
             off = (fvcn + j) * cs
             if off + cs > len(buf):
                 break
+            _runs.append((plcn, 1, off))
             f.seek(ps_off + plcn * cs)
             buf[off:off + cs] = f.read(cs)
+    if _content_what:
+        # An extent-backed ADS is output too (`export ads`), and this reader had no hole check at all.
+        content_holes(f, ps_off, cs, _runs, _content_what, stream_size=size)
     return bytes(memoryview(buf)[:size])
 
 def _ads_storage_map(vd, ctx=None):
@@ -8332,6 +8378,134 @@ def _hole_ranges_in(fd, start, end):
     return out
 
 
+_CONTENT_HOLES = []
+
+
+def content_holes(f, ps, cs, runs, what, stream_size=None):
+    """THE hole check for any read whose bytes become OUTPUT. Records and warns; returns hole bytes.
+
+    `runs` is [(plcn, n_clusters), ...] -- the PHYSICAL clusters a producer is about to turn into content.
+    Returns the number of bytes that lie in image holes, 0 when none, or None when the host cannot say.
+
+    Why this exists as one function rather than a check at each producer: the check already existed and
+    had exactly ONE caller each (`_extent_hole_ranges` -> cmd_extract, `_extent_hole_bytes` ->
+    get_file_content), and every other content path emitted holes as zeros with a clean exit. A punched
+    cluster behind a snapshot-shared file produced five zero bytes labelled
+    "snapshot-shared with the latest snapshot", rc=0 -- fabricated content under the tool's most
+    confident label. Adding a seventh call site would leave an eighth to be forgotten, so producers are
+    routed through here and `check_content_hole_coverage.py` asserts that they are.
+
+    A hole is NOT proof the data is missing: a sparsely stored image keeps a file's own zero content the
+    same way it keeps a range that was never captured. The caller says what it cannot distinguish.
+    """
+    name = getattr(f, "name", None)
+    if not isinstance(name, str) or not runs:
+        return None if runs else 0
+    try:
+        fd = os.open(name, os.O_RDONLY)
+    except OSError as _e:
+        # None means "the host cannot say", which callers already treat as undeterminable -- but the
+        # REASON should not vanish: this is the check that decides whether output bytes are trustworthy.
+        _skip_note("content hole check", what, _e)
+        return None
+    try:
+        total = 0
+        for entry in runs:
+            plcn, n, foff = (entry if len(entry) == 3 else (entry[0], entry[1], None))
+            if n <= 0:
+                continue
+            span = n * cs
+            if stream_size is not None and foff is not None:
+                # CLIP to the stream's logical size, exactly as _extent_hole_ranges does: "slack is not
+                # content". Without this the check counts allocation slack past EOF, and D13's own note
+                # records where that leads -- a 791 MB ISO, a silent WAV and 245 files with correct
+                # GFSAREPLAY content all overlap holes and all extract CORRECTLY. Warning on those is
+                # crying wolf, and it is the failure mode this check exists to avoid, not to cause.
+                if foff >= stream_size:
+                    continue                        # entirely past EOF: slack
+                span = min(span, stream_size - foff)
+            got = _hole_bytes_in(fd, ps + plcn * cs, ps + plcn * cs + span)
+            if got is None:
+                return None
+            total += got
+    finally:
+        os.close(fd)
+    if total:
+        _CONTENT_HOLES.append((what, total))
+        print(f"[{PROG}] WARNING: {total} byte(s) of {what} come from ranges the image stores as HOLES "
+              f"and read back as zeros. A sparse image stores a file's own zero content the same way it "
+              f"stores a range never captured, so this does not by itself prove data is missing — and it "
+              f"does not confirm the zeros are the file's. Corroborate before relying on them.",
+              file=sys.stderr)
+    return total
+
+
+def _content_hole_summary():
+    if _CONTENT_HOLES:
+        n = sum(b for _w, b in _CONTENT_HOLES)
+        # NOT "bytes the image does not contain" -- that overclaims. On a sparsely stored image a hole is
+        # equally how the file's OWN zero content is kept, and the tool cannot separate the two. The
+        # shipped snapshots sample proves the point: 69,632 bytes of one version read from holes on a
+        # perfectly healthy image. Say what is true -- the bytes came from holes -- and no more.
+        print(f"[{PROG}] {len(_CONTENT_HOLES)} output stream(s) drew {n} byte(s) from ranges the image "
+              f"stores as holes. Those bytes read back as zeros; whether they are the file's own zeros or "
+              f"a range never captured cannot be told from this image alone.", file=sys.stderr)
+
+
+# `extract` reports a hole-sourced stream three ways: a note, a `.holes.json` sidecar, and exit 2 -- and
+# `--refuse-holes` withholds the bytes. Until 1.11.2 the BULK exports had only the note, so a script could
+# not branch on them and an examiner got no sidecar. These three give the bulk paths the same contract,
+# per OUTPUT STREAM: each written file is treated exactly as `extract` treats its one file.
+_REFUSE_HOLES = False      # set from --refuse-holes by any command that writes content in bulk
+_HOLE_STREAMS = []         # [{"file", "what", "hole_bytes"}] -- what the bulk sidecar records
+_HOLE_REFUSALS = []        # destinations NOT written because --refuse-holes was in force
+
+
+def _bulk_hole_finish(out_dir):
+    """Close out a bulk export: write <out_dir>/holes.json and return the exit code (2 if any stream drew
+    from image holes, else 0).
+
+    Written even when nothing drew from holes -- an examiner keeping sidecars beside extracted files should
+    not have to infer, from the absence of one, whether the run was checked and clean or never checkable.
+    That is the same reason `extract` writes a sidecar for the undeterminable case."""
+    status = "holes_present" if _HOLE_STREAMS else "none"
+    for _h in _HOLE_STREAMS:
+        try:
+            _h["file"] = os.path.relpath(_h["file"], out_dir)
+        except ValueError:
+            pass                       # different drive on Windows: keep what we have rather than crash
+    doc = {"status": status,
+           "streams_with_holes": len(_HOLE_STREAMS),
+           "hole_bytes": sum(h["hole_bytes"] for h in _HOLE_STREAMS),
+           "refused": [os.path.relpath(_r, out_dir) for _r in _HOLE_REFUSALS],
+           "streams": _HOLE_STREAMS,
+           "note": "Bytes listed here were read from ranges the image stores as holes, which read back as "
+                   "zeros. A sparse image stores a file's own zero content the same way it stores a range "
+                   "that was never captured, so this is not by itself evidence that data is missing -- and "
+                   "not confirmation that the zeros are the file's. Corroborate before relying on them."}
+    try:
+        # A run that matched nothing never created its export directory; the sidecar still has to exist,
+        # because "checked and clean" and "never checked" are different evidential positions.
+        os.makedirs(out_dir, exist_ok=True)
+        with open(os.path.join(out_dir, "holes.json"), "w", encoding="utf-8") as fh:
+            json.dump(doc, fh, indent=2)
+    except OSError as _e:
+        print(f"[{PROG}] WARNING: could not write {os.path.join(out_dir, 'holes.json')}: {_e}",
+              file=sys.stderr)
+    if _HOLE_REFUSALS:
+        print(f"[{PROG}] --refuse-holes: {len(_HOLE_REFUSALS)} output stream(s) were NOT written because "
+              f"their bytes would have come from image holes; every other stream was written normally.",
+              file=sys.stderr)
+    if _HOLE_STREAMS:
+        print(f"[{PROG}] wrote {os.path.join(out_dir, 'holes.json')} naming the "
+              f"{len(_HOLE_STREAMS)} stream(s) that drew from holes.", file=sys.stderr)
+        return 2
+    return 0
+
+
+atexit.register(lambda: _content_hole_summary())
+
+
 def _extent_hole_ranges(f, ps, cs, exts, file_size):
     """Holes inside the file's DATA range, as [(file_offset, length)]. None when undeterminable.
 
@@ -8394,7 +8568,7 @@ def _extent_hole_bytes(f, ps, cs, exts):
         os.close(fd)
 
 
-def get_file_content(f, ps, cs, tr, info, verify_integrity=False):
+def get_file_content(f, ps, cs, tr, info, verify_integrity=False, _content_what=None):
     """Return (bytes | None, meta) — a file's $DATA content resolved for ANY residency, using the SAME cascade
     `cmd_extract` runs. `info` is an `_analyze_dir_extents` entry (fields: storage, file_size, extents,
     resident_content, cow_content, extent_backed, raw_value). Single source of truth so every content consumer
@@ -8422,7 +8596,7 @@ def get_file_content(f, ps, cs, tr, info, verify_integrity=False):
         if cow is not None:
             return cow, {"source": "cow", "size": file_size}
         if info.get("extent_backed"):
-            ic = _recover_inline_extent_content(f, ps, cs, tr, info.get("raw_value", b""))
+            ic = _recover_inline_extent_content(f, ps, cs, tr, info.get("raw_value", b""), _content_what)
             if ic is not None:
                 meta = {"source": "inline-holder", "size": file_size}
                 if verify_integrity:
@@ -8438,13 +8612,21 @@ def get_file_content(f, ps, cs, tr, info, verify_integrity=False):
     if alloc > 4 * 1024 * 1024 * 1024:
         return None, {"source": "too-large", "size": file_size}
     buf = bytearray(alloc)
+    _runs = []
     for ext in sorted_exts:
         plcn = ext["plcn"]
         for i in range(ext["clusters"]):
+            off = (ext["file_vcn"] + i) * cs
+            _runs.append((plcn + i, 1, off))
             f.seek(ps + (plcn + i) * cs)
             chunk = f.read(cs)
-            off = (ext["file_vcn"] + i) * cs
             buf[off:off + len(chunk)] = chunk          # length-safe (a short/past-EOF read must not shrink buf)
+    # This branch reassembles content from clusters, so it is a producer like every other: ask the shared
+    # choke point whether any IN-RANGE cluster came from a hole. The older `not any(out)` gate below only
+    # looked when the result was ENTIRELY zero, which is blind to a PARTIALLY punched file (real clusters +
+    # punched ones pass `any(out)` and were never asked about) -- the D13 class one level down.
+    if _content_what:
+        content_holes(f, ps, cs, _runs, _content_what, stream_size=file_size)
     out = bytes(memoryview(buf)[:file_size])
     meta = {"source": "extents", "size": file_size, "n_extents": len(sorted_exts)}
     # Only ask about holes when the content is entirely zero -- that is the only case where a hole changes
@@ -8587,13 +8769,15 @@ def cmd_extract(image, remaining, partition_start):
                 return 0
             if ads_match["storage"] == "extent-backed" and ads_match.get("extents"):
                 # E61: a large (>=2 KB) non-resident ADS — content in on-disk extents (type-0x0 record).
-                buf = _read_vlcn_extents(f, ps, cs, tr, ads_match["extents"], ads_match["stream_size"])
+                _hb0 = len(_CONTENT_HOLES)
+                buf = _read_vlcn_extents(f, ps, cs, tr, ads_match["extents"], ads_match["stream_size"],
+                                         _content_what=f"'{target['name']}:{stream_name}'")
                 print(f"Extracting '{target['name']}:{stream_name}' ({len(buf)} bytes — extent-backed ADS, "
                       f"{len(ads_match['extents'])} extents):", file=sys.stderr)
                 if target.get("file_attrs", 0) & 0x4000:
                     print(f"[{PROG}] WARNING: host is EFS-encrypted — ADS bytes are CIPHERTEXT.", file=sys.stderr)
                 _emit(buf)
-                return 0
+                return 2 if len(_CONTENT_HOLES) > _hb0 else 0
             die(f"ADS '{stream_name}' storage is '{ads_match['storage']}' — its content is not inline in the "
                 f"directory value and no extent list was found, so it cannot be extracted from this record")
 
@@ -8624,9 +8808,23 @@ def cmd_extract(image, remaining, partition_start):
             # snapshot (current 0x10028 holder has disk_alloc==0). Recovered via the tested snapshot extractor.
             cow = target.get("cow_content")
             if cow is not None:
+                # Recompute for THIS file with a name attached, so the shared-cluster reads go through
+                # content_holes(). The walk's precomputed copy was produced without the check (it runs for
+                # every file there); this repeats the work once, for the file actually asked for.
+                _hb0 = len(_CONTENT_HOLES)
+                _re = recover_cow_current_content(f, ps, cs, tr, target.get("raw_value", b""),
+                                                  _content_what=f"'{target['name']}'")
+                if _re is not None:
+                    cow = _re
                 fsz = target.get("file_size", 0)
                 print(f"Extracting '{target['name']}' ({len(cow)} bytes — snapshot-shared with the latest snapshot):",
                       file=sys.stderr)
+                if len(_CONTENT_HOLES) > _hb0:
+                    print(f"[{PROG}] '{target['name']}': part of the bytes above came from ranges the "
+                          f"image stores as holes — see the warning. Their completeness is unverified.",
+                          file=sys.stderr)
+                    _emit(cow)
+                    return 2
                 if len(cow) != fsz:
                     print(f"[{PROG}] WARNING: recovered {len(cow)} bytes but $DATA size is {fsz} — verify.",
                           file=sys.stderr)
@@ -8865,7 +9063,8 @@ def _walk_recycle(f, ps, cs, tr, obj_map, dir_oid, sid, depth, out):
     infos = {info["name"]: info for info in _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid)}
     for name, vd in i_rows:
         if name in infos:
-            content, _m = get_file_content(f, ps, cs, tr, infos[name])
+            content, _m = get_file_content(f, ps, cs, tr, infos[name],
+                                           _content_what="recycle-bin metadata (%s)" % name)
         else:
             content = get_resident_data_content(vd) if len(vd) > 84 else None
         meta = _decode_recycle_i(content)
@@ -10583,13 +10782,26 @@ def _collision_free_path(path):
         i += 1
     return f"{path}.dup{i}"
 
-def _guarded_extract_write(dest, data, failures):
+def _guarded_extract_write(dest, data, failures, holes_mark=None, what=None):
     """Write bytes `data` to `dest`, catching OSError so one bad file cannot ABORT a bulk extraction (audit 4.1).
     The faithful (un-truncated) sanitizer can produce a name longer than the host filesystem's component limit;
     that, plus disk-full / permission, must be SURFACED (our docstring's promise), not propagated as a mid-run
     traceback that leaves a partial directory and no record. On failure, append a record to `failures` and return
     None; on success return `dest`. The parent directory is created here too, so a too-long *directory* segment
-    (not just the leaf name) is caught the same way."""
+    (not just the leaf name) is caught the same way.
+
+    `holes_mark` is `len(_CONTENT_HOLES)` taken by the caller BEFORE it produced `data`. If the producer
+    recorded a hole since then, these bytes came from one: the stream is recorded for the sidecar, and
+    under `--refuse-holes` it is not written at all (returning None, exactly as a failed write does, but
+    WITHOUT being counted as a failure -- it is a deliberate refusal and is reported as one)."""
+    if holes_mark is not None and len(_CONTENT_HOLES) > holes_mark:
+        drew = sum(b for _w, b in _CONTENT_HOLES[holes_mark:])
+        _HOLE_STREAMS.append({"file": dest, "what": what or os.path.basename(dest), "hole_bytes": drew})
+        # `file` is rewritten relative to the export directory by _bulk_hole_finish: an absolute path is
+        # wrong the moment the examiner moves or ships the directory.
+        if _REFUSE_HOLES:
+            _HOLE_REFUSALS.append(dest)
+            return None
     try:
         d = os.path.dirname(dest)
         if d:
@@ -10616,7 +10828,7 @@ def _report_extract_failures(failures, out_dir):
           f"limit, disk full, or permission) — extraction continued; see "
           f"{os.path.join(out_dir, '_extract_failures.json')}", file=sys.stderr)
 
-def _carve_extent_backed(f, ps_off, cs, tr, vd, t40_backing=None):
+def _carve_extent_backed(f, ps_off, cs, tr, vd, t40_backing=None, _carve_what=None):
     """Best-effort content carve for a NON-RESIDENT deleted remnant. Returns (bytes, declared_size) or None.
     Two extent sources, in order: (1) the current stream's extents held INLINE in the name row (F5); (2) if
     that is absent/empty, a type-0x40 BACKING recovered from slack (Feature C) — the common case for a deleted
@@ -10638,7 +10850,7 @@ def _carve_extent_backed(f, ps_off, cs, tr, vd, t40_backing=None):
         if disk_alloc > 0 and exts and stream_size > 0:
             alloc = max(fv + run for fv, _vl, run in exts) * cs
             if alloc <= 256 * 1024 * 1024:          # safety cap for a best-effort carve
-                buf = bytearray(alloc)
+                buf = bytearray(alloc); _cruns = []
                 for fvcn, vlcn, run in sorted(exts, key=lambda x: x[0]):
                     if vlcn == 0:
                         continue                    # sparse hole -> leave zero-filled (never read boot region)
@@ -10647,10 +10859,13 @@ def _carve_extent_backed(f, ps_off, cs, tr, vd, t40_backing=None):
                             plcn = tr.tr(vlcn + j)
                         except Exception:
                             plcn = vlcn + j
-                        f.seek(ps_off + plcn * cs)
                         off = (fvcn + j) * cs
+                        _cruns.append((plcn, 1, off))
+                        f.seek(ps_off + plcn * cs)
                         chunk = f.read(cs)              # len(chunk)==cs on a normal read; a short/past-EOF read
                         buf[off:off + len(chunk)] = chunk   # must NOT shrink buf (slice-assign len-safe) -> zero-pad
+                if _carve_what:
+                    content_holes(f, ps_off, cs, _cruns, _carve_what, stream_size=stream_size)
                 return (bytes(memoryview(buf)[:stream_size]), stream_size)
     # (2) type-0x40 backing recovered from slack — extents already VLCN->PLCN translated by the parser.
     if t40_backing is not None:
@@ -10661,14 +10876,17 @@ def _carve_extent_backed(f, ps_off, cs, tr, vd, t40_backing=None):
             alloc = max(x["file_vcn"] + x["clusters"] for x in exts) * cs
             if alloc > 256 * 1024 * 1024:
                 return None
-            buf = bytearray(alloc)
+            buf = bytearray(alloc); _cruns = []
             for x in exts:
                 plcn, fvcn, run = x["plcn"], x["file_vcn"], x["clusters"]
                 for j in range(run):
-                    f.seek(ps_off + (plcn + j) * cs)
                     o = (fvcn + j) * cs
+                    _cruns.append((plcn + j, 1, o))
+                    f.seek(ps_off + (plcn + j) * cs)
                     chunk = f.read(cs)                  # len-safe assign (a past-EOF read must not shrink buf)
                     buf[o:o + len(chunk)] = chunk
+            if _carve_what:
+                content_holes(f, ps_off, cs, _cruns, _carve_what, stream_size=stream_size)
             return (bytes(memoryview(buf)[:stream_size]), stream_size)
     # (3) inline-holder MULTI-LEVEL extent map (v3.4 / v3.7 / v3.9 / upgraded): the current stream's runs live in
     # THIS row as an embedded B+-tree index array that step (1)'s parse_resident_btree_rows can't reach — the same
@@ -10679,18 +10897,21 @@ def _carve_extent_backed(f, ps_off, cs, tr, vd, t40_backing=None):
         stream_size = le64(vd, 0x58)                # inline-holder FileSize (alloc@0x60 already cover-checked)
         alloc = max(x["file_vcn"] + x["clusters"] for x in exts) * cs
         if stream_size > 0 and 0 < alloc <= 256 * 1024 * 1024:
-            buf = bytearray(alloc)
+            buf = bytearray(alloc); _cruns = []
             got = 0
             for x in sorted(exts, key=lambda x: x["file_vcn"]):
                 if x.get("vlcn", x["plcn"]) == 0:
                     continue                        # sparse hole -> leave zero-filled (never read boot region)
                 plcn, fvcn, run = x["plcn"], x["file_vcn"], x["clusters"]
                 for j in range(run):
+                    _cruns.append((plcn + j, 1, (fvcn + j) * cs))
                     f.seek(ps_off + (plcn + j) * cs)
                     chunk = f.read(cs)              # len-safe assign; count real bytes so a stale/out-of-volume
                     got += len(chunk)               # map (plcn past EOF -> empty read) yields NO file, not a 0-byte
                     o = (fvcn + j) * cs
                     buf[o:o + len(chunk)] = chunk
+            if got and _carve_what:
+                content_holes(f, ps_off, cs, _cruns, _carve_what, stream_size=stream_size)
             if got:                                 # nothing readable (extent map points outside the volume) -> no carve
                 return (bytes(memoryview(buf)[:stream_size]), stream_size)
     return None
@@ -10804,8 +11025,10 @@ def cmd_deleted(image, remaining, partition_start):
     remaining = [x for x in remaining if x != "--_from-export"]
     args = _parse_args(remaining, flags=["--trash", "--scan-pages", "--full", "--no-slack", "--slack",
                                          "--rows-only", "--content-only", "--carve", "--orphans",
-                                         "--rows", "--no-system"],
+                                         "--rows", "--no-system", "--refuse-holes"],
                        valued=["--search", "--max-scan", "--extract", "--log", "--csv", "--json", "--jsonl"])
+    global _REFUSE_HOLES
+    _REFUSE_HOLES = bool(args["refuse_holes"])
     # `--slack` is a silent no-op kept only for back-compat (the slack scan is the default `recovery` mode);
     # it is intentionally undocumented. Use `--full` for the complete scan, `--no-slack` to skip slack.
     search_name = args["search"]
@@ -10866,6 +11089,7 @@ def cmd_deleted(image, remaining, partition_start):
         if no_system and _deleted_category(name) == "system":
             return
         os.makedirs(extract_dir, exist_ok=True)
+        _hm_dec = len(_CONTENT_HOLES)
         venum, vlabel, decoded = _deleted_recoverability(e, cs, tr)
         prov = os.path.basename(base)                    # historical provenance name (…_c<plcn>o<off>)
         safe = _safe_filename(name)
@@ -10874,15 +11098,21 @@ def cmd_deleted(image, remaining, partition_start):
         if write_content and decoded:                    # RESIDENT — non-empty inline content (byte-exact; a
             cdir = os.path.join(extract_dir, "content"); os.makedirs(cdir, exist_ok=True)   # 0-byte file has
             content_path = _collision_free_path(os.path.join(cdir, safe))                   # nothing to recover)
-            content_path = _guarded_extract_write(content_path, decoded, _write_failures)   # audit 4.1
+            content_path = _guarded_extract_write(content_path, decoded, _write_failures,
+                                                  holes_mark=_hm_dec,
+                                                  what=f"deleted file '{name}'")   # audit 4.1
         elif write_content and carve and venum == "extent_backed":   # NON-RESIDENT — carve from the extent map
-            cres = _carve_extent_backed(f, ps, cs, tr, vd, e.get("t40_backing"))
+            _hm_carve = len(_CONTENT_HOLES)
+            cres = _carve_extent_backed(f, ps, cs, tr, vd, e.get("t40_backing"),
+                                        _carve_what=f"carved '{e.get('name') or e.get('path') or '?'}'")
             if cres:
                 cbytes, carved_size = cres
                 carved_len = len(cbytes)
                 cdir = os.path.join(extract_dir, "content"); os.makedirs(cdir, exist_ok=True)
                 carved_path = _collision_free_path(os.path.join(cdir, safe + ".carved"))
-                carved_path = _guarded_extract_write(carved_path, cbytes, _write_failures)   # audit 4.1
+                carved_path = _guarded_extract_write(carved_path, cbytes, _write_failures,
+                                                     holes_mark=_hm_carve,
+                                                     what=f"carved '{name}'")   # audit 4.1
         if write_rows:                                   # raw remnant (evidence) — opt-in
             rdir = os.path.join(extract_dir, "rows"); os.makedirs(rdir, exist_ok=True)
             row_path = _collision_free_path(os.path.join(rdir, prov + ".row"))
@@ -11318,15 +11548,17 @@ def cmd_deleted(image, remaining, partition_start):
                           _ofmt, args[_ofmt], label="deleted entries")
 
         print()
-        return 0
+        return _bulk_hole_finish(extract_dir) if extract_dir else 0
 
     finally:
         f.close()
 
 def cmd_snapshots(image, remaining, partition_start):
     out_fmt, out_dest, remaining = _extract_output_fmt(remaining, allow=("--json",))
-    args = _parse_args(remaining, flags=["-v", "--verbose", "--show"],
+    args = _parse_args(remaining, flags=["-v", "--verbose", "--show", "--refuse-holes"],
                        valued=["--file", "--depth", "--extract", "--snapshot"])
+    global _REFUSE_HOLES
+    _REFUSE_HOLES = bool(args["refuse_holes"])
     verbose = args["v"] or args["verbose"]
     do_show = args["show"]
     extract_dir = args["extract"]
@@ -11386,7 +11618,8 @@ def cmd_snapshots(image, remaining, partition_start):
 
         if not true_snap_results:
             print("\n  No files with stream snapshots found."
-                  "  (Alternate data streams are listed by `specials ads` / `export ads`.)"); return 0
+                  "  (Alternate data streams are listed by `specials ads` / `export ads`.)")
+            return _bulk_hole_finish(extract_dir) if extract_dir else 0
 
         print(f"\n{'-'*78}")
         file_filter = args["file"]
@@ -11394,7 +11627,8 @@ def cmd_snapshots(image, remaining, partition_start):
         if file_filter:
             display_list = [r for r in display_list if file_filter in r["path"]]
             if not display_list:
-                print(f"  No snapshot files matching '{file_filter}'"); return 0
+                print(f"  No snapshot files matching '{file_filter}'")
+                return _bulk_hole_finish(extract_dir) if extract_dir else 0
 
         # --snapshot: pick ONE version per file — a 1-based index number (as shown in the [N] listing),
         # or a case-insensitive substring of the version name. Returns the set of matching names, or None
@@ -11466,14 +11700,17 @@ def cmd_snapshots(image, remaining, partition_start):
                         safe = _safe_filename(safe)   # faithful (no truncation) component sanitizer
                         os.makedirs(extract_dir, exist_ok=True)
                         outp = os.path.join(extract_dir, safe)
-                        if _guarded_extract_write(outp, content, _snap_failures):   # audit 4.1
+                        if _guarded_extract_write(outp, content, _snap_failures,
+                                                  holes_mark=rec.get("_holes_mark"),
+                                                  what=f"snapshot version '{rec['name']}' "
+                                                       f"(0x{rec['sub_id']:x})"):   # audit 4.1
                             print(f"          -> wrote {outp}")
 
         if snap_sel and not any_sel_match:
             print(f"\n  No snapshot version matched --snapshot {snap_sel!r} "
                   f"(use a 1-based [N] index or part of a version name).")
         _report_extract_failures(_snap_failures, extract_dir)   # audit 4.1
-        return 0
+        return _bulk_hole_finish(extract_dir) if extract_dir else 0
 
     finally:
         f.close()
@@ -11967,7 +12204,8 @@ def cmd_export_metadata(image, remaining, partition_start):
                 if vd is not None:
                     st = parse_usn_journal_streams(vd, cs, tr)
                     if st.get("j_extents"):
-                        jd = read_usn_j_stream(f, ps, cs, st["j_extents"], st["j_stream_size"])
+                        jd = read_usn_j_stream(f, ps, cs, st["j_extents"], st["j_stream_size"],
+                                               _content_what="USN $J change-journal stream")
                         emit("usn_J.bin", jd, "USN $J change-journal stream (reassembled)")
             except Exception:
                 pass
@@ -12017,7 +12255,7 @@ def cmd_export_metadata(image, remaining, partition_start):
         print(f"\n  {len(manifest['artifacts'])} artifacts + manifest.json + sha256sums.txt → {outdir}")
         print("  Verify later with:  sha256sum -c sha256sums.txt")
         _report_extract_failures(_md_failures, outdir)   # audit 4.1
-        return 0
+        return _bulk_hole_finish(outdir)
     finally:
         f.close()
 
@@ -12219,7 +12457,9 @@ def cmd_export_resident(image, remaining, partition_start):
     """export resident-all <dir>: write every RESIDENT file's inline $DATA (and snapshot-shared resident content)
     to <dir>, preserving the directory tree. Reuses the same content path as `extract` (get_resident_data_content
     / recover_cow_current_content); skips 0-byte and non-inline entries."""
-    args = _parse_args(remaining, valued=["--oid", "--depth"])
+    args = _parse_args(remaining, flags=["--refuse-holes"], valued=["--oid", "--depth"])
+    global _REFUSE_HOLES
+    _REFUSE_HOLES = bool(args["refuse_holes"])
     out_dir = args["_rest"][0] if args["_rest"] else None
     if not out_dir:
         die("export resident-all requires an output directory")
@@ -12237,14 +12477,24 @@ def cmd_export_resident(image, remaining, partition_start):
             for info in _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
                 if info.get("storage") != "resident":
                     continue
+                _hm = len(_CONTENT_HOLES)
                 content = info.get("resident_content")
                 if content is None:
                     content = info.get("cow_content")
+                    if content is not None:
+                        # Same reason as cmd_extract's CoW branch: the walk precomputes this WITHOUT the
+                        # hole check (it would cost syscalls for every file, most of which are never
+                        # written). These bytes ARE written, so repeat the recovery once with the check on.
+                        _re = recover_cow_current_content(f, ps, cs, tr, info.get("raw_value", b""),
+                                                          _content_what=f"resident file '{info['name']}'")
+                        if _re is not None:
+                            content = _re
                 if content is None or len(content) == 0:
                     skipped += 1; continue
                 rel = _safe_relpath(f"{path}/{info['name']}" if path else info["name"])
                 dest = os.path.join(out_dir, rel)
-                if _guarded_extract_write(dest, content, _res_failures):   # audit 4.1 (also creates the subdir)
+                if _guarded_extract_write(dest, content, _res_failures, holes_mark=_hm,
+                                          what=f"resident file '{info['name']}'"):   # audit 4.1 (also creates the subdir)
                     written += 1
             if depth > 0:
                 for kd, vd in walk_bplus(f, ps, cs, tr, obj_map[dir_oid]):
@@ -12260,14 +12510,16 @@ def cmd_export_resident(image, remaining, partition_start):
               f"({skipped} skipped: 0-byte or non-inline). source: inline $DATA / snapshot-shared.",
               file=sys.stderr)
         _report_extract_failures(_res_failures, out_dir)   # audit 4.1
-        return 0
+        return _bulk_hole_finish(out_dir)
     finally:
         f.close()
 
 def cmd_export_recyclebin(image, remaining, partition_start):
     """export recyclebin <dir>: write each surviving $R payload from $RECYCLE.BIN to <dir>, named by its
     decoded original filename ($I). Reuses the recyclebin walk + the resident/extent content path."""
-    args = _parse_args(remaining, valued=[])
+    args = _parse_args(remaining, flags=["--refuse-holes"], valued=[])
+    global _REFUSE_HOLES
+    _REFUSE_HOLES = bool(args["refuse_holes"])
     out_dir = args["_rest"][0] if args["_rest"] else None
     if not out_dir:
         die("export recyclebin requires an output directory")
@@ -12283,7 +12535,8 @@ def cmd_export_recyclebin(image, remaining, partition_start):
                         kd[4:].decode("utf-16-le", errors="replace").rstrip("\x00") == "$RECYCLE.BIN":
                     recycle_oid = le64(vd, 0x08); break
         if recycle_oid is None:
-            print(f"[{PROG}] no $RECYCLE.BIN on this volume", file=sys.stderr); return 0
+            print(f"[{PROG}] no $RECYCLE.BIN on this volume", file=sys.stderr)
+            return _bulk_hole_finish(out_dir)
         recs = []
         _walk_recycle(f, ps, cs, tr, obj_map, recycle_oid, "", 8, recs)
         os.makedirs(out_dir, exist_ok=True)
@@ -12296,9 +12549,11 @@ def cmd_export_recyclebin(image, remaining, partition_start):
                     # SHARED reader: resident inline / CoW / inline-holder / type-0x40 extents, placed by
                     # file_vcn (correct for sparse/gapped files — the old inline append was wrong there) and
                     # length-safe. This is how a NON-RESIDENT $R payload (ReFS 3.4) is now recovered.
-                    c, _m = get_file_content(f, ps, cs, tr, info)
+                    _hm = len(_CONTENT_HOLES)
+                    c, _m = get_file_content(f, ps, cs, tr, info,
+                                             _content_what="recycled file %s" % info["name"])
                     if c:
-                        r_content[(sid, info["name"])] = c
+                        r_content[(sid, info["name"])] = (c, _hm)   # mark travels with the bytes
             for kd, vd in walk_bplus(f, ps, cs, tr, obj_map[dir_oid]):
                 if len(kd) >= 4 and le16(kd, 0) == 0x30 and len(vd) >= 0x44 and (le32(vd, 0x40) & 0x10000000):
                     child = le64(vd, 0x08) if len(vd) >= 0x10 else 0
@@ -12307,16 +12562,18 @@ def cmd_export_recyclebin(image, remaining, partition_start):
                         collect(child, sid or nm)
         collect(recycle_oid, "")
         for r in recs:
-            content = r_content.get((r["sid"], r["r_name"]))
-            if content is None:
+            _got = r_content.get((r["sid"], r["r_name"]))
+            if _got is None:
                 continue
+            content, _hm = _got
             orig = r["meta"]["original_path"] if r.get("meta") else r["r_name"]
             dest = os.path.join(out_dir, _safe_relpath(orig.replace("\\", "/").split("/")[-1] or r["r_name"]))
-            if _guarded_extract_write(dest, content, _rb_failures):   # audit 4.1
+            if _guarded_extract_write(dest, content, _rb_failures, holes_mark=_hm,
+                                      what="recycled file %s" % r["r_name"]):   # audit 4.1
                 written += 1
         _report_extract_failures(_rb_failures, out_dir)   # audit 4.1
         print(f"[{PROG}] export recyclebin: wrote {written} recovered payload(s) to {out_dir}.", file=sys.stderr)
-        return 0
+        return _bulk_hole_finish(out_dir)
     finally:
         f.close()
 

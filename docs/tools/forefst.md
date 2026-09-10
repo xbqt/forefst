@@ -300,6 +300,30 @@ directions and to corroborate them.
 
 Pass **`--refuse-holes`** for a strict run: same report, same exit code, nothing written.
 
+### Which commands check, and what each one does about it
+
+Every command that turns clusters into output runs the same check. What differs is only *where* the report
+goes, because a single file and a directory of files need different artifacts.
+
+| producing command | note | exit 2 | sidecar | `--refuse-holes` |
+|---|---|---|---|---|
+| `extract` (own extents, inline, snapshot-shared, ADS) | yes | yes | `FILE.holes.json` with `-o` | writes nothing |
+| `export deleted` (recovered + `--carve`) | yes | yes | `holes.json` in the export directory | skips the affected files |
+| `export snapshots` / `snapshots --extract` | yes | yes | `holes.json` | skips the affected versions |
+| `export resident-all` | yes | yes | `holes.json` | skips the affected files |
+| `export recyclebin` | yes | yes | `holes.json` | skips the affected payloads |
+| `export metadata` (the USN `$J` stream) | yes | yes | `holes.json` | skips `usn_J.bin` |
+
+Two differences from `extract` are deliberate. A bulk export writes **one** `holes.json` for the run rather
+than one file per output, naming each affected stream and its hole byte count, with paths relative to the
+export directory so the directory stays portable. And `--refuse-holes` withholds **per stream**: the affected
+outputs are not written, every clean output still is, and the refused list is in the sidecar. Refusing the
+whole run would discard good evidence because one file was affected.
+
+The sidecar is written even when nothing drew from holes (`"status": "none"`). An examiner keeping sidecars
+beside extracted files should not have to infer, from a missing file, whether the run was checked and clean
+or never checkable.
+
 The reported ranges are the **holes**, not the extents containing them, and adjacent ranges are **merged**:
 a hole that spans two extents is one range, because the split at an extent boundary describes the extent
 map rather than the gap. Two ranges in the list therefore mean two genuinely separate gaps with captured
@@ -325,6 +349,12 @@ means resolving each file's MI record first; that is a planned improvement, not 
 Addressing by a full `/path` resolves it directly from the root (no depth limit); a **bare name** is searched
 across the tree (to `--depth`) and the first match is extracted — pass the full path to pick a specific file when
 the name is not unique.
+
+**Case.** ReFS folds case by default, so a path resolves whatever case you type it in. Where a directory
+carries the per-directory case-sensitive flag (`fsutil file setCaseSensitiveInfo`) it can hold two names
+that differ only by case, and there the **exact spelling wins**: `hi.txt` and `HI.txt` each return their
+own bytes. A spelling that matches nothing exactly still falls back to a case-insensitive match, so
+addressing a file by the wrong case keeps working on an ordinary directory.
 
 | Option | Description |
 |--------|-------------|
