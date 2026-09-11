@@ -1,5 +1,5 @@
 # Sample command manifest — win11refs2tspecials.raw
-<!-- generated-by: forefst.py=v1.11.2/db17697cf519f6aa refsanalysis.py=v1.11.2 -->
+<!-- generated-by: forefst.py=v1.11.3/df88780108dbc71c refsanalysis.py=v1.11.3 -->
 
 Every file under `forefst/` and `refsanalysis/`, and the exact command that produced it.
 Regenerate with `analysis/tools/analysis_scripts/gen_samples.sh`. Image path shown as the basename.

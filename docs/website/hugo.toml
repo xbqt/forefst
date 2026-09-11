@@ -25,8 +25,8 @@ enableEmoji = true
   # Footer coverage stamp — bump when the regression harness is re-run against a newer build.
   coverage_note = "Validated on ReFS 3.14 · parses 3.4–3.15"
   latest_build = "26100.8521 (24H2)"          # shown once, on the About page (not in the per-page footer)
-  tool_version = "1.11.2"                            # footer version stamp — bump at each release
-  build_date = "10.09.2026"                            # last docs generation (DD.MM.YYYY) — stamped by build.py
+  tool_version = "1.11.3"                            # footer version stamp — bump at each release
+  build_date = "11.09.2026"                            # last docs generation (DD.MM.YYYY) — stamped by build.py
 
 [markup]
   [markup.goldmark.renderer]

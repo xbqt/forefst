@@ -125,7 +125,7 @@ def find_refs_partition(path):
         return first_basic
     return None, "no ReFS partition found in GPT (use --partition-start for raw partitions)"
 
-def gpt_partition_detail(path):
+def gpt_partition_detail(path, status=None):
     """GPT detail for the first ReFS partition, for informational -vv display.
 
     Returns {index (1-based), name, first_lba, last_lba, size_bytes, start_bytes}
@@ -136,10 +136,10 @@ def gpt_partition_detail(path):
         with open(path, "rb") as f:
             hdr, lba = _read_gpt_header(f)
             if hdr is None:
-                return None
+                return _outcome(status, None)
             plba = le64(hdr, 72); np = min(le32(hdr, 80), 128); es = le32(hdr, 84)
             if not (128 <= es <= 4096):     # audit 2.2: bound entries/size before the read (MemoryError guard)
-                return None
+                return _outcome(status, None)
             f.seek(plba * lba)
             entries = f.read(np * es)
         for i in range(np):
@@ -155,9 +155,12 @@ def gpt_partition_detail(path):
                     "size_bytes": (last - first + 1) * lba if last >= first else 0,
                     "start_bytes": first * lba,
                 }
-    except Exception:
-        return None
-    return None
+    except Exception as _e:
+        # was a bare `except Exception:` — the geometry silently became "no GPT", and the caller's scan
+        # fallback made the failure invisible. Record it, and tell the caller which answer this is.
+        _skip_note("GPT partition detail", path, _e)
+        return _outcome(status, None, _e)
+    return _outcome(status, None)          # walked the table, found no ReFS partition: genuinely absent
 
 def validate_image(path, die_fn=None):
     """Pre-flight check: path is a readable file with ReFS or GPT signature.
@@ -243,7 +246,7 @@ def validate_image(path, die_fn=None):
 
 # ─── Constants ────────────────────────────────────────────────────────
 PROG = "forefst"
-VERSION = "1.11.2"
+VERSION = "1.11.3"
 # Phase 3 (4.D): directory walks default to FULL depth (no artificial cap); `--depth N` overrides. The real
 # recursion depth equals the actual directory nesting (ReFS trees are shallow — tens of levels), so this
 # constant is never the binding limit; it just means "don't truncate". main() also raises the interpreter
@@ -669,7 +672,8 @@ def alloc_row_counts(r):
     return pc, L - pc
 
 
-def alloc_read_summary(f, ps, cs, tr, roots, root_idx, table_id=None, volume_clusters=None):
+def alloc_read_summary(f, ps, cs, tr, roots, root_idx, table_id=None, volume_clusters=None,
+                       status=None):
     """The 384-byte summary ReFS keeps in an allocator table's ROOT page, as 48 u64s (or None).
 
     One page read — no tree walk — so a caller can report capacity for free. Slot 1 = clusters covered,
@@ -682,28 +686,32 @@ def alloc_read_summary(f, ps, cs, tr, roots, root_idx, table_id=None, volume_clu
     """
     try:
         if root_idx >= len(roots) or not roots[root_idx]:
-            return None
+            return _outcome(status, None)
         lcn = roots[root_idx][0]
         p = lcn if root_idx in _CT_ROOT_INDICES else (tr.tr(lcn) if tr else lcn)
         f.seek(ps + p * cs); pg = f.read(cs)
         if pg[:4] != b"MSB+" or len(pg) < 0x58:
-            return None
+            return _outcome(status, None)
         if table_id is not None and le64(pg, 0x48) != table_id:
-            return None
+            return _outcome(status, None)
         base = 0x50 + le16(pg, 0x54)
         if base + 384 > len(pg):
-            return None
+            return _outcome(status, None)
         s = struct.unpack_from("<48Q", pg, base)
         if s[2] > s[1]:                                   # free can never exceed the span
-            return None
+            return _outcome(status, None)
         if volume_clusters is not None and s[1] > volume_clusters:
-            return None
+            return _outcome(status, None)
         return s
-    except (OSError, OverflowError, struct.error):
-        return None
+    except (OSError, OverflowError, struct.error) as _e:
+        # The read failed: the volume's own accounting could not be consulted. Returning a bare None here
+        # made that indistinguishable from "this table has no summary", so a capacity figure went missing
+        # with nothing said. (A2-R)
+        _skip_note("allocator summary", f"root {root_idx}", _e)
+        return _outcome(status, None, _e)
 
 
-def alloc_capacity(f, ps, cs, tr, roots):
+def alloc_capacity(f, ps, cs, tr, roots, status=None):
     """Volume capacity from the Medium allocator's persisted summary (one page read).
 
     Returns None when the summary is unreadable. `covered` is the space the allocator accounts for — the
@@ -714,13 +722,13 @@ def alloc_capacity(f, ps, cs, tr, roots):
         vol = (f.seek(0, 2) - ps) // cs
     except (OSError, OverflowError) as _e:
         _skip_note("allocator capacity", "image size", _e)
-        return None
+        return _outcome(status, None, _e)      # unknown capacity, NOT "the allocator reports nothing"
     s = alloc_read_summary(f, ps, cs, tr, roots, 1, table_id=0x21, volume_clusters=vol)
     if not s:
-        return None
+        return _outcome(status, None)
     covered, free = s[1], s[2]
     if not covered:
-        return None
+        return _outcome(status, None)
     return {"volume_clusters": vol, "covered_clusters": covered, "free_clusters": free,
             "used_clusters": covered - free, "outside_allocator_clusters": vol - covered,
             "cluster_size": cs, "format": s[0]}
@@ -1286,14 +1294,14 @@ def extract_reparse_from_backing(vd):
     return ""
 
 # ─── Per-object $SI extraction ────────────────────────────────────────
-def get_object_si(f, ps, cs, tr, vlcns):
+def get_object_si(f, ps, cs, tr, vlcns, status=None):
     """Walk an object's B+ tree and extract $STANDARD_INFORMATION (type 0x10)."""
     try:
         rows = walk_bplus(f, ps, cs, tr, vlcns)
     except Exception as _e:
         # Indistinguishable from "this object has no $SI" unless the failure is recorded.
         _skip_note("$STANDARD_INFORMATION", "object tree", _e)
-        return None
+        return _outcome(status, None, _e)      # unreadable: NOT the same as "this object has no $SI"
     for kd, vd in rows:
         if len(kd) >= 2 and le16(kd, 0) == 0x10:
             result = {}
@@ -1312,7 +1320,7 @@ def get_object_si(f, ps, cs, tr, vlcns):
                 result["usn"] = le64(vd, 0x68) if len(vd) >= 0x70 else 0
                 result["usn_journal_id"] = le64(vd, 0x70) if len(vd) >= 0x78 else 0
             return result
-    return None
+    return _outcome(status, None)
 
 # ─── ADS detection in per-object B+ tree ──────────────────────────────
 def detect_ads(f, ps, cs, tr, vlcns):
@@ -1609,6 +1617,23 @@ def _defer_note(where, reason):
     return len(_DEFERRALS)
 
 
+# A2-R: "absent" and "could not tell" are different answers, and four helpers returned None for both.
+# A caller that cannot separate them reports a missing thing as a thing that is not there -- the same
+# class as the hole check reporting "I cannot say" as "clean". The helpers still return None, so no call
+# site changes; a caller that CARES passes a `status` dict and reads the outcome out of it.
+ABSENT = "absent"                # the object genuinely has no such record
+UNREADABLE = "unreadable"        # the lookup failed; whether it exists is unknown
+
+
+def _outcome(status, value, why=None):
+    """Record how a lookup ended. Returns `value` so callers can `return _outcome(status, None)`."""
+    if status is not None:
+        status["outcome"] = UNREADABLE if why is not None else ABSENT
+        if why is not None:
+            status["reason"] = str(why)[:200]
+    return value
+
+
 def _skip_note(stage, where, exc, limit=3):
     """Record and report a skipped unit of work. Returns the running count for this kind."""
     key = (stage, type(exc).__name__)
@@ -1836,13 +1861,13 @@ def parse_ea_chain(data):
         off += nxt
     return eas
 
-def fetch_t40_backing(f, ps, cs, tr, obj_map, dir_oid, file_id, file_size=None):
+def fetch_t40_backing(f, ps, cs, tr, obj_map, dir_oid, file_id, file_size=None, status=None):
     """Raw value bytes of the type-0x40 backing record for (dir_oid, file_id), or None. A non-resident
     file's EAs live in this backing. The per-dir file_id can COLLIDE (hard-link ordinal reuse); when
     several records share it, disambiguate by the file's size (val+0x58) — the same collision-safe rule
     the directory walk uses (#340). (The PackedEaSize==Σ oracle in the caller is the final guard.)"""
     if dir_oid not in obj_map:
-        return None
+        return _outcome(status, None)
     cands = []
     try:
         for kd, vd in walk_bplus(f, ps, cs, tr, obj_map[dir_oid]):
@@ -1853,9 +1878,9 @@ def fetch_t40_backing(f, ps, cs, tr, obj_map, dir_oid, file_id, file_size=None):
         # same value makes the two indistinguishable -- and this record feeds residency, USN, SecurityId
         # and the attribute flags for the file.
         _skip_note("type-0x40 backing", f"dir 0x{dir_oid:x} file_id {file_id}", _e)
-        return None
+        return _outcome(status, None, _e)      # the walk failed: "no backing" has not been established
     if not cands:
-        return None
+        return _outcome(status, None)
     if file_size is not None and len(cands) > 1:
         for vd in cands:
             if len(vd) >= 0x60 and le64(vd, 0x58) == file_size:
@@ -8650,8 +8675,75 @@ def cmd_extract(image, remaining, partition_start):
     max_depth = _int_arg(args["depth"], "--depth") if args["depth"] else DEFAULT_DEPTH
     outp = args["o"] or args["output"]
 
-    def _emit(data):
+    def _emit_checked(data, hb0, ranges=None, size=None):
+        """THE content exit of `cmd_extract`. Returns the process exit code.
+
+        Every branch that turns clusters into output ends here, because the hole report used to live at
+        the bottom of ONE path and the branches that returned earlier had none of it. That shape has now
+        produced three findings: the original D13 gap (the check protected only the last branch), the
+        undeclared `get_file_content` producer, and the 1.11.2 CoW branch, which printed the note and
+        exited 2 but wrote no sidecar and ignored `--refuse-holes` -- while the tool page promised both.
+        Patching each branch as it is found leaves the next one to be found the same way.
+
+        `ranges` is the exact hole intervals when the caller has an extent list; otherwise the byte count
+        recorded by `content_holes()` since `hb0` is used, which is all the shared-cluster paths can know.
+        """
+        _sz = target.get("file_size", 0) if size is None else size
+        _hb = sum(b for _w, b in _CONTENT_HOLES[hb0:])
+        if ranges:
+            _hb = sum(n for _o, n in ranges)
+        if not ranges and not _hb:
+            _emit_raw(data)
+            return 0
+        _verb = "would be written from" if args["refuse_holes"] else "were written from"
+        if ranges:
+            _rtxt = ", ".join(f"{o}-{o + n - 1}" for o, n in ranges[:8])
+            if len(ranges) > 8:
+                _rtxt += f", … ({len(ranges)} ranges)"
+            print(f"[{PROG}] NOTE: {_hb} of {_sz} bytes of '{target['name']}' {_verb} ranges the "
+                  f"image stores as holes, which read back as zeros: {_rtxt}. A sparse image stores a file's "
+                  f"own zero content the same way it stores a range that was never captured, so this does "
+                  f"not by itself mean the data is missing — and does not confirm the zeros are the file's. "
+                  f"Corroborate before relying on them.", file=sys.stderr)
+        else:
+            print(f"[{PROG}] NOTE: {_hb} of {_sz} bytes of '{target['name']}' {_verb} ranges the image "
+                  f"stores as holes, which read back as zeros. A sparse image stores a file's own zero "
+                  f"content the same way it stores a range that was never captured, so this does not by "
+                  f"itself mean the data is missing — and does not confirm the zeros are the file's. "
+                  f"Corroborate before relying on them.", file=sys.stderr)
+        if outp and not args["refuse_holes"]:          # no sidecar beside a file we are not writing
+            _sidecar = outp + ".holes.json"
+            _doc = {"file": target["name"], "size": _sz, "status": "holes_present", "hole_bytes": _hb,
+                    "note": "Ranges read back as zeros because the image stores them as holes. On a "
+                            "sparsely-stored image that is also how genuine zero content is stored; the "
+                            "image cannot distinguish them."}
+            if ranges:
+                _doc["ranges"] = [{"offset": o, "length": n} for o, n in ranges]
+            else:
+                # A shared-cluster path (copy-on-write, extent-backed ADS, inline holder) knows the byte
+                # count but not the file-relative intervals: say so rather than emit an empty "ranges".
+                _doc["ranges_available"] = False
+                _doc["ranges_note"] = ("This stream is reassembled from blocks it shares with other "
+                                       "streams, so the hole is reported as a byte count, not as "
+                                       "file-relative ranges.")
+            try:
+                with open(_sidecar, "w", encoding="utf-8") as _sf:
+                    json.dump(_doc, _sf, indent=2)
+                print(f"[{PROG}] wrote {_sidecar} listing those ranges." if ranges else
+                      f"[{PROG}] wrote {_sidecar} recording those bytes.", file=sys.stderr)
+            except OSError as _e:
+                print(f"[{PROG}] WARNING: could not write {_sidecar}: {_e}", file=sys.stderr)
+        if args["refuse_holes"]:
+            print(f"[{PROG}] --refuse-holes: nothing written.", file=sys.stderr)
+            return 2
+        _emit_raw(data)
+        return 2
+
+    def _emit_raw(data):
         # Q2 UX: -o FILE saves the bytes; otherwise write to stdout and hint how to save.
+        # NOT an exit path on its own: every content branch must go through _emit_checked, which decides
+        # the note, the sidecar, --refuse-holes and the exit code. `check_extract_exits.py` asserts that
+        # this function has exactly one caller.
         if outp:
             if os.path.isdir(outp):                                  # A2: friendly error, not a traceback
                 _base = os.path.basename((stream_name or filename or "output").rstrip(":")) or "output"
@@ -8765,8 +8857,7 @@ def cmd_extract(image, remaining, partition_start):
                 if content is None:
                     die(f"ADS '{stream_name}' has no extractable content")
                 print(f"Extracting '{target['name']}:{stream_name}' ({len(content)} bytes):", file=sys.stderr)
-                _emit(content)
-                return 0
+                return _emit_checked(content, len(_CONTENT_HOLES), size=len(content))
             if ads_match["storage"] == "extent-backed" and ads_match.get("extents"):
                 # E61: a large (>=2 KB) non-resident ADS — content in on-disk extents (type-0x0 record).
                 _hb0 = len(_CONTENT_HOLES)
@@ -8776,8 +8867,7 @@ def cmd_extract(image, remaining, partition_start):
                       f"{len(ads_match['extents'])} extents):", file=sys.stderr)
                 if target.get("file_attrs", 0) & 0x4000:
                     print(f"[{PROG}] WARNING: host is EFS-encrypted — ADS bytes are CIPHERTEXT.", file=sys.stderr)
-                _emit(buf)
-                return 2 if len(_CONTENT_HOLES) > _hb0 else 0
+                return _emit_checked(buf, _hb0, size=ads_match.get("stream_size", len(buf)))
             die(f"ADS '{stream_name}' storage is '{ads_match['storage']}' — its content is not inline in the "
                 f"directory value and no extent list was found, so it cannot be extracted from this record")
 
@@ -8787,13 +8877,11 @@ def cmd_extract(image, remaining, partition_start):
             # extents, so the correct result is an empty output, not a failure. Reported without
             # the word "resident" because this record does not carry the inline form.
             print(f"Extracting '{target['name']}' (0 bytes — empty file):", file=sys.stderr)
-            _emit(b"")            # -o was given: create the (empty) file rather than nothing
-            return 0
+            return _emit_checked(b"", len(_CONTENT_HOLES), size=0)
         if target["storage"] == "resident" and not target["extents"]:
             if target.get("file_size", 0) == 0:
                 print(f"Extracting '{target['name']}' (0 bytes — empty file, inline form):", file=sys.stderr)
-                _emit(b"")        # -o was given: create the (empty) file rather than nothing
-                return 0
+                return _emit_checked(b"", len(_CONTENT_HOLES), size=0)
             # Q7: resident files store their $DATA inline in the directory value — write those bytes.
             content = target.get("resident_content")
             if content is not None:
@@ -8802,8 +8890,7 @@ def cmd_extract(image, remaining, partition_start):
                 if len(content) != fsz:
                     print(f"[{PROG}] WARNING: inline content is {len(content)} bytes but $DATA size is {fsz} "
                           f"— verify before relying on the output.", file=sys.stderr)
-                _emit(content)
-                return 0
+                return _emit_checked(content, len(_CONTENT_HOLES), size=fsz)
             # Q7/CoW: a resident file unmodified since a snapshot keeps its live bytes shared with the newest
             # snapshot (current 0x10028 holder has disk_alloc==0). Recovered via the tested snapshot extractor.
             cow = target.get("cow_content")
@@ -8819,17 +8906,10 @@ def cmd_extract(image, remaining, partition_start):
                 fsz = target.get("file_size", 0)
                 print(f"Extracting '{target['name']}' ({len(cow)} bytes — snapshot-shared with the latest snapshot):",
                       file=sys.stderr)
-                if len(_CONTENT_HOLES) > _hb0:
-                    print(f"[{PROG}] '{target['name']}': part of the bytes above came from ranges the "
-                          f"image stores as holes — see the warning. Their completeness is unverified.",
-                          file=sys.stderr)
-                    _emit(cow)
-                    return 2
-                if len(cow) != fsz:
+                if len(cow) != fsz and len(_CONTENT_HOLES) == _hb0:
                     print(f"[{PROG}] WARNING: recovered {len(cow)} bytes but $DATA size is {fsz} — verify.",
                           file=sys.stderr)
-                _emit(cow)
-                return 0
+                return _emit_checked(cow, _hb0, size=fsz)
             # Fell through: the $DATA is not a plain inline stream.
             if target.get("extent_backed"):
                 # Non-resident file whose extent map is held INLINE in the directory value (0x10028 holder;
@@ -8838,6 +8918,7 @@ def cmd_extract(image, remaining, partition_start):
                 # when the extents don't fully+cleanly cover the allocation (large/overflow holders) — then we
                 # keep the honest "not supported" message rather than emit anything wrong.
                 _before = len(_DEFERRALS)
+                _hb_ic = len(_CONTENT_HOLES)
                 _ic = _recover_inline_extent_content(f, ps, cs, tr, target.get("raw_value", b""),
                                                      _defer_ctx=f"'{target['name']}'")
                 if _ic is None and len(_DEFERRALS) > _before:
@@ -8874,8 +8955,7 @@ def cmd_extract(image, remaining, partition_start):
                                           f"stored=0x{_st:08x} actual=0x{_ac:08x}", file=sys.stderr)
                                 if _iv["bad_count"] > 8:
                                     print(f"[{PROG}]   ... and {_iv['bad_count'] - 8} more", file=sys.stderr)
-                    _emit(_ic)
-                    return 0
+                    return _emit_checked(_ic, _hb_ic, size=fsz)
                 print(f"File '{target['name']}' is NON-RESIDENT — its $DATA is stored in on-disk extents held "
                       f"inline in the directory value ({target.get('file_size',0)} bytes). The inline extent map "
                       f"could not be fully decoded here (large/overflow holder); use `dataruns` for the map.",
@@ -8939,7 +9019,7 @@ def cmd_extract(image, remaining, partition_start):
         # branch on it. The check runs on ANY hole inside the file's data range, not only on an all-zero
         # file -- a partial gap inside a file with real content is the case that used to pass silently.
         _hranges = _extent_hole_ranges(f, ps, cs, sorted_exts, file_size) if file_size else []
-        _rc_holes = 0
+        _hb_main = len(_CONTENT_HOLES)
         if _hranges is None:
             # UNDETERMINABLE is not "no holes". `if _hranges:` treated the two the same, so a file whose
             # hole coverage could not be read was written with no note, exit 0 -- and `--refuse-holes`,
@@ -8974,39 +9054,9 @@ def cmd_extract(image, remaining, partition_start):
                           file=sys.stderr)
                 except OSError as _e:
                     print(f"[{PROG}] WARNING: could not write {_sidecar}: {_e}", file=sys.stderr)
-        if _hranges:
-            _hbytes = sum(n for _o, n in _hranges)
-            _rtxt = ", ".join(f"{o}-{o + n - 1}" for o, n in _hranges[:8])
-            if len(_hranges) > 8:
-                _rtxt += f", … ({len(_hranges)} ranges)"
-            _verb = "would be written from" if args["refuse_holes"] else "were written from"
-            print(f"[{PROG}] NOTE: {_hbytes} of {file_size} bytes of '{target['name']}' {_verb} ranges the "
-                  f"image stores as holes, which read back as zeros: {_rtxt}. A sparse image stores a file's "
-                  f"own zero content the same way it stores a range that was never captured, so this does "
-                  f"not by itself mean the data is missing — and does not confirm the zeros are the file's. "
-                  f"Corroborate before relying on them.", file=sys.stderr)
-            if outp and not args["refuse_holes"]:      # no sidecar beside a file we are not writing
-                _sidecar = outp + ".holes.json"
-                try:
-                    with open(_sidecar, "w", encoding="utf-8") as _sf:
-                        json.dump({"file": target["name"], "size": file_size,
-                                   "status": "holes_present",
-                                   "hole_bytes": _hbytes,
-                                   "note": "Ranges read back as zeros because the image stores them as "
-                                           "holes. On a sparsely-stored image that is also how genuine "
-                                           "zero content is stored; the image cannot distinguish them.",
-                                   "ranges": [{"offset": o, "length": n} for o, n in _hranges]},
-                                  _sf, indent=2)
-                    print(f"[{PROG}] wrote {_sidecar} listing those ranges.", file=sys.stderr)
-                except OSError as _e:
-                    print(f"[{PROG}] WARNING: could not write {_sidecar}: {_e}", file=sys.stderr)
-            _rc_holes = 2
-            if args["refuse_holes"]:
-                print(f"[{PROG}] --refuse-holes: nothing written.", file=sys.stderr)
-                return 2
-        _emit(_out)
-
-        return _rc_holes
+        # The main path has the exact hole INTERVALS, so it hands them to the shared exit; every other
+        # branch hands only the byte count. One exit, one contract (see _emit_checked).
+        return _emit_checked(_out, _hb_main, ranges=(_hranges or None), size=file_size)
 
     finally:
         f.close()

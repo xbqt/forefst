@@ -1,5 +1,41 @@
 # Changelog
 
+## v1.11.3 — 2026-09-11 — `--refuse-holes` does what the page says, on every path
+
+**Everything here is relative to v1.11.2.** One correctness fix on a safety flag; no output changes for
+files that draw no bytes from image holes.
+
+### Fixed: `--refuse-holes` wrote the bytes it promised to withhold
+
+1.11.2 routed every content producer through one hole check, but `extract` reports the result on four
+different code paths and only one of them carried the whole contract. On a **snapshot-shared
+(copy-on-write)** file, an **extent-backed alternate data stream**, or a file whose extent map is held
+**inline**, `extract` printed the note but wrote no `FILE.holes.json`, and under `--refuse-holes` it wrote
+the bytes anyway. The tool page said it did both.
+
+The inline-holder path also exited **0** — a file whose bytes came from image holes reported success.
+
+- **What to change:** nothing, unless you scripted around the bug. `--refuse-holes` now withholds the
+  bytes on every path, `-o FILE` always produces `FILE.holes.json` when holes were involved, and a
+  hole-sourced extract always exits 2.
+- **On shared-cluster paths the sidecar reports a byte count, not file-relative ranges**, and says so
+  (`"ranges_available": false`). A stream reassembled from blocks it shares with other streams does not
+  know the intervals; the alternative was inventing them.
+
+### Why it needed a structural change rather than a patch
+
+`extract` had nine places that wrote bytes and the hole report lived at the bottom of one of them. That
+shape has now produced three separate findings, each fixed where it was found. There is now a single
+content exit that every branch returns through, and the writer can only be called from it — asserted by a
+gate check, so a new branch cannot emit content without the report attached.
+
+### Also
+
+- Four helpers that returned `None` both for "this record does not exist" and for "the lookup failed" can
+  now tell a caller which it was. Callers that do not ask are unchanged.
+- `snapshots --extract` — the command that reassembles snapshot content — is covered by the release
+  fingerprint for the first time; it previously had none.
+
 ## v1.11.2 — 2026-09-10 — a wrong-bytes fix, and the hole check on every producer
 
 **Everything here is relative to v1.11.1.** One correctness fix that can change which bytes you get, and
