@@ -1,5 +1,83 @@
 # Changelog
 
+## v1.12.1 — unreleased — read a metadata bundle without the disk
+
+**Everything here is relative to v1.12.0.** One new capability and one new command; no change to how any
+volume is parsed, and no output on a disk image moves.
+
+### Point forefst at an `export metadata` bundle
+
+`export metadata` has always written a hash-sealed set of the volume's structures. It can now be **read
+back**: pass the bundle directory where you would pass an image.
+
+```sh
+forefst.py disk.raw export metadata ./bundle     # on the machine with the disk
+forefst.py ./bundle files --csv                  # anywhere, later, without the disk
+```
+
+The bundle is rehydrated into a sparse image and read by the ordinary code path, so a bundle and its
+source volume give the **same answers from the same parser** — there is no second way of addressing bytes.
+Measured: `files --csv` from a bundle is **byte-identical** to the source volume on six volumes spanning
+format 3.4 and 3.14, 4 KiB and 64 KiB clusters, SHA-256 checksums and snapshots. `usn`, `mlog`, `timeline`,
+`deleted`, `security`, `ads`, `reparse`, `specials`, `snapshots`, `recyclebin` and `timestomp` all work.
+
+- **What to change:** nothing. A bundle is a new kind of input, not a change to an old one.
+- **Rehydration is sparse.** A bundle from a 2 TB volume reconstructs a 2 TB apparent file holding a few
+  tens of MB; it never materialises dense.
+
+### A bundle carries file content — inline content, and it says how much
+
+"Metadata" understates what a bundle holds. ReFS stores a small stream **inside** the record, so every
+inline file and inline ADS travels with the pages. **Sharing a bundle shares that content.**
+
+The manifest now states the amount (`inline_content`), and the banner repeats it on every run. On one lab
+volume that is 4,037 streams and 1.2 MB.
+
+`--redact-inline` is **not** implemented and refuses rather than approximating: a first attempt located
+payloads by searching for their bytes, and short payloads occur many times, so it zeroed 2 of 8 and left
+the rest — two files checked afterwards still returned their original content. A flag that leaves content
+behind while claiming redaction is worse than no flag.
+
+### Extent-backed content is refused, not returned as zeros
+
+A bundle holds no extent content. Asking for it returns **nothing and exits 2**, with a note saying the
+bytes are not in the bundle — a different statement from the one a sparse *image* gets, where zeros
+genuinely cannot be attributed. `deleted` and `snapshots` say in their header that their verdicts describe
+the records, not the bytes.
+
+### New: `verify-bundle`
+
+```sh
+forefst.py ./bundle verify-bundle      # exit 0 whole, 2 not
+```
+
+Checks the sha256 seal, the manifest's required fields, that every index row lies inside the blob it
+indexes, and that the bundle rehydrates and bootstraps. Declared absences are reported as notes. A bundle
+that fails is **refused on open** too, so a damaged bundle cannot be half-read.
+
+### The bundle records where it came from
+
+Every manifest now carries provenance — tool and version, source path, a content pin for the source image,
+export time, host — plus the pages that were **already absent** when the bundle was made and the holes the
+source image had at that moment. A derived artefact has to name what it was derived from.
+
+### Fixed: a failed journal export was silent
+
+The USN branch of `export metadata` was `except Exception: pass`. A failure produced a bundle silently
+missing the journal, and nothing downstream could tell that from a volume that never had one. Both are now
+recorded in the manifest and printed when the bundle is opened.
+
+### Fixed: the shipped hole fixtures could not run from a clone
+
+`run_hole_fixtures.py` pinned each image by hashing its **allocated extent map** as well as its bytes, so
+the same volume unpacked a different way failed the check — `zstd -d`, `zstd -d --sparse` and
+`cp --sparse=always` each produce different hole boundaries for byte-identical content. The pin is now
+**content at fixed offsets**, which is the same for every unpacking, and the fixtures run from a clone.
+
+### Documentation
+
+The known-issue notice for the 1.11.3 decoder defect is retired — 1.12.0 fixed it.
+
 ## v1.12.0 — unreleased — one decoder order, and the consolidation
 
 **Everything here is relative to v1.11.3.** Work in progress; this entry is written as the net effect for

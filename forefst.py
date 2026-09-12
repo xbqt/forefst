@@ -53,7 +53,7 @@ Body file format (Sleuthkit/mactime compatible):
 """
 
 from __future__ import annotations
-import argparse, atexit, csv, datetime, errno, hashlib, json, os, struct, sys
+import argparse, atexit, csv, datetime, errno, hashlib, json, os, shutil, socket, struct, sys, tempfile
 
 # ─── Shared utilities (formerly in refs_common.py) ───────────────────
 SECTOR = 512
@@ -246,7 +246,7 @@ def validate_image(path, die_fn=None):
 
 # ─── Constants ────────────────────────────────────────────────────────
 PROG = "forefst"
-VERSION = "1.12.0"
+VERSION = "1.12.1"
 # Phase 3 (4.D): directory walks default to FULL depth (no artificial cap); `--depth N` overrides. The real
 # recursion depth equals the actual directory nesting (ReFS trees are shallow — tens of levels), so this
 # constant is never the binding limit; it just means "don't truncate". main() also raises the interpreter
@@ -5079,7 +5079,7 @@ def _print_fastsummary(summary, plus_mode=False, is_summary=False):
     print("=" * w)
     print(f"ReFS Volume {'Fast ' if not plus_mode else 'Fast Extended '}Summary")
     print("-" * w)   # 3summary: '=' above the title, '-' below
-    print(f"  Image:              {summary['image']}")
+    print(f"  Image:              {_display_image(summary['image'])}")
     print(f"  Image size:         {hs(summary['image_size'])}")
     print(f"  ReFS version:       {summary['refs_version']}")
     print(f"  Volume GUID:        {summary['volume_guid']}")
@@ -8279,7 +8279,7 @@ def cmd_timestomp(image, remaining, partition_start):
         print("=" * W)
         print("ReFS Timestamp-Anomaly (Timestomp) Detection")
         print("=" * W)
-        print(f"  Image:           {os.path.basename(image)}  (ReFS {vmaj}.{vmin})")
+        print(f"  Image:           {os.path.basename(_display_image(image))}  (ReFS {vmaj}.{vmin})")
         print(f"  Volume created:  {_filetime_to_str(vol_create).replace(' UTC','')}")
         print(f"  Volume modified: {_filetime_to_str(vol_modify).replace(' UTC','')}")
         print(f"  USN journal:     {'present (authoritative cross-check ON)' if journal else 'absent (intrinsic signals only)'}")
@@ -8390,6 +8390,340 @@ def _resolve_id_entry(f, ps, cs, tr, obj_map, home_oid, file_id):
 # not proof -- a genuinely zero-filled file looks the same. SEEK_DATA is not available everywhere, so the
 # answer is three-valued: a byte count, or None for "could not determine" -- never 0, which would be a
 # silent false negative.
+
+def _collect_inline_payloads(f, ps, cs, tr, obj_map):
+    """Every inline stream payload on the volume, as raw byte strings.
+
+    ReFS keeps a small stream INSIDE the record, so the metadata pages of a bundle carry file content.
+    These are the payloads --redact-inline has to remove. Collected through the ordinary walk so the
+    definition of "inline" is the tool's one definition, not a second one written here.
+    """
+    out = []
+    for oid, vlcns in obj_map.items():
+        try:
+            for kd, vd in walk_bplus(f, ps, cs, tr, vlcns):
+                if not (len(kd) >= 4 and le16(kd, 0) == 0x30):
+                    continue
+                try:
+                    c = get_resident_data_content(vd)
+                except (ValueError, struct.error, IndexError) as _e:
+                    _skip_note("inline-content census", "a $DATA row", _e)
+                    continue
+                if c:
+                    out.append(bytes(c))
+                try:
+                    for a in _parse_ads_from_value(vd, cs, tr) or []:
+                        ac = a.get("content")
+                        if ac:
+                            out.append(bytes(ac))
+                except (ValueError, struct.error, IndexError, TypeError) as _e:
+                    _skip_note("inline-content census", "an ADS row", _e)
+        except (ValueError, struct.error, IndexError, OSError) as _e:
+            # Counted, not swallowed: a record this census cannot read makes the declared inline-content
+            # figure an UNDER-count, and a bundle that understates what it carries is the failure this
+            # disclosure exists to prevent.
+            _skip_note("inline-content census", "object 0x%x" % oid, _e)
+            continue
+    return out
+
+
+# ---------------------------------------------------------------------------------------------------
+# Reading an `export metadata` BUNDLE
+#
+# A bundle is rehydrated into a sparse image and read by the ordinary code path. That is deliberate: the
+# alternative -- teaching every reader to address bytes a second way -- is the shape that produced E95,
+# where a second reading of the same structure answered first and returned another file's clusters. One
+# addressing path, one set of answers.
+# ---------------------------------------------------------------------------------------------------
+_BUNDLE = None          # {"dir","manifest","tmp","missing"} while reading a bundle, else None
+
+
+def _bundle_open(bdir):
+    """Verify, rehydrate, and rewrite argv so the rest of the tool reads an ordinary image.
+
+    Refuses on a hash mismatch: the bundle ships sealed, so the reader enforces the seal rather than
+    trusting it. Sets --partition-start 0 because a rehydrated volume has no partition table in front
+    of it, and forces the hole contract to REFUSE by default (see _BUNDLE use in the hole reporting):
+    in a bundle, zeros from an unexported range are known not to be the file's, which is exactly the
+    thing a raw sparse image cannot tell you.
+    """
+    global _BUNDLE
+    problems = _bundle_verify_sums(bdir)
+    if problems:
+        die("bundle failed verification (%d problem(s)): %s" % (len(problems), "; ".join(problems[:4])))
+    tmp = tempfile.mkdtemp(prefix="forefst_bundle_")
+    dest = os.path.join(tmp, "rehydrated.raw")
+    try:
+        man, missing = _bundle_rehydrate(bdir, dest)
+    except (OSError, ValueError, KeyError) as e:
+        shutil.rmtree(tmp, ignore_errors=True)
+        die("bundle could not be rehydrated: %s: %s" % (type(e).__name__, e))
+    _BUNDLE = {"dir": bdir, "manifest": man, "tmp": tmp, "missing": missing}
+    atexit.register(lambda: shutil.rmtree(tmp, ignore_errors=True))
+    sys.argv[1] = dest
+    if "--partition-start" not in sys.argv:
+        sys.argv += ["--partition-start", "0"]
+    prov = man.get("provenance", {}) or {}
+    inl = man.get("inline_content") or {}
+    print("[%s] METADATA BUNDLE: %s" % (PROG, os.path.abspath(bdir)), file=sys.stderr)
+    print("[%s]   exported %s by %s v%s from %s"
+          % (PROG, prov.get("exported_utc", "?"), prov.get("tool", "?"),
+             prov.get("tool_version", "?"), prov.get("source_path", "?")), file=sys.stderr)
+    print("[%s]   File CONTENT is not in a bundle except what ReFS stores inline: %s stream(s), %s byte(s). "
+          "Extent-backed content is absent, and reads of it are refused rather than returned as zeros."
+          % (PROG, inl.get("streams", "?"), inl.get("bytes", "?")), file=sys.stderr)
+    for w in (man.get("warnings") or []):
+        print("[%s]   bundle warning: %s: %s" % (PROG, w.get("what"), w.get("reason")), file=sys.stderr)
+    if man.get("absent_pages"):
+        print("[%s]   %d page(s) were ALREADY absent when this bundle was made"
+              % (PROG, len(man["absent_pages"])), file=sys.stderr)
+    if missing:
+        print("[%s]   %d artefact(s) could not be placed: %s"
+              % (PROG, len(missing), ", ".join(missing[:3])), file=sys.stderr)
+
+
+def cmd_verify_bundle(bundle_dir):
+    """Say whether a bundle is whole, without the examiner having to open anything else.
+
+    Checks, in order: the seal (`sha256sums.txt`), the manifest's required fields, that every index row
+    lies inside the blob it indexes, and that the bundle rehydrates and bootstraps. Exit 2 on any failure,
+    so a script can branch on it.
+    """
+    problems, notes = [], []
+    if not _is_bundle(bundle_dir):
+        print("verify-bundle: FAIL — %s is not a bundle (no manifest.json)" % bundle_dir)
+        return 2
+    problems += _bundle_verify_sums(bundle_dir)
+    try:
+        man = json.load(open(os.path.join(bundle_dir, "manifest.json"), encoding="utf-8"))
+    except (OSError, ValueError) as e:
+        print("verify-bundle: FAIL — manifest.json unreadable: %s" % e)
+        return 2
+    for key in ("cluster_size", "refs_version", "artifacts"):
+        if key not in man:
+            problems.append("manifest is missing required field %r" % key)
+    prov = man.get("provenance") or {}
+    for key in ("tool_version", "source_path", "exported_utc"):
+        if key not in prov:
+            notes.append("manifest has no provenance.%s (exported by an older forefst)" % key)
+    # every index row must lie inside the blob it indexes
+    cs = int(man.get("cluster_size") or 0) or 4096
+    for idx_name, blob_name, key, nkey in (("metadata_index.csv", "metadata_pages.bin", "head_plcn", "n_clusters"),
+                                           ("mlog_log_index.csv", "mlog_log_pages.bin", "block_lcn", None),
+                                           ("usn_J_index.csv", "usn_J.bin", "plcn", "clusters")):
+        ip, bp = os.path.join(bundle_dir, idx_name), os.path.join(bundle_dir, blob_name)
+        if not os.path.exists(ip):
+            continue
+        if not os.path.exists(bp):
+            problems.append("%s exists but %s does not" % (idx_name, blob_name))
+            continue
+        blob_len = os.path.getsize(bp)
+        with open(ip, encoding="utf-8") as fh:
+            hdr = fh.readline().rstrip("\n").split(",")
+            for ln_no, ln in enumerate(fh, 2):
+                ln = ln.rstrip("\n")
+                if not ln:
+                    continue
+                r = dict(zip(hdr, ln.split(",")))
+                try:
+                    off = int(r["byte_offset"]); n = int(r[nkey]) if nkey else 1
+                    int(r[key], 16)
+                except (KeyError, ValueError):
+                    problems.append("%s line %d is malformed" % (idx_name, ln_no))
+                    continue
+                if off < 0 or off + n * cs > blob_len:
+                    problems.append("%s line %d points past the end of %s (%d+%d > %d)"
+                                    % (idx_name, ln_no, blob_name, off, n * cs, blob_len))
+    # declared absences are information, not failures -- but they must be visible
+    for w in (man.get("warnings") or []):
+        notes.append("export warning: %s: %s" % (w.get("what"), w.get("reason")))
+    if man.get("absent_pages"):
+        notes.append("%d page(s) were already absent when the bundle was made" % len(man["absent_pages"]))
+    inl = man.get("inline_content") or {}
+    if inl:
+        notes.append("carries inline file content: %s stream(s), %s byte(s)"
+                     % (inl.get("streams"), inl.get("bytes")))
+    # it must actually rehydrate and bootstrap
+    if not problems:
+        tmpd = tempfile.mkdtemp(prefix="forefst_vb_")
+        try:
+            _m, missing = _bundle_rehydrate(bundle_dir, os.path.join(tmpd, "r.raw"))
+            if missing:
+                problems.append("%d artefact(s) could not be placed: %s" % (len(missing), missing[:3]))
+            else:
+                fh, _ps, _cs, _tr, _roots, _om, _vj, _vn, _cl = bootstrap(
+                    os.path.join(tmpd, "r.raw"), 0)
+                fh.close()
+        except (OSError, ValueError, KeyError, struct.error) as e:
+            problems.append("rehydrated bundle does not bootstrap: %s: %s" % (type(e).__name__, e))
+        finally:
+            shutil.rmtree(tmpd, ignore_errors=True)
+    print("verify-bundle: %s — %s" % ("FAIL" if problems else "PASS", os.path.abspath(bundle_dir)))
+    for n in notes:
+        print("   note: %s" % n)
+    for pb in problems:
+        print("   PROBLEM: %s" % pb)
+    return 2 if problems else 0
+
+
+def _bundle_content_caveat():
+    """Print, once per report, that a bundle holds no extent-backed content.
+
+    `deleted` and `snapshots` report what is RECOVERABLE, which an examiner reads as "the bytes are
+    here". From a bundle the metadata evidence is complete but the extent content was never exported, so
+    the verdict is about the record, not the bytes.
+    """
+    if _BUNDLE is None:
+        return
+    print("  NOTE:         metadata bundle — verdicts below describe the RECORDS. Extent-backed content")
+    print("                is not in a bundle; only what ReFS stores inline can be read back.")
+
+
+def _verify_bundle_handler(image, remaining, partition_start):
+    """Dispatch shim for `verify-bundle`.
+
+    main() intercepts this command before argparse (it must run before a bundle is auto-opened, since
+    opening refuses a broken seal and the point here is to REPORT). The handler exists so the subcommand
+    table and the handler table stay equal -- an invariant the tier-0 tests enforce -- and so the command
+    still works if it is ever reached through ordinary dispatch.
+    """
+    for a in remaining or []:
+        if str(a).startswith("-"):
+            die("unrecognized argument: %s" % a)
+    target = _BUNDLE["dir"] if _BUNDLE is not None else image
+    return cmd_verify_bundle(target)
+
+
+def _display_image(image):
+    """What to print as the source. In bundle mode that is the BUNDLE, never the temp rehydration.
+
+    A report naming /tmp/forefst_bundle_<random>/rehydrated.raw states nothing an examiner can use and
+    differs on every run, so it would also make any fingerprint of a bundle read non-deterministic.
+    """
+    if _BUNDLE is not None:
+        return "%s (metadata bundle)" % os.path.abspath(_BUNDLE["dir"])
+    return image
+
+
+def _is_bundle(path):
+    return os.path.isdir(path) and os.path.exists(os.path.join(path, "manifest.json"))
+
+
+def _bundle_verify_sums(bdir):
+    """Every file listed in sha256sums.txt must be present and match. Returns a list of problems."""
+    bad = []
+    sums = os.path.join(bdir, "sha256sums.txt")
+    if not os.path.exists(sums):
+        return ["sha256sums.txt is missing"]
+    for line in open(sums, encoding="utf-8"):
+        line = line.rstrip("\n")
+        if not line.strip():
+            continue
+        want, _, name = line.partition("  ")
+        fp = os.path.join(bdir, name)
+        if not os.path.exists(fp):
+            bad.append("%s: listed in sha256sums.txt but absent" % name)
+            continue
+        h = hashlib.sha256()
+        with open(fp, "rb") as fh:
+            for chunk in iter(lambda: fh.read(1 << 22), b""):
+                h.update(chunk)
+        if h.hexdigest() != want:
+            bad.append("%s: content does not match its recorded hash" % name)
+    return bad
+
+
+def _bundle_rehydrate(bdir, dest):
+    """Place every artefact back at its own address, into a SPARSE file.
+
+    Written with seek-over-holes and never with zero fill: a bundle from a 2 TB volume rehydrates to a
+    2 TB apparent file, and materialising that densely would fill the disk to reconstruct a few MB of
+    metadata. Returns (manifest, [what could not be placed]).
+    """
+    m = json.load(open(os.path.join(bdir, "manifest.json"), encoding="utf-8"))
+    cs = int(m["cluster_size"])
+    SECTOR = 512
+    missing = []
+
+    def rows(fn):
+        fp = os.path.join(bdir, fn)
+        if not os.path.exists(fp):
+            return []
+        out = []
+        with open(fp, encoding="utf-8") as fh:
+            hdr = fh.readline().rstrip("\n").split(",")
+            for ln in fh:
+                ln = ln.rstrip("\n")
+                if ln:
+                    out.append(dict(zip(hdr, ln.split(","))))
+        return out
+
+    meta, mlog, usn = rows("metadata_index.csv"), rows("mlog_log_index.csv"), rows("usn_J_index.csv")
+    last_lba = max([a["lba"] for a in m.get("artifacts", []) if "lba" in a] or [0])
+    hi = 0
+    for r in meta:
+        hi = max(hi, int(r["head_plcn"], 16) + int(r["n_clusters"]))
+    for r in mlog:
+        hi = max(hi, int(r["block_lcn"], 16) + 1)
+    for r in usn:
+        hi = max(hi, int(r["plcn"], 16) + int(r["clusters"]))
+    size = max((last_lba + 1) * SECTOR, (hi + 8) * cs, int(m.get("provenance", {}).get(
+        "source_size_bytes", 0)) if m.get("provenance") else 0)
+
+    def place(out, blob, off, lo, hi_):
+        chunk = blob[lo:hi_]
+        if not chunk:
+            return False
+        out.seek(off)
+        out.write(chunk)
+        return True
+
+    with open(dest, "wb") as out:
+        out.truncate(size)                       # sparse: no zero fill, holes stay holes
+        for a in m.get("artifacts", []):
+            fp = os.path.join(bdir, a["file"])
+            if not os.path.exists(fp):
+                missing.append(a["file"])
+                continue
+            data = open(fp, "rb").read()
+            if "lcn" in a:
+                out.seek(int(a["lcn"]) * cs); out.write(data)
+            elif "lba" in a:
+                out.seek(int(a["lba"]) * SECTOR); out.write(data)
+        for fn, idx, key, nkey in (("metadata_pages.bin", meta, "head_plcn", "n_clusters"),
+                                   ("mlog_log_pages.bin", mlog, "block_lcn", None),
+                                   ("usn_J.bin", usn, "plcn", "clusters")):
+            fp = os.path.join(bdir, fn)
+            if not idx or not os.path.exists(fp):
+                continue
+            blob = open(fp, "rb").read()
+            for r in idx:
+                off = int(r["byte_offset"])
+                n = int(r[nkey]) if nkey else 1
+                if not place(out, blob, int(r[key], 16) * cs, off, off + n * cs):
+                    missing.append("%s row @%s" % (fn, r[key]))
+    return m, missing
+
+
+def _source_pin(path, probe=1 << 16):
+    """A cheap CONTENT identity for the image a bundle was exported from.
+
+    Deliberately not a whole-image SHA-256: these volumes are up to 2 TB apparent for a few hundred MB of
+    data, and hashing the holes would cost minutes to fingerprint the same bytes. Deliberately not a hash
+    of the sparse LAYOUT either -- that varies with how the image was written or unpacked, which is the
+    defect the hole fixtures' pin had. Size plus the first 64 KiB (protective MBR + GPT, which carries the
+    partition GUIDs) identifies the source well enough to say "this bundle came from that image", and it
+    is reproducible however the reader obtained it.
+    """
+    try:
+        h = hashlib.sha256()
+        h.update(b"size=%d\n" % os.path.getsize(path))
+        with open(path, "rb") as fh:
+            h.update(fh.read(probe))
+        return h.hexdigest()
+    except OSError:
+        return None
+
 
 def _hole_bytes_in(fd, start, end):
     """Bytes of [start, end) that lie in a sparse hole. None when the platform cannot tell."""
@@ -8524,11 +8858,19 @@ def content_holes(f, ps, cs, runs, what, stream_size=None):
         os.close(fd)
     if total:
         _CONTENT_HOLES.append((what, total))
-        print(f"[{PROG}] WARNING: {total} byte(s) of {what} come from ranges the image stores as HOLES "
-              f"and read back as zeros. A sparse image stores a file's own zero content the same way it "
-              f"stores a range never captured, so this does not by itself prove data is missing — and it "
-              f"does not confirm the zeros are the file's. Corroborate before relying on them.",
-              file=sys.stderr)
+        if _BUNDLE is not None:
+            # Not the same statement as on a raw image. Here the absence is KNOWN, not ambiguous: a
+            # metadata bundle never carried extent content, so these zeros are certainly not the file's.
+            print(f"[{PROG}] WARNING: {total} byte(s) of {what} are NOT IN THIS BUNDLE. A metadata bundle "
+                  f"carries file content only where ReFS stores it inline; extent-backed bytes were never "
+                  f"exported. These zeros are not the file's content — read this stream from the source "
+                  f"image.", file=sys.stderr)
+        else:
+            print(f"[{PROG}] WARNING: {total} byte(s) of {what} come from ranges the image stores as HOLES "
+                  f"and read back as zeros. A sparse image stores a file's own zero content the same way it "
+                  f"stores a range never captured, so this does not by itself prove data is missing — and it "
+                  f"does not confirm the zeros are the file's. Corroborate before relying on them.",
+                  file=sys.stderr)
     return total
 
 
@@ -8740,9 +9082,13 @@ def get_file_content(f, ps, cs, tr, info, verify_integrity=False, _content_what=
 
 
 def cmd_extract(image, remaining, partition_start):
+    # `extract` branches on args["refuse_holes"] directly rather than the module global, so a bundle has
+    # to be folded in HERE or every branch below would still write zeros it knows are not the file's.
     args = _parse_args(remaining, flags=["--no-verify-integrity", "--refuse-holes"],
                        valued=["--oid", "--depth", "--path", "--id", "-o", "--output"])
     # accept a bare name, an absolute /dir/file path, --path, or --id HomeOid:FileId (symmetric with `details`)
+    if _BUNDLE is not None:
+        args["refuse_holes"] = True
     id_arg = args["id"]
     filename = args["path"] or (args["_rest"][0] if args["_rest"] else None)
     start_oid = _int_arg(args["oid"], "--oid", 0) if args["oid"] else 0x600
@@ -9305,7 +9651,7 @@ def cmd_security(image, remaining, partition_start):
         print("=" * 78)
         print("ReFS Security Descriptors")
         print("=" * 78)
-        print(f"  Image:        {image}")
+        print(f"  Image:        {_display_image(image)}")
         print(f"  ReFS version: {vmaj}.{vmin}")
 
         if sid_filter is not None:
@@ -10652,7 +10998,7 @@ def cmd_reparse(image, remaining, partition_start):
             print("=" * 78)
             print("ReFS Reparse Point Index (OID 0x540)")
             print("=" * 78)
-            print(f"  Image:        {image}")
+            print(f"  Image:        {_display_image(image)}")
             print(f"  ReFS version: {vmaj}.{vmin}")
             print(f"\n  Total entries: {len(entries)}  (rows in the OID 0x540 reparse index table)")
             print("  Note: the driver inserts ONE index row per reparse-bearing OBJECT, when its reparse")
@@ -10722,7 +11068,7 @@ def cmd_reparse(image, remaining, partition_start):
         print("=" * 78)
         print("ReFS Reparse Points")
         print("=" * 78)
-        print(f"  Image:        {image}")
+        print(f"  Image:        {_display_image(image)}")
         print(f"  ReFS version: {vmaj}.{vmin}")
         reparse_count = len(all_files)
         wsl_count = sum(1 for fe in all_files if fe.get("wsl_eas"))
@@ -11150,7 +11496,10 @@ def cmd_deleted(image, remaining, partition_start):
                                          "--rows", "--no-system", "--refuse-holes"],
                        valued=["--search", "--max-scan", "--extract", "--log", "--csv", "--json", "--jsonl"])
     global _REFUSE_HOLES
-    _REFUSE_HOLES = bool(args["refuse_holes"])
+    # In a BUNDLE the zeros are known not to be the file's: extent content was never exported. So the
+    # contract defaults to refusing, where on a raw sparse image it defaults to writing-and-reporting
+    # because there the two cases genuinely cannot be told apart.
+    _REFUSE_HOLES = bool(args["refuse_holes"]) or _BUNDLE is not None
     # `--slack` is a silent no-op kept only for back-compat (the slack scan is the default `recovery` mode);
     # it is intentionally undocumented. Use `--full` for the complete scan, `--no-slack` to skip slack.
     search_name = args["search"]
@@ -11327,8 +11676,9 @@ def cmd_deleted(image, remaining, partition_start):
         print("=" * 78)
         print("ReFS Deleted File Finder")
         print("=" * 78)
-        print(f"  Image:        {image}")
+        print(f"  Image:        {_display_image(image)}")
         print(f"  ReFS version: {vmaj}.{vmin}")
+        _bundle_content_caveat()
         print(f"  Cluster size: {_hx(cs)}")
         print(f"  Checkpoints:  {len(checkpoints)} (VC: {', '.join(str(c[0]) for c in checkpoints)})")
         print(f"  Objects:      {len(obj_map)}")
@@ -11680,7 +12030,10 @@ def cmd_snapshots(image, remaining, partition_start):
     args = _parse_args(remaining, flags=["-v", "--verbose", "--show", "--refuse-holes"],
                        valued=["--file", "--depth", "--extract", "--snapshot"])
     global _REFUSE_HOLES
-    _REFUSE_HOLES = bool(args["refuse_holes"])
+    # In a BUNDLE the zeros are known not to be the file's: extent content was never exported. So the
+    # contract defaults to refusing, where on a raw sparse image it defaults to writing-and-reporting
+    # because there the two cases genuinely cannot be told apart.
+    _REFUSE_HOLES = bool(args["refuse_holes"]) or _BUNDLE is not None
     verbose = args["v"] or args["verbose"]
     do_show = args["show"]
     extract_dir = args["extract"]
@@ -11730,8 +12083,9 @@ def cmd_snapshots(image, remaining, partition_start):
         print("=" * 78)
         print("ReFS Stream Snapshot Analysis")
         print("=" * 78)
-        print(f"  Image:        {image}")
+        print(f"  Image:        {_display_image(image)}")
         print(f"  ReFS version: {vmaj}.{vmin}")
+        _bundle_content_caveat()
         print(f"  Cluster size: {_hx(cs)}")
         print(f"  Objects:      {len(obj_map)}")
         print()
@@ -12205,8 +12559,22 @@ def cmd_export_metadata(image, remaining, partition_start):
     dumping a raw $MFT): VBR (primary+backup), both checkpoints, SUPB copies, the MLog control+log pages,
     the USN $J stream, and the full object B+-tree forest — plus manifest.json + sha256sums.txt."""
     import hashlib, json as _json
-    args = _parse_args(remaining, flags=[],
+    args = _parse_args(remaining, flags=["--redact-inline"],
                        valued=["-o", "--out", "--what", "--btree-mode", "--max-scan"])
+    # A "metadata" bundle is NOT metadata-only: ReFS stores small streams INSIDE the record, so every
+    # inline file (< 2 KiB on format 3.11+) and every inline ADS travels with the pages. Sharing a bundle
+    # therefore shares small-file content, and the manifest states how much.
+    #
+    # --redact-inline is NOT implemented, and refuses rather than pretending. A first attempt zeroed
+    # payloads by searching for their bytes in the page blob; short payloads occur many times, so on a
+    # test volume it zeroed 2 of 8 and left the rest -- the two files checked afterwards still returned
+    # their original content. A flag that leaves content behind while claiming redaction is worse than no
+    # flag. Doing it correctly needs the row walker to expose page-relative offsets, which is a change to
+    # the core every command shares; it is deferred rather than rushed.
+    if args["redact_inline"]:
+        die("--redact-inline is not implemented in this release. A bundle carries inline file content "
+            "(the manifest's `inline_content` states how much); treat it as containing that content. "
+            "Redaction needs offset-precise row location and is deferred rather than approximated.")
     # 3.C convention: bulk exports take a positional DIR (like export resident-all/recyclebin/deleted);
     # -o/--out kept as a back-compat alias.
     outdir = args["o"] or args["out"] or (args["_rest"][0] if args["_rest"] else None)
@@ -12224,8 +12592,26 @@ def cmd_export_metadata(image, remaining, partition_start):
 
     try:
         os.makedirs(outdir, exist_ok=True)
+        # A bundle is a DERIVED artefact, so it has to name what it was derived from and what was
+        # already missing when it was made. Without this an examiner holding the bundle cannot say which
+        # image it came from, which tool wrote it, or whether a page was absent at export time rather
+        # than lost afterwards.
         manifest = {"image": os.path.basename(image), "partition_start_bytes": ps, "cluster_size": cs,
-                    "refs_version": f"{vmaj}.{vmin}", "artifacts": []}
+                    "refs_version": f"{vmaj}.{vmin}", "artifacts": [],
+                    "provenance": {
+                        "tool": PROG, "tool_version": VERSION,
+                        "source_path": os.path.abspath(image),
+                        "source_size_bytes": os.path.getsize(image),
+                        "source_content_pin": _source_pin(image),
+                        "exported_utc": datetime.datetime.now(
+                            datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+                        "host": socket.gethostname(),
+                    },
+                    # pages this export could NOT read, and holes in the SOURCE image at export time.
+                    # An empty list here is a claim, so both are always present.
+                    "absent_pages": [],
+                    "source_holes": [],
+                    "warnings": []}
         sha_lines = []
         _md_failures = []   # audit 4.1
 
@@ -12240,7 +12626,29 @@ def cmd_export_metadata(image, remaining, partition_start):
             print(f"  + {name:32s} {len(data):>13,d} B  {source}")
 
         def rd(lcn, nclu=1):
-            f.seek(ps + lcn * cs); return f.read(nclu * cs)
+            """Read pages, and record what was already missing in the SOURCE when we read it.
+
+            Two different absences, both recorded rather than inferred later: a short read means the page
+            is not in the image at all, and a range that lies in a sparse hole reads back as zeros that
+            are indistinguishable from written zeros. A bundle that does not carry this cannot tell an
+            examiner whether a blank page was blank on the volume or absent from the acquisition.
+            """
+            start = ps + lcn * cs
+            want = nclu * cs
+            f.seek(start)
+            data = f.read(want)
+            if len(data) < want:
+                manifest["absent_pages"].append({"lcn": lcn, "clusters": nclu,
+                                                 "got_bytes": len(data), "reason": "short read"})
+                data = data + b"\x00" * (want - len(data))
+            else:
+                try:
+                    hb = _hole_bytes_in(f.fileno(), start, start + want)
+                except OSError:
+                    hb = None
+                if hb:
+                    manifest["source_holes"].append({"lcn": lcn, "clusters": nclu, "hole_bytes": hb})
+            return data
 
         print("=" * 78)
         print(f"ReFS Metadata Export — {os.path.basename(image)} (v{vmaj}.{vmin})")
@@ -12321,16 +12729,46 @@ def cmd_export_metadata(image, remaining, partition_start):
                     pass
 
         if want("usn"):
+            # This branch used to be `except Exception: pass`. A failed journal export then produced a
+            # bundle that was silently missing the journal, and nothing downstream could tell "this volume
+            # had no journal" from "the export of it failed". Both outcomes are now recorded.
             try:
                 vd, _em = locate_change_journal(f, ps, cs, tr, obj_map)
-                if vd is not None:
+                if vd is None:
+                    manifest["warnings"].append({"what": "usn", "reason": "no change journal on this volume"})
+                else:
                     st = parse_usn_journal_streams(vd, cs, tr)
-                    if st.get("j_extents"):
+                    if not st.get("j_extents"):
+                        manifest["warnings"].append({"what": "usn",
+                                                     "reason": "journal located but it has no $J extents"})
+                    else:
                         jd = read_usn_j_stream(f, ps, cs, st["j_extents"], st["j_stream_size"],
                                                _content_what="USN $J change-journal stream")
                         emit("usn_J.bin", jd, "USN $J change-journal stream (reassembled)")
-            except Exception:
-                pass
+                        # The $J bytes ship REASSEMBLED, so without their addresses they cannot be put
+                        # back on a rehydrated volume and `usn`/`timeline` read an empty journal. MLog
+                        # already ships `mlog_log_index.csv` for the same reason; this is its counterpart.
+                        # Same element shape read_usn_j_stream() uses: dicts with "plcn" and "clusters",
+                        # and the same running file offset, so the index describes exactly the bytes in
+                        # usn_J.bin.
+                        idx = ["plcn,byte_offset,clusters"]
+                        off = 0
+                        _alloc = sum(_e["clusters"] for _e in st["j_extents"]) * cs
+                        for _e in st["j_extents"]:
+                            if off >= _alloc:
+                                break
+                            idx.append("0x%x,%d,%d" % (_e["plcn"], off, _e["clusters"]))
+                            off += _e["clusters"] * cs
+                        if len(idx) > 1:
+                            emit("usn_J_index.csv", ("\n".join(idx) + "\n").encode("utf-8"),
+                                 "index for usn_J.bin")
+                        else:
+                            manifest["warnings"].append(
+                                {"what": "usn_index",
+                                 "reason": "could not derive $J extent addresses; usn/timeline will not "
+                                           "work from this bundle"})
+            except (ValueError, OSError, struct.error, KeyError, IndexError) as _e:
+                manifest["warnings"].append({"what": "usn", "reason": "%s: %s" % (type(_e).__name__, _e)})
 
         if want("btree"):
             # the raw-metadata analogue: every reachable metadata page (system roots + every object tree)
@@ -12365,6 +12803,12 @@ def cmd_export_metadata(image, remaining, partition_start):
                         blob += rd(p)
                     owner = "object_table" if head in ot_heads else "metadata"
                     idx.append(f"0x{head:x},{len(plcns)},{off},{owner}")
+                # What this blob CONTAINS is stated, because "metadata" understates it: ReFS keeps a
+                # small stream inside the record, so these pages carry file content. An examiner handing
+                # the bundle to someone else is handing over that content, and must be told the amount.
+                _inl = _collect_inline_payloads(f, ps, cs, tr, obj_map)
+                manifest["inline_content"] = {"streams": len(_inl),
+                                              "bytes": sum(len(x) for x in _inl)}
                 emit("metadata_pages.bin", bytes(blob), f"{len(ptc)} metadata pages (packed)")
                 emit("metadata_index.csv", ("\n".join(idx) + "\n").encode(),
                      "index for metadata_pages.bin")
@@ -12398,7 +12842,7 @@ def cmd_dataruns(image, remaining, partition_start):
             print("=" * 78)
             print("ReFS File Data Extent Analysis")
             print("=" * 78)
-            print(f"  Image:        {image}")
+            print(f"  Image:        {_display_image(image)}")
             print(f"  ReFS version: {vmaj}.{vmin}")
             print(f"  Cluster size: {_hx(cs)} ({cs} bytes)")
             print(f"  Containers:   {len(tr.map) if tr else 0}")
@@ -12581,7 +13025,10 @@ def cmd_export_resident(image, remaining, partition_start):
     / recover_cow_current_content); skips 0-byte and non-inline entries."""
     args = _parse_args(remaining, flags=["--refuse-holes"], valued=["--oid", "--depth"])
     global _REFUSE_HOLES
-    _REFUSE_HOLES = bool(args["refuse_holes"])
+    # In a BUNDLE the zeros are known not to be the file's: extent content was never exported. So the
+    # contract defaults to refusing, where on a raw sparse image it defaults to writing-and-reporting
+    # because there the two cases genuinely cannot be told apart.
+    _REFUSE_HOLES = bool(args["refuse_holes"]) or _BUNDLE is not None
     out_dir = args["_rest"][0] if args["_rest"] else None
     if not out_dir:
         die("export resident-all requires an output directory")
@@ -12641,7 +13088,10 @@ def cmd_export_recyclebin(image, remaining, partition_start):
     decoded original filename ($I). Reuses the recyclebin walk + the resident/extent content path."""
     args = _parse_args(remaining, flags=["--refuse-holes"], valued=[])
     global _REFUSE_HOLES
-    _REFUSE_HOLES = bool(args["refuse_holes"])
+    # In a BUNDLE the zeros are known not to be the file's: extent content was never exported. So the
+    # contract defaults to refusing, where on a raw sparse image it defaults to writing-and-reporting
+    # because there the two cases genuinely cannot be told apart.
+    _REFUSE_HOLES = bool(args["refuse_holes"]) or _BUNDLE is not None
     out_dir = args["_rest"][0] if args["_rest"] else None
     if not out_dir:
         die("export recyclebin requires an output directory")
@@ -12806,12 +13256,14 @@ FORENSIC_SUBCOMMANDS = {
     "integrity": "Verify metadata-page checksums (-v/--checksums/--fullchecksums)",
     "export":    "Get data out — export file|ads|reparse|resident-all|snapshots|deleted|recyclebin|metadata (screen or -o/auto-dir)",
     "dataruns":  "File data extents / data-runs per object (-v/--oid/--depth)",
+    "verify-bundle": "Check an `export metadata` bundle is whole (seal, manifest, indexes, rehydration)",
 }
 FORENSIC_HANDLERS = {"usn": cmd_usn, "mlog": cmd_mlog, "timeline": cmd_timeline,
                      "timestomp": cmd_timestomp, "extract": cmd_extract, "security": cmd_security,
                      "reparse": cmd_reparse, "deleted": cmd_deleted, "snapshots": cmd_snapshots,
                      "recyclebin": cmd_recyclebin, "specials": cmd_specials, "ads": cmd_ads,
-                     "integrity": cmd_integrity, "export": cmd_export, "dataruns": cmd_dataruns}
+                     "integrity": cmd_integrity, "export": cmd_export, "dataruns": cmd_dataruns,
+                     "verify-bundle": _verify_bundle_handler}
 
 # F13: `files --filter <category>` subsets the listing by attribute category (folds in / retires the
 # old `attributes` command). Field-based and EA-SAFE — WSL is detected via the reparse tag, NOT the
@@ -13252,6 +13704,17 @@ CMD_HELP = {
          ("integrity --checksums", "verify system-root checksums"),
          ("integrity --fullchecksums -v", "full sweep + page details")],
  },
+ "verify-bundle": {
+  "tag": "Check an `export metadata` bundle is whole",
+  "desc": ["Verifies a bundle without opening it as a volume: the sha256 seal, the manifest's required",
+           "fields, that every index row lies inside the blob it indexes, and that the bundle rehydrates",
+           "and bootstraps. Declared absences (export warnings, pages already missing, inline content",
+           "carried) are reported as notes, not failures."],
+  "opts": [],
+  "ex": [("verify-bundle", "check the bundle at that path; exit 0 when whole, 2 when not")],
+  "notes": ["Exit 0 when the bundle is whole, 2 when it is not.",
+            "A bundle carries file content wherever ReFS stores it inline; the note says how much."],
+ },
  "dataruns": {
   "tag": "File data extents / data-runs per object",
   "desc": ["Maps non-resident files to their on-disk extents (data-runs). Default lists extent-backed",
@@ -13363,6 +13826,29 @@ def main():
     # `--csv-safe` (opt-in spreadsheet formula-injection guard) is a GLOBAL modifier that must apply to every
     # CSV-emitting command (files/usn/timeline/timestomp/mlog/deleted), so detect+strip it here before any
     # dispatch or argparse. Default stays OFF = filenames written byte-faithfully.
+    # A bundle is a DIRECTORY; an image is a FILE. The tool already refused a directory outright, so
+    # nothing has to be disambiguated -- only added. Resolved here, before either image-validation site,
+    # so every downstream path sees an ordinary regular file and no command needs bundle-awareness.
+    # `verify-bundle` inspects the bundle ITSELF, so it is handled before argparse and before any
+    # auto-open: opening dies on a bad seal, and the point of the command is to REPORT what is wrong.
+    # It still honours the shared CLI contract the tier-2 tests freeze -- `help <cmd>` prints help, an
+    # unknown flag is diagnosed before the path is read, and a missing path exits 1 saying "not found".
+    if len(sys.argv) > 2 and sys.argv[2] == "verify-bundle":
+        _rest = sys.argv[3:]
+        if "-h" in _rest or "--help" in _rest or sys.argv[1] == "help":
+            print("usage: forefst <bundle-dir> verify-bundle\n\n"
+                  "Check that an `export metadata` bundle is whole: its sha256 seal, the manifest's\n"
+                  "required fields, that every index row lies inside the blob it indexes, and that the\n"
+                  "bundle rehydrates and bootstraps. Exit 0 when whole, 2 when not.")
+            sys.exit(0)
+        for _a in _rest:
+            if _a.startswith("-"):
+                print(f"{PROG}: error: unrecognized argument: {_a}", file=sys.stderr); sys.exit(1)
+        if not os.path.exists(sys.argv[1]):
+            print(f"{PROG}: error: file not found: {sys.argv[1]}", file=sys.stderr); sys.exit(1)
+        sys.exit(cmd_verify_bundle(sys.argv[1]))
+    if len(sys.argv) > 1 and _is_bundle(sys.argv[1]):
+        _bundle_open(sys.argv[1])
     global _CSV_GUARD
     if "--csv-safe" in sys.argv:
         _CSV_GUARD = True

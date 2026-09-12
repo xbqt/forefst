@@ -1,5 +1,5 @@
 # Sample command manifest — wininsiderrefs8gtest2.raw
-<!-- generated-by: forefst.py=v1.12.0/bb34289c979eb3db refsanalysis.py=v1.12.0 -->
+<!-- generated-by: forefst.py=v1.12.1/3e28da51d3c6155a refsanalysis.py=v1.12.1 -->
 
 Every file under `forefst/` and `refsanalysis/`, and the exact command that produced it.
 Regenerate with `analysis/tools/analysis_scripts/gen_samples.sh`. Image path shown as the basename.

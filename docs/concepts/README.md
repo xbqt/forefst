@@ -117,6 +117,7 @@ cares.
 | Page | What it is / why it matters |
 |------|------------------------------|
 | [Copy-on-Write](copy_on_write.md) | The fundamental update model and the prior-page recovery it enables |
+| [Metadata bundles](metadata_bundles.md) | What `export metadata` captures, what it leaves behind, and why a bundle carries inline file content |
 | [Deletion Recovery](deletion_recovery.md) | The recovery methods: Trash Table, checkpoint differential, orphan scan, CoW prior-content, node-slack carve |
 | [Snapshots and Versioning](snapshots_versioning.md) | `$SNAPSHOT` stream snapshots and deterministic prior-content recovery |
 | [What Survives](what_survives.md) | The artifact-vs-event survival matrix (delete / format / upgrade / unmount / crash) |

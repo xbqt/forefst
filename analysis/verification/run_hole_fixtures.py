@@ -22,39 +22,36 @@ TSV = os.path.join(ROOT, "analysis/verification/hole_fixtures.tsv")
 TOOL = os.path.join(ROOT, "forefstdev/forefst.py")
 
 
-def allocated_sha256(path):
-    """Hash the ALLOCATED ranges plus the file length.
+BOOT_PROBE = 1 << 16          # GPT + protective MBR: enough to tell two volumes apart
+PROBE_BYTES = 1 << 16         # bytes hashed at each fixture offset
 
-    A whole-image hash would read 2 TB of holes to fingerprint 2 GB of data. Hashing the allocated extents
-    (offset, length, bytes) plus the total size identifies the volume just as tightly and runs in seconds.
+
+def volume_pin(path, probes=()):
+    """Identify the volume by CONTENT at fixed positions - never by its sparse layout.
+
+    This replaces an `allocated_sha256()` that folded the extent MAP into the hash (`ext=<off>:<len>` per
+    allocated range). That made the pin depend on how the file had been written, not on what it contained:
+    the maintainer's imaged copy, `zstd -d` (dense), `zstd -d --sparse` and `cp --sparse=always` all produce
+    different hole boundaries for byte-identical content, so the published sample failed a pin computed on
+    the corpus copy. Demonstrated with two files of identical content and different layouts: 16 vs 8,192
+    allocated blocks, different hashes.
+
+    A hole and a written zero are the same CONTENT. So this reads content at fixed offsets and never asks
+    where the holes are, which is what makes it reproducible from a clone however the image was unpacked.
+    Cost is a few hundred KB, not the 2 TB a whole-image hash would read.
     """
     h = hashlib.sha256()
     size = os.path.getsize(path)
     h.update(b"size=%d\n" % size)
-    fd = os.open(path, os.O_RDONLY)
-    try:
-        pos = 0
-        while pos < size:
-            try:
-                ds = os.lseek(fd, pos, os.SEEK_DATA)
-            except OSError:
-                break
-            try:
-                de = os.lseek(fd, ds, os.SEEK_HOLE)
-            except OSError:
-                de = size
-            h.update(b"ext=%d:%d\n" % (ds, de - ds))
-            os.lseek(fd, ds, os.SEEK_SET)
-            rem = min(de, size) - ds
-            while rem > 0:
-                chunk = os.read(fd, min(1 << 22, rem))
-                if not chunk:
-                    break
-                h.update(chunk)
-                rem -= len(chunk)
-            pos = de
-    finally:
-        os.close(fd)
+    with open(path, "rb") as f:
+        h.update(b"boot\n")
+        h.update(f.read(BOOT_PROBE))
+        for off in sorted(set(probes)):
+            if off < 0 or off >= size:
+                continue
+            f.seek(off)
+            h.update(b"@%d\n" % off)
+            h.update(f.read(PROBE_BYTES))
     return h.hexdigest()
 
 
@@ -146,6 +143,13 @@ def main():
         print("hole fixtures: FAIL — no rows in hole_fixtures.tsv")
         return 1
 
+    # One pin per IMAGE, computed over every offset that image's fixtures use, so all its rows carry the
+    # same value and the pin does not depend on which row is being run.
+    probes_by_image = {}
+    for r in rows:
+        probes_by_image.setdefault(r[2], set()).add(int(r[4], 0))
+    pin_cache = {}
+
     failures = []
     for fid, producer, image, want_hash, offset_s, path, exp_def, exp_ref in rows:
         src = _locate(image)
@@ -157,10 +161,14 @@ def main():
                   f"(pass --images DIR, or place it under analysis/)")
             skipped.append(fid)
             continue
-        got_hash = allocated_sha256(src)
+        if src not in pin_cache:
+            pin_cache[src] = volume_pin(src, probes_by_image.get(image, ()))
+        got_hash = pin_cache[src]
         if want_hash not in ("-", got_hash):
-            failures.append(f"{fid}: image content hash changed — recipe pinned {want_hash[:16]}…, "
-                            f"image is {got_hash[:16]}… (the fixture may no longer describe this volume)")
+            failures.append(f"{fid}: image content pin changed — recipe pinned {want_hash[:16]}…, "
+                            f"image is {got_hash[:16]}… (the fixture may no longer describe this volume). "
+                            f"The pin is content at fixed offsets, so it does NOT vary with how the image "
+                            f"was unpacked — a mismatch means different content, not a different layout.")
             continue
         offset = int(offset_s, 0)
         tmpd = tempfile.mkdtemp(prefix="holefx_")

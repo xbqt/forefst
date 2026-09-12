@@ -284,19 +284,6 @@ forefst.py disk.raw timestomp --csv suspects.csv       # export ALL tiers to CSV
 
 ### `extract` — extract a file's content (or one ADS)
 
-> **Known issue (1.11.3 and earlier):** a small number of extent-backed files decode to the **wrong
-> clusters**, so `extract`, `dataruns` and `export` report content that is not theirs. Most visibly, on some
-> **ReFS 3.10-format volumes** a file can decode to the **volume boot record** — the output is short, mostly
-> zeros, and begins with the `ReFS` signature. Nothing warns. Two rarer forms exist on 3.14 volumes: a file
-> that extracts as all zeros, and one that reads a stale cluster.
->
-> Measured over 106 images: **23 streams — 11 distinct files — of 109,540**. Three volume families are
-> affected; most volumes are not, and a file that decodes correctly is unaffected.
->
-> If you extracted an extent-backed file with 1.11.3 or earlier and the output looks wrong — short,
-> zero-filled, or starting with `ReFS` — re-extract it with 1.12.0, where the cause is fixed.
-
-
 Recovers a file's bytes and writes them to stdout (redirect to a file): **extent-backed** files from their extents — whether the extent map is held **inline** in the directory record (the common 3.14 case, listed as `DataResidency=extents`) or in a separate record — **inline** files from the `$DATA` bytes in the record — including a file whose record was split out of its name row by a move or a hard link but whose bytes stayed inline inside that record — and **snapshot-shared files unmodified since a snapshot** from the blocks they share with the latest snapshot. Address by bare name, absolute `/path`, or `--path`; use `name:stream` to pull an ADS (a small ADS from its inline bytes, or a large ≥2 KiB ADS reassembled from its on-disk extents). Only a rare oversized/overflow extent table falls back to `dataruns`; a modified-CoW file's prior versions are in `snapshots --extract`.
 
 **Bytes that came from image holes are reported, not withheld.** Raw images are stored sparsely — this
@@ -567,6 +554,8 @@ forefst.py disk.raw integrity --fullchecksums -v       # full sweep + page detai
 | `export deleted [dir] [--carve] [--rows-only\|--content-only]` | recover deleted remnants — the raw `.row` **and** the decoded `.recovered` (inline); with `--carve` also `.carved` (extent-backed), plus a `recovery_manifest.json` |
 | `export recyclebin [dir]` | surviving `$R` payloads, named by their decoded original filename |
 | `export metadata -o <dir>` | the hash-verified metadata bundle (`--what vbr,chkp,supb,mlog,usn,btree` · `--btree-mode packed\|per-object` · `--max-scan N`) |
+| `<bundle-dir> <subcommand>` | read a bundle back — pass the directory where you would pass an image; see [metadata bundles](../concepts/metadata_bundles.md) |
+| `<bundle-dir> verify-bundle` | check a bundle is whole (seal, manifest, indexes, rehydration); exit 0 whole, 2 not |
 
 **`export deleted` writes, per entry, by default:** the raw **`.row`** (the recovered directory-entry record, verbatim — chain-of-custody evidence) and, for a file whose inline `$DATA` decodes, the **`.recovered`** file (the full reconstructed content). With **`--carve`**, an **extent-backed** entry also gets a **`.carved`** file — reassembled from the extent map held inline in the record (validated byte-exact on a known live extent-backed file; **best-effort** for deleted files because the clusters may have been reallocated, and sparse files short-read — both flagged in the manifest). The distinct `.recovered`/`.carved` extensions mark carved remnants, never verbatim live copies. Files never clobber — a collision auto-renames to `.dup1`/`.dup2`. `--rows-only` reproduces the historical raw-row-only output byte-for-byte; `--content-only` writes just the decoded bytes (drops the evidence — used with a warning). A `recovery_manifest.json` stamps every entry (source, cluster, confidence, verdict, sizes).
 

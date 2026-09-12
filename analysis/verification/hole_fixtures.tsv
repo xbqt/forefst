@@ -9,11 +9,16 @@
 # compare against the two expectation columns. `image_sha256` is the content hash of the SOURCE image, so a
 # row cannot silently drift onto a different volume.
 #
+# The `image_sha256` column is a CONTENT pin (see volume_pin in run_hole_fixtures.py): size + content at
+# fixed offsets. It deliberately does NOT depend on the sparse layout, so the same volume unpacked with
+# `zstd -d`, `zstd -d --sparse` or `cp --sparse=always` yields the same value and the fixture runs from a
+# clone however the reader obtained the image.
+#
 # columns:
 #   id  producer  image  image_sha256  offset  path  expect_default  expect_refuse
 #     expect_default / expect_refuse = rc:bytes:sidecar   (bytes = "written" | "none")
 #
 id	producer	image	image_sha256	offset	path	expect_default	expect_refuse
-hole6-cow	recover_cow_current_content	analysis/rawdisk/disks/step3/win11refs2tsnapshots.raw	3fe8d29bfa134e94252b693ab01fff5f77932aad5c860b829e13878c29ef4388	0x337c2df000	testsnapshots/test.txt	2:written:sidecar	2:none:nosidecar
-hole7-ads	_read_vlcn_extents	analysis/rawdisk/disks/step3/win11refs2tsnapshots.raw	3fe8d29bfa134e94252b693ab01fff5f77932aad5c860b829e13878c29ef4388	0x337d0c4000	testsnapshots/testads.txt:adstest	2:written:sidecar	2:none:nosidecar
-hole8-control	negative-control	analysis/rawdisk/disks/step3/win11refs2tsnapshots.raw	3fe8d29bfa134e94252b693ab01fff5f77932aad5c860b829e13878c29ef4388	0x337d0c4000	testsnapshots/testads.txt	0:written:nosidecar	0:written:nosidecar
+hole6-cow	recover_cow_current_content	analysis/rawdisk/disks/step3/win11refs2tsnapshots.raw	c36cd1bb408e79ec4d7aa254eb961025365e3dba8ae04061bc489e22cab589b6	0x337c2df000	testsnapshots/test.txt	2:written:sidecar	2:none:nosidecar
+hole7-ads	_read_vlcn_extents	analysis/rawdisk/disks/step3/win11refs2tsnapshots.raw	c36cd1bb408e79ec4d7aa254eb961025365e3dba8ae04061bc489e22cab589b6	0x337d0c4000	testsnapshots/testads.txt:adstest	2:written:sidecar	2:none:nosidecar
+hole8-control	negative-control	analysis/rawdisk/disks/step3/win11refs2tsnapshots.raw	c36cd1bb408e79ec4d7aa254eb961025365e3dba8ae04061bc489e22cab589b6	0x337d0c4000	testsnapshots/testads.txt	0:written:nosidecar	0:written:nosidecar
