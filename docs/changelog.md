@@ -1,5 +1,82 @@
 # Changelog
 
+## v1.12.0 — unreleased — one decoder order, and the consolidation
+
+**Everything here is relative to v1.11.3.** Work in progress; this entry is written as the net effect for
+someone upgrading from 1.11.3, not as a diary of the milestones behind it.
+
+### Fixed: some files were mapped to the wrong clusters, and nine to the boot sector
+
+A non-resident file's extent map is held in one of **two forms**, and forefst has a **structural reading**
+for each: the nested B+-tree node, which is read through the node's own index array; and the plain holder,
+whose entries are read at a fixed stride from a descriptor whose start, end, count and capacity must agree
+before an entry is read. Behind both sits a **heuristic marker scan** that matches a 4-byte constant.
+
+Through 1.11.3 the order was inverted, so the marker scan could answer first. The guard that accepts a
+decode cannot catch that: a wrong single run of the right length covers the file's allocation exactly as
+well as the right one does.
+
+Measured across the whole corpus — **102 readable ReFS volumes**, in which 1.11.3 maps 109,567 files —
+that was **11 distinct files mapped to the wrong clusters, 23 occurrences** (several of the files exist on
+more than one image):
+
+- **9 files were mapped to cluster 0, the volume boot record**, and `extract` returned 43 non-zero bytes of
+  `ReFS` signature as though it were file content. Nothing warned.
+- **1 file** was mapped through `0x000E0080`, a `$DATA` sub-record descriptor constant, and extracted as
+  505,381 zero bytes. Its real content was recoverable all along.
+- **1 file** was mapped from an unindexed row inside its own extent node.
+
+- **What to change:** nothing. If you extracted one of those files with 1.11.3 or earlier, re-extract it.
+- **Where it could bite:** ReFS 3.7, 3.9, 3.10 and 3.14; both 4K and 64K clusters. Rare — 23 of the
+  109,567 files 1.11.3 maps — but silent.
+
+### 593 more files get a decoded extent map — 152 of them proven, 441 not
+
+The structural decoder resolves maps the marker scan could not, so files that previously reported no
+extents now report them. Counted across every readable volume in the corpus: **593 files** that 1.11.3
+could not map, 1.12.0 maps. On one ReFS 3.7 volume, files with decoded extents go from **469 to 508**.
+
+**"Decodes now" is not "decodes correctly", so here is the split.** Of the 593:
+
+- **152 are byte-proven** — the bytes carry the lab generator's content marker, a record this project did
+  not produce.
+- **441 are unproven.** They decode and return real content — a 12-file random sample returned 77 KB to
+  509 KB each, over 99 % non-zero bytes, and **none returned zeros** — but no independent record confirms
+  those bytes. They sit on volumes with no inventory and no content marker.
+- A second implementation (`refscat`) corroborates a small number where it can read them at all: on one
+  4 KiB volume, **3 of 49** byte-identical, **0 disagreements**, 46 unreadable by it.
+
+If you are relying on one of these files as evidence, corroborate it. `dataruns` names the reading that
+produced each map.
+
+Run boundaries are also now reported as the node records them, so a file's extent **count** can change
+while its clusters do not — `extents=2` becoming `extents=5` for the same 46 clusters. No bytes change.
+
+### Scope
+
+This changes the decoder **order** only. All three decoders remain, and the index array is still the only
+one that answers on ReFS 3.4.
+
+### `deleted` now says when a map came from the heuristic
+
+Three readings can produce a file's extent map; one of them — the marker scan — matches a 4-byte constant
+and is accepted only if it exactly covers the file's allocation. A coincidence can satisfy that too. On
+**live** files it now never answers. On **deleted remnants** it is often the only reading that recovers
+anything, so it stays — and when it produced a map, `deleted` prints a note on stderr saying how many maps
+came from it. The note appears on 42 of the 106 corpus volumes. **No recovered data changed**: on every one
+of those volumes `deleted`'s output is byte-identical to 1.11.3.
+
+### Also
+
+- **The checks now ship, so you can re-run them from a clone.** `analysis/verification/` carries the hole
+  fixtures (`hole_fixtures.tsv` + `run_hole_fixtures.py`), the single-source list and its lint, and two
+  documentation checks that need **no disk image at all**: one fails if two pages state the same fact with
+  different numbers, the other if a page states a load-bearing figure that disagrees with the reference.
+- **The worked examples are now covered.** The check that runs every documented command read three files;
+  the step-by-step walkthrough pages set a shell variable for the image, so none of their commands was ever
+  run. It now reads the fenced command blocks on every page — 129 commands instead of 102, and all of them
+  are accepted by the CLI.
+
 ## v1.11.3 — 2026-09-11 — `--refuse-holes` does what the page says, on every path
 
 **Everything here is relative to v1.11.2.** One correctness fix on a safety flag; no output changes for

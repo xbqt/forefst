@@ -1,0 +1,27 @@
+# DoD #1 — one source of truth per computed fact (plan v6 §2 / v7 §3.8, row 1).
+#
+# "No two functions compute residency, placement, timestomp tier, name->record resolution, an extent map
+# for the same holder form, or checkpoint parsing." This file NAMES each fact and its single function;
+# `check_single_source.py` fails if a second implementation appears.
+#
+# A fact is listed with the ONE function that computes it. `refsanalysis.py` may IMPORT from forefst.py --
+# that is what makes it one source -- but it may not define its own version. The lint checks definitions,
+# not calls, because a call is reuse and a definition is a fork.
+#
+# Extent maps are the exception the plan already anticipates: there are two HOLDER FORMS, so there are two
+# readings plus one heuristic fallback, and the entry below names all three deliberately (v7.4 §3.2). One
+# source per FORM, not one source overall.
+#
+# fact	function	file	note
+residency	_stream_data_form	forefstdev/forefst.py	data residency: inline / extents / snapshot-shared / unallocated (E87 axis 2)
+record_placement	_analyze_dir_extents	forefstdev/forefst.py	embedded vs split, from key_flags (E87 axis 1); set in one place on the entry dict
+timestomp_tier	timestomp_verdict	forefstdev/forefst.py	the single source since v1.10.1; the printed legend is generated from it
+name_to_record	walk_directory_tree	forefstdev/forefst.py	one resolution path since C1.4; the legacy ladder was deleted in 1.11.1
+checkpoint_parse	parse_chkp	forefstdev/forefst.py	CHKP decode; refsanalysis imports it rather than re-reading the offsets
+extent_map_nested_node	_embedded_data_extents	forefstdev/forefst.py	holder form 1 (E86): rows the node's index array references
+extent_map_plain_holder	_parse_inline_holder_extents	forefstdev/forefst.py	holder form 2: the embedded index array
+extent_map_plain_holder_array	_parse_extents_from_type40	forefstdev/forefst.py	holder form 2: descriptor-located fixed-stride array
+extent_map_fallback	_find_extents_in_subrecord	forefstdev/forefst.py	the ONE heuristic (marker scan), logged when it wins
+extent_map_dispatch	_decode_holder_extents	forefstdev/forefst.py	chooses among the above; the ORDER lives here and nowhere else
+content_hole_check	content_holes	forefstdev/forefst.py	every content producer routes through it (gate 1d)
+extract_content_exit	_emit_checked	forefstdev/forefst.py	the one content exit of cmd_extract (gate 1e)

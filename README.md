@@ -56,11 +56,25 @@ forefst/
 │   ├── methodology.md        #   how every claim was verified
 │   └── KNOWLEDGE_MAP.md      #   topic -> authoritative-source index
 └── analysis/                 # lab materials + verification harness (the tools don't depend on it)
-    ├── reference_table.csv   #   the live claim register (483 findings)
+    ├── reference_table.csv   #   the live claim register (486 findings)
     ├── lab/                  #   VM setup, disk generation, activity generator + baseline
     ├── samples/              #   captured tool output + samples/corpus/ + sample disks
     └── reports/              #   verification scripts, results, per-claim audit/ harness
 ```
+
+## Known issues
+
+> **Known issue (1.11.3 and earlier):** a small number of extent-backed files decode to the **wrong
+> clusters**, so `extract`, `dataruns` and `export` report content that is not theirs. Most visibly, on some
+> **ReFS 3.10-format volumes** a file can decode to the **volume boot record** — the output is short, mostly
+> zeros, and begins with the `ReFS` signature. Nothing warns. Two rarer forms exist on 3.14 volumes: a file
+> that extracts as all zeros, and one that reads a stale cluster.
+>
+> Measured over 106 images: **23 streams — 11 distinct files — of 109,540**. Three volume families are
+> affected; most volumes are not, and a file that decodes correctly is unaffected.
+>
+> If you extracted an extent-backed file with 1.11.3 or earlier and the output looks wrong — short,
+> zero-filled, or starting with `ReFS` — re-extract it with 1.12.0, where the cause is fixed.
 
 ## For NTFS analysts
 

@@ -261,8 +261,11 @@ def gen_knowledge_map(pages):
     multi = {f: v for f, v in by_finding.items() if len(v) > 1}
     lines += ["## 2. Findings → the pages that cite them", "",
               "Before changing a finding, correct every page listed on its row in the same commit. The",
-              f"**{len(multi)} rows with more than one page** are the owner-page consolidation candidates: one",
-              "page should state the fact and the rest should link to it.", "",
+              f"The **{len(multi)} rows citing more than one page** are not duplication to be consolidated:",
+              "a finding is cited where a page declares what backs its statements, and one finding legitimately",
+              "backs statements on several pages. Measured 2026-09-11: 540 of the 557 citations in the tree sit",
+              "in a `## Evidence` section, and no concept is explained redundantly. What must not happen is two",
+              "pages stating one fact with *different numbers* — gates 7h and 7i check exactly that.", "",
               "| Finding | Static | Disk | Pages | Cited on |",
               "|---------|--------|------|-------|----------|"]
     for fid in sorted(by_finding):

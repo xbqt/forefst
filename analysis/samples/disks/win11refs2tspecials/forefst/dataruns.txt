@@ -13,7 +13,7 @@ ReFS File Data Extent Analysis
     Total files analyzed:   1333
     Data inline in record:  535
     Data in extents:        798
-    With decoded extents:   759
+    With decoded extents:   798
 
 ==============================================================================
 File Data Locations
@@ -1119,6 +1119,9 @@ File Data Locations
   EXTENT    testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/hardlink_mike_455666.tmp
             record=split, size=240062, attrs=Archive, extents=4, clusters=59
             created=2026-05-16 16:34:27
+  EXTENT    testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/report_india_525082.ini
+            record=split, size=77841, attrs=Archive, extents=1, clusters=20
+            created=2026-05-16 16:34:31
   EXTENT    testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_kilo_929277/hotel_record_407322.log
             record=embedded, size=168243, attrs=Archive, extents=2, clusters=42
             created=2026-05-16 16:34:45
@@ -1272,6 +1275,9 @@ File Data Locations
   EXTENT    testspecials/dir_november_947335/hardlink_log_446439.tmp
             record=split, size=240062, attrs=Archive, extents=4, clusters=59
             created=2026-05-16 16:34:27
+  EXTENT    testspecials/dir_november_947335/hardlink_mike_216457.ini
+            record=split, size=77841, attrs=Archive, extents=1, clusters=20
+            created=2026-05-16 16:34:31
   EXTENT    testspecials/dir_november_947335/hardlink_oscar_269153.ini
             record=split, size=60201, attrs=Archive, extents=2, clusters=15
             created=2026-05-16 16:34:37
@@ -1356,6 +1362,9 @@ File Data Locations
   EXTENT    testspecials/dir_november_947335/dir_india_538407/hardlink_draft_409887.log
             record=split, size=344423, attrs=Archive, extents=3, clusters=85
             created=2026-05-16 16:36:16
+  EXTENT    testspecials/dir_november_947335/dir_india_538407/hardlink_echo_843063.ini
+            record=split, size=77841, attrs=Archive, extents=1, clusters=20
+            created=2026-05-16 16:34:31
   EXTENT    testspecials/dir_november_947335/dir_india_538407/hardlink_sierra_850190.bin
             record=split, size=339030, attrs=Archive, extents=3, clusters=83
             created=2026-05-16 16:35:44
@@ -1419,6 +1428,9 @@ File Data Locations
   EXTENT    testspecials/dir_november_947335/dir_mike_527964/hardlink_oscar_181976.bak
             record=split, size=324299, attrs=Archive, extents=3, clusters=80
             created=2026-05-16 16:34:50
+  EXTENT    testspecials/dir_november_947335/dir_mike_527964/hardlink_record_756488.ini
+            record=split, size=77841, attrs=Archive, extents=1, clusters=20
+            created=2026-05-16 16:34:31
   EXTENT    testspecials/dir_november_947335/dir_mike_527964/papa_romeo_945623.bin
             record=embedded, size=387261, attrs=Archive, extents=4, clusters=95
             created=2026-05-16 16:35:02
@@ -1617,6 +1629,12 @@ File Data Locations
   EXTENT    testspecials2/foxtrot_output_368928.md
             record=split, size=210671, attrs=Archive, extents=2, clusters=52
             created=2026-05-16 16:37:44
+  EXTENT    testspecials2/hardlink_backup_438537.md
+            record=split, size=293997, attrs=Archive, extents=9, clusters=72
+            created=2026-05-16 16:37:44
+  EXTENT    testspecials2/hardlink_hotel_900638.xml
+            record=split, size=170052, attrs=Archive, extents=4, clusters=42
+            created=2026-05-16 16:37:43
   EXTENT    testspecials2/hardlink_uniform_628960.log
             record=split, size=191037, attrs=Archive, extents=3, clusters=47
             created=2022-10-13 16:40:23
@@ -1635,6 +1653,9 @@ File Data Locations
   EXTENT    testspecials2/quebec_record_289611.log
             record=split, size=185287, attrs=Archive, extents=2, clusters=46
             created=2026-05-16 16:37:49
+  EXTENT    testspecials2/sync_lima_360177.dat
+            record=split, size=146627, attrs=Archive, extents=1, clusters=36
+            created=2026-05-16 16:37:42
   EXTENT    testspecials2/trace_output_728574.bin
             record=split, size=278005, attrs=Archive, extents=2, clusters=68
             created=2026-05-16 16:37:43
@@ -1674,9 +1695,15 @@ File Data Locations
   EXTENT    testspecials2/dir_kilo_616914/hardlink_oscar_842417.json
             record=split, size=423166, attrs=Archive, extents=3, clusters=104
             created=2026-05-16 16:37:43
+  EXTENT    testspecials2/dir_kilo_616914/hardlink_uniform_692622.md
+            record=split, size=293997, attrs=Archive, extents=9, clusters=72
+            created=2026-05-16 16:37:44
   EXTENT    testspecials2/dir_kilo_616914/tango_log_555645.json
             record=split, size=423166, attrs=Archive, extents=3, clusters=104
             created=2026-05-16 16:37:43
+  EXTENT    testspecials2/dir_kilo_616914/uniform_sierra_103233.md
+            record=split, size=293997, attrs=Archive, extents=9, clusters=72
+            created=2026-05-16 16:37:44
   EXTENT    testspecials2/dir_kilo_616914/audit_delta_706583.json
             record=embedded, size=166308, attrs=Archive, extents=3, clusters=41
             created=2026-05-16 16:39:28
@@ -1695,9 +1722,18 @@ File Data Locations
   EXTENT    testspecials2/dir_kilo_616914/dir_backup_630871/gamma_tango_178044.dat
             record=split, size=300868, attrs=Archive, extents=3, clusters=74
             created=2026-05-16 16:37:44
+  EXTENT    testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_cache_865974.xml
+            record=split, size=170052, attrs=Archive, extents=4, clusters=42
+            created=2026-05-16 16:37:43
   EXTENT    testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_lima_842582.json
             record=split, size=88589, attrs=Archive, extents=3, clusters=22
             created=2025-01-10 16:38:27
+  EXTENT    testspecials2/dir_kilo_616914/dir_backup_630871/hardlink_whiskey_549936.md
+            record=split, size=293997, attrs=Archive, extents=9, clusters=72
+            created=2026-05-16 16:37:44
+  EXTENT    testspecials2/dir_kilo_616914/dir_backup_630871/trace_foxtrot_918703.xml
+            record=split, size=170052, attrs=Archive, extents=4, clusters=42
+            created=2026-05-16 16:37:43
   EXTENT    testspecials2/dir_kilo_616914/dir_backup_630871/trace_index_996981.txt
             record=split, size=241510, attrs=Archive, extents=2, clusters=59
             created=2026-05-16 16:38:58
@@ -1728,6 +1764,9 @@ File Data Locations
   EXTENT    testspecials2/dir_kilo_616914/dir_backup_630871/zulu_quebec_328445.txt
             record=embedded, size=445093, attrs=Archive, extents=3, clusters=109
             created=2026-05-16 16:38:58
+  EXTENT    testspecials2/dir_kilo_616914/dir_hotel_911814/hardlink_uniform_712558.xml
+            record=split, size=170052, attrs=Archive, extents=4, clusters=42
+            created=2026-05-16 16:37:43
   EXTENT    testspecials2/dir_kilo_616914/dir_index_179689/hotel_zulu_522360.txt
             record=embedded, size=432746, attrs=Archive, extents=3, clusters=106
             created=2026-05-16 16:40:16
@@ -1797,6 +1836,9 @@ File Data Locations
   EXTENT    testspecials2/dir_kilo_616914/dir_victor_389261/hardlink_audit_921244.log
             record=split, size=185287, attrs=Archive, extents=2, clusters=46
             created=2026-05-16 16:37:49
+  EXTENT    testspecials2/dir_kilo_616914/dir_victor_389261/hardlink_delta_453509.xml
+            record=split, size=170052, attrs=Archive, extents=4, clusters=42
+            created=2026-05-16 16:37:43
   EXTENT    testspecials2/dir_kilo_616914/dir_victor_389261/backup_lima_914549.md
             record=embedded, size=298148, attrs=Archive, extents=3, clusters=73
             created=2026-05-16 16:38:46
@@ -1814,6 +1856,12 @@ File Data Locations
             created=2026-05-16 16:38:26
   EXTENT    testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_gamma_863368.log
             record=split, size=480960, attrs=Archive, extents=3, clusters=118
+            created=2026-05-16 16:37:43
+  EXTENT    testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_romeo_377680.md
+            record=split, size=293997, attrs=Archive, extents=9, clusters=72
+            created=2026-05-16 16:37:44
+  EXTENT    testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/hardlink_victor_213450.xml
+            record=split, size=170052, attrs=Archive, extents=4, clusters=42
             created=2026-05-16 16:37:43
   EXTENT    testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/echo_mike_940162.md
             record=embedded, size=521539, attrs=Archive, extents=3, clusters=128
@@ -1851,12 +1899,33 @@ File Data Locations
   EXTENT    testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/log_echo_397510.cfg
             record=split, size=409516, attrs=Archive, extents=3, clusters=100
             created=2026-05-16 16:37:58
+  EXTENT    testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_papa_764536/report_backup_871173.xml
+            record=split, size=170052, attrs=Archive, extents=4, clusters=42
+            created=2026-05-16 16:37:43
+  EXTENT    testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/hardlink_hotel_462218.md
+            record=split, size=293997, attrs=Archive, extents=9, clusters=72
+            created=2026-05-16 16:37:44
+  EXTENT    testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/hardlink_yankee_126039.md
+            record=split, size=293997, attrs=Archive, extents=9, clusters=72
+            created=2026-05-16 16:37:44
+  EXTENT    testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/november_alpha_101476.dat
+            record=split, size=146627, attrs=Archive, extents=1, clusters=36
+            created=2026-05-16 16:37:42
   EXTENT    testspecials2/dir_kilo_616914/dir_victor_389261/dir_november_374306/dir_quebec_843211/oscar_cache_226179.ini
             record=embedded, size=508685, attrs=Archive, extents=3, clusters=125
             created=2026-05-16 16:38:04
+  EXTENT    testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_audit_985925.md
+            record=split, size=293997, attrs=Archive, extents=9, clusters=72
+            created=2026-05-16 16:37:44
   EXTENT    testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_backup_499752.json
             record=split, size=423166, attrs=Archive, extents=3, clusters=104
             created=2026-05-16 16:37:43
+  EXTENT    testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_quebec_144962.xml
+            record=split, size=170052, attrs=Archive, extents=4, clusters=42
+            created=2026-05-16 16:37:43
+  EXTENT    testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/hardlink_sierra_747286.md
+            record=split, size=293997, attrs=Archive, extents=9, clusters=72
+            created=2026-05-16 16:37:44
   EXTENT    testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/victor_whiskey_810580.txt
             record=split, size=110573, attrs=Archive, extents=2, clusters=27
             created=2023-06-08 16:40:17
@@ -1869,6 +1938,12 @@ File Data Locations
   EXTENT    testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/victor_lima_445610.txt
             record=embedded, size=110573, attrs=Archive, extents=3, clusters=27
             created=2026-05-16 16:39:34
+  EXTENT    testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/hardlink_cache_241053.md
+            record=split, size=293997, attrs=Archive, extents=9, clusters=72
+            created=2026-05-16 16:37:44
+  EXTENT    testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/hardlink_sync_127557.md
+            record=split, size=293997, attrs=Archive, extents=9, clusters=72
+            created=2026-05-16 16:37:44
   EXTENT    testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_hotel_533721/quebec_romeo_967260.xml
             record=split, size=433603, attrs=Archive, extents=3, clusters=106
             created=2026-05-16 16:38:15
@@ -1896,6 +1971,9 @@ File Data Locations
   EXTENT    testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/hardlink_output_553502.log
             record=split, size=191037, attrs=Archive, extents=3, clusters=47
             created=2026-05-16 16:37:43
+  EXTENT    testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/hardlink_trace_911678.md
+            record=split, size=293997, attrs=Archive, extents=9, clusters=72
+            created=2026-05-16 16:37:44
   EXTENT    testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/quebec_zulu_613272.bin
             record=split, size=198602, attrs=Archive, extents=2, clusters=49
             created=2026-05-16 16:38:00
@@ -1931,6 +2009,9 @@ File Data Locations
             created=2026-05-16 16:39:04
   EXTENT    testspecials2/dir_log_298284/india_romeo_106206.bak
             record=split, size=433993, attrs=Archive, extents=3, clusters=106
+            created=2026-05-16 16:37:43
+  EXTENT    testspecials2/dir_log_298284/zulu_foxtrot_464678.xml
+            record=split, size=170052, attrs=Archive, extents=4, clusters=42
             created=2026-05-16 16:37:43
   EXTENT    testspecials2/dir_log_298284/archive_sierra_385249.dat
             record=embedded, size=230976, attrs=Archive, extents=2, clusters=57
@@ -1992,6 +2073,9 @@ File Data Locations
   EXTENT    testspecials2/dir_log_298284/dir_draft_685915/dir_papa_627382/hardlink_victor_612301.json
             record=split, size=44306, attrs=Archive, extents=2, clusters=11
             created=2026-05-16 16:38:05
+  EXTENT    testspecials2/dir_log_298284/dir_draft_685915/dir_papa_627382/hardlink_zulu_120968.dat
+            record=split, size=146627, attrs=Archive, extents=1, clusters=36
+            created=2026-05-16 16:37:42
   EXTENT    testspecials2/dir_log_298284/dir_draft_685915/dir_papa_627382/zulu_tango_592986.json
             record=split, size=88589, attrs=Archive, extents=3, clusters=22
             created=2025-01-10 16:38:27
@@ -2013,6 +2097,12 @@ File Data Locations
   EXTENT    testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/delta_index_239633.lnk
             record=split, size=166659, attrs=Archive, extents=2, clusters=41
             created=2026-05-16 16:38:36
+  EXTENT    testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/hardlink_cache_491864.md
+            record=split, size=293997, attrs=Archive, extents=9, clusters=72
+            created=2026-05-16 16:37:44
+  EXTENT    testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/hardlink_romeo_332955.md
+            record=split, size=293997, attrs=Archive, extents=9, clusters=72
+            created=2026-05-16 16:37:44
   EXTENT    testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/lima_index_115265.xml
             record=split, size=357207, attrs=Archive, extents=7, clusters=88
             created=2026-05-16 16:38:30
@@ -2028,6 +2118,9 @@ File Data Locations
   EXTENT    testspecials2/dir_log_298284/dir_draft_685915/dir_romeo_104507/yankee_gamma_992075.md
             record=embedded, size=423724, attrs=Archive, extents=4, clusters=104
             created=2026-05-16 16:38:34
+  EXTENT    testspecials2/dir_log_298284/dir_hotel_354514/hardlink_output_748297.md
+            record=split, size=293997, attrs=Archive, extents=9, clusters=72
+            created=2026-05-16 16:37:44
   EXTENT    testspecials2/dir_log_298284/dir_hotel_354514/hardlink_record_579332.cfg
             record=split, size=409516, attrs=Archive, extents=3, clusters=100
             created=2026-05-16 16:37:58
@@ -2042,6 +2135,9 @@ File Data Locations
             created=2026-05-16 16:40:13
   EXTENT    testspecials2/dir_oscar_397968/hardlink_backup_360005.dat
             record=split, size=300868, attrs=Archive, extents=3, clusters=74
+            created=2026-05-16 16:37:44
+  EXTENT    testspecials2/dir_oscar_397968/hardlink_gamma_652358.md
+            record=split, size=293997, attrs=Archive, extents=9, clusters=72
             created=2026-05-16 16:37:44
   EXTENT    testspecials2/dir_oscar_397968/hardlink_november_455794.md
             record=split, size=309729, attrs=Archive, extents=3, clusters=76
@@ -2079,6 +2175,9 @@ File Data Locations
   EXTENT    testspecials2/dir_oscar_397968/dir_oscar_522053/hardlink_data_812074.log
             record=split, size=503630, attrs=Archive, extents=6, clusters=123
             created=2026-05-16 16:37:43
+  EXTENT    testspecials2/dir_oscar_397968/dir_oscar_522053/hardlink_foxtrot_457455.xml
+            record=split, size=170052, attrs=Archive, extents=4, clusters=42
+            created=2026-05-16 16:37:43
   EXTENT    testspecials2/dir_oscar_397968/dir_oscar_522053/dir_sync_436503/hardlink_india_396154.lnk
             record=split, size=166659, attrs=Archive, extents=2, clusters=41
             created=2026-05-16 16:38:36
@@ -2087,6 +2186,9 @@ File Data Locations
             created=2026-05-16 16:40:31
   EXTENT    testspecials2/dir_oscar_397968/dir_romeo_329803/hardlink_alpha_573983.bin
             record=split, size=278005, attrs=Archive, extents=2, clusters=68
+            created=2026-05-16 16:37:43
+  EXTENT    testspecials2/dir_oscar_397968/dir_romeo_329803/hardlink_uniform_951667.xml
+            record=split, size=170052, attrs=Archive, extents=4, clusters=42
             created=2026-05-16 16:37:43
   EXTENT    testspecials2/dir_oscar_397968/dir_romeo_329803/data_romeo_908795.dat
             record=embedded, size=344617, attrs=Archive, extents=5, clusters=85
@@ -2106,6 +2208,9 @@ File Data Locations
   EXTENT    testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/hardlink_delta_953753.json
             record=split, size=144047, attrs=Archive, extents=2, clusters=36
             created=2026-05-16 16:39:04
+  EXTENT    testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/hardlink_victor_749942.xml
+            record=split, size=170052, attrs=Archive, extents=4, clusters=42
+            created=2026-05-16 16:37:43
   EXTENT    testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/report_tango_970124.log
             record=split, size=308051, attrs=Archive, extents=3, clusters=76
             created=2022-11-19 16:38:00
@@ -2130,6 +2235,12 @@ File Data Locations
   EXTENT    testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/hardlink_cache_647318.json
             record=split, size=88589, attrs=Archive, extents=3, clusters=22
             created=2025-01-10 16:38:27
+  EXTENT    testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/hardlink_config_909188.dat
+            record=split, size=146627, attrs=Archive, extents=1, clusters=36
+            created=2026-05-16 16:37:42
+  EXTENT    testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/hardlink_record_634135.md
+            record=split, size=293997, attrs=Archive, extents=9, clusters=72
+            created=2026-05-16 16:37:44
   EXTENT    testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/papa_sierra_191801.txt
             record=split, size=343899, attrs=Archive, extents=3, clusters=84
             created=2026-05-16 16:37:44
@@ -2160,6 +2271,9 @@ File Data Locations
   EXTENT    testspecials2/dir_oscar_397968/dir_zulu_210476/hardlink_hotel_913275.bak
             record=split, size=304003, attrs=Archive, extents=3, clusters=75
             created=2026-05-16 16:39:17
+  EXTENT    testspecials2/dir_oscar_397968/dir_zulu_210476/log_data_141232.md
+            record=split, size=293997, attrs=Archive, extents=9, clusters=72
+            created=2026-05-16 16:37:44
   EXTENT    testspecials2/dir_oscar_397968/dir_zulu_210476/foxtrot_lima_279318.json
             record=embedded, size=194764, attrs=Archive, extents=2, clusters=48
             created=2026-05-16 16:37:51
@@ -2241,6 +2355,9 @@ File Data Locations
   EXTENT    testspecials2/dir_yankee_474982/hardlink_audit_459489.xml
             record=split, size=433603, attrs=Archive, extents=3, clusters=106
             created=2026-05-16 16:38:15
+  EXTENT    testspecials2/dir_yankee_474982/hardlink_draft_276129.md
+            record=split, size=293997, attrs=Archive, extents=9, clusters=72
+            created=2026-05-16 16:37:44
   EXTENT    testspecials2/dir_yankee_474982/papa_sierra_887773.txt
             record=split, size=28102, attrs=Archive, extents=2, clusters=7
             created=2026-05-16 16:39:12

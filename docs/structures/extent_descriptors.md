@@ -158,6 +158,44 @@ under the same key and all the same size. They are told apart by a sub-stream id
 that picks by size or takes the first match will read a snapshot's extents and hand back an older version of
 the file as though it were the current one.
 
+## How often each map form occurs
+
+A volume does not use one extent-map form. Across 102 images and **109,588 extent-backed streams**, three
+forms occur, and which one a stream uses is a property of the record, not of the ReFS version:
+
+| map form | streams | share |
+|---|---|---|
+| a contiguous array of sub-records | 59,574 | 54.4 % |
+| a B+-tree node walked structurally (the form described above) | 40,665 | 37.1 % |
+| an embedded index array | 9,349 | 8.5 % |
+
+**Where the `$DATA` holder sits** is a separate question, and it does not determine the map form:
+
+| holder location | streams | share |
+|---|---|---|
+| the object's embedded attribute tree | 41,362 | 37.7 % |
+| a separate record in the home object's tree | 38,187 | 34.8 % |
+| a separate record in the directory's own tree | 27,482 | 25.1 % |
+| inline in the name row | 2,557 | 2.3 % |
+
+Both separate-record locations carry a mix of the contiguous array and the index array, so a reader cannot
+choose how to parse the map from where the record lives — it has to look at what the record contains.
+
+**Which form a reader should trust.** The node form above is authoritative: its rows are addressed by the
+node's index array, and a row the index array does not reference is dead space. A reader that walks the
+record's bytes positionally instead can pick such a row up, or match a value that merely looks like an
+entry — and the usual guard, that the runs exactly cover the file's allocation, does not catch it, because
+a wrong single run of the right length covers just as well. Reading the node structurally is what
+distinguishes them.
+
+**By version.** ReFS 3.4 uses the embedded index array for every stream. The contiguous array appears only
+on 3.14. The B+-tree node form is **not** a 3.14 feature: it already carries the majority of streams on 3.7
+(295 of 469) and 3.9 (1,052 of 1,502).
+
+**Maps that outgrow one node.** 139 streams have so many runs that the node becomes an index node whose
+rows point at child pages, as described above. Rare, but the reason the form exists: no flat array walk
+reaches those extents.
+
 ## Forensic notes
 
 - Two-level translation (VCN → VLCN → PLCN) is fundamental to ReFS. A parser that treats VLCN values as
@@ -184,6 +222,12 @@ image those zeros are indistinguishable from a region the acquisition never capt
 image holes in [what survives](../concepts/what_survives.md).
 
 ## Evidence
+
+The map-form and holder-location counts are a raw-disk census of 102 images and 109,588 extent-backed
+streams, every one attributed (`MD_DATA_RA_028`). The census was taken while the marker scan was consulted
+first, which is how forefst read these records up to and including v1.11.3; from v1.12.0 the structural
+readings are consulted first and the scan is a logged fallback, which corrected 23 streams across 11 files
+and gave 593 files a decoded extent map that had none before (`MD_DATA_RA_030`).
 
 The 24-byte extent entry layout (VLCN@0x00, flags@0x08, file_VCN@0x0C, padding@0x10, run_length@0x14) is
 raw-disk decoded (RD) and corroborated in the driver (E2): `CmsStream::LookupAllocation` (with

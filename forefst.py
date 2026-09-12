@@ -246,7 +246,7 @@ def validate_image(path, die_fn=None):
 
 # ─── Constants ────────────────────────────────────────────────────────
 PROG = "forefst"
-VERSION = "1.11.3"
+VERSION = "1.12.0"
 # Phase 3 (4.D): directory walks default to FULL depth (no artificial cap); `--depth N` overrides. The real
 # recursion depth equals the actual directory nesting (ReFS trees are shallow — tens of levels), so this
 # constant is never the binding limit; it just means "don't truncate". main() also raises the interpreter
@@ -1087,10 +1087,7 @@ def cow_recovery(f_after, ps_a, cs_a, tr_a, obj_map_a,
                     continue
                 at = le16(kd, 0)
                 if at == 0x30 and len(kd) > 4 and name is None:
-                    try:
-                        name = kd[4:].decode("utf-16-le").rstrip("\x00")
-                    except UnicodeDecodeError:
-                        pass
+                    name = _row_name(kd, "copy-on-write recovery")
                 if at == 0x10 and len(vd) >= 0x60 and not si:
                     si = {
                         "create_time": le64(vd, 0x28),
@@ -1186,8 +1183,8 @@ def _collect_dir_entries(f, ps, cs, tr, obj_map, oid, parent_path, out, visited,
         return
     for kd, vd in rows:
         if len(kd) < 4 or le16(kd, 0) != 0x30: continue
-        try: name = kd[4:].decode("utf-16-le").rstrip("\x00")
-        except UnicodeDecodeError: continue
+        name = _row_name(kd, "directory entry")
+        if name is None: continue
         full_path = f"{parent_path}/{name}" if parent_path else name
         child_oid = 0
         if len(vd) <= NON_RESIDENT_MAX_VALUE and len(vd) >= 0x10:
@@ -1223,16 +1220,16 @@ def extract_inline_reparse(vd):
             if print_len > 0 and buf_start + print_off + print_len <= len(vd):
                 try:
                     return vd[buf_start+print_off:buf_start+print_off+print_len].decode("utf-16-le")
-                except UnicodeDecodeError:
-                    pass
+                except UnicodeDecodeError as _e:
+                    _skip_note("reparse target decode", "extract_inline_reparse", _e)
             if sub_len > 0 and buf_start + sub_off + sub_len <= len(vd):
                 try:
                     target = vd[buf_start+sub_off:buf_start+sub_off+sub_len].decode("utf-16-le")
                     if target.startswith("\\??\\"):
                         target = target[4:]
                     return target
-                except UnicodeDecodeError:
-                    pass
+                except UnicodeDecodeError as _e:
+                    _skip_note("reparse target decode", "extract_inline_reparse", _e)
         elif tag_val == 0xA0000003:  # MOUNT_POINT/JUNCTION
             sub_off = le16(vd, idx + 8)
             sub_len = le16(vd, idx + 10)
@@ -1242,15 +1239,15 @@ def extract_inline_reparse(vd):
             if print_len > 0 and buf_start + print_off + print_len <= len(vd):
                 try:
                     return vd[buf_start+print_off:buf_start+print_off+print_len].decode("utf-16-le")
-                except UnicodeDecodeError:
-                    pass
+                except UnicodeDecodeError as _e:
+                    _skip_note("reparse target decode", "extract_inline_reparse", _e)
         elif tag_val == 0xA000001D:  # LX_SYMLINK
             # E5 fix: the LX_SYMLINK payload is u32 version(=2) + UTF-8 target; skip the 4-byte
             # version (idx+8 -> idx+12) so it does not prefix the target with "\x02\x00\x00\x00".
             try:
                 return vd[idx+12:idx+8+data_len].decode("utf-8").rstrip("\x00")
-            except UnicodeDecodeError:
-                pass
+            except UnicodeDecodeError as _e:
+                _skip_note("reparse target decode", "extract_inline_reparse", _e)
         return REPARSE_TAGS.get(tag_val, f"0x{tag_val:08X}")
     return ""
 
@@ -1280,8 +1277,8 @@ def extract_reparse_from_backing(vd):
                     t = vd[buf_start+print_off:buf_start+print_off+print_len].decode("utf-16-le")
                     if t and ("\\" in t or ":" in t):
                         return t
-                except UnicodeDecodeError:
-                    pass
+                except UnicodeDecodeError as _e:
+                    _skip_note("reparse target decode", "extract_reparse_from_backing", _e)
             if sub_len > 0 and buf_start + sub_off + sub_len <= len(vd):
                 try:
                     t = vd[buf_start+sub_off:buf_start+sub_off+sub_len].decode("utf-16-le")
@@ -1289,8 +1286,8 @@ def extract_reparse_from_backing(vd):
                         t = t[4:]
                     if t and ("\\" in t or ":" in t):
                         return t
-                except UnicodeDecodeError:
-                    pass
+                except UnicodeDecodeError as _e:
+                    _skip_note("reparse target decode", "extract_reparse_from_backing", _e)
     return ""
 
 # ─── Per-object $SI extraction ────────────────────────────────────────
@@ -1334,12 +1331,9 @@ def detect_ads(f, ps, cs, tr, vlcns):
         if len(kd) >= 4:
             attr_type = le16(kd, 0)
             if attr_type == 0x80 and len(kd) > 4:
-                try:
-                    stream_name = kd[4:].decode("utf-16-le").rstrip("\x00")
-                    if stream_name:
-                        ads_names.append(stream_name)
-                except UnicodeDecodeError:
-                    pass
+                stream_name = _row_name(kd, "ADS name")
+                if stream_name:
+                    ads_names.append(stream_name)
     return len(ads_names) > 0, ads_names
 
 # ─── Embedded B+-tree row parser (shared by snapshot/ADS/file-size) ───
@@ -1632,6 +1626,28 @@ def _outcome(status, value, why=None):
         if why is not None:
             status["reason"] = str(why)[:200]
     return value
+
+
+def _row_name(kd, where, off=4):
+    """Decode a directory row's UTF-16 filename, or return None RECORDING why it could not be read.
+
+    Every call site used to be `try: name = kd[4:].decode(...) / except UnicodeDecodeError: continue`,
+    which removes the entry from whatever is being built -- a listing, a census, a path resolution, an ADS
+    scan -- and says nothing. A file that vanishes from a listing because its name would not decode is
+    indistinguishable from a file that is not there, which is the class this project has already been bitten
+    by twice (a census that lost 72 % of one image's rows; `verify_claim --regress` reporting 20/20 while an
+    image it could not open simply never became "applicable").
+
+    Not one of these fires on the 106-image corpus -- measured, not assumed, by instrumenting every handler
+    and exercising nine commands per image. They guard damaged and truncated input, which is what a forensic
+    tool meets and this corpus does not contain, so the point of recording is for the volume that is not
+    here yet. See analysis/reports/M3_3_silent_skip_split.md.
+    """
+    try:
+        return kd[off:].decode("utf-16-le").rstrip("\x00")
+    except UnicodeDecodeError as exc:
+        _skip_note("filename decode", where, exc)
+        return None
 
 
 def _skip_note(stage, where, exc, limit=3):
@@ -1996,10 +2012,8 @@ def resolve_path(f, ps, cs, tr, obj_map, path):
         for kd, vd in rows:
             if len(kd) < 4 or le16(kd, 0) != 0x30:
                 continue
-            try:
-                nm = kd[4:].decode("utf-16-le").rstrip("\x00")
-            except UnicodeDecodeError:
-                continue          # a name that will not decode cannot be the one asked for
+            nm = _row_name(kd, "path resolution")
+            if nm is None: continue      # a name that will not decode cannot be the one asked for
             if nm == part:
                 found = (kd, vd)      # exact spelling wins outright
                 break
@@ -3489,10 +3503,8 @@ def build_oid_path_map(f, ps_off, cs, tr, obj_map):
         for kd, vd in rows:
             if len(kd) < 6 or le16(kd, 0) != 0x30:
                 continue
-            try:
-                name = kd[4:].decode("utf-16-le").rstrip("\x00")
-            except UnicodeDecodeError:
-                continue
+            name = _row_name(kd, "tree walk")
+            if name is None: continue
             if not name:
                 continue
             # value+0x08 is the child's OID for a DIRECTORY entry, but the home-dir BACKREF for a FILE
@@ -3710,10 +3722,8 @@ def locate_change_journal(f, ps, cs, tr, obj_map):
     for kd, vd in rows:
         if len(kd) < 4 or le16(kd, 0) != 0x30:
             continue
-        try:
-            name = kd[4:].decode("utf-16-le").rstrip("\x00")
-        except UnicodeDecodeError:
-            continue
+        name = _row_name(kd, "change-journal lookup")
+        if name is None: continue
         if name == "Change Journal":
             meta = {}
             if len(vd) >= 0x48:
@@ -3895,7 +3905,12 @@ def _reparse_buffer_target(vd):
     `vd` starts at the buffer itself: tag u32@0x00, ReparseDataLength u16@0x04, Reserved u16@0x06, then for
     SYMLINK / MOUNT_POINT the SubstituteName and PrintName offset+length pairs, and the path buffer at 0x14
     (SYMLINK, which has a 4-byte Flags field) or 0x10 (MOUNT_POINT). The PrintName is preferred because it is
-    the display form; a junction usually carries only the SubstituteName, so that is the fallback."""
+    the display form; a junction usually carries only the SubstituteName, so that is the fallback.
+
+    A candidate that will not decode falls through to the next, which is correct -- but it is RECORDED,
+    because when every candidate fails the function returns the tag name alone and the caller reports the
+    reparse point as carrying no target. "This symlink has no target" and "its target would not decode" are
+    different facts about the evidence, and they used to print the same."""
     if len(vd) < 8:
         return ""
     tag = le32(vd, 0)
@@ -3909,13 +3924,13 @@ def _reparse_buffer_target(vd):
         if print_len > 0 and buf_start + print_off + print_len <= len(vd):
             try:
                 return vd[buf_start+print_off:buf_start+print_off+print_len].decode("utf-16-le")
-            except UnicodeDecodeError:
-                pass
+            except UnicodeDecodeError as _e:
+                _skip_note("reparse target decode", "tag 0x%08X" % tag, _e)
         if sub_len > 0 and buf_start + sub_off + sub_len <= len(vd):
             try:
                 return vd[buf_start+sub_off:buf_start+sub_off+sub_len].decode("utf-16-le")
-            except UnicodeDecodeError:
-                pass
+            except UnicodeDecodeError as _e:
+                _skip_note("reparse target decode", "tag 0x%08X" % tag, _e)
     elif tag == 0xA0000003 and len(vd) >= 0x10:  # MOUNT_POINT/JUNCTION
         sub_off = le16(vd, 0x08)
         sub_len = le16(vd, 0x0A)
@@ -3925,19 +3940,19 @@ def _reparse_buffer_target(vd):
         if print_len > 0 and buf_start + print_off + print_len <= len(vd):
             try:
                 return vd[buf_start+print_off:buf_start+print_off+print_len].decode("utf-16-le")
-            except UnicodeDecodeError:
-                pass
+            except UnicodeDecodeError as _e:
+                _skip_note("reparse target decode", "tag 0x%08X" % tag, _e)
         if sub_len > 0 and buf_start + sub_off + sub_len <= len(vd):
             try:
                 return vd[buf_start+sub_off:buf_start+sub_off+sub_len].decode("utf-16-le")
-            except UnicodeDecodeError:
-                pass
+            except UnicodeDecodeError as _e:
+                _skip_note("reparse target decode", "tag 0x%08X" % tag, _e)
     elif tag == 0xA000001D and len(vd) > 8:  # LX_SYMLINK
         # E5 fix: skip the 4-byte version (8 -> 12) so it does not prefix the target.
         try:
             return vd[12:8+data_len].decode("utf-8").rstrip("\x00")
-        except UnicodeDecodeError:
-            pass
+        except UnicodeDecodeError as _e:
+            _skip_note("reparse target decode", "tag 0x%08X" % tag, _e)
     return REPARSE_TAGS.get(tag, f"0x{tag:08X}")
 
 
@@ -5857,6 +5872,9 @@ def _looks_text(b, sample=8192):
     if not chunk or b"\x00" in chunk:
         return False
     try:
+        # PINNED, cosmetic: the answer decides only whether a trailing newline is added when writing to a
+        # TTY. A wrong answer costs a tidy prompt, never a byte of output -- `-o FILE` and any redirect are
+        # byte-exact regardless.
         chunk.decode("utf-8")
         return True
     except UnicodeDecodeError:
@@ -7436,10 +7454,17 @@ def _find_extents_in_subrecord(vd, rec_off, rec_size, needed, tr, cs, result):
                 # coincidental match on an UNMAPPABLE vlcn would otherwise be accepted and read identity-mapped
                 # — the wrong clusters — and would also count a container-table miss the analyst sees as
                 # evidence the volume is damaged.
+                # v7.4 M2.2: the marker scan is the ONE heuristic of the three readings, and it is now a
+                # LOGGED fallback. It only runs after both structural readings declined, and when it wins
+                # it says so -- an examiner reading a map that came from a 4-byte constant match should be
+                # told, because that is the reading a coincidence can satisfy. Measured share: 1,771 of
+                # 133,145 accepted sub-record decodes (1.3%).
+                _MARKER_SCAN_WINS.append(rec_off)
                 result["extents"] = [{
                     "vlcn": vlcn, "plcn": tr.tr(vlcn), "file_vcn": 0,
                     "clusters": cluster_count, "flags": 0, "disk_offset": 0,
                 }]
+                result["decoder"] = "marker-scan"
                 return
 
 def _parse_extents_from_type40(vd, cs, tr):
@@ -7558,7 +7583,7 @@ def _parse_inline_holder_extents(vd, cs, tr):
     return exts
 
 
-def _decode_holder_extents(vb, cs, tr):
+def _decode_holder_extents(vb, cs, tr, ctx=None):
     """Hybrid, cover-guarded extent decode for a non-resident file's stored extents — used for BOTH the
     inline-holder value (long key_flags=0x01, §C.3b) AND the type-0x40 backing record (key_flags=0x02, §C.3a),
     which share the same $DATA-holder layout. Tries the embedded B+-tree index array first (decodes fragmented /
@@ -7572,7 +7597,28 @@ def _decode_holder_extents(vb, cs, tr):
         return []
     alloc = le64(vb, 0x60)
     need = alloc // cs if alloc > 0 and alloc % cs == 0 else -1
-    exts = _parse_inline_holder_extents(vb, cs, tr)
+    # ORDER (1.12.0). There are two HOLDER FORMS and therefore two STRUCTURAL readings, plus one
+    # heuristic. They are tried in that order:
+    #
+    #   1. the NESTED NODE (E86) -- `_embedded_data_extents`: parses the $DATA record's B+-tree node and
+    #      returns only rows the node's INDEX ARRAY references, selecting the live stream by sub-stream
+    #      id 0x1000. Needs a read context, so it is skipped when `ctx` is None.
+    #   2. the PLAIN HOLDER -- the embedded index array, then the descriptor-located fixed-stride array.
+    #      Also structural: entries are read at a fixed 24-byte stride from a descriptor whose
+    #      start/end/count/capacity must agree with each other before a single entry is read.
+    #   3. the MARKER SCAN, inside `_find_extents_in_subrecord` -- the ONLY heuristic of the three. It
+    #      matches a 4-byte constant and a cluster count, so a coincidence can satisfy it.
+    #
+    # Through 1.11.3 the order was inverted and the scan could answer first. The cover guard cannot catch
+    # that: a wrong single run of the right length covers the allocation exactly as well as the right one.
+    # Measured over the corpus that was 23 streams -- 11 distinct files -- mapped to the wrong clusters:
+    # nine returned the VOLUME BOOT RECORD as file content (VLCN 0), one was built on the $DATA descriptor
+    # constant 0x000E0080, one read a row the index array does not reference. Every reading stays; the
+    # index array is still the only one that answers on v3.4.
+    # See analysis/reports/M2_2_decoder_order.md.
+    exts = _embedded_data_extents(vb, cs, ctx) if ctx else []
+    if not exts:
+        exts = _parse_inline_holder_extents(vb, cs, tr)
     if not exts:
         exts = _parse_extents_from_type40(vb, cs, tr)["extents"]
     if not _contiguous_cover(exts, need):
@@ -7617,7 +7663,13 @@ def _vlcn_mappable(tr, vlcn):
         # 2026-09-03 pass, where 794 of 794 warnings were spurious.
         low = min(tr.map) if tr.map else None
         return low is not None and key < low
-    except Exception:
+    except Exception as _e:
+        # NOT pinned any more. `False` is the safe direction -- it withholds a map rather than inventing
+        # one -- but this sits on a path that PRODUCES BYTES: at the marker-scan site a False rejects the
+        # candidate, so a recoverable map is silently not recovered. The v7.4 condition for pinning a
+        # silent skip is that it must not decide bytes, a size or a verdict; this decides all three, so it
+        # records instead. The answer is unchanged; only the silence is.
+        _skip_note("container-table mappability", "vlcn %s" % vlcn, _e)
         return False
 
 def _extent_node_rows(buf, N):
@@ -7784,7 +7836,8 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
             # stale (measured: 190 of 83,176 index-entry names corpus-wide, v3.7-v3.14); the backing is the
             # object's record, and its value+0x58 agreed with the independently-decoded $DATA stream size on
             # 190/190 of those. Every size that gates a read or a write resolves through here.
-            type40_map[(stream_idx, parent_oid)] = {"extents": _decode_holder_extents(bytes(vd), cs, tr),
+            type40_map[(stream_idx, parent_oid)] = {"extents": _decode_holder_extents(bytes(vd), cs, tr,
+                                                                                        (f, ps, cs, tr)),
                                                     "obj_size": le64(vd, 0x58), "obj_alloc": le64(vd, 0x60),
                                                     "raw": bytes(vd),      # for _stream_data_form (W6)
                                                     "inline": _backing_inline_data(vd, (f, ps, cs, tr))}
@@ -7797,7 +7850,8 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
             if oid in obj_map:
                 for rkd, rvd in walk_bplus(f, ps, cs, tr, obj_map[oid]):
                     if len(rkd) >= 24 and le16(rkd, 0) == 0x40 and len(rvd) >= 0x68:
-                        m.setdefault(le64(rkd, 8), {"extents": _decode_holder_extents(bytes(rvd), cs, tr),
+                        m.setdefault(le64(rkd, 8), {"extents": _decode_holder_extents(bytes(rvd), cs, tr,
+                                                                                          (f, ps, cs, tr)),
                                                     "obj_size": le64(rvd, 0x58), "obj_alloc": le64(rvd, 0x60),
                                                     "raw": bytes(rvd),     # for _stream_data_form (W6)
                                                     "inline": _backing_inline_data(rvd, (f, ps, cs, tr))})
@@ -7883,12 +7937,9 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
             # Hybrid, cover-guarded decode (index-array primary, 0xA8-scan fallback): decodes fragmented /
             # multi-node inline-holder files and emits extents only for an exact contiguous cover, else none
             # (clean `extract` failure) — never wrong bytes.
-            exts = _decode_holder_extents(vb, cs, tr)
-            if not exts:
-                # E86: the map is not a flat run array here — it is a nested node inside the embedded
-                # $DATA record (and, past one node, a child page). Fallback ONLY: when the holder decode
-                # already produced a cover, nothing changes.
-                exts = _embedded_data_extents(vb, cs, (f, ps, cs, tr))
+            # The decoder ORDER lives in _decode_holder_extents (1.12.0): structural first, the
+            # positional walks as its fallback. Passing ctx is what lets it ask the structural decoder.
+            exts = _decode_holder_extents(vb, cs, tr, (f, ps, cs, tr))
             for ext in exts:
                 ext["disk_offset"] = ps + ext["plcn"] * cs
             results.append({
@@ -7916,10 +7967,9 @@ def _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
             for ext in extents:
                 ext["disk_offset"] = ps + ext["plcn"] * cs
         ads_list = _parse_ads_from_value(vd, (f, ps, cs, tr)) if len(vd) > 0xA8 else []
-        if not extents and file_size and get_resident_data_content(vd) is None:
-            # E86: an extent-backed record whose map is a nested node in the embedded $DATA row. Fallback
-            # ONLY — a file whose bytes are inline (resident) or reachable by the existing paths is not
-            # touched, so nothing that resolves today changes.
+        if file_size and get_resident_data_content(vd) is None:
+            # Structural decode of this row's own embedded $DATA node; a file whose bytes are inline
+            # (resident) is never touched. The dispatcher applies the same preference for every other path.
             _nested = _embedded_data_extents(vd, cs, (f, ps, cs, tr))
             if _nested:
                 for ext in _nested:
@@ -8403,6 +8453,23 @@ def _hole_ranges_in(fd, start, end):
     return out
 
 
+_MARKER_SCAN_WINS = []     # sub-record offsets whose extent map came from the heuristic marker scan
+
+
+def _marker_scan_summary():
+    """Say, once per run, how many maps came from the heuristic rather than a structural reading.
+
+    The marker scan matches a 4-byte constant and a cluster count; a coincidence can satisfy it, and the
+    contiguous-cover guard cannot tell a coincidence from a correct single run. It answers for 1.3 % of
+    decodes and it is the reading that produced the wrong maps corrected in 1.12.0, so when it is what
+    produced an answer the operator is told."""
+    if _MARKER_SCAN_WINS:
+        print(f"[{PROG}] NOTE: {len(_MARKER_SCAN_WINS)} extent map(s) came from the heuristic marker scan "
+              f"rather than a structural reading of the record. Those maps are accepted only when they "
+              f"exactly cover the file's allocation, but a coincidental match can satisfy that too -- "
+              f"corroborate before relying on their content.", file=sys.stderr)
+
+
 _CONTENT_HOLES = []
 
 
@@ -8529,6 +8596,7 @@ def _bulk_hole_finish(out_dir):
 
 
 atexit.register(lambda: _content_hole_summary())
+atexit.register(lambda: _marker_scan_summary())
 
 
 def _extent_hole_ranges(f, ps, cs, exts, file_size):
@@ -8543,6 +8611,10 @@ def _extent_hole_ranges(f, ps, cs, exts, file_size):
     try:
         fd = os.open(name, os.O_RDONLY)
     except OSError:
+        # PINNED, and None is the CONTRACT here, not a swallowed error: it means "the host could not be
+        # asked", which every caller already distinguishes from "no holes" -- cmd_extract prints the
+        # undeterminable warning and --refuse-holes refuses on it. Recording via _skip_note as well would
+        # report a finding on every extract run from a filesystem without SEEK_DATA/SEEK_HOLE.
         return None
     out = []
     try:
@@ -8580,6 +8652,10 @@ def _extent_hole_bytes(f, ps, cs, exts):
     try:
         fd = os.open(name, os.O_RDONLY)
     except OSError:
+        # PINNED, and None is the CONTRACT here, not a swallowed error: it means "the host could not be
+        # asked", which every caller already distinguishes from "no holes" -- cmd_extract prints the
+        # undeterminable warning and --refuse-holes refuses on it. Recording via _skip_note as well would
+        # report a finding on every extract run from a filesystem without SEEK_DATA/SEEK_HOLE.
         return None
     try:
         total = 0
@@ -9765,10 +9841,8 @@ def _scan_page_slack(page, plcn, tag):
         kd = page[off + ko:off + ko + kl]
         if len(kd) < 6 or le16(kd, 0) != 0x30:
             continue
-        try:
-            name = kd[4:].decode("utf-16-le").rstrip("\x00")
-        except UnicodeDecodeError:
-            continue
+        name = _row_name(kd, "page-slack scan")
+        if name is None: continue
         if len(name) < 2 or not all(0x20 <= ord(c) < 0xFFFE for c in name):
             continue
         e = _decode_dir_row_value(page[off + vo:off + vo + vl])
@@ -9874,11 +9948,9 @@ def find_orphan_objects(f, ps, cs, tr, obj_map, referenced_oids, log_fn=None):
                     "usn": le64(vd, 0x68) if len(vd) >= 0x70 else 0,
                 }
             elif attr_type == 0x30 and len(kd) > 4 and name is None:
-                try:
-                    name = kd[4:].decode("utf-16-le").rstrip("\x00")
+                name = _row_name(kd, "orphan-object scan")
+                if name is not None:
                     child_ct = _decode_dir_row_value(vd).get("create_time", 0)
-                except UnicodeDecodeError:
-                    pass
         if not name and not si_data:
             continue
         fa = si_data.get("file_attrs", 0)
@@ -13560,16 +13632,24 @@ def main():
         die(f"cannot read image: {e}")
     version_str = f"{vmaj}.{vmin}"
     usn_active = False
+    _usn_unknown = False
     if 0x520 in obj_map:
         try:
             for kd, _vd in walk_bplus(f, ps, cs, tr, obj_map[0x520]):
                 if len(kd) >= 4 and le16(kd, 0) == 0x30:
-                    try:
-                        nm = kd[4:].decode("utf-16-le").rstrip("\x00")
-                        if nm == "Change Journal": usn_active = True; break
-                    except Exception: pass
-        except Exception: pass
-    usn_tag = " | USN: active" if usn_active else ""
+                    nm = _row_name(kd, "USN presence check")
+                    if nm is None:
+                        _usn_unknown = True          # a name we could not read may be the one we look for
+                    elif nm == "Change Journal":
+                        usn_active = True
+                        break
+        except Exception as _e:
+            # "no USN" and "could not look" printed the same banner. The banner is the first thing an
+            # examiner reads about the volume, so it now says which of the two this is.
+            _skip_note("USN presence check", "system metadata tree", _e)
+            _usn_unknown = True
+    usn_tag = (" | USN: active" if usn_active
+               else (" | USN: unknown (could not read the system metadata tree)" if _usn_unknown else ""))
     log(f"[{PROG}] ReFS {version_str} | {len(obj_map)} objects | cluster_size={cs}{usn_tag}")
     if (vmaj, vmin) < (3, 14):
         log(f"[{PROG}] note: ReFS {version_str} (<3.14) — some enriched fields may be incomplete (see --list)")

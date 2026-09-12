@@ -1,0 +1,24 @@
+# Load-bearing figures that more than one page states, with the value the reference gives.
+#
+# Why this file exists: the drift gate (check_doc_drift.py) compares sentences that are WORDED alike. The
+# figures below are stated on three to nine pages each in wording so different that no similarity measure
+# links them -- CPC is on five pages at containment 0.06-0.10. Those are exactly the numbers that drift.
+# Each row pins one figure to the value in forclaude/reference/, and the check asserts every page that
+# states it in this shape states it with that value.
+#
+# id <TAB> expected <TAB> regex with ONE capture group for the number <TAB> reference for the value
+cpc_4k_a	16384	(?<!\d)(\d{1,3},\d{3}|\d{4,})\s+(?:on|for)\s+4\s*KiB\s+cluster	structure_reference.md:315
+cpc_64k_a	1024	(?<!\d)(\d{1,3},\d{3}|\d{4,})\s+(?:on|for)\s+64\s*KiB\s+cluster	structure_reference.md:315
+cpc_4k_b	16384	(?<!\d)4\s*KiB\s+clusters?:\s*CPC\s*=\s*(\d[\d,]*)	structure_reference.md:315
+cpc_64k_b	1024	64\s*KiB\s+clusters?:\s*CPC\s*=\s*(\d[\d,]*)	structure_reference.md:315
+container_row_4k	160	\*{0,2}(\d[\d,]*)\s*bytes?\*{0,2}\s+on\s+4\s*KiB\s+clusters	structure_reference.md:307
+container_row_64k	224	\*{0,2}(\d[\d,]*)\s*bytes?\*{0,2}\s+on\s+64\s*KiB\s+clusters	structure_reference.md:325
+si_v34	116	layout\s+differs\s+between\s+v?3\.4\s*\((\d+)\s*bytes\)	structure_reference.md:773
+si_v314	124	and\s+v?3\.14\s*\((\d+)\s*bytes\)	structure_reference.md:773
+crc32c_cluster	4096	(?:over|of)\s+the\s+(?:full\s+)?(\d[\d,]*)[- ]byte\s+cluster	structure_reference.md:1106
+vbr_size	512	(\d+)-byte structure at sector 0	structure_reference.md (VBR)
+vbr_checksum_range	3	bytes\s+(\d+)\.\.511	structure_reference.md (VBR self-checksum)
+container_row_4k_b	160	(\d[\d,]*)-byte row \(4\s*KiB	structure_reference.md:307
+container_row_64k_b	224	(\d[\d,]*)-byte row \(64\s*KiB	structure_reference.md:325
+si_v34_total	116	total\s+(\d+)\s+bytes\s+\(0x74\)	structure_reference.md:773
+si_v314_total	124	total\s+(\d+)\s+bytes\s+\(0x7C\)	structure_reference.md:773

@@ -48,7 +48,7 @@ only, and the sync step regenerates.
 | [container_index.md](structures/container_index.md) | The Container Index (root #10, table ID 0x0E, schema 0xe100) is an alternate index over the … | CT_CNTX_001, FS_CHKP_019, GN_CROT_SA_001 |
 | [container_table.md](structures/container_table.md) | The Container Table (roots #7/#8, schema 0xe0c0) maps virtual container IDs to physical disk … | AP_REDO_037, CT_CTBL_001, CT_CTBL_002, CT_CTBL_003, CT_CTBL_004, CT_CTBL_005, CT_CTBL_006, CT_CTBL_007, CT_CTBL_008, CT_CTBL_009, CT_CTBL_010, CT_CTBL_011, CT_CTBL_RA_003, CT_CTBL_RA_004, FS_CHKP_016, FS_CHKP_017, FS_CHKP_019, GN_ARCH_003, GN_ARCH_RA_001 |
 | [directory_entries.md](structures/directory_entries.md) | Directory entries (type 0x30) are B+-tree rows within a per-directory B+-tree. | FN_DTBL_002, FN_DTBL_006, FN_DTBL_007, GN_IENT_004, MD_ATTR_RA_008, MD_ATTR_RA_014, MD_DATA_RA_012, MD_DATA_RA_021, MD_FTBL_005 |
-| [extent_descriptors.md](structures/extent_descriptors.md) | Extent descriptors (type 0x40) map a file's logical cluster offsets (VCNs) to virtual LCNs (VLCNs). | CT_DRNT_001, CT_DRNT_003, CT_DRNT_RA_001, MD_ADS_RA_002, MD_DATA_RA_001, MD_DATA_RA_002, MD_DATA_RA_007, MD_DATA_RA_009, MD_DATA_RA_011, MD_DATA_RA_013, MD_DATA_RA_014, MD_DATA_RA_023, MD_DATA_RA_024, MD_SF_RA_004, MD_SF_RA_005, MD_SNAP_RA_003 |
+| [extent_descriptors.md](structures/extent_descriptors.md) | Extent descriptors (type 0x40) map a file's logical cluster offsets (VCNs) to virtual LCNs (VLCNs). | CT_DRNT_001, CT_DRNT_003, CT_DRNT_RA_001, MD_ADS_RA_002, MD_DATA_RA_001, MD_DATA_RA_002, MD_DATA_RA_007, MD_DATA_RA_009, MD_DATA_RA_011, MD_DATA_RA_013, MD_DATA_RA_014, MD_DATA_RA_023, MD_DATA_RA_024, MD_DATA_RA_028, MD_DATA_RA_030, MD_SF_RA_004, MD_SF_RA_005, MD_SNAP_RA_003 |
 | [integrity_state.md](structures/integrity_state.md) | The Integrity State Table (root #11, table ID 0x0F, schema 0xe080) tracks volume-level … | FS_CHKP_020 |
 | [mlog.md](structures/mlog.md) | The MLog implements write-ahead logging for atomic metadata updates. | AP_EVNT_001, AP_EVNT_002, AP_EVNT_003, AP_EVNT_004, AP_EVNT_005, AP_EVNT_006, AP_EVNT_007, AP_LGFL_003, AP_LGFL_004, AP_LGFL_RA_003, AP_LGFL_RA_005, AP_LGFL_RA_006, AP_LGFL_RA_008, AP_LGFL_RA_010, AP_LGTB_001, AP_LGTB_002, AP_LGTB_003, AP_LGTB_005, AP_REDO_001, AP_REDO_002, AP_REDO_003, AP_REDO_004, AP_REDO_005, AP_REDO_006, AP_REDO_007, AP_REDO_008, AP_REDO_009, AP_REDO_010, AP_REDO_011, AP_REDO_012, AP_REDO_013, AP_REDO_014, AP_REDO_015, AP_REDO_016, AP_REDO_017, AP_REDO_018, AP_REDO_019, AP_REDO_020, AP_REDO_021, AP_REDO_022, AP_REDO_023, AP_REDO_024, AP_REDO_025, AP_REDO_026, AP_REDO_027, AP_REDO_028, AP_REDO_029, AP_REDO_030, AP_REDO_031, AP_REDO_032, AP_REDO_033, AP_REDO_034, AP_REDO_035, AP_REDO_036, AP_REDO_037, AP_REDO_038, AP_REDO_039, AP_REDO_040 |
 | [object_table.md](structures/object_table.md) | The Object Table (roots #0 and #5, schema 0xe030) is the master OID-to-table mapping. | FS_OTBL_001, FS_OTBL_002, FS_OTBL_RA_002, FS_OTBL_RA_007, FS_OTBL_SA_001, FS_OTBL_SA_003, FS_OTBL_SA_007, MD_ATTR_RA_005 |
@@ -130,8 +130,11 @@ only, and the sync step regenerates.
 ## 2. Findings → the pages that cite them
 
 Before changing a finding, correct every page listed on its row in the same commit. The
-**124 rows with more than one page** are the owner-page consolidation candidates: one
-page should state the fact and the rest should link to it.
+The **124 rows citing more than one page** are not duplication to be consolidated:
+a finding is cited where a page declares what backs its statements, and one finding legitimately
+backs statements on several pages. Measured 2026-09-11: 540 of the 557 citations in the tree sit
+in a `## Evidence` section, and no concept is explained redundantly. What must not happen is two
+pages stating one fact with *different numbers* — gates 7h and 7i check exactly that.
 
 | Finding | Static | Disk | Pages | Cited on |
 |---------|--------|------|-------|----------|
@@ -510,6 +513,8 @@ page should state the fact and the rest should link to it.
 | `MD_DATA_RA_024` | RD | CONFIRMED |  | [extent_descriptors.md](structures/extent_descriptors.md) |
 | `MD_DATA_RA_025` | E2+RD | CONFIRMED |  | [driver_transitions.md](concepts/driver_transitions.md) |
 | `MD_DATA_RA_027` | RD | REFUTED |  | [placement_and_residency.md](concepts/placement_and_residency.md) |
+| `MD_DATA_RA_028` | RD | CONFIRMED |  | [extent_descriptors.md](structures/extent_descriptors.md) |
+| `MD_DATA_RA_030` | RD | CONFIRMED |  | [extent_descriptors.md](structures/extent_descriptors.md) |
 | `MD_DDIR_001` | E2 | CONFIRMED |  | [STANDARD_INFORMATION.md](attributes/STANDARD_INFORMATION.md) |
 | `MD_DDIR_002` | — | CONFIRMED |  | [STANDARD_INFORMATION.md](attributes/STANDARD_INFORMATION.md) |
 | `MD_DDIR_003` | — | NOT_TESTED |  | [STANDARD_INFORMATION.md](attributes/STANDARD_INFORMATION.md) |
@@ -604,7 +609,7 @@ page should state the fact and the rest should link to it.
 
 ## 3. Register rows no page cites
 
-The triage list: **17 of 483** register rows are cited by no page in
+The triage list: **18 of 486** register rows are cited by no page in
 `attributes/, structures/, concepts/, tools/, examples/` — the denominator is the content directories, because those are the
 pages a reader reaches. A row here is one of three things, and the triage decides which:
 
@@ -633,6 +638,7 @@ Rows read in register order. A mention in `changelog.md` does not count as docum
 | `FS_OTBL_SA_008` | E2 … | CONFIRMED |
 | `MD_DATA_RA_026` | RD | CONFIRMED |
 | `MD_CS_RA_003` | E2+RD | CONFIRMED |
+| `MD_DATA_RA_029` | RD | CONFIRMED |
 
 ---
-*Generated by `build_docs_index.py` — 81 pages indexed, 466 of 483 register rows cited, 124 cited on more than one page. The claim register is `analysis/reference_table.csv`.*
+*Generated by `build_docs_index.py` — 81 pages indexed, 468 of 486 register rows cited, 124 cited on more than one page. The claim register is `analysis/reference_table.csv`.*

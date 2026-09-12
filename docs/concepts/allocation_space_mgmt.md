@@ -37,7 +37,7 @@ Each managed range is described by one row. A **bitmap row** carries an allocati
 `+0x18` — **1 bit per cluster, where `1 = allocated`**. The row is **not a fixed size**: the bitmap is
 exactly as long as its range needs, so the row measures `bitmap_offset + roundup8(ceil(range_length / 8))`.
 The familiar 2,072-byte row is simply the one covering 16,384 clusters; rows of 152 bytes (1,024 clusters)
-and 32 bytes (a dozen clusters or fewer) occur too. Ranges that are entirely allocated or entirely free do
+and 32 bytes (12 and 3 clusters) occur too. Ranges that are entirely allocated or entirely free do
 not need a bitmap at all, so they collapse to a **compact row** that keeps the header fields and drops the
 bitmap payload — the common case of a whole container fully in use, or fully free, without spending 2 KiB
 on a uniform bitmap. Whether a row carries a bitmap is stated by **bit 0 of the flags** at `+0x12`, not by

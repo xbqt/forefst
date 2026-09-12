@@ -284,6 +284,19 @@ forefst.py disk.raw timestomp --csv suspects.csv       # export ALL tiers to CSV
 
 ### `extract` — extract a file's content (or one ADS)
 
+> **Known issue (1.11.3 and earlier):** a small number of extent-backed files decode to the **wrong
+> clusters**, so `extract`, `dataruns` and `export` report content that is not theirs. Most visibly, on some
+> **ReFS 3.10-format volumes** a file can decode to the **volume boot record** — the output is short, mostly
+> zeros, and begins with the `ReFS` signature. Nothing warns. Two rarer forms exist on 3.14 volumes: a file
+> that extracts as all zeros, and one that reads a stale cluster.
+>
+> Measured over 106 images: **23 streams — 11 distinct files — of 109,540**. Three volume families are
+> affected; most volumes are not, and a file that decodes correctly is unaffected.
+>
+> If you extracted an extent-backed file with 1.11.3 or earlier and the output looks wrong — short,
+> zero-filled, or starting with `ReFS` — re-extract it with 1.12.0, where the cause is fixed.
+
+
 Recovers a file's bytes and writes them to stdout (redirect to a file): **extent-backed** files from their extents — whether the extent map is held **inline** in the directory record (the common 3.14 case, listed as `DataResidency=extents`) or in a separate record — **inline** files from the `$DATA` bytes in the record — including a file whose record was split out of its name row by a move or a hard link but whose bytes stayed inline inside that record — and **snapshot-shared files unmodified since a snapshot** from the blocks they share with the latest snapshot. Address by bare name, absolute `/path`, or `--path`; use `name:stream` to pull an ADS (a small ADS from its inline bytes, or a large ≥2 KiB ADS reassembled from its on-disk extents). Only a rare oversized/overflow extent table falls back to `dataruns`; a modified-CoW file's prior versions are in `snapshots --extract`.
 
 **Bytes that came from image holes are reported, not withheld.** Raw images are stored sparsely — this

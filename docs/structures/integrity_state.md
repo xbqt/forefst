@@ -59,7 +59,7 @@ The class contracts modestly across versions rather than growing.
 
 ## Cross-references
 
-- [Checkpoint (CHKP)](chkp.md) — root #11 in the root-pointer list
+- [Checkpoint (CHKP)](chkp.md) — carries this table's root pointer, at index #11 in the root-pointer list
 - [Schema Table](schema_table.md) — schema 0xe080
 - [VBR](vbr.md) — integrity streams are orthogonal to the metadata-checksum configuration
 

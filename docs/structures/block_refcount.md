@@ -69,7 +69,7 @@ with bit 15 — the bit positions and this dedup-only appearance are what the co
 
 ## Cross-references
 
-- [Checkpoint (CHKP)](chkp.md) — root #6 in the root-pointer list
+- [Checkpoint (CHKP)](chkp.md) — carries this table's root pointer, at index #6 in the root-pointer list
 - [Schema Table](schema_table.md) — schema 0xe0b0
 - [Container Table](container_table.md) — Start LCN values align with container boundaries
 - [Copy-on-Write](../concepts/copy_on_write.md) — why refcounts ≥ 2 protect CoW clusters
