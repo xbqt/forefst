@@ -1,0 +1,645 @@
+{
+ "id": "attr_named_data_win11refs2tspecials",
+ "generated_by": "analysis/tools/analysis_scripts/gen_hex_figures.py",
+ "decoded_by": "forefst 1.14.0 (forefstdev/forefst.py)",
+ "title": "An example alternate data stream (a 47-byte inline $NAMED_DATA record), read with forefst.",
+ "image": {
+  "name": "win11refs2tspecials.raw",
+  "step": "step3",
+  "listed_as": "analysis/rawdisk/disks/step3/win11refs2tspecials.raw",
+  "size": 2199023255552
+ },
+ "offset": 42126496,
+ "offset_hex": "0x282cca0",
+ "length": 168,
+ "bytes": "a800000010002600000038006b0000006b0000000000000002000080b0000500680069006400640065006e005f0038003200340031000000000000005f0000000c0000003000000000000000000000002f000000000000002f000000000000002f000000000000002f000000000000000200000047656e6572617465642041445320617420323032362d30352d31365431363a33373a35342e363832343432395a0d0a0000000000",
+ "note": "The bytes are the row of the sub-record 80000002/00b0 of `testspecials2/output_zulu_513021.log`. Not coloured: +0x10 to +0x17, +0x36 to +0x37, +0xA3 to +0xA7.",
+ "fields": [
+  {
+   "off": "0x00",
+   "len": 16,
+   "name": "Row header",
+   "frame": "the sub-record's row",
+   "group": null,
+   "bytes": "a8 00 00 00 10 00 26 00 00 00 38 00 6b 00 00 00",
+   "value": "row 0xa8 (168) bytes; key at +0x10 (38 bytes), value at +0x38 (0x6b (107) bytes)",
+   "decoder": "forefst.parse_resident_btree_rows",
+   "slot": 0,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "b-tree-row-header--16-bytes"
+   },
+   "row": false,
+   "table": null
+  },
+  {
+   "off": "0x00",
+   "len": 4,
+   "name": "Marker",
+   "frame": "from the key's marker",
+   "group": null,
+   "bytes": "02 00 00 80",
+   "value": "0x80000002",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 1,
+   "link": {
+    "page": "attributes/NAMED_DATA.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x04",
+   "len": 4,
+   "name": "Descriptor",
+   "frame": "from the key's marker",
+   "group": null,
+   "bytes": "b0 00 05 00",
+   "value": "0x000500b0",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 2,
+   "link": {
+    "page": "attributes/NAMED_DATA.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x08",
+   "len": 22,
+   "name": "Stream name",
+   "frame": "from the key's marker",
+   "group": null,
+   "bytes": "68 00 69 00 64 00 64 00 65 00 6e 00 5f 00 38 00 …",
+   "value": "\"hidden_8241\"",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 3,
+   "link": {
+    "page": "attributes/NAMED_DATA.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x00",
+   "len": 2,
+   "name": "Padding",
+   "frame": "in the value",
+   "group": null,
+   "bytes": "00 00",
+   "value": "0x0000",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 4,
+   "link": {
+    "page": "attributes/NAMED_DATA.md",
+    "anchor": "the-value"
+   },
+   "row": true,
+   "table": "value"
+  },
+  {
+   "off": "0x02",
+   "len": 2,
+   "name": "Attribute flags",
+   "frame": "in the value",
+   "group": null,
+   "bytes": "00 00",
+   "value": "0x0000",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 5,
+   "link": {
+    "page": "attributes/NAMED_DATA.md",
+    "anchor": "the-value"
+   },
+   "row": true,
+   "table": "value"
+  },
+  {
+   "off": "0x04",
+   "len": 4,
+   "name": "Data-area size",
+   "frame": "in the value",
+   "group": null,
+   "bytes": "5f 00 00 00",
+   "value": "0x5f (95) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 6,
+   "link": {
+    "page": "attributes/NAMED_DATA.md",
+    "anchor": "the-value"
+   },
+   "row": true,
+   "table": "value"
+  },
+  {
+   "off": "0x08",
+   "len": 4,
+   "name": "Content offset",
+   "frame": "in the value",
+   "group": null,
+   "bytes": "0c 00 00 00",
+   "value": "0xc (12)",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 7,
+   "link": {
+    "page": "attributes/NAMED_DATA.md",
+    "anchor": "the-value"
+   },
+   "row": true,
+   "table": "value"
+  },
+  {
+   "off": "0x0C",
+   "len": 4,
+   "name": "Summary size",
+   "frame": "in the value",
+   "group": null,
+   "bytes": "30 00 00 00",
+   "value": "0x30 (48) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 0,
+   "link": {
+    "page": "attributes/NAMED_DATA.md",
+    "anchor": "the-value"
+   },
+   "row": true,
+   "table": "value"
+  },
+  {
+   "off": "0x10",
+   "len": 2,
+   "name": "StreamSummary flags",
+   "frame": "in the value",
+   "group": null,
+   "bytes": "00 00",
+   "value": "0x0000",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 1,
+   "link": {
+    "page": "attributes/NAMED_DATA.md",
+    "anchor": "the-value"
+   },
+   "row": true,
+   "table": "value"
+  },
+  {
+   "off": "0x12",
+   "len": 6,
+   "name": "Reserved",
+   "frame": "in the value",
+   "group": null,
+   "bytes": "00 00 00 00 00 00",
+   "value": "all 6 bytes zero",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": "z",
+   "link": {
+    "page": "attributes/NAMED_DATA.md",
+    "anchor": "the-value"
+   },
+   "row": true,
+   "table": "value"
+  },
+  {
+   "off": "0x18",
+   "len": 8,
+   "name": "Allocated size",
+   "frame": "in the value",
+   "group": null,
+   "bytes": "2f 00 00 00 00 00 00 00",
+   "value": "0x2f (47) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 2,
+   "link": {
+    "page": "attributes/NAMED_DATA.md",
+    "anchor": "the-value"
+   },
+   "row": true,
+   "table": "value"
+  },
+  {
+   "off": "0x20",
+   "len": 8,
+   "name": "Stream size",
+   "frame": "in the value",
+   "group": null,
+   "bytes": "2f 00 00 00 00 00 00 00",
+   "value": "0x2f (47) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 3,
+   "link": {
+    "page": "attributes/NAMED_DATA.md",
+    "anchor": "the-value"
+   },
+   "row": true,
+   "table": "value"
+  },
+  {
+   "off": "0x28",
+   "len": 8,
+   "name": "Valid data length",
+   "frame": "in the value",
+   "group": null,
+   "bytes": "2f 00 00 00 00 00 00 00",
+   "value": "0x2f (47) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 4,
+   "link": {
+    "page": "attributes/NAMED_DATA.md",
+    "anchor": "the-value"
+   },
+   "row": true,
+   "table": "value"
+  },
+  {
+   "off": "0x30",
+   "len": 8,
+   "name": "Total allocated",
+   "frame": "in the value",
+   "group": null,
+   "bytes": "2f 00 00 00 00 00 00 00",
+   "value": "0x2f (47) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 5,
+   "link": {
+    "page": "attributes/NAMED_DATA.md",
+    "anchor": "the-value"
+   },
+   "row": true,
+   "table": "value"
+  },
+  {
+   "off": "0x38",
+   "len": 2,
+   "name": "Checksum type",
+   "frame": "in the value",
+   "group": null,
+   "bytes": "02 00",
+   "value": "0x0002",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 6,
+   "link": {
+    "page": "attributes/NAMED_DATA.md",
+    "anchor": "the-value"
+   },
+   "row": true,
+   "table": "value"
+  },
+  {
+   "off": "0x3A",
+   "len": 2,
+   "name": "Integrity algorithm",
+   "frame": "in the value",
+   "group": null,
+   "bytes": "00 00",
+   "value": "0x0000",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 7,
+   "link": {
+    "page": "attributes/NAMED_DATA.md",
+    "anchor": "the-value"
+   },
+   "row": true,
+   "table": "value"
+  },
+  {
+   "off": "0x3C",
+   "len": 47,
+   "name": "Inline content",
+   "frame": "in the value",
+   "group": null,
+   "bytes": "47 65 6e 65 72 61 74 65 64 20 41 44 53 20 61 74 …",
+   "value": "47 bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 0,
+   "link": {
+    "page": "attributes/NAMED_DATA.md",
+    "anchor": "the-value"
+   },
+   "row": true,
+   "table": "value"
+  }
+ ],
+ "groups": [],
+ "rows": [
+  {
+   "o": "0000",
+   "h": [
+    [
+     0,
+     "a8 00 00 00 10 00 26 00  00 00 38 00 6b 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     0,
+     "......&...8.k..."
+    ]
+   ]
+  },
+  {
+   "o": "0010",
+   "h": [
+    [
+     -1,
+     "6b 00 00 00 00 00 00 00  "
+    ],
+    [
+     1,
+     "02 00 00 80"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     2,
+     "b0 00 05 00"
+    ]
+   ],
+   "a": [
+    [
+     -1,
+     "k......."
+    ],
+    [
+     1,
+     "...."
+    ],
+    [
+     2,
+     "...."
+    ]
+   ]
+  },
+  {
+   "o": "0020",
+   "h": [
+    [
+     3,
+     "68 00 69 00 64 00 64 00  65 00 6e 00 5f 00 38 00"
+    ]
+   ],
+   "a": [
+    [
+     3,
+     "h.i.d.d.e.n._.8."
+    ]
+   ]
+  },
+  {
+   "o": "0030",
+   "h": [
+    [
+     3,
+     "32 00 34 00 31 00"
+    ],
+    [
+     -1,
+     " 00 00  "
+    ],
+    [
+     4,
+     "00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     5,
+     "00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     6,
+     "5f 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     3,
+     "2.4.1."
+    ],
+    [
+     -1,
+     ".."
+    ],
+    [
+     4,
+     ".."
+    ],
+    [
+     5,
+     ".."
+    ],
+    [
+     6,
+     "_..."
+    ]
+   ]
+  },
+  {
+   "o": "0040",
+   "h": [
+    [
+     7,
+     "0c 00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     8,
+     "30 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     9,
+     "00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     10,
+     "00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     7,
+     "...."
+    ],
+    [
+     8,
+     "0..."
+    ],
+    [
+     9,
+     ".."
+    ],
+    [
+     10,
+     "......"
+    ]
+   ]
+  },
+  {
+   "o": "0050",
+   "h": [
+    [
+     11,
+     "2f 00 00 00 00 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     12,
+     "2f 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     11,
+     "/......."
+    ],
+    [
+     12,
+     "/......."
+    ]
+   ]
+  },
+  {
+   "o": "0060",
+   "h": [
+    [
+     13,
+     "2f 00 00 00 00 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     14,
+     "2f 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     13,
+     "/......."
+    ],
+    [
+     14,
+     "/......."
+    ]
+   ]
+  },
+  {
+   "o": "0070",
+   "h": [
+    [
+     15,
+     "02 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     16,
+     "00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     17,
+     "47 65 6e 65  72 61 74 65 64 20 41 44"
+    ]
+   ],
+   "a": [
+    [
+     15,
+     ".."
+    ],
+    [
+     16,
+     ".."
+    ],
+    [
+     17,
+     "Generated AD"
+    ]
+   ]
+  },
+  {
+   "o": "0080",
+   "h": [
+    [
+     17,
+     "53 20 61 74 20 32 30 32  36 2d 30 35 2d 31 36 54"
+    ]
+   ],
+   "a": [
+    [
+     17,
+     "S at 2026-05-16T"
+    ]
+   ]
+  },
+  {
+   "o": "0090",
+   "h": [
+    [
+     17,
+     "31 36 3a 33 37 3a 35 34  2e 36 38 32 34 34 32 39"
+    ]
+   ],
+   "a": [
+    [
+     17,
+     "16:37:54.6824429"
+    ]
+   ]
+  },
+  {
+   "o": "00a0",
+   "h": [
+    [
+     17,
+     "5a 0d 0a"
+    ],
+    [
+     -1,
+     " 00 00 00 00 00                         "
+    ]
+   ],
+   "a": [
+    [
+     17,
+     "Z.."
+    ],
+    [
+     -1,
+     "....."
+    ]
+   ]
+  }
+ ]
+}

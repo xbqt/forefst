@@ -1,0 +1,522 @@
+{
+ "id": "attr_reparse_point_win11refs2tspecials",
+ "generated_by": "analysis/tools/analysis_scripts/gen_hex_figures.py",
+ "decoded_by": "forefst 1.14.0 (forefstdev/forefst.py)",
+ "title": "An example $REPARSE_POINT value of a symbolic link, read with forefst.",
+ "image": {
+  "name": "win11refs2tspecials.raw",
+  "step": "step3",
+  "listed_as": "analysis/rawdisk/disks/step3/win11refs2tspecials.raw",
+  "size": 2199023255552
+ },
+ "offset": 77806152,
+ "offset_hex": "0x4a33a48",
+ "length": 188,
+ "bytes": "00000000ac0000000c0000000c0000a0a40000004800500000004800000000006a003a005c0074006500730074005c0078006200700074005f00790061006e006b00650065005f00610075006400690074005f003400330033003700390033002e0078006d006c005c003f003f005c006a003a005c0074006500730074005c0078006200700074005f00790061006e006b00650065005f00610075006400690074005f003400330033003700390033002e0078006d006c0000000000",
+ "note": "The bytes are the value of the sub-record 80000001/00c0 of `test/xbpt_symlink_output_831744.lnk`. Not coloured: nothing.",
+ "fields": [
+  {
+   "off": "0x00",
+   "len": 4,
+   "name": "Padding",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 00",
+   "value": "0x00000000",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 0,
+   "link": {
+    "page": "attributes/REPARSE_POINT.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x04",
+   "len": 4,
+   "name": "Data-area size",
+   "frame": null,
+   "group": null,
+   "bytes": "ac 00 00 00",
+   "value": "0xac (172) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 1,
+   "link": {
+    "page": "attributes/REPARSE_POINT.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x08",
+   "len": 4,
+   "name": "Content offset",
+   "frame": null,
+   "group": null,
+   "bytes": "0c 00 00 00",
+   "value": "0xc (12)",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 2,
+   "link": {
+    "page": "attributes/REPARSE_POINT.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x0C",
+   "len": 4,
+   "name": "Reparse tag",
+   "frame": null,
+   "group": null,
+   "bytes": "0c 00 00 a0",
+   "value": "0xa000000c",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 3,
+   "link": {
+    "page": "attributes/REPARSE_POINT.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x10",
+   "len": 2,
+   "name": "Reparse data length",
+   "frame": null,
+   "group": null,
+   "bytes": "a4 00",
+   "value": "0xa4 (164) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 4,
+   "link": {
+    "page": "attributes/REPARSE_POINT.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x12",
+   "len": 2,
+   "name": "Reserved",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00",
+   "value": "0x0000",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": "z",
+   "link": {
+    "page": "attributes/REPARSE_POINT.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x14",
+   "len": 2,
+   "name": "Substitute name offset",
+   "frame": null,
+   "group": null,
+   "bytes": "48 00",
+   "value": "\"H\"",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 5,
+   "link": {
+    "page": "attributes/REPARSE_POINT.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": "symlink"
+  },
+  {
+   "off": "0x16",
+   "len": 2,
+   "name": "Substitute name length",
+   "frame": null,
+   "group": null,
+   "bytes": "50 00",
+   "value": "\"P\"",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 6,
+   "link": {
+    "page": "attributes/REPARSE_POINT.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": "symlink"
+  },
+  {
+   "off": "0x18",
+   "len": 2,
+   "name": "Print name offset",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00",
+   "value": "\"\"",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 7,
+   "link": {
+    "page": "attributes/REPARSE_POINT.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": "symlink"
+  },
+  {
+   "off": "0x1A",
+   "len": 2,
+   "name": "Print name length",
+   "frame": null,
+   "group": null,
+   "bytes": "48 00",
+   "value": "\"H\"",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 0,
+   "link": {
+    "page": "attributes/REPARSE_POINT.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": "symlink"
+  },
+  {
+   "off": "0x1C",
+   "len": 4,
+   "name": "Flags",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 00",
+   "value": "0x00000000",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 1,
+   "link": {
+    "page": "attributes/REPARSE_POINT.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": "symlink"
+  },
+  {
+   "off": "0x20",
+   "len": 156,
+   "name": "Path strings",
+   "frame": null,
+   "group": null,
+   "bytes": "6a 00 3a 00 5c 00 74 00 65 00 73 00 74 00 5c 00 …",
+   "value": "\"j:\\test\\xbpt_yankee_audit_433793.xml\\??\\j:\\test\\xbpt_yankee_audit_433793.xml\"",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 2,
+   "link": {
+    "page": "attributes/REPARSE_POINT.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": "symlink"
+  }
+ ],
+ "groups": [],
+ "rows": [
+  {
+   "o": "0000",
+   "h": [
+    [
+     0,
+     "00 00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     1,
+     "ac 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     2,
+     "0c 00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     3,
+     "0c 00 00 a0"
+    ]
+   ],
+   "a": [
+    [
+     0,
+     "...."
+    ],
+    [
+     1,
+     "...."
+    ],
+    [
+     2,
+     "...."
+    ],
+    [
+     3,
+     "...."
+    ]
+   ]
+  },
+  {
+   "o": "0010",
+   "h": [
+    [
+     4,
+     "a4 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     5,
+     "00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     6,
+     "48 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     7,
+     "50 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     8,
+     "00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     9,
+     "48 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     10,
+     "00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     4,
+     ".."
+    ],
+    [
+     5,
+     ".."
+    ],
+    [
+     6,
+     "H."
+    ],
+    [
+     7,
+     "P."
+    ],
+    [
+     8,
+     ".."
+    ],
+    [
+     9,
+     "H."
+    ],
+    [
+     10,
+     "...."
+    ]
+   ]
+  },
+  {
+   "o": "0020",
+   "h": [
+    [
+     11,
+     "6a 00 3a 00 5c 00 74 00  65 00 73 00 74 00 5c 00"
+    ]
+   ],
+   "a": [
+    [
+     11,
+     "j.:.\\.t.e.s.t.\\."
+    ]
+   ]
+  },
+  {
+   "o": "0030",
+   "h": [
+    [
+     11,
+     "78 00 62 00 70 00 74 00  5f 00 79 00 61 00 6e 00"
+    ]
+   ],
+   "a": [
+    [
+     11,
+     "x.b.p.t._.y.a.n."
+    ]
+   ]
+  },
+  {
+   "o": "0040",
+   "h": [
+    [
+     11,
+     "6b 00 65 00 65 00 5f 00  61 00 75 00 64 00 69 00"
+    ]
+   ],
+   "a": [
+    [
+     11,
+     "k.e.e._.a.u.d.i."
+    ]
+   ]
+  },
+  {
+   "o": "0050",
+   "h": [
+    [
+     11,
+     "74 00 5f 00 34 00 33 00  33 00 37 00 39 00 33 00"
+    ]
+   ],
+   "a": [
+    [
+     11,
+     "t._.4.3.3.7.9.3."
+    ]
+   ]
+  },
+  {
+   "o": "0060",
+   "h": [
+    [
+     11,
+     "2e 00 78 00 6d 00 6c 00  5c 00 3f 00 3f 00 5c 00"
+    ]
+   ],
+   "a": [
+    [
+     11,
+     "..x.m.l.\\.?.?.\\."
+    ]
+   ]
+  },
+  {
+   "o": "0070",
+   "h": [
+    [
+     11,
+     "6a 00 3a 00 5c 00 74 00  65 00 73 00 74 00 5c 00"
+    ]
+   ],
+   "a": [
+    [
+     11,
+     "j.:.\\.t.e.s.t.\\."
+    ]
+   ]
+  },
+  {
+   "o": "0080",
+   "h": [
+    [
+     11,
+     "78 00 62 00 70 00 74 00  5f 00 79 00 61 00 6e 00"
+    ]
+   ],
+   "a": [
+    [
+     11,
+     "x.b.p.t._.y.a.n."
+    ]
+   ]
+  },
+  {
+   "o": "0090",
+   "h": [
+    [
+     11,
+     "6b 00 65 00 65 00 5f 00  61 00 75 00 64 00 69 00"
+    ]
+   ],
+   "a": [
+    [
+     11,
+     "k.e.e._.a.u.d.i."
+    ]
+   ]
+  },
+  {
+   "o": "00a0",
+   "h": [
+    [
+     11,
+     "74 00 5f 00 34 00 33 00  33 00 37 00 39 00 33 00"
+    ]
+   ],
+   "a": [
+    [
+     11,
+     "t._.4.3.3.7.9.3."
+    ]
+   ]
+  },
+  {
+   "o": "00b0",
+   "h": [
+    [
+     11,
+     "2e 00 78 00 6d 00 6c 00  00 00 00 00"
+    ],
+    [
+     -1,
+     "            "
+    ]
+   ],
+   "a": [
+    [
+     11,
+     "..x.m.l....."
+    ],
+    [
+     -1,
+     ""
+    ]
+   ]
+  }
+ ]
+}

@@ -1,11 +1,13 @@
 # File Systems
 
-Every ReFS forensic decision rests on a small number of general file-system ideas — what a cluster is,
-how files point at their data, how the namespace forms a graph, and how a file system stays consistent
-across a crash. Getting these wrong is how an NTFS-trained tool mis-reads a ReFS volume: it treats a
-cluster number as a disk offset, expects a flat metadata table, or looks for an undo log that does not
-exist. This page sets out the vocabulary and the design space so the ReFS-specific pages can name
-exactly *which* general choice ReFS makes and *what it costs an analyst*.
+Every ReFS forensic decision depends on a few general file-system ideas: what a cluster is, how files point at
+their data, how the namespace forms a graph, and how a file system stays consistent across a crash.
+
+Getting these wrong is how an NTFS-trained tool mis-reads a ReFS volume: it treats a cluster number as a disk offset,
+expects a flat metadata table, or looks for an undo log that does not exist.
+
+This page sets out the vocabulary and the design space so that the ReFS-specific pages can name *which* general
+choice ReFS makes and *how it affects an analyst*.
 
 ## The storage hierarchy
 
@@ -27,19 +29,21 @@ Raw storage device
 - A **cluster** (Windows) or **block** (Unix) is the smallest logical unit the file system allocates —
   one or more consecutive sectors, with the size chosen at format time.
 
-The cluster is the unit that matters most for ReFS analysis, because two of its properties drive
-everything downstream. Its **size** is fixed at format and decides how every address is decomposed —
-ReFS supports 4 KiB and 64 KiB clusters, and that choice (not the version) sets the page size and the
-container arithmetic, as the [Cluster and Page Size](cluster_page_size.md) page explains. And the
-cluster number a file's metadata records is, on ReFS, not even a disk position — it is a *virtual*
-address that must be translated, which is the subject of [Virtual Addressing](virtual_addressing.md).
+The cluster is the unit that matters most for ReFS analysis, because two of its properties affect every later
+step:
+
+- Its **size** is fixed at format and decides how every address is decomposed — ReFS supports 4 KiB and 64 KiB
+  clusters, and that choice (not the version) sets the page size and the container arithmetic, as the
+  [Cluster and Page Size](cluster_page_size.md) page explains.
+- On ReFS, the cluster number a file's metadata records is not a disk position: it is a *virtual* address
+  that must be translated, which is the subject of [Virtual Addressing](virtual_addressing.md).
 
 **Slack space** is the unused tail of the last cluster allocated to a file. Because allocation is at
 cluster granularity, a file that does not fill its last cluster leaves residual bytes that may still hold
-data from a previous file — a classic recovery target. ReFS reshapes what slack *looks like*: its
+data from a previous file — a classic recovery target. On ReFS slack takes a different form: its
 metadata lives in variable-length B+-tree pages rather than fixed records, so the analogous artifact is a
 stale row left inside a page rather than a fixed-size record tail. [Copy-on-Write](copy_on_write.md)
-covers how those stale rows are produced and propagated.
+covers why superseded pages, and the stale rows in them, survive.
 
 ## Files and directories
 
@@ -51,9 +55,9 @@ namespace rooted at a single entry point.
 ### Metadata and attributes
 
 Every file carries attributes beyond its content: name, timestamps, owner, size, permissions. This
-metadata is where forensics happens — timestamps, link counts, and allocation state reveal a file's
-history independently of, and often after the loss of, its data. On ReFS each of these lives as a typed,
-named record inside the file's B+-tree entry; the [Attributes — Forensic Reference](../attributes/README.md)
+metadata is the main forensic source: timestamps, link counts, and allocation state show a file's history
+independently of its data, and often after the data is lost. On ReFS each of these lives as a typed,
+named record inside the file's row in its directory's B+-tree; the [Attributes — Forensic Reference](../attributes/README.md)
 catalogs how each one is laid out and what it is worth.
 
 Brian Carrier's *File System Forensic Analysis* draws a distinction this catalog inherits:
@@ -61,11 +65,10 @@ Brian Carrier's *File System Forensic Analysis* draws a distinction this catalog
 - **Essential attributes** — name, the metadata reference, and the data-location pointers — are required
   to *access* the file. They cannot be wrong without breaking the file.
 - **Optional attributes** — timestamps, ownership — can be modified without affecting access, which is
-  precisely why they are the surface a forger (or a backup tool) alters and an analyst scrutinizes.
+  why a forger (or a backup tool) alters them and an analyst checks them.
 
-That essential/optional split is the spine of the broader
-[Carrier category model](carrier_categories.md), which maps every ReFS artifact to one of five
-analytical layers.
+The broader [Carrier category model](carrier_categories.md) is built on that essential/optional split;
+it maps every ReFS artifact to one of five analytical layers.
 
 ## How file systems allocate data
 
@@ -90,10 +93,10 @@ its tooling consequences.
 ### Extents
 
 NTFS, ReFS, and Btrfs describe a file's data with **extents** — a contiguous cluster range given as
-start + length — rather than one pointer per block. This collapses the metadata cost of large files. In
-NTFS these are *data runs*; on ReFS they are rows in B+-tree leaf nodes, and there is a forensic twist:
-the cluster numbers in those rows are virtual, not physical. The byte layout of a ReFS extent is on the
-[Extent Descriptors](../structures/extent_descriptors.md) page, and the translation those virtual numbers
+start + length — rather than one pointer per block. This reduces the metadata a large file needs. In
+NTFS these are *data runs*; on ReFS they are rows in B+-tree leaf nodes, and the cluster numbers in those
+rows are virtual, not physical. The byte layout of a ReFS extent is on the
+[Extent Records](../structures/extent_descriptors.md) page, and the translation those virtual numbers
 demand is on [Virtual Addressing](virtual_addressing.md).
 
 ### Directory indexing
@@ -119,15 +122,17 @@ into a directed graph. Two mechanisms do this, and they differ in a way that mat
 - **Symbolic links** — store a target *path* rather than a direct metadata reference. They can cross file
   system boundaries, but become dangling references if the target moves or is deleted.
 
-On NTFS, hard links use file-record references (MFT record number + sequence number) and symbolic links
-ride on reparse points. ReFS supports reparse points — and therefore symlinks and junctions — from its
-earliest version, but **hard links arrived later and require a natively-formatted v3.14 volume**; a v3.4
-volume upgraded to v3.14 does *not* gain them. ReFS also takes an unusual implementation route: it stores
-**no explicit hard-link count on disk**, so the link relationship has to be *reconstructed* by matching
-directory-entry identity fields rather than read from a counter. The
-[Hard Links](hard_links.md) page works through that reconstruction (and why the field that looks like a
-count is a decoy), and [Reparse Points](../structures/reparse_points.md) covers the symlink/junction
-side.
+On NTFS, hard links use file-record references (MFT record number + sequence number) and symbolic links are stored
+as reparse points.
+
+ReFS supports reparse points — and therefore symlinks and junctions — on every format read here (3.4 onwards), but
+**hard links came later: they need the volume's hard-link flag** (boot-sector flags bit 0x20), set at format time
+from ReFS 3.7; a v3.4 volume, and one upgraded from v3.4, does *not* have it.
+
+ReFS also keeps the count in an unusual place: a file's names are separate rows in their directories, so a name row
+does not say how many names the file has; the count is in the file's own record, which hard-linking splits out of the
+name row. The [Hard Links](hard_links.md) page shows how the names of one file are joined and where the count is read,
+and [Reparse Points](../structures/reparse_points.md) covers the symlink/junction side.
 
 ## How file systems stay consistent
 
@@ -139,8 +144,10 @@ architectural difference from NTFS.
 
 Metadata changes are written to a dedicated log *before* being applied. After a crash the journal is
 replayed to finish or reverse incomplete operations, avoiding a full integrity scan (`fsck` / `chkdsk`).
-A classic journal stores both **redo** (re-apply) and **undo** (roll back) records, because in-place
-updates have to be reversible. NTFS (`$LogFile`) and ext4 work this way.
+A journal of the NTFS kind (`$LogFile`) stores both **redo** (re-apply) and **undo** (roll back) records, because
+in-place updates have to be reversible. The ext4 journal (jbd2) instead writes the new contents of the blocks and,
+after a crash, replays every committed transaction and discards an uncommitted one — redo only (the Linux kernel
+documentation, "Journal (jbd2)").
 
 ### Copy-on-write (CoW)
 
@@ -150,8 +157,8 @@ the volume is *always* in a consistent state and a half-finished update simply l
 force. ReFS and Btrfs use this model.
 
 CoW is why ReFS needs only a **redo** log and never an undo log: there is no in-place change to reverse,
-so the recovery log records only operations to re-apply. That is the structural opposite of the NTFS
-journal, and it has a direct forensic payoff — the old pages an update leaves behind are recoverable from
+so the recovery log records only operations to re-apply. The NTFS journal
+stores undo records as well. For an examiner, the old pages an update leaves behind can be recovered from
 a single image until the allocator reuses their clusters. [Copy-on-Write](copy_on_write.md) is the
 canonical treatment of the mechanism and its artifacts;
 [Transactions and Crash Consistency](transactions_crash_consistency.md) formalizes the redo-only
@@ -164,15 +171,17 @@ compares, catching silent corruption regardless of cause — including faults th
 which protect only against *crash* inconsistency, cannot see. The two file systems differ in *scope*:
 
 - **Btrfs** checksums both metadata and user data by default.
-- **ReFS** checksums **metadata** (CRC64 by default on v3.14; *off* on original v3.4 volumes, which
-  format with no metadata checksums), but checksums **user data only when integrity streams are
-  enabled** — and that is a *per-file* opt-in, not a volume-wide setting.
+- **ReFS** checksums **metadata** (CRC64 by default, v3.4 volumes included, or SHA-256 where the volume
+  was formatted with it), but checksums **user data only when integrity streams are enabled** — a *per-file*
+  attribute, which a file inherits from its directory, so it can cover a whole volume when it is set on the root at
+  format (Microsoft's 2012 design post).
 
-For an analyst that scope difference is load-bearing: on a default ReFS volume a recomputable checksum
-proves a *metadata* page is genuine, but it says nothing about whether a *data* cluster is original,
-because no data checksum was ever written. [Checksum Architecture](checksum_architecture.md) details the
-Merkle-tree layout and the algorithms per level, and [Integrity Streams](integrity_streams.md) covers the
-per-file data-checksum opt-in and how to tell whether a given file carries one.
+This difference in scope matters to an analyst: on a default ReFS volume a checksum that
+recomputes shows that a *metadata* page holds what the volume recorded for it (not that nobody edited
+it: the checksums are not keyed), but it says nothing about a *data* cluster, for which no checksum was
+written. [Checksum Architecture](checksum_architecture.md) details the Merkle-tree layout and the
+algorithms per level, and [Integrity Streams](integrity_streams.md) covers the per-file data-checksum
+opt-in and how to tell whether a given file carries one.
 
 ## The evolution this leads to
 
@@ -180,13 +189,13 @@ per-file data-checksum opt-in and how to tell whether a given file carries one.
 |------------|----------|----------------|
 | Simple allocation table | FAT | Hierarchical namespace, no integrity guarantees |
 | Structured metadata | ext2 | Per-file inodes, permissions |
-| Journaling | NTFS, ext4 | Crash consistency via redo/undo logs |
+| Journaling | NTFS, ext4 | Crash consistency via a journal (redo and undo on NTFS, redo on ext4) |
 | Copy-on-write + checksums | Btrfs, ReFS | Atomic updates, integrity verification, snapshots |
 
-ReFS belongs to the last generation, and the move it embodies — from a static, in-place allocation table
-to a dynamic, copy-on-write, tree-indexed architecture — is the conceptual pivot the rest of these pages
-build on. Every ReFS-specific behavior an analyst meets (virtual addressing, redo-only logging,
-per-container relocation, snapshot recovery) is a consequence of that one architectural shift.
+ReFS belongs to the last generation. It replaces a static allocation table updated in place with
+copy-on-write, tree-indexed metadata, and the rest of these pages build on that change. Every ReFS-specific
+behavior an analyst meets (virtual addressing, redo-only logging, per-container relocation, snapshot recovery)
+follows from it.
 
 ## Cross-references
 
@@ -202,7 +211,8 @@ per-container relocation, snapshot recovery) is a consequence of that one archit
 - [Copy-on-Write](copy_on_write.md) — the consistency model ReFS chooses, and the artifacts it leaves
 - [Checksum Architecture](checksum_architecture.md) — the metadata Merkle tree
 - [Integrity Streams](integrity_streams.md) — the per-file user-data checksum opt-in
-- [Hard Links](hard_links.md) — the multi-name graph, reconstructed without a count field
+- [Hard Links](hard_links.md) — the multi-name graph: the count in the file's own record, the names
+  joined from directory entries
 - [Bootstrap Chain](bootstrap_chain.md) — how a ReFS volume is traversed from raw disk to metadata
 - [Attributes — Forensic Reference](../attributes/README.md) — the per-file metadata catalog
 
@@ -210,10 +220,13 @@ per-container relocation, snapshot recovery) is a consequence of that one archit
 
 This page is a conceptual orientation; it asserts no ReFS structure offsets, values, or driver internals
 of its own. The ReFS-specific claims it makes in passing — copy-on-write and redo-only logging, metadata
-checksummed by default on current versions (but never on original v3.4) with user-data checksummed only
-under integrity streams, reparse points from the earliest
-version with hard links gated to native v3.14, and the absence of a flat metadata table or an on-disk
-hard-link count — are each established, with their evidence levels and finding IDs, on the linked page
-that owns them (`copy_on_write.md`, `checksum_architecture.md`, `integrity_streams.md`, `hard_links.md`,
-`ntfs_comparison.md`). Also registered for statements on this page: **MD_LK_RA_001**. See [how this was verified](../methodology.md) for the corpus and method behind
-those pages.
+checksummed by default (v3.4 volumes included) with user-data checksummed only under integrity streams,
+reparse points from the earliest version with hard links from format 3.7, the absence of a flat metadata
+table, and the link count kept in the file's own record — are each established, with their evidence, on
+the linked page that owns them (`copy_on_write.md`, `checksum_architecture.md`, `integrity_streams.md`,
+`hard_links.md`, `ntfs_comparison.md`).
+
+See [how this was verified](../methodology.md) for the corpus
+and method behind those pages.
+
+<!-- findings: MD_LK_RA_001 -->

@@ -94,16 +94,19 @@ def main():
             out = os.path.join(td, "bundle")
             r = subprocess.run([sys.executable, tool, path, "export", "metadata", out],
                                capture_output=True, text=True, timeout=3600)
-            if r.returncode != 0:
-                problems.append("%s: export metadata failed (%s)"
-                                % (os.path.basename(path), r.stderr.strip()[-120:]))
+            # C1-2 (1.14.0): the tool's exit contract -- 0 ran, 2 ran with a finding or with work it could not complete (its output says which), 1
+            # could not run. Exit 2 was a "failed" export / listing here; it is a run. Any other exit is a problem.
+            if r.returncode not in (0, 2):
+                problems.append("%s: export metadata failed (exit %d: %s)"
+                                % (os.path.basename(path), r.returncode, r.stderr.strip()[-120:]))
                 continue
             a = subprocess.run([sys.executable, tool, path, "files", "--csv"],
                                capture_output=True, text=True, timeout=3600)
             b = subprocess.run([sys.executable, tool, out, "files", "--csv"],
                                capture_output=True, text=True, timeout=3600)
-            if a.returncode != 0 or b.returncode != 0:
-                problems.append("%s: could not list both the volume and its bundle" % os.path.basename(path))
+            if a.returncode not in (0, 2) or b.returncode not in (0, 2):
+                problems.append("%s: could not list both the volume and its bundle (exit %d / %d)"
+                                % (os.path.basename(path), a.returncode, b.returncode))
                 continue
             if a.stdout != b.stdout:
                 ra = list(csv.DictReader(io.StringIO(a.stdout)))

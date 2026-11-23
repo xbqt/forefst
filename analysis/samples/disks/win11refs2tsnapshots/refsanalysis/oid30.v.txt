@@ -4,24 +4,24 @@ Image: win11refs2tsnapshots.raw  (ReFS 3.14, 47 objects)
 ==============================================================================
   OID 0x30: PRESENT at VLCN 0x11604 / PLCN 0x1604
   Total rows: 18
-  Sessions: 4
+  Generations: 4  (10-minute periods in which the volume had I/O)
 
-  Session: 2026-05-16 17:00:44 UTC
-    Sub-IDs: 0x0, 0x1, 0x5, 0x19c4, 0x19c5, 0x19c6, 0x19c7
+  Generation: 2026-05-16T17:00:44.1672638Z
+    Key +0x8: 0x0, 0x1, 0x5, 0x19c4, 0x19c5, 0x19c6, 0x19c7
 
-  Session: 2026-05-16 17:20:44 UTC
-    Sub-IDs: 0x0, 0x1, 0x19c5
+  Generation: 2026-05-16T17:20:44.1718124Z
+    Key +0x8: 0x0, 0x1, 0x19c5
 
-  Session: 2026-05-16 17:30:44 UTC
-    Sub-IDs: 0x0, 0x1, 0x19c7
+  Generation: 2026-05-16T17:30:44.1742238Z
+    Key +0x8: 0x0, 0x1, 0x19c7
 
-  Session: 2026-05-16 17:37:57 UTC
-    Sub-IDs: 0x0, 0x1, 0x19c5, 0x19c6, 0x19c7
+  Generation: 2026-05-16T17:37:57.4582537Z
+    Key +0x8: 0x0, 0x1, 0x19c5, 0x19c6, 0x19c7
 
   ──────────────────────────────────────────────────────────────────────────
   Detailed rows:
 
-    Sub-ID 0x0 (Session summary) — 80 bytes (standard)
+    Key +0x8 0x0 (generation totals (+0x8 = 0)) — 80 bytes
       field[0]:        11194 (0x2bba)
       field[1]:         1053 (0x41d)
       field[2]:            2 (0x2)
@@ -31,7 +31,7 @@ Image: win11refs2tsnapshots.raw  (ReFS 3.14, 47 objects)
       field[6]:         7813 (0x1e85)
       field[7]:            0 (0x0)
 
-    Sub-ID 0x1 (IO counters (detailed)) — 80 bytes (standard)
+    Key +0x8 0x1 (generation totals (+0x8 = 1)) — 80 bytes
       field[0]:         4837 (0x12e5)
       field[1]:          610 (0x262)
       field[2]:            3 (0x3)
@@ -41,37 +41,37 @@ Image: win11refs2tsnapshots.raw  (ReFS 3.14, 47 objects)
       field[6]:         4666 (0x123a)
       field[7]:            0 (0x0)
 
-    Sub-ID 0x5 (Category A) — 44 bytes (standard)
+    Key +0x8 0x5 (container 2, RWType bit 1) — 44 bytes
       field[0]:            8 (0x8)
       field[1]:            2 (0x2)
       field[2]:          296 (0x128)
-      trailing_u32: 1082130432 (0x40800000)
+      map (u32 at +0x28): 1082130432 (0x40800000)
 
-    Sub-ID 0x19c4 (Unknown (0x19c4)) — 44 bytes (standard)
+    Key +0x8 0x19c4 (container 3298, RWType bit 0) — 44 bytes
       field[0]:         7813 (0x1e85)
       field[1]:          743 (0x2e7)
       field[2]:          296 (0x128)
-      trailing_u32: 4294967295 (0xffffffff)
+      map (u32 at +0x28): 4294967295 (0xffffffff)
 
-    Sub-ID 0x19c5 (Unknown (0x19c5)) — 44 bytes (standard)
+    Key +0x8 0x19c5 (container 3298, RWType bit 1) — 44 bytes
       field[0]:         4666 (0x123a)
       field[1]:          445 (0x1bd)
       field[2]:          296 (0x128)
-      trailing_u32: 2147483647 (0x7fffffff)
+      map (u32 at +0x28): 2147483647 (0x7fffffff)
 
-    Sub-ID 0x19c6 (Unknown (0x19c6)) — 44 bytes (standard)
+    Key +0x8 0x19c6 (container 3299, RWType bit 0) — 44 bytes
       field[0]:         3381 (0xd35)
       field[1]:          310 (0x136)
       field[2]:          296 (0x128)
-      trailing_u32: 135561215 (0x8147fff)
+      map (u32 at +0x28): 135561215 (0x8147fff)
 
-    Sub-ID 0x19c7 (Unknown (0x19c7)) — 44 bytes (standard)
+    Key +0x8 0x19c7 (container 3299, RWType bit 1) — 44 bytes
       field[0]:          163 (0xa3)
       field[1]:          163 (0xa3)
       field[2]:          296 (0x128)
-      trailing_u32: 134234109 (0x8003ffd)
+      map (u32 at +0x28): 134234109 (0x8003ffd)
 
-    Sub-ID 0x0 (Session summary) — 80 bytes (standard)
+    Key +0x8 0x0 (generation totals (+0x8 = 0)) — 80 bytes
       field[0]:            0 (0x0)
       field[1]:            0 (0x0)
       field[2]:            0 (0x0)
@@ -81,7 +81,7 @@ Image: win11refs2tsnapshots.raw  (ReFS 3.14, 47 objects)
       field[6]:            0 (0x0)
       field[7]:            0 (0x0)
 
-    Sub-ID 0x1 (IO counters (detailed)) — 80 bytes (standard)
+    Key +0x8 0x1 (generation totals (+0x8 = 1)) — 80 bytes
       field[0]:            5 (0x5)
       field[1]:            5 (0x5)
       field[2]:            1 (0x1)
@@ -91,13 +91,13 @@ Image: win11refs2tsnapshots.raw  (ReFS 3.14, 47 objects)
       field[6]:            5 (0x5)
       field[7]:            0 (0x0)
 
-    Sub-ID 0x19c5 (Unknown (0x19c5)) — 44 bytes (standard)
+    Key +0x8 0x19c5 (container 3298, RWType bit 1) — 44 bytes
       field[0]:            5 (0x5)
       field[1]:            5 (0x5)
       field[2]:          296 (0x128)
-      trailing_u32: 34144256 (0x2090000)
+      map (u32 at +0x28): 34144256 (0x2090000)
 
-    Sub-ID 0x0 (Session summary) — 80 bytes (standard)
+    Key +0x8 0x0 (generation totals (+0x8 = 0)) — 80 bytes
       field[0]:            0 (0x0)
       field[1]:            0 (0x0)
       field[2]:            0 (0x0)
@@ -107,7 +107,7 @@ Image: win11refs2tsnapshots.raw  (ReFS 3.14, 47 objects)
       field[6]:            0 (0x0)
       field[7]:            0 (0x0)
 
-    Sub-ID 0x1 (IO counters (detailed)) — 80 bytes (standard)
+    Key +0x8 0x1 (generation totals (+0x8 = 1)) — 80 bytes
       field[0]:            2 (0x2)
       field[1]:            2 (0x2)
       field[2]:            1 (0x1)
@@ -117,13 +117,13 @@ Image: win11refs2tsnapshots.raw  (ReFS 3.14, 47 objects)
       field[6]:            2 (0x2)
       field[7]:            0 (0x0)
 
-    Sub-ID 0x19c7 (Unknown (0x19c7)) — 44 bytes (standard)
+    Key +0x8 0x19c7 (container 3299, RWType bit 1) — 44 bytes
       field[0]:            2 (0x2)
       field[1]:            2 (0x2)
       field[2]:          296 (0x128)
-      trailing_u32: 1 (0x1)
+      map (u32 at +0x28): 1 (0x1)
 
-    Sub-ID 0x0 (Session summary) — 80 bytes (standard)
+    Key +0x8 0x0 (generation totals (+0x8 = 0)) — 80 bytes
       field[0]:           18 (0x12)
       field[1]:            3 (0x3)
       field[2]:            1 (0x1)
@@ -133,7 +133,7 @@ Image: win11refs2tsnapshots.raw  (ReFS 3.14, 47 objects)
       field[6]:           18 (0x12)
       field[7]:            0 (0x0)
 
-    Sub-ID 0x1 (IO counters (detailed)) — 80 bytes (standard)
+    Key +0x8 0x1 (generation totals (+0x8 = 1)) — 80 bytes
       field[0]:         1675 (0x68b)
       field[1]:           20 (0x14)
       field[2]:            2 (0x2)
@@ -143,20 +143,20 @@ Image: win11refs2tsnapshots.raw  (ReFS 3.14, 47 objects)
       field[6]:         1671 (0x687)
       field[7]:            0 (0x0)
 
-    Sub-ID 0x19c5 (Unknown (0x19c5)) — 44 bytes (standard)
+    Key +0x8 0x19c5 (container 3298, RWType bit 1) — 44 bytes
       field[0]:         1671 (0x687)
       field[1]:           16 (0x10)
       field[2]:          296 (0x128)
-      trailing_u32: 269246555 (0x100c605b)
+      map (u32 at +0x28): 269246555 (0x100c605b)
 
-    Sub-ID 0x19c6 (Unknown (0x19c6)) — 44 bytes (standard)
+    Key +0x8 0x19c6 (container 3299, RWType bit 0) — 44 bytes
       field[0]:           18 (0x12)
       field[1]:            3 (0x3)
       field[2]:          296 (0x128)
-      trailing_u32: 134217730 (0x8000002)
+      map (u32 at +0x28): 134217730 (0x8000002)
 
-    Sub-ID 0x19c7 (Unknown (0x19c7)) — 44 bytes (standard)
+    Key +0x8 0x19c7 (container 3299, RWType bit 1) — 44 bytes
       field[0]:            4 (0x4)
       field[1]:            4 (0x4)
       field[2]:          296 (0x128)
-      trailing_u32: 1 (0x1)
+      map (u32 at +0x28): 1 (0x1)

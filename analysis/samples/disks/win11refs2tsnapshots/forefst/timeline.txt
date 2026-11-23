@@ -3,216 +3,222 @@
 ==============================================================================
 ReFS Super-Timeline — win11refs2tsnapshots.raw
 ==============================================================================
-  Sources merged: USN=0  MLog=1626  $SI-MACB=1216  (time-sorted; correlated by name/path —
+  Sources merged: USN=0  MLog=1626  $SI-MACB=1216  (sorted by time; rows are not joined across sources:
                   a file is listed under its HOME directory's OID in $SI and USN -- the
                   FileRef high half, kept after a move or hard link -- and MLog the target OID)
-  NOTE: USN journal inactive on this image — timeline is $SI + MLog only.
+  NOTE: USN Journal: Inactive — timeline is $SI + MLog only.
   Caveat: USN and $SI carry exact FILETIMEs. MLog has NO wall-clock time — an MLog row's time is
-          the affected object's embedded $SI birth (approximate; for a RENAME/MOVE it is the object
-          birth, not the op time). MLog times that predate the volume are undated + marked.
-          (9 MLog rows had an impossible pre-volume time → undated.)
+          the latest time its log payload's records carry (a payload can merge up to 15 redo
+          blocks, whose own times can differ), or the paired $SI-update's time for a rename or
+          delete that embeds none. MLog times that predate the volume are undated + marked.
+          An $SI Accessed event exists only while last-access updating was on.
+          An MLog row's event is DERIVED from its records (`mlog --info`). A $SI or
+          MLog row shows the live tree's path TODAY (PathToday), not the path at the event; a USN row
+          the name its record carries (its path at the event is not read).
+  648 MLog row(s) are left out: their log payloads carry no embedded time (an undated payload cannot
+  be placed on a timeline; `mlog --parse` lists it).
 ------------------------------------------------------------------------------
-  Timestamp (UTC)          Src    OID         Name/Path                   Event
+  Timestamp (UTC)               Src    OID         Path today / USN name       Event
   ----------------------------------------------------------------------------
-  2021-05-18 07:16:04 UTC  $SI    0x702       test/elvis_dir_papa_8053…   Created
-  2021-09-26 07:16:24 UTC  $SI    0x70b       test/elvis_dir_record_44…   Created
-  2021-09-29 07:16:41 UTC  $SI    0x702       test/elvis_dir_record_44…   Created
-  2021-10-04 07:16:49 UTC  $SI    0x717       test/elvis_dir_victor_78…   Created
-  2021-10-04 07:16:49 UTC  $SI    0x717       test/elvis_dir_victor_78…   Modified
-  2021-10-04 07:16:49 UTC  $SI    0x717       test/elvis_dir_victor_78…   Accessed
-  2021-10-14 07:17:10 UTC  $SI    0x706       test/elvis_dir_record_44…   Created
-  2021-10-14 07:17:10 UTC  $SI    0x706       test/elvis_dir_record_44…   Modified
-  2021-10-14 07:17:10 UTC  $SI    0x706       test/elvis_dir_record_44…   Accessed
-  2021-10-15 07:17:19 UTC  $SI    0x702       test/xbpt_config_log_982…   Created
-  2021-10-15 07:17:19 UTC  $SI    0x702       test/xbpt_config_log_982…   Modified
-  2021-10-15 07:17:19 UTC  $SI    0x702       test/xbpt_config_log_982…   Accessed
-  2021-10-19 07:16:21 UTC  $SI    0x710       test/elvis_dir_papa_8053…   Modified
-  2021-10-19 07:16:21 UTC  $SI    0x703       test/elvis_dir_record_44…   Created
-  2021-10-19 07:16:21 UTC  $SI    0x703       test/elvis_dir_record_44…   Modified
-  2021-10-19 07:16:21 UTC  $SI    0x703       test/elvis_dir_record_44…   Accessed
-  2022-02-07 07:16:33 UTC  $SI    0x722       test/elvis_dir_index_149…   Modified
-  2022-02-07 07:16:33 UTC  $SI    0x723       test/elvis_dir_india_800…   Modified
-  2022-02-07 07:16:33 UTC  $SI    0x710       test/elvis_dir_papa_8053…   Created
-  2022-02-07 07:16:33 UTC  $SI    0x710       test/elvis_dir_papa_8053…   Modified
-  2022-02-07 07:16:33 UTC  $SI    0x710       test/elvis_dir_papa_8053…   Accessed
-  2022-02-12 07:16:16 UTC  $SI    0x702       test/xbpt_yankee_audit_4…   Created
-  2022-02-12 07:16:16 UTC  $SI    0x702       test/xbpt_yankee_audit_4…   Modified
-  2022-02-12 07:16:16 UTC  $SI    0x702       test/xbpt_yankee_audit_4…   Accessed
-  2022-02-28 07:17:26 UTC  $SI    0x707       test/elvis_dir_record_44…   Created
-  2022-02-28 07:17:26 UTC  $SI    0x707       test/elvis_dir_record_44…   Modified
-  2022-02-28 07:17:26 UTC  $SI    0x707       test/elvis_dir_record_44…   Accessed
-  2022-03-06 07:16:22 UTC  $SI    0x707       test/elvis_dir_record_44…   Created
-  2022-03-06 07:16:22 UTC  $SI    0x707       test/elvis_dir_record_44…   Modified
-  2022-03-06 07:16:22 UTC  $SI    0x707       test/elvis_dir_record_44…   Accessed
-  2022-04-19 07:16:47 UTC  $SI    0x704       test/elvis_dir_record_44…   Created
-  2022-04-19 07:16:47 UTC  $SI    0x704       test/elvis_dir_record_44…   Modified
-  2022-04-19 07:16:47 UTC  $SI    0x704       test/elvis_dir_record_44…   Accessed
-  2022-05-20 07:16:16 UTC  $SI    0x711       test/elvis_dir_index_149…   Created
-  2022-05-20 07:16:16 UTC  $SI    0x711       test/elvis_dir_index_149…   Modified
-  2022-05-20 07:16:16 UTC  $SI    0x711       test/elvis_dir_index_149…   Accessed
-  2022-05-31 07:17:29 UTC  $SI    0x717       test/elvis_dir_victor_78…   Created
-  2022-05-31 07:17:29 UTC  $SI    0x717       test/elvis_dir_victor_78…   Modified
-  2022-05-31 07:17:29 UTC  $SI    0x717       test/elvis_dir_victor_78…   Accessed
-  2022-06-11 07:16:28 UTC  $SI    0x70f       test/elvis_dir_record_44…   Created
-  2022-06-17 07:16:38 UTC  $SI    0x711       test/elvis_dir_record_44…   Created
-  2022-06-17 07:16:38 UTC  $SI    0x711       test/elvis_dir_record_44…   Modified
-  2022-06-17 07:16:38 UTC  $SI    0x711       test/elvis_dir_record_44…   Accessed
-  2022-08-02 07:16:28 UTC  $SI    0x703       test/elvis_dir_record_44…   Created
-  2022-12-26 07:16:15 UTC  $SI    0x707       test/elvis_dir_record_44…   Created
-  2022-12-26 07:16:15 UTC  $SI    0x707       test/elvis_dir_record_44…   Modified
-  2022-12-26 07:16:15 UTC  $SI    0x707       test/elvis_dir_record_44…   Accessed
-  2023-08-26 07:16:12 UTC  $SI    0x70b       test/elvis_dir_record_44…   Created
-  2023-08-26 07:16:12 UTC  $SI    0x70b       test/elvis_dir_record_44…   Modified
-  2023-08-26 07:16:12 UTC  $SI    0x70b       test/elvis_dir_record_44…   Accessed
-  2023-10-15 07:17:00 UTC  $SI    0x703       test/elvis_dir_record_44…   Created
-  2023-10-15 07:17:00 UTC  $SI    0x703       test/elvis_dir_record_44…   Modified
-  2023-10-15 07:17:00 UTC  $SI    0x703       test/elvis_dir_record_44…   Accessed
-  2023-11-21 07:17:13 UTC  $SI    0x703       test/elvis_dir_record_44…   Created
-  2023-11-21 07:17:13 UTC  $SI    0x703       test/elvis_dir_record_44…   Modified
-  2023-11-21 07:17:13 UTC  $SI    0x703       test/elvis_dir_record_44…   Accessed
-  2023-11-27 07:16:30 UTC  $SI    0x704       test/elvis_dir_index_149…   Created
-  2023-11-27 07:16:30 UTC  $SI    0x704       test/elvis_dir_index_149…   Modified
-  2023-11-27 07:16:30 UTC  $SI    0x704       test/elvis_dir_index_149…   Accessed
-  2024-01-13 07:17:04 UTC  $SI    0x710       test/elvis_dir_papa_8053…   Created
-  2024-01-13 07:17:04 UTC  $SI    0x710       test/elvis_dir_papa_8053…   Modified
-  2024-01-13 07:17:04 UTC  $SI    0x710       test/elvis_dir_papa_8053…   Accessed
-  2024-04-02 07:16:32 UTC  $SI    0x706       test/xbpt_india_temp_831…   Created
-  2024-04-02 07:16:32 UTC  $SI    0x706       test/xbpt_india_temp_831…   Modified
-  2024-04-02 07:16:32 UTC  $SI    0x706       test/xbpt_india_temp_831…   Accessed
-  2024-04-04 07:17:02 UTC  $SI    0x704       test/elvis_dir_record_44…   Created
-  2024-05-06 07:17:31 UTC  $SI    0x702       test/elvis_dir_record_44…   Created
-  2024-05-06 07:17:31 UTC  $SI    0x702       test/elvis_dir_record_44…   Modified
-  2024-05-06 07:17:31 UTC  $SI    0x702       test/elvis_dir_record_44…   Accessed
-  2024-06-07 07:17:11 UTC  $SI    0x712       test/elvis_dir_record_44…   Created
-  2024-06-07 07:17:11 UTC  $SI    0x712       test/elvis_dir_record_44…   Modified
-  2024-06-07 07:17:11 UTC  $SI    0x712       test/elvis_dir_record_44…   Accessed
-  2024-08-03 07:17:33 UTC  $SI    0x731       test/elvis_dir_index_149…   Created
-  2024-08-03 07:17:33 UTC  $SI    0x731       test/elvis_dir_index_149…   Modified
-  2024-08-03 07:17:33 UTC  $SI    0x731       test/elvis_dir_index_149…   Accessed
-  2024-10-16 07:17:27 UTC  $SI    0x707       test/elvis_dir_record_44…   Created
-  2024-11-23 07:17:31 UTC  $SI    0x718       test/elvis_dir_index_149…   Created
-  2024-11-23 07:17:31 UTC  $SI    0x718       test/elvis_dir_index_149…   Modified
-  2024-11-23 07:17:31 UTC  $SI    0x718       test/elvis_dir_index_149…   Accessed
-  2024-12-12 07:16:57 UTC  $SI    0x703       test/elvis_dir_record_44…   Created
-  2025-02-09 07:17:09 UTC  $SI    0x70f       test/elvis_dir_papa_8053…   Created
-  2025-02-23 07:17:23 UTC  $SI    0x706       test/elvis_dir_record_44…   Created
-  2025-02-23 07:17:23 UTC  $SI    0x706       test/elvis_dir_record_44…   Modified
-  2025-02-23 07:17:23 UTC  $SI    0x706       test/elvis_dir_record_44…   Accessed
-  2025-03-31 07:17:11 UTC  $SI    0x706       test/elvis_dir_record_44…   Created
-  2025-03-31 07:17:11 UTC  $SI    0x706       test/elvis_dir_record_44…   Modified
-  2025-03-31 07:17:11 UTC  $SI    0x706       test/elvis_dir_record_44…   Accessed
-  2025-04-01 07:16:26 UTC  $SI    0x730       test/elvis_dir_index_149…   Modified
-  2025-04-01 07:16:26 UTC  $SI    0x711       test/elvis_dir_papa_8053…   Created
-  2025-04-02 07:16:24 UTC  $SI    0x715       test/elvis_dir_papa_8053…   Created
-  2025-04-08 07:17:35 UTC  $SI    0x721       test/elvis_dir_record_44…   Created
-  2025-04-08 07:17:35 UTC  $SI    0x721       test/elvis_dir_record_44…   Modified
-  2025-04-08 07:17:35 UTC  $SI    0x721       test/elvis_dir_record_44…   Accessed
-  2025-04-19 07:17:09 UTC  $SI    0x717       test/elvis_dir_victor_78…   Created
-  2025-04-19 07:17:09 UTC  $SI    0x717       test/elvis_dir_victor_78…   Modified
-  2025-04-19 07:17:09 UTC  $SI    0x717       test/elvis_dir_victor_78…   Accessed
-  2025-05-12 07:17:04 UTC  $SI    0x708       test/elvis_dir_victor_78…   Created
-  2025-06-06 07:17:11 UTC  $SI    0x702       test/xbpt_index_india_42…   Created
-  2025-06-06 07:17:11 UTC  $SI    0x702       test/xbpt_index_india_42…   Modified
-  2025-06-06 07:17:11 UTC  $SI    0x702       test/xbpt_index_india_42…   Accessed
-  2025-06-11 07:16:10 UTC  $SI    0x704       test/elvis_dir_record_44…   Created
-  2025-06-11 07:16:10 UTC  $SI    0x704       test/elvis_dir_record_44…   Modified
-  2025-06-11 07:16:10 UTC  $SI    0x704       test/elvis_dir_record_44…   Accessed
-  2025-07-16 07:17:35 UTC  $SI    0x710       test/elvis_dir_papa_8053…   Created
-  2025-07-16 07:17:35 UTC  $SI    0x710       test/elvis_dir_papa_8053…   Modified
-  2025-07-16 07:17:35 UTC  $SI    0x710       test/elvis_dir_papa_8053…   Accessed
-  2025-08-11 07:17:32 UTC  $SI    0x702       test/xbpt_india_papa_801…   Created
-  2025-08-11 07:17:32 UTC  $SI    0x702       test/xbpt_india_papa_801…   Modified
-  2025-08-11 07:17:32 UTC  $SI    0x702       test/xbpt_india_papa_801…   Accessed
-  2025-09-04 07:16:57 UTC  $SI    0x717       test/elvis_dir_victor_78…   Created
-  2025-09-04 07:16:57 UTC  $SI    0x717       test/elvis_dir_victor_78…   Modified
-  2025-09-04 07:16:57 UTC  $SI    0x717       test/elvis_dir_victor_78…   Accessed
-  2025-11-05 07:16:31 UTC  $SI    0x702       test/xbpt_foxtrot_config…   Created
-  2025-12-01 07:17:11 UTC  $SI    0x717       test/elvis_dir_victor_78…   Created
-  2025-12-01 07:17:11 UTC  $SI    0x717       test/elvis_dir_victor_78…   Modified
-  2025-12-01 07:17:11 UTC  $SI    0x717       test/elvis_dir_victor_78…   Accessed
-  2025-12-30 07:17:16 UTC  $SI    0x711       test/elvis_dir_record_44…   Created
-  2025-12-30 07:17:16 UTC  $SI    0x711       test/elvis_dir_record_44…   Modified
-  2025-12-30 07:17:16 UTC  $SI    0x711       test/elvis_dir_record_44…   Accessed
-  2026-01-01 07:16:17 UTC  $SI    0x70b       test/elvis_dir_index_149…   Created
-  2026-02-23 07:17:05 UTC  $SI    0x706       test/elvis_dir_record_44…   Created
-  2026-03-01 07:16:07 UTC  $SI    0x704       test/elvis_dir_record_44…   Created
-  2026-03-01 07:16:07 UTC  $SI    0x704       test/elvis_dir_record_44…   Modified
-  2026-03-01 07:16:07 UTC  $SI    0x704       test/elvis_dir_record_44…   Accessed
-  2026-05-16 16:50:44 UTC  MLog   —                                       MODIFY
-  2026-05-16 16:50:44 UTC  MLog   0x600       /                           WRITE
-  2026-05-16 16:50:44 UTC  MLog   0x600       /                           WRITE
-  2026-05-16 16:50:44 UTC  MLog   0x600       /                           WRITE
-  2026-05-16 16:50:44 UTC  MLog   —                                       MODIFY
-  2026-05-16 16:50:44 UTC  MLog   0x600       /                           MODIFY
-  2026-05-16 16:50:44 UTC  MLog   0x600       /                           MODIFY
-  2026-05-16 16:50:44 UTC  MLog   0x600       /                           MODIFY
-  2026-05-16 16:50:46 UTC  $SI    0x701       System Volume Information   Created
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x600       /                           CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   STREAM_UPD
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   STREAM_UPD
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  $SI    0x701       System Volume Informatio…   Created
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   WRITE
-  2026-05-16 16:50:46 UTC  $SI    0x701       System Volume Informatio…   Modified
-  2026-05-16 16:50:46 UTC  $SI    0x701       System Volume Informatio…   Metadata-Changed
-  2026-05-16 16:50:46 UTC  $SI    0x701       System Volume Informatio…   Accessed
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   MODIFY
-  2026-05-16 16:50:46 UTC  MLog   0x701       /System Volume Informati…   CREATE
+  2021-05-18T07:16:04.9990009Z  $SI    0x702       test/elvis_dir_papa_8053…   Created
+  2021-09-26T07:16:24.5409194Z  $SI    0x70b       test/elvis_dir_record_44…   Created
+  2021-09-29T07:16:41.2004512Z  $SI    0x702       test/elvis_dir_record_44…   Created
+  2021-10-04T07:16:49.6636174Z  $SI    0x717       test/elvis_dir_victor_78…   Created
+  2021-10-04T07:16:49.6636174Z  $SI    0x717       test/elvis_dir_victor_78…   Modified
+  2021-10-04T07:16:49.6636174Z  $SI    0x717       test/elvis_dir_victor_78…   Accessed
+  2021-10-14T07:17:10.8947266Z  $SI    0x706       test/elvis_dir_record_44…   Created
+  2021-10-14T07:17:10.8947266Z  $SI    0x706       test/elvis_dir_record_44…   Modified
+  2021-10-14T07:17:10.8947266Z  $SI    0x706       test/elvis_dir_record_44…   Accessed
+  2021-10-15T07:17:19.9400574Z  $SI    0x702       test/xbpt_config_log_982…   Created
+  2021-10-15T07:17:19.9400574Z  $SI    0x702       test/xbpt_config_log_982…   Modified
+  2021-10-15T07:17:19.9400574Z  $SI    0x702       test/xbpt_config_log_982…   Accessed
+  2021-10-19T07:16:21.7425212Z  $SI    0x710       test/elvis_dir_papa_8053…   Modified
+  2021-10-19T07:16:21.7425212Z  $SI    0x703       test/elvis_dir_record_44…   Created
+  2021-10-19T07:16:21.7425212Z  $SI    0x703       test/elvis_dir_record_44…   Modified
+  2021-10-19T07:16:21.7425212Z  $SI    0x703       test/elvis_dir_record_44…   Accessed
+  2022-02-07T07:16:33.0361865Z  $SI    0x722       test/elvis_dir_index_149…   Modified
+  2022-02-07T07:16:33.0361865Z  $SI    0x723       test/elvis_dir_india_800…   Modified
+  2022-02-07T07:16:33.0361865Z  $SI    0x710       test/elvis_dir_papa_8053…   Created
+  2022-02-07T07:16:33.0361865Z  $SI    0x710       test/elvis_dir_papa_8053…   Modified
+  2022-02-07T07:16:33.0361865Z  $SI    0x710       test/elvis_dir_papa_8053…   Accessed
+  2022-02-12T07:16:16.9171874Z  $SI    0x702       test/xbpt_yankee_audit_4…   Created
+  2022-02-12T07:16:16.9171874Z  $SI    0x702       test/xbpt_yankee_audit_4…   Modified
+  2022-02-12T07:16:16.9171874Z  $SI    0x702       test/xbpt_yankee_audit_4…   Accessed
+  2022-02-28T07:17:26.7141564Z  $SI    0x707       test/elvis_dir_record_44…   Created
+  2022-02-28T07:17:26.7141564Z  $SI    0x707       test/elvis_dir_record_44…   Modified
+  2022-02-28T07:17:26.7141564Z  $SI    0x707       test/elvis_dir_record_44…   Accessed
+  2022-03-06T07:16:22.2090777Z  $SI    0x707       test/elvis_dir_record_44…   Created
+  2022-03-06T07:16:22.2090777Z  $SI    0x707       test/elvis_dir_record_44…   Modified
+  2022-03-06T07:16:22.2090777Z  $SI    0x707       test/elvis_dir_record_44…   Accessed
+  2022-04-19T07:16:47.0726903Z  $SI    0x704       test/elvis_dir_record_44…   Created
+  2022-04-19T07:16:47.0726903Z  $SI    0x704       test/elvis_dir_record_44…   Modified
+  2022-04-19T07:16:47.0726903Z  $SI    0x704       test/elvis_dir_record_44…   Accessed
+  2022-05-20T07:16:16.7264974Z  $SI    0x711       test/elvis_dir_index_149…   Created
+  2022-05-20T07:16:16.7264974Z  $SI    0x711       test/elvis_dir_index_149…   Modified
+  2022-05-20T07:16:16.7264974Z  $SI    0x711       test/elvis_dir_index_149…   Accessed
+  2022-05-31T07:17:29.8718970Z  $SI    0x717       test/elvis_dir_victor_78…   Created
+  2022-05-31T07:17:29.8718970Z  $SI    0x717       test/elvis_dir_victor_78…   Modified
+  2022-05-31T07:17:29.8718970Z  $SI    0x717       test/elvis_dir_victor_78…   Accessed
+  2022-06-11T07:16:28.0969336Z  $SI    0x70f       test/elvis_dir_record_44…   Created
+  2022-06-17T07:16:38.2016426Z  $SI    0x711       test/elvis_dir_record_44…   Created
+  2022-06-17T07:16:38.2016426Z  $SI    0x711       test/elvis_dir_record_44…   Modified
+  2022-06-17T07:16:38.2016426Z  $SI    0x711       test/elvis_dir_record_44…   Accessed
+  2022-08-02T07:16:28.1705690Z  $SI    0x703       test/elvis_dir_record_44…   Created
+  2022-12-26T07:16:15.5489447Z  $SI    0x707       test/elvis_dir_record_44…   Created
+  2022-12-26T07:16:15.5489447Z  $SI    0x707       test/elvis_dir_record_44…   Modified
+  2022-12-26T07:16:15.5489447Z  $SI    0x707       test/elvis_dir_record_44…   Accessed
+  2023-08-26T07:16:12.5023383Z  $SI    0x70b       test/elvis_dir_record_44…   Created
+  2023-08-26T07:16:12.5023383Z  $SI    0x70b       test/elvis_dir_record_44…   Modified
+  2023-08-26T07:16:12.5023383Z  $SI    0x70b       test/elvis_dir_record_44…   Accessed
+  2023-10-15T07:17:00.9306544Z  $SI    0x703       test/elvis_dir_record_44…   Created
+  2023-10-15T07:17:00.9306544Z  $SI    0x703       test/elvis_dir_record_44…   Modified
+  2023-10-15T07:17:00.9306544Z  $SI    0x703       test/elvis_dir_record_44…   Accessed
+  2023-11-21T07:17:13.8768248Z  $SI    0x703       test/elvis_dir_record_44…   Created
+  2023-11-21T07:17:13.8768248Z  $SI    0x703       test/elvis_dir_record_44…   Modified
+  2023-11-21T07:17:13.8768248Z  $SI    0x703       test/elvis_dir_record_44…   Accessed
+  2023-11-27T07:16:30.1657183Z  $SI    0x704       test/elvis_dir_index_149…   Created
+  2023-11-27T07:16:30.1657183Z  $SI    0x704       test/elvis_dir_index_149…   Modified
+  2023-11-27T07:16:30.1657183Z  $SI    0x704       test/elvis_dir_index_149…   Accessed
+  2024-01-13T07:17:04.4473965Z  $SI    0x710       test/elvis_dir_papa_8053…   Created
+  2024-01-13T07:17:04.4473965Z  $SI    0x710       test/elvis_dir_papa_8053…   Modified
+  2024-01-13T07:17:04.4473965Z  $SI    0x710       test/elvis_dir_papa_8053…   Accessed
+  2024-04-02T07:16:32.8669648Z  $SI    0x706       test/xbpt_india_temp_831…   Created
+  2024-04-02T07:16:32.8669648Z  $SI    0x706       test/xbpt_india_temp_831…   Modified
+  2024-04-02T07:16:32.8669648Z  $SI    0x706       test/xbpt_india_temp_831…   Accessed
+  2024-04-04T07:17:02.6780853Z  $SI    0x704       test/elvis_dir_record_44…   Created
+  2024-05-06T07:17:31.2960857Z  $SI    0x702       test/elvis_dir_record_44…   Created
+  2024-05-06T07:17:31.2960857Z  $SI    0x702       test/elvis_dir_record_44…   Modified
+  2024-05-06T07:17:31.2960857Z  $SI    0x702       test/elvis_dir_record_44…   Accessed
+  2024-06-07T07:17:11.2423573Z  $SI    0x712       test/elvis_dir_record_44…   Created
+  2024-06-07T07:17:11.2423573Z  $SI    0x712       test/elvis_dir_record_44…   Modified
+  2024-06-07T07:17:11.2423573Z  $SI    0x712       test/elvis_dir_record_44…   Accessed
+  2024-08-03T07:17:33.0580290Z  $SI    0x731       test/elvis_dir_index_149…   Created
+  2024-08-03T07:17:33.0580290Z  $SI    0x731       test/elvis_dir_index_149…   Modified
+  2024-08-03T07:17:33.0580290Z  $SI    0x731       test/elvis_dir_index_149…   Accessed
+  2024-10-16T07:17:27.5521698Z  $SI    0x707       test/elvis_dir_record_44…   Created
+  2024-11-23T07:17:31.6060620Z  $SI    0x718       test/elvis_dir_index_149…   Created
+  2024-11-23T07:17:31.6060620Z  $SI    0x718       test/elvis_dir_index_149…   Modified
+  2024-11-23T07:17:31.6060620Z  $SI    0x718       test/elvis_dir_index_149…   Accessed
+  2024-12-12T07:16:57.7860609Z  $SI    0x703       test/elvis_dir_record_44…   Created
+  2025-02-09T07:17:09.6819863Z  $SI    0x70f       test/elvis_dir_papa_8053…   Created
+  2025-02-23T07:17:23.7743638Z  $SI    0x706       test/elvis_dir_record_44…   Created
+  2025-02-23T07:17:23.7743638Z  $SI    0x706       test/elvis_dir_record_44…   Modified
+  2025-02-23T07:17:23.7743638Z  $SI    0x706       test/elvis_dir_record_44…   Accessed
+  2025-03-31T07:17:11.8319740Z  $SI    0x706       test/elvis_dir_record_44…   Created
+  2025-03-31T07:17:11.8319740Z  $SI    0x706       test/elvis_dir_record_44…   Modified
+  2025-03-31T07:17:11.8319740Z  $SI    0x706       test/elvis_dir_record_44…   Accessed
+  2025-04-01T07:16:26.2947244Z  $SI    0x730       test/elvis_dir_index_149…   Modified
+  2025-04-01T07:16:26.2947244Z  $SI    0x711       test/elvis_dir_papa_8053…   Created
+  2025-04-02T07:16:24.8031332Z  $SI    0x715       test/elvis_dir_papa_8053…   Created
+  2025-04-08T07:17:35.0852677Z  $SI    0x721       test/elvis_dir_record_44…   Created
+  2025-04-08T07:17:35.0852677Z  $SI    0x721       test/elvis_dir_record_44…   Modified
+  2025-04-08T07:17:35.0852677Z  $SI    0x721       test/elvis_dir_record_44…   Accessed
+  2025-04-19T07:17:09.2149813Z  $SI    0x717       test/elvis_dir_victor_78…   Created
+  2025-04-19T07:17:09.2149813Z  $SI    0x717       test/elvis_dir_victor_78…   Modified
+  2025-04-19T07:17:09.2149813Z  $SI    0x717       test/elvis_dir_victor_78…   Accessed
+  2025-05-12T07:17:04.3504532Z  $SI    0x708       test/elvis_dir_victor_78…   Created
+  2025-06-06T07:17:11.5639166Z  $SI    0x702       test/xbpt_index_india_42…   Created
+  2025-06-06T07:17:11.5639166Z  $SI    0x702       test/xbpt_index_india_42…   Modified
+  2025-06-06T07:17:11.5639166Z  $SI    0x702       test/xbpt_index_india_42…   Accessed
+  2025-06-11T07:16:10.1388255Z  $SI    0x704       test/elvis_dir_record_44…   Created
+  2025-06-11T07:16:10.1388255Z  $SI    0x704       test/elvis_dir_record_44…   Modified
+  2025-06-11T07:16:10.1388255Z  $SI    0x704       test/elvis_dir_record_44…   Accessed
+  2025-07-16T07:17:35.7846153Z  $SI    0x710       test/elvis_dir_papa_8053…   Created
+  2025-07-16T07:17:35.7846153Z  $SI    0x710       test/elvis_dir_papa_8053…   Modified
+  2025-07-16T07:17:35.7846153Z  $SI    0x710       test/elvis_dir_papa_8053…   Accessed
+  2025-08-11T07:17:32.2206252Z  $SI    0x702       test/xbpt_india_papa_801…   Created
+  2025-08-11T07:17:32.2206252Z  $SI    0x702       test/xbpt_india_papa_801…   Modified
+  2025-08-11T07:17:32.2206252Z  $SI    0x702       test/xbpt_india_papa_801…   Accessed
+  2025-09-04T07:16:57.5507155Z  $SI    0x717       test/elvis_dir_victor_78…   Created
+  2025-09-04T07:16:57.5507155Z  $SI    0x717       test/elvis_dir_victor_78…   Modified
+  2025-09-04T07:16:57.5507155Z  $SI    0x717       test/elvis_dir_victor_78…   Accessed
+  2025-11-05T07:16:31.4941888Z  $SI    0x702       test/xbpt_foxtrot_config…   Created
+  2025-12-01T07:17:11.3472066Z  $SI    0x717       test/elvis_dir_victor_78…   Created
+  2025-12-01T07:17:11.3472066Z  $SI    0x717       test/elvis_dir_victor_78…   Modified
+  2025-12-01T07:17:11.3472066Z  $SI    0x717       test/elvis_dir_victor_78…   Accessed
+  2025-12-30T07:17:16.4645071Z  $SI    0x711       test/elvis_dir_record_44…   Created
+  2025-12-30T07:17:16.4645071Z  $SI    0x711       test/elvis_dir_record_44…   Modified
+  2025-12-30T07:17:16.4645071Z  $SI    0x711       test/elvis_dir_record_44…   Accessed
+  2026-01-01T07:16:17.1671215Z  $SI    0x70b       test/elvis_dir_index_149…   Created
+  2026-02-23T07:17:05.2859306Z  $SI    0x706       test/elvis_dir_record_44…   Created
+  2026-03-01T07:16:07.6076372Z  $SI    0x704       test/elvis_dir_record_44…   Created
+  2026-03-01T07:16:07.6076372Z  $SI    0x704       test/elvis_dir_record_44…   Modified
+  2026-03-01T07:16:07.6076372Z  $SI    0x704       test/elvis_dir_record_44…   Accessed
+  2026-05-16T16:50:44.1722315Z  MLog   —                                       MODIFY (derived)
+  2026-05-16T16:50:44.1722315Z  MLog   0x600       .                           DATA_OR_REPARSE_WRITE (derived)
+  2026-05-16T16:50:44.1722315Z  MLog   0x600       .                           DATA_OR_REPARSE_WRITE (derived)
+  2026-05-16T16:50:44.1722315Z  MLog   0x600       .                           DATA_OR_REPARSE_WRITE (derived)
+  2026-05-16T16:50:44.1722315Z  MLog   —                                       MODIFY (derived)
+  2026-05-16T16:50:46.1357572Z  $SI    0x701       System Volume Information   Created
+  2026-05-16T16:50:46.1357572Z  MLog   0x701       System Volume Information   CREATE (derived)
+  2026-05-16T16:50:46.1357572Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.1357572Z  MLog   0x600       .                           MODIFY (derived)
+  2026-05-16T16:50:46.1426414Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.1553568Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.1625402Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.1708374Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.1785170Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.1876785Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.1897557Z  MLog   0x701       System Volume Information   STREAM_UPD (derived)
+  2026-05-16T16:50:46.1897557Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.1897557Z  MLog   0x701       System Volume Information   STREAM_UPD (derived)
+  2026-05-16T16:50:46.1917718Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.1917718Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.1994466Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.2014856Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.2057068Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.2079690Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.2153947Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.2175714Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.2278779Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.2298918Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.2392583Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.2414851Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.2455648Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.2478061Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.2576056Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.2707858Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.2794201Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.2835176Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.2913221Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.2954477Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.3006893Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.3027588Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.3093551Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.3113762Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.3202119Z  $SI    0x701       System Volume Informatio…   Created
+  2026-05-16T16:50:46.3202119Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.3251276Z  $SI    0x701       System Volume Informatio…   Modified
+  2026-05-16T16:50:46.3251276Z  $SI    0x701       System Volume Informatio…   Metadata-Changed
+  2026-05-16T16:50:46.3251276Z  $SI    0x701       System Volume Informatio…   Accessed
+  2026-05-16T16:50:46.3251276Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.3251276Z  MLog   0x701       System Volume Information   DATA_OR_REPARSE_WRITE (derived)
+  2026-05-16T16:50:46.3292258Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.3353919Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.3375029Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.3471635Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.3489233Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.3549694Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.3549694Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.3600656Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.3620861Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.3728820Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.3769767Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.3825813Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.3906752Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.4004899Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.4053363Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.4074412Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.4146430Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.4194674Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.4215178Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.4235328Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.4235328Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.4271086Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.4312056Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.4332726Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.4376803Z  MLog   0x701       System Volume Information   MODIFY (derived)
+  2026-05-16T16:50:46.4453758Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-16T16:50:46.4464811Z  MLog   0x701       System Volume Information   MODIFY (derived)
 ------------------------------------------------------------------------------
   200 events

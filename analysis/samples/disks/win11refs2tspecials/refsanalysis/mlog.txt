@@ -1,37 +1,41 @@
 ==============================================================================
 ReFS MLog Analysis — win11refs2tspecials.raw
-ReFS v3.14 | cluster_size=0x1000 | objects=230
+ReFS 3.14 | cluster_size=4096 | objects=230
 ==============================================================================
 
 ==============================================================================
 MLog Control Area
 ==============================================================================
-  Control PLCN:      0x30
+  Control PLCN:      0x30  (copy 0, in use: the newer of the two copies that pass refs.sys's checks)
   Signature:         MLog
-  Format magic:      0x6dfbad7b (per-volume format/log-instance constant; changes after a reformat)
-  Version:           1
-  Sector size:       0x1000
+  Format magic:      0x6dfbad7b (written from the volume's signature, which refs.sys derives from
+                     the superblock's volume GUID; a reformat changes it)
+  Header +0x8:       01000000 (4 bytes, raw: refs.sys writes 1 here and does not read it)
+  Log block size:    4 KiB
   UUID:              525a042c-58aa-4cca-a4f2-125f8bebb05f
   Sequence:          69
-  Write counter:     2
-  Flags:             0x1
-  Total entries:     0
-  Generation:        4995
-  Data area:         0x8000 - 0x48000 (262144 clusters)
-  LSN oldest:        0x1383.1
-  Dispatch table:    v3.14 (44 opcodes)
+  Log open count:    2
+  Log flags:         0x1
+  Log version:       1 (payload +0x40: refs.sys opens a log only when it is 1)
+  Data area:         0x8000 - 0x48000 (262144 clusters; 262144 log blocks of 4 KiB)
+  Log start:         0x0000000100001383 (generation 1, offset 0x1383)
+  Log end:           0x0000000100001383 (generation 1, offset 0x1383)
+  Host info:         366 (payload +0x44: refs.sys writes the checkpoint virtual clock minus 1 here
+                     when it advances the log start)
+  Dispatch table:    the ReFS 3.14 table (45 opcodes: 0x0-0x2b, and 0x2d, which of the builds read
+                     only Insider 29683 dispatches; per build: `mlog --info`)
 
 ==============================================================================
 Data Area Summary
 ==============================================================================
-  Total pages:       262144
+  Log blocks:        262144
   zero                 257150  ( 98.1%)
   MLog                   4994  (  1.9%)
 
 ==============================================================================
 Redo Records
 ==============================================================================
-  Total records:      45256
+  Redo records:       45256
   Transaction starts: 24107
   Transaction commits: 24107
 

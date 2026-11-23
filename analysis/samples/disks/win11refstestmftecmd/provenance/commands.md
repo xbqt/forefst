@@ -44,12 +44,12 @@ fsutil usn readjournal  n: > n_usnreadlast.txt        # -> provenance/usn_readjo
 ```
 
 The export (`usn_readjournal_export.txt`, **9 367 records**) was read from the **live** volume; the
-image's on-disk journal holds **6 805 records**. They are the **same journal**, both starting at
-First USN 0 (no wrap), and they agree **record-for-record over USN 0–917 280 (exactly 6 805 records
-on each side)**. The export's additional 2 562 records all lie *beyond* the image's last record
-(USN 917 280 → Next USN 1 261 144) — file-system activity that post-dates this snapshot. So the count
-difference is purely capture timing (the `.raw` is an earlier snapshot than the live `readjournal`
-read), and the exact overlap validates the tool's journal parser against `fsutil`. Cross-check
+image's on-disk journal holds **9 371 records**. They are the **same journal**, both starting at
+First USN 0 (no wrap): each of the export's 9 367 records (USN 0–1 261 000) is in the image with the
+same USN, file name and reason, and the image holds **4 more**, from USN 1 261 144 — the export's own
+Next USN — to 1 261 568 (`MountPointManagerRemoteDatabase`, `AadRecoveryPasswordDelete`): records written
+after the export was read and before the volume was imaged. The count difference is
+capture timing, and the exact overlap validates the tool's journal parser against `fsutil`. Cross-check
 against `refsanalysis/usn.txt`.
 
 ## 4. Unmount

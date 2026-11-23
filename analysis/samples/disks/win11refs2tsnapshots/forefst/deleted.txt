@@ -5,24 +5,28 @@ ReFS Deleted File Finder
 ==============================================================================
   Image:        win11refs2tsnapshots.raw
   ReFS version: 3.14
-  Cluster size: 0x1000
-  Checkpoints:  2 (VC: 265, 264)
+  Cluster size: 4 KiB
+  Checkpoints:  2 (VC: 265 in use; 264 superseded)
   Objects:      47
+  What this is: rows RECOVERED from metadata pages (best effort), not the volume's current content;
+                each entry says what it is (DELETED, RENAMED, ...) and what decided it.
 
-── Trash Table (OID 0xD) ──
-  Empty (all deletions fully processed)
+── Trash Table (OID 0xd) ──
+  Empty (0 rows)
 
 ── Checkpoint Comparison ──
-  Current checkpoint: VC=265
-  Previous checkpoint: VC=264
-  Same top-level files in both (change may be in subdirectories or metadata)
+  Current checkpoint: VC=265 (LCN 0x51eb04, in use)
+  Previous checkpoint: VC=264 (LCN 0x3d702ac, superseded)
+  Same files and paths in both checkpoints (content and metadata are not compared)
 
 ── Recovery methods ──
-  Mode: recovery.  Ran: Trash table (0xD), checkpoint diff.
+  Mode: recovery.  Ran: Trash table (0xd), checkpoint diff.
   Slack scan SKIPPED (--no-slack). Run `deleted` (the default) to recover deleted rows.
-  Fine-grained: --no-slack · --scan-pages · --orphans · --carve · --search SUB · --csv/--json/--jsonl FILE · `export deleted DIR`.
-  --max-scan N stops the orphan scan early (faster, but the run is then INCOMPLETE); `help deleted` lists what each option costs.
+  Fine-grained: --no-slack · --scan-pages · --orphans · --search SUB · --csv/--json/--jsonl FILE ·
+                `export deleted DIR` (with --carve).
+  --max-scan N stops the orphan scan early (faster, but the run is then INCOMPLETE); `help deleted`
+  lists what each option costs.
   Also: `deleted --orphans` adds a low-confidence tier for OID-Table objects unlinked from the tree.
-  Prior versions of files that still exist: `snapshots`.  Windows Recycle Bin: `recyclebin`.
+  Stream snapshots of files that still exist: `snapshots`.  Windows Recycle Bin: `recyclebin`.
 
 

@@ -3,216 +3,222 @@
 ==============================================================================
 ReFS Super-Timeline — wininsiderrefs8gtest2.raw
 ==============================================================================
-  Sources merged: USN=0  MLog=1983  $SI-MACB=3576  (time-sorted; correlated by name/path —
+  Sources merged: USN=0  MLog=1983  $SI-MACB=3576  (sorted by time; rows are not joined across sources:
                   a file is listed under its HOME directory's OID in $SI and USN -- the
                   FileRef high half, kept after a move or hard link -- and MLog the target OID)
-  NOTE: USN journal inactive on this image — timeline is $SI + MLog only.
+  NOTE: USN Journal: Inactive — timeline is $SI + MLog only.
   Caveat: USN and $SI carry exact FILETIMEs. MLog has NO wall-clock time — an MLog row's time is
-          the affected object's embedded $SI birth (approximate; for a RENAME/MOVE it is the object
-          birth, not the op time). MLog times that predate the volume are undated + marked.
-          (7 MLog rows had an impossible pre-volume time → undated.)
+          the latest time its log payload's records carry (a payload can merge up to 15 redo
+          blocks, whose own times can differ), or the paired $SI-update's time for a rename or
+          delete that embeds none. MLog times that predate the volume are undated + marked.
+          An $SI Accessed event exists only while last-access updating was on.
+          An MLog row's event is DERIVED from its records (`mlog --info`). A $SI or
+          MLog row shows the live tree's path TODAY (PathToday), not the path at the event; a USN row
+          the name its record carries (its path at the event is not read).
+  56 MLog row(s) are left out: their log payloads carry no embedded time (an undated payload cannot
+  be placed on a timeline; `mlog --parse` lists it).
 ------------------------------------------------------------------------------
-  Timestamp (UTC)          Src    OID         Name/Path                   Event
+  Timestamp (UTC)               Src    OID         Path today / USN name       Event
   ----------------------------------------------------------------------------
-  2021-05-18 07:16:04 UTC  $SI    0x76f       testintegrity/elvis_dir_…   Created
-  2021-06-01 19:58:21 UTC  $SI    0x710       testspecials/dir_oscar_2…   Created
-  2021-06-01 19:58:21 UTC  $SI    0x710       testspecials/dir_oscar_2…   Modified
-  2021-06-01 19:58:21 UTC  $SI    0x710       testspecials/dir_oscar_2…   Accessed
-  2021-09-26 07:16:24 UTC  $SI    0x778       testintegrity/elvis_dir_…   Created
-  2021-09-29 07:16:41 UTC  $SI    0x76f       testintegrity/elvis_dir_…   Created
-  2021-10-04 07:16:49 UTC  $SI    0x784       testintegrity/elvis_dir_…   Created
-  2021-10-04 07:16:49 UTC  $SI    0x784       testintegrity/elvis_dir_…   Modified
-  2021-10-04 07:16:49 UTC  $SI    0x784       testintegrity/elvis_dir_…   Accessed
-  2021-10-14 07:17:10 UTC  $SI    0x773       testintegrity/elvis_dir_…   Created
-  2021-10-14 07:17:10 UTC  $SI    0x773       testintegrity/elvis_dir_…   Modified
-  2021-10-14 07:17:10 UTC  $SI    0x773       testintegrity/elvis_dir_…   Accessed
-  2021-10-15 07:17:19 UTC  $SI    0x76f       testintegrity/xbpt_confi…   Created
-  2021-10-15 07:17:19 UTC  $SI    0x76f       testintegrity/xbpt_confi…   Modified
-  2021-10-15 07:17:19 UTC  $SI    0x76f       testintegrity/xbpt_confi…   Accessed
-  2021-10-19 07:16:21 UTC  $SI    0x77d       testintegrity/elvis_dir_…   Modified
-  2021-10-19 07:16:21 UTC  $SI    0x770       testintegrity/elvis_dir_…   Created
-  2021-10-19 07:16:21 UTC  $SI    0x770       testintegrity/elvis_dir_…   Modified
-  2021-10-19 07:16:21 UTC  $SI    0x770       testintegrity/elvis_dir_…   Accessed
-  2022-02-07 07:16:33 UTC  $SI    0x78f       testintegrity/elvis_dir_…   Modified
-  2022-02-07 07:16:33 UTC  $SI    0x790       testintegrity/elvis_dir_…   Modified
-  2022-02-07 07:16:33 UTC  $SI    0x77d       testintegrity/elvis_dir_…   Created
-  2022-02-07 07:16:33 UTC  $SI    0x77d       testintegrity/elvis_dir_…   Modified
-  2022-02-07 07:16:33 UTC  $SI    0x77d       testintegrity/elvis_dir_…   Accessed
-  2022-02-12 07:16:16 UTC  $SI    0x76f       testintegrity/xbpt_yanke…   Created
-  2022-02-12 07:16:16 UTC  $SI    0x76f       testintegrity/xbpt_yanke…   Modified
-  2022-02-12 07:16:16 UTC  $SI    0x76f       testintegrity/xbpt_yanke…   Accessed
-  2022-02-28 07:17:26 UTC  $SI    0x774       testintegrity/elvis_dir_…   Created
-  2022-02-28 07:17:26 UTC  $SI    0x774       testintegrity/elvis_dir_…   Modified
-  2022-02-28 07:17:26 UTC  $SI    0x774       testintegrity/elvis_dir_…   Accessed
-  2022-03-06 07:16:22 UTC  $SI    0x774       testintegrity/elvis_dir_…   Created
-  2022-03-06 07:16:22 UTC  $SI    0x774       testintegrity/elvis_dir_…   Modified
-  2022-03-06 07:16:22 UTC  $SI    0x774       testintegrity/elvis_dir_…   Accessed
-  2022-04-19 07:16:47 UTC  $SI    0x771       testintegrity/elvis_dir_…   Created
-  2022-04-19 07:16:47 UTC  $SI    0x771       testintegrity/elvis_dir_…   Modified
-  2022-04-19 07:16:47 UTC  $SI    0x771       testintegrity/elvis_dir_…   Accessed
-  2022-05-20 07:16:16 UTC  $SI    0x77e       testintegrity/elvis_dir_…   Created
-  2022-05-20 07:16:16 UTC  $SI    0x77e       testintegrity/elvis_dir_…   Modified
-  2022-05-20 07:16:16 UTC  $SI    0x77e       testintegrity/elvis_dir_…   Accessed
-  2022-05-31 07:17:29 UTC  $SI    0x784       testintegrity/elvis_dir_…   Created
-  2022-05-31 07:17:29 UTC  $SI    0x784       testintegrity/elvis_dir_…   Modified
-  2022-05-31 07:17:29 UTC  $SI    0x784       testintegrity/elvis_dir_…   Accessed
-  2022-06-11 07:16:28 UTC  $SI    0x77c       testintegrity/elvis_dir_…   Created
-  2022-06-17 07:16:38 UTC  $SI    0x77e       testintegrity/elvis_dir_…   Created
-  2022-06-17 07:16:38 UTC  $SI    0x77e       testintegrity/elvis_dir_…   Modified
-  2022-06-17 07:16:38 UTC  $SI    0x77e       testintegrity/elvis_dir_…   Accessed
-  2022-08-02 07:16:28 UTC  $SI    0x770       testintegrity/elvis_dir_…   Created
-  2022-12-26 07:16:15 UTC  $SI    0x774       testintegrity/elvis_dir_…   Created
-  2022-12-26 07:16:15 UTC  $SI    0x774       testintegrity/elvis_dir_…   Modified
-  2022-12-26 07:16:15 UTC  $SI    0x774       testintegrity/elvis_dir_…   Accessed
-  2023-06-05 19:57:51 UTC  $SI    0x703       testspecials/dir_record_…   Created
-  2023-08-26 07:16:12 UTC  $SI    0x778       testintegrity/elvis_dir_…   Created
-  2023-08-26 07:16:12 UTC  $SI    0x778       testintegrity/elvis_dir_…   Modified
-  2023-08-26 07:16:12 UTC  $SI    0x778       testintegrity/elvis_dir_…   Accessed
-  2023-09-14 19:58:48 UTC  $SI    0x727       testspecials/dir_config_…   Created
-  2023-09-14 19:58:48 UTC  $SI    0x727       testspecials/dir_config_…   Modified
-  2023-09-14 19:58:48 UTC  $SI    0x727       testspecials/dir_config_…   Accessed
-  2023-10-15 07:17:00 UTC  $SI    0x770       testintegrity/elvis_dir_…   Created
-  2023-10-15 07:17:00 UTC  $SI    0x770       testintegrity/elvis_dir_…   Modified
-  2023-10-15 07:17:00 UTC  $SI    0x770       testintegrity/elvis_dir_…   Accessed
-  2023-11-21 07:17:13 UTC  $SI    0x770       testintegrity/elvis_dir_…   Created
-  2023-11-21 07:17:13 UTC  $SI    0x770       testintegrity/elvis_dir_…   Modified
-  2023-11-21 07:17:13 UTC  $SI    0x770       testintegrity/elvis_dir_…   Accessed
-  2023-11-27 07:16:30 UTC  $SI    0x771       testintegrity/elvis_dir_…   Created
-  2023-11-27 07:16:30 UTC  $SI    0x771       testintegrity/elvis_dir_…   Modified
-  2023-11-27 07:16:30 UTC  $SI    0x771       testintegrity/elvis_dir_…   Accessed
-  2024-01-13 07:17:04 UTC  $SI    0x77d       testintegrity/elvis_dir_…   Created
-  2024-01-13 07:17:04 UTC  $SI    0x77d       testintegrity/elvis_dir_…   Modified
-  2024-01-13 07:17:04 UTC  $SI    0x77d       testintegrity/elvis_dir_…   Accessed
-  2024-04-02 07:16:32 UTC  $SI    0x773       testintegrity/xbpt_india…   Created
-  2024-04-02 07:16:32 UTC  $SI    0x773       testintegrity/xbpt_india…   Modified
-  2024-04-02 07:16:32 UTC  $SI    0x773       testintegrity/xbpt_india…   Accessed
-  2024-04-04 07:17:02 UTC  $SI    0x771       testintegrity/elvis_dir_…   Created
-  2024-05-06 07:17:31 UTC  $SI    0x76f       testintegrity/elvis_dir_…   Created
-  2024-05-06 07:17:31 UTC  $SI    0x76f       testintegrity/elvis_dir_…   Modified
-  2024-05-06 07:17:31 UTC  $SI    0x76f       testintegrity/elvis_dir_…   Accessed
-  2024-06-07 07:17:11 UTC  $SI    0x77f       testintegrity/elvis_dir_…   Created
-  2024-06-07 07:17:11 UTC  $SI    0x77f       testintegrity/elvis_dir_…   Modified
-  2024-06-07 07:17:11 UTC  $SI    0x77f       testintegrity/elvis_dir_…   Accessed
-  2024-08-03 07:17:33 UTC  $SI    0x79e       testintegrity/elvis_dir_…   Created
-  2024-08-03 07:17:33 UTC  $SI    0x79e       testintegrity/elvis_dir_…   Modified
-  2024-08-03 07:17:33 UTC  $SI    0x79e       testintegrity/elvis_dir_…   Accessed
-  2024-10-12 19:57:49 UTC  $SI    0x702       testspecials/dir_record_…   Created
-  2024-10-12 19:57:49 UTC  $SI    0x702       testspecials/hardlink_wh…   Created
-  2024-10-12 19:57:49 UTC  $SI    0x702       testspecials/temp_record…   Created
-  2024-10-16 07:17:27 UTC  $SI    0x774       testintegrity/elvis_dir_…   Created
-  2024-10-16 19:59:02 UTC  $SI    0x702       testspecials/dir_config_…   Created
-  2024-10-16 19:59:02 UTC  $SI    0x702       testspecials/dir_oscar_2…   Created
-  2024-10-16 19:59:02 UTC  $SI    0x702       testspecials/dir_oscar_2…   Created
-  2024-10-16 19:59:02 UTC  $SI    0x702       testspecials/dir_record_…   Created
-  2024-10-16 19:59:02 UTC  $SI    0x702       testspecials/dir_record_…   Created
-  2024-10-16 19:59:02 UTC  $SI    0x702       testspecials/dir_record_…   Created
-  2024-10-16 19:59:02 UTC  $SI    0x702       testspecials/hardlink_qu…   Created
-  2024-11-23 07:17:31 UTC  $SI    0x785       testintegrity/elvis_dir_…   Created
-  2024-11-23 07:17:31 UTC  $SI    0x785       testintegrity/elvis_dir_…   Modified
-  2024-11-23 07:17:31 UTC  $SI    0x785       testintegrity/elvis_dir_…   Accessed
-  2024-12-01 19:59:05 UTC  $SI    0x724       testspecials/dir_record_…   Created
-  2024-12-01 19:59:05 UTC  $SI    0x724       testspecials/dir_record_…   Modified
-  2024-12-01 19:59:05 UTC  $SI    0x724       testspecials/dir_record_…   Accessed
-  2024-12-01 19:59:05 UTC  $SI    0x724       testspecials/dir_record_…   Created
-  2024-12-01 19:59:05 UTC  $SI    0x724       testspecials/dir_record_…   Modified
-  2024-12-01 19:59:05 UTC  $SI    0x724       testspecials/dir_record_…   Accessed
-  2024-12-01 19:59:05 UTC  $SI    0x724       testspecials/dir_record_…   Created
-  2024-12-01 19:59:05 UTC  $SI    0x724       testspecials/dir_record_…   Modified
-  2024-12-01 19:59:05 UTC  $SI    0x724       testspecials/dir_record_…   Accessed
-  2024-12-12 07:16:57 UTC  $SI    0x770       testintegrity/elvis_dir_…   Created
-  2025-02-09 07:17:09 UTC  $SI    0x77c       testintegrity/elvis_dir_…   Created
-  2025-02-23 07:17:23 UTC  $SI    0x773       testintegrity/elvis_dir_…   Created
-  2025-02-23 07:17:23 UTC  $SI    0x773       testintegrity/elvis_dir_…   Modified
-  2025-02-23 07:17:23 UTC  $SI    0x773       testintegrity/elvis_dir_…   Accessed
-  2025-03-31 07:17:11 UTC  $SI    0x773       testintegrity/elvis_dir_…   Created
-  2025-03-31 07:17:11 UTC  $SI    0x773       testintegrity/elvis_dir_…   Modified
-  2025-03-31 07:17:11 UTC  $SI    0x773       testintegrity/elvis_dir_…   Accessed
-  2025-04-01 07:16:26 UTC  $SI    0x79d       testintegrity/elvis_dir_…   Modified
-  2025-04-01 07:16:26 UTC  $SI    0x77e       testintegrity/elvis_dir_…   Created
-  2025-04-02 07:16:24 UTC  $SI    0x782       testintegrity/elvis_dir_…   Created
-  2025-04-08 07:17:35 UTC  $SI    0x78e       testintegrity/elvis_dir_…   Created
-  2025-04-08 07:17:35 UTC  $SI    0x78e       testintegrity/elvis_dir_…   Modified
-  2025-04-08 07:17:35 UTC  $SI    0x78e       testintegrity/elvis_dir_…   Accessed
-  2025-04-19 07:17:09 UTC  $SI    0x784       testintegrity/elvis_dir_…   Created
-  2025-04-19 07:17:09 UTC  $SI    0x784       testintegrity/elvis_dir_…   Modified
-  2025-04-19 07:17:09 UTC  $SI    0x784       testintegrity/elvis_dir_…   Accessed
-  2025-05-12 07:17:04 UTC  $SI    0x775       testintegrity/elvis_dir_…   Created
-  2025-06-06 07:17:11 UTC  $SI    0x76f       testintegrity/xbpt_index…   Created
-  2025-06-06 07:17:11 UTC  $SI    0x76f       testintegrity/xbpt_index…   Modified
-  2025-06-06 07:17:11 UTC  $SI    0x76f       testintegrity/xbpt_index…   Accessed
-  2025-06-11 07:16:10 UTC  $SI    0x771       testintegrity/elvis_dir_…   Created
-  2025-06-11 07:16:10 UTC  $SI    0x771       testintegrity/elvis_dir_…   Modified
-  2025-06-11 07:16:10 UTC  $SI    0x771       testintegrity/elvis_dir_…   Accessed
-  2025-07-16 07:17:35 UTC  $SI    0x77d       testintegrity/elvis_dir_…   Created
-  2025-07-16 07:17:35 UTC  $SI    0x77d       testintegrity/elvis_dir_…   Modified
-  2025-07-16 07:17:35 UTC  $SI    0x77d       testintegrity/elvis_dir_…   Accessed
-  2025-08-11 07:17:32 UTC  $SI    0x76f       testintegrity/xbpt_india…   Created
-  2025-08-11 07:17:32 UTC  $SI    0x76f       testintegrity/xbpt_india…   Modified
-  2025-08-11 07:17:32 UTC  $SI    0x76f       testintegrity/xbpt_india…   Accessed
-  2025-09-04 07:16:57 UTC  $SI    0x784       testintegrity/elvis_dir_…   Created
-  2025-09-04 07:16:57 UTC  $SI    0x784       testintegrity/elvis_dir_…   Modified
-  2025-09-04 07:16:57 UTC  $SI    0x784       testintegrity/elvis_dir_…   Accessed
-  2025-11-04 19:59:09 UTC  $SI    0x715       testspecials/dir_record_…   Created
-  2025-11-04 19:59:09 UTC  $SI    0x715       testspecials/dir_record_…   Modified
-  2025-11-04 19:59:09 UTC  $SI    0x715       testspecials/dir_record_…   Accessed
-  2025-11-05 07:16:31 UTC  $SI    0x76f       testintegrity/xbpt_foxtr…   Created
-  2025-12-01 07:17:11 UTC  $SI    0x784       testintegrity/elvis_dir_…   Created
-  2025-12-01 07:17:11 UTC  $SI    0x784       testintegrity/elvis_dir_…   Modified
-  2025-12-01 07:17:11 UTC  $SI    0x784       testintegrity/elvis_dir_…   Accessed
-  2025-12-30 07:17:16 UTC  $SI    0x77e       testintegrity/elvis_dir_…   Created
-  2025-12-30 07:17:16 UTC  $SI    0x77e       testintegrity/elvis_dir_…   Modified
-  2025-12-30 07:17:16 UTC  $SI    0x77e       testintegrity/elvis_dir_…   Accessed
-  2026-01-01 07:16:17 UTC  $SI    0x778       testintegrity/elvis_dir_…   Created
-  2026-01-01 19:57:30 UTC  $SI    0x71a       testspecials/dir_config_…   Modified
-  2026-01-01 19:57:30 UTC  $SI    0x708       testspecials/dir_gamma_6…   Created
-  2026-01-01 19:57:30 UTC  $SI    0x708       testspecials/dir_oscar_7…   Created
-  2026-01-01 19:57:30 UTC  $SI    0x708       testspecials/dir_record_…   Created
-  2026-01-01 19:57:30 UTC  $SI    0x708       testspecials/dir_record_…   Created
-  2026-01-27 19:59:19 UTC  $SI    0x703       testspecials/dir_record_…   Created
-  2026-01-27 19:59:19 UTC  $SI    0x703       testspecials/dir_record_…   Modified
-  2026-01-27 19:59:19 UTC  $SI    0x703       testspecials/dir_record_…   Accessed
-  2026-01-27 19:59:19 UTC  $SI    0x703       testspecials/dir_record_…   Created
-  2026-01-27 19:59:19 UTC  $SI    0x703       testspecials/dir_record_…   Modified
-  2026-01-27 19:59:19 UTC  $SI    0x703       testspecials/dir_record_…   Accessed
-  2026-02-23 07:17:05 UTC  $SI    0x773       testintegrity/elvis_dir_…   Created
-  2026-03-01 07:16:07 UTC  $SI    0x771       testintegrity/elvis_dir_…   Created
-  2026-03-01 07:16:07 UTC  $SI    0x771       testintegrity/elvis_dir_…   Modified
-  2026-03-01 07:16:07 UTC  $SI    0x771       testintegrity/elvis_dir_…   Accessed
-  2026-05-19 19:56:47 UTC  MLog   —                                       MODIFY
-  2026-05-19 19:56:47 UTC  MLog   —                                       MODIFY
-  2026-05-19 19:56:47 UTC  MLog   0x600       /                           WRITE
-  2026-05-19 19:56:47 UTC  MLog   0x600       /                           MODIFY
-  2026-05-19 19:56:47 UTC  MLog   0x600       /                           WRITE
-  2026-05-19 19:56:47 UTC  MLog   0x600       /                           WRITE
-  2026-05-19 19:56:47 UTC  $SI    0x701       System Volume Information   Created
-  2026-05-19 19:56:47 UTC  $SI    0x701       System Volume Information   Modified
-  2026-05-19 19:56:47 UTC  $SI    0x701       System Volume Information   Metadata-Changed
-  2026-05-19 19:56:47 UTC  $SI    0x701       System Volume Information   Accessed
-  2026-05-19 19:56:47 UTC  $SI    0x701       System Volume Informatio…   Created
-  2026-05-19 19:56:47 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-19 19:56:47 UTC  MLog   0x701       /System Volume Informati…   CREATE
-  2026-05-19 19:56:47 UTC  MLog   0x701       /System Volume Informati…   WRITE
-  2026-05-19 19:56:47 UTC  $SI    0x701       System Volume Informatio…   Modified
-  2026-05-19 19:56:47 UTC  $SI    0x701       System Volume Informatio…   Metadata-Changed
-  2026-05-19 19:56:47 UTC  $SI    0x701       System Volume Informatio…   Accessed
-  2026-05-19 19:57:27 UTC  $SI    0x702       testspecials                Created
-  2026-05-19 19:57:27 UTC  MLog   0x702       /testspecials               CREATE
-  2026-05-19 19:57:27 UTC  MLog   0x600       /                           MODIFY
-  2026-05-19 19:57:27 UTC  $SI    0x702       testspecials/archive_alp…   Created
-  2026-05-19 19:57:27 UTC  MLog   0x702       /testspecials               STREAM_UPD
-  2026-05-19 19:57:27 UTC  MLog   0x702       /testspecials               STREAM_UPD
-  2026-05-19 19:57:27 UTC  $SI    0x707       testspecials/dir_record_…   Modified
-  2026-05-19 19:57:27 UTC  $SI    0x707       testspecials/dir_record_…   Metadata-Changed
-  2026-05-19 19:57:27 UTC  $SI    0x702       testspecials/dir_gamma_6…   Created
-  2026-05-19 19:57:27 UTC  $SI    0x702       testspecials/dir_record_…   Created
-  2026-05-19 19:57:27 UTC  $SI    0x702       testspecials/mike_mike_6…   Created
-  2026-05-19 19:57:27 UTC  MLog   0x702       /testspecials               STREAM_UPD
-  2026-05-19 19:57:27 UTC  $SI    0x702       testspecials/dir_record_…   Created
-  2026-05-19 19:57:27 UTC  MLog   0x702       /testspecials               CREATE
-  2026-05-19 19:57:27 UTC  MLog   0x702       /testspecials               STREAM_UPD
-  2026-05-19 19:57:27 UTC  $SI    0x702       testspecials/dir_config_…   Created
-  2026-05-19 19:57:27 UTC  $SI    0x702       testspecials/dir_record_…   Created
-  2026-05-19 19:57:27 UTC  $SI    0x702       testspecials/dir_record_…   Created
-  2026-05-19 19:57:27 UTC  $SI    0x702       testspecials/temp_draft_…   Created
+  2021-05-18T07:16:04.9990009Z  $SI    0x76f       testintegrity/elvis_dir_…   Created
+  2021-06-01T19:58:21.1525863Z  $SI    0x710       testspecials/dir_oscar_2…   Created
+  2021-06-01T19:58:21.1525863Z  $SI    0x710       testspecials/dir_oscar_2…   Modified
+  2021-06-01T19:58:21.1525863Z  $SI    0x710       testspecials/dir_oscar_2…   Accessed
+  2021-09-26T07:16:24.5409194Z  $SI    0x778       testintegrity/elvis_dir_…   Created
+  2021-09-29T07:16:41.2004512Z  $SI    0x76f       testintegrity/elvis_dir_…   Created
+  2021-10-04T07:16:49.6636174Z  $SI    0x784       testintegrity/elvis_dir_…   Created
+  2021-10-04T07:16:49.6636174Z  $SI    0x784       testintegrity/elvis_dir_…   Modified
+  2021-10-04T07:16:49.6636174Z  $SI    0x784       testintegrity/elvis_dir_…   Accessed
+  2021-10-14T07:17:10.8947266Z  $SI    0x773       testintegrity/elvis_dir_…   Created
+  2021-10-14T07:17:10.8947266Z  $SI    0x773       testintegrity/elvis_dir_…   Modified
+  2021-10-14T07:17:10.8947266Z  $SI    0x773       testintegrity/elvis_dir_…   Accessed
+  2021-10-15T07:17:19.9400574Z  $SI    0x76f       testintegrity/xbpt_confi…   Created
+  2021-10-15T07:17:19.9400574Z  $SI    0x76f       testintegrity/xbpt_confi…   Modified
+  2021-10-15T07:17:19.9400574Z  $SI    0x76f       testintegrity/xbpt_confi…   Accessed
+  2021-10-19T07:16:21.7425212Z  $SI    0x77d       testintegrity/elvis_dir_…   Modified
+  2021-10-19T07:16:21.7425212Z  $SI    0x770       testintegrity/elvis_dir_…   Created
+  2021-10-19T07:16:21.7425212Z  $SI    0x770       testintegrity/elvis_dir_…   Modified
+  2021-10-19T07:16:21.7425212Z  $SI    0x770       testintegrity/elvis_dir_…   Accessed
+  2022-02-07T07:16:33.0361865Z  $SI    0x78f       testintegrity/elvis_dir_…   Modified
+  2022-02-07T07:16:33.0361865Z  $SI    0x790       testintegrity/elvis_dir_…   Modified
+  2022-02-07T07:16:33.0361865Z  $SI    0x77d       testintegrity/elvis_dir_…   Created
+  2022-02-07T07:16:33.0361865Z  $SI    0x77d       testintegrity/elvis_dir_…   Modified
+  2022-02-07T07:16:33.0361865Z  $SI    0x77d       testintegrity/elvis_dir_…   Accessed
+  2022-02-12T07:16:16.9171874Z  $SI    0x76f       testintegrity/xbpt_yanke…   Created
+  2022-02-12T07:16:16.9171874Z  $SI    0x76f       testintegrity/xbpt_yanke…   Modified
+  2022-02-12T07:16:16.9171874Z  $SI    0x76f       testintegrity/xbpt_yanke…   Accessed
+  2022-02-28T07:17:26.7141564Z  $SI    0x774       testintegrity/elvis_dir_…   Created
+  2022-02-28T07:17:26.7141564Z  $SI    0x774       testintegrity/elvis_dir_…   Modified
+  2022-02-28T07:17:26.7141564Z  $SI    0x774       testintegrity/elvis_dir_…   Accessed
+  2022-03-06T07:16:22.2090777Z  $SI    0x774       testintegrity/elvis_dir_…   Created
+  2022-03-06T07:16:22.2090777Z  $SI    0x774       testintegrity/elvis_dir_…   Modified
+  2022-03-06T07:16:22.2090777Z  $SI    0x774       testintegrity/elvis_dir_…   Accessed
+  2022-04-19T07:16:47.0726903Z  $SI    0x771       testintegrity/elvis_dir_…   Created
+  2022-04-19T07:16:47.0726903Z  $SI    0x771       testintegrity/elvis_dir_…   Modified
+  2022-04-19T07:16:47.0726903Z  $SI    0x771       testintegrity/elvis_dir_…   Accessed
+  2022-05-20T07:16:16.7264974Z  $SI    0x77e       testintegrity/elvis_dir_…   Created
+  2022-05-20T07:16:16.7264974Z  $SI    0x77e       testintegrity/elvis_dir_…   Modified
+  2022-05-20T07:16:16.7264974Z  $SI    0x77e       testintegrity/elvis_dir_…   Accessed
+  2022-05-31T07:17:29.8718970Z  $SI    0x784       testintegrity/elvis_dir_…   Created
+  2022-05-31T07:17:29.8718970Z  $SI    0x784       testintegrity/elvis_dir_…   Modified
+  2022-05-31T07:17:29.8718970Z  $SI    0x784       testintegrity/elvis_dir_…   Accessed
+  2022-06-11T07:16:28.0969336Z  $SI    0x77c       testintegrity/elvis_dir_…   Created
+  2022-06-17T07:16:38.2016426Z  $SI    0x77e       testintegrity/elvis_dir_…   Created
+  2022-06-17T07:16:38.2016426Z  $SI    0x77e       testintegrity/elvis_dir_…   Modified
+  2022-06-17T07:16:38.2016426Z  $SI    0x77e       testintegrity/elvis_dir_…   Accessed
+  2022-08-02T07:16:28.1705690Z  $SI    0x770       testintegrity/elvis_dir_…   Created
+  2022-12-26T07:16:15.5489447Z  $SI    0x774       testintegrity/elvis_dir_…   Created
+  2022-12-26T07:16:15.5489447Z  $SI    0x774       testintegrity/elvis_dir_…   Modified
+  2022-12-26T07:16:15.5489447Z  $SI    0x774       testintegrity/elvis_dir_…   Accessed
+  2023-06-05T19:57:51.0855466Z  $SI    0x703       testspecials/dir_record_…   Created
+  2023-08-26T07:16:12.5023383Z  $SI    0x778       testintegrity/elvis_dir_…   Created
+  2023-08-26T07:16:12.5023383Z  $SI    0x778       testintegrity/elvis_dir_…   Modified
+  2023-08-26T07:16:12.5023383Z  $SI    0x778       testintegrity/elvis_dir_…   Accessed
+  2023-09-14T19:58:48.8959121Z  $SI    0x727       testspecials/dir_config_…   Created
+  2023-09-14T19:58:48.8959121Z  $SI    0x727       testspecials/dir_config_…   Modified
+  2023-09-14T19:58:48.8959121Z  $SI    0x727       testspecials/dir_config_…   Accessed
+  2023-10-15T07:17:00.9306544Z  $SI    0x770       testintegrity/elvis_dir_…   Created
+  2023-10-15T07:17:00.9306544Z  $SI    0x770       testintegrity/elvis_dir_…   Modified
+  2023-10-15T07:17:00.9306544Z  $SI    0x770       testintegrity/elvis_dir_…   Accessed
+  2023-11-21T07:17:13.8768248Z  $SI    0x770       testintegrity/elvis_dir_…   Created
+  2023-11-21T07:17:13.8768248Z  $SI    0x770       testintegrity/elvis_dir_…   Modified
+  2023-11-21T07:17:13.8768248Z  $SI    0x770       testintegrity/elvis_dir_…   Accessed
+  2023-11-27T07:16:30.1657183Z  $SI    0x771       testintegrity/elvis_dir_…   Created
+  2023-11-27T07:16:30.1657183Z  $SI    0x771       testintegrity/elvis_dir_…   Modified
+  2023-11-27T07:16:30.1657183Z  $SI    0x771       testintegrity/elvis_dir_…   Accessed
+  2024-01-13T07:17:04.4473965Z  $SI    0x77d       testintegrity/elvis_dir_…   Created
+  2024-01-13T07:17:04.4473965Z  $SI    0x77d       testintegrity/elvis_dir_…   Modified
+  2024-01-13T07:17:04.4473965Z  $SI    0x77d       testintegrity/elvis_dir_…   Accessed
+  2024-04-02T07:16:32.8669648Z  $SI    0x773       testintegrity/xbpt_india…   Created
+  2024-04-02T07:16:32.8669648Z  $SI    0x773       testintegrity/xbpt_india…   Modified
+  2024-04-02T07:16:32.8669648Z  $SI    0x773       testintegrity/xbpt_india…   Accessed
+  2024-04-04T07:17:02.6780853Z  $SI    0x771       testintegrity/elvis_dir_…   Created
+  2024-05-06T07:17:31.2960857Z  $SI    0x76f       testintegrity/elvis_dir_…   Created
+  2024-05-06T07:17:31.2960857Z  $SI    0x76f       testintegrity/elvis_dir_…   Modified
+  2024-05-06T07:17:31.2960857Z  $SI    0x76f       testintegrity/elvis_dir_…   Accessed
+  2024-06-07T07:17:11.2423573Z  $SI    0x77f       testintegrity/elvis_dir_…   Created
+  2024-06-07T07:17:11.2423573Z  $SI    0x77f       testintegrity/elvis_dir_…   Modified
+  2024-06-07T07:17:11.2423573Z  $SI    0x77f       testintegrity/elvis_dir_…   Accessed
+  2024-08-03T07:17:33.0580290Z  $SI    0x79e       testintegrity/elvis_dir_…   Created
+  2024-08-03T07:17:33.0580290Z  $SI    0x79e       testintegrity/elvis_dir_…   Modified
+  2024-08-03T07:17:33.0580290Z  $SI    0x79e       testintegrity/elvis_dir_…   Accessed
+  2024-10-12T19:57:49.7356276Z  $SI    0x702       testspecials/dir_record_…   Created
+  2024-10-12T19:57:49.7356276Z  $SI    0x702       testspecials/hardlink_wh…   Created
+  2024-10-12T19:57:49.7356276Z  $SI    0x702       testspecials/temp_record…   Created
+  2024-10-16T07:17:27.5521698Z  $SI    0x774       testintegrity/elvis_dir_…   Created
+  2024-10-16T19:59:02.0629892Z  $SI    0x702       testspecials/dir_config_…   Created
+  2024-10-16T19:59:02.0629892Z  $SI    0x702       testspecials/dir_oscar_2…   Created
+  2024-10-16T19:59:02.0629892Z  $SI    0x702       testspecials/dir_oscar_2…   Created
+  2024-10-16T19:59:02.0629892Z  $SI    0x702       testspecials/dir_record_…   Created
+  2024-10-16T19:59:02.0629892Z  $SI    0x702       testspecials/dir_record_…   Created
+  2024-10-16T19:59:02.0629892Z  $SI    0x702       testspecials/dir_record_…   Created
+  2024-10-16T19:59:02.0629892Z  $SI    0x702       testspecials/hardlink_qu…   Created
+  2024-11-23T07:17:31.6060620Z  $SI    0x785       testintegrity/elvis_dir_…   Created
+  2024-11-23T07:17:31.6060620Z  $SI    0x785       testintegrity/elvis_dir_…   Modified
+  2024-11-23T07:17:31.6060620Z  $SI    0x785       testintegrity/elvis_dir_…   Accessed
+  2024-12-01T19:59:05.6175585Z  $SI    0x724       testspecials/dir_record_…   Created
+  2024-12-01T19:59:05.6175585Z  $SI    0x724       testspecials/dir_record_…   Modified
+  2024-12-01T19:59:05.6175585Z  $SI    0x724       testspecials/dir_record_…   Accessed
+  2024-12-01T19:59:05.6175585Z  $SI    0x724       testspecials/dir_record_…   Created
+  2024-12-01T19:59:05.6175585Z  $SI    0x724       testspecials/dir_record_…   Modified
+  2024-12-01T19:59:05.6175585Z  $SI    0x724       testspecials/dir_record_…   Accessed
+  2024-12-01T19:59:05.6175585Z  $SI    0x724       testspecials/dir_record_…   Created
+  2024-12-01T19:59:05.6175585Z  $SI    0x724       testspecials/dir_record_…   Modified
+  2024-12-01T19:59:05.6175585Z  $SI    0x724       testspecials/dir_record_…   Accessed
+  2024-12-12T07:16:57.7860609Z  $SI    0x770       testintegrity/elvis_dir_…   Created
+  2025-02-09T07:17:09.6819863Z  $SI    0x77c       testintegrity/elvis_dir_…   Created
+  2025-02-23T07:17:23.7743638Z  $SI    0x773       testintegrity/elvis_dir_…   Created
+  2025-02-23T07:17:23.7743638Z  $SI    0x773       testintegrity/elvis_dir_…   Modified
+  2025-02-23T07:17:23.7743638Z  $SI    0x773       testintegrity/elvis_dir_…   Accessed
+  2025-03-31T07:17:11.8319740Z  $SI    0x773       testintegrity/elvis_dir_…   Created
+  2025-03-31T07:17:11.8319740Z  $SI    0x773       testintegrity/elvis_dir_…   Modified
+  2025-03-31T07:17:11.8319740Z  $SI    0x773       testintegrity/elvis_dir_…   Accessed
+  2025-04-01T07:16:26.2947244Z  $SI    0x79d       testintegrity/elvis_dir_…   Modified
+  2025-04-01T07:16:26.2947244Z  $SI    0x77e       testintegrity/elvis_dir_…   Created
+  2025-04-02T07:16:24.8031332Z  $SI    0x782       testintegrity/elvis_dir_…   Created
+  2025-04-08T07:17:35.0852677Z  $SI    0x78e       testintegrity/elvis_dir_…   Created
+  2025-04-08T07:17:35.0852677Z  $SI    0x78e       testintegrity/elvis_dir_…   Modified
+  2025-04-08T07:17:35.0852677Z  $SI    0x78e       testintegrity/elvis_dir_…   Accessed
+  2025-04-19T07:17:09.2149813Z  $SI    0x784       testintegrity/elvis_dir_…   Created
+  2025-04-19T07:17:09.2149813Z  $SI    0x784       testintegrity/elvis_dir_…   Modified
+  2025-04-19T07:17:09.2149813Z  $SI    0x784       testintegrity/elvis_dir_…   Accessed
+  2025-05-12T07:17:04.3504532Z  $SI    0x775       testintegrity/elvis_dir_…   Created
+  2025-06-06T07:17:11.5639166Z  $SI    0x76f       testintegrity/xbpt_index…   Created
+  2025-06-06T07:17:11.5639166Z  $SI    0x76f       testintegrity/xbpt_index…   Modified
+  2025-06-06T07:17:11.5639166Z  $SI    0x76f       testintegrity/xbpt_index…   Accessed
+  2025-06-11T07:16:10.1388255Z  $SI    0x771       testintegrity/elvis_dir_…   Created
+  2025-06-11T07:16:10.1388255Z  $SI    0x771       testintegrity/elvis_dir_…   Modified
+  2025-06-11T07:16:10.1388255Z  $SI    0x771       testintegrity/elvis_dir_…   Accessed
+  2025-07-16T07:17:35.7846153Z  $SI    0x77d       testintegrity/elvis_dir_…   Created
+  2025-07-16T07:17:35.7846153Z  $SI    0x77d       testintegrity/elvis_dir_…   Modified
+  2025-07-16T07:17:35.7846153Z  $SI    0x77d       testintegrity/elvis_dir_…   Accessed
+  2025-08-11T07:17:32.2206252Z  $SI    0x76f       testintegrity/xbpt_india…   Created
+  2025-08-11T07:17:32.2206252Z  $SI    0x76f       testintegrity/xbpt_india…   Modified
+  2025-08-11T07:17:32.2206252Z  $SI    0x76f       testintegrity/xbpt_india…   Accessed
+  2025-09-04T07:16:57.5507155Z  $SI    0x784       testintegrity/elvis_dir_…   Created
+  2025-09-04T07:16:57.5507155Z  $SI    0x784       testintegrity/elvis_dir_…   Modified
+  2025-09-04T07:16:57.5507155Z  $SI    0x784       testintegrity/elvis_dir_…   Accessed
+  2025-11-04T19:59:09.3311001Z  $SI    0x715       testspecials/dir_record_…   Created
+  2025-11-04T19:59:09.3311001Z  $SI    0x715       testspecials/dir_record_…   Modified
+  2025-11-04T19:59:09.3311001Z  $SI    0x715       testspecials/dir_record_…   Accessed
+  2025-11-05T07:16:31.4941888Z  $SI    0x76f       testintegrity/xbpt_foxtr…   Created
+  2025-12-01T07:17:11.3472066Z  $SI    0x784       testintegrity/elvis_dir_…   Created
+  2025-12-01T07:17:11.3472066Z  $SI    0x784       testintegrity/elvis_dir_…   Modified
+  2025-12-01T07:17:11.3472066Z  $SI    0x784       testintegrity/elvis_dir_…   Accessed
+  2025-12-30T07:17:16.4645071Z  $SI    0x77e       testintegrity/elvis_dir_…   Created
+  2025-12-30T07:17:16.4645071Z  $SI    0x77e       testintegrity/elvis_dir_…   Modified
+  2025-12-30T07:17:16.4645071Z  $SI    0x77e       testintegrity/elvis_dir_…   Accessed
+  2026-01-01T07:16:17.1671215Z  $SI    0x778       testintegrity/elvis_dir_…   Created
+  2026-01-01T19:57:30.3178321Z  $SI    0x71a       testspecials/dir_config_…   Modified
+  2026-01-01T19:57:30.3178321Z  $SI    0x708       testspecials/dir_gamma_6…   Created
+  2026-01-01T19:57:30.3178321Z  $SI    0x708       testspecials/dir_oscar_7…   Created
+  2026-01-01T19:57:30.3178321Z  $SI    0x708       testspecials/dir_record_…   Created
+  2026-01-01T19:57:30.3178321Z  $SI    0x708       testspecials/dir_record_…   Created
+  2026-01-27T19:59:19.3924577Z  $SI    0x703       testspecials/dir_record_…   Created
+  2026-01-27T19:59:19.3924577Z  $SI    0x703       testspecials/dir_record_…   Modified
+  2026-01-27T19:59:19.3924577Z  $SI    0x703       testspecials/dir_record_…   Accessed
+  2026-01-27T19:59:19.3924577Z  $SI    0x703       testspecials/dir_record_…   Created
+  2026-01-27T19:59:19.3924577Z  $SI    0x703       testspecials/dir_record_…   Modified
+  2026-01-27T19:59:19.3924577Z  $SI    0x703       testspecials/dir_record_…   Accessed
+  2026-02-23T07:17:05.2859306Z  $SI    0x773       testintegrity/elvis_dir_…   Created
+  2026-03-01T07:16:07.6076372Z  $SI    0x771       testintegrity/elvis_dir_…   Created
+  2026-03-01T07:16:07.6076372Z  $SI    0x771       testintegrity/elvis_dir_…   Modified
+  2026-03-01T07:16:07.6076372Z  $SI    0x771       testintegrity/elvis_dir_…   Accessed
+  2026-05-19T19:56:47.3896445Z  MLog   —                                       MODIFY (derived)
+  2026-05-19T19:56:47.3896445Z  MLog   —                                       MODIFY (derived)
+  2026-05-19T19:56:47.3913860Z  MLog   0x600       .                           DATA_OR_REPARSE_WRITE (derived)
+  2026-05-19T19:56:47.3928478Z  MLog   0x600       .                           DATA_OR_REPARSE_WRITE (derived)
+  2026-05-19T19:56:47.3928478Z  MLog   0x600       .                           DATA_OR_REPARSE_WRITE (derived)
+  2026-05-19T19:56:47.6680427Z  $SI    0x701       System Volume Information   Created
+  2026-05-19T19:56:47.6680427Z  $SI    0x701       System Volume Information   Modified
+  2026-05-19T19:56:47.6680427Z  $SI    0x701       System Volume Information   Metadata-Changed
+  2026-05-19T19:56:47.6680427Z  $SI    0x701       System Volume Information   Accessed
+  2026-05-19T19:56:47.6680427Z  $SI    0x701       System Volume Informatio…   Created
+  2026-05-19T19:56:47.6680427Z  MLog   0x701       System Volume Information   CREATE (derived)
+  2026-05-19T19:56:47.6680427Z  MLog   0x701       System Volume Informatio…   CREATE (derived)
+  2026-05-19T19:56:47.6715199Z  $SI    0x701       System Volume Informatio…   Modified
+  2026-05-19T19:56:47.6715199Z  $SI    0x701       System Volume Informatio…   Metadata-Changed
+  2026-05-19T19:56:47.6715199Z  $SI    0x701       System Volume Informatio…   Accessed
+  2026-05-19T19:56:47.6715199Z  MLog   0x701       System Volume Information   DATA_OR_REPARSE_WRITE (derived)
+  2026-05-19T19:57:27.8368767Z  $SI    0x702       testspecials                Created
+  2026-05-19T19:57:27.8368767Z  MLog   0x702       testspecials                CREATE (derived)
+  2026-05-19T19:57:27.8368767Z  MLog   0x600       .                           MODIFY (derived)
+  2026-05-19T19:57:27.8977735Z  $SI    0x702       testspecials/archive_alp…   Created
+  2026-05-19T19:57:27.8977735Z  MLog   0x702       testspecials/archive_alp…   CREATE (derived)
+  2026-05-19T19:57:27.9236006Z  $SI    0x707       testspecials/dir_record_…   Modified
+  2026-05-19T19:57:27.9236006Z  $SI    0x707       testspecials/dir_record_…   Metadata-Changed
+  2026-05-19T19:57:27.9236006Z  MLog   0x702       testspecials/hidden_7607    STREAM_UPD (derived)
+  2026-05-19T19:57:27.9430160Z  $SI    0x702       testspecials/dir_gamma_6…   Created
+  2026-05-19T19:57:27.9430160Z  $SI    0x702       testspecials/dir_record_…   Created
+  2026-05-19T19:57:27.9430160Z  $SI    0x702       testspecials/mike_mike_6…   Created
+  2026-05-19T19:57:27.9430160Z  MLog   0x702       testspecials/mike_mike_6…   CREATE (derived)
+  2026-05-19T19:57:27.9551930Z  $SI    0x702       testspecials/dir_record_…   Created
+  2026-05-19T19:57:27.9551930Z  MLog   0x702       testspecials/temp_record…   CREATE (derived)
+  2026-05-19T19:57:27.9566489Z  MLog   0x702       testspecials                STREAM_UPD (derived)
+  2026-05-19T19:57:27.9952214Z  $SI    0x702       testspecials/dir_config_…   Created
+  2026-05-19T19:57:27.9952214Z  $SI    0x702       testspecials/dir_record_…   Created
+  2026-05-19T19:57:27.9952214Z  $SI    0x702       testspecials/dir_record_…   Created
+  2026-05-19T19:57:27.9952214Z  $SI    0x702       testspecials/temp_draft_…   Created
+  2026-05-19T19:57:27.9952214Z  MLog   0x702       testspecials/temp_draft_…   CREATE (derived)
 ------------------------------------------------------------------------------
   200 events

@@ -3,14 +3,14 @@ ReFS File Attribute Analysis
 ==============================================================================
   Image:        win11refs2tsnapshots.raw
   ReFS version: 3.14
-  Cluster size: 0x1000
+  Cluster size: 4 KiB
   Start OID:    0x600
 
   Summary:
-    Total entries:     304
+    Total entries:     304 names
     Directories:       34
-    Files:             270
-    Inline files:      9
+    Files:             269 (9 inline, 257 extents, 3 snapshot-shared)
+    Names:             270 (a hard-linked file has one name per link)
     EFS encrypted:     0
     WSL metadata:      0
     Reparse points:    3
@@ -21,2417 +21,3019 @@ Detailed Attributes
 ==============================================================================
 
   DIR  System Volume Information
-    Created:     2026-05-16 16:50:46 UTC
-    Modified:    2026-05-16 16:50:55 UTC
-    Changed:     2026-05-16 16:50:55 UTC
-    Attributes:  Hidden | System | Directory_Internal (0x10000006)
-    SecurityId:  0x10aa39b62
+    Created:     2026-05-16T16:50:46.1357572Z
+    Modified:    2026-05-16T16:50:55.4710672Z
+    Changed:     2026-05-16T16:50:55.4710672Z
+    Accessed:    2026-05-16T16:50:55.4710672Z
+    Attributes:  0x10000006 (Hidden|System|Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x10aa39b62 (4473461602)
 
   FILE System Volume Information/FVE2.{8252fd17-a486-4ad4-b1ca-f4fe64d23218}
-    Created:     2026-05-16 16:50:53 UTC
-    Modified:    2026-05-16 16:50:53 UTC
-    Changed:     2026-05-16 16:50:53 UTC
-    Attributes:  Hidden | System | Archive (0x26)
-    IntFlags:     (0x8)
-    SecurityId:  0x10a9f9562
+    Created:     2026-05-16T16:50:53.5841843Z
+    Modified:    2026-05-16T16:50:53.5841843Z
+    Changed:     2026-05-16T16:50:53.5841843Z
+    Accessed:    2026-05-16T16:50:53.5841843Z
+    Attributes:  0x26 (Hidden|System|Archive)
+    IntFlags:    0x8 (DataInRecord)
+    SecurityId:  0x10a9f9562 (4473197922)
     Storage:     inline (record embedded, 312 bytes)
 
   FILE System Volume Information/WPSettings.dat
-    Created:     2026-05-16 16:50:46 UTC
-    Modified:    2026-05-16 16:50:46 UTC
-    Changed:     2026-05-16 16:50:46 UTC
-    Attributes:  Archive (0x20)
-    IntFlags:     (0x8)
-    SecurityId:  0x123d306f5
+    Created:     2026-05-16T16:50:46.3202119Z
+    Modified:    2026-05-16T16:50:46.3251276Z
+    Changed:     2026-05-16T16:50:46.3251276Z
+    Accessed:    2026-05-16T16:50:46.3251276Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x8 (DataInRecord)
+    SecurityId:  0x123d306f5 (4895999733)
     Storage:     inline (record embedded, 328 bytes)
 
   DIR  test
-    Created:     2026-05-16 16:51:49 UTC
-    Modified:    2026-05-16 16:52:03 UTC
-    Changed:     2026-05-16 16:52:03 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:51:49.6993045Z
+    Modified:    2026-05-16T16:52:03.0244081Z
+    Changed:     2026-05-16T16:52:03.0244081Z
+    Accessed:    2026-05-16T16:52:03.0704746Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   DIR  test/elvis_dir_index_149423
-    Created:     2026-05-16 16:51:57 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:51:57.0348937Z
+    Modified:    2026-05-16T16:52:02.6095468Z
+    Changed:     2026-05-16T16:52:02.6095468Z
+    Accessed:    2026-05-16T16:52:03.0758554Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   DIR  test/elvis_dir_index_149423/elvis_dir_victor_121923
-    Created:     2026-05-16 16:52:00 UTC
-    Modified:    2026-05-16 16:52:03 UTC
-    Changed:     2026-05-16 16:52:03 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:52:00.3281617Z
+    Modified:    2026-05-16T16:52:03.0144080Z
+    Changed:     2026-05-16T16:52:03.0144080Z
+    Accessed:    2026-05-16T16:52:03.0778536Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   DIR  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324
-    Created:     2026-05-16 16:52:00 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:52:00.5467169Z
+    Modified:    2026-05-16T16:52:02.8195237Z
+    Changed:     2026-05-16T16:52:02.8195237Z
+    Accessed:    2026-05-16T16:52:03.0788610Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   DIR  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165
-    Created:     2026-05-16 16:52:00 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:52:00.8159250Z
+    Modified:    2026-05-16T16:52:02.3107323Z
+    Changed:     2026-05-16T16:52:02.3107323Z
+    Accessed:    2026-05-16T16:52:02.3107323Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   DIR  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/elvis_dir_oscar_874075
-    Created:     2026-05-16 16:51:59 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:51:59.3078929Z
+    Modified:    2026-05-16T16:52:02.7687941Z
+    Changed:     2026-05-16T16:52:02.7687941Z
+    Accessed:    2026-05-16T16:52:03.0808570Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/elvis_dir_oscar_874075/xbpt_delta_victor_412034.ini
-    Created:     2026-05-16 16:51:54 UTC
-    Modified:    2026-05-16 16:51:55 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:54.5161670Z
+    Modified:    2026-05-16T16:51:55.3235831Z
+    Changed:     2026-05-16T16:51:59.8982393Z
+    Accessed:    2026-05-16T16:51:55.3235831Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/elvis_dir_oscar_874075/xbpt_zulu_mike_340372.cfg
-    Created:     2026-05-16 16:51:59 UTC
-    Modified:    2026-05-16 16:51:59 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:59.5343383Z
+    Modified:    2026-05-16T16:51:59.5353470Z
+    Changed:     2026-05-16T16:51:59.5353470Z
+    Accessed:    2026-05-16T16:51:59.5353470Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 632 bytes)
 
   FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_audit_echo_178867.tmp
-    Created:     2026-01-01 07:16:17 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-01-01T07:16:17.1671215Z
+    Modified:    2026-05-16T16:52:00.3371580Z
+    Changed:     2026-05-16T16:52:01.9116280Z
+    Accessed:    2026-05-16T16:52:00.3371580Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_log_foxtrot_796125.ini
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.1348430Z
+    Modified:    2026-05-16T16:52:01.1372025Z
+    Changed:     2026-05-16T16:52:01.1372025Z
+    Accessed:    2026-05-16T16:52:01.1372025Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_oscar_foxtrot_866936.json
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.7069655Z
+    Modified:    2026-05-16T16:52:01.7069655Z
+    Changed:     2026-05-16T16:52:01.7069655Z
+    Accessed:    2026-05-16T16:52:01.7069655Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_output_lima_215617.json
-    Created:     2026-05-16 16:51:52 UTC
-    Modified:    2026-05-16 16:51:52 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:52.5650468Z
+    Modified:    2026-05-16T16:51:52.5660370Z
+    Changed:     2026-05-16T16:52:02.3107323Z
+    Accessed:    2026-05-16T16:51:52.5660370Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_papa_archive_660135.txt
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.8201916Z
+    Modified:    2026-05-16T16:52:01.8201916Z
+    Changed:     2026-05-16T16:52:01.8201916Z
+    Accessed:    2026-05-16T16:52:01.8201916Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_zulu_india_473528.csv
-    Created:     2024-08-03 07:17:33 UTC
-    Modified:    2024-08-03 07:17:33 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2024-08-03T07:17:33.0580290Z
+    Modified:    2024-08-03T07:17:33.0580290Z
+    Changed:     2026-05-16T16:52:02.6010592Z
+    Accessed:    2024-08-03T07:17:33.0580290Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_cache_sync_352758.ini
-    Created:     2026-05-16 16:51:55 UTC
-    Modified:    2026-05-16 16:51:55 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:55.6652421Z
+    Modified:    2026-05-16T16:51:55.6652421Z
+    Changed:     2026-05-16T16:52:01.1112303Z
+    Accessed:    2026-05-16T16:51:55.6652421Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_cache_temp_298348.bak
-    Created:     2026-05-16 16:52:02 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:02.8195237Z
+    Modified:    2026-05-16T16:52:02.8195237Z
+    Changed:     2026-05-16T16:52:02.8195237Z
+    Accessed:    2026-05-16T16:52:02.8195237Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_log_romeo_711888.cfg
-    Created:     2026-05-16 16:52:00 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:00.8890981Z
+    Modified:    2026-05-16T16:52:00.8901032Z
+    Changed:     2026-05-16T16:52:00.8901032Z
+    Accessed:    2026-05-16T16:52:00.8901032Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_november_yankee_663510.csv
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2025-04-01 07:16:26 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.3451845Z
+    Modified:    2025-04-01T07:16:26.2947244Z
+    Changed:     2026-05-16T16:52:02.0524831Z
+    Accessed:    2026-05-16T16:52:01.3451845Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_trace_gamma_472483.cfg
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.0007270Z
+    Modified:    2026-05-16T16:52:01.0007270Z
+    Changed:     2026-05-16T16:52:01.0007270Z
+    Accessed:    2026-05-16T16:52:01.0007270Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_zulu_audit_805568.ini
-    Created:     2026-05-16 16:52:02 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:02.6320567Z
+    Modified:    2026-05-16T16:52:02.6320567Z
+    Changed:     2026-05-16T16:52:02.6320567Z
+    Accessed:    2026-05-16T16:52:02.6320567Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_hotel_mike_996142.cfg
-    Created:     2026-05-16 16:52:02 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:02.4850618Z
+    Modified:    2026-05-16T16:52:02.4850618Z
+    Changed:     2026-05-16T16:52:02.4850618Z
+    Accessed:    2026-05-16T16:52:02.4850618Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_hotel_victor_678038.txt
-    Created:     2026-05-16 16:52:02 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:02.1027313Z
+    Modified:    2026-05-16T16:52:02.1027313Z
+    Changed:     2026-05-16T16:52:02.2439439Z
+    Accessed:    2026-05-16T16:52:02.1027313Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_large_5mb_romeo_293003.dat
-    Created:     2026-05-16 16:52:03 UTC
-    Modified:    2026-05-16 16:52:03 UTC
-    Changed:     2026-05-16 16:52:03 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:03.0144080Z
+    Modified:    2026-05-16T16:52:03.0144080Z
+    Changed:     2026-05-16T16:52:03.0144080Z
+    Accessed:    2026-05-16T16:52:03.0144080Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_temp_uniform_753565.cfg
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.0067315Z
+    Modified:    2026-05-16T16:52:02.9581223Z
+    Changed:     2026-05-16T16:52:02.9581223Z
+    Accessed:    2026-05-16T16:52:02.9581223Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_whiskey_delta_922359.tmp
-    Created:     2024-11-23 07:17:31 UTC
-    Modified:    2024-11-23 07:17:31 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2024-11-23T07:17:31.6060620Z
+    Modified:    2024-11-23T07:17:31.6060620Z
+    Changed:     2026-05-16T16:52:02.5950602Z
+    Accessed:    2024-11-23T07:17:31.6060620Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_zulu_echo_160107.cfg
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.4245439Z
+    Modified:    2026-05-16T16:52:02.4728072Z
+    Changed:     2026-05-16T16:52:02.4728072Z
+    Accessed:    2026-05-16T16:52:02.4728072Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_zulu_papa_839258.bin
-    Created:     2026-05-16 16:52:00 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:00.9724256Z
+    Modified:    2026-05-16T16:52:00.9731782Z
+    Changed:     2026-05-16T16:52:00.9731782Z
+    Accessed:    2026-05-16T16:52:00.9731782Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_index_149423/xbpt_beta_archive_985685.tmp
-    Created:     2023-11-27 07:16:30 UTC
-    Modified:    2023-11-27 07:16:30 UTC
-    Changed:     2026-05-16 16:51:58 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2023-11-27T07:16:30.1657183Z
+    Modified:    2023-11-27T07:16:30.1657183Z
+    Changed:     2026-05-16T16:51:58.3298661Z
+    Accessed:    2023-11-27T07:16:30.1657183Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_index_149423/xbpt_config_sync_830891.tmp
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2022-02-07 07:16:33 UTC
-    Changed:     2026-05-16 16:51:56 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.5979372Z
+    Modified:    2022-02-07T07:16:33.0361865Z
+    Changed:     2026-05-16T16:51:56.6473939Z
+    Accessed:    2026-05-16T16:52:01.5979372Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_index_149423/xbpt_draft_india_626576.tmp
-    Created:     2026-05-16 16:51:58 UTC
-    Modified:    2026-05-16 16:51:58 UTC
-    Changed:     2026-05-16 16:51:58 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:58.9909167Z
+    Modified:    2026-05-16T16:51:58.9909167Z
+    Changed:     2026-05-16T16:51:58.9909167Z
+    Accessed:    2026-05-16T16:51:58.9909167Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_index_149423/xbpt_draft_record_749595.cfg
-    Created:     2026-05-16 16:51:54 UTC
-    Modified:    2026-05-16 16:51:54 UTC
-    Changed:     2026-05-16 16:51:58 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:54.9297515Z
+    Modified:    2026-05-16T16:51:54.8200316Z
+    Changed:     2026-05-16T16:51:58.9240998Z
+    Accessed:    2026-05-16T16:51:54.9297515Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_index_149423/xbpt_kilo_draft_550251.bin
-    Created:     2026-05-16 16:51:58 UTC
-    Modified:    2026-05-16 16:51:56 UTC
-    Changed:     2026-05-16 16:51:56 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:58.9296685Z
+    Modified:    2026-05-16T16:51:56.3444502Z
+    Changed:     2026-05-16T16:51:56.3444502Z
+    Accessed:    2026-05-16T16:51:58.9300992Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_index_149423/xbpt_papa_papa_899322.md
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.8436449Z
+    Modified:    2026-05-16T16:52:01.8436449Z
+    Changed:     2026-05-16T16:52:01.8436449Z
+    Accessed:    2026-05-16T16:52:01.8436449Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_index_149423/xbpt_quebec_kilo_982841.tmp
-    Created:     2026-05-16 16:52:00 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:00.0015497Z
+    Modified:    2026-05-16T16:52:00.0025463Z
+    Changed:     2026-05-16T16:52:00.0025463Z
+    Accessed:    2026-05-16T16:52:00.0025463Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_index_149423/xbpt_sync_output_795963.bin
-    Created:     2026-05-16 16:52:00 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:00.2713239Z
+    Modified:    2026-05-16T16:52:00.1454009Z
+    Changed:     2026-05-16T16:52:00.1454009Z
+    Accessed:    2026-05-16T16:52:00.3047349Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_index_149423/xbpt_victor_gamma_564302.csv
-    Created:     2026-05-16 16:51:56 UTC
-    Modified:    2026-05-16 16:51:52 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:56.6647916Z
+    Modified:    2026-05-16T16:51:52.2042216Z
+    Changed:     2026-05-16T16:51:59.8461292Z
+    Accessed:    2026-05-16T16:51:56.6647916Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_index_149423/xbpt_yankee_draft_816830.dat
-    Created:     2026-05-16 16:52:02 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:02.2040260Z
+    Modified:    2026-05-16T16:52:02.2090360Z
+    Changed:     2026-05-16T16:52:02.2090360Z
+    Accessed:    2026-05-16T16:52:02.2090360Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_index_149423/xbpt_zulu_kilo_319858.csv
-    Created:     2022-05-20 07:16:16 UTC
-    Modified:    2022-05-20 07:16:16 UTC
-    Changed:     2026-05-16 16:51:57 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2022-05-20T07:16:16.7264974Z
+    Modified:    2022-05-20T07:16:16.7264974Z
+    Changed:     2026-05-16T16:51:57.4717275Z
+    Accessed:    2022-05-20T07:16:16.7264974Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   DIR  test/elvis_dir_india_800575
-    Created:     2026-05-16 16:51:57 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:51:57.3173431Z
+    Modified:    2026-05-16T16:52:02.9894867Z
+    Changed:     2026-05-16T16:52:02.9894867Z
+    Accessed:    2026-05-16T16:52:03.0808570Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   FILE test/elvis_dir_india_800575/xbpt_beta_archive_202282.json
-    Created:     2026-05-16 16:51:57 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:57.4437488Z
+    Modified:    2026-05-16T16:52:02.7888781Z
+    Changed:     2026-05-16T16:52:02.7888781Z
+    Accessed:    2026-05-16T16:52:02.7888781Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_india_800575/xbpt_cache_index_408825.bin
-    Created:     2026-05-16 16:52:02 UTC
-    Modified:    2026-05-16 16:51:57 UTC
-    Changed:     2026-05-16 16:51:57 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:02.7084286Z
+    Modified:    2026-05-16T16:51:57.0523357Z
+    Changed:     2026-05-16T16:51:57.0523357Z
+    Accessed:    2026-05-16T16:52:02.7084286Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_india_800575/xbpt_cache_lima_454391.txt
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.9296326Z
+    Modified:    2026-05-16T16:52:01.9306317Z
+    Changed:     2026-05-16T16:52:01.9306317Z
+    Accessed:    2026-05-16T16:52:01.9306317Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_india_800575/xbpt_delta_lima_807650.tmp
-    Created:     2026-05-16 16:52:02 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:02.1954809Z
+    Modified:    2026-05-16T16:52:02.1964852Z
+    Changed:     2026-05-16T16:52:02.1964852Z
+    Accessed:    2026-05-16T16:52:02.1964852Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_india_800575/xbpt_foxtrot_zulu_156856.csv
-    Created:     2026-05-16 16:51:57 UTC
-    Modified:    2026-05-16 16:51:57 UTC
-    Changed:     2026-05-16 16:51:58 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:57.0603594Z
+    Modified:    2026-05-16T16:51:57.0603594Z
+    Changed:     2026-05-16T16:51:58.6454818Z
+    Accessed:    2026-05-16T16:51:57.0603594Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_india_800575/xbpt_kilo_config_292054.json
-    Created:     2026-05-16 16:51:58 UTC
-    Modified:    2026-05-16 16:51:59 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:58.2356631Z
+    Modified:    2026-05-16T16:51:59.5137259Z
+    Changed:     2026-05-16T16:51:59.5137259Z
+    Accessed:    2026-05-16T16:51:59.5137259Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/elvis_dir_india_800575/xbpt_large_2mb_report_507726.txt
-    Created:     2026-05-16 16:52:02 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:02.9894867Z
+    Modified:    2026-05-16T16:52:02.9894867Z
+    Changed:     2026-05-16T16:52:02.9894867Z
+    Accessed:    2026-05-16T16:52:02.9894867Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_india_800575/xbpt_log_beta_973172.txt
-    Created:     2026-05-16 16:52:00 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:00.5150051Z
+    Modified:    2026-05-16T16:52:02.6404187Z
+    Changed:     2026-05-16T16:52:02.6404187Z
+    Accessed:    2026-05-16T16:52:02.6404187Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_india_800575/xbpt_oscar_backup_284025.json
-    Created:     2026-05-16 16:52:00 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:00.1744471Z
+    Modified:    2026-05-16T16:52:00.1744471Z
+    Changed:     2026-05-16T16:52:00.1744471Z
+    Accessed:    2026-05-16T16:52:00.1744471Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_india_800575/xbpt_output_config_975939.bak
-    Created:     2026-05-16 16:51:58 UTC
-    Modified:    2026-05-16 16:51:58 UTC
-    Changed:     2026-05-16 16:51:58 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:58.8180360Z
+    Modified:    2026-05-16T16:51:58.8180360Z
+    Changed:     2026-05-16T16:51:58.8180360Z
+    Accessed:    2026-05-16T16:51:58.8180360Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_india_800575/xbpt_output_victor_198806.ini
-    Created:     2026-05-16 16:52:00 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:00.3652125Z
+    Modified:    2026-05-16T16:52:00.3652125Z
+    Changed:     2026-05-16T16:52:00.3652125Z
+    Accessed:    2026-05-16T16:52:00.3652125Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_india_800575/xbpt_report_temp_854937.tmp
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2022-02-07 07:16:33 UTC
-    Changed:     2026-05-16 16:51:56 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.6975926Z
+    Modified:    2022-02-07T07:16:33.0361865Z
+    Changed:     2026-05-16T16:51:56.6473939Z
+    Accessed:    2026-05-16T16:52:01.6975926Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_india_800575/xbpt_sierra_beta_228555.dat
-    Created:     2026-05-16 16:51:57 UTC
-    Modified:    2026-05-16 16:51:53 UTC
-    Changed:     2026-05-16 16:51:53 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:57.7878617Z
+    Modified:    2026-05-16T16:51:53.1249699Z
+    Changed:     2026-05-16T16:51:53.1249699Z
+    Accessed:    2026-05-16T16:51:57.7888639Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_india_800575/xbpt_sierra_data_271533.bin
-    Created:     2026-05-16 16:51:59 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:59.6167034Z
+    Modified:    2026-05-16T16:52:00.1794541Z
+    Changed:     2026-05-16T16:52:00.1794541Z
+    Accessed:    2026-05-16T16:52:00.1794541Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/elvis_dir_india_800575/xbpt_uniform_lima_155750.md
-    Created:     2026-05-16 16:51:54 UTC
-    Modified:    2026-05-16 16:51:54 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:54.4564403Z
+    Modified:    2026-05-16T16:51:54.4564403Z
+    Changed:     2026-05-16T16:52:01.5533647Z
+    Accessed:    2026-05-16T16:51:54.4564403Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   DIR  test/elvis_dir_papa_805353
-    Created:     2026-05-16 16:51:57 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:51:57.7390196Z
+    Modified:    2026-05-16T16:52:02.4584309Z
+    Changed:     2026-05-16T16:52:02.5175463Z
+    Accessed:    2026-05-16T16:52:02.4584309Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   DIR  test/elvis_dir_papa_805353/elvis_dir_november_478580
-    Created:     2026-05-16 16:51:52 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:51:52.5457841Z
+    Modified:    2026-05-16T16:52:02.9691461Z
+    Changed:     2026-05-16T16:52:02.9691461Z
+    Accessed:    2026-05-16T16:52:02.9691461Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   DIR  test/elvis_dir_papa_805353/elvis_dir_november_478580/elvis_dir_kilo_751807
-    Created:     2026-05-16 16:52:02 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:52:02.5846040Z
+    Modified:    2026-05-16T16:52:02.7523504Z
+    Changed:     2026-05-16T16:52:02.9691461Z
+    Accessed:    2026-05-16T16:52:02.7523504Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/elvis_dir_kilo_751807/xbpt_delta_zulu_595944.bak
-    Created:     2026-05-16 16:51:54 UTC
-    Modified:    2026-05-16 16:51:58 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:54.4659066Z
+    Modified:    2026-05-16T16:51:58.3998852Z
+    Changed:     2026-05-16T16:52:02.7523504Z
+    Accessed:    2026-05-16T16:51:58.3998852Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/elvis_dir_kilo_751807/xbpt_temp_backup_816270.cfg
-    Created:     2026-05-16 16:52:02 UTC
-    Modified:    2026-05-16 16:51:59 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:02.6658226Z
+    Modified:    2026-05-16T16:51:59.3740544Z
+    Changed:     2026-05-16T16:51:59.3740544Z
+    Accessed:    2026-05-16T16:52:02.6702519Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_alpha_cache_742120.dat
-    Created:     2026-05-16 16:52:02 UTC
-    Modified:    2026-05-16 16:51:59 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:02.3167280Z
+    Modified:    2026-05-16T16:51:59.5451599Z
+    Changed:     2026-05-16T16:51:59.5451599Z
+    Accessed:    2026-05-16T16:52:02.3177364Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_archive_trace_798923.cfg
-    Created:     2026-05-16 16:51:59 UTC
-    Modified:    2026-05-16 16:51:53 UTC
-    Changed:     2026-05-16 16:51:56 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:59.7434103Z
+    Modified:    2026-05-16T16:51:53.4908147Z
+    Changed:     2026-05-16T16:51:56.1228807Z
+    Accessed:    2026-05-16T16:51:59.7434103Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_audit_sync_528794.xml
-    Created:     2026-05-16 16:52:00 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:00.8209187Z
+    Modified:    2026-05-16T16:52:00.8219237Z
+    Changed:     2026-05-16T16:52:00.8219237Z
+    Accessed:    2026-05-16T16:52:00.8219237Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_backup_mike_407434.log
-    Created:     2021-05-18 07:16:04 UTC
-    Modified:    2026-05-16 16:51:54 UTC
-    Changed:     2026-05-16 16:51:58 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2021-05-18T07:16:04.9990009Z
+    Modified:    2026-05-16T16:51:54.0313191Z
+    Changed:     2026-05-16T16:51:58.7189188Z
+    Accessed:    2026-05-16T16:51:54.0313191Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_beta_echo_977425.bin
-    Created:     2026-05-16 16:52:00 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:00.3977193Z
+    Modified:    2026-05-16T16:52:00.3987186Z
+    Changed:     2026-05-16T16:52:00.3987186Z
+    Accessed:    2026-05-16T16:52:00.3987186Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_config_log_890790.bak
-    Created:     2026-05-16 16:52:00 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:00.7964424Z
+    Modified:    2026-05-16T16:52:00.7984588Z
+    Changed:     2026-05-16T16:52:00.7984588Z
+    Accessed:    2026-05-16T16:52:00.7984588Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_delta_echo_268401.csv
-    Created:     2024-01-13 07:17:04 UTC
-    Modified:    2024-01-13 07:17:04 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2024-01-13T07:17:04.4473965Z
+    Modified:    2024-01-13T07:17:04.4473965Z
+    Changed:     2026-05-16T16:52:00.2422138Z
+    Accessed:    2024-01-13T07:17:04.4473965Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_delta_report_275249.dat
-    Created:     2026-05-16 16:51:59 UTC
-    Modified:    2026-05-16 16:51:56 UTC
-    Changed:     2026-05-16 16:51:56 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:59.0002403Z
+    Modified:    2026-05-16T16:51:56.8793586Z
+    Changed:     2026-05-16T16:51:56.8793586Z
+    Accessed:    2026-05-16T16:51:59.0012703Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_hardlink_echo_387599.ini
-    Created:     2025-02-09 07:17:09 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2025-02-09T07:17:09.6819863Z
+    Modified:    2026-05-16T16:52:02.5020831Z
+    Changed:     2026-05-16T16:52:02.5020831Z
+    Accessed:    2026-05-16T16:52:02.5020831Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_hotel_kilo_705007.cfg
-    Created:     2026-05-16 16:51:58 UTC
-    Modified:    2026-05-16 16:51:54 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:58.4206967Z
+    Modified:    2026-05-16T16:51:54.8200316Z
+    Changed:     2026-05-16T16:52:01.3040075Z
+    Accessed:    2026-05-16T16:51:58.4216998Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_index_index_579494.cfg
-    Created:     2026-05-16 16:52:00 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:00.9791764Z
+    Modified:    2026-05-16T16:52:00.9812382Z
+    Changed:     2026-05-16T16:52:02.9531271Z
+    Accessed:    2026-05-16T16:52:00.9812382Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_kilo_output_350111.log
-    Created:     2026-05-16 16:51:52 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:52.5557898Z
+    Modified:    2026-05-16T16:52:01.4367195Z
+    Changed:     2026-05-16T16:52:01.4367195Z
+    Accessed:    2026-05-16T16:52:01.4367195Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_lima_temp_514782.csv
-    Created:     2026-05-16 16:51:55 UTC
-    Modified:    2026-05-16 16:51:58 UTC
-    Changed:     2026-05-16 16:51:58 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:55.1920731Z
+    Modified:    2026-05-16T16:51:58.7259186Z
+    Changed:     2026-05-16T16:51:58.7259186Z
+    Accessed:    2026-05-16T16:51:58.7259186Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 712 bytes)
 
   FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_lima_victor_941030.cfg
-    Created:     2025-07-16 07:17:35 UTC
-    Modified:    2025-07-16 07:17:35 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2025-07-16T07:17:35.7846153Z
+    Modified:    2025-07-16T07:17:35.7846153Z
+    Changed:     2026-05-16T16:52:02.7808786Z
+    Accessed:    2025-07-16T07:17:35.7846153Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_log_output_579275.dat
-    Created:     2026-05-16 16:51:53 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:53.1239603Z
+    Modified:    2026-05-16T16:52:00.9852562Z
+    Changed:     2026-05-16T16:52:00.9852562Z
+    Accessed:    2026-05-16T16:52:00.9852562Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_oscar_archive_384713.txt
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.9036176Z
+    Modified:    2026-05-16T16:52:01.9046194Z
+    Changed:     2026-05-16T16:52:01.9046194Z
+    Accessed:    2026-05-16T16:52:01.9046194Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_oscar_foxtrot_635028.xml
-    Created:     2026-05-16 16:51:54 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:54.2169570Z
+    Modified:    2026-05-16T16:52:00.1404045Z
+    Changed:     2026-05-16T16:52:00.1404045Z
+    Accessed:    2026-05-16T16:52:00.1404045Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_papa_index_238422.csv
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.0661606Z
+    Modified:    2026-05-16T16:52:01.0671653Z
+    Changed:     2026-05-16T16:52:01.0671653Z
+    Accessed:    2026-05-16T16:52:01.0671653Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_quebec_papa_978800.txt
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.4437170Z
+    Modified:    2026-05-16T16:52:02.6967051Z
+    Changed:     2026-05-16T16:52:02.7970894Z
+    Accessed:    2026-05-16T16:52:02.6967051Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_sierra_echo_921063.xml
-    Created:     2025-04-02 07:16:24 UTC
-    Modified:    2026-05-16 16:51:55 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2025-04-02T07:16:24.8031332Z
+    Modified:    2026-05-16T16:51:55.6924101Z
+    Changed:     2026-05-16T16:51:59.3490525Z
+    Accessed:    2026-05-16T16:51:55.6924101Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_tango_echo_291736.csv
-    Created:     2025-04-01 07:16:26 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2025-04-01T07:16:26.2947244Z
+    Modified:    2026-05-16T16:52:01.3685448Z
+    Changed:     2026-05-16T16:52:01.3685448Z
+    Accessed:    2026-05-16T16:52:01.3685448Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_temp_sierra_130629.tmp
-    Created:     2022-02-07 07:16:33 UTC
-    Modified:    2022-02-07 07:16:33 UTC
-    Changed:     2026-05-16 16:51:56 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2022-02-07T07:16:33.0361865Z
+    Modified:    2022-02-07T07:16:33.0361865Z
+    Changed:     2026-05-16T16:51:56.6473939Z
+    Accessed:    2022-02-07T07:16:33.0361865Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_trace_gamma_651618.dat
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2021-10-19 07:16:21 UTC
-    Changed:     2026-05-16 16:51:56 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.1238478Z
+    Modified:    2021-10-19T07:16:21.7425212Z
+    Changed:     2026-05-16T16:51:56.1011982Z
+    Accessed:    2026-05-16T16:52:01.1238478Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_victor_tango_152379.bin
-    Created:     2026-05-16 16:51:56 UTC
-    Modified:    2026-05-16 16:51:56 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:56.3444502Z
+    Modified:    2026-05-16T16:51:56.3444502Z
+    Changed:     2026-05-16T16:52:00.0718777Z
+    Accessed:    2026-05-16T16:51:56.3444502Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_yankee_victor_114004.ini
-    Created:     2026-05-16 16:51:59 UTC
-    Modified:    2026-05-16 16:51:59 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:59.6394480Z
+    Modified:    2026-05-16T16:51:59.6418176Z
+    Changed:     2026-05-16T16:51:59.6418176Z
+    Accessed:    2026-05-16T16:51:59.6418176Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_papa_805353/xbpt_audit_index_229436.csv
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.4195412Z
+    Modified:    2026-05-16T16:52:01.4195412Z
+    Changed:     2026-05-16T16:52:01.4195412Z
+    Accessed:    2026-05-16T16:52:01.4195412Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_papa_805353/xbpt_mike_oscar_154118.csv
-    Created:     2026-05-16 16:51:58 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:58.3348675Z
+    Modified:    2026-05-16T16:52:00.0075507Z
+    Changed:     2026-05-16T16:52:00.0075507Z
+    Accessed:    2026-05-16T16:52:00.0075507Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/elvis_dir_papa_805353/xbpt_november_hotel_509136.md
-    Created:     2026-05-16 16:52:02 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:02.0464867Z
+    Modified:    2026-05-16T16:52:02.0464867Z
+    Changed:     2026-05-16T16:52:02.0464867Z
+    Accessed:    2026-05-16T16:52:02.0464867Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_papa_805353/xbpt_november_record_124675.bak
-    Created:     2026-05-16 16:51:59 UTC
-    Modified:    2026-05-16 16:51:55 UTC
-    Changed:     2026-05-16 16:51:55 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:59.3012524Z
+    Modified:    2026-05-16T16:51:55.9074605Z
+    Changed:     2026-05-16T16:51:55.9074605Z
+    Accessed:    2026-05-16T16:51:59.3012524Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_papa_805353/xbpt_november_sierra_312346.xml
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.1432052Z
+    Modified:    2026-05-16T16:52:01.1432052Z
+    Changed:     2026-05-16T16:52:01.1432052Z
+    Accessed:    2026-05-16T16:52:01.1432052Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_papa_805353/xbpt_oscar_archive_362034.json
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.6500459Z
+    Modified:    2026-05-16T16:52:01.6500459Z
+    Changed:     2026-05-16T16:52:01.6500459Z
+    Accessed:    2026-05-16T16:52:01.6500459Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_papa_805353/xbpt_papa_victor_656146.log
-    Created:     2026-05-16 16:52:02 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:02.4584309Z
+    Modified:    2026-05-16T16:52:02.4584309Z
+    Changed:     2026-05-16T16:52:02.4584309Z
+    Accessed:    2026-05-16T16:52:02.4584309Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_papa_805353/xbpt_temp_data_294711.md
-    Created:     2026-05-16 16:52:02 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:02.2591332Z
+    Modified:    2026-05-16T16:52:02.8637959Z
+    Changed:     2026-05-16T16:52:02.8637959Z
+    Accessed:    2026-05-16T16:52:02.8637959Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/elvis_dir_papa_805353/xbpt_temp_log_141240.cfg
-    Created:     2026-05-16 16:51:58 UTC
-    Modified:    2026-05-16 16:51:59 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:58.8829889Z
+    Modified:    2026-05-16T16:51:59.3740544Z
+    Changed:     2026-05-16T16:51:59.3740544Z
+    Accessed:    2026-05-16T16:51:59.3740544Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   DIR  test/elvis_dir_record_449015
-    Created:     2026-05-16 16:51:52 UTC
-    Modified:    2026-05-16 16:52:03 UTC
-    Changed:     2026-05-16 16:52:03 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:51:52.4741306Z
+    Modified:    2026-05-16T16:52:03.0519904Z
+    Changed:     2026-05-16T16:52:03.0519904Z
+    Accessed:    2026-05-16T16:52:03.0878593Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   DIR  test/elvis_dir_record_449015/elvis_dir_lima_252141
-    Created:     2026-05-16 16:51:59 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:51:59.0605457Z
+    Modified:    2026-05-16T16:52:02.7362117Z
+    Changed:     2026-05-16T16:52:02.7362117Z
+    Accessed:    2026-05-16T16:52:02.9224036Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   DIR  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778
-    Created:     2026-05-16 16:51:52 UTC
-    Modified:    2026-05-16 16:52:03 UTC
-    Changed:     2026-05-16 16:52:03 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:51:52.6018207Z
+    Modified:    2026-05-16T16:52:03.0050156Z
+    Changed:     2026-05-16T16:52:03.0050156Z
+    Accessed:    2026-05-16T16:52:03.0983105Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   DIR  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608
-    Created:     2026-05-16 16:51:52 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:51:52.1302537Z
+    Modified:    2026-05-16T16:52:00.3192465Z
+    Changed:     2026-05-16T16:52:00.3192465Z
+    Accessed:    2026-05-16T16:52:00.3192465Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_cache_zulu_259753.dat
-    Created:     2026-03-01 07:16:07 UTC
-    Modified:    2026-03-01 07:16:07 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-03-01T07:16:07.6076372Z
+    Modified:    2026-03-01T07:16:07.6076372Z
+    Changed:     2026-05-16T16:52:00.3192465Z
+    Accessed:    2026-03-01T07:16:07.6076372Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_delta_india_877880.dat
-    Created:     2026-05-16 16:51:52 UTC
-    Modified:    2026-05-16 16:51:59 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:52.2247091Z
+    Modified:    2026-05-16T16:51:59.5451599Z
+    Changed:     2026-05-16T16:51:59.5451599Z
+    Accessed:    2026-05-16T16:51:59.5451599Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_delta_temp_981764.tmp
-    Created:     2023-08-26 07:16:12 UTC
-    Modified:    2023-08-26 07:16:12 UTC
-    Changed:     2026-05-16 16:51:52 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2023-08-26T07:16:12.5023383Z
+    Modified:    2023-08-26T07:16:12.5023383Z
+    Changed:     2026-05-16T16:51:52.9574721Z
+    Accessed:    2023-08-26T07:16:12.5023383Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_mike_quebec_329740.dat
-    Created:     2026-05-16 16:51:52 UTC
-    Modified:    2026-05-16 16:51:57 UTC
-    Changed:     2026-05-16 16:51:57 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:52.3220422Z
+    Modified:    2026-05-16T16:51:57.0083018Z
+    Changed:     2026-05-16T16:51:57.0083018Z
+    Accessed:    2026-05-16T16:51:57.0083018Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   DIR  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509
-    Created:     2026-05-16 16:51:54 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:51:54.8284328Z
+    Modified:    2026-05-16T16:52:01.8313774Z
+    Changed:     2026-05-16T16:52:01.8313774Z
+    Accessed:    2026-05-16T16:52:01.8313774Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509/xbpt_mike_trace_701071.dat
-    Created:     2026-05-16 16:51:55 UTC
-    Modified:    2026-05-16 16:51:55 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:55.6442296Z
+    Modified:    2026-05-16T16:51:55.6442296Z
+    Changed:     2026-05-16T16:51:59.2023192Z
+    Accessed:    2026-05-16T16:51:55.6442296Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   DIR  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264
-    Created:     2026-05-16 16:51:52 UTC
-    Modified:    2026-05-16 16:51:57 UTC
-    Changed:     2026-05-16 16:51:57 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:51:52.7357903Z
+    Modified:    2026-05-16T16:51:57.4138828Z
+    Changed:     2026-05-16T16:51:57.4138828Z
+    Accessed:    2026-05-16T16:51:57.4138828Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_audit_config_255291.dat
-    Created:     2021-10-19 07:16:21 UTC
-    Modified:    2021-10-19 07:16:21 UTC
-    Changed:     2026-05-16 16:51:56 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2021-10-19T07:16:21.7425212Z
+    Modified:    2021-10-19T07:16:21.7425212Z
+    Changed:     2026-05-16T16:51:56.1011982Z
+    Accessed:    2021-10-19T07:16:21.7425212Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_beta_report_756229.csv
-    Created:     2026-05-16 16:51:56 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:56.2971810Z
+    Modified:    2026-05-16T16:52:00.1218908Z
+    Changed:     2026-05-16T16:52:00.1218908Z
+    Accessed:    2026-05-16T16:52:00.1218908Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_november_cache_127869.dat
-    Created:     2026-05-16 16:51:53 UTC
-    Modified:    2026-05-16 16:51:56 UTC
-    Changed:     2026-05-16 16:51:56 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:53.1729692Z
+    Modified:    2026-05-16T16:51:56.8793586Z
+    Changed:     2026-05-16T16:51:56.8793586Z
+    Accessed:    2026-05-16T16:51:56.8793586Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_zulu_trace_481495.md
-    Created:     2024-06-07 07:17:11 UTC
-    Modified:    2024-06-07 07:17:11 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2024-06-07T07:17:11.2423573Z
+    Modified:    2024-06-07T07:17:11.2423573Z
+    Changed:     2026-05-16T16:52:00.9154031Z
+    Accessed:    2024-06-07T07:17:11.2423573Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_backup_echo_585708.csv
-    Created:     2022-06-17 07:16:38 UTC
-    Modified:    2022-06-17 07:16:38 UTC
-    Changed:     2026-05-16 16:51:57 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2022-06-17T07:16:38.2016426Z
+    Modified:    2022-06-17T07:16:38.2016426Z
+    Changed:     2026-05-16T16:51:57.3830335Z
+    Accessed:    2022-06-17T07:16:38.2016426Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_beta_archive_448246.ini
-    Created:     2026-05-16 16:51:54 UTC
-    Modified:    2026-05-16 16:51:58 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:54.8887235Z
+    Modified:    2026-05-16T16:51:58.7087232Z
+    Changed:     2026-05-16T16:52:00.1918042Z
+    Accessed:    2026-05-16T16:51:58.7087232Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_draft_oscar_719333.tmp
-    Created:     2026-05-16 16:51:52 UTC
-    Modified:    2026-05-16 16:51:52 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:52.6447094Z
+    Modified:    2026-05-16T16:51:52.1957001Z
+    Changed:     2026-05-16T16:52:00.6958759Z
+    Accessed:    2026-05-16T16:51:52.6458548Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_kilo_beta_246643.bin
-    Created:     2026-05-16 16:52:02 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:02.2859834Z
+    Modified:    2026-05-16T16:52:02.2869877Z
+    Changed:     2026-05-16T16:52:02.2869877Z
+    Accessed:    2026-05-16T16:52:02.2869877Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_large_7mb_india_845613.txt
-    Created:     2026-05-16 16:52:03 UTC
-    Modified:    2026-05-16 16:52:03 UTC
-    Changed:     2026-05-16 16:52:03 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:03.0050156Z
+    Modified:    2026-05-16T16:52:03.0050156Z
+    Changed:     2026-05-16T16:52:03.0050156Z
+    Accessed:    2026-05-16T16:52:03.0050156Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_large_86mb_india_568540.txt
-    Created:     2026-05-16 16:52:03 UTC
-    Modified:    2026-05-16 16:52:03 UTC
-    Changed:     2026-05-16 16:52:03 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:03.0000252Z
+    Modified:    2026-05-16T16:52:03.0011361Z
+    Changed:     2026-05-16T16:52:03.0011361Z
+    Accessed:    2026-05-16T16:52:03.0011361Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_log_romeo_319918.txt
-    Created:     2026-05-16 16:51:59 UTC
-    Modified:    2026-05-16 16:51:59 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:59.8757242Z
+    Modified:    2026-05-16T16:51:59.8757242Z
+    Changed:     2026-05-16T16:51:59.8757242Z
+    Accessed:    2026-05-16T16:51:59.8757242Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_mike_trace_484217.ini
-    Created:     2026-05-16 16:51:58 UTC
-    Modified:    2026-05-16 16:51:58 UTC
-    Changed:     2026-05-16 16:51:58 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:58.0162654Z
+    Modified:    2026-05-16T16:51:58.0182916Z
+    Changed:     2026-05-16T16:51:58.0182916Z
+    Accessed:    2026-05-16T16:51:58.0182916Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_mike_uniform_215836.txt
-    Created:     2026-05-16 16:51:51 UTC
-    Modified:    2026-05-16 16:51:52 UTC
-    Changed:     2026-05-16 16:51:53 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:51.2509347Z
+    Modified:    2026-05-16T16:51:52.3594981Z
+    Changed:     2026-05-16T16:51:53.9495787Z
+    Accessed:    2026-05-16T16:51:52.3594981Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_report_india_560484.txt
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.6855932Z
+    Modified:    2026-05-16T16:52:01.6865956Z
+    Changed:     2026-05-16T16:52:01.6865956Z
+    Accessed:    2026-05-16T16:52:01.6865956Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_romeo_output_531365.cfg
-    Created:     2022-08-02 07:16:28 UTC
-    Modified:    2026-05-16 16:51:56 UTC
-    Changed:     2026-05-16 16:51:56 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2022-08-02T07:16:28.1705690Z
+    Modified:    2026-05-16T16:51:56.2599612Z
+    Changed:     2026-05-16T16:51:56.4199355Z
+    Accessed:    2026-05-16T16:51:56.2599612Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_sync_echo_156375.ini
-    Created:     2026-05-16 16:52:00 UTC
-    Modified:    2026-05-16 16:51:57 UTC
-    Changed:     2026-05-16 16:51:57 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:00.1684498Z
+    Modified:    2026-05-16T16:51:57.6902672Z
+    Changed:     2026-05-16T16:51:57.6902672Z
+    Accessed:    2026-05-16T16:52:00.1694580Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_temp_mike_134457.bak
-    Created:     2025-12-30 07:17:16 UTC
-    Modified:    2025-12-30 07:17:16 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2025-12-30T07:17:16.4645071Z
+    Modified:    2025-12-30T07:17:16.4645071Z
+    Changed:     2026-05-16T16:52:01.2545106Z
+    Accessed:    2025-12-30T07:17:16.4645071Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_trace_delta_811163.txt
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.7831332Z
+    Modified:    2026-05-16T16:52:01.7831332Z
+    Changed:     2026-05-16T16:52:01.7831332Z
+    Accessed:    2026-05-16T16:52:01.7831332Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_yankee_tango_103961.bin
-    Created:     2026-05-16 16:51:58 UTC
-    Modified:    2026-05-16 16:51:58 UTC
-    Changed:     2026-05-16 16:51:58 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:58.8963637Z
+    Modified:    2026-05-16T16:51:58.8973563Z
+    Changed:     2026-05-16T16:51:58.8973563Z
+    Accessed:    2026-05-16T16:51:58.8973563Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_zulu_hotel_433348.log
-    Created:     2026-05-16 16:51:54 UTC
-    Modified:    2026-05-16 16:51:53 UTC
-    Changed:     2026-05-16 16:51:56 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:54.5705165Z
+    Modified:    2026-05-16T16:51:53.3972742Z
+    Changed:     2026-05-16T16:51:56.8998872Z
+    Accessed:    2026-05-16T16:51:54.5769486Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   DIR  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_report_664539
-    Created:     2026-05-16 16:52:02 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:52:02.7197855Z
+    Modified:    2026-05-16T16:52:02.7197855Z
+    Changed:     2026-05-16T16:52:02.7197855Z
+    Accessed:    2026-05-16T16:52:02.7197855Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_alpha_delta_877195.json
-    Created:     2026-05-16 16:52:00 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:00.5301978Z
+    Modified:    2026-05-16T16:52:00.5311993Z
+    Changed:     2026-05-16T16:52:00.5311993Z
+    Accessed:    2026-05-16T16:52:00.5311993Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_index_draft_129088.bin
-    Created:     2026-05-16 16:51:56 UTC
-    Modified:    2026-05-16 16:51:56 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:56.4373386Z
+    Modified:    2026-05-16T16:51:56.3213420Z
+    Changed:     2026-05-16T16:52:02.5070920Z
+    Accessed:    2026-05-16T16:51:56.4712004Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_kilo_quebec_845728.bak
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.4565633Z
+    Modified:    2026-05-16T16:52:01.4575604Z
+    Changed:     2026-05-16T16:52:01.4575604Z
+    Accessed:    2026-05-16T16:52:01.4575604Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_tango_record_232127.csv
-    Created:     2026-05-16 16:51:59 UTC
-    Modified:    2026-05-16 16:51:59 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:59.9815922Z
+    Modified:    2026-05-16T16:51:59.9825903Z
+    Changed:     2026-05-16T16:51:59.9825903Z
+    Accessed:    2026-05-16T16:51:59.9825903Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_temp_index_659152.xml
-    Created:     2026-05-16 16:51:59 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:59.0799552Z
+    Modified:    2026-05-16T16:52:02.9234140Z
+    Changed:     2026-05-16T16:52:02.9234140Z
+    Accessed:    2026-05-16T16:52:02.9234140Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_uniform_mike_713257.xml
-    Created:     2026-05-16 16:51:59 UTC
-    Modified:    2026-05-16 16:51:59 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:59.3995386Z
+    Modified:    2026-05-16T16:51:59.3995386Z
+    Changed:     2026-05-16T16:51:59.3995386Z
+    Accessed:    2026-05-16T16:51:59.3995386Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_yankee_report_288078.log
-    Created:     2026-05-16 16:51:59 UTC
-    Modified:    2026-05-16 16:51:59 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:59.5247233Z
+    Modified:    2026-05-16T16:51:59.5257260Z
+    Changed:     2026-05-16T16:51:59.5257260Z
+    Accessed:    2026-05-16T16:51:59.5257260Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   DIR  test/elvis_dir_record_449015/elvis_dir_papa_104235
-    Created:     2026-05-16 16:51:56 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:51:56.7689313Z
+    Modified:    2026-05-16T16:52:02.9366825Z
+    Changed:     2026-05-16T16:52:02.9366825Z
+    Accessed:    2026-05-16T16:52:03.1097471Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   DIR  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743
-    Created:     2026-05-16 16:51:51 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:51:51.2569313Z
+    Modified:    2026-05-16T16:52:02.8030861Z
+    Changed:     2026-05-16T16:52:02.8030861Z
+    Accessed:    2026-05-16T16:52:03.1137504Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   DIR  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016
-    Created:     2026-05-16 16:51:51 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:51:51.1209477Z
+    Modified:    2026-05-16T16:52:02.8793299Z
+    Changed:     2026-05-16T16:52:02.8793299Z
+    Accessed:    2026-05-16T16:52:02.9446852Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   DIR  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_archive_704644
-    Created:     2026-05-16 16:51:57 UTC
-    Modified:    2026-05-16 16:51:57 UTC
-    Changed:     2026-05-16 16:51:57 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:51:57.5551279Z
+    Modified:    2026-05-16T16:51:57.5789147Z
+    Changed:     2026-05-16T16:51:57.6491243Z
+    Accessed:    2026-05-16T16:51:57.5789147Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_archive_704644/xbpt_uniform_oscar_320878.log
-    Created:     2026-05-16 16:51:57 UTC
-    Modified:    2026-05-16 16:51:57 UTC
-    Changed:     2026-05-16 16:51:57 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:57.5789147Z
+    Modified:    2026-05-16T16:51:57.5789147Z
+    Changed:     2026-05-16T16:51:57.5789147Z
+    Accessed:    2026-05-16T16:51:57.5789147Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   DIR  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148
-    Created:     2026-05-16 16:51:50 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:51:50.7744405Z
+    Modified:    2026-05-16T16:52:02.7838852Z
+    Changed:     2026-05-16T16:52:02.7838852Z
+    Accessed:    2026-05-16T16:52:02.9107463Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_config_archive_855545.dat
-    Created:     2026-05-16 16:51:55 UTC
-    Modified:    2026-05-16 16:51:53 UTC
-    Changed:     2026-05-16 16:51:53 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:55.4425105Z
+    Modified:    2026-05-16T16:51:53.1249699Z
+    Changed:     2026-05-16T16:51:53.1249699Z
+    Accessed:    2026-05-16T16:51:55.4425105Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_data_victor_588744.ini
-    Created:     2026-05-16 16:51:54 UTC
-    Modified:    2026-05-16 16:51:54 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:54.1455490Z
+    Modified:    2026-05-16T16:51:54.9092643Z
+    Changed:     2026-05-16T16:51:59.7675238Z
+    Accessed:    2026-05-16T16:51:54.9092643Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_delta_sierra_216359.bin
-    Created:     2024-04-04 07:17:02 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2024-04-04T07:17:02.6780853Z
+    Modified:    2026-05-16T16:52:02.9107463Z
+    Changed:     2026-05-16T16:52:02.9107463Z
+    Accessed:    2026-05-16T16:52:02.9107463Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_hotel_data_899354.bak
-    Created:     2026-05-16 16:51:51 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:51.5249123Z
+    Modified:    2026-05-16T16:52:02.1739285Z
+    Changed:     2026-05-16T16:52:02.1739285Z
+    Accessed:    2026-05-16T16:52:02.1739285Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_index_zulu_828859.bak
-    Created:     2026-05-16 16:51:51 UTC
-    Modified:    2026-05-16 16:51:52 UTC
-    Changed:     2026-05-16 16:51:52 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:51.9559191Z
+    Modified:    2026-05-16T16:51:52.5083371Z
+    Changed:     2026-05-16T16:51:52.9127577Z
+    Accessed:    2026-05-16T16:51:52.5083371Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_lima_mike_622053.csv
-    Created:     2026-05-16 16:51:56 UTC
-    Modified:    2026-05-16 16:51:56 UTC
-    Changed:     2026-05-16 16:51:56 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:56.5863356Z
+    Modified:    2026-05-16T16:51:56.5873352Z
+    Changed:     2026-05-16T16:51:56.5873352Z
+    Accessed:    2026-05-16T16:51:56.5873352Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_papa_audit_649170.md
-    Created:     2026-05-16 16:51:53 UTC
-    Modified:    2026-05-16 16:51:53 UTC
-    Changed:     2026-05-16 16:51:53 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:53.5147337Z
+    Modified:    2026-05-16T16:51:53.5157311Z
+    Changed:     2026-05-16T16:51:53.5157311Z
+    Accessed:    2026-05-16T16:51:53.5157311Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_sierra_log_210965.log
-    Created:     2026-05-16 16:51:52 UTC
-    Modified:    2026-05-16 16:51:52 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:52.2545882Z
+    Modified:    2026-05-16T16:51:52.4095765Z
+    Changed:     2026-05-16T16:52:00.7745815Z
+    Accessed:    2026-05-16T16:51:52.4095765Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 712 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_tango_mike_573093.dat
-    Created:     2026-05-16 16:51:51 UTC
-    Modified:    2026-05-16 16:51:51 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:51.3481753Z
+    Modified:    2026-05-16T16:51:51.2732911Z
+    Changed:     2026-05-16T16:52:01.5648322Z
+    Accessed:    2026-05-16T16:51:51.3589478Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_temp_audit_764882.bak
-    Created:     2026-05-16 16:51:53 UTC
-    Modified:    2026-05-16 16:51:56 UTC
-    Changed:     2026-05-16 16:51:56 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:53.1073669Z
+    Modified:    2026-05-16T16:51:56.7873599Z
+    Changed:     2026-05-16T16:51:56.7873599Z
+    Accessed:    2026-05-16T16:51:56.7873599Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_uniform_alpha_203203.json
-    Created:     2026-05-16 16:51:53 UTC
-    Modified:    2026-05-16 16:51:53 UTC
-    Changed:     2026-05-16 16:51:53 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:53.3132524Z
+    Modified:    2026-05-16T16:51:53.9135559Z
+    Changed:     2026-05-16T16:51:53.9135559Z
+    Accessed:    2026-05-16T16:51:53.9135559Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_whiskey_kilo_275488.json
-    Created:     2026-05-16 16:51:52 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:52.6613233Z
+    Modified:    2026-05-16T16:52:01.8363875Z
+    Changed:     2026-05-16T16:52:01.8363875Z
+    Accessed:    2026-05-16T16:52:01.8363875Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_whiskey_romeo_757926.txt
-    Created:     2026-05-16 16:51:55 UTC
-    Modified:    2026-05-16 16:51:54 UTC
-    Changed:     2026-05-16 16:51:55 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:55.7879247Z
+    Modified:    2026-05-16T16:51:54.0814510Z
+    Changed:     2026-05-16T16:51:55.0999713Z
+    Accessed:    2026-05-16T16:51:55.7997860Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_yankee_foxtrot_727835.bak
-    Created:     2022-04-19 07:16:47 UTC
-    Modified:    2022-04-19 07:16:47 UTC
-    Changed:     2026-05-16 16:51:58 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2022-04-19T07:16:47.0726903Z
+    Modified:    2022-04-19T07:16:47.0726903Z
+    Changed:     2026-05-16T16:51:58.3038589Z
+    Accessed:    2022-04-19T07:16:47.0726903Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   DIR  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790
-    Created:     2026-05-16 16:51:55 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:51:55.0246448Z
+    Modified:    2026-05-16T16:52:02.7523504Z
+    Changed:     2026-05-16T16:52:02.7523504Z
+    Accessed:    2026-05-16T16:52:03.1229840Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790/xbpt_delta_delta_676812.xml
-    Created:     2026-05-16 16:51:55 UTC
-    Modified:    2026-05-16 16:51:59 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:55.4763006Z
+    Modified:    2026-05-16T16:51:59.6519970Z
+    Changed:     2026-05-16T16:51:59.9701007Z
+    Accessed:    2026-05-16T16:51:59.6519970Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 712 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790/xbpt_draft_india_571157.ini
-    Created:     2026-05-16 16:51:55 UTC
-    Modified:    2026-05-16 16:51:54 UTC
-    Changed:     2026-05-16 16:51:54 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:55.1240723Z
+    Modified:    2026-05-16T16:51:54.9092643Z
+    Changed:     2026-05-16T16:51:54.9092643Z
+    Accessed:    2026-05-16T16:51:55.1639732Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   DIR  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398
-    Created:     2026-05-16 16:51:54 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:51:54.4788979Z
+    Modified:    2026-05-16T16:52:02.5950602Z
+    Changed:     2026-05-16T16:52:02.5950602Z
+    Accessed:    2026-05-16T16:52:03.1239881Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   DIR  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805
-    Created:     2026-05-16 16:51:51 UTC
-    Modified:    2026-05-16 16:51:58 UTC
-    Changed:     2026-05-16 16:51:58 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:51:51.8448761Z
+    Modified:    2026-05-16T16:51:58.4410272Z
+    Changed:     2026-05-16T16:51:58.4410272Z
+    Accessed:    2026-05-16T16:51:58.4410272Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   DIR  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083
-    Created:     2026-05-16 16:51:53 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:51:53.4400620Z
+    Modified:    2026-05-16T16:52:01.3511836Z
+    Changed:     2026-05-16T16:52:01.3511836Z
+    Accessed:    2026-05-16T16:52:03.1269880Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083/xbpt_yankee_echo_729349.tmp
-    Created:     2026-05-16 16:51:54 UTC
-    Modified:    2026-05-16 16:51:58 UTC
-    Changed:     2026-05-16 16:51:58 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:54.0625348Z
+    Modified:    2026-05-16T16:51:58.0863035Z
+    Changed:     2026-05-16T16:51:58.0863035Z
+    Accessed:    2026-05-16T16:51:58.0863035Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_alpha_delta_830163.ini
-    Created:     2026-05-16 16:51:52 UTC
-    Modified:    2026-05-16 16:51:58 UTC
-    Changed:     2026-05-16 16:51:58 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:52.5177867Z
+    Modified:    2026-05-16T16:51:58.9724085Z
+    Changed:     2026-05-16T16:51:58.9724085Z
+    Accessed:    2026-05-16T16:51:58.9724085Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_backup_draft_411674.log
-    Created:     2026-05-16 16:51:54 UTC
-    Modified:    2026-05-16 16:51:54 UTC
-    Changed:     2026-05-16 16:51:54 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:54.8007305Z
+    Modified:    2026-05-16T16:51:54.8017279Z
+    Changed:     2026-05-16T16:51:54.8017279Z
+    Accessed:    2026-05-16T16:51:54.8017279Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_delta_cache_147912.bin
-    Created:     2021-09-26 07:16:24 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2021-09-26T07:16:24.5409194Z
+    Modified:    2026-05-16T16:52:00.8024674Z
+    Changed:     2026-05-16T16:52:00.8024674Z
+    Accessed:    2026-05-16T16:52:00.8024674Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_hardlink_audit_219848.cfg
-    Created:     2026-05-16 16:51:51 UTC
-    Modified:    2026-05-16 16:51:54 UTC
-    Changed:     2026-05-16 16:51:54 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:51.1077294Z
+    Modified:    2026-05-16T16:51:54.8200316Z
+    Changed:     2026-05-16T16:51:54.8200316Z
+    Accessed:    2026-05-16T16:51:54.8200316Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_log_backup_939898.json
-    Created:     2026-05-16 16:51:54 UTC
-    Modified:    2026-05-16 16:51:56 UTC
-    Changed:     2026-05-16 16:51:56 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:54.5635197Z
+    Modified:    2026-05-16T16:51:56.8938941Z
+    Changed:     2026-05-16T16:51:56.8938941Z
+    Accessed:    2026-05-16T16:51:56.8938941Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_report_audit_396522.txt
-    Created:     2021-09-29 07:16:41 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2021-09-29T07:16:41.2004512Z
+    Modified:    2026-05-16T16:52:00.0166595Z
+    Changed:     2026-05-16T16:52:00.0166595Z
+    Accessed:    2026-05-16T16:52:00.0166595Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_symlink_gamma_582874.lnk
-    Created:     2026-05-16 16:51:53 UTC
-    Modified:    2026-05-16 16:51:53 UTC
-    Changed:     2026-05-16 16:51:53 UTC
-    Attributes:  Archive | ReparsePoint (0x420)
-    IntFlags:    RedirectionTrust (0x28)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:53.6446165Z
+    Modified:    2026-05-16T16:51:53.6446165Z
+    Changed:     2026-05-16T16:51:53.6446165Z
+    Accessed:    2026-05-16T16:51:53.6446165Z
+    Attributes:  0x420 (Archive|ReparsePoint)
+    IntFlags:    0x28 (DataInRecord|RedirectionTrust)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     inline (record embedded, 536 bytes)
     *** REPARSE POINT (symlink/WSL special file) ***
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/xbpt_india_temp_254875.bak
-    Created:     2026-05-16 16:51:56 UTC
-    Modified:    2026-05-16 16:51:58 UTC
-    Changed:     2026-05-16 16:51:58 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:56.5719272Z
+    Modified:    2026-05-16T16:51:58.9549975Z
+    Changed:     2026-05-16T16:51:58.9549975Z
+    Accessed:    2026-05-16T16:51:58.9549975Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_alpha_victor_250409.ini
-    Created:     2026-02-23 07:17:05 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-02-23T07:17:05.2859306Z
+    Modified:    2026-05-16T16:52:00.3927145Z
+    Changed:     2026-05-16T16:52:00.3927145Z
+    Accessed:    2026-05-16T16:52:00.3927145Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_audit_data_566396.txt
-    Created:     2026-05-16 16:51:55 UTC
-    Modified:    2026-05-16 16:51:55 UTC
-    Changed:     2026-05-16 16:51:55 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:55.3682622Z
+    Modified:    2026-05-16T16:51:55.3682622Z
+    Changed:     2026-05-16T16:51:55.3682622Z
+    Accessed:    2026-05-16T16:51:55.3682622Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_audit_india_563500.bin
-    Created:     2026-05-16 16:51:55 UTC
-    Modified:    2026-05-16 16:51:56 UTC
-    Changed:     2026-05-16 16:51:56 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:55.3313662Z
+    Modified:    2026-05-16T16:51:56.7231057Z
+    Changed:     2026-05-16T16:51:56.7231057Z
+    Accessed:    2026-05-16T16:51:56.7231057Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_audit_log_130131.ini
-    Created:     2021-10-14 07:17:10 UTC
-    Modified:    2021-10-14 07:17:10 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2021-10-14T07:17:10.8947266Z
+    Modified:    2021-10-14T07:17:10.8947266Z
+    Changed:     2026-05-16T16:52:00.8960979Z
+    Accessed:    2021-10-14T07:17:10.8947266Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_beta_cache_861983.json
-    Created:     2025-06-11 07:16:10 UTC
-    Modified:    2025-06-11 07:16:10 UTC
-    Changed:     2026-05-16 16:51:57 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2025-06-11T07:16:10.1388255Z
+    Modified:    2025-06-11T07:16:10.1388255Z
+    Changed:     2026-05-16T16:51:57.2403319Z
+    Accessed:    2025-06-11T07:16:10.1388255Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_lima_lima_890070.dat
-    Created:     2026-05-16 16:51:52 UTC
-    Modified:    2026-05-16 16:51:57 UTC
-    Changed:     2026-05-16 16:51:57 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:52.8656843Z
+    Modified:    2026-05-16T16:51:57.6353400Z
+    Changed:     2026-05-16T16:51:57.6353400Z
+    Accessed:    2026-05-16T16:51:57.6353400Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_lima_oscar_843603.tmp
-    Created:     2026-05-16 16:51:53 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:53.1903962Z
+    Modified:    2026-05-16T16:52:02.9446852Z
+    Changed:     2026-05-16T16:52:02.9446852Z
+    Accessed:    2026-05-16T16:52:02.9446852Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_mike_tango_822153.dat
-    Created:     2026-05-16 16:51:53 UTC
-    Modified:    2026-05-16 16:51:53 UTC
-    Changed:     2026-05-16 16:51:53 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:53.0779990Z
+    Modified:    2026-05-16T16:51:53.0790044Z
+    Changed:     2026-05-16T16:51:53.0790044Z
+    Accessed:    2026-05-16T16:51:53.0790044Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_romeo_gamma_831931.dat
-    Created:     2025-02-23 07:17:23 UTC
-    Modified:    2025-02-23 07:17:23 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2025-02-23T07:17:23.7743638Z
+    Modified:    2025-02-23T07:17:23.7743638Z
+    Changed:     2026-05-16T16:52:01.7901340Z
+    Accessed:    2025-02-23T07:17:23.7743638Z
+    ADS:         hidden_7357 (inline)
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 792 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_tango_victor_844323.json
-    Created:     2025-03-31 07:17:11 UTC
-    Modified:    2025-03-31 07:17:11 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2025-03-31T07:17:11.8319740Z
+    Modified:    2025-03-31T07:17:11.8319740Z
+    Changed:     2026-05-16T16:52:00.9671754Z
+    Accessed:    2025-03-31T07:17:11.8319740Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_temp_output_522138.tmp
-    Created:     2026-05-16 16:51:56 UTC
-    Modified:    2026-05-16 16:51:56 UTC
-    Changed:     2026-05-16 16:51:56 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:56.9409901Z
+    Modified:    2026-05-16T16:51:56.9421529Z
+    Changed:     2026-05-16T16:51:56.9421529Z
+    Accessed:    2026-05-16T16:51:56.9421529Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_trace_quebec_127743.bin
-    Created:     2026-05-16 16:51:57 UTC
-    Modified:    2026-05-16 16:51:58 UTC
-    Changed:     2026-05-16 16:51:58 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:57.7748159Z
+    Modified:    2026-05-16T16:51:58.6772339Z
+    Changed:     2026-05-16T16:51:58.6772339Z
+    Accessed:    2026-05-16T16:51:58.6772339Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   DIR  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462
-    Created:     2026-05-16 16:51:50 UTC
-    Modified:    2026-05-16 16:51:59 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:51:50.4528371Z
+    Modified:    2026-05-16T16:51:59.2695542Z
+    Changed:     2026-05-16T16:51:59.2695542Z
+    Accessed:    2026-05-16T16:51:59.2695542Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   DIR  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899
-    Created:     2026-05-16 16:51:51 UTC
-    Modified:    2026-05-16 16:51:57 UTC
-    Changed:     2026-05-16 16:51:58 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:51:51.3945172Z
+    Modified:    2026-05-16T16:51:57.3113430Z
+    Changed:     2026-05-16T16:51:58.0038686Z
+    Accessed:    2026-05-16T16:51:57.3113430Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899/xbpt_config_record_746941.dat
-    Created:     2024-05-06 07:17:31 UTC
-    Modified:    2024-05-06 07:17:31 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2024-05-06T07:17:31.2960857Z
+    Modified:    2024-05-06T07:17:31.2960857Z
+    Changed:     2026-05-16T16:52:02.4677988Z
+    Accessed:    2024-05-06T07:17:31.2960857Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_index_uniform_409576.json
-    Created:     2024-12-12 07:16:57 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2024-12-12T07:16:57.7860609Z
+    Modified:    2026-05-16T16:52:02.2963291Z
+    Changed:     2026-05-16T16:52:02.2963291Z
+    Accessed:    2026-05-16T16:52:02.2963291Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_victor_echo_578793.cfg
-    Created:     2023-10-15 07:17:00 UTC
-    Modified:    2023-10-15 07:17:00 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2023-10-15T07:17:00.9306544Z
+    Modified:    2023-10-15T07:17:00.9306544Z
+    Changed:     2026-05-16T16:51:59.8632963Z
+    Accessed:    2023-10-15T07:17:00.9306544Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_zulu_output_293634.cfg
-    Created:     2023-11-21 07:17:13 UTC
-    Modified:    2023-11-21 07:17:13 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2023-11-21T07:17:13.8768248Z
+    Modified:    2023-11-21T07:17:13.8768248Z
+    Changed:     2026-05-16T16:52:01.0971840Z
+    Accessed:    2023-11-21T07:17:13.8768248Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_archive_whiskey_718198.csv
-    Created:     2026-05-16 16:51:52 UTC
-    Modified:    2026-05-16 16:51:52 UTC
-    Changed:     2026-05-16 16:51:56 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:52.7254277Z
+    Modified:    2026-05-16T16:51:52.7264189Z
+    Changed:     2026-05-16T16:51:56.0522287Z
+    Accessed:    2026-05-16T16:51:52.7264189Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_audit_november_543757.cfg
-    Created:     2026-05-16 16:52:02 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:02.1119363Z
+    Modified:    2026-05-16T16:52:02.1129252Z
+    Changed:     2026-05-16T16:52:02.1129252Z
+    Accessed:    2026-05-16T16:52:02.1129252Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_cache_beta_265588.tmp
-    Created:     2022-03-06 07:16:22 UTC
-    Modified:    2022-03-06 07:16:22 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2022-03-06T07:16:22.2090777Z
+    Modified:    2022-03-06T07:16:22.2090777Z
+    Changed:     2026-05-16T16:52:01.5698313Z
+    Accessed:    2022-03-06T07:16:22.2090777Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_config_beta_555315.bin
-    Created:     2026-05-16 16:51:58 UTC
-    Modified:    2026-05-16 16:51:58 UTC
-    Changed:     2026-05-16 16:51:58 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:58.3939363Z
+    Modified:    2026-05-16T16:51:58.3939363Z
+    Changed:     2026-05-16T16:51:58.3939363Z
+    Accessed:    2026-05-16T16:51:58.3939363Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_config_india_582905.json
-    Created:     2026-05-16 16:51:53 UTC
-    Modified:    2026-05-16 16:51:53 UTC
-    Changed:     2026-05-16 16:51:53 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:53.4274247Z
+    Modified:    2026-05-16T16:51:53.4304176Z
+    Changed:     2026-05-16T16:51:53.4304176Z
+    Accessed:    2026-05-16T16:51:53.4304176Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_draft_beta_656043.txt
-    Created:     2026-05-16 16:51:51 UTC
-    Modified:    2026-05-16 16:51:53 UTC
-    Changed:     2026-05-16 16:51:56 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:51.2215113Z
+    Modified:    2026-05-16T16:51:53.1309646Z
+    Changed:     2026-05-16T16:51:56.7639367Z
+    Accessed:    2026-05-16T16:51:53.1309646Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_gamma_victor_852781.bak
-    Created:     2026-05-16 16:52:02 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:02.8020895Z
+    Modified:    2026-05-16T16:52:02.8030861Z
+    Changed:     2026-05-16T16:52:02.8030861Z
+    Accessed:    2026-05-16T16:52:02.8030861Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_hotel_sync_810225.ini
-    Created:     2026-05-16 16:51:52 UTC
-    Modified:    2026-05-16 16:51:57 UTC
-    Changed:     2026-05-16 16:51:57 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:52.7569244Z
+    Modified:    2026-05-16T16:51:57.6902672Z
+    Changed:     2026-05-16T16:51:57.6902672Z
+    Accessed:    2026-05-16T16:51:57.6902672Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_index_temp_198731.cfg
-    Created:     2022-02-28 07:17:26 UTC
-    Modified:    2022-02-28 07:17:26 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2022-02-28T07:17:26.7141564Z
+    Modified:    2022-02-28T07:17:26.7141564Z
+    Changed:     2026-05-16T16:52:02.1179262Z
+    Accessed:    2022-02-28T07:17:26.7141564Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_india_whiskey_159747.csv
-    Created:     2026-05-16 16:51:57 UTC
-    Modified:    2026-05-16 16:51:57 UTC
-    Changed:     2026-05-16 16:51:57 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:57.1469533Z
+    Modified:    2026-05-16T16:51:57.9183602Z
+    Changed:     2026-05-16T16:51:57.9183602Z
+    Accessed:    2026-05-16T16:51:57.9183602Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_log_whiskey_169575.dat
-    Created:     2022-12-26 07:16:15 UTC
-    Modified:    2022-12-26 07:16:15 UTC
-    Changed:     2026-05-16 16:51:53 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2022-12-26T07:16:15.5489447Z
+    Modified:    2022-12-26T07:16:15.5489447Z
+    Changed:     2026-05-16T16:51:53.5402893Z
+    Accessed:    2022-12-26T07:16:15.5489447Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_mike_uniform_966879.xml
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.0303629Z
+    Modified:    2026-05-16T16:52:01.0313310Z
+    Changed:     2026-05-16T16:52:01.0313310Z
+    Accessed:    2026-05-16T16:52:01.0313310Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_oscar_report_193920.cfg
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.9236306Z
+    Modified:    2026-05-16T16:52:01.9246232Z
+    Changed:     2026-05-16T16:52:01.9246232Z
+    Accessed:    2026-05-16T16:52:01.9246232Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_quebec_audit_121864.cfg
-    Created:     2024-10-16 07:17:27 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2024-10-16T07:17:27.5521698Z
+    Modified:    2026-05-16T16:52:02.7583496Z
+    Changed:     2026-05-16T16:52:02.7583496Z
+    Accessed:    2026-05-16T16:52:02.7583496Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 712 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_record_delta_426347.json
-    Created:     2026-05-16 16:51:57 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:57.0165381Z
+    Modified:    2026-05-16T16:52:01.5832306Z
+    Changed:     2026-05-16T16:52:01.5832306Z
+    Accessed:    2026-05-16T16:52:01.5832306Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_record_index_307951.json
-    Created:     2026-05-16 16:51:55 UTC
-    Modified:    2026-05-16 16:51:55 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:55.4857064Z
+    Modified:    2026-05-16T16:51:55.4867030Z
+    Changed:     2026-05-16T16:52:01.2505152Z
+    Accessed:    2026-05-16T16:51:55.4867030Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_report_alpha_806856.csv
-    Created:     2026-05-16 16:51:57 UTC
-    Modified:    2026-05-16 16:51:57 UTC
-    Changed:     2026-05-16 16:51:57 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:57.4572324Z
+    Modified:    2026-05-16T16:51:57.4572324Z
+    Changed:     2026-05-16T16:51:57.4572324Z
+    Accessed:    2026-05-16T16:51:57.4572324Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_temp_echo_351548.json
-    Created:     2026-05-16 16:51:56 UTC
-    Modified:    2026-05-16 16:51:56 UTC
-    Changed:     2026-05-16 16:51:56 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:56.9196148Z
+    Modified:    2026-05-16T16:51:56.9206160Z
+    Changed:     2026-05-16T16:51:56.9206160Z
+    Accessed:    2026-05-16T16:51:56.9206160Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   DIR  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_whiskey_835215
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:52:01.3906221Z
+    Modified:    2026-05-16T16:52:02.1864814Z
+    Changed:     2026-05-16T16:52:02.1864814Z
+    Accessed:    2026-05-16T16:52:02.1864814Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_whiskey_835215/xbpt_alpha_romeo_974930.bin
-    Created:     2026-05-16 16:51:58 UTC
-    Modified:    2026-05-16 16:51:58 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:58.0624433Z
+    Modified:    2026-05-16T16:51:58.0634477Z
+    Changed:     2026-05-16T16:52:02.1864814Z
+    Accessed:    2026-05-16T16:51:58.0634477Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_backup_sierra_949923.ini
-    Created:     2026-05-16 16:51:59 UTC
-    Modified:    2026-05-16 16:51:59 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:59.8149144Z
+    Modified:    2026-05-16T16:51:59.8149144Z
+    Changed:     2026-05-16T16:51:59.8149144Z
+    Accessed:    2026-05-16T16:51:59.8149144Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_delta_log_234524.log
-    Created:     2026-05-16 16:52:00 UTC
-    Modified:    2026-05-16 16:51:54 UTC
-    Changed:     2026-05-16 16:51:54 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:00.8777899Z
+    Modified:    2026-05-16T16:51:54.8017279Z
+    Changed:     2026-05-16T16:51:54.8017279Z
+    Accessed:    2026-05-16T16:52:00.8777899Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_draft_draft_797325.txt
-    Created:     2026-05-16 16:51:57 UTC
-    Modified:    2026-05-16 16:51:58 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:57.7075424Z
+    Modified:    2026-05-16T16:51:58.6901904Z
+    Changed:     2026-05-16T16:52:02.3013346Z
+    Accessed:    2026-05-16T16:51:58.6901904Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_foxtrot_cache_816969.xml
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.3635472Z
+    Modified:    2026-05-16T16:52:02.0309720Z
+    Changed:     2026-05-16T16:52:02.8135219Z
+    Accessed:    2026-05-16T16:52:02.0309720Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_hotel_yankee_781098.log
-    Created:     2026-05-16 16:51:59 UTC
-    Modified:    2026-05-16 16:51:59 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:59.4312828Z
+    Modified:    2026-05-16T16:51:59.4312828Z
+    Changed:     2026-05-16T16:51:59.4312828Z
+    Accessed:    2026-05-16T16:51:59.4312828Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_kilo_sync_474043.csv
-    Created:     2026-05-16 16:52:00 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:00.3855654Z
+    Modified:    2026-05-16T16:52:00.3855654Z
+    Changed:     2026-05-16T16:52:00.3855654Z
+    Accessed:    2026-05-16T16:52:00.3855654Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_lima_config_611703.json
-    Created:     2026-05-16 16:51:59 UTC
-    Modified:    2026-05-16 16:51:59 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:59.9461751Z
+    Modified:    2026-05-16T16:51:59.9471811Z
+    Changed:     2026-05-16T16:51:59.9471811Z
+    Accessed:    2026-05-16T16:51:59.9471811Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_log_mike_997799.bin
-    Created:     2026-05-16 16:52:00 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:00.6433431Z
+    Modified:    2026-05-16T16:52:00.6443431Z
+    Changed:     2026-05-16T16:52:00.6443431Z
+    Accessed:    2026-05-16T16:52:00.6443431Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_output_temp_864816.txt
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.6755289Z
+    Modified:    2026-05-16T16:52:01.6755289Z
+    Changed:     2026-05-16T16:52:01.6755289Z
+    Accessed:    2026-05-16T16:52:01.6755289Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_record_cache_584285.json
-    Created:     2026-05-16 16:51:59 UTC
-    Modified:    2026-05-16 16:51:59 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:59.3800564Z
+    Modified:    2026-05-16T16:51:59.3800564Z
+    Changed:     2026-05-16T16:52:02.1607973Z
+    Accessed:    2026-05-16T16:51:59.3800564Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_sierra_record_710410.bin
-    Created:     2026-05-16 16:51:57 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:57.9213691Z
+    Modified:    2026-05-16T16:52:00.1454009Z
+    Changed:     2026-05-16T16:52:00.1454009Z
+    Accessed:    2026-05-16T16:52:00.1454009Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_temp_foxtrot_475776.md
-    Created:     2025-04-08 07:17:35 UTC
-    Modified:    2025-04-08 07:17:35 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2025-04-08T07:17:35.0852677Z
+    Modified:    2025-04-08T07:17:35.0852677Z
+    Changed:     2026-05-16T16:52:02.7422236Z
+    Accessed:    2025-04-08T07:17:35.0852677Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_trace_report_848037.cfg
-    Created:     2026-05-16 16:52:00 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:00.4039970Z
+    Modified:    2026-05-16T16:52:01.6915908Z
+    Changed:     2026-05-16T16:52:01.6915908Z
+    Accessed:    2026-05-16T16:52:01.6915908Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_victor_sync_949138.bak
-    Created:     2026-05-16 16:51:51 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:51.4701166Z
+    Modified:    2026-05-16T16:52:01.8580765Z
+    Changed:     2026-05-16T16:52:01.8580765Z
+    Accessed:    2026-05-16T16:52:01.8580765Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_zulu_hotel_356824.dat
-    Created:     2026-05-16 16:51:59 UTC
-    Modified:    2026-05-16 16:51:57 UTC
-    Changed:     2026-05-16 16:51:57 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:59.1560821Z
+    Modified:    2026-05-16T16:51:57.2486875Z
+    Changed:     2026-05-16T16:51:57.2486875Z
+    Accessed:    2026-05-16T16:51:59.1757248Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_zulu_sync_665668.bin
-    Created:     2026-05-16 16:52:02 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:02.9366825Z
+    Modified:    2026-05-16T16:52:02.9366825Z
+    Changed:     2026-05-16T16:52:02.9366825Z
+    Accessed:    2026-05-16T16:52:02.9366825Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   DIR  test/elvis_dir_record_449015/elvis_dir_tango_434284
-    Created:     2026-05-16 16:52:02 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:52:02.1638087Z
+    Modified:    2026-05-16T16:52:02.7727925Z
+    Changed:     2026-05-16T16:52:02.7727925Z
+    Accessed:    2026-05-16T16:52:03.1329861Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   DIR  test/elvis_dir_record_449015/elvis_dir_tango_434284/elvis_dir_record_864004
-    Created:     2026-05-16 16:52:02 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:52:02.7727925Z
+    Modified:    2026-05-16T16:52:02.7727925Z
+    Changed:     2026-05-16T16:52:02.7727925Z
+    Accessed:    2026-05-16T16:52:02.7727925Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   FILE test/elvis_dir_record_449015/elvis_dir_tango_434284/xbpt_data_config_437965.csv
-    Created:     2026-05-16 16:52:02 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:02.6454234Z
+    Modified:    2026-05-16T16:52:02.7277895Z
+    Changed:     2026-05-16T16:52:02.7277895Z
+    Accessed:    2026-05-16T16:52:02.7277895Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/xbpt_alpha_echo_381900.ini
-    Created:     2026-05-16 16:52:00 UTC
-    Modified:    2026-05-16 16:51:59 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:00.3495026Z
+    Modified:    2026-05-16T16:51:59.8149144Z
+    Changed:     2026-05-16T16:51:59.8149144Z
+    Accessed:    2026-05-16T16:52:00.3601999Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/xbpt_archive_audit_104959.tmp
-    Created:     2026-05-16 16:51:52 UTC
-    Modified:    2026-05-16 16:51:57 UTC
-    Changed:     2026-05-16 16:51:57 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:52.9208825Z
+    Modified:    2026-05-16T16:51:57.0308970Z
+    Changed:     2026-05-16T16:51:57.0308970Z
+    Accessed:    2026-05-16T16:51:57.0308970Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/elvis_dir_record_449015/xbpt_backup_delta_809262.csv
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.2805423Z
+    Modified:    2026-05-16T16:52:02.6598305Z
+    Changed:     2026-05-16T16:52:02.6598305Z
+    Accessed:    2026-05-16T16:52:02.6598305Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/elvis_dir_record_449015/xbpt_beta_mike_393018.xml
-    Created:     2026-05-16 16:51:59 UTC
-    Modified:    2026-05-16 16:51:59 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:59.5177288Z
+    Modified:    2026-05-16T16:51:59.5177288Z
+    Changed:     2026-05-16T16:51:59.5177288Z
+    Accessed:    2026-05-16T16:51:59.5177288Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/xbpt_config_uniform_831195.csv
-    Created:     2026-05-16 16:51:59 UTC
-    Modified:    2026-05-16 16:51:59 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:59.8219172Z
+    Modified:    2026-05-16T16:51:59.8219172Z
+    Changed:     2026-05-16T16:51:59.8219172Z
+    Accessed:    2026-05-16T16:51:59.8219172Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/xbpt_delta_log_356379.tmp
-    Created:     2026-05-16 16:51:54 UTC
-    Modified:    2026-05-16 16:51:54 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:54.7696031Z
+    Modified:    2026-05-16T16:51:54.3923619Z
+    Changed:     2026-05-16T16:52:01.3791349Z
+    Accessed:    2026-05-16T16:51:54.7705950Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/elvis_dir_record_449015/xbpt_foxtrot_lima_318386.tmp
-    Created:     2026-05-16 16:52:02 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:02.3768222Z
+    Modified:    2026-05-16T16:52:00.0025463Z
+    Changed:     2026-05-16T16:52:00.0025463Z
+    Accessed:    2026-05-16T16:52:02.3798237Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/xbpt_gamma_archive_952302.cfg
-    Created:     2026-05-16 16:51:58 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:58.5912340Z
+    Modified:    2026-05-16T16:52:02.8950717Z
+    Changed:     2026-05-16T16:52:02.8950717Z
+    Accessed:    2026-05-16T16:52:02.8950717Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/xbpt_india_delta_132534.bak
-    Created:     2026-05-16 16:51:54 UTC
-    Modified:    2026-05-16 16:51:54 UTC
-    Changed:     2026-05-16 16:51:54 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:54.5068098Z
+    Modified:    2026-05-16T16:51:54.5078113Z
+    Changed:     2026-05-16T16:51:54.5078113Z
+    Accessed:    2026-05-16T16:51:54.5078113Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/xbpt_kilo_papa_445436.xml
-    Created:     2026-05-16 16:52:00 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:00.7055046Z
+    Modified:    2026-05-16T16:52:00.7066055Z
+    Changed:     2026-05-16T16:52:00.7066055Z
+    Accessed:    2026-05-16T16:52:00.7066055Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/xbpt_large_14mb_foxtrot_773062.bak
-    Created:     2026-05-16 16:52:03 UTC
-    Modified:    2026-05-16 16:52:03 UTC
-    Changed:     2026-05-16 16:52:03 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:03.0519904Z
+    Modified:    2026-05-16T16:52:03.0519904Z
+    Changed:     2026-05-16T16:52:03.0519904Z
+    Accessed:    2026-05-16T16:52:03.0519904Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/xbpt_log_india_171227.csv
-    Created:     2026-05-16 16:51:52 UTC
-    Modified:    2026-05-16 16:51:59 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:52.2042216Z
+    Modified:    2026-05-16T16:51:59.7725297Z
+    Changed:     2026-05-16T16:51:59.7725297Z
+    Accessed:    2026-05-16T16:51:59.7725297Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_record_449015/xbpt_mike_trace_772216.dat
-    Created:     2026-05-16 16:51:57 UTC
-    Modified:    2026-05-16 16:51:57 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:57.3636750Z
+    Modified:    2026-05-16T16:51:57.3647090Z
+    Changed:     2026-05-16T16:52:01.6705304Z
+    Accessed:    2026-05-16T16:51:57.3647090Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/xbpt_november_quebec_231876.bak
-    Created:     2026-05-16 16:51:57 UTC
-    Modified:    2026-05-16 16:51:57 UTC
-    Changed:     2026-05-16 16:51:57 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:57.9556112Z
+    Modified:    2026-05-16T16:51:57.9556112Z
+    Changed:     2026-05-16T16:51:57.9556112Z
+    Accessed:    2026-05-16T16:51:57.9556112Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/xbpt_oscar_victor_509674.md
-    Created:     2026-05-16 16:51:58 UTC
-    Modified:    2026-05-16 16:51:58 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:58.4085093Z
+    Modified:    2026-05-16T16:51:58.4085093Z
+    Changed:     2026-05-16T16:51:59.2530418Z
+    Accessed:    2026-05-16T16:51:58.4085093Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/xbpt_output_papa_412411.log
-    Created:     2022-06-11 07:16:28 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2022-06-11T07:16:28.0969336Z
+    Modified:    2026-05-16T16:52:00.4199228Z
+    Changed:     2026-05-16T16:52:00.4199228Z
+    Accessed:    2026-05-16T16:52:00.4199228Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/xbpt_sierra_kilo_206137.json
-    Created:     2026-05-16 16:51:54 UTC
-    Modified:    2026-05-16 16:51:52 UTC
-    Changed:     2026-05-16 16:51:52 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:54.5849483Z
+    Modified:    2026-05-16T16:51:52.5660370Z
+    Changed:     2026-05-16T16:51:52.5660370Z
+    Accessed:    2026-05-16T16:51:54.6240842Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/xbpt_sierra_victor_685719.xml
-    Created:     2026-05-16 16:51:56 UTC
-    Modified:    2026-05-16 16:51:55 UTC
-    Changed:     2026-05-16 16:51:55 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:56.0941953Z
+    Modified:    2026-05-16T16:51:55.4288843Z
+    Changed:     2026-05-16T16:51:55.5187127Z
+    Accessed:    2026-05-16T16:51:56.0952000Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/xbpt_uniform_record_153192.json
-    Created:     2026-05-16 16:51:56 UTC
-    Modified:    2026-05-16 16:51:56 UTC
-    Changed:     2026-05-16 16:51:56 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:56.3290612Z
+    Modified:    2026-05-16T16:51:56.3300694Z
+    Changed:     2026-05-16T16:51:56.3300694Z
+    Accessed:    2026-05-16T16:51:56.3300694Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_record_449015/xbpt_whiskey_sync_681180.xml
-    Created:     2026-05-16 16:51:57 UTC
-    Modified:    2026-05-16 16:51:57 UTC
-    Changed:     2026-05-16 16:51:57 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:57.7708135Z
+    Modified:    2026-05-16T16:51:57.7708135Z
+    Changed:     2026-05-16T16:51:57.7708135Z
+    Accessed:    2026-05-16T16:51:57.7708135Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   DIR  test/elvis_dir_victor_783323
-    Created:     2026-05-16 16:51:54 UTC
-    Modified:    2026-05-16 16:52:03 UTC
-    Changed:     2026-05-16 16:52:03 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:51:54.1156346Z
+    Modified:    2026-05-16T16:52:03.0204119Z
+    Changed:     2026-05-16T16:52:03.0204119Z
+    Accessed:    2026-05-16T16:52:03.1384598Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   FILE test/elvis_dir_victor_783323/xbpt_audit_november_550810.ini
-    Created:     2026-05-16 16:51:54 UTC
-    Modified:    2026-05-16 16:51:55 UTC
-    Changed:     2026-05-16 16:51:57 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:54.2559796Z
+    Modified:    2026-05-16T16:51:55.8112081Z
+    Changed:     2026-05-16T16:51:57.2249250Z
+    Accessed:    2026-05-16T16:51:55.8112081Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/elvis_dir_victor_783323/xbpt_cache_alpha_953426.ini
-    Created:     2026-05-16 16:52:00 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:00.0949161Z
+    Modified:    2026-05-16T16:52:00.0959080Z
+    Changed:     2026-05-16T16:52:00.0959080Z
+    Accessed:    2026-05-16T16:52:00.0959080Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_victor_783323/xbpt_cache_quebec_319176.xml
-    Created:     2026-05-16 16:52:02 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:02.2780007Z
+    Modified:    2026-05-16T16:52:02.2789928Z
+    Changed:     2026-05-16T16:52:02.2789928Z
+    Accessed:    2026-05-16T16:52:02.2789928Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_victor_783323/xbpt_data_romeo_946788.bin
-    Created:     2026-05-16 16:51:56 UTC
-    Modified:    2026-05-16 16:51:56 UTC
-    Changed:     2026-05-16 16:51:56 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:56.4249334Z
+    Modified:    2026-05-16T16:51:56.4259340Z
+    Changed:     2026-05-16T16:51:56.4259340Z
+    Accessed:    2026-05-16T16:51:56.4259340Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_victor_783323/xbpt_delta_echo_626074.json
-    Created:     2025-04-19 07:17:09 UTC
-    Modified:    2025-04-19 07:17:09 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2025-04-19T07:17:09.2149813Z
+    Modified:    2025-04-19T07:17:09.2149813Z
+    Changed:     2026-05-16T16:52:00.7695808Z
+    Accessed:    2025-04-19T07:17:09.2149813Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_victor_783323/xbpt_draft_november_935526.json
-    Created:     2026-05-16 16:51:59 UTC
-    Modified:    2026-05-16 16:51:59 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:59.8662841Z
+    Modified:    2026-05-16T16:51:59.8672919Z
+    Changed:     2026-05-16T16:51:59.8672919Z
+    Accessed:    2026-05-16T16:51:59.8672919Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_victor_783323/xbpt_hotel_yankee_684408.cfg
-    Created:     2026-05-16 16:51:54 UTC
-    Modified:    2026-05-16 16:51:54 UTC
-    Changed:     2026-05-16 16:51:57 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:54.8529974Z
+    Modified:    2026-05-16T16:51:54.8200316Z
+    Changed:     2026-05-16T16:51:57.3586674Z
+    Accessed:    2026-05-16T16:51:54.8539895Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_victor_783323/xbpt_india_quebec_883273.bak
-    Created:     2026-05-16 16:51:55 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:55.9062467Z
+    Modified:    2026-05-16T16:52:02.1414505Z
+    Changed:     2026-05-16T16:52:02.1414505Z
+    Accessed:    2026-05-16T16:52:02.1414505Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_victor_783323/xbpt_large_149mb_alpha_610845.dat
-    Created:     2026-05-16 16:52:03 UTC
-    Modified:    2026-05-16 16:52:03 UTC
-    Changed:     2026-05-16 16:52:03 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:03.0194083Z
+    Modified:    2026-05-16T16:52:03.0204119Z
+    Changed:     2026-05-16T16:52:03.0204119Z
+    Accessed:    2026-05-16T16:52:03.0204119Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_victor_783323/xbpt_november_quebec_999278.md
-    Created:     2026-05-16 16:52:02 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:02.4452664Z
+    Modified:    2026-05-16T16:52:02.4452664Z
+    Changed:     2026-05-16T16:52:02.4452664Z
+    Accessed:    2026-05-16T16:52:02.4452664Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_victor_783323/xbpt_oscar_delta_192166.ini
-    Created:     2026-05-16 16:51:59 UTC
-    Modified:    2026-05-16 16:51:59 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:59.9925932Z
+    Modified:    2026-05-16T16:51:59.9925932Z
+    Changed:     2026-05-16T16:51:59.9925932Z
+    Accessed:    2026-05-16T16:51:59.9925932Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_victor_783323/xbpt_quebec_echo_201709.md
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.0403185Z
+    Modified:    2026-05-16T16:52:01.0413262Z
+    Changed:     2026-05-16T16:52:01.0413262Z
+    Accessed:    2026-05-16T16:52:01.0413262Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_victor_783323/xbpt_record_mike_276675.tmp
-    Created:     2025-12-01 07:17:11 UTC
-    Modified:    2025-12-01 07:17:11 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2025-12-01T07:17:11.3472066Z
+    Modified:    2025-12-01T07:17:11.3472066Z
+    Changed:     2026-05-16T16:52:00.9248413Z
+    Accessed:    2025-12-01T07:17:11.3472066Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_victor_783323/xbpt_report_quebec_867569.md
-    Created:     2025-05-12 07:17:04 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2025-05-12T07:17:04.3504532Z
+    Modified:    2026-05-16T16:52:02.8733266Z
+    Changed:     2026-05-16T16:52:02.8733266Z
+    Accessed:    2026-05-16T16:52:02.8733266Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_victor_783323/xbpt_romeo_quebec_189040.ini
-    Created:     2026-05-16 16:51:58 UTC
-    Modified:    2026-05-16 16:51:58 UTC
-    Changed:     2026-05-16 16:51:58 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:58.9456073Z
+    Modified:    2026-05-16T16:51:58.9456073Z
+    Changed:     2026-05-16T16:51:58.9456073Z
+    Accessed:    2026-05-16T16:51:58.9456073Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_victor_783323/xbpt_romeo_yankee_383561.cfg
-    Created:     2022-05-31 07:17:29 UTC
-    Modified:    2022-05-31 07:17:29 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2022-05-31T07:17:29.8718970Z
+    Modified:    2022-05-31T07:17:29.8718970Z
+    Changed:     2026-05-16T16:52:02.3262148Z
+    Accessed:    2022-05-31T07:17:29.8718970Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/elvis_dir_victor_783323/xbpt_sierra_echo_709659.md
-    Created:     2026-05-16 16:52:02 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:02.0359910Z
+    Modified:    2026-05-16T16:52:02.0369685Z
+    Changed:     2026-05-16T16:52:02.0369685Z
+    Accessed:    2026-05-16T16:52:02.0369685Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_victor_783323/xbpt_sierra_gamma_615567.ini
-    Created:     2026-05-16 16:52:01 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:01.5782439Z
+    Modified:    2026-05-16T16:52:01.5782439Z
+    Changed:     2026-05-16T16:52:01.5782439Z
+    Accessed:    2026-05-16T16:52:01.5782439Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_victor_783323/xbpt_trace_cache_289808.json
-    Created:     2026-05-16 16:51:59 UTC
-    Modified:    2026-05-16 16:51:59 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:59.8013898Z
+    Modified:    2026-05-16T16:51:59.8013898Z
+    Changed:     2026-05-16T16:52:02.7687941Z
+    Accessed:    2026-05-16T16:51:59.8013898Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/elvis_dir_victor_783323/xbpt_trace_config_794136.tmp
-    Created:     2021-10-04 07:16:49 UTC
-    Modified:    2021-10-04 07:16:49 UTC
-    Changed:     2026-05-16 16:51:58 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2021-10-04T07:16:49.6636174Z
+    Modified:    2021-10-04T07:16:49.6636174Z
+    Changed:     2026-05-16T16:51:58.6116614Z
+    Accessed:    2021-10-04T07:16:49.6636174Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/elvis_dir_victor_783323/xbpt_trace_hotel_502150.xml
-    Created:     2026-05-16 16:51:59 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:59.2635473Z
+    Modified:    2026-05-16T16:52:01.7811358Z
+    Changed:     2026-05-16T16:52:01.7811358Z
+    Accessed:    2026-05-16T16:52:01.7811358Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/elvis_dir_victor_783323/xbpt_yankee_output_781405.csv
-    Created:     2025-09-04 07:16:57 UTC
-    Modified:    2025-09-04 07:16:57 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2025-09-04T07:16:57.5507155Z
+    Modified:    2025-09-04T07:16:57.5507155Z
+    Changed:     2026-05-16T16:51:59.4123857Z
+    Accessed:    2025-09-04T07:16:57.5507155Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/xbpt_archive_romeo_596174.txt
-    Created:     2026-05-16 16:51:53 UTC
-    Modified:    2026-05-16 16:51:53 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:53.3022221Z
+    Modified:    2026-05-16T16:51:53.8049163Z
+    Changed:     2026-05-16T16:52:00.0856457Z
+    Accessed:    2026-05-16T16:51:53.8049163Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/xbpt_beta_sierra_570651.json
-    Created:     2026-05-16 16:51:59 UTC
-    Modified:    2026-05-16 16:51:59 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:59.9136868Z
+    Modified:    2026-05-16T16:51:59.9136868Z
+    Changed:     2026-05-16T16:51:59.9136868Z
+    Accessed:    2026-05-16T16:51:59.9136868Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/xbpt_config_hotel_558589.txt
-    Created:     2026-05-16 16:51:54 UTC
-    Modified:    2026-05-16 16:51:54 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:54.0814510Z
+    Modified:    2026-05-16T16:51:54.0814510Z
+    Changed:     2026-05-16T16:52:01.3511836Z
+    Accessed:    2026-05-16T16:51:54.0814510Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/xbpt_config_log_714507.md
-    Created:     2026-05-16 16:51:57 UTC
-    Modified:    2026-05-16 16:51:58 UTC
-    Changed:     2026-05-16 16:51:58 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:57.0693545Z
+    Modified:    2026-05-16T16:51:58.5615503Z
+    Changed:     2026-05-16T16:51:58.5615503Z
+    Accessed:    2026-05-16T16:51:58.5615503Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/xbpt_config_log_982725.bin
-    Created:     2021-10-15 07:17:19 UTC
-    Modified:    2021-10-15 07:17:19 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2021-10-15T07:17:19.9400574Z
+    Modified:    2021-10-15T07:17:19.9400574Z
+    Changed:     2026-05-16T16:52:01.4625705Z
+    Accessed:    2021-10-15T07:17:19.9400574Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/xbpt_draft_tango_958869.bin
-    Created:     2026-05-16 16:51:57 UTC
-    Modified:    2026-05-16 16:51:57 UTC
-    Changed:     2026-05-16 16:51:57 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:57.0523357Z
+    Modified:    2026-05-16T16:51:57.0523357Z
+    Changed:     2026-05-16T16:51:57.0523357Z
+    Accessed:    2026-05-16T16:51:57.0523357Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/xbpt_foxtrot_config_966558.log
-    Created:     2025-11-05 07:16:31 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2025-11-05T07:16:31.4941888Z
+    Modified:    2026-05-16T16:52:02.5494635Z
+    Changed:     2026-05-16T16:52:02.5494635Z
+    Accessed:    2026-05-16T16:52:02.5494635Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/xbpt_gamma_temp_372257.bak
-    Created:     2026-05-16 16:51:56 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:56.8833625Z
+    Modified:    2026-05-16T16:52:01.3145493Z
+    Changed:     2026-05-16T16:52:01.3145493Z
+    Accessed:    2026-05-16T16:52:01.3145493Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/xbpt_index_india_423224.csv
-    Created:     2025-06-06 07:17:11 UTC
-    Modified:    2025-06-06 07:17:11 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2025-06-06T07:17:11.5639166Z
+    Modified:    2025-06-06T07:17:11.5639166Z
+    Changed:     2026-05-16T16:52:00.9452340Z
+    Accessed:    2025-06-06T07:17:11.5639166Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/xbpt_india_papa_801739.json
-    Created:     2025-08-11 07:17:32 UTC
-    Modified:    2025-08-11 07:17:32 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2025-08-11T07:17:32.2206252Z
+    Modified:    2025-08-11T07:17:32.2206252Z
+    Changed:     2026-05-16T16:52:02.5281013Z
+    Accessed:    2025-08-11T07:17:32.2206252Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/xbpt_india_temp_831504.csv
-    Created:     2024-04-02 07:16:32 UTC
-    Modified:    2024-04-02 07:16:32 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2024-04-02T07:16:32.8669648Z
+    Modified:    2024-04-02T07:16:32.8669648Z
+    Changed:     2026-05-16T16:51:59.2490424Z
+    Accessed:    2024-04-02T07:16:32.8669648Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/xbpt_india_trace_307426.json
-    Created:     2026-05-16 16:51:56 UTC
-    Modified:    2026-05-16 16:51:56 UTC
-    Changed:     2026-05-16 16:51:56 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:56.5505414Z
+    Modified:    2026-05-16T16:51:56.5515634Z
+    Changed:     2026-05-16T16:51:56.5515634Z
+    Accessed:    2026-05-16T16:51:56.5515634Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/xbpt_large_99mb_report_414178.tmp
-    Created:     2026-05-16 16:52:03 UTC
-    Modified:    2026-05-16 16:52:03 UTC
-    Changed:     2026-05-16 16:52:03 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:03.0244081Z
+    Modified:    2026-05-16T16:52:03.0276249Z
+    Changed:     2026-05-16T16:52:03.0276249Z
+    Accessed:    2026-05-16T16:52:03.0276249Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/xbpt_log_november_496320.csv
-    Created:     2026-05-16 16:51:59 UTC
-    Modified:    2026-05-16 16:51:58 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:59.6650177Z
+    Modified:    2026-05-16T16:51:58.7259186Z
+    Changed:     2026-05-16T16:52:02.3670307Z
+    Accessed:    2026-05-16T16:51:59.7014863Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/xbpt_marked_eveliselaurence_670394.txt
-    Created:     2026-05-16 16:52:02 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    IntFlags:     (0x8)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:02.9771372Z
+    Modified:    2026-05-16T16:52:02.9771372Z
+    Changed:     2026-05-16T16:52:02.9771372Z
+    Accessed:    2026-05-16T16:52:02.9771372Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x8 (DataInRecord)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     inline (record embedded, 488 bytes)
 
   FILE test/xbpt_sierra_sync_956584.ini
-    Created:     2026-05-16 16:51:54 UTC
-    Modified:    2026-05-16 16:52:02 UTC
-    Changed:     2026-05-16 16:52:02 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:54.6866429Z
+    Modified:    2026-05-16T16:52:02.9057501Z
+    Changed:     2026-05-16T16:52:02.9057501Z
+    Accessed:    2026-05-16T16:52:02.9057501Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/xbpt_symlink_hotel_632659.lnk
-    Created:     2026-05-16 16:51:57 UTC
-    Modified:    2026-05-16 16:51:57 UTC
-    Changed:     2026-05-16 16:51:57 UTC
-    Attributes:  Archive | ReparsePoint (0x420)
-    IntFlags:    RedirectionTrust (0x28)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:57.2650810Z
+    Modified:    2026-05-16T16:51:57.2650810Z
+    Changed:     2026-05-16T16:51:57.2660836Z
+    Accessed:    2026-05-16T16:51:57.2650810Z
+    Attributes:  0x420 (Archive|ReparsePoint)
+    IntFlags:    0x28 (DataInRecord|RedirectionTrust)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     inline (record embedded, 896 bytes)
     *** REPARSE POINT (symlink/WSL special file) ***
 
   FILE test/xbpt_symlink_output_831744.lnk
-    Created:     2026-05-16 16:52:00 UTC
-    Modified:    2026-05-16 16:52:00 UTC
-    Changed:     2026-05-16 16:52:00 UTC
-    Attributes:  Archive | ReparsePoint (0x420)
-    IntFlags:    RedirectionTrust (0x28)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:52:00.4309201Z
+    Modified:    2026-05-16T16:52:00.4309201Z
+    Changed:     2026-05-16T16:52:00.4309201Z
+    Accessed:    2026-05-16T16:52:00.4309201Z
+    Attributes:  0x420 (Archive|ReparsePoint)
+    IntFlags:    0x28 (DataInRecord|RedirectionTrust)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     inline (record embedded, 536 bytes)
     *** REPARSE POINT (symlink/WSL special file) ***
 
   FILE test/xbpt_sync_zulu_911953.ini
-    Created:     2026-05-16 16:51:51 UTC
-    Modified:    2026-05-16 16:51:52 UTC
-    Changed:     2026-05-16 16:51:57 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:51.4375721Z
+    Modified:    2026-05-16T16:51:52.8886023Z
+    Changed:     2026-05-16T16:51:57.7217531Z
+    Accessed:    2026-05-16T16:51:52.8886023Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/xbpt_tango_archive_828215.dat
-    Created:     2026-05-16 16:51:52 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:52.2447297Z
+    Modified:    2026-05-16T16:52:01.4090604Z
+    Changed:     2026-05-16T16:52:01.4090604Z
+    Accessed:    2026-05-16T16:52:01.4090604Z
+    ADS:         hidden_1514 (inline)
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 832 bytes)
 
   FILE test/xbpt_tango_foxtrot_898933.txt
-    Created:     2026-05-16 16:51:57 UTC
-    Modified:    2026-05-16 16:51:58 UTC
-    Changed:     2026-05-16 16:51:59 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:57.5336808Z
+    Modified:    2026-05-16T16:51:58.1255038Z
+    Changed:     2026-05-16T16:51:59.7937278Z
+    Accessed:    2026-05-16T16:51:58.1255038Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record split)
 
   FILE test/xbpt_uniform_victor_168724.txt
-    Created:     2026-05-16 16:51:57 UTC
-    Modified:    2026-05-16 16:51:53 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:57.1970235Z
+    Modified:    2026-05-16T16:51:53.8049163Z
+    Changed:     2026-05-16T16:52:01.2895433Z
+    Accessed:    2026-05-16T16:51:57.2199181Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 688 bytes)
 
   FILE test/xbpt_victor_lima_251467.cfg
-    Created:     2026-05-16 16:51:51 UTC
-    Modified:    2026-05-16 16:51:57 UTC
-    Changed:     2026-05-16 16:51:57 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:51.9292604Z
+    Modified:    2026-05-16T16:51:57.6640313Z
+    Changed:     2026-05-16T16:51:57.6640313Z
+    Accessed:    2026-05-16T16:51:57.6640313Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 656 bytes)
 
   FILE test/xbpt_yankee_audit_433793.xml
-    Created:     2022-02-12 07:16:16 UTC
-    Modified:    2022-02-12 07:16:16 UTC
-    Changed:     2026-05-16 16:51:55 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2022-02-12T07:16:16.9171874Z
+    Modified:    2022-02-12T07:16:16.9171874Z
+    Changed:     2026-05-16T16:51:55.4558919Z
+    Accessed:    2022-02-12T07:16:16.9171874Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   FILE test/xbpt_zulu_hotel_479124.bin
-    Created:     2026-05-16 16:51:59 UTC
-    Modified:    2026-05-16 16:52:01 UTC
-    Changed:     2026-05-16 16:52:01 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:51:59.4073810Z
+    Modified:    2026-05-16T16:52:01.7725894Z
+    Changed:     2026-05-16T16:52:01.7725894Z
+    Accessed:    2026-05-16T16:52:01.7725894Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 616 bytes)
 
   DIR  testsnapshots
-    Created:     2026-05-16 16:54:44 UTC
-    Modified:    2026-05-16 17:34:52 UTC
-    Changed:     2026-05-16 17:34:52 UTC
-    Attributes:  Directory_Internal (0x10000000)
-    SecurityId:  0x120005b20
+    Created:     2026-05-16T16:54:44.1294125Z
+    Modified:    2026-05-16T17:34:52.0564658Z
+    Changed:     2026-05-16T17:34:52.0564658Z
+    Accessed:    2026-05-16T17:34:52.1094005Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   FILE testsnapshots/arg.txt
-    Created:     2026-05-16 16:55:20 UTC
-    Modified:    2026-05-16 17:12:30 UTC
-    Changed:     2026-05-16 17:12:30 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T16:55:20.9805996Z
+    Modified:    2026-05-16T17:12:30.7302294Z
+    Changed:     2026-05-16T17:12:30.7302294Z
+    Accessed:    2026-05-16T17:12:30.7302294Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 1096 bytes)
     *** STREAM SNAPSHOTS (large embedded data: 1096 bytes) ***
 
   FILE testsnapshots/arg.txt.bak.20260516191516
-    Created:     2026-05-16 17:15:16 UTC
-    Modified:    2026-05-16 17:12:30 UTC
-    Changed:     2026-05-16 17:12:30 UTC
-    Attributes:  Archive (0x20)
-    IntFlags:     (0x8)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T17:15:16.8401019Z
+    Modified:    2026-05-16T17:12:30.7302294Z
+    Changed:     2026-05-16T17:12:30.7302294Z
+    Accessed:    2026-05-16T17:15:16.8421183Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x8 (DataInRecord)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     inline (record embedded, 328 bytes)
 
   FILE testsnapshots/arg.txt.bak.20260516191620
-    Created:     2026-05-16 17:16:20 UTC
-    Modified:    2026-05-16 17:12:30 UTC
-    Changed:     2026-05-16 17:12:30 UTC
-    Attributes:  Archive (0x20)
-    IntFlags:     (0x8)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T17:16:20.0287089Z
+    Modified:    2026-05-16T17:12:30.7302294Z
+    Changed:     2026-05-16T17:12:30.7302294Z
+    Accessed:    2026-05-16T17:16:20.0307297Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x8 (DataInRecord)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     inline (record embedded, 328 bytes)
 
   FILE testsnapshots/lasttest.txt
-    Created:     2026-05-16 17:34:52 UTC
-    Modified:    2026-05-16 17:35:57 UTC
-    Changed:     2026-05-16 17:35:57 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T17:34:52.0564658Z
+    Modified:    2026-05-16T17:35:57.4899352Z
+    Changed:     2026-05-16T17:35:57.4899352Z
+    Accessed:    2026-05-16T17:35:57.4899352Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     snapshot-shared (record embedded, 1600 bytes)
     *** STREAM SNAPSHOTS (large embedded data: 1600 bytes) ***
 
   FILE testsnapshots/test.txt
-    Created:     2026-05-16 17:16:47 UTC
-    Modified:    2026-05-16 17:19:37 UTC
-    Changed:     2026-05-16 17:19:37 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T17:16:47.9281343Z
+    Modified:    2026-05-16T17:19:37.0883235Z
+    Changed:     2026-05-16T17:19:37.0883235Z
+    Accessed:    2026-05-16T17:19:37.0883235Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     snapshot-shared (record embedded, 2520 bytes)
     *** STREAM SNAPSHOTS (large embedded data: 2520 bytes) ***
 
   FILE testsnapshots/testads.txt
-    Created:     2026-05-16 17:26:23 UTC
-    Modified:    2026-05-16 17:27:58 UTC
-    Changed:     2026-05-16 17:27:58 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T17:26:23.9789438Z
+    Modified:    2026-05-16T17:27:58.0956492Z
+    Changed:     2026-05-16T17:27:58.0956492Z
+    Accessed:    2026-05-16T17:27:58.0956492Z
+    ADS:         adstest (extents)
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     snapshot-shared (record embedded, 1768 bytes)
     *** STREAM SNAPSHOTS (large embedded data: 1768 bytes) ***
 
   FILE testsnapshots/testxyz.txt
-    Created:     2026-05-16 17:21:14 UTC
-    Modified:    2026-05-16 17:19:37 UTC
-    Changed:     2026-05-16 17:19:37 UTC
-    Attributes:  Archive (0x20)
-    IntFlags:     (0x8)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T17:21:14.8910907Z
+    Modified:    2026-05-16T17:19:37.0883235Z
+    Changed:     2026-05-16T17:19:37.0883235Z
+    Accessed:    2026-05-16T17:21:14.8938717Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x8 (DataInRecord)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     inline (record embedded, 320 bytes)
 
   FILE testsnapshots/xbpt_beta_sierra_570651.json
-    Created:     2026-05-16 17:30:57 UTC
-    Modified:    2026-05-16 17:34:32 UTC
-    Changed:     2026-05-16 17:34:32 UTC
-    Attributes:  Archive (0x20)
-    SecurityId:  0x1348ee884
+    Created:     2026-05-16T17:30:57.2925347Z
+    Modified:    2026-05-16T17:34:32.1649542Z
+    Changed:     2026-05-16T17:34:32.1649542Z
+    Accessed:    2026-05-16T17:34:32.1649542Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1348ee884 (5176748164)
     Storage:     extents (record embedded, 1888 bytes)
     *** STREAM SNAPSHOTS (large embedded data: 1888 bytes) ***
 

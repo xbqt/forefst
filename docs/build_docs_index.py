@@ -32,7 +32,7 @@ CONTENT_DIRS = []
 # All content dirs (attributes/, structures/, concepts/, tools/) have HAND-WRITTEN forensic-reference READMEs (not auto-generated); KNOWLEDGE_MAP still indexes them.
 # Keep CONTENT_DIRS EMPTY: those READMEs are prose. As a hard guard, the write loop in main() refuses to overwrite
 # any README lacking the auto-generated HEAD_NOTE marker, so re-adding a dir here can never clobber a prose README.
-MAP_ONLY_DIRS = ["attributes", "structures", "concepts", "tools", "examples"]
+MAP_ONLY_DIRS = ["attributes", "structures", "concepts", "tools", "examples", "methodology"]
 BOLD_PREAMBLE_RE = re.compile(r"^\*\*[^*]+:")   # a '**Key:** value' metadata preamble line
 # a '**Key:** value' line whose value IS the summary (prose), not a metadata field
 SUMMARY_LABEL_RE = re.compile(r"^\*\*(?:Description|Purpose|Summary|Overview):\*\*\s*(.+)$")
@@ -147,7 +147,7 @@ def gen_readme(d, plist, meta):
         lines += ["| Page | Summary |", "|------|---------|"]
         for p in plist:
             lines.append(f"| {_link(p)} | {p['summary'] or '—'} |")
-    lines += ["", "See also: [Knowledge Map](../KNOWLEDGE_MAP.md) · [root index](../README.md) · [how this was verified](../methodology.md) · [conventions](../CONTRIBUTING.md)", ""]
+    lines += ["", "See also: [Knowledge Map](../KNOWLEDGE_MAP.md) · [root index](../README.md) · [how this was verified](../methodology.md)", ""]
     return "\n".join(lines)
 
 ALPHA_ID = _re.compile(r"\b(?:GN|FS|CT|MD|FN|AP)_[A-Z0-9]+(?:_[A-Z0-9]+)*_\d{3}\b")
@@ -277,6 +277,7 @@ def gen_knowledge_map(pages):
 
     # ---- section 3: the triage list ---------------------------------------------------------
     uncited = [f for f in tiers if f not in by_finding]
+    triage = load_triage()
     scanned = "/, ".join(CONTENT_DIRS + MAP_ONLY_DIRS) + "/"
     lines += ["## 3. Register rows no page cites", "",
               f"The triage list: **{len(uncited)} of {len(tiers)}** register rows are cited by no page in",
@@ -286,10 +287,11 @@ def gen_knowledge_map(pages):
               "- **undocumented** — reader-facing knowledge with no page, so a page (or a paragraph) is owed;",
               "- **duplicate** — the same fact as a cited row, to be merged into it.", "",
               "Rows read in register order. A mention in `changelog.md` does not count as documentation.", "",
-              "| Finding | Static | Disk |", "|---------|--------|------|"]
+              "| Finding | Static | Disk | Class (`register_triage.tsv`) |", "|---------|--------|------|-------|"]
     for fid in uncited:
         st, dk = tiers[fid]
-        lines.append(f"| `{fid}` | {st} | {dk} |")
+        cl, why = triage.get(fid, ("**unclassified**", ""))
+        lines.append(f"| `{fid}` | {st} | {dk} | {cl}{': ' + why if why else ''} |")
     lines.append("")
 
     lines += ["---",
@@ -297,6 +299,46 @@ def gen_knowledge_map(pages):
               f"{len(tiers)} register rows cited, {len(multi)} cited on more than one page. The claim "
               "register is `analysis/reference_table.csv`.*", ""]
     return "\n".join(lines)
+
+TRIAGE = os.path.join(DOCS_ROOT, "register_triage.tsv")
+TRIAGE_CLASSES = ("internal-only", "undocumented", "duplicate")
+
+
+def load_triage():
+    """TRIAGE (1.14.0): ref_id -> (class, reason) for the rows no page cites (register_triage.tsv)."""
+    out = {}
+    if os.path.exists(TRIAGE):
+        for ln in open(TRIAGE, encoding="utf-8"):
+            if ln.startswith("#") or not ln.strip():
+                continue
+            p = ln.rstrip("\n").split("\t")
+            if p[0] == "ref_id":
+                continue
+            out[p[0]] = (p[1], p[2] if len(p) > 2 else "")
+    return out
+
+
+def triage_problems(pages):
+    """An uncited row with no class, a class outside the three, or a line for a row that pages now cite."""
+    tiers = register_tiers()
+    cited = set()
+    for d in CONTENT_DIRS + MAP_ONLY_DIRS:
+        for pg in pages[d]:
+            cited.update(page_findings(pg["path"]) if isinstance(pg, dict) else [])
+    triage = load_triage()
+    out = []
+    for fid in tiers:
+        if fid not in cited and fid not in triage:
+            out.append("%s: cited by no page and not classified in register_triage.tsv" % fid)
+    for fid, (cl, _w) in triage.items():
+        if cl not in TRIAGE_CLASSES:
+            out.append("%s: class %r is not one of %s" % (fid, cl, ", ".join(TRIAGE_CLASSES)))
+        if fid in cited:
+            out.append("%s: a page now cites it; its line in register_triage.tsv is stale" % fid)
+        if fid not in tiers:
+            out.append("%s: not a register row" % fid)
+    return out
+
 
 def main():
     unknown = [a for a in sys.argv[1:] if a not in ("--check", "--preview")]
@@ -334,6 +376,11 @@ def main():
     # NOTE: cited-id-vs-register validation is NOT duplicated here — verify_docs_static.py's
     # citation gate owns it (it is what caught an invented id). This --check is drift only.
     if check:
+        tp = triage_problems(pages)
+        for t in tp:
+            print("TRIAGE: " + t)
+        if tp:
+            sys.exit(1)
         if drift:
             print(f"DRIFT: {drift} index file(s) out of date — run build_docs_index.py "
                   f"(the sync step regenerates; this gate only verifies).")

@@ -1,8 +1,8 @@
 # forefst wininsiderrefs8gtest2.raw search test
 # ----------------------------------------------------------------------------
-ObjectRef      Type          Size  Data             Modified             Path
-─────────────  ────  ────────────  ───────────────  ───────────────────  ────────────────────────────────────────
-0x76f          Dir              0  —                2026-05-19 20:00:58  testintegrity
-0x702          Dir              0  —                2026-05-19 19:59:12  testspecials
+ObjectRef      Type          Size  Data             Modified                      Path
+─────────────  ────  ────────────  ───────────────  ────────────────────────────  ────────────────────────────────────────
+0x76f:0x0      Dir              0  —                2026-05-19T20:00:58.3619577Z  testintegrity
+0x702:0x0      Dir              0  —                2026-05-19T19:59:12.4438468Z  testspecials
 
 2 matches. Use `details <path>`, `details --id FileRef` (HomeOID:FileID) or `details --id OID` for full detail.

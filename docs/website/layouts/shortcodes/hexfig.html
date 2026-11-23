@@ -1,0 +1,107 @@
+{{- /* A byte figure: the hex dump of real bytes (offset, 16 bytes, ASCII), each field's bytes in its own text colour.
+       Usage, in the docs: the marker `<!-- site: hexfig "id" -->` (build.py turns it into the shortcode):
+         - on the line before the page's field table: {{< hexfig "id" >}} | Offset | ... | {{< /hexfig >}} -- the
+           page's own table is the figure's table: each row whose Offset cell names a field gets the field's colour on
+           its Offset and Field cells (every field must match exactly one row, except a field the generator marks
+           "row": false -- documented in a section of the page, or on another page, not in a row of its own -- whose
+           bytes link to it); a group of the data (`groups`: one row of the table that documents several fields
+           together, e.g. the file record's sub-record chain, 0xA8+) colours that row, and hovering it marks all its
+           fields; a field of the data with a `table` (e.g. "value") is coloured instead in the page's table that the
+           marker `<!-- site: hexfig-rows "id" "value" -->` gives the same figure (shortcode hexfig-rows);
+         - alone: {{< hexfig "id" />}} (or {{< hexfig "id" "nocaption" />}} under a heading that titles it) -- no table: each field's bytes link to where the field is documented (on the
+           figure's own page when it documents it, gen_hex_figures.py `check_local`), so nothing is written twice.
+       Hovering a field's bytes (or its row) marks both, and the line under the dump shows the example value forefst
+       decodes from it, labelled [EXAMPLE].
+       Data: data/hexfig/<id>.json, written by analysis/tools/analysis_scripts/gen_hex_figures.py (never by hand:
+       regen_generated.sh --check fails when a file differs from what the generator writes). Styles: assets/css/hexfig.css. */ -}}
+{{- $id := .Get 0 -}}
+{{- $fig := index site.Data.hexfig $id -}}
+{{- if not $fig -}}
+  {{- errorf "hexfig: no data/hexfig/%s.json -- run analysis/tools/analysis_scripts/gen_hex_figures.py (%s)" $id .Position -}}
+{{- end -}}
+{{- $fields := $fig.fields -}}
+{{- $linked := not .Inner -}}
+{{- $idle := cond $linked "Hover over a field to see its example value as decoded by forefst; click it to open its description." "Hover over a field, in the bytes or in the table, to see its example value as decoded by forefst." -}}
+{{- $cap := ne (.Get 1) "nocaption" -}}
+<figure class="hexfig" id="hexfig-{{ $id }}" data-hexfig="{{ $id }}"{{ if not $cap }} aria-label="{{ $fig.title }}"{{ end }}>
+{{ if $cap }}<figcaption>{{ $fig.title }}</figcaption>{{ end }}
+<div class="hf-dump" aria-hidden="true">
+{{- range $fig.rows -}}
+<span class="hf-row"><span class="hf-off">{{ .o }}</span><span class="hf-hex">
+  {{- range .h -}}
+    {{- $n := int (index . 0) -}}
+    {{- if ge $n 0 -}}{{- $f := index $fields $n -}}
+      {{- if or $linked (eq $f.row false) -}}{{- $p := site.GetPage (printf "/%s" (strings.TrimSuffix ".md" $f.link.page)) -}}
+        {{- if not $p -}}{{- errorf "hexfig %s: no page %s for field %s" $id $f.link.page $f.name -}}{{- end -}}
+      <a class="hf-f hf-c{{ $f.slot }}" data-f="{{ $n }}" tabindex="-1" href="{{ if eq $p.RelPermalink $.Page.RelPermalink }}{{ else }}{{ $p.RelPermalink }}{{ end }}#{{ $f.link.anchor }}" title="{{ $f.off }} {{ $f.name }}: {{ $f.value }}">{{ index . 1 }}</a>
+      {{- else -}}
+      <span class="hf-f hf-c{{ $f.slot }}" data-f="{{ $n }}" title="{{ $f.off }} {{ $f.name }}: {{ $f.value }}">{{ index . 1 }}</span>
+      {{- end -}}
+    {{- else -}}{{ index . 1 }}{{- end -}}
+  {{- end -}}
+</span><span class="hf-asc">
+  {{- range .a -}}
+    {{- $n := int (index . 0) -}}
+    {{- if ge $n 0 -}}{{- $f := index $fields $n -}}
+      <span class="hf-f hf-c{{ $f.slot }}" data-f="{{ $n }}">{{ index . 1 }}</span>
+    {{- else -}}{{ index . 1 }}{{- end -}}
+  {{- end -}}
+</span></span>
+{{- end -}}
+</div>
+<div class="hf-readout" aria-live="polite" data-idle="{{ $idle }}">{{ $idle }}</div>
+<div class="hf-values" hidden>
+{{- range $i, $f := $fields }}<span data-f="{{ $i }}"><span class="hf-ex">[EXAMPLE]</span><b class="hf-c{{ $f.slot }}">{{ $f.off }} {{ $f.name }}</b>{{ with $f.frame }}, {{ . }}{{ end }} ({{ $f.len }} byte{{ if ne (int $f.len) 1 }}s{{ end }}): {{ $f.value }}</span>{{ end -}}
+{{- range $fig.groups }}<span data-f="{{ .id }}"><span class="hf-ex">[EXAMPLE]</span><b class="hf-cg">{{ .cell }} {{ .name }}</b> ({{ .len }} bytes): {{ .value }}</span>{{ end -}}
+</div>
+{{- if .Inner -}}
+  {{- $html := .Page.RenderString (dict "display" "block") .Inner -}}
+  {{- range $i, $f := $fields -}}{{- if and (ne $f.row false) (not $f.table) -}}
+    {{- $re := printf `<tr>(\s*)<td>%s</td>(\s*)<td>([^<]*)</td>(\s*)<td>` $f.off -}}
+    {{- $hits := len (findRE $re $html) -}}
+    {{- if ne $hits 1 -}}
+      {{- errorf "hexfig %s: field %s %s matches %d rows of the page's table, not 1 (its Offset cell must read %s)" $id $f.off $f.name $hits $f.off -}}
+    {{- end -}}
+    {{- $html = replaceRE $re (printf `<tr class="hf-c%v" data-f="%d">${1}<td class="hf-k"><code>%s</code></td>${2}<td>${3}</td>${4}<td class="hf-k">` $f.slot $i $f.off) $html -}}
+  {{- end -}}{{- end -}}
+  {{- range $g := $fig.groups -}}
+    {{- $re := printf `<tr>(\s*)<td>%s</td>(\s*)<td>([^<]*)</td>(\s*)<td>` (replace $g.cell "+" `\+`) -}}
+    {{- $hits := len (findRE $re $html) -}}
+    {{- if ne $hits 1 -}}
+      {{- errorf "hexfig %s: group %s %s matches %d rows of the page's table, not 1" $id $g.cell $g.name $hits -}}
+    {{- end -}}
+    {{- $html = replaceRE $re (printf `<tr class="hf-cg" data-f="%s" data-m="%s">${1}<td class="hf-k"><code>%s</code></td>${2}<td>${3}</td>${4}<td class="hf-k">` $g.id $g.members $g.cell) $html -}}
+  {{- end -}}
+  {{- $html | replaceRE `^\s*<table>` `<table class="hf-table">` | safeHTML -}}
+{{- end }}
+</figure>
+{{- if not (.Page.Store.Get "hexfig-js") -}}
+{{- .Page.Store.Set "hexfig-js" true }}
+<script>
+(function () {
+  /* hover a field's bytes or its table row: mark both, and show its decoded value under the dump */
+  function mark(e) {
+    var on = e.type === 'mouseover', t = e.target.closest && e.target.closest('.hexfig [data-f]');
+    if (!t || t.closest('.hf-values')) return;
+    /* the figure and the page's other tables it colours (hexfig-rows) share data-hexfig */
+    var id = t.closest('.hexfig').getAttribute('data-hexfig'), fig = document.getElementById('hexfig-' + id);
+    var n = t.getAttribute('data-f'), m = t.getAttribute('data-m');
+    if (!fig) return;
+    document.querySelectorAll('[data-hexfig="' + id + '"]').forEach(function (part) {
+      /* a group row (data-m) marks the bytes of all its fields; a field's bytes also mark the group row holding it */
+      (m ? m.split(' ') : [n]).forEach(function (k) {
+        part.querySelectorAll('.hf-dump [data-f="' + k + '"]').forEach(function (x) { x.classList.toggle('hf-hl', on); });
+      });
+      part.querySelectorAll('.hf-table [data-f="' + n + '"], .hf-table [data-m~="' + n + '"]').forEach(function (x) {
+        x.classList.toggle('hf-hl', on);
+      });
+    });
+    var out = fig.querySelector('.hf-readout'), v = fig.querySelector('.hf-values [data-f="' + n + '"]');
+    if (out && v) out.innerHTML = on ? v.innerHTML : out.getAttribute('data-idle');
+    if (out) out.classList.toggle('hf-on', on);
+  }
+  document.addEventListener('mouseover', mark);
+  document.addEventListener('mouseout', mark);
+})();
+</script>
+{{- end -}}

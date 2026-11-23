@@ -1,12 +1,12 @@
 # forefst win11refs2tsnapshots.raw specials snapshot
 # ----------------------------------------------------------------------------
 
-── snapshot  (5) — CoW prior-version streams ──
-  PRIORS  PATH
-         1  testsnapshots/arg.txt
-         2  testsnapshots/lasttest.txt
-         4  testsnapshots/test.txt
-         1  testsnapshots/testads.txt
-         2  testsnapshots/xbpt_beta_sierra_570651.json
+── snapshot  (5 objects, 5 names) — files with stream snapshots (CoW) ──
+  OBJECTREF        SNAPSHOTS  PATH
+  0x73c:0x2                1  testsnapshots/arg.txt
+  0x73c:0x9                2  testsnapshots/lasttest.txt
+  0x73c:0x5                4  testsnapshots/test.txt
+  0x73c:0x7                1  testsnapshots/testads.txt
+  0x73c:0x8                2  testsnapshots/xbpt_beta_sierra_570651.json
 
   Extract versions:  forefst IMG export snapshots <dir>

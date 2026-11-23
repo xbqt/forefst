@@ -1,16 +1,34 @@
 # $EFS
+<!-- site: description "The encryption metadata of an EFS-encrypted file: the named stream $EFS, with the user's certificate identity and the wrapped file key." -->
 
-`$EFS` is the Windows **Encrypting File System** metadata for an encrypted file. ReFS stores it as a
-single `$LOGGED_UTILITY_STREAM` attribute (schema 0x200, embedded type 0x100) whose stream name is
-`$EFS`. It holds the standard Windows **DDF** (Data-Decryption Field): the user's certificate identity
-and the RSA-wrapped File Encryption Key.
+`$EFS` is the Windows Encrypting File System metadata for an encrypted file.
+
+- ReFS stores it as a single `$LOGGED_UTILITY_STREAM` attribute (embedded type
+  0x100) whose stream name is
+  `$EFS`.
+- It holds the standard Windows DDF (Data-Decryption Field): the user's certificate identity and the RSA-wrapped File
+  Encryption Key.
+
+| Property | Value |
+|----------|-------|
+| Type code | 0x100 (subtype 0x0005), the named `$LOGGED_UTILITY_STREAM` container |
+| Instances | multi-instance marker (0x80000002); the only named instance on disk is `$EFS`, one per encrypted file |
+| Where it lives | the encrypted file's record, as the named stream `$EFS` |
+| Size | 676 or 732 bytes on the values read (the difference is in the variable-length strings) |
+| Added in | 3.14 in the corpus; the driver allows EFS from format 3.11 (`RefsIsEncryptionSupported`), and no 3.11 to 3.13 volume is held |
 
 ## Value layout
 
-The value is a 12-byte ReFS sub-record wrapper followed by the standard Windows EFS metadata carrying
-the DDF. The value is **676 or 732 bytes**; the difference is entirely in the variable-length
-container-GUID and provider-name strings, and is **not cluster-size-dependent** (the blob is produced by
-the Windows EFS service, not by the cluster-aware driver layer). Offsets are value-relative:
+The value is a 12-byte ReFS sub-record wrapper followed by the standard Windows EFS metadata carrying the DDF.
+
+- The value is 676 or 732 bytes; the difference is entirely in the variable-length container-GUID and provider-name
+  strings.
+- It is not cluster-size-dependent (the blob is produced by the Windows EFS service, not by the cluster-aware driver
+  layer).
+
+Offsets are value-relative:
+
+<!-- site: hexfig "attr_efs_win11refs4gattributes" -->
 
 | Offset | Size | Field | Description |
 |--------|------|-------|-------------|
@@ -20,85 +38,104 @@ the Windows EFS service, not by the cluster-aware driver layer). Offsets are val
 | 0x0C | 4 | Metadata length | repeats the data-area size |
 | 0x14 | 4 | EFS state / version | 2 |
 | 0x1C | 16 | Metadata GUID | per-file (one of only two per-file-varying regions) |
-| 0x60 | 4 | DDF entry count | 1 (no DRF — no data-recovery agent) |
-| 0x64 | (entry) | DDF entry | the single Data-Decryption-Field entry (base for the entry-relative fields below) |
+| 0x60 | 4 | DDF entry count | 1 on every record read (no DRF — no data-recovery agent) |
+| 0x64 | var | DDF entry | the single Data-Decryption-Field entry (base for the entry-relative fields below) |
 | 0x94 | 28 | Credential SID | the EFS user's SID (`S-1-5-21-…`; matches an owner in the security table, OID 0x530) — fixed offset |
 | 0xB0 | 20 | Public-key-info header | 5 u32s, fixed offset: hash length (0x14 = SHA-1) + the cguid / provider / cname string offsets, each relative to this header base |
 | 0xC4 | 20 | Certificate thumbprint | SHA-1 of the user's EFS certificate — fixed offset |
 | 0xD8 | var | Container-GUID string | UTF-16LE — start of the variable-length strings region |
-| (var) | var | CSP provider string | UTF-16LE (e.g. `Microsoft Enhanced Cryptographic Provider v1.0`) |
-| (var) | var | Key-container name | UTF-16LE |
-| 0x64 + FEKoff | 256 | **Wrapped FEK** | the File Encryption Key, RSA-2048-wrapped — the **last field of the DDF entry** (at value+0x1A2 on 676-byte records, value+0x1DA on 732-byte) |
+| var | var | CSP provider string | UTF-16LE (e.g. `Microsoft Enhanced Cryptographic Provider v1.0`) |
+| var | var | Key-container name | UTF-16LE |
+| var | 256 | Wrapped FEK | the File Encryption Key, RSA-2048-wrapped, at `0x64 + FEK offset` — the last field of the DDF entry (at value+0x1A2 on 676-byte records, value+0x1DA on 732-byte) |
 
 ### The DDF entry (base = value+0x64)
 
-| Entry offset | Field | Value |
-|--------------|-------|-------|
-| +0x00 | Entry length | spans value+0x64 → value_end − 2 |
-| +0x04 | Certificate-hash length | 0x14 (20 = SHA-1) |
-| +0x08 | FEK length | 0x100 (256 = RSA-2048) |
-| +0x0C | FEK offset (entry-relative) | `FEK_offset + FEK_length = entry_length` — the FEK is the entry's last field |
-| +0x18 | SID length | 0x1C (28) |
+<!-- site: hexfig-rows "attr_efs_win11refs4gattributes" "ddf" -->
 
-The certificate thumbprint and SID are constant per user/certificate; the **metadata GUID (0x1C) and the
-256-byte wrapped FEK are the only per-file fields**. There is **no `EFSS` signature** in the value and
-**no DRF** (the DDF entry count is 1). Everything except the RSA-wrapped FEK is plaintext metadata and
-is fully decoded; the FEK is opaque by design.
+| Offset | Size | Field | Description |
+|--------|------|-------|-------------|
+| 0x00 | 4 | Entry length | spans value+0x64 → value_end − 2 |
+| 0x04 | 4 | Certificate-hash length | 0x14 (20 = SHA-1) |
+| 0x08 | 4 | FEK length | 0x100 (256 = RSA-2048) |
+| 0x0C | 4 | FEK offset (entry-relative) | `FEK_offset + FEK_length = entry_length` — the FEK is the entry's last field |
+| 0x10 | 4 | Reserved | 0 |
+| 0x18 | — | SID length | 0x1C (28) |
+
+On the records compared:
+
+- the certificate thumbprint and SID are constant per user/certificate;
+- the metadata GUID (0x1C) and the 256-byte wrapped FEK are the only per-file fields;
+- there is no `EFSS` signature in the value and no DRF (the DDF entry count is 1).
+
+Everything except the RSA-wrapped FEK is plaintext metadata; the FEK is opaque by design. A record with more than one
+DDF entry, or with a DRF, is not in the corpus, so its layout is not verified.
 
 ## How EFS metadata is stored
 
-ReFS does not implement EFS itself — the `$EFS` value is the standard Windows EFS metadata blob,
-produced by the EFS user-mode (LSA) service and stored verbatim (`refs.sys` does not generate the crypto
-fields). On disk it is one embedded single-instance sub-record (schema 0x200, type 0x100,
-subtype 0x0005) with stream name `$EFS`. There is **no `$CBW4` stream** — that name does not exist on
-disk or in the binary; it is a misread of a mangled C++ checksum-template token (`span<$$CBW4byte@utl>`),
-unrelated to EFS.
+`refs.sys` handles encrypted streams (the functions listed below, and a `cng.sys` import), but it does not build the
+EFS metadata: the `$EFS` value is the standard Windows EFS metadata blob, produced by the EFS user-mode (LSA) service
+and stored verbatim (`refs.sys` does not generate the crypto fields).
 
-An encrypted file also carries the **`0x4000` (FILE_ATTRIBUTE_ENCRYPTED)** file-attribute flag, set by
-`RefsEncryptStream` and cleared on decrypt. EFS is supported from **v3.11+** (gated by
-`RefsIsEncryptionSupported`). Related driver functions: `RefsSetEncryption`, `RefsEncryptStream`,
-`RefsReadRawEncrypted`, `RefsWriteRawEncrypted`, `EfspFileRequiresEncryption`.
+- On disk it is one embedded sub-record under the multi-instance marker 0x80000002 (type 0x100,
+  subtype 0x0005) with stream name `$EFS`.
+- There is no `$CBW4` stream — that name does not exist on disk or in the binary; it is a misread of a mangled C++
+  checksum-template token (`span<$$CBW4byte@utl>`), unrelated to EFS.
+- An encrypted file also carries the `0x4000` (FILE_ATTRIBUTE_ENCRYPTED) file-attribute flag, set by
+  `RefsEncryptStream` and cleared on decrypt.
+- EFS is supported from v3.11+ (gated by `RefsIsEncryptionSupported`). Related driver functions: `RefsSetEncryption`,
+  `RefsEncryptStream`, `RefsReadRawEncrypted`, `RefsWriteRawEncrypted`, `EfspFileRequiresEncryption`.
 
 ## Can the data be decrypted from a ReFS image?
 
-**Not from the ReFS data volume alone.** The on-disk elements are necessary but not sufficient:
+Not from the ReFS data volume alone. The on-disk elements are necessary but not sufficient:
 
 | Element | On the ReFS data volume? |
 |---------|--------------------------|
-| Encrypted file data (AES ciphertext) | **Yes** — the encrypted files' `$DATA` |
-| RSA-wrapped FEK | **Yes** — the 256-byte blob in `$EFS` |
-| Certificate thumbprint, key-container name, user SID | **Yes** — plaintext in `$EFS` (identifies *which* key is needed) |
-| User's RSA private key (unwraps the FEK) | **No** — in the profile `…\Microsoft\Crypto\RSA\<SID>\`, DPAPI-protected |
-| DPAPI master key + user password | **No** — in the profile `…\Microsoft\Protect\<SID>\`, gated by the password |
+| Encrypted file data (AES ciphertext) | Yes — the encrypted files' `$DATA` |
+| RSA-wrapped FEK | Yes — the 256-byte blob in `$EFS` |
+| Certificate thumbprint, key-container name, user SID | Yes — plaintext in `$EFS` (identifies *which* key is needed) |
+| User's RSA private key (unwraps the FEK) | No — in the profile `…\Microsoft\Crypto\RSA\<SID>\`, DPAPI-protected |
+| DPAPI master key + user password | No — in the profile `…\Microsoft\Protect\<SID>\`, gated by the password |
 
-A stream scan of a ReFS *data* volume finds the encrypted data and the wrapped FEKs but **no RSA
-private-key material, no `Crypto\RSA` containers, and no DPAPI master keys** — so the FEK cannot be
-unwrapped from that image alone. To decrypt you additionally need the off-volume EFS chain: the user's
-RSA private key + DPAPI master key + the password (or a domain data-recovery-agent key, or the password
-hash from a SAM/LSASS source). If the ReFS volume *were* the system volume carrying the user profile,
-that material would be present and the standard chain applies:
-`password → DPAPI master key → RSA private key → unwrap FEK → AES-decrypt the file`. The `$EFS`
-thumbprint / container / SID fields are the forensic pointers that identify exactly which key and user
-to target.
+A stream scan of the ReFS *data* volumes measured finds the encrypted data and the wrapped FEKs but no RSA
+private-key material, no `Crypto\RSA` containers, and no DPAPI master keys — so the FEK cannot be unwrapped from such
+an image alone.
+
+- To decrypt you additionally need the off-volume EFS chain: the user's RSA private key + DPAPI master key + the
+  password (or a domain data-recovery-agent key, or the password hash from a SAM/LSASS source).
+- If the ReFS volume *were* the system volume carrying the user profile, that material would be present and the
+  standard chain applies: `password → DPAPI master key → RSA private key → unwrap FEK → AES-decrypt the file`.
+- The `$EFS` thumbprint / container / SID fields are the forensic pointers that identify exactly which key and user
+  to target.
+
+What `extract` writes for an encrypted file. The bytes are ciphertext, cut at the stream's logical size, and the tool
+says so. EFS writes the ciphertext on to the end of the allocation (on the lab volume every file smaller than a
+cluster holds high-entropy bytes to the end of its 4 KiB cluster), so the bytes written are not all the ciphertext on
+the disk, and whether they decrypt on their own is not known — the statement also says when the size is not a
+multiple of the 16-byte AES block. `dataruns` lists the allocation's clusters.
+
+## What an encrypted file looks like on disk
+
+On the format 3.14 volumes measured, an EFS-encrypted file carries three streams, and the `$EFS` named stream (676 or
+732 bytes) holds the certificate material, with the literal `$EFS` visible in UTF-16. Even a small encrypted file
+takes a whole cluster (4,096 bytes on the volumes measured).
 
 ## Cross-references
 
 - [Attributes — Forensic Reference](../attributes/README.md) — the attribute catalog and on-disk layout
 - [Driver Interface](../concepts/driver_architecture.md) — the `cng.sys` import for EFS support
 
-## What an encrypted file looks like on disk
-
-An EFS-encrypted file carries **three streams**, and the `$EFS` named stream — around 720 bytes — holds
-the certificate material, with the literal `$EFS` visible in UTF-16. Even a small encrypted file takes a
-minimum 4,096-byte allocation. Measured on format 3.14.
-
 ## Evidence
 
-Schema 0x200 / type 0x100 and the `$EFS` stream name are confirmed by the string literal (E1) and the
-decompiled driver (E2); the value layout, the DDF/FEK offsets, and the *no `$CBW4` / no `EFSS` / no DRF*
-facts are raw-disk decoded (RD) across the corpus EFS records (value sizes 676 and 732). Findings:
-**MD_ATTR_RA_009**, **MD_EFS_RA_005** (value sizes). The three-stream shape and the ~720-byte `$EFS` stream are **MD_DISK_RA_006**. See
-[how this was verified](../methodology.md) to trace these to the exact images and measurements in
-`analysis/`.
+Type 0x100 and the `$EFS` stream name are read in the driver (the `$EFS` string literal and the
+decompiled code); the value layout, the DDF/FEK offsets, and the *no `$CBW4` / no `EFSS` / no DRF* facts are decoded
+on disk across the corpus EFS records (value sizes 676 and 732), as are the three-stream shape and the size of the
+`$EFS` stream. The page is documented against the project's claim register. See
+[how this was verified](../methodology.md).
 
-The remaining field-level statements on this page are registered as **GN_EFS_SA_001**, **MD_EFS_RA_004**, **MD_EFS_RA_006** — each with its own evidence tier and witness in the claim register.
+The measurements behind the text:
+
+- 7 `$EFS` entries across 110 images; 4 on `win11refs4gattributestest2`.
+- The ciphertext to the end of the allocation: 13 of 13 files smaller than a cluster on the lab volume.
+
+<!-- findings: GN_EFS_SA_001, MD_ATTR_RA_009, MD_DISK_RA_006, MD_EFS_RA_003, MD_EFS_RA_004, MD_EFS_RA_005, MD_EFS_RA_006 -->

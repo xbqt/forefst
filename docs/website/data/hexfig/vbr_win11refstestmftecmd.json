@@ -1,0 +1,574 @@
+{
+ "id": "vbr_win11refstestmftecmd",
+ "generated_by": "analysis/tools/analysis_scripts/gen_hex_figures.py",
+ "decoded_by": "forefst 1.14.0 (forefstdev/forefst.py)",
+ "title": "An example volume boot record of a ReFS 3.14 volume (4 KiB clusters, CRC64; its first 96 of 512 bytes), read with forefst.",
+ "image": {
+  "name": "win11refstestmftecmd.raw",
+  "step": "step5",
+  "listed_as": "analysis/rawdisk/disks/step5/win11refstestmftecmd.raw",
+  "size": 4294967296
+ },
+ "offset": 16777216,
+ "offset_hex": "0x1000000",
+ "length": 96,
+ "bytes": "00000052654653000000000000000000465352530002ed9800007e00000000000002000008000000030e0200660000000000000000000000f5f911c23112c2b20000000400000000960b3570e71ed74ab5170103bb195df80000000000000000",
+ "note": null,
+ "fields": [
+  {
+   "off": "0x00",
+   "len": 3,
+   "name": "Jump instruction",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00",
+   "value": "no jump: 00 00 00",
+   "decoder": "bytes",
+   "slot": 0,
+   "link": {
+    "page": "structures/vbr.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x03",
+   "len": 8,
+   "name": "File system name",
+   "frame": null,
+   "group": null,
+   "bytes": "52 65 46 53 00 00 00 00",
+   "value": "\"ReFS\" and 4 zero bytes",
+   "decoder": "forefst.boot_sector_failures (bytes 3..10 = ReFS + four zero bytes)",
+   "slot": 1,
+   "link": {
+    "page": "structures/vbr.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x0B",
+   "len": 5,
+   "name": "Reserved",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 00 00",
+   "value": "all 5 bytes zero",
+   "decoder": "bytes",
+   "slot": "z",
+   "link": {
+    "page": "structures/vbr.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x10",
+   "len": 4,
+   "name": "FSRS identifier",
+   "frame": null,
+   "group": null,
+   "bytes": "46 53 52 53",
+   "value": "\"FSRS\"",
+   "decoder": "bytes",
+   "slot": 2,
+   "link": {
+    "page": "structures/vbr.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x14",
+   "len": 2,
+   "name": "VBR size",
+   "frame": null,
+   "group": null,
+   "bytes": "00 02",
+   "value": "0x200 (512) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 3,
+   "link": {
+    "page": "structures/vbr.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x16",
+   "len": 2,
+   "name": "VBR checksum",
+   "frame": null,
+   "group": null,
+   "bytes": "ed 98",
+   "value": "0x98ed; computed over bytes 3 to 511: 0x98ed (matches)",
+   "decoder": "forefst.boot_sector_checksum",
+   "slot": 4,
+   "link": {
+    "page": "structures/vbr.md",
+    "anchor": "checksum-algorithm"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x18",
+   "len": 8,
+   "name": "Total sector count",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 7e 00 00 00 00 00",
+   "value": "0x7e0000 (8257536) sectors; x 512 bytes = 4227858432 bytes",
+   "decoder": "forefst.volume_length",
+   "slot": 5,
+   "link": {
+    "page": "structures/vbr.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x20",
+   "len": 4,
+   "name": "Bytes per sector",
+   "frame": null,
+   "group": null,
+   "bytes": "00 02 00 00",
+   "value": "0x200 (512)",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 6,
+   "link": {
+    "page": "structures/vbr.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x24",
+   "len": 4,
+   "name": "Sectors per cluster",
+   "frame": null,
+   "group": null,
+   "bytes": "08 00 00 00",
+   "value": "8; cluster size 4096 bytes (4 KiB)",
+   "decoder": "forefst.vbr_cluster_size",
+   "slot": 7,
+   "link": {
+    "page": "structures/vbr.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x28",
+   "len": 1,
+   "name": "Major version",
+   "frame": null,
+   "group": null,
+   "bytes": "03",
+   "value": "3",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 0,
+   "link": {
+    "page": "structures/vbr.md",
+    "anchor": "version-values-offset-0x28"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x29",
+   "len": 1,
+   "name": "Minor version",
+   "frame": null,
+   "group": null,
+   "bytes": "0e",
+   "value": "14: ReFS 3.14",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 1,
+   "link": {
+    "page": "structures/vbr.md",
+    "anchor": "version-values-offset-0x28"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x2A",
+   "len": 2,
+   "name": "Checksum algorithm selector",
+   "frame": null,
+   "group": null,
+   "bytes": "02 00",
+   "value": "0x2 (CRC64); read, the flags at 0x2C carry 0x40",
+   "decoder": "forefst.volume_checksum_type",
+   "slot": 2,
+   "link": {
+    "page": "structures/vbr.md",
+    "anchor": "checksum-algorithm-selector-offset-0x2a"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x2C",
+   "len": 4,
+   "name": "Volume flags",
+   "frame": null,
+   "group": null,
+   "bytes": "66 00 00 00",
+   "value": "0x66: bits 0x02, 0x04, 0x20, 0x40",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 3,
+   "link": {
+    "page": "structures/vbr.md",
+    "anchor": "volume-flags-offset-0x2c"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x30",
+   "len": 8,
+   "name": "Reserved",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 00 00 00 00 00",
+   "value": "all 8 bytes zero",
+   "decoder": "bytes",
+   "slot": "z",
+   "link": {
+    "page": "structures/vbr.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x38",
+   "len": 8,
+   "name": "Volume serial number",
+   "frame": null,
+   "group": null,
+   "bytes": "f5 f9 11 c2 31 12 c2 b2",
+   "value": "0xb2c21231c211f9f5",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 4,
+   "link": {
+    "page": "structures/vbr.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x40",
+   "len": 8,
+   "name": "Bytes per container",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 04 00 00 00 00",
+   "value": "0x4000000 (64 MiB): 16384 clusters per container",
+   "decoder": "forefst.vbr_container_size",
+   "slot": 5,
+   "link": {
+    "page": "structures/vbr.md",
+    "anchor": "derived-values"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x48",
+   "len": 16,
+   "name": "Extended GUID",
+   "frame": null,
+   "group": null,
+   "bytes": "96 0b 35 70 e7 1e d7 4a b5 17 01 03 bb 19 5d f8",
+   "value": "70350b96-1ee7-4ad7-b517-0103bb195df8",
+   "decoder": "forefst._guid_str",
+   "slot": 6,
+   "link": {
+    "page": "structures/vbr.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x58",
+   "len": 424,
+   "name": "Unused",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 00 00 00 00 00 …",
+   "value": "all 424 bytes zero; the first 8 are shown",
+   "decoder": "bytes",
+   "slot": "z",
+   "link": {
+    "page": "structures/vbr.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  }
+ ],
+ "groups": [],
+ "rows": [
+  {
+   "o": "0000",
+   "h": [
+    [
+     0,
+     "00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     1,
+     "52 65 46 53 00  00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     2,
+     "00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     0,
+     "..."
+    ],
+    [
+     1,
+     "ReFS...."
+    ],
+    [
+     2,
+     "....."
+    ]
+   ]
+  },
+  {
+   "o": "0010",
+   "h": [
+    [
+     3,
+     "46 53 52 53"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     4,
+     "00 02"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     5,
+     "ed 98"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     6,
+     "00 00 7e 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     3,
+     "FSRS"
+    ],
+    [
+     4,
+     ".."
+    ],
+    [
+     5,
+     ".."
+    ],
+    [
+     6,
+     "..~....."
+    ]
+   ]
+  },
+  {
+   "o": "0020",
+   "h": [
+    [
+     7,
+     "00 02 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     8,
+     "08 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     9,
+     "03"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     10,
+     "0e"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     11,
+     "02 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     12,
+     "66 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     7,
+     "...."
+    ],
+    [
+     8,
+     "...."
+    ],
+    [
+     9,
+     "."
+    ],
+    [
+     10,
+     "."
+    ],
+    [
+     11,
+     ".."
+    ],
+    [
+     12,
+     "f..."
+    ]
+   ]
+  },
+  {
+   "o": "0030",
+   "h": [
+    [
+     13,
+     "00 00 00 00 00 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     14,
+     "f5 f9 11 c2 31 12 c2 b2"
+    ]
+   ],
+   "a": [
+    [
+     13,
+     "........"
+    ],
+    [
+     14,
+     "....1..."
+    ]
+   ]
+  },
+  {
+   "o": "0040",
+   "h": [
+    [
+     15,
+     "00 00 00 04 00 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     16,
+     "96 0b 35 70 e7 1e d7 4a"
+    ]
+   ],
+   "a": [
+    [
+     15,
+     "........"
+    ],
+    [
+     16,
+     "..5p...J"
+    ]
+   ]
+  },
+  {
+   "o": "0050",
+   "h": [
+    [
+     16,
+     "b5 17 01 03 bb 19 5d f8"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     17,
+     "00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     16,
+     "......]."
+    ],
+    [
+     17,
+     "........"
+    ]
+   ]
+  }
+ ]
+}

@@ -1,0 +1,60 @@
+<svg class="diagram" viewBox="0 0 760 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="The three mechanisms behind the survival matrix: copy-on-write leaves old pages on disk, the log is redo-only, and some boot-sector fields keep their format-time value">
+  <defs>
+    <marker id="sm-arrow" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto">
+      <path class="dg-arrowhead" d="M0,0 L7,3 L0,6 Z"/>
+    </marker>
+  </defs>
+
+  <!-- 1. copy-on-write -->
+  <text class="dg-title" x="132" y="24" text-anchor="middle" font-size="13" font-weight="700">1. Copy-on-write</text>
+  <rect class="dg-box" x="22" y="40" width="220" height="40" rx="6"/>
+  <text class="dg-text" x="132" y="58" text-anchor="middle" font-size="11.5">a page, version 1</text>
+  <text class="dg-muted" x="132" y="73" text-anchor="middle" font-size="10.5">referenced by its parent</text>
+  <line class="dg-line" x1="132" y1="80" x2="132" y2="112" marker-end="url(#sm-arrow)"/>
+  <text class="dg-muted" x="140" y="100" font-size="10.5">a change or delete</text>
+  <rect class="dg-box-accent" x="22" y="118" width="220" height="40" rx="6"/>
+  <text class="dg-accent" x="132" y="136" text-anchor="middle" font-size="11.5">version 2, written to new clusters</text>
+  <text class="dg-muted" x="132" y="151" text-anchor="middle" font-size="10.5">the parent now points here</text>
+  <rect class="dg-dash" x="22" y="176" width="220" height="56" rx="6"/>
+  <text class="dg-text" x="132" y="196" text-anchor="middle" font-size="11.5">version 1 stays on disk</text>
+  <text class="dg-muted" x="132" y="211" text-anchor="middle" font-size="10.5">no longer referenced, not erased,</text>
+  <text class="dg-muted" x="132" y="224" text-anchor="middle" font-size="10.5">until its clusters are reused</text>
+  <text class="dg-muted" x="132" y="256" text-anchor="middle" font-size="11">so old metadata survives,</text>
+  <text class="dg-muted" x="132" y="271" text-anchor="middle" font-size="11">depending on the image</text>
+
+  <!-- 2. redo-only log -->
+  <text class="dg-title" x="380" y="24" text-anchor="middle" font-size="13" font-weight="700">2. Redo-only log</text>
+  <rect class="dg-box" x="270" y="40" width="220" height="40" rx="6"/>
+  <text class="dg-text" x="380" y="58" text-anchor="middle" font-size="11.5">MLog: redo records</text>
+  <text class="dg-muted" x="380" y="73" text-anchor="middle" font-size="10.5">new values only, no pre-images</text>
+  <line class="dg-line" x1="380" y1="80" x2="380" y2="112" marker-end="url(#sm-arrow)"/>
+  <text class="dg-muted" x="388" y="100" font-size="10.5">after a crash</text>
+  <rect class="dg-box-accent" x="270" y="118" width="220" height="40" rx="6"/>
+  <text class="dg-accent" x="380" y="136" text-anchor="middle" font-size="11.5">replayed forward onto the pages</text>
+  <text class="dg-muted" x="380" y="151" text-anchor="middle" font-size="10.5">no undo pass, unlike NTFS's $LogFile</text>
+  <rect class="dg-dash" x="270" y="176" width="220" height="56" rx="6"/>
+  <text class="dg-text" x="380" y="196" text-anchor="middle" font-size="11.5">no record of a replaced value</text>
+  <text class="dg-muted" x="380" y="211" text-anchor="middle" font-size="10.5">earlier records keep what they wrote,</text>
+  <text class="dg-muted" x="380" y="224" text-anchor="middle" font-size="10.5">e.g. a file's true creation time</text>
+  <text class="dg-muted" x="380" y="256" text-anchor="middle" font-size="11">so the log shows what each write set,</text>
+  <text class="dg-muted" x="380" y="271" text-anchor="middle" font-size="11">not what it replaced</text>
+
+  <!-- 3. format-time boot-sector fields -->
+  <text class="dg-title" x="628" y="24" text-anchor="middle" font-size="13" font-weight="700">3. Format-time fields</text>
+  <rect class="dg-box" x="518" y="40" width="220" height="40" rx="6"/>
+  <text class="dg-text" x="628" y="58" text-anchor="middle" font-size="11.5">VBR 0x2A, 0x48, part of 0x2C</text>
+  <text class="dg-muted" x="628" y="73" text-anchor="middle" font-size="10.5">checksum type, GUID, bits 0x20 / 0x40</text>
+  <line class="dg-line" x1="628" y1="80" x2="628" y2="112" marker-end="url(#sm-arrow)"/>
+  <text class="dg-muted" x="636" y="100" font-size="10.5">an upgrade</text>
+  <rect class="dg-box-accent" x="518" y="118" width="220" height="40" rx="6"/>
+  <text class="dg-accent" x="628" y="136" text-anchor="middle" font-size="11.5">the same values afterwards</text>
+  <text class="dg-muted" x="628" y="151" text-anchor="middle" font-size="10.5">on both upgrades measured</text>
+  <rect class="dg-dash" x="518" y="176" width="220" height="56" rx="6"/>
+  <text class="dg-text" x="628" y="196" text-anchor="middle" font-size="11.5">the volume's birth state</text>
+  <text class="dg-muted" x="628" y="211" text-anchor="middle" font-size="10.5">with the checkpoint flags, they tell</text>
+  <text class="dg-muted" x="628" y="224" text-anchor="middle" font-size="10.5">an upgraded volume from a native one</text>
+  <text class="dg-muted" x="628" y="256" text-anchor="middle" font-size="11">so they are provenance</text>
+  <text class="dg-muted" x="628" y="271" text-anchor="middle" font-size="11">markers</text>
+
+  <text class="dg-muted" x="380" y="306" text-anchor="middle" font-size="10.5">Most cells of the survival matrix follow from these three properties; the exceptions are named in the cells.</text>
+</svg>

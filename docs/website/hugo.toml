@@ -23,10 +23,12 @@ enableEmoji = true
   github_blob = "https://github.com/xbqt/forefst/blob/main"   # link a file
   defaultTheme = "light"                            # light | dark
   # Footer coverage stamp — bump when the regression harness is re-run against a newer build.
-  coverage_note = "Validated on ReFS 3.14 · parses 3.4–3.14"
-  latest_build = "26100.8521 (24H2)"          # shown once, on the About page (not in the per-page footer)
-  tool_version = "1.13.1"                            # footer version stamp — bump at each release
-  build_date = "25.09.2026"                            # last docs generation (DD.MM.YYYY) — stamped by build.py
+  coverage_note = "Tested on ReFS 3.4–3.14 volumes (3.7, 3.9 and 3.10: one volume each)"
+  # The newest refs.sys builds read (forclaude/reference/driver_register.md, "Builds"): shown on the home page by the
+  # latest-driver shortcode. ONE place: update it when a newer build is read.
+  latest_driver_read = "refs.sys 26100.9974 (Windows 11, 26100) and 29683 (Windows Insider)"
+  tool_version = "1.14.0"                            # footer version stamp — bump at each release
+  build_date = "23.11.2026"                            # last docs generation (DD.MM.YYYY) — stamped by build.py
 
 [markup]
   [markup.goldmark.renderer]

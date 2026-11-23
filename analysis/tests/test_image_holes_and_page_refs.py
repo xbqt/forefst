@@ -72,7 +72,29 @@ def test_no_extents_means_zero_not_unknown(tmp_path):
 
 # ── page references ──────────────────────────────────────────────────────────
 
+class AmbiguousImageName(LookupError):
+    """N386 (LB6, LB20): a bare image basename that exists more than once in the corpus. Deliberately NOT an
+    AssertionError and NOT a skip: a RED or a test that names such an image must be told, not pass or skip."""
+
+
+def resolve_corpus_name(root, name):
+    """N386 (LB6, LB20): THE rule every shared image lookup follows. `name` is a step path under the disks root
+    ('step2/win11refs8g.raw': the file at that path, or None) or a bare basename: its one copy, None when absent, and
+    AmbiguousImageName when it exists twice (six basenames repeat across steps; a bare name then resolved to whichever
+    copy the directory walk met first -- step6/win11refs8g.raw on the USB key, step2 on the originals)."""
+    if "/" in name.replace(os.sep, "/"):
+        p = os.path.join(root, *name.replace(os.sep, "/").split("/"))
+        return p if os.path.isfile(p) else None
+    hits = sorted(os.path.join(dirpath, name) for dirpath, _dirs, files in os.walk(root) if name in files)
+    if len(hits) > 1:
+        raise AmbiguousImageName("the image name %r exists %d times in the corpus (%s): address it by its step path"
+                                 % (name, len(hits), ", ".join(os.path.relpath(h, root) for h in hits)))
+    return hits[0] if hits else None
+
+
 def _corpus_image(name):
+    """The corpus image `name` -- a step path, or a basename that occurs once (`resolve_corpus_name`); None when the
+    tree has no corpus or no such image."""
     seen = set()
     for start in (os.getcwd(), REPO):
         d = os.path.abspath(start)
@@ -80,10 +102,7 @@ def _corpus_image(name):
             seen.add(d)
             root = os.path.join(d, "analysis", "rawdisk", "disks")
             if os.path.isdir(root):
-                for dirpath, _dirs, files in os.walk(root):
-                    if name in files:
-                        return os.path.join(dirpath, name)
-                return None
+                return resolve_corpus_name(root, name)
             parent = os.path.dirname(d)
             if parent == d:
                 break
@@ -114,7 +133,7 @@ def _page_reference_targets(f, ps, cs, tr, roots):
     return sorted(set(out))
 
 def test_page_references_verify_on_a_real_volume():
-    img = _corpus_image("win11refsmini.raw")
+    img = _corpus_image("step1/win11refsmini.raw")
     if img is None:
         pytest.skip("corpus image not present (a clone ships no images)")
     f, ps, cs, tr, roots, obj_map, vmaj, vmin, _ = F.bootstrap(img, None)
@@ -135,7 +154,7 @@ def test_page_reference_check_is_gated_on_checksums():
     ~38 s. Running it unconditionally took `integrity` from 1.4 s to 38.2 s, so it sits behind the same flag
     as the other deep checks.
     """
-    img = _corpus_image("win11refsmini.raw")
+    img = _corpus_image("step1/win11refsmini.raw")
     if img is None:
         pytest.skip("corpus image not present")
     tool = os.path.join(REPO, "forefst.py")
@@ -154,7 +173,7 @@ def test_summary_does_not_pay_for_page_verification():
 
     It was briefly in the shared summary dict, which took `fastsummary` from 0.36 s to 36.70 s and `summary`
     from 4.72 s to 42.24 s on a real Windows volume."""
-    img = _corpus_image("win11refsmini.raw")
+    img = _corpus_image("step1/win11refsmini.raw")
     if img is None:
         pytest.skip("corpus image not present")
     tool = os.path.join(REPO, "forefst.py")
@@ -176,7 +195,7 @@ def test_absent_page_is_not_reported_as_a_failure():
     a sparse copy of a real volume with the referenced page clusters punched out. Both branches are then
     exercised for real -- zeroed pages must land in `absent`, and a page with WRONG content in `failed`.
     """
-    img = _corpus_image("win11refsmini.raw")
+    img = _corpus_image("step1/win11refsmini.raw")
     if img is None:
         pytest.skip("corpus image not present")
 
@@ -222,7 +241,7 @@ def _first_extent_file(f, ps, cs, tr, obj_map, _skipped_dirs=None):
     if _skipped_dirs is None:
         _skipped_dirs = []
     seen = set()
-    for e in F.walk_directory_tree(f, ps, cs, tr, obj_map, 0x600, F.DEFAULT_DEPTH, False, set()):
+    for e in F.walk_directory_tree(f, ps, cs, tr, obj_map, 0x600, F.DEFAULT_DEPTH, False):
         if e.get("is_dir"):
             continue
         oid = e["parent_oid"]
@@ -254,7 +273,7 @@ def test_extract_reports_hole_sourced_bytes_but_still_writes_them():
     content is the case that used to pass silently.
     """
     img = info = None
-    for cand in ("win11refs2g.raw", "win10refs2g.raw", "win10refsmini.raw"):
+    for cand in ("win11refs2g.raw", "win10refs2g.raw", "step1/win10refsmini.raw"):
         img = _corpus_image(cand)
         if img is None:
             continue
@@ -300,8 +319,9 @@ def test_extract_reports_hole_sourced_bytes_but_still_writes_them():
         side = out + ".holes.json"
         assert os.path.exists(side), "-o must leave a sidecar naming the ranges"
         rec = json.load(open(side))
-        assert rec["ranges"] and rec["hole_bytes"] > 0
-        assert sum(x["length"] for x in rec["ranges"]) == rec["hole_bytes"]
+        assert rec["Ranges"] and rec["HoleBytes"] > 0                  # K21 (1.14.0): the sidecar's keys
+        assert sum(x["Length"] for x in rec["Ranges"]) == rec["HoleBytes"]
+        assert all(x["Offset"].startswith("0x") for x in rec["Ranges"])   # K10: an offset is hex
 
         # strict: same finding, nothing written at all
         out2 = os.path.join(d, "strict.bin")
@@ -315,7 +335,8 @@ def test_extract_reports_hole_sourced_bytes_but_still_writes_them():
 
 
 def test_a_file_with_no_holes_extracts_with_exit_zero():
-    """The other half of the contract: no holes -> no note, no sidecar, exit 0."""
+    """The other half of the contract: no holes -> no note, exit 0, and (B12, 1.14.0) a sidecar that SAYS so:
+    status "none", 0 hole bytes -- so the absence of a sidecar never has to be read as either state."""
     img = info = None
     for cand in ("win11refs2g.raw", "win10refs2g.raw"):
         img = _corpus_image(cand)
@@ -343,7 +364,9 @@ def test_a_file_with_no_holes_extracts_with_exit_zero():
                            capture_output=True, text=True, timeout=900)
         assert r.returncode == 0, f"a fully-captured file must exit 0: {r.stderr[-300:]}"
         assert "stores as holes" not in r.stderr
-        assert not os.path.exists(out + ".holes.json")
+        with open(out + ".holes.json") as fh:
+            side = json.load(fh)
+        assert side["Status"] == "none" and side["HoleBytes"] == 0 and side["Ranges"] == [], side
     finally:
         shutil.rmtree(d, ignore_errors=True)
 
@@ -366,9 +389,11 @@ def test_hole_ranges_merge_across_extent_boundaries():
             w.write(b"\xab" * cs)
         f = open(path, "rb")
         try:
-            # two ADJACENT extents, each fully inside the hole: clusters 0 and 1..3
-            exts = [{"file_vcn": 0, "plcn": 0, "clusters": 1},
-                    {"file_vcn": 1, "plcn": 1, "clusters": 3}]
+            # two ADJACENT extents, each fully inside the hole: clusters 0 and 1..3. Each carries the VLCN the reader
+            # reads it by: since 1.14.0 (N127) a run the reader never reads (VLCN 0, a hole, never written) is not
+            # counted as hole bytes, and an extent with no VLCN at PLCN 0 is one of those
+            exts = [{"file_vcn": 0, "plcn": 0, "vlcn": 0x1000, "clusters": 1},
+                    {"file_vcn": 1, "plcn": 1, "vlcn": 0x1001, "clusters": 3}]
             got = F._extent_hole_ranges(f, 0, cs, exts, 4 * cs)
             if got is None:
                 pytest.skip("SEEK_DATA/SEEK_HOLE unsupported on this filesystem")
@@ -376,8 +401,8 @@ def test_hole_ranges_merge_across_extent_boundaries():
             assert sum(n for _o, n in got) == 4 * cs
 
             # a gap between the two extents must NOT be merged away
-            exts2 = [{"file_vcn": 0, "plcn": 0, "clusters": 1},
-                     {"file_vcn": 2, "plcn": 2, "clusters": 1}]
+            exts2 = [{"file_vcn": 0, "plcn": 0, "vlcn": 0x1000, "clusters": 1},
+                     {"file_vcn": 2, "plcn": 2, "vlcn": 0x1002, "clusters": 1}]
             got2 = F._extent_hole_ranges(f, 0, cs, exts2, 3 * cs)
             assert got2 == [(0, cs), (2 * cs, cs)], f"non-adjacent ranges must stay separate, got {got2}"
         finally:
@@ -400,7 +425,7 @@ def test_dataruns_reports_the_full_residency_vocabulary():
     f, ps, cs, tr, roots, obj_map, vmaj, vmin, _ = F.bootstrap(img, None)
     try:
         walk = {e["path"]: e for e in F.walk_directory_tree(
-            f, ps, cs, tr, obj_map, 0x600, F.DEFAULT_DEPTH, False, set()) if not e.get("is_dir")}
+            f, ps, cs, tr, obj_map, 0x600, F.DEFAULT_DEPTH, False) if not e.get("is_dir")}
         shared = [e for e in walk.values() if e.get("data_form") == F.DATA_SNAPSHOT_SHARED]
         assert shared, "this image is the snapshot-shared witness; it must have some"
 

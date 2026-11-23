@@ -1,0 +1,216 @@
+{{- /* Where each attribute sits: a directory's B+-tree and its row types, the attributes in each, and the volume-wide
+       ones. SVG in the style of bootstrap-roots.html (same classes and colours), relURL hit-targets so links survive
+       the /forefst/ sub-path. Placements checked against attributes/*.md, structures/directory_entries.md,
+       structures/reverse_index.md, structures/usn_journal.md, concepts/placement_and_residency.md and the master. */ -}}
+<figure class="roots-figure">
+<svg id="refsattr" class="refsattr" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 736" style="width:100%;height:auto;max-width:920px;display:block;margin:0 auto" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif" role="img" aria-labelledby="refsattr-t">
+  <title id="refsattr-t">Where the ReFS attributes sit: a directory's own B+-tree with its row types 0x10, 0x30, 0x40 and 0x20, and the volume-wide attributes</title>
+  <style>
+    /* ── accent — the same two lines as bootstrap-roots.html ── */
+    .refsattr .boxhi { fill: #e4efe6; stroke: #2f6b45; stroke-width: 1.6; }
+    .refsattr .step  { font-size: 11.5px; font-weight: 700; fill: #2f6b45; }
+
+    .refsattr .bg     { fill: #ffffff; }
+    .refsattr .ttl    { font-size: 17px; font-weight: 700; fill: #16191c; }
+    .refsattr .sub    { font-size: 12.5px; fill: #5c6469; }
+    .refsattr .box    { fill: #f1f3f1; stroke: #333a40; stroke-width: 1.4; }
+    .refsattr .grp    { fill: none; stroke: #c2cdc5; stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .refsattr .grplbl { font-size: 12.5px; font-weight: 700; fill: #3d454b; }
+    .refsattr .grpsub { font-size: 11px; fill: #6b7379; }
+    .refsattr .name   { font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: 13.5px; font-weight: 600; fill: #16191c; }
+    .refsattr .where  { font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: 10.5px; fill: #5c6469; }
+    .refsattr .rname  { font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: 10px; fill: #16191c; }
+    .refsattr .rnameb { font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: 10px; font-weight: 600; fill: #16191c; }
+    .refsattr .ridx   { font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; font-size: 9px; fill: #7c848a; }
+    .refsattr .arrow  { stroke: #5a6169; stroke-width: 1.5; fill: none; }
+    .refsattr .arrowd { stroke: #98a0a6; stroke-width: 1.4; fill: none; stroke-dasharray: 4 3; }
+    .refsattr .leg    { font-size: 11px; fill: #454c52; }
+    .refsattr .note   { font-size: 11.5px; fill: #454c52; font-style: italic; }
+    .refsattr .hit { fill: transparent; cursor: pointer; }
+    .refsattr .hit:hover { fill: rgba(47,107,69,0.12); }
+  </style>
+
+  <defs>
+    <marker id="aah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#5a6169"/>
+    </marker>
+    <marker id="aahd" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#98a0a6"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="920" height="736"/>
+
+  <text class="ttl" x="45" y="38">Where the attributes sit</text>
+  <text class="sub" x="45" y="60">A directory is an object with its own B+-tree, found by its object ID through the Object Table. A file has no tree</text>
+  <text class="sub" x="45" y="77">of its own: its attributes are rows inside its directory's tree, in its name row or, once its record is split out, a backing row.</text>
+
+  <!-- the entry: Object Table -->
+  <rect class="box" x="45" y="96" width="230" height="46" rx="3"/>
+  <text class="name" x="60" y="116">Object Table</text>
+  <text class="where" x="60" y="133">root #0 · object ID → its tree</text>
+  <path class="arrow" d="M 160 142 L 160 161" marker-end="url(#aah)"/>
+
+  <!-- ══ a directory object ══ -->
+  <rect class="grp" x="45" y="164" width="830" height="416" rx="4"/>
+  <text class="grplbl" x="62" y="186">Directory object — its own B+-tree</text>
+  <text class="grpsub" x="330" y="186">the root directory (OID 0x600) or a user directory (from OID 0x701)</text>
+
+  <!-- row 0x10: the own row -->
+  <text class="step" x="62" y="222">row 0x10</text>
+  <text class="where" x="62" y="238">own row</text>
+
+  <rect class="box" x="160" y="200" width="160" height="52" rx="3"/>
+  <text class="ridx" x="168" y="216">fixed region, +0x28</text>
+  <text class="rnameb" x="168" y="231">$STANDARD_INFORMATION</text>
+
+  <rect class="box" x="328" y="200" width="122" height="52" rx="3"/>
+  <text class="ridx" x="336" y="216">0x39 · one per name</text>
+  <text class="rnameb" x="336" y="231">$OBJ_LINK</text>
+
+  <rect class="box" x="458" y="200" width="106" height="52" rx="3"/>
+  <text class="ridx" x="466" y="216">0x90 · template</text>
+  <text class="rnameb" x="466" y="231">$I30_INDEX</text>
+
+  <rect class="box" x="572" y="200" width="148" height="52" rx="3"/>
+  <text class="ridx" x="580" y="216">0xC0 · junction, symlink</text>
+  <text class="rnameb" x="580" y="231">$REPARSE_POINT</text>
+
+  <rect class="box" x="728" y="200" width="126" height="52" rx="3"/>
+  <text class="ridx" x="736" y="216">0xD0 / 0xE0</text>
+  <text class="rnameb" x="736" y="231">$EA_INFORMATION</text>
+  <text class="rname" x="736" y="245">+ $EA</text>
+
+  <!-- row 0x30: one per child name -->
+  <text class="step" x="62" y="296">row 0x30</text>
+  <text class="where" x="62" y="312">one per child</text>
+  <text class="where" x="62" y="326">name</text>
+  <text class="leg" x="160" y="277">an embedded record (key flags 0x01): the file's own record — a file has no tree of its own</text>
+
+  <rect class="box" x="160" y="286" width="160" height="52" rx="3"/>
+  <text class="ridx" x="168" y="302">its fields, at +0x28</text>
+  <text class="rnameb" x="168" y="317">$STANDARD_INFORMATION</text>
+
+  <rect class="box" x="328" y="286" width="250" height="52" rx="3"/>
+  <text class="ridx" x="336" y="302">0x80 · inline bytes, or an extent node</text>
+  <text class="rnameb" x="336" y="317">$DATA</text>
+
+  <path class="arrow" d="M 578 312 L 596 312" marker-end="url(#aah)"/>
+
+  <rect class="box" x="602" y="286" width="150" height="52" rx="3"/>
+  <text class="ridx" x="610" y="302">the bytes on disk</text>
+  <text class="rnameb" x="610" y="317">clusters</text>
+
+  <rect class="box" x="160" y="346" width="126" height="52" rx="3"/>
+  <text class="ridx" x="168" y="362">0xB0 · ADS</text>
+  <text class="rnameb" x="168" y="377">$NAMED_DATA</text>
+
+  <rect class="box" x="294" y="346" width="126" height="52" rx="3"/>
+  <text class="ridx" x="302" y="362">0xB0 · snapshot</text>
+  <text class="rnameb" x="302" y="377">$SNAPSHOT</text>
+
+  <rect class="box" x="428" y="346" width="126" height="52" rx="3"/>
+  <text class="ridx" x="436" y="362">0xC0 · reparse data</text>
+  <text class="rnameb" x="436" y="377">$REPARSE_POINT</text>
+
+  <rect class="box" x="562" y="346" width="126" height="52" rx="3"/>
+  <text class="ridx" x="570" y="362">0xD0 / 0xE0</text>
+  <text class="rnameb" x="570" y="377">$EA_INFORMATION</text>
+  <text class="rname" x="570" y="391">+ $EA · WSL $LX*</text>
+
+  <rect class="box" x="696" y="346" width="126" height="52" rx="3"/>
+  <text class="ridx" x="704" y="362">0x100 · encryption</text>
+  <text class="rnameb" x="704" y="377">$EFS</text>
+
+  <text class="leg" x="160" y="418">or an index entry (key flags 0x02): a child directory, whose record is its own tree (its row 0x10, as above),</text>
+  <text class="leg" x="160" y="433">or a file whose record was split out, which then sits in a backing row 0x40 of the file's home directory.</text>
+  <path class="arrowd" d="M 420 437 L 420 450" marker-end="url(#aahd)"/>
+
+  <!-- row 0x40: the backing record -->
+  <text class="step" x="62" y="472">row 0x40</text>
+  <text class="where" x="62" y="488">backing</text>
+  <text class="where" x="62" y="502">record</text>
+
+  <rect class="box" x="160" y="452" width="540" height="52" rx="3"/>
+  <text class="ridx" x="168" y="468">a moved or hard-linked file: its record, split out of its name row, stays in its home directory</text>
+  <text class="rnameb" x="168" y="483">the same attributes as an embedded record</text>
+
+  <rect class="box" x="708" y="452" width="138" height="52" rx="3"/>
+  <text class="ridx" x="716" y="468">plus, one per name</text>
+  <text class="rnameb" x="716" y="483">$OBJ_LINK</text>
+
+  <!-- row 0x20: the FileId reverse index -->
+  <text class="step" x="62" y="540">row 0x20</text>
+  <text class="where" x="62" y="556">reverse index</text>
+
+  <rect class="box" x="160" y="520" width="300" height="46" rx="3"/>
+  <text class="ridx" x="168" y="536">FileId → name, or home directory</text>
+  <text class="rnameb" x="168" y="551">FileId reverse index</text>
+
+  <!-- ══ volume-wide ══ -->
+  <rect class="grp" x="45" y="596" width="830" height="86" rx="4"/>
+  <text class="grplbl" x="62" y="618">Volume-wide</text>
+  <text class="grpsub" x="170" y="618">kept on system objects, not on user files or directories</text>
+
+  <rect class="box" x="62" y="628" width="255" height="42" rx="3"/>
+  <text class="ridx" x="70" y="644">OID 0x500 · label, version, times</text>
+  <text class="rnameb" x="70" y="659">$VOLUME_INFORMATION</text>
+
+  <rect class="box" x="329" y="628" width="255" height="42" rx="3"/>
+  <text class="ridx" x="337" y="644">OID 0x540 · reparse points by tag</text>
+  <text class="rnameb" x="337" y="659">Reparse Index</text>
+
+  <rect class="box" x="596" y="628" width="262" height="42" rx="3"/>
+  <text class="ridx" x="604" y="644">0xF0 · on the Change Journal file, OID 0x520</text>
+  <text class="rnameb" x="604" y="659">USN $Max</text>
+
+  <text class="note" x="45" y="706">Type codes as on ReFS 3.7 and later; on 3.4, $OBJ_LINK is 0x38 and $REPARSE_POINT 0x70.</text>
+  <text class="note" x="45" y="722">Not every attribute exists on every format: each page says where it does.</text>
+
+  <!-- clickable overlays (base-path-safe via relURL) -->
+  <a xlink:href="{{ "structures/object_table/" | relURL }}" href="{{ "structures/object_table/" | relURL }}"><title>Object Table</title><rect class="hit" x="45" y="96" width="230" height="46" rx="3"/></a>
+  <a xlink:href="{{ "attributes/standard_information/" | relURL }}" href="{{ "attributes/standard_information/" | relURL }}"><title>$STANDARD_INFORMATION</title><rect class="hit" x="160" y="200" width="160" height="52" rx="3"/></a>
+  <a xlink:href="{{ "attributes/obj_link/" | relURL }}" href="{{ "attributes/obj_link/" | relURL }}"><title>$OBJ_LINK</title><rect class="hit" x="328" y="200" width="122" height="52" rx="3"/></a>
+  <a xlink:href="{{ "attributes/i30_index/" | relURL }}" href="{{ "attributes/i30_index/" | relURL }}"><title>$I30_INDEX</title><rect class="hit" x="458" y="200" width="106" height="52" rx="3"/></a>
+  <a xlink:href="{{ "attributes/reparse_point/" | relURL }}" href="{{ "attributes/reparse_point/" | relURL }}"><title>$REPARSE_POINT</title><rect class="hit" x="572" y="200" width="148" height="52" rx="3"/></a>
+  <a xlink:href="{{ "attributes/ea_information/" | relURL }}" href="{{ "attributes/ea_information/" | relURL }}"><title>$EA_INFORMATION and $EA</title><rect class="hit" x="728" y="200" width="126" height="52" rx="3"/></a>
+  <a xlink:href="{{ "structures/directory_entries/" | relURL }}" href="{{ "structures/directory_entries/" | relURL }}"><title>Directory Entries</title><rect class="hit" x="155" y="264" width="600" height="18" rx="3"/></a>
+  <a xlink:href="{{ "attributes/standard_information/" | relURL }}" href="{{ "attributes/standard_information/" | relURL }}"><title>$STANDARD_INFORMATION</title><rect class="hit" x="160" y="286" width="160" height="52" rx="3"/></a>
+  <a xlink:href="{{ "attributes/data/" | relURL }}" href="{{ "attributes/data/" | relURL }}"><title>$DATA</title><rect class="hit" x="328" y="286" width="250" height="52" rx="3"/></a>
+  <a xlink:href="{{ "structures/extent_descriptors/" | relURL }}" href="{{ "structures/extent_descriptors/" | relURL }}"><title>Extent Records</title><rect class="hit" x="602" y="286" width="150" height="52" rx="3"/></a>
+  <a xlink:href="{{ "attributes/named_data/" | relURL }}" href="{{ "attributes/named_data/" | relURL }}"><title>$NAMED_DATA</title><rect class="hit" x="160" y="346" width="126" height="52" rx="3"/></a>
+  <a xlink:href="{{ "attributes/snapshot/" | relURL }}" href="{{ "attributes/snapshot/" | relURL }}"><title>$SNAPSHOT</title><rect class="hit" x="294" y="346" width="126" height="52" rx="3"/></a>
+  <a xlink:href="{{ "attributes/reparse_point/" | relURL }}" href="{{ "attributes/reparse_point/" | relURL }}"><title>$REPARSE_POINT</title><rect class="hit" x="428" y="346" width="126" height="52" rx="3"/></a>
+  <a xlink:href="{{ "attributes/ea_information/" | relURL }}" href="{{ "attributes/ea_information/" | relURL }}"><title>$EA_INFORMATION and $EA</title><rect class="hit" x="562" y="346" width="126" height="52" rx="3"/></a>
+  <a xlink:href="{{ "attributes/efs/" | relURL }}" href="{{ "attributes/efs/" | relURL }}"><title>$EFS</title><rect class="hit" x="696" y="346" width="126" height="52" rx="3"/></a>
+  <a xlink:href="{{ "structures/directory_entries/" | relURL }}" href="{{ "structures/directory_entries/" | relURL }}"><title>Directory Entries</title><rect class="hit" x="155" y="405" width="700" height="33" rx="3"/></a>
+  <a xlink:href="{{ "concepts/placement_and_residency/" | relURL }}" href="{{ "concepts/placement_and_residency/" | relURL }}"><title>Record placement and data residency</title><rect class="hit" x="160" y="452" width="540" height="52" rx="3"/></a>
+  <a xlink:href="{{ "attributes/obj_link/" | relURL }}" href="{{ "attributes/obj_link/" | relURL }}"><title>$OBJ_LINK</title><rect class="hit" x="708" y="452" width="138" height="52" rx="3"/></a>
+  <a xlink:href="{{ "structures/reverse_index/" | relURL }}" href="{{ "structures/reverse_index/" | relURL }}"><title>Reverse Index</title><rect class="hit" x="160" y="520" width="300" height="46" rx="3"/></a>
+  <a xlink:href="{{ "attributes/volume_information/" | relURL }}" href="{{ "attributes/volume_information/" | relURL }}"><title>$VOLUME_INFORMATION</title><rect class="hit" x="62" y="628" width="255" height="42" rx="3"/></a>
+  <a xlink:href="{{ "attributes/reparse/" | relURL }}" href="{{ "attributes/reparse/" | relURL }}"><title>Reparse Index</title><rect class="hit" x="329" y="628" width="255" height="42" rx="3"/></a>
+  <a xlink:href="{{ "structures/usn_journal/" | relURL }}" href="{{ "structures/usn_journal/" | relURL }}"><title>USN Journal</title><rect class="hit" x="596" y="628" width="262" height="42" rx="3"/></a>
+</svg>
+<button type="button" class="roots-enlarge" id="refsattr-big">Enlarge the drawing</button>
+<dialog class="roots-dialog" id="refsattr-dlg" aria-label="The drawing, enlarged"><button type="button" class="roots-close" aria-label="Close">&times;</button></dialog>
+<script>
+(function () {
+  /* the same drawing, as wide as the window: a copy of the SVG (its ids removed; the styles are class-based) */
+  var d = document.getElementById('refsattr-dlg'), b = document.getElementById('refsattr-big');
+  if (!d || !d.showModal) { if (b) b.hidden = true; return; }
+  b.addEventListener('click', function () {
+    if (!d.querySelector('svg')) {
+      var c = document.getElementById('refsattr').cloneNode(true);
+      c.removeAttribute('id'); c.removeAttribute('aria-labelledby');
+      c.querySelectorAll('[id]').forEach(function (x) { x.removeAttribute('id'); });
+      c.style.maxWidth = 'none';
+      d.appendChild(c);
+    }
+    d.showModal();
+  });
+  d.addEventListener('click', function (e) { if (e.target === d || e.target.closest('.roots-close')) d.close(); });
+})();
+</script>
+
+  <figcaption>Click any box to open its page. The row types and their layouts: <a href="{{ "structures/directory_entries/" | relURL }}">Directory Entries</a> &middot; why a record moves into a backing row: <a href="{{ "concepts/placement_and_residency/" | relURL }}">Record placement and data residency</a> &middot; every attribute, by type code: the list below.</figcaption>
+</figure>

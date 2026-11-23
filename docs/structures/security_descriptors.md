@@ -1,22 +1,22 @@
 # Security Descriptors
 
-ReFS uses a centralized, content-addressed security model. A SecurityId stored with each file maps
-directly to OID 0x530, the Security Descriptors table, where the actual `SECURITY_DESCRIPTOR`
-structures reside. Identical permission sets share a single descriptor entry rather than being
-duplicated per file.
+ReFS uses a centralised, content-addressed security model:
+
+- a SecurityId stored with each file maps directly to OID 0x530, the Security Descriptors table, where the
+  actual `SECURITY_DESCRIPTOR` structures reside;
+- identical permission sets share a single descriptor entry rather than being duplicated per file.
 
 ## SD table key — 16 bytes
 
-OID 0x530 is a **stream-type table without a schema** — unlike most other ReFS tables it does not use a
-schema-typed B+-tree. Each entry is keyed by the 16-byte structure below. (Note this table is distinct
-from schema 0x160, which is used by the Reparse Point Index, not by security.)
+OID 0x530 is a B+-tree table of schema 0x140, the schema the driver gives it when it creates it
+(`RefsSecurityInitialize`). Each entry is keyed by the 16-byte structure below. (Schema 0x160 is the Reparse Point
+Index's, not this table's.)
 
 | Offset | Size | Field | Description |
 |--------|------|-------|-------------|
-| 0x00 | 4 | Entry size (u32) | Total value byte count (the key echoes the value length) |
-| 0x04 | 4 | Padding (u32) | Always 0 |
-| 0x08 | 4 | SecurityId high (u32) | Collision generation (see below) |
-| 0x0C | 4 | SecurityId low (u32) | SD content hash (see below) |
+| 0x00 | 8 | Value length (u64) | The row's value length (the key echoes it) |
+| 0x08 | 4 | Security ID high (u32) | Collision generation (see below) |
+| 0x0C | 4 | Security ID low (u32) | SD content hash (see below) |
 
 ## Value layout — 12-byte wrapper + SECURITY_DESCRIPTOR_RELATIVE
 
@@ -52,20 +52,20 @@ ACCESS_ALLOWED (0x00), ACCESS_DENIED (0x01), SYSTEM_AUDIT (0x02). AccessMask 0x0
 
 ## Resolution chain
 
-A file reaches its descriptor through its SecurityId. Where that SecurityId lives depends on whether
-the file record is resident or non-resident:
+A file reaches its descriptor through its SecurityId. Where that SecurityId lives depends on where the
+file's record sits — embedded in its name row, or split out into a type-0x40 backing by a move or a hard link:
 
 ```text
-Resident file:     directory entry value offset 0x50 (SecurityId, u64)
-Non-resident file: type-0x40 backing record value offset 0x50 (SecurityId, u64)
+Embedded record: directory entry value offset 0x50 (SecurityId, u64)
+Split record:    type-0x40 backing record value offset 0x50 (SecurityId, u64)
  -> OID 0x530 (Security Descriptors table)
  -> SECURITY_DESCRIPTOR (Owner SID, Group SID, DACL, SACL)
 ```
 
-Resident files carry the SecurityId inline at value offset 0x50. A non-resident file carries it in its own
-**type-0x40 backing record** — the file's `$SI` / stream-summary, keyed by (home-dir OID + FileId) — at
-backing value offset 0x50, **not** through the Object Table (a non-resident file has no Object-Table OID of
-its own).
+A file whose record is embedded carries the SecurityId inline at value offset 0x50. A split record carries it
+in the file's own **type-0x40 backing record** — the file's `$SI` / stream-summary, keyed by (home-dir OID +
+FileID) — at backing value offset 0x50, **not** through the Object Table (a file has no Object-Table OID of its
+own).
 
 This is a single-table model. `RefsSecurityInitialize` opens only OID 0x530
 (`MsInitializeWellKnownObjectId(0x530, ...)`). The security load/cache/find functions
@@ -77,7 +77,8 @@ involved in security resolution.
 
 The 64-bit SecurityId is **not opaque**: its low 32 bits are a content hash of the security descriptor,
 and its high 32 bits are a collision generation. Because the SecurityId embeds the SD hash, security
-dedup is **content-addressed** — identical descriptors produce identical SecurityIds on every volume.
+dedup is **content-addressed** — identical descriptors produce the same SecurityId low half on every volume, and
+the same SecurityId wherever no hash collision raised the generation.
 
 Distinct descriptors that appear on multiple images carry the *same* SecurityId-low on all of them —
 only possible if the low 32 bits are a deterministic content hash, not a per-volume counter. The high
@@ -93,7 +94,7 @@ for each little-endian u32 dword d in the SECURITY_DESCRIPTOR:
 
 `GetSecurityIdFromSecurityDescriptorUnsafe` returns a `_SECURITY_HASH_KEY` and calls
 `RefsSecurityFindMatchingDescriptor` (the dedup lookup against VCB+0xb0, the OID 0x530 table): a new SD
-is hashed and matched against existing entries before a new SecurityId is minted.
+is hashed and matched against existing entries before a new SecurityId is created.
 
 ### Worked example (SecurityId 0x10a9f9562)
 
@@ -114,8 +115,10 @@ wrapper hash.
 This is the same centralized, content-addressed security model NTFS uses (`$Secure`): identical
 permission sets share a single descriptor entry, keyed by the SD hash, rather than being duplicated per
 file. Because the SecurityId embeds the SD hash, the *same permissions yield the same SecurityId on any
-ReFS volume* — a forensic fingerprint. A SecurityId can be matched to a known descriptor without
-reading the descriptor body, and a descriptor whose stored hash ≠ recomputed hash indicates it was altered after write (tampering or corruption).
+ReFS volume* (unless a hash collision raised the generation there), so a SecurityId identifies a permission set across volumes. A SecurityId can be
+matched to a known descriptor without reading the descriptor body. The stored hash equals the hash recomputed
+over the descriptor's bytes on every descriptor of the corpus (4,405 on 124 volumes), so a descriptor where the two
+differ was not left that way by any write measured: treat it as damaged or edited.
 Changing a file's permissions either reuses an existing SecurityId (if the new descriptor hashes to an
 existing entry) or creates a new one.
 
@@ -124,19 +127,23 @@ The default descriptor applied to new objects at format time is built by
 
 ## Cross-references
 
-- [Directory Entries](directory_entries.md) — resident files carry the SecurityId at value offset 0x50; non-resident files carry it in their type-0x40 backing record at value offset 0x50 (not via the Object Table)
+- [Directory Entries](directory_entries.md) — an embedded record carries the SecurityId at value offset 0x50; a split record carries it in its type-0x40 backing record at value offset 0x50 (not via the Object Table)
 - [System OIDs](system_oids.md) — OID 0x520 and OID 0x530
 - [Object Table](object_table.md) — OID resolution for 0x520 and 0x530
 
 ## Evidence
 
-The single-table model and the OID 0x530 key/value structure are static-decompiled (E2) and raw-disk
-decoded (RD) across the corpus: `RefsSecurityInitialize` opens OID 0x530 (via
-`MsInitializeWellKnownObjectId(0x530, …)`) and `CmsHashTable` backs the descriptor lookup, while the
-SecurityId resolves through `RefsLoadSecurityDescriptor` / `RefsSecurityGetDescriptorById`; the key, the
-12-byte wrapper, the
-self-relative SD layout, the content-hash identity (SecurityId-low = SD hash, ROL-3 NTFS algorithm),
-and the per-file compound SecurityId `(generation << 32) | hash32(SD)` are all confirmed byte-for-byte
-on disk. The schema-0x160 disambiguation (0x160 belongs to the Reparse Point Index, not to OID 0x530)
-is a static naming correction. Also registered for statements on this page: **FS_OTBL_SA_006**, **MD_DDIR_006**. See [how this was verified](../methodology.md) to trace these to
+The single-table model and the OID 0x530 key/value structure are read in the decompiled driver and decoded from the disk
+across the corpus: `RefsSecurityInitialize` opens OID 0x530 (via `MsInitializeWellKnownObjectId(0x530, …)`) and
+`CmsHashTable` backs the descriptor lookup, while the SecurityId resolves through `RefsLoadSecurityDescriptor` /
+`RefsSecurityGetDescriptorById`; the key, the 12-byte wrapper, the self-relative SD layout, the content-hash identity
+(SecurityId-low = SD hash, ROL-3 NTFS algorithm), and the per-file compound SecurityId `(generation << 32) | hash32(SD)`
+are all confirmed byte-for-byte on disk: on the 124 ReFS volumes of the corpus, the 4,405 descriptors' stored hash, key
+low half and recomputed hash are equal on every one, and the key high half equals the generation, 1 on all 4,405. The
+table's schema 0x140 is read in `RefsSecurityInitialize` and at the table's root on a 3.4, a 3.7 and a 3.14 volume. Each
+is a registered finding with its own evidence tier and witness in the claim register.
+
+See [how this was verified](../methodology.md) to trace these to
 the exact images and measurements in `analysis/`.
+
+<!-- findings: FS_OTBL_SA_006, MD_DDIR_006 -->

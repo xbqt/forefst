@@ -1,35 +1,35 @@
 # Format support
 
-Verified means a measurement was made on an image of that format and recorded with the claim.
-It is deliberately a **floor**: a statement can be true of a format nobody here has an image of,
-and this table will not say so. Nothing is inferred from what a claim asserts — only from what
-was checked.
+Which ReFS formats each area of this project has been **confirmed on**: a number is how many
+statements in that area a measurement on an image of that format confirmed. It is not which
+formats a statement is *about* — a statement can describe a format no image here was checked
+against, and this table will not say so. It is deliberately a **floor**: nothing is inferred from
+what a statement asserts, only from what was measured. Blank means nothing in that area was
+confirmed on that format, which is a gap in the evidence, not a statement that ReFS differs.
 
-Which ReFS formats each area of this project has been **verified on** — not which formats a
-statement is *about*. A claim can describe a format that no image here was ever checked against;
-this table counts only measurements actually made, so it is a floor, not a ceiling.
+The last two columns count the area's statements that no format cell holds: **format not
+recorded** — confirmed on an image, but the record does not say which format; **not confirmed on
+an image** — read from the driver, inferred, not yet tested on an image, or contradicted by a
+measurement.
 
-A number is how many verified statements in that area cover that format. Blank means nothing in
-that area was checked on it — which is a gap in the evidence, not a statement that ReFS differs.
+| Area | 3.4 | 3.7 | 3.9 | 3.10 | 3.14 | format not recorded | not confirmed on an image |
+|---|---|---|---|---|---|---|---|
+| File records & attributes | 41 | 15 | 14 | 14 | 71 | 25 | 21 |
+| Journals & log | 17 | 3 | 1 | 2 | 22 | 7 | 48 |
+| B+-tree structure | 48 | 14 | 10 | 13 | 53 | 2 | 2 |
+| Object & container tables | 41 | 6 | 6 | 7 | 41 | 5 | 8 |
+| Boot & volume | 32 | 5 | 5 | 7 | 34 | 3 | 10 |
+| Checkpoints | 27 | 1 | 1 | 1 | 21 | 3 | 0 |
+| Architecture & driver | 7 |  |  |  | 6 | 3 | 19 |
+| Security & links | 8 | 4 | 2 | 3 | 17 | 3 | 3 |
+| Deletion & recovery | 2 |  |  |  | 3 | 4 | 4 |
+| Snapshots & CoW |  |  |  |  | 6 | 0 | 2 |
+| Other | 2 |  |  |  | 2 | 0 | 4 |
 
-| Area | 3.4 | 3.7 | 3.9 | 3.10 | 3.14 | scope not recorded |
-|---|---|---|---|---|---|---|
-| File records & attributes | 57 | 12 | 10 | 10 | 77 | 23 |
-| Journals & log | 49 | 3 | 1 | 2 | 55 | 7 |
-| B+-tree structure | 45 | 8 | 5 | 8 | 47 | 3 |
-| Object & container tables | 42 | 3 | 3 | 4 | 40 | 9 |
-| Boot & volume | 33 | 2 | 2 | 4 | 40 | 3 |
-| Checkpoints | 27 |  |  |  | 20 | 2 |
-| Other | 4 |  |  |  | 18 | 10 |
-| Security & links | 8 | 2 |  | 1 | 21 | 3 |
-| Architecture & driver | 12 |  |  |  | 11 | 4 |
-| Deletion & recovery | 3 |  |  |  | 6 | 4 |
-| Snapshots & CoW |  |  |  |  | 8 | 0 |
-
-**68 statements have no recorded verification scope.** They are counted in the last
-column rather than dropped: leaving them out would make coverage look strongest exactly where it
-is least documented. Most are older entries whose record kept the date of the check but not the
-volumes it ran on.
+Of 503 statements, **382 were confirmed on an image**; 55 of them without a
+recorded format, and **121 are not confirmed on an image**. Both are counted in their columns
+rather than dropped: leaving them out would make coverage look strongest exactly where it is least
+documented. A statement confirmed on two formats is counted under each.
 
 Formats 3.11 to 3.13 appear nowhere because no image of them exists in this project's corpus.
 A boundary such as *"this applies from 3.11"* is a statement about where behaviour changes,

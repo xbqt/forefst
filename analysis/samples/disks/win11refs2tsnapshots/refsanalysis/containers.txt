@@ -3,15 +3,15 @@ ReFS Container & Allocator Analysis
 ==============================================================================
   Image:              win11refs2tsnapshots.raw
   ReFS version:       3.14
-  Cluster size:       0x1000 (4.0 KB)
-  Container size:     0x4000000 (64.0 MB)
+  Cluster size:       4 KiB
+  Container size:     64 MiB
   Clusters/container: 16384
-  Checkpoint VC:      265
+  Checkpoint VC:      265  (checkpoint LCN 0x51eb04)
 
 ------------------------------------------------------------------------------
 Volume Capacity
 ------------------------------------------------------------------------------
-  Total volume size:  2.0 TB
+  Total volume size:  2198956146688 bytes (2047.9 GiB)
   Total containers:   32767 (theoretical from volume size)
   Container Table:    32767 mapped containers
 
@@ -26,7 +26,7 @@ Allocator Tables
 ------------------------------------------------------------------------------
 Compression Configuration (from Container Table header)
 ------------------------------------------------------------------------------
-  Format:      None
+  Format:      none
   Level:       0
   Chunk size:  0 (default)
 

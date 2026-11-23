@@ -1,0 +1,785 @@
+{
+ "id": "chkp_win11refstestmftecmd",
+ "generated_by": "analysis/tools/analysis_scripts/gen_hex_figures.py",
+ "decoded_by": "forefst 1.14.0 (forefstdev/forefst.py)",
+ "title": "An example checkpoint of a ReFS 3.14 volume (4 KiB clusters, CRC64; the copy in use, up to the end of its own page reference), read with forefst.",
+ "image": {
+  "name": "win11refstestmftecmd.raw",
+  "step": "step5",
+  "listed_as": "analysis/rawdisk/disks/step5/win11refstestmftecmd.raw",
+  "size": 4294967296
+ },
+ "offset": 524238848,
+ "offset_hex": "0x1f3f4000",
+ "length": 272,
+ "bytes": "43484b5002000000000000005fcc49aa69020000000000000000000000000000f4e30100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003000e0003000e00e00000003000000069020000000000006002000000000000d9120000040000008206000000000000000000000000000080030000200000000d000000a800000038000000000000000000000000000000100100004001000070010000a0010000d001000000020000300200006002000090020000c0020000f0020000200300005003000000000000f4e301000000000000000000000000000000000000000000000000000000000000000108040000004355270700000000",
+ "note": null,
+ "fields": [
+  {
+   "off": "0x00",
+   "len": 80,
+   "name": "Page header",
+   "frame": null,
+   "group": null,
+   "bytes": "43 48 4b 50 02 00 00 00 00 00 00 00 5f cc 49 aa …",
+   "value": "signature \"CHKP\"; page clock (+0x10): 0x269 (617); this copy is at LCN 0x1e3f4 (superblock slot 1), the copy in use",
+   "decoder": "forefst.checkpoint_select",
+   "slot": 0,
+   "link": {
+    "page": "structures/chkp.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x50",
+   "len": 4,
+   "name": "Version echo",
+   "frame": null,
+   "group": null,
+   "bytes": "03 00 0e 00",
+   "value": "0xe0003: 3.14",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 1,
+   "link": {
+    "page": "structures/chkp.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x54",
+   "len": 2,
+   "name": "Major version",
+   "frame": null,
+   "group": null,
+   "bytes": "03 00",
+   "value": "3",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 2,
+   "link": {
+    "page": "structures/chkp.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x56",
+   "len": 2,
+   "name": "Minor version",
+   "frame": null,
+   "group": null,
+   "bytes": "0e 00",
+   "value": "14",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 3,
+   "link": {
+    "page": "structures/chkp.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x58",
+   "len": 4,
+   "name": "Self-descriptor offset",
+   "frame": null,
+   "group": null,
+   "bytes": "e0 00 00 00",
+   "value": "0xe0",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 4,
+   "link": {
+    "page": "structures/chkp.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x5C",
+   "len": 4,
+   "name": "Page reference size",
+   "frame": null,
+   "group": null,
+   "bytes": "30 00 00 00",
+   "value": "0x30 (48 bytes)",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 5,
+   "link": {
+    "page": "structures/chkp.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x60",
+   "len": 8,
+   "name": "Virtual clock",
+   "frame": null,
+   "group": null,
+   "bytes": "69 02 00 00 00 00 00 00",
+   "value": "0x269 (617)",
+   "decoder": "forefst.checkpoint_select",
+   "slot": 6,
+   "link": {
+    "page": "structures/chkp.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x68",
+   "len": 8,
+   "name": "Allocator clock",
+   "frame": null,
+   "group": null,
+   "bytes": "60 02 00 00 00 00 00 00",
+   "value": "0x260 (608)",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 7,
+   "link": {
+    "page": "structures/chkp.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x70",
+   "len": 8,
+   "name": "Log position",
+   "frame": null,
+   "group": null,
+   "bytes": "d9 12 00 00 04 00 00 00",
+   "value": "0x4000012d9: generation 4, block offset 0x12d9",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 0,
+   "link": {
+    "page": "structures/chkp.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x78",
+   "len": 4,
+   "name": "CHKP flags",
+   "frame": null,
+   "group": null,
+   "bytes": "82 06 00 00",
+   "value": "0x682: 0x2 = always-set; 0x80 = native-Win11-format (ReFS 3.10+); 0x200 = indirect-root-list; 0x400 = rollback-protection fields (+0x9c offset / +0xa0 length; ReFS 3.13+)",
+   "decoder": "forefst.chkp_flags_decoded",
+   "slot": 1,
+   "link": {
+    "page": "structures/chkp.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x7C",
+   "len": 12,
+   "name": "Reserved",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 00 00 00 00 00 00 00 00 00",
+   "value": "all 12 bytes zero",
+   "decoder": "bytes",
+   "slot": "z",
+   "link": {
+    "page": "structures/chkp.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x88",
+   "len": 4,
+   "name": "Optional area: offset",
+   "frame": null,
+   "group": null,
+   "bytes": "80 03 00 00",
+   "value": "0x380",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 2,
+   "link": {
+    "page": "structures/chkp.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x8C",
+   "len": 4,
+   "name": "Optional area: length",
+   "frame": null,
+   "group": null,
+   "bytes": "20 00 00 00",
+   "value": "0x20",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 3,
+   "link": {
+    "page": "structures/chkp.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x90",
+   "len": 4,
+   "name": "Root count",
+   "frame": null,
+   "group": null,
+   "bytes": "0d 00 00 00",
+   "value": "13",
+   "decoder": "forefst.parse_chkp",
+   "slot": 4,
+   "link": {
+    "page": "structures/chkp.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x94",
+   "len": 4,
+   "name": "Root pointer list",
+   "frame": null,
+   "group": null,
+   "bytes": "a8 00 00 00",
+   "value": "0xa8: the root-offset table starts at +0xA8 (flag 0x200)",
+   "decoder": "forefst.parse_chkp",
+   "slot": 5,
+   "link": {
+    "page": "structures/chkp.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x98",
+   "len": 4,
+   "name": "Root-offset table length",
+   "frame": null,
+   "group": null,
+   "bytes": "38 00 00 00",
+   "value": "56 bytes: at least 4 x 13 roots = 52, the driver's test",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 6,
+   "link": {
+    "page": "structures/chkp.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x9C",
+   "len": 4,
+   "name": "Rollback-protection blob: offset",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 00",
+   "value": "0: none",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 7,
+   "link": {
+    "page": "structures/chkp.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0xA0",
+   "len": 4,
+   "name": "Rollback-protection blob: length",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 00",
+   "value": "0: none",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 0,
+   "link": {
+    "page": "structures/chkp.md",
+    "anchor": "field-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0xA8",
+   "len": 52,
+   "name": "Root offsets",
+   "frame": null,
+   "group": null,
+   "bytes": "10 01 00 00 40 01 00 00 70 01 00 00 a0 01 00 00 …",
+   "value": "the in-record offsets of the 13 root references: 0x110, 0x140, 0x170, 0x1a0, 0x1d0, 0x200, 0x230, 0x260, 0x290, 0x2c0, 0x2f0, 0x320, 0x350",
+   "decoder": "forefst.parse_chkp",
+   "slot": 1,
+   "link": {
+    "page": "structures/chkp.md",
+    "anchor": "13-root-table-pointers"
+   },
+   "row": false,
+   "table": null
+  },
+  {
+   "off": "0xE0",
+   "len": 48,
+   "name": "Own page reference",
+   "frame": null,
+   "group": null,
+   "bytes": "f4 e3 01 00 00 00 00 00 00 00 00 00 00 00 00 00 …",
+   "value": "the checkpoint's reference to itself: its first LCN slot is 0x1e3f4, this copy",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 2,
+   "link": {
+    "page": "structures/chkp.md",
+    "anchor": "field-layout"
+   },
+   "row": false,
+   "table": null
+  }
+ ],
+ "groups": [],
+ "rows": [
+  {
+   "o": "0000",
+   "h": [
+    [
+     0,
+     "43 48 4b 50 02 00 00 00  00 00 00 00 5f cc 49 aa"
+    ]
+   ],
+   "a": [
+    [
+     0,
+     "CHKP........_.I."
+    ]
+   ]
+  },
+  {
+   "o": "0010",
+   "h": [
+    [
+     0,
+     "69 02 00 00 00 00 00 00  00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     0,
+     "i..............."
+    ]
+   ]
+  },
+  {
+   "o": "0020",
+   "h": [
+    [
+     0,
+     "f4 e3 01 00 00 00 00 00  00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     0,
+     "................"
+    ]
+   ]
+  },
+  {
+   "o": "0030",
+   "h": [
+    [
+     0,
+     "00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     0,
+     "................"
+    ]
+   ]
+  },
+  {
+   "o": "0040",
+   "h": [
+    [
+     0,
+     "00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     0,
+     "................"
+    ]
+   ]
+  },
+  {
+   "o": "0050",
+   "h": [
+    [
+     1,
+     "03 00 0e 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     2,
+     "03 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     3,
+     "0e 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     4,
+     "e0 00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     5,
+     "30 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     1,
+     "...."
+    ],
+    [
+     2,
+     ".."
+    ],
+    [
+     3,
+     ".."
+    ],
+    [
+     4,
+     "...."
+    ],
+    [
+     5,
+     "0..."
+    ]
+   ]
+  },
+  {
+   "o": "0060",
+   "h": [
+    [
+     6,
+     "69 02 00 00 00 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     7,
+     "60 02 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     6,
+     "i......."
+    ],
+    [
+     7,
+     "`......."
+    ]
+   ]
+  },
+  {
+   "o": "0070",
+   "h": [
+    [
+     8,
+     "d9 12 00 00 04 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     9,
+     "82 06 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     10,
+     "00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     8,
+     "........"
+    ],
+    [
+     9,
+     "...."
+    ],
+    [
+     10,
+     "...."
+    ]
+   ]
+  },
+  {
+   "o": "0080",
+   "h": [
+    [
+     10,
+     "00 00 00 00 00 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     11,
+     "80 03 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     12,
+     "20 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     10,
+     "........"
+    ],
+    [
+     11,
+     "...."
+    ],
+    [
+     12,
+     " ..."
+    ]
+   ]
+  },
+  {
+   "o": "0090",
+   "h": [
+    [
+     13,
+     "0d 00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     14,
+     "a8 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     15,
+     "38 00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     16,
+     "00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     13,
+     "...."
+    ],
+    [
+     14,
+     "...."
+    ],
+    [
+     15,
+     "8..."
+    ],
+    [
+     16,
+     "...."
+    ]
+   ]
+  },
+  {
+   "o": "00a0",
+   "h": [
+    [
+     17,
+     "00 00 00 00"
+    ],
+    [
+     -1,
+     " 00 00 00 00  "
+    ],
+    [
+     18,
+     "10 01 00 00 40 01 00 00"
+    ]
+   ],
+   "a": [
+    [
+     17,
+     "...."
+    ],
+    [
+     -1,
+     "...."
+    ],
+    [
+     18,
+     "....@..."
+    ]
+   ]
+  },
+  {
+   "o": "00b0",
+   "h": [
+    [
+     18,
+     "70 01 00 00 a0 01 00 00  d0 01 00 00 00 02 00 00"
+    ]
+   ],
+   "a": [
+    [
+     18,
+     "p..............."
+    ]
+   ]
+  },
+  {
+   "o": "00c0",
+   "h": [
+    [
+     18,
+     "30 02 00 00 60 02 00 00  90 02 00 00 c0 02 00 00"
+    ]
+   ],
+   "a": [
+    [
+     18,
+     "0...`..........."
+    ]
+   ]
+  },
+  {
+   "o": "00d0",
+   "h": [
+    [
+     18,
+     "f0 02 00 00 20 03 00 00  50 03 00 00"
+    ],
+    [
+     -1,
+     " 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     18,
+     ".... ...P..."
+    ],
+    [
+     -1,
+     "...."
+    ]
+   ]
+  },
+  {
+   "o": "00e0",
+   "h": [
+    [
+     19,
+     "f4 e3 01 00 00 00 00 00  00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     19,
+     "................"
+    ]
+   ]
+  },
+  {
+   "o": "00f0",
+   "h": [
+    [
+     19,
+     "00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     19,
+     "................"
+    ]
+   ]
+  },
+  {
+   "o": "0100",
+   "h": [
+    [
+     19,
+     "00 00 01 08 04 00 00 00  43 55 27 07 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     19,
+     "........CU'....."
+    ]
+   ]
+  }
+ ]
+}

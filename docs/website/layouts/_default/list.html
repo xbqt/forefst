@@ -1,7 +1,10 @@
 {{ define "main" }}
 <article>
   <h1>{{ .Title }}</h1>
-  {{ .Content }}
+  {{- /* RC3: a section page's `<!-- site: after-list -->` (build.py: the paragraph @@after-list@@) puts what follows it
+         after the list of pages */ -}}
+  {{ $parts := split (string .Content) "<p>@@after-list@@</p>" }}
+  {{ index $parts 0 | safeHTML }}
 
   {{ $groups := .Params.groups }}
   {{ if $groups }}
@@ -21,5 +24,6 @@
       {{ partial "page-table.html" (sort .Pages "Params.sort") }}
     {{ end }}
   {{ end }}
+  {{ if gt (len $parts) 1 }}{{ index $parts 1 | safeHTML }}{{ end }}
 </article>
 {{ end }}

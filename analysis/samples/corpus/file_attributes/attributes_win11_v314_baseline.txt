@@ -1,16 +1,18 @@
+# refsanalysis win11refsmini.raw attributes   (refsanalysis.py 1.14.0; gen_corpus_samples.sh)
+# ----------------------------------------------------------------------------
 ==============================================================================
 ReFS File Attribute Analysis
 ==============================================================================
-  Image:        /workspace/refs/analysis/rawdisk/disks/step1/win11refsmini.raw
+  Image:        win11refsmini.raw
   ReFS version: 3.14
-  Cluster size: 0x1000
+  Cluster size: 4 KiB
   Start OID:    0x600
 
   Summary:
-    Total entries:     20
+    Total entries:     20 names
     Directories:       11
-    Files:             9
-    Resident files:    9
+    Files:             9 (9 inline)
+    Names:             9 (one per file: no file is hard-linked)
     EFS encrypted:     0
     WSL metadata:      0
     Reparse points:    0
@@ -21,149 +23,191 @@ Detailed Attributes
 ==============================================================================
 
   DIR  $RECYCLE.BIN
-    Created:     2026-05-14 06:29:26 UTC
-    Modified:    2026-05-14 06:29:26 UTC
-    Changed:     2026-05-14 06:29:26 UTC
-    Attributes:  HIDDEN | SYSTEM | DIRECTORY_INTERNAL (0x10000006)
+    Created:     2026-05-14T06:29:26.8041686Z
+    Modified:    2026-05-14T06:29:26.8041686Z
+    Changed:     2026-05-14T06:29:26.8041686Z
+    Accessed:    2026-05-14T06:29:26.8041686Z
+    Attributes:  0x10000006 (Hidden|System|Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x125f8814d (4932010317)
 
   DIR  $RECYCLE.BIN/S-1-5-21-3829591975-2821165226-2477612932-1001
-    Created:     2026-05-14 06:29:26 UTC
-    Modified:    2026-05-14 06:29:26 UTC
-    Changed:     2026-05-14 06:29:26 UTC
-    Attributes:  HIDDEN | SYSTEM | DIRECTORY_INTERNAL (0x10000006)
+    Created:     2026-05-14T06:29:26.8041686Z
+    Modified:    2026-05-14T06:29:26.8041686Z
+    Changed:     2026-05-14T06:29:26.8041686Z
+    Accessed:    2026-05-14T06:29:26.8041686Z
+    Attributes:  0x10000006 (Hidden|System|Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1d7af2978 (7913548152)
 
   FILE $RECYCLE.BIN/S-1-5-21-3829591975-2821165226-2477612932-1001/desktop.ini
-    Created:     2026-05-14 06:29:26 UTC
-    Modified:    2026-05-14 06:29:26 UTC
-    Changed:     2026-05-14 06:29:26 UTC
-    Attributes:  HIDDEN | SYSTEM | ARCHIVE (0x26)
-    IntFlags:    HAS_EA (0x8)
-    SecurityId:  0x111afe37e
-    Storage:     RESIDENT (440 bytes)
+    Created:     2026-05-14T06:29:26.8041686Z
+    Modified:    2026-05-14T06:29:26.8041686Z
+    Changed:     2026-05-14T06:29:26.8041686Z
+    Accessed:    2026-05-14T06:29:26.8041686Z
+    Attributes:  0x26 (Hidden|System|Archive)
+    IntFlags:    0x8 (DataInRecord)
+    SecurityId:  0x111afe37e (4591707006)
+    Storage:     inline (record embedded, 440 bytes)
 
   DIR  plusrienneva
-    Created:     2026-05-14 06:30:45 UTC
-    Modified:    2026-05-14 06:32:05 UTC
-    Changed:     2026-05-14 06:32:05 UTC
-    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+    Created:     2026-05-14T06:30:45.0093932Z
+    Modified:    2026-05-14T06:32:05.7353990Z
+    Changed:     2026-05-14T06:32:05.7353990Z
+    Accessed:    2026-05-14T06:32:09.3572624Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   FILE plusrienneva/bat.txt
-    Created:     2026-05-14 06:31:31 UTC
-    Modified:    2026-05-14 06:31:31 UTC
-    Changed:     2026-05-14 06:31:31 UTC
-    Attributes:  ARCHIVE (0x20)
-    IntFlags:    HAS_EA (0x8)
-    SecurityId:  0x1348ee884
-    Storage:     RESIDENT (320 bytes)
+    Created:     2026-05-14T06:31:31.5288730Z
+    Modified:    2026-05-14T06:31:31.5288730Z
+    Changed:     2026-05-14T06:31:31.5288730Z
+    Accessed:    2026-05-14T06:31:31.5288730Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x8 (DataInRecord)
+    SecurityId:  0x1348ee884 (5176748164)
+    Storage:     inline (record embedded, 320 bytes)
 
   FILE plusrienneva/hoho.txt
-    Created:     2026-05-14 06:31:58 UTC
-    Modified:    2026-05-14 06:31:42 UTC
-    Changed:     2026-05-14 06:31:48 UTC
-    Attributes:  ARCHIVE (0x20)
-    IntFlags:    HAS_EA (0x8)
-    SecurityId:  0x1348ee884
-    Storage:     RESIDENT (320 bytes)
+    Created:     2026-05-14T06:31:58.0844068Z
+    Modified:    2026-05-14T06:31:42.0186659Z
+    Changed:     2026-05-14T06:31:48.3965510Z
+    Accessed:    2026-05-14T06:31:58.0883063Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x8 (DataInRecord)
+    SecurityId:  0x1348ee884 (5176748164)
+    Storage:     inline (record embedded, 320 bytes)
 
   FILE plusrienneva/xbpt.txt
-    Created:     2026-05-14 06:31:05 UTC
-    Modified:    2026-05-14 06:31:05 UTC
-    Changed:     2026-05-14 06:31:05 UTC
-    Attributes:  ARCHIVE (0x20)
-    IntFlags:    HAS_EA (0x8)
-    SecurityId:  0x1348ee884
-    Storage:     RESIDENT (328 bytes)
+    Created:     2026-05-14T06:31:05.8792268Z
+    Modified:    2026-05-14T06:31:05.8792268Z
+    Changed:     2026-05-14T06:31:05.8792268Z
+    Accessed:    2026-05-14T06:31:05.8792268Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x8 (DataInRecord)
+    SecurityId:  0x1348ee884 (5176748164)
+    Storage:     inline (record embedded, 328 bytes)
 
   DIR  System Volume Information
-    Created:     2026-05-14 06:26:07 UTC
-    Modified:    2026-05-14 06:27:38 UTC
-    Changed:     2026-05-14 06:27:38 UTC
-    Attributes:  HIDDEN | SYSTEM | DIRECTORY_INTERNAL (0x10000006)
+    Created:     2026-05-14T06:26:07.0499619Z
+    Modified:    2026-05-14T06:27:38.8253721Z
+    Changed:     2026-05-14T06:27:38.8253721Z
+    Accessed:    2026-05-14T06:27:38.8253721Z
+    Attributes:  0x10000006 (Hidden|System|Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x10aa39b62 (4473461602)
 
   FILE System Volume Information/FVE2.{8252fd17-a486-4ad4-b1ca-f4fe64d23218}
-    Created:     2026-05-14 06:27:37 UTC
-    Modified:    2026-05-14 06:27:37 UTC
-    Changed:     2026-05-14 06:27:37 UTC
-    Attributes:  HIDDEN | SYSTEM | ARCHIVE (0x26)
-    IntFlags:    HAS_EA (0x8)
-    SecurityId:  0x10a9f9562
-    Storage:     RESIDENT (312 bytes)
+    Created:     2026-05-14T06:27:37.8152248Z
+    Modified:    2026-05-14T06:27:37.8152248Z
+    Changed:     2026-05-14T06:27:37.8152248Z
+    Accessed:    2026-05-14T06:27:37.8152248Z
+    Attributes:  0x26 (Hidden|System|Archive)
+    IntFlags:    0x8 (DataInRecord)
+    SecurityId:  0x10a9f9562 (4473197922)
+    Storage:     inline (record embedded, 312 bytes)
 
   FILE System Volume Information/IndexerVolumeGuid
-    Created:     2026-05-14 06:26:10 UTC
-    Modified:    2026-05-14 06:26:10 UTC
-    Changed:     2026-05-14 06:26:10 UTC
-    Attributes:  ARCHIVE (0x20)
-    IntFlags:    HAS_EA (0x8)
-    SecurityId:  0x123d306f5
-    Storage:     RESIDENT (392 bytes)
+    Created:     2026-05-14T06:26:10.7043096Z
+    Modified:    2026-05-14T06:26:10.7043096Z
+    Changed:     2026-05-14T06:26:10.7043096Z
+    Accessed:    2026-05-14T06:26:10.7043096Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x8 (DataInRecord)
+    SecurityId:  0x123d306f5 (4895999733)
+    Storage:     inline (record embedded, 392 bytes)
 
   FILE System Volume Information/WPSettings.dat
-    Created:     2026-05-14 06:26:07 UTC
-    Modified:    2026-05-14 06:26:07 UTC
-    Changed:     2026-05-14 06:26:07 UTC
-    Attributes:  ARCHIVE (0x20)
-    IntFlags:    HAS_EA (0x8)
-    SecurityId:  0x123d306f5
-    Storage:     RESIDENT (328 bytes)
+    Created:     2026-05-14T06:26:07.0499619Z
+    Modified:    2026-05-14T06:26:07.0578109Z
+    Changed:     2026-05-14T06:26:07.0578109Z
+    Accessed:    2026-05-14T06:26:07.0578109Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x8 (DataInRecord)
+    SecurityId:  0x123d306f5 (4895999733)
+    Storage:     inline (record embedded, 328 bytes)
 
   DIR  test
-    Created:     2026-05-14 06:29:26 UTC
-    Modified:    2026-05-14 06:30:03 UTC
-    Changed:     2026-05-14 06:30:03 UTC
-    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+    Created:     2026-05-14T06:29:26.3621292Z
+    Modified:    2026-05-14T06:30:03.0256725Z
+    Changed:     2026-05-14T06:30:03.0256725Z
+    Accessed:    2026-05-14T06:30:04.9932519Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x1e96009c6 (8210352582)
 
   FILE test/ok.txt
-    Created:     2026-05-14 06:29:51 UTC
-    Modified:    2026-05-14 06:29:51 UTC
-    Changed:     2026-05-14 06:29:51 UTC
-    Attributes:  ARCHIVE (0x20)
-    IntFlags:    HAS_EA (0x8)
-    SecurityId:  0x1348ee884
-    Storage:     RESIDENT (320 bytes)
+    Created:     2026-05-14T06:29:51.5656593Z
+    Modified:    2026-05-14T06:29:51.5656593Z
+    Changed:     2026-05-14T06:29:51.5656593Z
+    Accessed:    2026-05-14T06:29:51.5656593Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x8 (DataInRecord)
+    SecurityId:  0x1348ee884 (5176748164)
+    Storage:     inline (record embedded, 320 bytes)
 
   DIR  test/t1
-    Created:     2026-05-14 06:29:57 UTC
-    Modified:    2026-05-14 06:29:57 UTC
-    Changed:     2026-05-14 06:29:57 UTC
-    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+    Created:     2026-05-14T06:29:57.2818294Z
+    Modified:    2026-05-14T06:29:57.2818294Z
+    Changed:     2026-05-14T06:29:57.2818294Z
+    Accessed:    2026-05-14T06:29:57.2818294Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   DIR  test/t2
-    Created:     2026-05-14 06:29:59 UTC
-    Modified:    2026-05-14 06:29:59 UTC
-    Changed:     2026-05-14 06:29:59 UTC
-    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+    Created:     2026-05-14T06:29:59.8699098Z
+    Modified:    2026-05-14T06:29:59.8699098Z
+    Changed:     2026-05-14T06:29:59.8699098Z
+    Accessed:    2026-05-14T06:29:59.8699098Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   DIR  test/t3
-    Created:     2026-05-14 06:30:03 UTC
-    Modified:    2026-05-14 06:30:11 UTC
-    Changed:     2026-05-14 06:30:11 UTC
-    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+    Created:     2026-05-14T06:30:03.0256725Z
+    Modified:    2026-05-14T06:30:11.9985662Z
+    Changed:     2026-05-14T06:30:11.9985662Z
+    Accessed:    2026-05-14T06:30:13.5114437Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   DIR  test/t3/ta
-    Created:     2026-05-14 06:30:07 UTC
-    Modified:    2026-05-14 06:30:07 UTC
-    Changed:     2026-05-14 06:30:07 UTC
-    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+    Created:     2026-05-14T06:30:07.8370534Z
+    Modified:    2026-05-14T06:30:07.8370534Z
+    Changed:     2026-05-14T06:30:07.8370534Z
+    Accessed:    2026-05-14T06:30:07.8370534Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   DIR  test/t3/tb
-    Created:     2026-05-14 06:30:10 UTC
-    Modified:    2026-05-14 06:30:10 UTC
-    Changed:     2026-05-14 06:30:10 UTC
-    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+    Created:     2026-05-14T06:30:10.3232858Z
+    Modified:    2026-05-14T06:30:10.3232858Z
+    Changed:     2026-05-14T06:30:10.3232858Z
+    Accessed:    2026-05-14T06:30:10.3232858Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   DIR  test/t3/tc
-    Created:     2026-05-14 06:30:11 UTC
-    Modified:    2026-05-14 06:30:11 UTC
-    Changed:     2026-05-14 06:30:11 UTC
-    Attributes:  DIRECTORY_INTERNAL (0x10000000)
+    Created:     2026-05-14T06:30:11.9985662Z
+    Modified:    2026-05-14T06:30:11.9985662Z
+    Changed:     2026-05-14T06:30:11.9985662Z
+    Accessed:    2026-05-14T06:30:11.9985662Z
+    Attributes:  0x10000000 (Directory_Internal)
+    IntFlags:    0x0 (none set)
+    SecurityId:  0x120005b20 (4831861536)
 
   FILE test/t3/tc/hello.txt
-    Created:     2026-05-14 06:30:24 UTC
-    Modified:    2026-05-14 06:30:24 UTC
-    Changed:     2026-05-14 06:30:24 UTC
-    Attributes:  ARCHIVE (0x20)
-    IntFlags:    HAS_EA (0x8)
-    SecurityId:  0x1348ee884
-    Storage:     RESIDENT (320 bytes)
+    Created:     2026-05-14T06:30:24.8268459Z
+    Modified:    2026-05-14T06:30:24.8268459Z
+    Changed:     2026-05-14T06:30:24.8268459Z
+    Accessed:    2026-05-14T06:30:24.8268459Z
+    Attributes:  0x20 (Archive)
+    IntFlags:    0x8 (DataInRecord)
+    SecurityId:  0x1348ee884 (5176748164)
+    Storage:     inline (record embedded, 320 bytes)
 

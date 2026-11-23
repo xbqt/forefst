@@ -11,7 +11,7 @@ Parent-Child Relationships
   Tree roots:         0x600
 
   Parent         → Child            Parent Name               → Child Name
-  ------------------------------------------------------------------------
+  ----------------------------------------------------------------------------
   0x600          → 0x520            Root Directory            → FS Metadata
   0x600          → 0x701            Root Directory            → Dir/File (0x701)
   0x600          → 0x702            Root Directory            → Dir/File (0x702)

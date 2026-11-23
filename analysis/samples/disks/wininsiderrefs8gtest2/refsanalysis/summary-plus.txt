@@ -5,16 +5,17 @@ ReFS Volume Summary (extended)
   ReFS version:       3.14
   Volume GUID:        40c09f25-7f3f-4813-88be-e28be75c7526
   Volume label:       winsiderrefs8gtest2
-  Volume size:        7.9 GB
-  Cluster size:       0x10000 (64.0 KB)
-  Container size:     0x4000000 (64.0 MB)
+  Volume size:        8522825728 bytes (7.9 GiB)
+  Cluster size:       64 KiB
+  Container size:     64 MiB
   Checksum:           SHA-256
-  Compression:        None
+  Compression:        none
 
 ------------------------------------------------------------------------------
 Checkpoint
 ------------------------------------------------------------------------------
   Virtual clock:      161
+  Copy in use:        LCN 0x3d15
   Flags:              0x2682
   Containers mapped:  127
 
@@ -22,11 +23,12 @@ Checkpoint
 File System Content
 ------------------------------------------------------------------------------
   Directories:        118
-  Files:              776 (251 inline + 525 extent-backed)
-  Total file size:    803.4 MB
+  Files:              621 (177 inline, 444 extents)
+  Names:              776 (621 files, plus 155 more names: 92 hard-linked files have 247 names)
+  Total file size:    842462015 bytes (803.4 MiB)
   Security descs:     7
-  Oldest timestamp:   2021-05-18 07:16:04 UTC
-  Newest timestamp:   2026-05-19 20:00:58 UTC
+  Oldest timestamp:   2021-05-18T07:16:04.9990009Z
+  Newest timestamp:   2026-05-19T20:00:58.3654380Z
 
 ------------------------------------------------------------------------------
 Global Root Tables
@@ -36,13 +38,13 @@ Global Root Tables
   Container Allocator               2 rows
   Schema Table                     30 rows
   Parent-Child Table              119 rows
-  Object ID Table dup             132 rows
+  Object ID Table copy 2          132 rows
   Block RefCount                    4 rows
   Container Table                 127 rows
-  Container Table dup             127 rows
-  Schema Table dup                 30 rows
+  Container Table copy 2          127 rows
+  Schema Table copy 2              30 rows
   Container Index                   0 rows
-  Integrity State                   1 rows
+  Integrity State                   1 row
   Small Allocator                   2 rows
 
 ------------------------------------------------------------------------------
@@ -50,9 +52,9 @@ Volume Detail (OID 0x500)
 ------------------------------------------------------------------------------
   Volume version:     3.14
   Driver version:     3.15
-  Volume created:     2026-05-19 19:56:46 UTC
-  Volume modified:    2026-05-19 19:56:47 UTC
-  Schema count:       35
+  Volume created:     2026-05-19T19:56:46.8989928Z
+  Last mount (rw):    2026-05-19T19:56:47.3896445Z
+  Verify block:       LCN 0x23, 1 cluster (a copy of the volume information)
 
 ------------------------------------------------------------------------------
 FS Metadata Directory (OID 0x520)
@@ -67,13 +69,19 @@ Extended Metrics
   Reparse index:      173 entries
   Symlinks:           173
   Snapshot versions:  0 (across 0 files)
-  ADS host files:     127
+  ADS host files:     69
   Hard-linked:        92 files sharing 247 names
   Encrypted files:    0
-  Integrity objects:  0
+  Integrity files:    0
   Compressed files:   0
   Trash table:        0 entries
-  Containers used:    126 / 127 (99.2%)
-  Space used:         1.3 GB of 7.9 GB (16.9%) - 6.6 GB not allocated
+  Containers:         127 mapped (126 outside the boot region; the first is at PLCN 0x0)
+  Space used:         1.3 GiB of 7.9 GiB (16.9%) - 6.6 GiB not allocated
                       (Windows reports less as free: it keeps part in reserve)
-                      + 48.0 MB past the last container, outside the allocator (not free space)
+
+------------------------------------------------------------------------------
+MLog
+------------------------------------------------------------------------------
+  not read: `summary --mlog` or `summary -v` reads it (one pass over the log's data area);
+  `mlog` lists the log's records
+

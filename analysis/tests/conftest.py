@@ -57,6 +57,83 @@ def make_gpt(num_parts=128, entry_size=128, part_lba=2, partitions=()):
     return bytes(mbr) + bytes(hdr) + bytes(entries)
 
 
+def jget(d, name, over=None, default=None):
+    """1.14.0 (K21): a JSON field read by its INTERNAL name -- `checkpoint_used_lcn` -- under the output name the tool
+    gives it (`out_key`: CheckpointUsedLCN; `over`, a command's overrides, e.g. forefst's `_SUMMARY_KEYS`). For the
+    readers whose subject is not the key form (the key forms have their own tests, test_1132_e2b_machine)."""
+    import forefst as _F
+    if not isinstance(d, dict):
+        return default
+    return d.get(_F.out_key(name, over), default)
+
+
+class _JView(dict):
+    """1.14.0 (K21): a JSON object whose fields are read by their INTERNAL names (`records`, `content_file`) under the
+    output names the tool writes (`Records`, `ContentFile`; `out_key`, with a command's overrides); a name the object
+    holds as it is (an output name, a data map's key) is read as it is. `jdoc` builds it."""
+    _over = None
+
+    def _k(self, k):
+        if not isinstance(k, str) or dict.__contains__(self, k):
+            return k
+        import forefst as _F
+        return _F.out_key(k, self._over)
+
+    def __getitem__(self, k):
+        return dict.__getitem__(self, self._k(k))
+
+    def get(self, k, default=None):
+        return dict.get(self, self._k(k), default)
+
+    def __contains__(self, k):
+        return dict.__contains__(self, self._k(k))
+
+
+def jdoc(o, over=None):
+    """1.14.0 (K21): a JSON document (from `json.load`) whose objects read their fields by internal name (`_JView`),
+    recursively -- for the readers whose subject is not the key form, as `jget` for one field."""
+    if isinstance(o, dict):
+        v = _JView((k, jdoc(x, over)) for k, x in o.items())
+        v._over = over
+        return v
+    if isinstance(o, list):
+        return [jdoc(x, over) for x in o]
+    return o
+
+
+def jint(v):
+    """1.14.0 (K1, K9, K10): an identifier, LCN or offset is a hex string in JSON -- its integer (an integer as it is;
+    None for an absent value)."""
+    if v is None or isinstance(v, bool):
+        return v
+    if isinstance(v, int):
+        return v
+    return int(v, 16) if isinstance(v, str) and v.lower().startswith("0x") else int(v)
+
+
+def unwrap_table_rows(text):
+    """refsanalysis's tables wrap their last column at 80 characters (N377, 1.14.0: one table was 203 columns wide): a
+    row's continuation lines carry only that column, indented under it. Returns `text` with each continuation joined to
+    its row by one space, so a reader takes one row per line. A table starts at its dashes line and ends at a blank
+    line; inside it, a row starts with a non-space character and a continuation with a space."""
+    import re as _re
+    out, in_table = [], False
+    for ln in text.split("\n"):
+        if _re.match(r"^-+(  +-+)+\s*$", ln):
+            in_table = True
+            out.append(ln)
+            continue
+        if not ln.strip():
+            in_table = False
+            out.append(ln)
+            continue
+        if in_table and ln[:1] == " " and out and out[-1].strip():
+            out[-1] = out[-1].rstrip() + " " + ln.strip()
+            continue
+        out.append(ln)
+    return "\n".join(out)
+
+
 def make_msb_page(rows, is_inner=False, cluster_size=4096,
                   key_len_override=None, val_len_override=None):
     """A minimal MSB+ B+-tree page.
@@ -202,3 +279,27 @@ def pytest_collection_modifyitems(config, items):
             fn = (item.originalname if hasattr(item, "originalname") else item.name.split("[")[0])
             reason = _XFAIL_REASON.get(fn, "deferred/rejected audit finding (see AUDIT_RESPONSE.md)")
             item.add_marker(pytest.mark.xfail(reason=reason, strict=True, run=True))
+
+
+# ─── N575 (1.14.0): the tool's run-wide registers, cleared when the session ends ───────────────────────────────────
+# Tests that call forefst in-process record into its module-level registers (pages that could not be read, skipped
+# work, deferrals, holes, marker-scan answers, CSV formula cells, translators). The tool prints them from atexit hooks
+# at the end of a COMMAND; in the test process the end is pytest's, so the leftovers of every in-process test were
+# printed after the suite's summary as one forefst warning ("8 metadata page(s) could not be read ... INCOMPLETE"),
+# a statement about no command. Each test asserts on its own run, so the registers are emptied here, after the last
+# test and before the atexit hooks run.
+_N575_REGISTERS = ("_SKIP_NOTES", "_SKIP_EXPECTED", "_DEFERRALS", "_MARKER_SCAN_WINS", "_CONTENT_HOLES", "_ALL_TRS")
+
+
+def pytest_sessionfinish(session, exitstatus):
+    for mod in list(sys.modules.values()):
+        reset = getattr(mod, "_walk_damage_reset", None)
+        if not callable(reset):
+            continue
+        reset()
+        for name in _N575_REGISTERS:
+            reg = getattr(mod, name, None)
+            if hasattr(reg, "clear"):
+                reg.clear()
+        if isinstance(getattr(mod, "_CSV_FORMULA_SEEN", None), int):
+            mod._CSV_FORMULA_SEEN = 0

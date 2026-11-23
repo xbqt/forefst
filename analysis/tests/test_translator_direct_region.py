@@ -17,6 +17,8 @@ from a unit test. That path is covered at corpus level instead: `dataruns` is by
 across the corpus while the spurious container caveat drops to 0 on four volumes. Stated here
 rather than left to look like coverage this file does not have.
 """
+import pytest
+
 import forefst as F
 
 
@@ -28,6 +30,14 @@ class _T(F.Translator):
         self.mask = cpc - 1
         self.misses = 0
         self._first_cid = min(mapping) if mapping else None
+        self.skipped, self._said, self.ct = {}, set(), None     # C3 (N216 / N452): what Translator.__init__ sets
+
+
+@pytest.fixture(autouse=True)
+def _skip_registers(monkeypatch):
+    """C3 (N452): a miss is a recorded skip now; keep it in this node's registers, not the run's."""
+    monkeypatch.setattr(F, "_SKIP_FINDING", [])
+    monkeypatch.setattr(F, "_SKIP_NOTES", {})
 
 
 def test_address_below_the_first_container_is_identity_and_not_a_miss():
@@ -41,6 +51,7 @@ def test_a_genuine_gap_still_counts_as_a_miss():
     t = _T({2: 0x1000, 4: 0x3000})     # container 3 missing from the middle
     assert t.tr(3 << 15) == 3 << 15    # identity fallback
     assert t.misses == 1, "a real unmapped container must still raise the caveat"
+    assert F._SKIP_FINDING == ["container translation"] and F.rc_escalate(0) == 2   # N452: and it exits 2
 
 
 def test_an_address_above_the_table_still_counts_as_a_miss():

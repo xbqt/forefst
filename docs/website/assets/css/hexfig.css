@@ -1,0 +1,64 @@
+/* Byte figures (shortcode `hexfig`): a hex dump of real bytes, each field's bytes in its own text colour -- above the
+   page's own field table, whose Offset and Field cells carry the same colour, or alone, its bytes linking to the
+   fields' descriptions. No background tints: a hovered field's
+   bytes and row get a light wash of the field's own colour.
+
+   Eight colour slots cycle over the fields that carry a value (gen_hex_figures.py), so two such fields next to each
+   other never share a colour; slot z (a Reserved or Unused field whose bytes are zero) is the site's muted text.
+   Slot g (a table row that documents several fields together) is the site's heading colour.
+   The hues are the site's own family, in their lighter tones (the maintainer's choice of 2026-11-20, variant B of the
+   preview). Contrast of each slot's text on the dump's background: light theme on #f8f9fc, 2.2:1 to 4.0:1;
+   dark theme on #131c31, 9.0:1 to 12.1:1. */
+
+:root{
+  --hf-0:#3b82f6; --hf-1:#d97706; --hf-2:#14b8a6; --hf-3:#f43f5e;
+  --hf-4:#8b5cf6; --hf-5:#22c55e; --hf-6:#d946ef; --hf-7:#f97316;
+}
+[data-theme="dark"]{
+  --hf-0:#93c5fd; --hf-1:#fcd34d; --hf-2:#5eead4; --hf-3:#fda4af;
+  --hf-4:#c4b5fd; --hf-5:#86efac; --hf-6:#f0abfc; --hf-7:#fdba74;
+}
+.hexfig .hf-c0{--hf:var(--hf-0)} .hexfig .hf-c1{--hf:var(--hf-1)} .hexfig .hf-c2{--hf:var(--hf-2)}
+.hexfig .hf-c3{--hf:var(--hf-3)} .hexfig .hf-c4{--hf:var(--hf-4)} .hexfig .hf-c5{--hf:var(--hf-5)}
+.hexfig .hf-c6{--hf:var(--hf-6)} .hexfig .hf-c7{--hf:var(--hf-7)} .hexfig .hf-cz{--hf:var(--text-muted)}
+.hexfig .hf-cg{--hf:var(--heading)}
+
+.hexfig{margin:1.2rem 0 1.8rem}
+.hexfig .hf-dump{display:block;overflow-x:auto;white-space:pre;margin:0;padding:.75rem 1rem;
+  background:var(--bg-alt);border:1px solid var(--border-light);border-radius:var(--radius-md);
+  font-family:'JetBrains Mono','Cascadia Code',monospace;font-size:.82rem;line-height:1.8;color:var(--text)}
+.hexfig .hf-row{display:block;width:max-content}
+.hexfig .hf-off{color:var(--text-muted);margin-right:1.6ch}
+.hexfig .hf-asc{margin-left:2.4ch;padding-left:1.2ch;border-left:1px solid var(--border-light)}
+
+/* a field's bytes: its colour as text */
+.hexfig .hf-f{color:var(--hf);font-weight:500;border-radius:3px;padding:2px 0;transition:background-color .12s}
+.hexfig a.hf-f,.hexfig a.hf-f:hover{color:var(--hf);text-decoration:none;cursor:pointer}
+
+/* the line under the dump: the hovered field's decoded value */
+.hexfig .hf-readout{min-height:1.5em;margin:.35rem .2rem .2rem;font-size:.84rem;line-height:1.5;color:var(--text-muted)}
+.hexfig .hf-readout.hf-on{color:var(--text)}
+.hexfig .hf-readout b{color:var(--hf);font-weight:600}
+.hexfig .hf-readout .hf-ex{font-size:.7rem;font-weight:700;letter-spacing:.04em;color:var(--heading);margin-right:.45em}
+
+/* the table: the Offset and Field cells in the field's colour */
+.hexfig table.hf-table{margin:.6rem 0 .2rem}
+.hexfig .hf-table td.hf-k,.hexfig .hf-table td.hf-k a{color:var(--hf);font-weight:500}
+.hexfig .hf-table td.hf-k code{background:transparent;border:0;padding:0;white-space:nowrap;color:inherit}
+.hexfig .hf-table td.hf-k a{text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--hf) 40%,transparent);
+  text-underline-offset:2px}
+.hexfig .hf-table tr.hf-grp th{background:var(--surface);color:var(--heading);font-weight:600;
+  border-bottom:1px solid var(--border)}
+.hexfig .hf-frame{display:block;font-size:.78rem;color:var(--text-secondary);font-weight:400}
+.hexfig .hf-table tr[data-f]{transition:background-color .12s}
+
+/* hover: the field's bytes and its row, washed in the field's colour */
+.hexfig .hf-f.hf-hl{background:color-mix(in srgb,var(--hf) 16%,transparent);
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--hf) 35%,transparent)}
+.hexfig .hf-table tr.hf-hl > td{background:color-mix(in srgb,var(--hf) 9%,transparent)}
+
+.hexfig figcaption{font-size:.84rem;color:var(--text-muted);line-height:1.5;margin:0 .2rem .45rem}
+.hexfig figcaption code{font-size:.8rem}
+/* RC3a (n13): two byte figures side by side (the NTFS and the ReFS $STANDARD_INFORMATION); they stack on a narrow screen */
+.hf-pair{display:flex;flex-wrap:wrap;gap:1.2rem;align-items:flex-start}
+.hf-pair>.hexfig{flex:1 1 420px;min-width:0;margin-top:0}

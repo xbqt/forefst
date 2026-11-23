@@ -22,7 +22,7 @@ import sys
 import tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-SOURCES = ("README.md", "docs/tools/forefst.md", "docs/tools/refsanalysis.md")
+SOURCES = ("README.md", "docs/tools/forefst.md", "docs/tools/refsanalysis.md", "docs/tools/known_issues.md")   # RC3: its own page
 IMAGE_TOKENS = ("disk.raw", "image.raw", "volume.raw", "refs.raw",
                 # the walkthrough pages tell the reader to set a shell variable first; without
                 # these the whole examples/ tree was silently skipped -- see BLOCK_SOURCES below.
@@ -63,7 +63,8 @@ def block_sources(tree):
     out = ["README.md"]
     docs = os.path.join(tree, "docs")
     for dp, _d, fs in os.walk(docs):
-        if "website" in dp or "_templates" in dp:
+        # N592: only website/content/ is generated (build.py); website/pages/ holds hand-written published pages
+        if os.path.join("website", "content") in dp or "_templates" in dp:
             continue
         out += [os.path.relpath(os.path.join(dp, f), tree) for f in sorted(fs) if f.endswith(".md")]
     return out
@@ -131,7 +132,7 @@ def main(tree=None):
         print("FAIL — no runnable examples found under %r; the extractor or the docs moved." % tree)
         return 1
     tmp = tempfile.mkdtemp(prefix="fe_examples_")
-    usage_errs, data_errs, ok = [], 0, 0
+    usage_errs, data_errs, ok, finding = [], 0, 0, 0
     try:
         for rel, cmd in ex:
             # shlex, not split(): a quoted example (`details "/users/bat/passwords.txt"`) otherwise reaches
@@ -167,16 +168,21 @@ def main(tree=None):
                 data_errs += 1
                 continue
             err = (r.stderr or "").lower()
+            # C1-2 (1.14.0): the tool's exit contract -- 0 ran, 2 ran with a finding or with work it could not complete (its output says which), 1
+            # could not run. An example that exits 2 ran (most corpus volumes have a finding for some command), so it
+            # is counted as run, not as "failed on this image's data".
             if r.returncode != 0 and any(u in err for u in USAGE):
                 usage_errs.append((rel, cmd, (r.stderr or "").strip().split("\n")[-1][:120]))
-            elif r.returncode != 0:
+            elif r.returncode not in (0, 2):
                 data_errs += 1
             else:
                 ok += 1
+                finding += r.returncode == 2
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
-    print("documented examples: %d runnable; %d ran clean, %d failed on this image's data, "
-          "%d REJECTED BY THE CLI" % (len(ex), ok, data_errs, len(usage_errs)))
+    print("documented examples: %d runnable; %d ran clean (%d of them exit 2: ran, with a finding), %d failed on this "
+          "image's data, "
+          "%d REJECTED BY THE CLI" % (len(ex), ok, finding, data_errs, len(usage_errs)))
     if ex and ok == 0:
         print("FAIL — %d example(s) were found but NONE ran clean. That is a harness fault (wrong tree, or "
               "the tool could not be launched), not a clean bill of health." % len(ex))

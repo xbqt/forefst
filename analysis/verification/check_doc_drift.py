@@ -20,6 +20,11 @@ Method: paragraphs (not raw lines -- a wrapped sentence split mid-clause produce
 during development), sentence-split, normalised 5-gram shingles, Jaccard >= 0.32 and >= 9 content words.
 For each cross-page pair, compare the numeric tokens; a difference fails the gate.
 
+D10 (1.14.0): the tools' help is a page too. Each command's `CMD_HELP` entry of forefst.py and refsanalysis.py
+(its tag, its description lines joined, each option's text) is read with `ast` -- nothing is run -- and compared with
+the pages as a page of its own, `help:<tool> <command>`: a help text and a page stating one fact with different
+numbers fail the gate like two pages.
+
 Exit 0 when no restated pair disagrees.
 """
 import itertools
@@ -30,7 +35,8 @@ import sys
 STOP = set("the a an of to in is are and or for with that this it as on by be was were from at not but its "
            "one same its their there when which who what how".split())
 NUM = re.compile(r"\b\d[\d,\.]*\b")
-SKIP_DIRS = ("website", "_templates")
+# N592: only website/content/ is generated (build.py); website/pages/ holds hand-written published pages
+SKIP_DIRS = (os.path.join("website", "content"), "_templates")
 SKIP_FILES = ("KNOWLEDGE_MAP.md", "changelog.md")
 THRESHOLD = 0.35   # the genuine placement/residency restatement scores 0.368; 0.40 missed it
 
@@ -108,6 +114,44 @@ def sentences(tree):
 
 
 
+def help_sentences(tree):
+    """(`help:<tool> <command>`, line, sentence) for each CMD_HELP entry of the two tools (D10)."""
+    import ast
+    out = []
+    for tool in ("forefst.py", "refsanalysis.py"):
+        p = os.path.join(tree, tool)
+        if not os.path.exists(p):
+            continue
+        mod = ast.parse(open(p, encoding="utf-8").read())
+        for n in mod.body:
+            if not (isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "CMD_HELP" for t in n.targets)
+                    and isinstance(n.value, ast.Dict)):
+                continue
+            for k, v in zip(n.value.keys, n.value.values):
+                if not (isinstance(k, ast.Constant) and isinstance(v, ast.Dict)):
+                    continue
+                rel = "help:%s %s" % (tool[:-3], k.value)
+                parts = []
+                for kk, vv in zip(v.keys, v.values):
+                    if not isinstance(kk, ast.Constant):
+                        continue
+                    if kk.value == "tag" and isinstance(vv, ast.Constant):
+                        parts.append((vv.lineno, vv.value))
+                    elif kk.value == "desc" and isinstance(vv, ast.List):
+                        lines = [e for e in vv.elts if isinstance(e, ast.Constant) and isinstance(e.value, str)]
+                        if lines:
+                            parts.append((lines[0].lineno, " ".join(e.value.strip() for e in lines)))
+                    elif kk.value == "opts" and isinstance(vv, ast.List):
+                        for e in vv.elts:
+                            if isinstance(e, ast.Tuple) and len(e.elts) >= 2 and isinstance(e.elts[1], ast.Constant):
+                                parts.append((e.lineno, str(e.elts[1].value)))
+                for line, text in parts:
+                    for sent in re.split(r"(?<=[.!?])\s+", text):
+                        if sent.strip():
+                            out.append((rel, line, sent.strip()))
+    return out
+
+
 def default_tree():
     """Dev keeps the pages under forefstdev/docs; a PUBLISHED tree has docs/ at its root.
 
@@ -123,7 +167,7 @@ def default_tree():
 def main(tree=None):
     tree = tree or default_tree()
     shingled = []
-    for rel, line, s in sentences(tree):
+    for rel, line, s in sentences(tree) + help_sentences(tree):
         w = content_words(s)
         if len(w) < 9:
             continue

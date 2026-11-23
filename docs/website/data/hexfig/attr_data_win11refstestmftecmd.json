@@ -1,0 +1,661 @@
+{
+ "id": "attr_data_win11refstestmftecmd",
+ "generated_by": "analysis/tools/analysis_scripts/gen_hex_figures.py",
+ "decoded_by": "forefst 1.14.0 (forefstdev/forefst.py)",
+ "title": "An example $DATA record of a 128-byte file whose data is inline, read with forefst.",
+ "image": {
+  "name": "win11refstestmftecmd.raw",
+  "step": "step5",
+  "listed_as": "analysis/rawdisk/disks/step5/win11refstestmftecmd.raw",
+  "size": 4294967296
+ },
+ "offset": 21144760,
+ "offset_hex": "0x142a4b8",
+ "length": 224,
+ "bytes": "e00000001000100000002000bc000000bc00000000000000010000808000000000000000b00000000c000000300000000000000000000000800000000000000080000000000000008000000000000000800000000000000002000000474653415245504c41590000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+ "note": "The bytes are the row of the sub-record 80000001/0080 of `testspecials/dir_romeo_413583/dir_kilo_704584/dir_report_123351/xbpt_quebec_cache_515604.cfg`. Not coloured: +0xDC to +0xDF.",
+ "fields": [
+  {
+   "off": "0x00",
+   "len": 16,
+   "name": "Row header",
+   "frame": "the sub-record's row",
+   "group": null,
+   "bytes": "e0 00 00 00 10 00 10 00 00 00 20 00 bc 00 00 00",
+   "value": "row 0xe0 (224) bytes; key at +0x10 (16 bytes), value at +0x20 (0xbc (188) bytes)",
+   "decoder": "forefst.parse_resident_btree_rows",
+   "slot": 0,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "b-tree-row-header--16-bytes"
+   },
+   "row": false,
+   "table": null
+  },
+  {
+   "off": "0x00",
+   "len": 8,
+   "name": "Value length",
+   "frame": "in the key",
+   "group": null,
+   "bytes": "bc 00 00 00 00 00 00 00",
+   "value": "0xbc (188) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 1,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x08",
+   "len": 4,
+   "name": "Marker",
+   "frame": "in the key",
+   "group": null,
+   "bytes": "01 00 00 80",
+   "value": "0x80000001",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 2,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x0C",
+   "len": 2,
+   "name": "Type code",
+   "frame": "in the key",
+   "group": null,
+   "bytes": "80 00",
+   "value": "0x0080",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 3,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x0E",
+   "len": 2,
+   "name": "Subtype",
+   "frame": "in the key",
+   "group": null,
+   "bytes": "00 00",
+   "value": "0x0000",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 4,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x00",
+   "len": 4,
+   "name": "Padding",
+   "frame": "in the value",
+   "group": null,
+   "bytes": "00 00 00 00",
+   "value": "0x00000000",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 5,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": true,
+   "table": "value"
+  },
+  {
+   "off": "0x04",
+   "len": 4,
+   "name": "Data-area size",
+   "frame": "in the value",
+   "group": null,
+   "bytes": "b0 00 00 00",
+   "value": "0xb0 (176) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 6,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": true,
+   "table": "value"
+  },
+  {
+   "off": "0x08",
+   "len": 4,
+   "name": "Content offset",
+   "frame": "in the value",
+   "group": null,
+   "bytes": "0c 00 00 00",
+   "value": "0xc (12)",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 7,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": true,
+   "table": "value"
+  },
+  {
+   "off": "0x0C",
+   "len": 4,
+   "name": "Summary size",
+   "frame": "in the value",
+   "group": null,
+   "bytes": "30 00 00 00",
+   "value": "0x30 (48) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 0,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": true,
+   "table": "value"
+  },
+  {
+   "off": "0x10",
+   "len": 8,
+   "name": "Reserved",
+   "frame": "in the value",
+   "group": null,
+   "bytes": "00 00 00 00 00 00 00 00",
+   "value": "0x0000000000000000",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": "z",
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": true,
+   "table": "value"
+  },
+  {
+   "off": "0x18",
+   "len": 8,
+   "name": "Allocated size",
+   "frame": "in the value",
+   "group": null,
+   "bytes": "80 00 00 00 00 00 00 00",
+   "value": "0x80 (128) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 1,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": true,
+   "table": "value"
+  },
+  {
+   "off": "0x20",
+   "len": 8,
+   "name": "File size",
+   "frame": "in the value",
+   "group": null,
+   "bytes": "80 00 00 00 00 00 00 00",
+   "value": "0x80 (128) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 2,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": true,
+   "table": "value"
+  },
+  {
+   "off": "0x28",
+   "len": 8,
+   "name": "Valid data length",
+   "frame": "in the value",
+   "group": null,
+   "bytes": "80 00 00 00 00 00 00 00",
+   "value": "0x80 (128) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 3,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": true,
+   "table": "value"
+  },
+  {
+   "off": "0x30",
+   "len": 8,
+   "name": "Total allocated",
+   "frame": "in the value",
+   "group": null,
+   "bytes": "80 00 00 00 00 00 00 00",
+   "value": "0x80 (128) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 4,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": true,
+   "table": "value"
+  },
+  {
+   "off": "0x38",
+   "len": 2,
+   "name": "Checksum type",
+   "frame": "in the value",
+   "group": null,
+   "bytes": "02 00",
+   "value": "0x0002",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 5,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": true,
+   "table": "value"
+  },
+  {
+   "off": "0x3A",
+   "len": 2,
+   "name": "Integrity algorithm",
+   "frame": "in the value",
+   "group": null,
+   "bytes": "00 00",
+   "value": "0x0000",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 6,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": true,
+   "table": "value"
+  },
+  {
+   "off": "0x3C",
+   "len": 128,
+   "name": "Inline content",
+   "frame": "in the value",
+   "group": null,
+   "bytes": "47 46 53 41 52 45 50 4c 41 59 00 00 00 00 00 00 …",
+   "value": "128 bytes: \"GFSAREPLAY\" then zero bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 7,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": true,
+   "table": "value"
+  }
+ ],
+ "groups": [],
+ "rows": [
+  {
+   "o": "0000",
+   "h": [
+    [
+     0,
+     "e0 00 00 00 10 00 10 00  00 00 20 00 bc 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     0,
+     ".......... ....."
+    ]
+   ]
+  },
+  {
+   "o": "0010",
+   "h": [
+    [
+     1,
+     "bc 00 00 00 00 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     2,
+     "01 00 00 80"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     3,
+     "80 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     4,
+     "00 00"
+    ]
+   ],
+   "a": [
+    [
+     1,
+     "........"
+    ],
+    [
+     2,
+     "...."
+    ],
+    [
+     3,
+     ".."
+    ],
+    [
+     4,
+     ".."
+    ]
+   ]
+  },
+  {
+   "o": "0020",
+   "h": [
+    [
+     5,
+     "00 00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     6,
+     "b0 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     7,
+     "0c 00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     8,
+     "30 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     5,
+     "...."
+    ],
+    [
+     6,
+     "...."
+    ],
+    [
+     7,
+     "...."
+    ],
+    [
+     8,
+     "0..."
+    ]
+   ]
+  },
+  {
+   "o": "0030",
+   "h": [
+    [
+     9,
+     "00 00 00 00 00 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     10,
+     "80 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     9,
+     "........"
+    ],
+    [
+     10,
+     "........"
+    ]
+   ]
+  },
+  {
+   "o": "0040",
+   "h": [
+    [
+     11,
+     "80 00 00 00 00 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     12,
+     "80 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     11,
+     "........"
+    ],
+    [
+     12,
+     "........"
+    ]
+   ]
+  },
+  {
+   "o": "0050",
+   "h": [
+    [
+     13,
+     "80 00 00 00 00 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     14,
+     "02 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     15,
+     "00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     16,
+     "47 46 53 41"
+    ]
+   ],
+   "a": [
+    [
+     13,
+     "........"
+    ],
+    [
+     14,
+     ".."
+    ],
+    [
+     15,
+     ".."
+    ],
+    [
+     16,
+     "GFSA"
+    ]
+   ]
+  },
+  {
+   "o": "0060",
+   "h": [
+    [
+     16,
+     "52 45 50 4c 41 59 00 00  00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     16,
+     "REPLAY.........."
+    ]
+   ]
+  },
+  {
+   "o": "0070",
+   "h": [
+    [
+     16,
+     "00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     16,
+     "................"
+    ]
+   ]
+  },
+  {
+   "o": "0080",
+   "h": [
+    [
+     16,
+     "00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     16,
+     "................"
+    ]
+   ]
+  },
+  {
+   "o": "0090",
+   "h": [
+    [
+     16,
+     "00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     16,
+     "................"
+    ]
+   ]
+  },
+  {
+   "o": "00a0",
+   "h": [
+    [
+     16,
+     "00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     16,
+     "................"
+    ]
+   ]
+  },
+  {
+   "o": "00b0",
+   "h": [
+    [
+     16,
+     "00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     16,
+     "................"
+    ]
+   ]
+  },
+  {
+   "o": "00c0",
+   "h": [
+    [
+     16,
+     "00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     16,
+     "................"
+    ]
+   ]
+  },
+  {
+   "o": "00d0",
+   "h": [
+    [
+     16,
+     "00 00 00 00 00 00 00 00  00 00 00 00"
+    ],
+    [
+     -1,
+     " 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     16,
+     "............"
+    ],
+    [
+     -1,
+     "...."
+    ]
+   ]
+  }
+ ]
+}

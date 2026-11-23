@@ -3,8 +3,8 @@ ReFS Upcase Table
 ==============================================================================
   Image:             win11refs2tspecials.raw
   ReFS version:      3.14
-  Upcase OID:        0x7
-  Duplicate (0x08):  present
+  Upcase OID:        0x8 (the copy read; refs.sys opens OID 0x8 first, then OID 0x7)
+  Other copy:        OID 0x7
 
 ------------------------------------------------------------------------------
 Upcase Table Summary

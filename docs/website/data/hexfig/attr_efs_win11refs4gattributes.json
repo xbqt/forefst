@@ -1,0 +1,1178 @@
+{
+ "id": "attr_efs_win11refs4gattributes",
+ "generated_by": "analysis/tools/analysis_scripts/gen_hex_figures.py",
+ "decoded_by": "forefst 1.14.0 (forefstdev/forefst.py)",
+ "title": "An example $EFS value of an encrypted file, read with forefst.",
+ "image": {
+  "name": "win11refs4gattributes.raw",
+  "step": "step4",
+  "listed_as": "analysis/rawdisk/disks/step4/win11refs4gattributes.raw",
+  "size": 4294967296
+ },
+ "offset": 62934632,
+ "offset_hex": "0x3c04e68",
+ "length": 676,
+ "bytes": "00000000980200000c0000009802000000000000020000000000000062e4c7d58c6bc84796f04ea4e860526600000000000000000000000000000000000000000000000000000000000000005400000000000000000000000000000000000000010000003e02000014000000000100003e010000000000002a0100001c00000003000000f2000000380000000000000000000000010500000000000515000000a7ef42e4aa9027a8845fad93e903000014000000140000002800000072000000d0000000335067e4df4f1dcc2c89f556afc8c284e4f19518340033006400630066003400350037002d0031003200610065002d0034003900310062002d0038003600640064002d0063003200330061003800350035003500370065003600350000004d006900630072006f0073006f0066007400200045006e00680061006e006300650064002000430072007900700074006f0067007200610070006800690063002000500072006f00760069006400650072002000760031002e00300000007200650066007300280072006500660073004000770069006e003100310029000000ee8c855979160a4390ce07c960011de9685790786ad4fae9c977a181db746e5e4d406272b2ac41265711b2a592ce7c8e0dece33bd771a6fdcb4fa9e894b241fe16976eed57c5818aee2d40fb870fec36a8f034a1830813ff0651e96d94972086d85e21a1d066de5a4930a30d39c123d0f6fbafaa0dbf507db7dd8aa9b787299ee9a2fe91c7ba35bd05ea0af260e26fb69cde04065fc39edf3da3397e12e344fc0d78347dda13942e7673dfab417a0c7e881020eff856e71fbcb825b49b6924640df8f18d0f483510185f1814edaa204f3ebe166a2dcae7be8ccb689fc81ad5daea11fcf29d990a62dbe152cc9d87b7781f90b1edd1ac19242facf485cd55edb20000",
+ "note": "The bytes are the value of the sub-record 80000002/0100 of `forattributes/encrypted.txt`. Not coloured: +0x10 to +0x13, +0x18 to +0x1B, +0x2C to +0x5F, +0x78 to +0x93, +0x2A2 to +0x2A3.",
+ "fields": [
+  {
+   "off": "0x00",
+   "len": 4,
+   "name": "Padding",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 00",
+   "value": "0x00000000",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 0,
+   "link": {
+    "page": "attributes/EFS.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x04",
+   "len": 4,
+   "name": "Data-area size",
+   "frame": null,
+   "group": null,
+   "bytes": "98 02 00 00",
+   "value": "0x298 (664) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 1,
+   "link": {
+    "page": "attributes/EFS.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x08",
+   "len": 4,
+   "name": "Content offset",
+   "frame": null,
+   "group": null,
+   "bytes": "0c 00 00 00",
+   "value": "0xc (12)",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 2,
+   "link": {
+    "page": "attributes/EFS.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x0C",
+   "len": 4,
+   "name": "Metadata length",
+   "frame": null,
+   "group": null,
+   "bytes": "98 02 00 00",
+   "value": "0x298 (664) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 3,
+   "link": {
+    "page": "attributes/EFS.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x14",
+   "len": 4,
+   "name": "EFS state / version",
+   "frame": null,
+   "group": null,
+   "bytes": "02 00 00 00",
+   "value": "0x00000002",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 4,
+   "link": {
+    "page": "attributes/EFS.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x1C",
+   "len": 16,
+   "name": "Metadata GUID",
+   "frame": null,
+   "group": null,
+   "bytes": "62 e4 c7 d5 8c 6b c8 47 96 f0 4e a4 e8 60 52 66",
+   "value": "16 bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 5,
+   "link": {
+    "page": "attributes/EFS.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x60",
+   "len": 4,
+   "name": "DDF entry count",
+   "frame": null,
+   "group": null,
+   "bytes": "01 00 00 00",
+   "value": "1",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 6,
+   "link": {
+    "page": "attributes/EFS.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x94",
+   "len": 28,
+   "name": "Credential SID",
+   "frame": null,
+   "group": null,
+   "bytes": "01 05 00 00 00 00 00 05 15 00 00 00 a7 ef 42 e4 …",
+   "value": "28 bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 7,
+   "link": {
+    "page": "attributes/EFS.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0xB0",
+   "len": 20,
+   "name": "Public-key-info header",
+   "frame": null,
+   "group": null,
+   "bytes": "14 00 00 00 14 00 00 00 28 00 00 00 72 00 00 00 …",
+   "value": "20 bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 0,
+   "link": {
+    "page": "attributes/EFS.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0xC4",
+   "len": 20,
+   "name": "Certificate thumbprint",
+   "frame": null,
+   "group": null,
+   "bytes": "33 50 67 e4 df 4f 1d cc 2c 89 f5 56 af c8 c2 84 …",
+   "value": "20 bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 1,
+   "link": {
+    "page": "attributes/EFS.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x00",
+   "len": 4,
+   "name": "Entry length",
+   "frame": "in the DDF entry",
+   "group": null,
+   "bytes": "3e 02 00 00",
+   "value": "0x23e (574) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 2,
+   "link": {
+    "page": "attributes/EFS.md",
+    "anchor": "the-ddf-entry-base--value0x64"
+   },
+   "row": true,
+   "table": "ddf"
+  },
+  {
+   "off": "0x04",
+   "len": 4,
+   "name": "Certificate-hash length",
+   "frame": "in the DDF entry",
+   "group": null,
+   "bytes": "14 00 00 00",
+   "value": "0x14 (20) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 3,
+   "link": {
+    "page": "attributes/EFS.md",
+    "anchor": "the-ddf-entry-base--value0x64"
+   },
+   "row": true,
+   "table": "ddf"
+  },
+  {
+   "off": "0x08",
+   "len": 4,
+   "name": "FEK length",
+   "frame": "in the DDF entry",
+   "group": null,
+   "bytes": "00 01 00 00",
+   "value": "0x100 (256) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 4,
+   "link": {
+    "page": "attributes/EFS.md",
+    "anchor": "the-ddf-entry-base--value0x64"
+   },
+   "row": true,
+   "table": "ddf"
+  },
+  {
+   "off": "0x0C",
+   "len": 4,
+   "name": "FEK offset (entry-relative)",
+   "frame": "in the DDF entry",
+   "group": null,
+   "bytes": "3e 01 00 00",
+   "value": "0x13e (318)",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 5,
+   "link": {
+    "page": "attributes/EFS.md",
+    "anchor": "the-ddf-entry-base--value0x64"
+   },
+   "row": true,
+   "table": "ddf"
+  },
+  {
+   "off": "0x10",
+   "len": 4,
+   "name": "Reserved",
+   "frame": "in the DDF entry",
+   "group": null,
+   "bytes": "00 00 00 00",
+   "value": "0x00000000",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": "z",
+   "link": {
+    "page": "attributes/EFS.md",
+    "anchor": "the-ddf-entry-base--value0x64"
+   },
+   "row": true,
+   "table": "ddf"
+  },
+  {
+   "off": "0xD8",
+   "len": 74,
+   "name": "Container-GUID string",
+   "frame": null,
+   "group": null,
+   "bytes": "34 00 33 00 64 00 63 00 66 00 34 00 35 00 37 00 …",
+   "value": "\"43dcf457-12ae-491b-86dd-c23a85557e65\"",
+   "decoder": "UTF-16LE",
+   "slot": 6,
+   "link": {
+    "page": "attributes/EFS.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x122",
+   "len": 94,
+   "name": "CSP provider string",
+   "frame": "value+0x122",
+   "group": null,
+   "bytes": "4d 00 69 00 63 00 72 00 6f 00 73 00 6f 00 66 00 …",
+   "value": "\"Microsoft Enhanced Cryptographic Provider v1.0\"",
+   "decoder": "UTF-16LE",
+   "slot": 7,
+   "link": {
+    "page": "attributes/EFS.md",
+    "anchor": "value-layout"
+   },
+   "row": false,
+   "table": null
+  },
+  {
+   "off": "0x180",
+   "len": 34,
+   "name": "Key-container name",
+   "frame": "value+0x180",
+   "group": null,
+   "bytes": "72 00 65 00 66 00 73 00 28 00 72 00 65 00 66 00 …",
+   "value": "\"refs(refs@win11)\"",
+   "decoder": "UTF-16LE",
+   "slot": 0,
+   "link": {
+    "page": "attributes/EFS.md",
+    "anchor": "value-layout"
+   },
+   "row": false,
+   "table": null
+  },
+  {
+   "off": "0x1A2",
+   "len": 256,
+   "name": "Wrapped FEK",
+   "frame": "value+0x1A2",
+   "group": null,
+   "bytes": "ee 8c 85 59 79 16 0a 43 90 ce 07 c9 60 01 1d e9 …",
+   "value": "256 bytes, RSA-wrapped (opaque by design)",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 1,
+   "link": {
+    "page": "attributes/EFS.md",
+    "anchor": "value-layout"
+   },
+   "row": false,
+   "table": null
+  }
+ ],
+ "groups": [],
+ "rows": [
+  {
+   "o": "0000",
+   "h": [
+    [
+     0,
+     "00 00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     1,
+     "98 02 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     2,
+     "0c 00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     3,
+     "98 02 00 00"
+    ]
+   ],
+   "a": [
+    [
+     0,
+     "...."
+    ],
+    [
+     1,
+     "...."
+    ],
+    [
+     2,
+     "...."
+    ],
+    [
+     3,
+     "...."
+    ]
+   ]
+  },
+  {
+   "o": "0010",
+   "h": [
+    [
+     -1,
+     "00 00 00 00 "
+    ],
+    [
+     4,
+     "02 00 00 00"
+    ],
+    [
+     -1,
+     "  00 00 00 00 "
+    ],
+    [
+     5,
+     "62 e4 c7 d5"
+    ]
+   ],
+   "a": [
+    [
+     -1,
+     "...."
+    ],
+    [
+     4,
+     "...."
+    ],
+    [
+     -1,
+     "...."
+    ],
+    [
+     5,
+     "b..."
+    ]
+   ]
+  },
+  {
+   "o": "0020",
+   "h": [
+    [
+     5,
+     "8c 6b c8 47 96 f0 4e a4  e8 60 52 66"
+    ],
+    [
+     -1,
+     " 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     5,
+     ".k.G..N..`Rf"
+    ],
+    [
+     -1,
+     "...."
+    ]
+   ]
+  },
+  {
+   "o": "0030",
+   "h": [
+    [
+     -1,
+     "00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     -1,
+     "................"
+    ]
+   ]
+  },
+  {
+   "o": "0040",
+   "h": [
+    [
+     -1,
+     "00 00 00 00 00 00 00 00  00 00 00 00 54 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     -1,
+     "............T..."
+    ]
+   ]
+  },
+  {
+   "o": "0050",
+   "h": [
+    [
+     -1,
+     "00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     -1,
+     "................"
+    ]
+   ]
+  },
+  {
+   "o": "0060",
+   "h": [
+    [
+     6,
+     "01 00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     10,
+     "3e 02 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     11,
+     "14 00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     12,
+     "00 01 00 00"
+    ]
+   ],
+   "a": [
+    [
+     6,
+     "...."
+    ],
+    [
+     10,
+     ">..."
+    ],
+    [
+     11,
+     "...."
+    ],
+    [
+     12,
+     "...."
+    ]
+   ]
+  },
+  {
+   "o": "0070",
+   "h": [
+    [
+     13,
+     "3e 01 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     14,
+     "00 00 00 00"
+    ],
+    [
+     -1,
+     "  2a 01 00 00 1c 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     13,
+     ">..."
+    ],
+    [
+     14,
+     "...."
+    ],
+    [
+     -1,
+     "*......."
+    ]
+   ]
+  },
+  {
+   "o": "0080",
+   "h": [
+    [
+     -1,
+     "03 00 00 00 f2 00 00 00  38 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     -1,
+     "........8......."
+    ]
+   ]
+  },
+  {
+   "o": "0090",
+   "h": [
+    [
+     -1,
+     "00 00 00 00 "
+    ],
+    [
+     7,
+     "01 05 00 00  00 00 00 05 15 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     -1,
+     "...."
+    ],
+    [
+     7,
+     "............"
+    ]
+   ]
+  },
+  {
+   "o": "00a0",
+   "h": [
+    [
+     7,
+     "a7 ef 42 e4 aa 90 27 a8  84 5f ad 93 e9 03 00 00"
+    ]
+   ],
+   "a": [
+    [
+     7,
+     "..B...'.._......"
+    ]
+   ]
+  },
+  {
+   "o": "00b0",
+   "h": [
+    [
+     8,
+     "14 00 00 00 14 00 00 00  28 00 00 00 72 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     8,
+     "........(...r..."
+    ]
+   ]
+  },
+  {
+   "o": "00c0",
+   "h": [
+    [
+     8,
+     "d0 00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     9,
+     "33 50 67 e4  df 4f 1d cc 2c 89 f5 56"
+    ]
+   ],
+   "a": [
+    [
+     8,
+     "...."
+    ],
+    [
+     9,
+     "3Pg..O..,..V"
+    ]
+   ]
+  },
+  {
+   "o": "00d0",
+   "h": [
+    [
+     9,
+     "af c8 c2 84 e4 f1 95 18"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     15,
+     "34 00 33 00 64 00 63 00"
+    ]
+   ],
+   "a": [
+    [
+     9,
+     "........"
+    ],
+    [
+     15,
+     "4.3.d.c."
+    ]
+   ]
+  },
+  {
+   "o": "00e0",
+   "h": [
+    [
+     15,
+     "66 00 34 00 35 00 37 00  2d 00 31 00 32 00 61 00"
+    ]
+   ],
+   "a": [
+    [
+     15,
+     "f.4.5.7.-.1.2.a."
+    ]
+   ]
+  },
+  {
+   "o": "00f0",
+   "h": [
+    [
+     15,
+     "65 00 2d 00 34 00 39 00  31 00 62 00 2d 00 38 00"
+    ]
+   ],
+   "a": [
+    [
+     15,
+     "e.-.4.9.1.b.-.8."
+    ]
+   ]
+  },
+  {
+   "o": "0100",
+   "h": [
+    [
+     15,
+     "36 00 64 00 64 00 2d 00  63 00 32 00 33 00 61 00"
+    ]
+   ],
+   "a": [
+    [
+     15,
+     "6.d.d.-.c.2.3.a."
+    ]
+   ]
+  },
+  {
+   "o": "0110",
+   "h": [
+    [
+     15,
+     "38 00 35 00 35 00 35 00  37 00 65 00 36 00 35 00"
+    ]
+   ],
+   "a": [
+    [
+     15,
+     "8.5.5.5.7.e.6.5."
+    ]
+   ]
+  },
+  {
+   "o": "0120",
+   "h": [
+    [
+     15,
+     "00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     16,
+     "4d 00 69 00 63 00  72 00 6f 00 73 00 6f 00"
+    ]
+   ],
+   "a": [
+    [
+     15,
+     ".."
+    ],
+    [
+     16,
+     "M.i.c.r.o.s.o."
+    ]
+   ]
+  },
+  {
+   "o": "0130",
+   "h": [
+    [
+     16,
+     "66 00 74 00 20 00 45 00  6e 00 68 00 61 00 6e 00"
+    ]
+   ],
+   "a": [
+    [
+     16,
+     "f.t. .E.n.h.a.n."
+    ]
+   ]
+  },
+  {
+   "o": "0140",
+   "h": [
+    [
+     16,
+     "63 00 65 00 64 00 20 00  43 00 72 00 79 00 70 00"
+    ]
+   ],
+   "a": [
+    [
+     16,
+     "c.e.d. .C.r.y.p."
+    ]
+   ]
+  },
+  {
+   "o": "0150",
+   "h": [
+    [
+     16,
+     "74 00 6f 00 67 00 72 00  61 00 70 00 68 00 69 00"
+    ]
+   ],
+   "a": [
+    [
+     16,
+     "t.o.g.r.a.p.h.i."
+    ]
+   ]
+  },
+  {
+   "o": "0160",
+   "h": [
+    [
+     16,
+     "63 00 20 00 50 00 72 00  6f 00 76 00 69 00 64 00"
+    ]
+   ],
+   "a": [
+    [
+     16,
+     "c. .P.r.o.v.i.d."
+    ]
+   ]
+  },
+  {
+   "o": "0170",
+   "h": [
+    [
+     16,
+     "65 00 72 00 20 00 76 00  31 00 2e 00 30 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     16,
+     "e.r. .v.1...0..."
+    ]
+   ]
+  },
+  {
+   "o": "0180",
+   "h": [
+    [
+     17,
+     "72 00 65 00 66 00 73 00  28 00 72 00 65 00 66 00"
+    ]
+   ],
+   "a": [
+    [
+     17,
+     "r.e.f.s.(.r.e.f."
+    ]
+   ]
+  },
+  {
+   "o": "0190",
+   "h": [
+    [
+     17,
+     "73 00 40 00 77 00 69 00  6e 00 31 00 31 00 29 00"
+    ]
+   ],
+   "a": [
+    [
+     17,
+     "s.@.w.i.n.1.1.)."
+    ]
+   ]
+  },
+  {
+   "o": "01a0",
+   "h": [
+    [
+     17,
+     "00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     18,
+     "ee 8c 85 59 79 16  0a 43 90 ce 07 c9 60 01"
+    ]
+   ],
+   "a": [
+    [
+     17,
+     ".."
+    ],
+    [
+     18,
+     "...Yy..C....`."
+    ]
+   ]
+  },
+  {
+   "o": "01b0",
+   "h": [
+    [
+     18,
+     "1d e9 68 57 90 78 6a d4  fa e9 c9 77 a1 81 db 74"
+    ]
+   ],
+   "a": [
+    [
+     18,
+     "..hW.xj....w...t"
+    ]
+   ]
+  },
+  {
+   "o": "01c0",
+   "h": [
+    [
+     18,
+     "6e 5e 4d 40 62 72 b2 ac  41 26 57 11 b2 a5 92 ce"
+    ]
+   ],
+   "a": [
+    [
+     18,
+     "n^M@br..A&W....."
+    ]
+   ]
+  },
+  {
+   "o": "01d0",
+   "h": [
+    [
+     18,
+     "7c 8e 0d ec e3 3b d7 71  a6 fd cb 4f a9 e8 94 b2"
+    ]
+   ],
+   "a": [
+    [
+     18,
+     "|....;.q...O...."
+    ]
+   ]
+  },
+  {
+   "o": "01e0",
+   "h": [
+    [
+     18,
+     "41 fe 16 97 6e ed 57 c5  81 8a ee 2d 40 fb 87 0f"
+    ]
+   ],
+   "a": [
+    [
+     18,
+     "A...n.W....-@..."
+    ]
+   ]
+  },
+  {
+   "o": "01f0",
+   "h": [
+    [
+     18,
+     "ec 36 a8 f0 34 a1 83 08  13 ff 06 51 e9 6d 94 97"
+    ]
+   ],
+   "a": [
+    [
+     18,
+     ".6..4......Q.m.."
+    ]
+   ]
+  },
+  {
+   "o": "0200",
+   "h": [
+    [
+     18,
+     "20 86 d8 5e 21 a1 d0 66  de 5a 49 30 a3 0d 39 c1"
+    ]
+   ],
+   "a": [
+    [
+     18,
+     " ..^!..f.ZI0..9."
+    ]
+   ]
+  },
+  {
+   "o": "0210",
+   "h": [
+    [
+     18,
+     "23 d0 f6 fb af aa 0d bf  50 7d b7 dd 8a a9 b7 87"
+    ]
+   ],
+   "a": [
+    [
+     18,
+     "#.......P}......"
+    ]
+   ]
+  },
+  {
+   "o": "0220",
+   "h": [
+    [
+     18,
+     "29 9e e9 a2 fe 91 c7 ba  35 bd 05 ea 0a f2 60 e2"
+    ]
+   ],
+   "a": [
+    [
+     18,
+     ").......5.....`."
+    ]
+   ]
+  },
+  {
+   "o": "0230",
+   "h": [
+    [
+     18,
+     "6f b6 9c de 04 06 5f c3  9e df 3d a3 39 7e 12 e3"
+    ]
+   ],
+   "a": [
+    [
+     18,
+     "o....._...=.9~.."
+    ]
+   ]
+  },
+  {
+   "o": "0240",
+   "h": [
+    [
+     18,
+     "44 fc 0d 78 34 7d da 13  94 2e 76 73 df ab 41 7a"
+    ]
+   ],
+   "a": [
+    [
+     18,
+     "D..x4}....vs..Az"
+    ]
+   ]
+  },
+  {
+   "o": "0250",
+   "h": [
+    [
+     18,
+     "0c 7e 88 10 20 ef f8 56  e7 1f bc b8 25 b4 9b 69"
+    ]
+   ],
+   "a": [
+    [
+     18,
+     ".~.. ..V....%..i"
+    ]
+   ]
+  },
+  {
+   "o": "0260",
+   "h": [
+    [
+     18,
+     "24 64 0d f8 f1 8d 0f 48  35 10 18 5f 18 14 ed aa"
+    ]
+   ],
+   "a": [
+    [
+     18,
+     "$d.....H5.._...."
+    ]
+   ]
+  },
+  {
+   "o": "0270",
+   "h": [
+    [
+     18,
+     "20 4f 3e be 16 6a 2d ca  e7 be 8c cb 68 9f c8 1a"
+    ]
+   ],
+   "a": [
+    [
+     18,
+     " O>..j-.....h..."
+    ]
+   ]
+  },
+  {
+   "o": "0280",
+   "h": [
+    [
+     18,
+     "d5 da ea 11 fc f2 9d 99  0a 62 db e1 52 cc 9d 87"
+    ]
+   ],
+   "a": [
+    [
+     18,
+     ".........b..R..."
+    ]
+   ]
+  },
+  {
+   "o": "0290",
+   "h": [
+    [
+     18,
+     "b7 78 1f 90 b1 ed d1 ac  19 24 2f ac f4 85 cd 55"
+    ]
+   ],
+   "a": [
+    [
+     18,
+     ".x.......$/....U"
+    ]
+   ]
+  },
+  {
+   "o": "02a0",
+   "h": [
+    [
+     18,
+     "ed b2"
+    ],
+    [
+     -1,
+     " 00 00                                     "
+    ]
+   ],
+   "a": [
+    [
+     18,
+     ".."
+    ],
+    [
+     -1,
+     ".."
+    ]
+   ]
+  }
+ ]
+}

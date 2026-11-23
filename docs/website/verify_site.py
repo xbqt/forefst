@@ -24,7 +24,10 @@ import os, re, sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 CONTENT = os.path.join(HERE, "content")
-DOCS = os.environ.get("REFS_DOCS", os.path.join(HERE, "..", "forefst", "docs"))
+# N116 (1.14.0): the docs folder this site is built from -- website/'s parent, in the dev and the published tree alike;
+# the default was website/../forefst/docs, which exists in neither, so every rule that compares a generated page with
+# its source compared with nothing (measured 2026-11-20: pointed at the real sources, the 88 pages still pass)
+DOCS = os.environ.get("REFS_DOCS", os.path.join(HERE, ".."))
 
 # generated page -> source page  (mirrors build.py's layout)
 def pairs():
@@ -35,15 +38,26 @@ def pairs():
             continue
         for fn in sorted(os.listdir(d)):
             if fn.endswith(".md") and fn != "_index.md":
-                out.append((os.path.join(d, fn), os.path.join(DOCS, sec, fn)))
-    exd = os.path.join(CONTENT, "tools", "examples")
-    if os.path.isdir(exd):
-        for fn in sorted(os.listdir(exd)):
-            if fn.endswith(".md") and fn != "_index.md":
-                out.append((os.path.join(exd, fn), os.path.join(DOCS, "examples", fn)))
+                src = os.path.join(DOCS, sec, fn)
+                if sec == "tools" and not os.path.isfile(src) and os.path.isfile(os.path.join(DOCS, "examples", fn)):
+                    src = os.path.join(DOCS, "examples", fn)     # build.py publishes the examples as pages of tools/
+                out.append((os.path.join(d, fn), src))
     gl = os.path.join(CONTENT, "glossary.md")
     if os.path.isfile(gl):
         out.append((gl, os.path.join(DOCS, "glossary.md")))
+    # N223 (1.14.0): the three site-only pages build.py copies as they are (home, about, methodology) were in no pair,
+    # so no rule -- the LEAK check included -- read them
+    for gen_name, src_name in (("_index.md", "home.md"), ("about.md", "about.md"),
+                               (os.path.join("verification", "_index.md"), "verification.md")):
+        g = os.path.join(CONTENT, gen_name)
+        if os.path.isfile(g):
+            out.append((g, os.path.join(HERE, "pages", src_name)))
+    # RC3a: the Methodology section's sub-pages (docs/methodology/*.md, published under content/verification/)
+    vd = os.path.join(CONTENT, "verification")
+    if os.path.isdir(vd):
+        for fn in sorted(os.listdir(vd)):
+            if fn.endswith(".md") and fn != "_index.md":
+                out.append((os.path.join(vd, fn), os.path.join(DOCS, "methodology", fn)))
     return out
 
 # Published page basenames (for link resolution) and the never-published set (build.py UNPUBLISHED+EXCLUDE).
@@ -55,6 +69,7 @@ def published_basenames():
                 s.add(fn.lower())
     return s
 
+_METHOD_ALLOWED = ("master reference", "evidence-level jargon", "finding-ID jargon")
 UNPUB = {"readme.md", "knowledge_map.md", "contributing.md", "changelog.md",
          "test_baseline_images.md", "methodology.md", "cbw4.md"}
 
@@ -77,6 +92,9 @@ def check_page(gen_path, src_path, pub, gen=None, src=None):
     base = os.path.basename(gen_path)
     rel = os.path.relpath(gen_path, CONTENT)
     is_about_or_gloss = base in ("about.md", "glossary.md")
+    # N223 (1.14.0): the Methodology page (content/verification.md) explains the evidence model, so the words of that
+    # model are its subject, not jargon leaking into a reference page; ids, erratum numbers and #NNN stay forbidden there
+    is_method = os.path.dirname(gen_path) == os.path.join(CONTENT, "verification")    # the Methodology section
     if gen is None:
         gen = open(gen_path, encoding="utf-8").read()
     if src is None:
@@ -121,10 +139,14 @@ def check_page(gen_path, src_path, pub, gen=None, src=None):
                      (r'(?<![\w.,])[A-J]\.\d+[a-z]\b', 'bare appendix ref'),
                      (r'(?m)^\s*Findings?:\s', 'Findings: lead-in'),
                      (r'\bopen question [A-Z]\d\b', 'open-question code')]:
+        if is_method and lbl in _METHOD_ALLOWED:
+            continue
         for m in re.finditer(pat, prose):
             H("LEAK", f"{lbl}: {m.group(0)[:30]!r}")
     # repo-internal filenames must not appear even inside inline code (they render to the reader)
     for m in re.finditer(r'\b(?:structure_reference|reference_table|findings_register|open_questions)\b', gen):
+        if is_method:
+            continue                          # N223: the Methodology page links the register by its file name
         H("LEAK", f"repo filename in output: {m.group(0)!r}")
 
     # ---- DANGLE ----  dead predicate left by a removal
@@ -263,8 +285,42 @@ def calibrate(pub):
     return ok_all
 
 
+def check_sitemap(root):
+    """RC3b (the maintainer, 2026-11-22: "be sure to update the sitemap.xml"): in the RENDERED site `root`, sitemap.xml
+    lists every page Hugo wrote and no redirect page (a moved page's old address, an alias). Hugo regenerates the file
+    at every build; this checks what it wrote. Returns the problems, [] when it is right."""
+    sm = os.path.join(root, "sitemap.xml")
+    if not os.path.isfile(sm):
+        return ["no sitemap.xml in %s" % root]
+    locs = set()
+    for m in re.finditer(r"<loc>([^<]+)</loc>", open(sm, encoding="utf-8").read()):
+        u = m.group(1)
+        locs.add(re.sub(r"^[a-z]+://[^/]+/", "", u))
+    pages, redirects = set(), set()
+    for d, _dirs, files in os.walk(root):
+        if "index.html" not in files:
+            continue
+        rel = os.path.relpath(d, root)
+        key = "" if rel == "." else rel.replace(os.sep, "/") + "/"
+        head = open(os.path.join(d, "index.html"), encoding="utf-8", errors="replace").read(2048)
+        (redirects if 'http-equiv="refresh"' in head or "http-equiv=refresh" in head else pages).add(key)
+    probs = ["page not in sitemap.xml: /%s" % k for k in sorted(pages - locs)]
+    probs += ["redirect page listed in sitemap.xml: /%s" % k for k in sorted(locs & redirects)]
+    probs += ["sitemap.xml lists a page that was not written: /%s" % k for k in sorted(locs - pages - redirects)]
+    return probs
+
+
 def main():
     report = "--report" in sys.argv
+    rendered = [a for a in sys.argv[1:] if not a.startswith("--")]
+    if rendered:
+        probs = check_sitemap(rendered[0])
+        for pr in probs:
+            print("  [sitemap  ] " + pr)
+        if probs:
+            print("FAIL — sitemap.xml: %d problem(s)" % len(probs))
+            return 1
+        print("sitemap.xml: every rendered page listed, no redirect page listed")
     pub = published_basenames()
     if "--calibrate" in sys.argv:
         return 0 if calibrate(pub) else 1

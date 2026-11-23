@@ -3,319 +3,321 @@ ReFS Directory Tree
 ==============================================================================
   Image:           win11refs2tsnapshots.raw
   ReFS version:    3.14
-  Cluster size:    0x1000
+  Cluster size:    4 KiB
   Objects:         47
   Start OID:       0x600
   Start name:      Root Directory
 
-  Total entries:   304 (34 directories, 270 files, 3 ADS)
+  Total entries:   304 (34 directories, 270 file names, 3 named-stream entries (listed under each name))
+  Files:           269 (9 inline, 257 extents, 3 snapshot-shared)
+  Names:           270 (a hard-linked file has one name per link)
 
-  Type  OID          Attrs            Size Modified             Path
+  Type  ObjectRef   Data            Attrs            Size Modified             Path
   ----------------------------------------------------------------------------------------------------
-  DIR   0x701        Hidden|System|Directory            2026-05-16 16:50:55  System Volume Information
-  FILE  (inline)     Hidden|System|Archive          0 2026-05-16 16:50:53  System Volume Information/FVE2.{8252fd17-a486-4ad4-b1ca-f4fe64d23218}
-  FILE  (inline)     Archive            12 2026-05-16 16:50:46  System Volume Information/WPSettings.dat
-  DIR   0x702        Directory             2026-05-16 16:52:03  test
-  DIR   0x722        Directory             2026-05-16 16:52:02  test/elvis_dir_index_149423
-  DIR   0x72f        Directory             2026-05-16 16:52:03  test/elvis_dir_index_149423/elvis_dir_victor_121923
-  DIR   0x730        Directory             2026-05-16 16:52:02  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324
-  DIR   0x731        Directory             2026-05-16 16:52:02  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165
-  DIR   0x72b        Directory             2026-05-16 16:52:02  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/elvis_dir_oscar_874075
-  FILE  (extents)    Archive        209311 2026-05-16 16:51:55  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/elvis_dir_oscar_874075/xbpt_delta_victor_412034.ini
-  FILE  (extents)    Archive        507770 2026-05-16 16:51:59  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/elvis_dir_oscar_874075/xbpt_zulu_mike_340372.cfg
-  FILE  (extents)    Archive        520031 2026-05-16 16:52:00  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_audit_echo_178867.tmp
-  FILE  (extents)    Archive        264326 2026-05-16 16:52:01  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_log_foxtrot_796125.ini
-  FILE  (extents)    Archive        179023 2026-05-16 16:52:01  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_oscar_foxtrot_866936.json
-  FILE  (extents)    Archive        403765 2026-05-16 16:51:52  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_output_lima_215617.json
-  FILE  (extents)    Archive        209277 2026-05-16 16:52:01  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_papa_archive_660135.txt
-  FILE  (extents)    Archive        472261 2024-08-03 07:17:33  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_zulu_india_473528.csv
-  FILE  (extents)    Archive        208467 2026-05-16 16:51:55  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_cache_sync_352758.ini
-  FILE  (extents)    Archive        348773 2026-05-16 16:52:02  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_cache_temp_298348.bak
-  FILE  (extents)    Archive         78863 2026-05-16 16:52:00  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_log_romeo_711888.cfg
-  FILE  (extents)    Archive        181536 2025-04-01 07:16:26  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_november_yankee_663510.csv
-  FILE  (extents)    Archive        519258 2026-05-16 16:52:01  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_trace_gamma_472483.cfg
-  FILE  (extents)    Archive        322201 2026-05-16 16:52:02  test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_zulu_audit_805568.ini
-  FILE  (extents)    Archive         36549 2026-05-16 16:52:02  test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_hotel_mike_996142.cfg
-  FILE  (extents)    Archive        453197 2026-05-16 16:52:02  test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_hotel_victor_678038.txt
-  FILE  (extents)    Archive       5242880 2026-05-16 16:52:03  test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_large_5mb_romeo_293003.dat
-  FILE  (extents)    Archive        387932 2026-05-16 16:52:02  test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_temp_uniform_753565.cfg
-  FILE  (extents)    Archive        339532 2024-11-23 07:17:31  test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_whiskey_delta_922359.tmp
-  FILE  (extents)    Archive         71744 2026-05-16 16:52:02  test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_zulu_echo_160107.cfg
-  FILE  (extents)    Archive        166783 2026-05-16 16:52:00  test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_zulu_papa_839258.bin
-  FILE  (extents)    Archive        310564 2023-11-27 07:16:30  test/elvis_dir_index_149423/xbpt_beta_archive_985685.tmp
-  FILE  (extents)    Archive        407328 2022-02-07 07:16:33  test/elvis_dir_index_149423/xbpt_config_sync_830891.tmp
-  FILE  (extents)    Archive        308061 2026-05-16 16:51:58  test/elvis_dir_index_149423/xbpt_draft_india_626576.tmp
-  FILE  (extents)    Archive        239973 2026-05-16 16:51:54  test/elvis_dir_index_149423/xbpt_draft_record_749595.cfg
-  FILE  (extents)    Archive        505381 2026-05-16 16:51:56  test/elvis_dir_index_149423/xbpt_kilo_draft_550251.bin
-  FILE  (extents)    Archive        297647 2026-05-16 16:52:01  test/elvis_dir_index_149423/xbpt_papa_papa_899322.md
-  FILE  (extents)    Archive        312142 2026-05-16 16:52:00  test/elvis_dir_index_149423/xbpt_quebec_kilo_982841.tmp
-  FILE  (extents)    Archive        376478 2026-05-16 16:52:00  test/elvis_dir_index_149423/xbpt_sync_output_795963.bin
-  FILE  (extents)    Archive        306493 2026-05-16 16:51:52  test/elvis_dir_index_149423/xbpt_victor_gamma_564302.csv
-  FILE  (extents)    Archive        261891 2026-05-16 16:52:02  test/elvis_dir_index_149423/xbpt_yankee_draft_816830.dat
-  FILE  (extents)    Archive        457030 2022-05-20 07:16:16  test/elvis_dir_index_149423/xbpt_zulu_kilo_319858.csv
-  DIR   0x723        Directory             2026-05-16 16:52:02  test/elvis_dir_india_800575
-  FILE  (extents)    Archive        480555 2026-05-16 16:52:02  test/elvis_dir_india_800575/xbpt_beta_archive_202282.json
-  FILE  (extents)    Archive         59633 2026-05-16 16:51:57  test/elvis_dir_india_800575/xbpt_cache_index_408825.bin
-  FILE  (extents)    Archive        388287 2026-05-16 16:52:01  test/elvis_dir_india_800575/xbpt_cache_lima_454391.txt
-  FILE  (extents)    Archive        271776 2026-05-16 16:52:02  test/elvis_dir_india_800575/xbpt_delta_lima_807650.tmp
-  FILE  (extents)    Archive        130777 2026-05-16 16:51:57  test/elvis_dir_india_800575/xbpt_foxtrot_zulu_156856.csv
-  FILE  (extents)    Archive        453499 2026-05-16 16:51:59  test/elvis_dir_india_800575/xbpt_kilo_config_292054.json
-  FILE  (extents)    Archive       2097152 2026-05-16 16:52:02  test/elvis_dir_india_800575/xbpt_large_2mb_report_507726.txt
-  FILE  (extents)    Archive        171788 2026-05-16 16:52:02  test/elvis_dir_india_800575/xbpt_log_beta_973172.txt
-  FILE  (extents)    Archive        467882 2026-05-16 16:52:00  test/elvis_dir_india_800575/xbpt_oscar_backup_284025.json
-  FILE  (extents)    Archive         92647 2026-05-16 16:51:58  test/elvis_dir_india_800575/xbpt_output_config_975939.bak
-  FILE  (extents)    Archive        412745 2026-05-16 16:52:00  test/elvis_dir_india_800575/xbpt_output_victor_198806.ini
-  FILE  (extents)    Archive        407328 2022-02-07 07:16:33  test/elvis_dir_india_800575/xbpt_report_temp_854937.tmp
-  FILE  (extents)    Archive        340231 2026-05-16 16:51:53  test/elvis_dir_india_800575/xbpt_sierra_beta_228555.dat
-  FILE  (extents)    Archive        507751 2026-05-16 16:52:00  test/elvis_dir_india_800575/xbpt_sierra_data_271533.bin
-  FILE  (extents)    Archive        145250 2026-05-16 16:51:54  test/elvis_dir_india_800575/xbpt_uniform_lima_155750.md
-  DIR   0x725        Directory             2026-05-16 16:52:02  test/elvis_dir_papa_805353
-  DIR   0x710        Directory             2026-05-16 16:52:02  test/elvis_dir_papa_805353/elvis_dir_november_478580
-  DIR   0x739        Directory             2026-05-16 16:52:02  test/elvis_dir_papa_805353/elvis_dir_november_478580/elvis_dir_kilo_751807
-  FILE  (extents)    Archive        100455 2026-05-16 16:51:58  test/elvis_dir_papa_805353/elvis_dir_november_478580/elvis_dir_kilo_751807/xbpt_delta_zulu_595944.bak
-  FILE  (extents)    Archive        185084 2026-05-16 16:51:59  test/elvis_dir_papa_805353/elvis_dir_november_478580/elvis_dir_kilo_751807/xbpt_temp_backup_816270.cfg
-  FILE  (extents)    Archive        401806 2026-05-16 16:51:59  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_alpha_cache_742120.dat
-  FILE  (extents)    Archive        474347 2026-05-16 16:51:53  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_archive_trace_798923.cfg
-  FILE  (extents)    Archive        283618 2026-05-16 16:52:00  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_audit_sync_528794.xml
-  FILE  (extents)    Archive        140609 2026-05-16 16:51:54  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_backup_mike_407434.log
-  FILE  (extents)    Archive         60673 2026-05-16 16:52:00  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_beta_echo_977425.bin
-  FILE  (extents)    Archive        216460 2026-05-16 16:52:00  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_config_log_890790.bak
-  FILE  (extents)    Archive        516104 2024-01-13 07:17:04  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_delta_echo_268401.csv
-  FILE  (extents)    Archive        173269 2026-05-16 16:51:56  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_delta_report_275249.dat
-  FILE  (extents)    Archive        237968 2026-05-16 16:52:02  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_hardlink_echo_387599.ini
-  FILE  (extents)    Archive        239973 2026-05-16 16:51:54  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_hotel_kilo_705007.cfg
-  FILE  (extents)    Archive        113106 2026-05-16 16:52:00  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_index_index_579494.cfg
-  FILE  (extents)    Archive        333522 2026-05-16 16:52:01  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_kilo_output_350111.log
-  FILE  (extents)    Archive        552331 2026-05-16 16:51:58  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_lima_temp_514782.csv
-  FILE  (extents)    Archive        516237 2025-07-16 07:17:35  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_lima_victor_941030.cfg
-  FILE  (extents)    Archive        123468 2026-05-16 16:52:00  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_log_output_579275.dat
-  FILE  (extents)    Archive        163402 2026-05-16 16:52:01  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_oscar_archive_384713.txt
-  FILE  (extents)    Archive        392164 2026-05-16 16:52:00  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_oscar_foxtrot_635028.xml
-  FILE  (extents)    Archive        188129 2026-05-16 16:52:01  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_papa_index_238422.csv
-  FILE  (extents)    Archive         30711 2026-05-16 16:52:02  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_quebec_papa_978800.txt
-  FILE  (extents)    Archive        546650 2026-05-16 16:51:55  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_sierra_echo_921063.xml
-  FILE  (extents)    Archive        219586 2026-05-16 16:52:01  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_tango_echo_291736.csv
-  FILE  (extents)    Archive        407328 2022-02-07 07:16:33  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_temp_sierra_130629.tmp
-  FILE  (extents)    Archive        462545 2021-10-19 07:16:21  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_trace_gamma_651618.dat
-  FILE  (extents)    Archive        505381 2026-05-16 16:51:56  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_victor_tango_152379.bin
-  FILE  (extents)    Archive        142209 2026-05-16 16:51:59  test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_yankee_victor_114004.ini
-  FILE  (extents)    Archive        307397 2026-05-16 16:52:01  test/elvis_dir_papa_805353/xbpt_audit_index_229436.csv
-  FILE  (extents)    Archive        179320 2026-05-16 16:52:00  test/elvis_dir_papa_805353/xbpt_mike_oscar_154118.csv
-  FILE  (extents)    Archive        219663 2026-05-16 16:52:02  test/elvis_dir_papa_805353/xbpt_november_hotel_509136.md
-  FILE  (extents)    Archive        151966 2026-05-16 16:51:55  test/elvis_dir_papa_805353/xbpt_november_record_124675.bak
-  FILE  (extents)    Archive         50327 2026-05-16 16:52:01  test/elvis_dir_papa_805353/xbpt_november_sierra_312346.xml
-  FILE  (extents)    Archive        191641 2026-05-16 16:52:01  test/elvis_dir_papa_805353/xbpt_oscar_archive_362034.json
-  FILE  (extents)    Archive        214551 2026-05-16 16:52:02  test/elvis_dir_papa_805353/xbpt_papa_victor_656146.log
-  FILE  (extents)    Archive        187614 2026-05-16 16:52:02  test/elvis_dir_papa_805353/xbpt_temp_data_294711.md
-  FILE  (extents)    Archive        185084 2026-05-16 16:51:59  test/elvis_dir_papa_805353/xbpt_temp_log_141240.cfg
-  DIR   0x70f        Directory             2026-05-16 16:52:03  test/elvis_dir_record_449015
-  DIR   0x72a        Directory             2026-05-16 16:52:02  test/elvis_dir_record_449015/elvis_dir_lima_252141
-  DIR   0x711        Directory             2026-05-16 16:52:03  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778
-  DIR   0x70d        Directory             2026-05-16 16:52:00  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608
-  FILE  (extents)    Archive        407804 2026-03-01 07:16:07  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_cache_zulu_259753.dat
-  FILE  (extents)    Archive        401806 2026-05-16 16:51:59  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_delta_india_877880.dat
-  FILE  (extents)    Archive        408171 2023-08-26 07:16:12  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_delta_temp_981764.tmp
-  FILE  (extents)    Archive         11844 2026-05-16 16:51:57  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_mike_quebec_329740.dat
-  DIR   0x719        Directory             2026-05-16 16:52:01  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509
-  FILE  (extents)    Archive          8103 2026-05-16 16:51:55  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509/xbpt_mike_trace_701071.dat
-  DIR   0x712        Directory             2026-05-16 16:51:57  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264
-  FILE  (extents)    Archive        462545 2021-10-19 07:16:21  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_audit_config_255291.dat
-  FILE  (extents)    Archive        184020 2026-05-16 16:52:00  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_beta_report_756229.csv
-  FILE  (extents)    Archive        173269 2026-05-16 16:51:56  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_november_cache_127869.dat
-  FILE  (extents)    Archive        429380 2024-06-07 07:17:11  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_zulu_trace_481495.md
-  FILE  (extents)    Archive        219827 2022-06-17 07:16:38  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_backup_echo_585708.csv
-  FILE  (extents)    Archive        371711 2026-05-16 16:51:58  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_beta_archive_448246.ini
-  FILE  (extents)    Archive        408171 2026-05-16 16:51:52  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_draft_oscar_719333.tmp
-  FILE  (extents)    Archive         96238 2026-05-16 16:52:02  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_kilo_beta_246643.bin
-  FILE  (extents)    Archive       7340032 2026-05-16 16:52:03  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_large_7mb_india_845613.txt
-  FILE  (extents)    Archive      90177536 2026-05-16 16:52:03  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_large_86mb_india_568540.txt
-  FILE  (extents)    Archive          8137 2026-05-16 16:51:59  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_log_romeo_319918.txt
-  FILE  (extents)    Archive        363952 2026-05-16 16:51:58  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_mike_trace_484217.ini
-  FILE  (extents)    Archive        236094 2026-05-16 16:51:52  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_mike_uniform_215836.txt
-  FILE  (extents)    Archive        318104 2026-05-16 16:52:01  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_report_india_560484.txt
-  FILE  (extents)    Archive         97673 2026-05-16 16:51:56  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_romeo_output_531365.cfg
-  FILE  (extents)    Archive        166671 2026-05-16 16:51:57  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_sync_echo_156375.ini
-  FILE  (extents)    Archive        129835 2025-12-30 07:17:16  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_temp_mike_134457.bak
-  FILE  (extents)    Archive        500541 2026-05-16 16:52:01  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_trace_delta_811163.txt
-  FILE  (extents)    Archive        490481 2026-05-16 16:51:58  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_yankee_tango_103961.bin
-  FILE  (extents)    Archive        283500 2026-05-16 16:51:53  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_zulu_hotel_433348.log
-  DIR   0x73a        Directory             2026-05-16 16:52:02  test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_report_664539
-  FILE  (extents)    Archive        355665 2026-05-16 16:52:00  test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_alpha_delta_877195.json
-  FILE  (extents)    Archive        159126 2026-05-16 16:51:56  test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_index_draft_129088.bin
-  FILE  (extents)    Archive        163770 2026-05-16 16:52:01  test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_kilo_quebec_845728.bak
-  FILE  (extents)    Archive        296805 2026-05-16 16:51:59  test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_tango_record_232127.csv
-  FILE  (extents)    Archive        317120 2026-05-16 16:52:02  test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_temp_index_659152.xml
-  FILE  (extents)    Archive        217733 2026-05-16 16:51:59  test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_uniform_mike_713257.xml
-  FILE  (extents)    Archive          2590 2026-05-16 16:51:59  test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_yankee_report_288078.log
-  DIR   0x721        Directory             2026-05-16 16:52:02  test/elvis_dir_record_449015/elvis_dir_papa_104235
-  DIR   0x707        Directory             2026-05-16 16:52:02  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743
-  DIR   0x706        Directory             2026-05-16 16:52:02  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016
-  DIR   0x724        Directory             2026-05-16 16:51:57  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_archive_704644
-  FILE  (extents)    Archive        170417 2026-05-16 16:51:57  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_archive_704644/xbpt_uniform_oscar_320878.log
-  DIR   0x704        Directory             2026-05-16 16:52:02  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148
-  FILE  (extents)    Archive        340231 2026-05-16 16:51:53  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_config_archive_855545.dat
-  FILE  (extents)    Archive        498204 2026-05-16 16:51:54  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_data_victor_588744.ini
-  FILE  (extents)    Archive        193275 2026-05-16 16:52:02  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_delta_sierra_216359.bin
-  FILE  (extents)    Archive        499196 2026-05-16 16:52:02  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_hotel_data_899354.bak
-  FILE  (extents)    Archive         23113 2026-05-16 16:51:52  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_index_zulu_828859.bak
-  FILE  (extents)    Archive        442099 2026-05-16 16:51:56  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_lima_mike_622053.csv
-  FILE  (extents)    Archive        238043 2026-05-16 16:51:53  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_papa_audit_649170.md
-  FILE  (extents)    Archive        116615 2026-05-16 16:51:52  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_sierra_log_210965.log
-  FILE  (extents)    Archive        414625 2026-05-16 16:51:51  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_tango_mike_573093.dat
-  FILE  (extents)    Archive        459389 2026-05-16 16:51:56  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_temp_audit_764882.bak
-  FILE  (extents)    Archive        344917 2026-05-16 16:51:53  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_uniform_alpha_203203.json
-  FILE  (extents)    Archive        190655 2026-05-16 16:52:01  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_whiskey_kilo_275488.json
-  FILE  (extents)    Archive        192688 2026-05-16 16:51:54  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_whiskey_romeo_757926.txt
-  FILE  (extents)    Archive        360608 2022-04-19 07:16:47  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_yankee_foxtrot_727835.bak
-  DIR   0x71a        Directory             2026-05-16 16:52:02  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790
-  FILE  (extents)    Archive        163495 2026-05-16 16:51:59  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790/xbpt_delta_delta_676812.xml
-  FILE  (extents)    Archive        498204 2026-05-16 16:51:54  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790/xbpt_draft_india_571157.ini
-  DIR   0x718        Directory             2026-05-16 16:52:02  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398
-  DIR   0x70b        Directory             2026-05-16 16:51:58  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805
-  DIR   0x715        Directory             2026-05-16 16:52:01  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083
-  FILE  (extents)    Archive        336685 2026-05-16 16:51:58  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083/xbpt_yankee_echo_729349.tmp
-  FILE  (extents)    Archive        330404 2026-05-16 16:51:58  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_alpha_delta_830163.ini
-  FILE  (extents)    Archive         57215 2026-05-16 16:51:54  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_backup_draft_411674.log
-  FILE  (extents)    Archive        105712 2026-05-16 16:52:00  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_delta_cache_147912.bin
-  FILE  (extents)    Archive         97673 2026-05-16 16:51:54  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_hardlink_audit_219848.cfg
-  FILE  (extents)    Archive         63909 2026-05-16 16:51:56  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_log_backup_939898.json
-  FILE  (extents)    Archive        241654 2026-05-16 16:52:00  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_report_audit_396522.txt
-  FILE  (inline)     Archive|ReparsePoint          0 2026-05-16 16:51:53  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_symlink_gamma_582874.lnk
-  FILE  (extents)    Archive        259142 2026-05-16 16:51:58  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/xbpt_india_temp_254875.bak
-  FILE  (extents)    Archive         88203 2026-05-16 16:52:00  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_alpha_victor_250409.ini
-  FILE  (extents)    Archive        179268 2026-05-16 16:51:55  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_audit_data_566396.txt
-  FILE  (extents)    Archive        417431 2026-05-16 16:51:56  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_audit_india_563500.bin
-  FILE  (extents)    Archive        208467 2021-10-14 07:17:10  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_audit_log_130131.ini
-  FILE  (extents)    Archive        308742 2025-06-11 07:16:10  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_beta_cache_861983.json
-  FILE  (extents)    Archive        286139 2026-05-16 16:51:57  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_lima_lima_890070.dat
-  FILE  (extents)    Archive          4780 2026-05-16 16:52:02  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_lima_oscar_843603.tmp
-  FILE  (extents)    Archive        498061 2026-05-16 16:51:53  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_mike_tango_822153.dat
-  FILE  (extents)    Archive        518777 2025-02-23 07:17:23  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_romeo_gamma_831931.dat
-   ADS                                  46                      test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_romeo_gamma_831931.dat:hidden_7357
-  FILE  (extents)    Archive        213498 2025-03-31 07:17:11  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_tango_victor_844323.json
-  FILE  (extents)    Archive        345054 2026-05-16 16:51:56  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_temp_output_522138.tmp
-  FILE  (extents)    Archive        316740 2026-05-16 16:51:58  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_trace_quebec_127743.bin
-  DIR   0x703        Directory             2026-05-16 16:51:59  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462
-  DIR   0x708        Directory             2026-05-16 16:51:57  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899
-  FILE  (extents)    Archive         73763 2024-05-06 07:17:31  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899/xbpt_config_record_746941.dat
-  FILE  (extents)    Archive        244817 2026-05-16 16:52:02  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_index_uniform_409576.json
-  FILE  (extents)    Archive        373180 2023-10-15 07:17:00  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_victor_echo_578793.cfg
-  FILE  (extents)    Archive        474347 2023-11-21 07:17:13  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_zulu_output_293634.cfg
-  FILE  (extents)    Archive        332344 2026-05-16 16:51:52  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_archive_whiskey_718198.csv
-  FILE  (extents)    Archive        404255 2026-05-16 16:52:02  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_audit_november_543757.cfg
-  FILE  (extents)    Archive        277941 2022-03-06 07:16:22  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_cache_beta_265588.tmp
-  FILE  (extents)    Archive         34068 2026-05-16 16:51:58  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_config_beta_555315.bin
-  FILE  (extents)    Archive        417040 2026-05-16 16:51:53  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_config_india_582905.json
-  FILE  (extents)    Archive        436357 2026-05-16 16:51:53  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_draft_beta_656043.txt
-  FILE  (extents)    Archive        360128 2026-05-16 16:52:02  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_gamma_victor_852781.bak
-  FILE  (extents)    Archive        166671 2026-05-16 16:51:57  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_hotel_sync_810225.ini
-  FILE  (extents)    Archive        264667 2022-02-28 07:17:26  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_index_temp_198731.cfg
-  FILE  (extents)    Archive         64539 2026-05-16 16:51:57  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_india_whiskey_159747.csv
-  FILE  (extents)    Archive        407804 2022-12-26 07:16:15  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_log_whiskey_169575.dat
-  FILE  (extents)    Archive        470735 2026-05-16 16:52:01  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_mike_uniform_966879.xml
-  FILE  (extents)    Archive        331810 2026-05-16 16:52:01  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_oscar_report_193920.cfg
-  FILE  (extents)    Archive        380437 2026-05-16 16:52:02  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_quebec_audit_121864.cfg
-  FILE  (extents)    Archive        364340 2026-05-16 16:52:01  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_record_delta_426347.json
-  FILE  (extents)    Archive        415474 2026-05-16 16:51:55  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_record_index_307951.json
-  FILE  (extents)    Archive        100336 2026-05-16 16:51:57  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_report_alpha_806856.csv
-  FILE  (extents)    Archive        254247 2026-05-16 16:51:56  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_temp_echo_351548.json
-  DIR   0x734        Directory             2026-05-16 16:52:02  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_whiskey_835215
-  FILE  (extents)    Archive        478670 2026-05-16 16:51:58  test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_whiskey_835215/xbpt_alpha_romeo_974930.bin
-  FILE  (extents)    Archive        192974 2026-05-16 16:51:59  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_backup_sierra_949923.ini
-  FILE  (extents)    Archive         57215 2026-05-16 16:51:54  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_delta_log_234524.log
-  FILE  (extents)    Archive        396015 2026-05-16 16:51:58  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_draft_draft_797325.txt
-  FILE  (extents)    Archive        378484 2026-05-16 16:52:02  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_foxtrot_cache_816969.xml
-  FILE  (extents)    Archive        339395 2026-05-16 16:51:59  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_hotel_yankee_781098.log
-  FILE  (extents)    Archive        479405 2026-05-16 16:52:00  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_kilo_sync_474043.csv
-  FILE  (extents)    Archive        297107 2026-05-16 16:51:59  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_lima_config_611703.json
-  FILE  (extents)    Archive        302125 2026-05-16 16:52:00  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_log_mike_997799.bin
-  FILE  (extents)    Archive        444510 2026-05-16 16:52:01  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_output_temp_864816.txt
-  FILE  (extents)    Archive        522962 2026-05-16 16:51:59  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_record_cache_584285.json
-  FILE  (extents)    Archive        376478 2026-05-16 16:52:00  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_sierra_record_710410.bin
-  FILE  (extents)    Archive        288237 2025-04-08 07:17:35  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_temp_foxtrot_475776.md
-  FILE  (extents)    Archive        431764 2026-05-16 16:52:01  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_trace_report_848037.cfg
-  FILE  (extents)    Archive        144033 2026-05-16 16:52:01  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_victor_sync_949138.bak
-  FILE  (extents)    Archive         73763 2026-05-16 16:51:57  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_zulu_hotel_356824.dat
-  FILE  (extents)    Archive        194037 2026-05-16 16:52:02  test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_zulu_sync_665668.bin
-  DIR   0x737        Directory             2026-05-16 16:52:02  test/elvis_dir_record_449015/elvis_dir_tango_434284
-  DIR   0x73b        Directory             2026-05-16 16:52:02  test/elvis_dir_record_449015/elvis_dir_tango_434284/elvis_dir_record_864004
-  FILE  (extents)    Archive         82819 2026-05-16 16:52:02  test/elvis_dir_record_449015/elvis_dir_tango_434284/xbpt_data_config_437965.csv
-  FILE  (extents)    Archive        192974 2026-05-16 16:51:59  test/elvis_dir_record_449015/xbpt_alpha_echo_381900.ini
-  FILE  (extents)    Archive        306574 2026-05-16 16:51:57  test/elvis_dir_record_449015/xbpt_archive_audit_104959.tmp
-  FILE  (extents)    Archive        512155 2026-05-16 16:52:02  test/elvis_dir_record_449015/xbpt_backup_delta_809262.csv
-  FILE  (extents)    Archive        204365 2026-05-16 16:51:59  test/elvis_dir_record_449015/xbpt_beta_mike_393018.xml
-  FILE  (extents)    Archive        493766 2026-05-16 16:51:59  test/elvis_dir_record_449015/xbpt_config_uniform_831195.csv
-  FILE  (extents)    Archive        427688 2026-05-16 16:51:54  test/elvis_dir_record_449015/xbpt_delta_log_356379.tmp
-  FILE  (extents)    Archive        312142 2026-05-16 16:52:00  test/elvis_dir_record_449015/xbpt_foxtrot_lima_318386.tmp
-  FILE  (extents)    Archive        141514 2026-05-16 16:52:02  test/elvis_dir_record_449015/xbpt_gamma_archive_952302.cfg
-  FILE  (extents)    Archive        450070 2026-05-16 16:51:54  test/elvis_dir_record_449015/xbpt_india_delta_132534.bak
-  FILE  (extents)    Archive         30619 2026-05-16 16:52:00  test/elvis_dir_record_449015/xbpt_kilo_papa_445436.xml
-  FILE  (extents)    Archive      14680064 2026-05-16 16:52:03  test/elvis_dir_record_449015/xbpt_large_14mb_foxtrot_773062.bak
-  FILE  (extents)    Archive        189614 2026-05-16 16:51:59  test/elvis_dir_record_449015/xbpt_log_india_171227.csv
-  FILE  (extents)    Archive         81506 2026-05-16 16:51:57  test/elvis_dir_record_449015/xbpt_mike_trace_772216.dat
-  FILE  (extents)    Archive        245528 2026-05-16 16:51:57  test/elvis_dir_record_449015/xbpt_november_quebec_231876.bak
-  FILE  (extents)    Archive        266358 2026-05-16 16:51:58  test/elvis_dir_record_449015/xbpt_oscar_victor_509674.md
-  FILE  (extents)    Archive        416811 2026-05-16 16:52:00  test/elvis_dir_record_449015/xbpt_output_papa_412411.log
-  FILE  (extents)    Archive        403765 2026-05-16 16:51:52  test/elvis_dir_record_449015/xbpt_sierra_kilo_206137.json
-  FILE  (extents)    Archive        451460 2026-05-16 16:51:55  test/elvis_dir_record_449015/xbpt_sierra_victor_685719.xml
-  FILE  (extents)    Archive        269818 2026-05-16 16:51:56  test/elvis_dir_record_449015/xbpt_uniform_record_153192.json
-  FILE  (extents)    Archive        117140 2026-05-16 16:51:57  test/elvis_dir_record_449015/xbpt_whiskey_sync_681180.xml
-  DIR   0x717        Directory             2026-05-16 16:52:03  test/elvis_dir_victor_783323
-  FILE  (extents)    Archive        417862 2026-05-16 16:51:55  test/elvis_dir_victor_783323/xbpt_audit_november_550810.ini
-  FILE  (extents)    Archive         68356 2026-05-16 16:52:00  test/elvis_dir_victor_783323/xbpt_cache_alpha_953426.ini
-  FILE  (extents)    Archive          7493 2026-05-16 16:52:02  test/elvis_dir_victor_783323/xbpt_cache_quebec_319176.xml
-  FILE  (extents)    Archive        406857 2026-05-16 16:51:56  test/elvis_dir_victor_783323/xbpt_data_romeo_946788.bin
-  FILE  (extents)    Archive        273437 2025-04-19 07:17:09  test/elvis_dir_victor_783323/xbpt_delta_echo_626074.json
-  FILE  (extents)    Archive        151318 2026-05-16 16:51:59  test/elvis_dir_victor_783323/xbpt_draft_november_935526.json
-  FILE  (extents)    Archive        239973 2026-05-16 16:51:54  test/elvis_dir_victor_783323/xbpt_hotel_yankee_684408.cfg
-  FILE  (extents)    Archive        495518 2026-05-16 16:52:02  test/elvis_dir_victor_783323/xbpt_india_quebec_883273.bak
-  FILE  (extents)    Archive     156237824 2026-05-16 16:52:03  test/elvis_dir_victor_783323/xbpt_large_149mb_alpha_610845.dat
-  FILE  (extents)    Archive        495412 2026-05-16 16:52:02  test/elvis_dir_victor_783323/xbpt_november_quebec_999278.md
-  FILE  (extents)    Archive        237378 2026-05-16 16:51:59  test/elvis_dir_victor_783323/xbpt_oscar_delta_192166.ini
-  FILE  (extents)    Archive        251331 2026-05-16 16:52:01  test/elvis_dir_victor_783323/xbpt_quebec_echo_201709.md
-  FILE  (extents)    Archive        267437 2025-12-01 07:17:11  test/elvis_dir_victor_783323/xbpt_record_mike_276675.tmp
-  FILE  (extents)    Archive        540829 2026-05-16 16:52:02  test/elvis_dir_victor_783323/xbpt_report_quebec_867569.md
-  FILE  (extents)    Archive          8369 2026-05-16 16:51:58  test/elvis_dir_victor_783323/xbpt_romeo_quebec_189040.ini
-  FILE  (extents)    Archive        474347 2022-05-31 07:17:29  test/elvis_dir_victor_783323/xbpt_romeo_yankee_383561.cfg
-  FILE  (extents)    Archive        278186 2026-05-16 16:52:02  test/elvis_dir_victor_783323/xbpt_sierra_echo_709659.md
-  FILE  (extents)    Archive        492715 2026-05-16 16:52:01  test/elvis_dir_victor_783323/xbpt_sierra_gamma_615567.ini
-  FILE  (extents)    Archive         40965 2026-05-16 16:51:59  test/elvis_dir_victor_783323/xbpt_trace_cache_289808.json
-  FILE  (extents)    Archive        234937 2021-10-04 07:16:49  test/elvis_dir_victor_783323/xbpt_trace_config_794136.tmp
-  FILE  (extents)    Archive        277218 2026-05-16 16:52:01  test/elvis_dir_victor_783323/xbpt_trace_hotel_502150.xml
-  FILE  (extents)    Archive        414030 2025-09-04 07:16:57  test/elvis_dir_victor_783323/xbpt_yankee_output_781405.csv
-  FILE  (extents)    Archive        186635 2026-05-16 16:51:53  test/xbpt_archive_romeo_596174.txt
-  FILE  (extents)    Archive         71395 2026-05-16 16:51:59  test/xbpt_beta_sierra_570651.json
-  FILE  (extents)    Archive        192688 2026-05-16 16:51:54  test/xbpt_config_hotel_558589.txt
-  FILE  (extents)    Archive        440919 2026-05-16 16:51:58  test/xbpt_config_log_714507.md
-  FILE  (extents)    Archive        159126 2021-10-15 07:17:19  test/xbpt_config_log_982725.bin
-  FILE  (extents)    Archive         59633 2026-05-16 16:51:57  test/xbpt_draft_tango_958869.bin
-  FILE  (extents)    Archive        298452 2026-05-16 16:52:02  test/xbpt_foxtrot_config_966558.log
-  FILE  (extents)    Archive        430306 2026-05-16 16:52:01  test/xbpt_gamma_temp_372257.bak
-  FILE  (extents)    Archive        376745 2025-06-06 07:17:11  test/xbpt_index_india_423224.csv
-  FILE  (extents)    Archive        305819 2025-08-11 07:17:32  test/xbpt_india_papa_801739.json
-  FILE  (extents)    Archive        475328 2024-04-02 07:16:32  test/xbpt_india_temp_831504.csv
-  FILE  (extents)    Archive        214075 2026-05-16 16:51:56  test/xbpt_india_trace_307426.json
-  FILE  (extents)    Archive     103809024 2026-05-16 16:52:03  test/xbpt_large_99mb_report_414178.tmp
-  FILE  (extents)    Archive        552331 2026-05-16 16:51:58  test/xbpt_log_november_496320.csv
-  FILE  (inline)     Archive           173 2026-05-16 16:52:02  test/xbpt_marked_eveliselaurence_670394.txt
-  FILE  (extents)    Archive         19465 2026-05-16 16:52:02  test/xbpt_sierra_sync_956584.ini
-  FILE  (inline)     Archive|ReparsePoint          0 2026-05-16 16:51:57  test/xbpt_symlink_hotel_632659.lnk
-  FILE  (inline)     Archive|ReparsePoint          0 2026-05-16 16:52:00  test/xbpt_symlink_output_831744.lnk
-  FILE  (extents)    Archive        349388 2026-05-16 16:51:52  test/xbpt_sync_zulu_911953.ini
-  FILE  (extents)    Archive        116243 2026-05-16 16:52:01  test/xbpt_tango_archive_828215.dat
-   ADS                                  46                      test/xbpt_tango_archive_828215.dat:hidden_1514
-  FILE  (extents)    Archive        207263 2026-05-16 16:51:58  test/xbpt_tango_foxtrot_898933.txt
-  FILE  (extents)    Archive        186635 2026-05-16 16:51:53  test/xbpt_uniform_victor_168724.txt
-  FILE  (extents)    Archive        578777 2026-05-16 16:51:57  test/xbpt_victor_lima_251467.cfg
-  FILE  (extents)    Archive        380116 2022-02-12 07:16:16  test/xbpt_yankee_audit_433793.xml
-  FILE  (extents)    Archive        454363 2026-05-16 16:52:01  test/xbpt_zulu_hotel_479124.bin
-  DIR   0x73c        Directory             2026-05-16 17:34:52  testsnapshots
-  FILE  (extents)    Archive            15 2026-05-16 17:12:30  testsnapshots/arg.txt
-  FILE  (inline)     Archive            15 2026-05-16 17:12:30  testsnapshots/arg.txt.bak.20260516191516
-  FILE  (inline)     Archive            15 2026-05-16 17:12:30  testsnapshots/arg.txt.bak.20260516191620
-  FILE  (snapshot-shared) Archive           201 2026-05-16 17:35:57  testsnapshots/lasttest.txt
-  FILE  (snapshot-shared) Archive             5 2026-05-16 17:19:37  testsnapshots/test.txt
-  FILE  (snapshot-shared) Archive            12 2026-05-16 17:27:58  testsnapshots/testads.txt
-   ADS                                  30                      testsnapshots/testads.txt:adstest
-  FILE  (inline)     Archive             5 2026-05-16 17:19:37  testsnapshots/testxyz.txt
-  FILE  (extents)    Archive       3201078 2026-05-16 17:34:32  testsnapshots/xbpt_beta_sierra_570651.json
+  DIR   0x701:0x0                   0x10000006 (Hidden|System|Directory_Internal)            2026-05-16T16:50:55.4710672Z System Volume Information
+  FILE  0x701:0x110 inline          0x26 (Hidden|System|Archive)          0 2026-05-16T16:50:53.5841843Z System Volume Information/FVE2.{8252fd17-a486-4ad4-b1ca-f4fe64d23218}
+  FILE  0x701:0x13  inline          0x20 (Archive)         12 2026-05-16T16:50:46.3251276Z System Volume Information/WPSettings.dat
+  DIR   0x702:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:52:03.0244081Z test
+  DIR   0x722:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:52:02.6095468Z test/elvis_dir_index_149423
+  DIR   0x72f:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:52:03.0144080Z test/elvis_dir_index_149423/elvis_dir_victor_121923
+  DIR   0x730:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:52:02.8195237Z test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324
+  DIR   0x731:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:52:02.3107323Z test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165
+  DIR   0x72b:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:52:02.7687941Z test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/elvis_dir_oscar_874075
+  FILE  0x717:0x4   extents         0x20 (Archive)     209311 2026-05-16T16:51:55.3235831Z test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/elvis_dir_oscar_874075/xbpt_delta_victor_412034.ini
+  FILE  0x72b:0x2   extents         0x20 (Archive)     507770 2026-05-16T16:51:59.5353470Z test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/elvis_dir_oscar_874075/xbpt_zulu_mike_340372.cfg
+  FILE  0x70b:0x2   extents         0x20 (Archive)     520031 2026-05-16T16:52:00.3371580Z test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_audit_echo_178867.tmp
+  FILE  0x731:0x2   extents         0x20 (Archive)     264326 2026-05-16T16:52:01.1372025Z test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_log_foxtrot_796125.ini
+  FILE  0x731:0x3   extents         0x20 (Archive)     179023 2026-05-16T16:52:01.7069655Z test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_oscar_foxtrot_866936.json
+  FILE  0x707:0x6   extents         0x20 (Archive)     403765 2026-05-16T16:51:52.5660370Z test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_output_lima_215617.json
+  FILE  0x731:0x5   extents         0x20 (Archive)     209277 2026-05-16T16:52:01.8201916Z test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_papa_archive_660135.txt
+  FILE  0x731:0x4   extents         0x20 (Archive)     472261 2024-08-03T07:17:33.0580290Z test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_zulu_india_473528.csv
+  FILE  0x704:0x17  extents         0x20 (Archive)     208467 2026-05-16T16:51:55.6652421Z test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_cache_sync_352758.ini
+  FILE  0x730:0x6   extents         0x20 (Archive)     348773 2026-05-16T16:52:02.8195237Z test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_cache_temp_298348.bak
+  FILE  0x730:0x2   extents         0x20 (Archive)      78863 2026-05-16T16:52:00.8901032Z test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_log_romeo_711888.cfg
+  FILE  0x730:0x4   extents         0x20 (Archive)     181536 2025-04-01T07:16:26.2947244Z test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_november_yankee_663510.csv
+  FILE  0x730:0x3   extents         0x20 (Archive)     519258 2026-05-16T16:52:01.0007270Z test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_trace_gamma_472483.cfg
+  FILE  0x730:0x5   extents         0x20 (Archive)     322201 2026-05-16T16:52:02.6320567Z test/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/xbpt_zulu_audit_805568.ini
+  FILE  0x72f:0x6   extents         0x20 (Archive)      36549 2026-05-16T16:52:02.4850618Z test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_hotel_mike_996142.cfg
+  FILE  0x707:0x14  extents         0x20 (Archive)     453197 2026-05-16T16:52:02.1027313Z test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_hotel_victor_678038.txt
+  FILE  0x72f:0x7   extents         0x20 (Archive)    5242880 2026-05-16T16:52:03.0144080Z test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_large_5mb_romeo_293003.dat
+  FILE  0x72f:0x4   extents         0x20 (Archive)     387932 2026-05-16T16:52:02.9581223Z test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_temp_uniform_753565.cfg
+  FILE  0x718:0x2   extents         0x20 (Archive)     339532 2024-11-23T07:17:31.6060620Z test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_whiskey_delta_922359.tmp
+  FILE  0x72f:0x5   extents         0x20 (Archive)      71744 2026-05-16T16:52:02.4728072Z test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_zulu_echo_160107.cfg
+  FILE  0x72f:0x2   extents         0x20 (Archive)     166783 2026-05-16T16:52:00.9731782Z test/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_zulu_papa_839258.bin
+  FILE  0x704:0x19  extents         0x20 (Archive)     310564 2023-11-27T07:16:30.1657183Z test/elvis_dir_index_149423/xbpt_beta_archive_985685.tmp
+  FILE  0x722:0x8   extents         0x20 (Archive)     407328 2022-02-07T07:16:33.0361865Z test/elvis_dir_index_149423/xbpt_config_sync_830891.tmp
+  FILE  0x722:0x4   extents         0x20 (Archive)     308061 2026-05-16T16:51:58.9909167Z test/elvis_dir_index_149423/xbpt_draft_india_626576.tmp
+  FILE  0x710:0x9   extents         0x20 (Archive)     239973 2026-05-16T16:51:54.8200316Z test/elvis_dir_index_149423/xbpt_draft_record_749595.cfg
+  FILE  0x722:0x3   extents         0x20 (Archive)     505381 2026-05-16T16:51:56.3444502Z test/elvis_dir_index_149423/xbpt_kilo_draft_550251.bin
+  FILE  0x722:0x9   extents         0x20 (Archive)     297647 2026-05-16T16:52:01.8436449Z test/elvis_dir_index_149423/xbpt_papa_papa_899322.md
+  FILE  0x722:0x6   extents         0x20 (Archive)     312142 2026-05-16T16:52:00.0025463Z test/elvis_dir_index_149423/xbpt_quebec_kilo_982841.tmp
+  FILE  0x722:0x7   extents         0x20 (Archive)     376478 2026-05-16T16:52:00.1454009Z test/elvis_dir_index_149423/xbpt_sync_output_795963.bin
+  FILE  0x706:0x12  extents         0x20 (Archive)     306493 2026-05-16T16:51:52.2042216Z test/elvis_dir_index_149423/xbpt_victor_gamma_564302.csv
+  FILE  0x722:0xa   extents         0x20 (Archive)     261891 2026-05-16T16:52:02.2090360Z test/elvis_dir_index_149423/xbpt_yankee_draft_816830.dat
+  FILE  0x711:0x5   extents         0x20 (Archive)     457030 2022-05-20T07:16:16.7264974Z test/elvis_dir_index_149423/xbpt_zulu_kilo_319858.csv
+  DIR   0x723:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:52:02.9894867Z test/elvis_dir_india_800575
+  FILE  0x723:0x2   extents         0x20 (Archive)     480555 2026-05-16T16:52:02.7888781Z test/elvis_dir_india_800575/xbpt_beta_archive_202282.json
+  FILE  0x723:0xe   extents         0x20 (Archive)      59633 2026-05-16T16:51:57.0523357Z test/elvis_dir_india_800575/xbpt_cache_index_408825.bin
+  FILE  0x723:0xc   extents         0x20 (Archive)     388287 2026-05-16T16:52:01.9306317Z test/elvis_dir_india_800575/xbpt_cache_lima_454391.txt
+  FILE  0x723:0xd   extents         0x20 (Archive)     271776 2026-05-16T16:52:02.1964852Z test/elvis_dir_india_800575/xbpt_delta_lima_807650.tmp
+  FILE  0x70f:0xf   extents         0x20 (Archive)     130777 2026-05-16T16:51:57.0603594Z test/elvis_dir_india_800575/xbpt_foxtrot_zulu_156856.csv
+  FILE  0x723:0x5   extents         0x20 (Archive)     453499 2026-05-16T16:51:59.5137259Z test/elvis_dir_india_800575/xbpt_kilo_config_292054.json
+  FILE  0x723:0xf   extents         0x20 (Archive)    2097152 2026-05-16T16:52:02.9894867Z test/elvis_dir_india_800575/xbpt_large_2mb_report_507726.txt
+  FILE  0x723:0xa   extents         0x20 (Archive)     171788 2026-05-16T16:52:02.6404187Z test/elvis_dir_india_800575/xbpt_log_beta_973172.txt
+  FILE  0x723:0x8   extents         0x20 (Archive)     467882 2026-05-16T16:52:00.1744471Z test/elvis_dir_india_800575/xbpt_oscar_backup_284025.json
+  FILE  0x723:0x6   extents         0x20 (Archive)      92647 2026-05-16T16:51:58.8180360Z test/elvis_dir_india_800575/xbpt_output_config_975939.bak
+  FILE  0x723:0x9   extents         0x20 (Archive)     412745 2026-05-16T16:52:00.3652125Z test/elvis_dir_india_800575/xbpt_output_victor_198806.ini
+  FILE  0x723:0xb   extents         0x20 (Archive)     407328 2022-02-07T07:16:33.0361865Z test/elvis_dir_india_800575/xbpt_report_temp_854937.tmp
+  FILE  0x723:0x4   extents         0x20 (Archive)     340231 2026-05-16T16:51:53.1249699Z test/elvis_dir_india_800575/xbpt_sierra_beta_228555.dat
+  FILE  0x723:0x7   extents         0x20 (Archive)     507751 2026-05-16T16:52:00.1794541Z test/elvis_dir_india_800575/xbpt_sierra_data_271533.bin
+  FILE  0x702:0x13  extents         0x20 (Archive)     145250 2026-05-16T16:51:54.4564403Z test/elvis_dir_india_800575/xbpt_uniform_lima_155750.md
+  DIR   0x725:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:52:02.4584309Z test/elvis_dir_papa_805353
+  DIR   0x710:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:52:02.9691461Z test/elvis_dir_papa_805353/elvis_dir_november_478580
+  DIR   0x739:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:52:02.7523504Z test/elvis_dir_papa_805353/elvis_dir_november_478580/elvis_dir_kilo_751807
+  FILE  0x702:0x14  extents         0x20 (Archive)     100455 2026-05-16T16:51:58.3998852Z test/elvis_dir_papa_805353/elvis_dir_november_478580/elvis_dir_kilo_751807/xbpt_delta_zulu_595944.bak
+  FILE  0x739:0x2   extents         0x20 (Archive)     185084 2026-05-16T16:51:59.3740544Z test/elvis_dir_papa_805353/elvis_dir_november_478580/elvis_dir_kilo_751807/xbpt_temp_backup_816270.cfg
+  FILE  0x710:0x1c  extents         0x20 (Archive)     401806 2026-05-16T16:51:59.5451599Z test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_alpha_cache_742120.dat
+  FILE  0x710:0x12  extents         0x20 (Archive)     474347 2026-05-16T16:51:53.4908147Z test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_archive_trace_798923.cfg
+  FILE  0x710:0x17  extents         0x20 (Archive)     283618 2026-05-16T16:52:00.8219237Z test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_audit_sync_528794.xml
+  FILE  0x702:0x3   extents         0x20 (Archive)     140609 2026-05-16T16:51:54.0313191Z test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_backup_mike_407434.log
+  FILE  0x710:0x15  extents         0x20 (Archive)      60673 2026-05-16T16:52:00.3987186Z test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_beta_echo_977425.bin
+  FILE  0x710:0x16  extents         0x20 (Archive)     216460 2026-05-16T16:52:00.7984588Z test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_config_log_890790.bak
+  FILE  0x710:0xe   extents         0x20 (Archive)     516104 2024-01-13T07:17:04.4473965Z test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_delta_echo_268401.csv
+  FILE  0x710:0xd   extents         0x20 (Archive)     173269 2026-05-16T16:51:56.8793586Z test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_delta_report_275249.dat
+  FILE  0x70f:0xb   extents         0x20 (Archive)     237968 2026-05-16T16:52:02.5020831Z test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_hardlink_echo_387599.ini
+  FILE  0x711:0xb   extents         0x20 (Archive)     239973 2026-05-16T16:51:54.8200316Z test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_hotel_kilo_705007.cfg
+  FILE  0x72f:0x3   extents         0x20 (Archive)     113106 2026-05-16T16:52:00.9812382Z test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_index_index_579494.cfg
+  FILE  0x710:0x2   extents         0x20 (Archive)     333522 2026-05-16T16:52:01.4367195Z test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_kilo_output_350111.log
+  FILE  0x710:0xa   extents         0x20 (Archive)     552331 2026-05-16T16:51:58.7259186Z test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_lima_temp_514782.csv
+  FILE  0x710:0x1d  extents         0x20 (Archive)     516237 2025-07-16T07:17:35.7846153Z test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_lima_victor_941030.cfg
+  FILE  0x711:0x4   extents         0x20 (Archive)     123468 2026-05-16T16:52:00.9852562Z test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_log_output_579275.dat
+  FILE  0x710:0x1b  extents         0x20 (Archive)     163402 2026-05-16T16:52:01.9046194Z test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_oscar_archive_384713.txt
+  FILE  0x710:0x7   extents         0x20 (Archive)     392164 2026-05-16T16:52:00.1404045Z test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_oscar_foxtrot_635028.xml
+  FILE  0x710:0x18  extents         0x20 (Archive)     188129 2026-05-16T16:52:01.0671653Z test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_papa_index_238422.csv
+  FILE  0x702:0x22  extents         0x20 (Archive)      30711 2026-05-16T16:52:02.6967051Z test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_quebec_papa_978800.txt
+  FILE  0x715:0x6   extents         0x20 (Archive)     546650 2026-05-16T16:51:55.6924101Z test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_sierra_echo_921063.xml
+  FILE  0x711:0x3   extents         0x20 (Archive)     219586 2026-05-16T16:52:01.3685448Z test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_tango_echo_291736.csv
+  FILE  0x710:0x8   extents         0x20 (Archive)     407328 2022-02-07T07:16:33.0361865Z test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_temp_sierra_130629.tmp
+  FILE  0x710:0x19  extents         0x20 (Archive)     462545 2021-10-19T07:16:21.7425212Z test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_trace_gamma_651618.dat
+  FILE  0x718:0x4   extents         0x20 (Archive)     505381 2026-05-16T16:51:56.3444502Z test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_victor_tango_152379.bin
+  FILE  0x710:0x10  extents         0x20 (Archive)     142209 2026-05-16T16:51:59.6418176Z test/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_yankee_victor_114004.ini
+  FILE  0x725:0x6   extents         0x20 (Archive)     307397 2026-05-16T16:52:01.4195412Z test/elvis_dir_papa_805353/xbpt_audit_index_229436.csv
+  FILE  0x725:0x2   extents         0x20 (Archive)     179320 2026-05-16T16:52:00.0075507Z test/elvis_dir_papa_805353/xbpt_mike_oscar_154118.csv
+  FILE  0x725:0x8   extents         0x20 (Archive)     219663 2026-05-16T16:52:02.0464867Z test/elvis_dir_papa_805353/xbpt_november_hotel_509136.md
+  FILE  0x725:0x4   extents         0x20 (Archive)     151966 2026-05-16T16:51:55.9074605Z test/elvis_dir_papa_805353/xbpt_november_record_124675.bak
+  FILE  0x725:0x5   extents         0x20 (Archive)      50327 2026-05-16T16:52:01.1432052Z test/elvis_dir_papa_805353/xbpt_november_sierra_312346.xml
+  FILE  0x725:0x7   extents         0x20 (Archive)     191641 2026-05-16T16:52:01.6500459Z test/elvis_dir_papa_805353/xbpt_oscar_archive_362034.json
+  FILE  0x725:0xa   extents         0x20 (Archive)     214551 2026-05-16T16:52:02.4584309Z test/elvis_dir_papa_805353/xbpt_papa_victor_656146.log
+  FILE  0x725:0x9   extents         0x20 (Archive)     187614 2026-05-16T16:52:02.8637959Z test/elvis_dir_papa_805353/xbpt_temp_data_294711.md
+  FILE  0x710:0xc   extents         0x20 (Archive)     185084 2026-05-16T16:51:59.3740544Z test/elvis_dir_papa_805353/xbpt_temp_log_141240.cfg
+  DIR   0x70f:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:52:03.0519904Z test/elvis_dir_record_449015
+  DIR   0x72a:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:52:02.7362117Z test/elvis_dir_record_449015/elvis_dir_lima_252141
+  DIR   0x711:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:52:03.0050156Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778
+  DIR   0x70d:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:52:00.3192465Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608
+  FILE  0x704:0x6   extents         0x20 (Archive)     407804 2026-03-01T07:16:07.6076372Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_cache_zulu_259753.dat
+  FILE  0x70d:0x3   extents         0x20 (Archive)     401806 2026-05-16T16:51:59.5451599Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_delta_india_877880.dat
+  FILE  0x70b:0x3   extents         0x20 (Archive)     408171 2023-08-26T07:16:12.5023383Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_delta_temp_981764.tmp
+  FILE  0x70d:0x4   extents         0x20 (Archive)      11844 2026-05-16T16:51:57.0083018Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_mike_quebec_329740.dat
+  DIR   0x719:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:52:01.8313774Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509
+  FILE  0x719:0x3   extents         0x20 (Archive)       8103 2026-05-16T16:51:55.6442296Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_cache_505509/xbpt_mike_trace_701071.dat
+  DIR   0x712:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:51:57.4138828Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264
+  FILE  0x703:0x5   extents         0x20 (Archive)     462545 2021-10-19T07:16:21.7425212Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_audit_config_255291.dat
+  FILE  0x712:0x5   extents         0x20 (Archive)     184020 2026-05-16T16:52:00.1218908Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_beta_report_756229.csv
+  FILE  0x712:0x2   extents         0x20 (Archive)     173269 2026-05-16T16:51:56.8793586Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_november_cache_127869.dat
+  FILE  0x712:0x3   extents         0x20 (Archive)     429380 2024-06-07T07:17:11.2423573Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_zulu_trace_481495.md
+  FILE  0x711:0x6   extents         0x20 (Archive)     219827 2022-06-17T07:16:38.2016426Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_backup_echo_585708.csv
+  FILE  0x711:0x7   extents         0x20 (Archive)     371711 2026-05-16T16:51:58.7087232Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_beta_archive_448246.ini
+  FILE  0x711:0x2   extents         0x20 (Archive)     408171 2026-05-16T16:51:52.1957001Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_draft_oscar_719333.tmp
+  FILE  0x711:0x12  extents         0x20 (Archive)      96238 2026-05-16T16:52:02.2869877Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_kilo_beta_246643.bin
+  FILE  0x711:0x14  extents         0x20 (Archive)    7340032 2026-05-16T16:52:03.0050156Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_large_7mb_india_845613.txt
+  FILE  0x711:0x13  extents         0x20 (Archive)   90177536 2026-05-16T16:52:03.0011361Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_large_86mb_india_568540.txt
+  FILE  0x711:0xe   extents         0x20 (Archive)       8137 2026-05-16T16:51:59.8757242Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_log_romeo_319918.txt
+  FILE  0x711:0xa   extents         0x20 (Archive)     363952 2026-05-16T16:51:58.0182916Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_mike_trace_484217.ini
+  FILE  0x703:0x9   extents         0x20 (Archive)     236094 2026-05-16T16:51:52.3594981Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_mike_uniform_215836.txt
+  FILE  0x711:0x10  extents         0x20 (Archive)     318104 2026-05-16T16:52:01.6865956Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_report_india_560484.txt
+  FILE  0x703:0x8   extents         0x20 (Archive)      97673 2026-05-16T16:51:56.2599612Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_romeo_output_531365.cfg
+  FILE  0x711:0xf   extents         0x20 (Archive)     166671 2026-05-16T16:51:57.6902672Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_sync_echo_156375.ini
+  FILE  0x711:0xd   extents         0x20 (Archive)     129835 2025-12-30T07:17:16.4645071Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_temp_mike_134457.bak
+  FILE  0x711:0x11  extents         0x20 (Archive)     500541 2026-05-16T16:52:01.7831332Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_trace_delta_811163.txt
+  FILE  0x711:0xc   extents         0x20 (Archive)     490481 2026-05-16T16:51:58.8973563Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_yankee_tango_103961.bin
+  FILE  0x715:0x7   extents         0x20 (Archive)     283500 2026-05-16T16:51:53.3972742Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_zulu_hotel_433348.log
+  DIR   0x73a:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:52:02.7197855Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_report_664539
+  FILE  0x72a:0x7   extents         0x20 (Archive)     355665 2026-05-16T16:52:00.5311993Z test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_alpha_delta_877195.json
+  FILE  0x70f:0xd   extents         0x20 (Archive)     159126 2026-05-16T16:51:56.3213420Z test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_index_draft_129088.bin
+  FILE  0x72a:0x8   extents         0x20 (Archive)     163770 2026-05-16T16:52:01.4575604Z test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_kilo_quebec_845728.bak
+  FILE  0x72a:0x6   extents         0x20 (Archive)     296805 2026-05-16T16:51:59.9825903Z test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_tango_record_232127.csv
+  FILE  0x72a:0x2   extents         0x20 (Archive)     317120 2026-05-16T16:52:02.9234140Z test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_temp_index_659152.xml
+  FILE  0x72a:0x3   extents         0x20 (Archive)     217733 2026-05-16T16:51:59.3995386Z test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_uniform_mike_713257.xml
+  FILE  0x72a:0x4   extents         0x20 (Archive)       2590 2026-05-16T16:51:59.5257260Z test/elvis_dir_record_449015/elvis_dir_lima_252141/xbpt_yankee_report_288078.log
+  DIR   0x721:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:52:02.9366825Z test/elvis_dir_record_449015/elvis_dir_papa_104235
+  DIR   0x707:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:52:02.8030861Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743
+  DIR   0x706:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:52:02.8793299Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016
+  DIR   0x724:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:51:57.5789147Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_archive_704644
+  FILE  0x724:0x2   extents         0x20 (Archive)     170417 2026-05-16T16:51:57.5789147Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_archive_704644/xbpt_uniform_oscar_320878.log
+  DIR   0x704:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:52:02.7838852Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148
+  FILE  0x704:0x16  extents         0x20 (Archive)     340231 2026-05-16T16:51:53.1249699Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_config_archive_855545.dat
+  FILE  0x704:0x14  extents         0x20 (Archive)     498204 2026-05-16T16:51:54.9092643Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_data_victor_588744.ini
+  FILE  0x704:0x1a  extents         0x20 (Archive)     193275 2026-05-16T16:52:02.9107463Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_delta_sierra_216359.bin
+  FILE  0x704:0x7   extents         0x20 (Archive)     499196 2026-05-16T16:52:02.1739285Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_hotel_data_899354.bak
+  FILE  0x704:0xa   extents         0x20 (Archive)      23113 2026-05-16T16:51:52.5083371Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_index_zulu_828859.bak
+  FILE  0x704:0x1b  extents         0x20 (Archive)     442099 2026-05-16T16:51:56.5873352Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_lima_mike_622053.csv
+  FILE  0x704:0x12  extents         0x20 (Archive)     238043 2026-05-16T16:51:53.5157311Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_papa_audit_649170.md
+  FILE  0x704:0xc   extents         0x20 (Archive)     116615 2026-05-16T16:51:52.4095765Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_sierra_log_210965.log
+  FILE  0x703:0xa   extents         0x20 (Archive)     414625 2026-05-16T16:51:51.2732911Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_tango_mike_573093.dat
+  FILE  0x704:0xf   extents         0x20 (Archive)     459389 2026-05-16T16:51:56.7873599Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_temp_audit_764882.bak
+  FILE  0x704:0x11  extents         0x20 (Archive)     344917 2026-05-16T16:51:53.9135559Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_uniform_alpha_203203.json
+  FILE  0x704:0xd   extents         0x20 (Archive)     190655 2026-05-16T16:52:01.8363875Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_whiskey_kilo_275488.json
+  FILE  0x704:0x18  extents         0x20 (Archive)     192688 2026-05-16T16:51:54.0814510Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_whiskey_romeo_757926.txt
+  FILE  0x704:0x15  extents         0x20 (Archive)     360608 2022-04-19T07:16:47.0726903Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_yankee_foxtrot_727835.bak
+  DIR   0x71a:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:52:02.7523504Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790
+  FILE  0x71a:0x5   extents         0x20 (Archive)     163495 2026-05-16T16:51:59.6519970Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790/xbpt_delta_delta_676812.xml
+  FILE  0x71a:0x2   extents         0x20 (Archive)     498204 2026-05-16T16:51:54.9092643Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_index_592790/xbpt_draft_india_571157.ini
+  DIR   0x718:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:52:02.5950602Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398
+  DIR   0x70b:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:51:58.4410272Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805
+  DIR   0x715:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:52:01.3511836Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083
+  FILE  0x715:0x2   extents         0x20 (Archive)     336685 2026-05-16T16:51:58.0863035Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/elvis_dir_sierra_850083/xbpt_yankee_echo_729349.tmp
+  FILE  0x70b:0x4   extents         0x20 (Archive)     330404 2026-05-16T16:51:58.9724085Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_alpha_delta_830163.ini
+  FILE  0x70b:0xc   extents         0x20 (Archive)      57215 2026-05-16T16:51:54.8017279Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_backup_draft_411674.log
+  FILE  0x70b:0x5   extents         0x20 (Archive)     105712 2026-05-16T16:52:00.8024674Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_delta_cache_147912.bin
+  FILE  0x703:0x8   extents         0x20 (Archive)      97673 2026-05-16T16:51:54.8200316Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_hardlink_audit_219848.cfg
+  FILE  0x70b:0xb   extents         0x20 (Archive)      63909 2026-05-16T16:51:56.8938941Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_log_backup_939898.json
+  FILE  0x702:0xc   extents         0x20 (Archive)     241654 2026-05-16T16:52:00.0166595Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_report_audit_396522.txt
+  FILE  0x70b:0xa   inline          0x420 (Archive|ReparsePoint)          0 2026-05-16T16:51:53.6446165Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_symlink_gamma_582874.lnk
+  FILE  0x718:0x6   extents         0x20 (Archive)     259142 2026-05-16T16:51:58.9549975Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/xbpt_india_temp_254875.bak
+  FILE  0x706:0xc   extents         0x20 (Archive)      88203 2026-05-16T16:52:00.3927145Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_alpha_victor_250409.ini
+  FILE  0x706:0xf   extents         0x20 (Archive)     179268 2026-05-16T16:51:55.3682622Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_audit_data_566396.txt
+  FILE  0x706:0xe   extents         0x20 (Archive)     417431 2026-05-16T16:51:56.7231057Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_audit_india_563500.bin
+  FILE  0x706:0x14  extents         0x20 (Archive)     208467 2021-10-14T07:17:10.8947266Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_audit_log_130131.ini
+  FILE  0x704:0x8   extents         0x20 (Archive)     308742 2025-06-11T07:16:10.1388255Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_beta_cache_861983.json
+  FILE  0x706:0x7   extents         0x20 (Archive)     286139 2026-05-16T16:51:57.6353400Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_lima_lima_890070.dat
+  FILE  0x706:0xa   extents         0x20 (Archive)       4780 2026-05-16T16:52:02.9446852Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_lima_oscar_843603.tmp
+  FILE  0x706:0x9   extents         0x20 (Archive)     498061 2026-05-16T16:51:53.0790044Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_mike_tango_822153.dat
+  FILE  0x706:0xb   extents         0x20 (Archive)     518777 2025-02-23T07:17:23.7743638Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_romeo_gamma_831931.dat
+   ADS              inline                             46                      test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_romeo_gamma_831931.dat:hidden_7357
+  FILE  0x706:0x11  extents         0x20 (Archive)     213498 2025-03-31T07:17:11.8319740Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_tango_victor_844323.json
+  FILE  0x706:0x13  extents         0x20 (Archive)     345054 2026-05-16T16:51:56.9421529Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_temp_output_522138.tmp
+  FILE  0x706:0x15  extents         0x20 (Archive)     316740 2026-05-16T16:51:58.6772339Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_trace_quebec_127743.bin
+  DIR   0x703:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:51:59.2695542Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462
+  DIR   0x708:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:51:57.3113430Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899
+  FILE  0x702:0x6   extents         0x20 (Archive)      73763 2024-05-06T07:17:31.2960857Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899/xbpt_config_record_746941.dat
+  FILE  0x703:0x10  extents         0x20 (Archive)     244817 2026-05-16T16:52:02.2963291Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_index_uniform_409576.json
+  FILE  0x703:0xf   extents         0x20 (Archive)     373180 2023-10-15T07:17:00.9306544Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_victor_echo_578793.cfg
+  FILE  0x703:0x6   extents         0x20 (Archive)     474347 2023-11-21T07:17:13.8768248Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_zulu_output_293634.cfg
+  FILE  0x707:0x7   extents         0x20 (Archive)     332344 2026-05-16T16:51:52.7264189Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_archive_whiskey_718198.csv
+  FILE  0x707:0x15  extents         0x20 (Archive)     404255 2026-05-16T16:52:02.1129252Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_audit_november_543757.cfg
+  FILE  0x707:0x5   extents         0x20 (Archive)     277941 2022-03-06T07:16:22.2090777Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_cache_beta_265588.tmp
+  FILE  0x707:0x10  extents         0x20 (Archive)      34068 2026-05-16T16:51:58.3939363Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_config_beta_555315.bin
+  FILE  0x707:0xa   extents         0x20 (Archive)     417040 2026-05-16T16:51:53.4304176Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_config_india_582905.json
+  FILE  0x704:0x5   extents         0x20 (Archive)     436357 2026-05-16T16:51:53.1309646Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_draft_beta_656043.txt
+  FILE  0x707:0x16  extents         0x20 (Archive)     360128 2026-05-16T16:52:02.8030861Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_gamma_victor_852781.bak
+  FILE  0x707:0x8   extents         0x20 (Archive)     166671 2026-05-16T16:51:57.6902672Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_hotel_sync_810225.ini
+  FILE  0x707:0x12  extents         0x20 (Archive)     264667 2022-02-28T07:17:26.7141564Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_index_temp_198731.cfg
+  FILE  0x707:0xe   extents         0x20 (Archive)      64539 2026-05-16T16:51:57.9183602Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_india_whiskey_159747.csv
+  FILE  0x707:0x4   extents         0x20 (Archive)     407804 2022-12-26T07:16:15.5489447Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_log_whiskey_169575.dat
+  FILE  0x707:0x11  extents         0x20 (Archive)     470735 2026-05-16T16:52:01.0313310Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_mike_uniform_966879.xml
+  FILE  0x707:0x13  extents         0x20 (Archive)     331810 2026-05-16T16:52:01.9246232Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_oscar_report_193920.cfg
+  FILE  0x707:0xd   extents         0x20 (Archive)     380437 2026-05-16T16:52:02.7583496Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_quebec_audit_121864.cfg
+  FILE  0x70f:0xe   extents         0x20 (Archive)     364340 2026-05-16T16:52:01.5832306Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_record_delta_426347.json
+  FILE  0x71a:0x6   extents         0x20 (Archive)     415474 2026-05-16T16:51:55.4867030Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_record_index_307951.json
+  FILE  0x707:0xf   extents         0x20 (Archive)     100336 2026-05-16T16:51:57.4572324Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_report_alpha_806856.csv
+  FILE  0x707:0xc   extents         0x20 (Archive)     254247 2026-05-16T16:51:56.9206160Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_temp_echo_351548.json
+  DIR   0x734:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:52:02.1864814Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_whiskey_835215
+  FILE  0x706:0x16  extents         0x20 (Archive)     478670 2026-05-16T16:51:58.0634477Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_whiskey_835215/xbpt_alpha_romeo_974930.bin
+  FILE  0x721:0x8   extents         0x20 (Archive)     192974 2026-05-16T16:51:59.8149144Z test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_backup_sierra_949923.ini
+  FILE  0x721:0xd   extents         0x20 (Archive)      57215 2026-05-16T16:51:54.8017279Z test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_delta_log_234524.log
+  FILE  0x702:0x1d  extents         0x20 (Archive)     396015 2026-05-16T16:51:58.6901904Z test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_draft_draft_797325.txt
+  FILE  0x710:0x1a  extents         0x20 (Archive)     378484 2026-05-16T16:52:02.0309720Z test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_foxtrot_cache_816969.xml
+  FILE  0x721:0x7   extents         0x20 (Archive)     339395 2026-05-16T16:51:59.4312828Z test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_hotel_yankee_781098.log
+  FILE  0x721:0xa   extents         0x20 (Archive)     479405 2026-05-16T16:52:00.3855654Z test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_kilo_sync_474043.csv
+  FILE  0x721:0x9   extents         0x20 (Archive)     297107 2026-05-16T16:51:59.9471811Z test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_lima_config_611703.json
+  FILE  0x721:0xc   extents         0x20 (Archive)     302125 2026-05-16T16:52:00.6443431Z test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_log_mike_997799.bin
+  FILE  0x721:0xe   extents         0x20 (Archive)     444510 2026-05-16T16:52:01.6755289Z test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_output_temp_864816.txt
+  FILE  0x721:0x6   extents         0x20 (Archive)     522962 2026-05-16T16:51:59.3800564Z test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_record_cache_584285.json
+  FILE  0x721:0x4   extents         0x20 (Archive)     376478 2026-05-16T16:52:00.1454009Z test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_sierra_record_710410.bin
+  FILE  0x721:0xf   extents         0x20 (Archive)     288237 2025-04-08T07:17:35.0852677Z test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_temp_foxtrot_475776.md
+  FILE  0x721:0xb   extents         0x20 (Archive)     431764 2026-05-16T16:52:01.6915908Z test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_trace_report_848037.cfg
+  FILE  0x708:0x2   extents         0x20 (Archive)     144033 2026-05-16T16:52:01.8580765Z test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_victor_sync_949138.bak
+  FILE  0x721:0x5   extents         0x20 (Archive)      73763 2026-05-16T16:51:57.2486875Z test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_zulu_hotel_356824.dat
+  FILE  0x721:0x10  extents         0x20 (Archive)     194037 2026-05-16T16:52:02.9366825Z test/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_zulu_sync_665668.bin
+  DIR   0x737:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:52:02.7727925Z test/elvis_dir_record_449015/elvis_dir_tango_434284
+  DIR   0x73b:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:52:02.7727925Z test/elvis_dir_record_449015/elvis_dir_tango_434284/elvis_dir_record_864004
+  FILE  0x737:0x2   extents         0x20 (Archive)      82819 2026-05-16T16:52:02.7277895Z test/elvis_dir_record_449015/elvis_dir_tango_434284/xbpt_data_config_437965.csv
+  FILE  0x70f:0x18  extents         0x20 (Archive)     192974 2026-05-16T16:51:59.8149144Z test/elvis_dir_record_449015/xbpt_alpha_echo_381900.ini
+  FILE  0x70f:0x3   extents         0x20 (Archive)     306574 2026-05-16T16:51:57.0308970Z test/elvis_dir_record_449015/xbpt_archive_audit_104959.tmp
+  FILE  0x70f:0x1a  extents         0x20 (Archive)     512155 2026-05-16T16:52:02.6598305Z test/elvis_dir_record_449015/xbpt_backup_delta_809262.csv
+  FILE  0x70f:0x16  extents         0x20 (Archive)     204365 2026-05-16T16:51:59.5177288Z test/elvis_dir_record_449015/xbpt_beta_mike_393018.xml
+  FILE  0x70f:0x17  extents         0x20 (Archive)     493766 2026-05-16T16:51:59.8219172Z test/elvis_dir_record_449015/xbpt_config_uniform_831195.csv
+  FILE  0x70f:0x8   extents         0x20 (Archive)     427688 2026-05-16T16:51:54.3923619Z test/elvis_dir_record_449015/xbpt_delta_log_356379.tmp
+  FILE  0x70f:0x1b  extents         0x20 (Archive)     312142 2026-05-16T16:52:00.0025463Z test/elvis_dir_record_449015/xbpt_foxtrot_lima_318386.tmp
+  FILE  0x70f:0x15  extents         0x20 (Archive)     141514 2026-05-16T16:52:02.8950717Z test/elvis_dir_record_449015/xbpt_gamma_archive_952302.cfg
+  FILE  0x70f:0x5   extents         0x20 (Archive)     450070 2026-05-16T16:51:54.5078113Z test/elvis_dir_record_449015/xbpt_india_delta_132534.bak
+  FILE  0x70f:0x19  extents         0x20 (Archive)      30619 2026-05-16T16:52:00.7066055Z test/elvis_dir_record_449015/xbpt_kilo_papa_445436.xml
+  FILE  0x70f:0x1c  extents         0x20 (Archive)   14680064 2026-05-16T16:52:03.0519904Z test/elvis_dir_record_449015/xbpt_large_14mb_foxtrot_773062.bak
+  FILE  0x70d:0x2   extents         0x20 (Archive)     189614 2026-05-16T16:51:59.7725297Z test/elvis_dir_record_449015/xbpt_log_india_171227.csv
+  FILE  0x70f:0x10  extents         0x20 (Archive)      81506 2026-05-16T16:51:57.3647090Z test/elvis_dir_record_449015/xbpt_mike_trace_772216.dat
+  FILE  0x70f:0x12  extents         0x20 (Archive)     245528 2026-05-16T16:51:57.9556112Z test/elvis_dir_record_449015/xbpt_november_quebec_231876.bak
+  FILE  0x70f:0x13  extents         0x20 (Archive)     266358 2026-05-16T16:51:58.4085093Z test/elvis_dir_record_449015/xbpt_oscar_victor_509674.md
+  FILE  0x70f:0x4   extents         0x20 (Archive)     416811 2026-05-16T16:52:00.4199228Z test/elvis_dir_record_449015/xbpt_output_papa_412411.log
+  FILE  0x70f:0x6   extents         0x20 (Archive)     403765 2026-05-16T16:51:52.5660370Z test/elvis_dir_record_449015/xbpt_sierra_kilo_206137.json
+  FILE  0x70f:0xa   extents         0x20 (Archive)     451460 2026-05-16T16:51:55.4288843Z test/elvis_dir_record_449015/xbpt_sierra_victor_685719.xml
+  FILE  0x70f:0xc   extents         0x20 (Archive)     269818 2026-05-16T16:51:56.3300694Z test/elvis_dir_record_449015/xbpt_uniform_record_153192.json
+  FILE  0x70f:0x11  extents         0x20 (Archive)     117140 2026-05-16T16:51:57.7708135Z test/elvis_dir_record_449015/xbpt_whiskey_sync_681180.xml
+  DIR   0x717:0x0                   0x10000000 (Directory_Internal)            2026-05-16T16:52:03.0204119Z test/elvis_dir_victor_783323
+  FILE  0x717:0x3   extents         0x20 (Archive)     417862 2026-05-16T16:51:55.8112081Z test/elvis_dir_victor_783323/xbpt_audit_november_550810.ini
+  FILE  0x717:0x11  extents         0x20 (Archive)      68356 2026-05-16T16:52:00.0959080Z test/elvis_dir_victor_783323/xbpt_cache_alpha_953426.ini
+  FILE  0x717:0x16  extents         0x20 (Archive)       7493 2026-05-16T16:52:02.2789928Z test/elvis_dir_victor_783323/xbpt_cache_quebec_319176.xml
+  FILE  0x717:0xb   extents         0x20 (Archive)     406857 2026-05-16T16:51:56.4259340Z test/elvis_dir_victor_783323/xbpt_data_romeo_946788.bin
+  FILE  0x717:0x6   extents         0x20 (Archive)     273437 2025-04-19T07:17:09.2149813Z test/elvis_dir_victor_783323/xbpt_delta_echo_626074.json
+  FILE  0x717:0xf   extents         0x20 (Archive)     151318 2026-05-16T16:51:59.8672919Z test/elvis_dir_victor_783323/xbpt_draft_november_935526.json
+  FILE  0x717:0x5   extents         0x20 (Archive)     239973 2026-05-16T16:51:54.8200316Z test/elvis_dir_victor_783323/xbpt_hotel_yankee_684408.cfg
+  FILE  0x717:0xa   extents         0x20 (Archive)     495518 2026-05-16T16:52:02.1414505Z test/elvis_dir_victor_783323/xbpt_india_quebec_883273.bak
+  FILE  0x717:0x18  extents         0x20 (Archive)  156237824 2026-05-16T16:52:03.0204119Z test/elvis_dir_victor_783323/xbpt_large_149mb_alpha_610845.dat
+  FILE  0x717:0x17  extents         0x20 (Archive)     495412 2026-05-16T16:52:02.4452664Z test/elvis_dir_victor_783323/xbpt_november_quebec_999278.md
+  FILE  0x717:0x10  extents         0x20 (Archive)     237378 2026-05-16T16:51:59.9925932Z test/elvis_dir_victor_783323/xbpt_oscar_delta_192166.ini
+  FILE  0x717:0x12  extents         0x20 (Archive)     251331 2026-05-16T16:52:01.0413262Z test/elvis_dir_victor_783323/xbpt_quebec_echo_201709.md
+  FILE  0x717:0x7   extents         0x20 (Archive)     267437 2025-12-01T07:17:11.3472066Z test/elvis_dir_victor_783323/xbpt_record_mike_276675.tmp
+  FILE  0x708:0x3   extents         0x20 (Archive)     540829 2026-05-16T16:52:02.8733266Z test/elvis_dir_victor_783323/xbpt_report_quebec_867569.md
+  FILE  0x717:0xd   extents         0x20 (Archive)       8369 2026-05-16T16:51:58.9456073Z test/elvis_dir_victor_783323/xbpt_romeo_quebec_189040.ini
+  FILE  0x717:0x15  extents         0x20 (Archive)     474347 2022-05-31T07:17:29.8718970Z test/elvis_dir_victor_783323/xbpt_romeo_yankee_383561.cfg
+  FILE  0x717:0x14  extents         0x20 (Archive)     278186 2026-05-16T16:52:02.0369685Z test/elvis_dir_victor_783323/xbpt_sierra_echo_709659.md
+  FILE  0x717:0x13  extents         0x20 (Archive)     492715 2026-05-16T16:52:01.5782439Z test/elvis_dir_victor_783323/xbpt_sierra_gamma_615567.ini
+  FILE  0x72b:0x3   extents         0x20 (Archive)      40965 2026-05-16T16:51:59.8013898Z test/elvis_dir_victor_783323/xbpt_trace_cache_289808.json
+  FILE  0x717:0x8   extents         0x20 (Archive)     234937 2021-10-04T07:16:49.6636174Z test/elvis_dir_victor_783323/xbpt_trace_config_794136.tmp
+  FILE  0x717:0xe   extents         0x20 (Archive)     277218 2026-05-16T16:52:01.7811358Z test/elvis_dir_victor_783323/xbpt_trace_hotel_502150.xml
+  FILE  0x717:0x9   extents         0x20 (Archive)     414030 2025-09-04T07:16:57.5507155Z test/elvis_dir_victor_783323/xbpt_yankee_output_781405.csv
+  FILE  0x710:0x4   extents         0x20 (Archive)     186635 2026-05-16T16:51:53.8049163Z test/xbpt_archive_romeo_596174.txt
+  FILE  0x702:0x1f  extents         0x20 (Archive)      71395 2026-05-16T16:51:59.9136868Z test/xbpt_beta_sierra_570651.json
+  FILE  0x715:0x3   extents         0x20 (Archive)     192688 2026-05-16T16:51:54.0814510Z test/xbpt_config_hotel_558589.txt
+  FILE  0x702:0x1a  extents         0x20 (Archive)     440919 2026-05-16T16:51:58.5615503Z test/xbpt_config_log_714507.md
+  FILE  0x702:0x21  extents         0x20 (Archive)     159126 2021-10-15T07:17:19.9400574Z test/xbpt_config_log_982725.bin
+  FILE  0x702:0x19  extents         0x20 (Archive)      59633 2026-05-16T16:51:57.0523357Z test/xbpt_draft_tango_958869.bin
+  FILE  0x702:0x11  extents         0x20 (Archive)     298452 2026-05-16T16:52:02.5494635Z test/xbpt_foxtrot_config_966558.log
+  FILE  0x702:0x17  extents         0x20 (Archive)     430306 2026-05-16T16:52:01.3145493Z test/xbpt_gamma_temp_372257.bak
+  FILE  0x702:0x15  extents         0x20 (Archive)     376745 2025-06-06T07:17:11.5639166Z test/xbpt_index_india_423224.csv
+  FILE  0x702:0x18  extents         0x20 (Archive)     305819 2025-08-11T07:17:32.2206252Z test/xbpt_india_papa_801739.json
+  FILE  0x706:0x6   extents         0x20 (Archive)     475328 2024-04-02T07:16:32.8669648Z test/xbpt_india_temp_831504.csv
+  FILE  0x702:0x16  extents         0x20 (Archive)     214075 2026-05-16T16:51:56.5515634Z test/xbpt_india_trace_307426.json
+  FILE  0x702:0x24  extents         0x20 (Archive)  103809024 2026-05-16T16:52:03.0276249Z test/xbpt_large_99mb_report_414178.tmp
+  FILE  0x710:0x11  extents         0x20 (Archive)     552331 2026-05-16T16:51:58.7259186Z test/xbpt_log_november_496320.csv
+  FILE  0x702:0x23  inline          0x20 (Archive)        173 2026-05-16T16:52:02.9771372Z test/xbpt_marked_eveliselaurence_670394.txt
+  FILE  0x70f:0x7   extents         0x20 (Archive)      19465 2026-05-16T16:52:02.9057501Z test/xbpt_sierra_sync_956584.ini
+  FILE  0x702:0x1c  inline          0x420 (Archive|ReparsePoint)          0 2026-05-16T16:51:57.2650810Z test/xbpt_symlink_hotel_632659.lnk
+  FILE  0x702:0x20  inline          0x420 (Archive|ReparsePoint)          0 2026-05-16T16:52:00.4309201Z test/xbpt_symlink_output_831744.lnk
+  FILE  0x702:0x7   extents         0x20 (Archive)     349388 2026-05-16T16:51:52.8886023Z test/xbpt_sync_zulu_911953.ini
+  FILE  0x702:0xe   extents         0x20 (Archive)     116243 2026-05-16T16:52:01.4090604Z test/xbpt_tango_archive_828215.dat
+   ADS              inline                             46                      test/xbpt_tango_archive_828215.dat:hidden_1514
+  FILE  0x723:0x3   extents         0x20 (Archive)     207263 2026-05-16T16:51:58.1255038Z test/xbpt_tango_foxtrot_898933.txt
+  FILE  0x702:0x1b  extents         0x20 (Archive)     186635 2026-05-16T16:51:53.8049163Z test/xbpt_uniform_victor_168724.txt
+  FILE  0x702:0xd   extents         0x20 (Archive)     578777 2026-05-16T16:51:57.6640313Z test/xbpt_victor_lima_251467.cfg
+  FILE  0x702:0xa   extents         0x20 (Archive)     380116 2022-02-12T07:16:16.9171874Z test/xbpt_yankee_audit_433793.xml
+  FILE  0x702:0x1e  extents         0x20 (Archive)     454363 2026-05-16T16:52:01.7725894Z test/xbpt_zulu_hotel_479124.bin
+  DIR   0x73c:0x0                   0x10000000 (Directory_Internal)            2026-05-16T17:34:52.0564658Z testsnapshots
+  FILE  0x73c:0x2   extents         0x20 (Archive)         15 2026-05-16T17:12:30.7302294Z testsnapshots/arg.txt
+  FILE  0x73c:0x3   inline          0x20 (Archive)         15 2026-05-16T17:12:30.7302294Z testsnapshots/arg.txt.bak.20260516191516
+  FILE  0x73c:0x4   inline          0x20 (Archive)         15 2026-05-16T17:12:30.7302294Z testsnapshots/arg.txt.bak.20260516191620
+  FILE  0x73c:0x9   snapshot-shared 0x20 (Archive)        201 2026-05-16T17:35:57.4899352Z testsnapshots/lasttest.txt
+  FILE  0x73c:0x5   snapshot-shared 0x20 (Archive)          5 2026-05-16T17:19:37.0883235Z testsnapshots/test.txt
+  FILE  0x73c:0x7   snapshot-shared 0x20 (Archive)         12 2026-05-16T17:27:58.0956492Z testsnapshots/testads.txt
+   ADS              extents                            30                      testsnapshots/testads.txt:adstest
+  FILE  0x73c:0x6   inline          0x20 (Archive)          5 2026-05-16T17:19:37.0883235Z testsnapshots/testxyz.txt
+  FILE  0x73c:0x8   extents         0x20 (Archive)    3201078 2026-05-16T17:34:32.1649542Z testsnapshots/xbpt_beta_sierra_570651.json

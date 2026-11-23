@@ -1,12 +1,12 @@
 # forefst win11refs2tsnapshots.raw search test
 # ----------------------------------------------------------------------------
-ObjectRef      Type          Size  Data             Modified             Path
-─────────────  ────  ────────────  ───────────────  ───────────────────  ────────────────────────────────────────
-0x702          Dir              0  —                2026-05-16 16:52:03  test
-0x73c          Dir              0  —                2026-05-16 17:34:52  testsnapshots
-0x73c:0x9      File         201 B  snapshot-shared  2026-05-16 17:35:57  testsnapshots/lasttest.txt
-0x73c:0x5      File           5 B  snapshot-shared  2026-05-16 17:19:37  testsnapshots/test.txt
-0x73c:0x7      File          12 B  snapshot-shared  2026-05-16 17:27:58  testsnapshots/testads.txt
-0x73c:0x6      File           5 B  inline           2026-05-16 17:19:37  testsnapshots/testxyz.txt
+ObjectRef      Type          Size  Data             Modified                      Path
+─────────────  ────  ────────────  ───────────────  ────────────────────────────  ────────────────────────────────────────
+0x702:0x0      Dir              0  —                2026-05-16T16:52:03.0244081Z  test
+0x73c:0x0      Dir              0  —                2026-05-16T17:34:52.0564658Z  testsnapshots
+0x73c:0x9      File           201  snapshot-shared  2026-05-16T17:35:57.4899352Z  testsnapshots/lasttest.txt
+0x73c:0x5      File             5  snapshot-shared  2026-05-16T17:19:37.0883235Z  testsnapshots/test.txt
+0x73c:0x7      File            12  snapshot-shared  2026-05-16T17:27:58.0956492Z  testsnapshots/testads.txt
+0x73c:0x6      File             5  inline           2026-05-16T17:19:37.0883235Z  testsnapshots/testxyz.txt
 
 6 matches. Use `details <path>`, `details --id FileRef` (HomeOID:FileID) or `details --id OID` for full detail.

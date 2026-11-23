@@ -1,43 +1,49 @@
 # Driver Interface
 
-The on-disk structures only tell half the story; the other half is the code that writes them. This page is
-the static-analysis companion to the [Driver Architecture](architecture.md) model — it reads the `refs.sys`
-binary across three builds (Win10 v3.4, Win11 v3.14, Insider) and reports what the imports, embedded
-libraries, class tables, and IRP dispatch reveal about *which features a given driver can produce*. For an
-analyst this matters because the driver is the ground truth: a feature visible on disk has a code path that
-created it, and the presence or absence of that code path tells you what a volume could and could not
-contain. Function counts are non-external (defined) functions only, and every class name, method, and count
-below is verified against the function catalog.
+The on-disk structures are one source of evidence; the code that writes them is the other.
+
+This page is the static-analysis companion to the [Driver Architecture](architecture.md) model. It reads the
+`refs.sys` binary across three builds (Win10 17134 for v3.4, Win11 26100.8115 for v3.14, Insider 29574) and reports
+what the imports, embedded libraries, class tables, and IRP dispatch reveal about *which features a given driver can
+produce*.
+
+For an analyst this matters because a feature visible on disk was created by a code path in the driver, so the
+presence or absence of that code path tells you what a volume could and could not contain.
+
+Function counts are non-external (defined) functions only, and every class name, method, and count below is verified
+against the function catalog.
 
 ## What the binary reveals across builds
 
-The driver grows from 3,959 functions in v3.4 to 5,818 in v3.14 — a ~47% increase — while the count
-of functions that carry a PDB-resolved name stays nearly flat (2,553 in v3.4 vs 2,565 in v3.14), so PDB
-coverage falls from 64.5% to 44.1%. That combination is the signature of **refactoring plus new
-subsystems**: many old functions were replaced rather than extended, and the added bulk is whole new
-feature areas, not incremental edits to the storage core. The Insider build adds a further 612 functions
-on top of v3.14 (6,430 total; 2,878 PDB-named, 44.8% coverage). The practical reading is that v3.4 structural knowledge remains a valid
-baseline (the engine is stable) but each build can mint metadata the previous one could not.
+The driver grows from 3,959 functions in v3.4 (17134) to 5,818 in v3.14 (26100.8115), about 47 % more, and the
+Insider build 29574 has 6,430.
+
+Almost every function carries its own name from Microsoft's symbol file: 3,723 of the 17134 functions and 5,519 of
+the 26100.8115 ones; the rest are unnamed (`FUN_*`, about 5 % on both) or thunks. The names quoted on this site are
+those names, not guesses.
+
+So what is known about the v3.4 structures remains a baseline, but each build can write metadata the previous one
+could not.
 
 ## Imports: the driver's external dependencies
 
-The import table is the cleanest external evidence of what a driver build can do, because a feature that
-needs a kernel service must import the API that provides it. The v3.4 driver imports 415 functions from
-just two libraries — `ntoskrnl.exe` (core kernel services) and `HAL.dll` (one performance-counter call).
-The v3.14 driver imports 566 (+36%) from seven libraries — adding five — and each addition maps to a
-specific new capability:
+The import table is the cleanest external evidence of what a driver build can do, because a feature that needs a kernel
+service must import the API that provides it. The v3.4 driver imports 415 functions from just two libraries —
+`ntoskrnl.exe` (core kernel services) and `HAL.dll` (one performance-counter call). The 26100.8115 driver imports 566
+(+36%) from seven libraries — adding five (26100.9444: 567; Insider 29574 and 29683: 564 and 572, from six) — and each
+addition maps to a specific new capability, read from its callers on 26100.9444:
 
 | Library | Purpose | Capability it gates |
 |---------|---------|---------------------|
 | `ntoskrnl.exe` | Core kernel services | (baseline) |
 | `cng.sys` | `BCrypt*` cryptographic APIs | the EFS encryption engine — see [$EFS](../attributes/EFS.md) |
-| `ext-ms-win-ntos-ksr-*` | Kernel Soft Restart | memory persistence across soft reboots (server availability) |
-| `msrpc.sys` | Kernel-mode RPC | clustered-storage communication |
-| `ext-ms-win-crypto-xbox-*` | Hardware-accelerated crypto | checksum / encryption acceleration |
+| `ext-ms-win-ntos-ksr-*` | Kernel Soft Restart | keeps each mounted volume's container-table state (not on an SMR disk) in memory across a soft restart, for the next mount to reuse |
+| `msrpc.sys` | Kernel-mode RPC | EFS's calls to its user-mode service (decrypt a file key, generate a key) |
+| `ext-ms-win-crypto-xbox-*` | Xbox crypto provider | an alternative EFS XTS-AES key and decryption provider, used when it reports itself supported (it never encrypts) |
 | `HAL.dll` | Performance counter | (baseline) |
-| `ext-ms-win-ntos-clipsp-*` | Client license policy | edition gating |
+| `ext-ms-win-ntos-clipsp-*` | Client license policy | the license callbacks EFS uses for file-license headers and keys |
 
-The `cng.sys` import is the most forensically useful single fact here: it is the driver-level proof that the
+The `cng.sys` import shows that the
 build supports EFS, because ReFS does not implement the RSA/AES crypto itself — it delegates the SHA-256
 metadata and key operations to the `cng.sys` `BCrypt*` provider (the in-driver wrapper is `CmsBCrypt`). A
 v3.4 driver, lacking that import, cannot encrypt a stream.
@@ -45,53 +51,52 @@ v3.4 driver, lacking that import, cannot encrypt a stream.
 ## Embedded libraries: compression evidence inside the binary
 
 The v3.14 driver also embeds two complete compression-library implementations directly in the binary, which
-accounts for part of its size growth and replaces the v3.4 LZX/XPRESS wrappers:
+accounts for part of its size growth. The v3.4 driver has other codec classes instead (`CmsCompressionLZNT1`,
+`CmsCompressionLZX`, `CmsCompressionXPRESS`, `CmsCompressionXPRESS_HUFF`) and neither library:
 
-| Library | Functions | Replaces |
-|---------|-----------|----------|
-| ZSTD | 281 | v3.4 LZX/XPRESS compression wrappers |
-| LZ4 | 15 | v3.4 LZX/XPRESS compression wrappers |
+| Library | Functions | In the v3.4 driver |
+|---------|-----------|--------------------|
+| ZSTD | 281 | absent (0 functions) |
+| LZ4 | 15 | absent (0 functions) |
 
 These embedded codecs are the driver-level counterpart to the [compression](compression.md) features visible
-on disk: if the binary contains a ZSTD decompressor, the volume can hold ZSTD-compressed extents. Note that
-the v3.14 *checksum* consolidation does **not** rely on an embedded crypto library — CRC32-C/CRC64 are
+on disk: if the binary contains a ZSTD decompressor, the volume can hold ZSTD-compressed containers.
+
+Note that the v3.14 *checksum* consolidation does **not** rely on an embedded crypto library — CRC32-C/CRC64 are
 computed in-driver via ClMul intrinsics and XXH64 (the `CmsChecksum` class), with SHA-256 delegated to
-`cng.sys`/`CmsBCrypt`. The embedded SymCrypt library is an Insider-build addition tied to early-boot and
-attestation, not a v3.14 component.
+`cng.sys`/`CmsBCrypt`. The embedded SymCrypt library (153 functions) is in the Insider builds read (29574, 29659,
+29683) and in no 17134 or 26100 build read: on 29574 it computes the volume attestation's HMAC-SHA256 of checkpoint and
+log records and checks the PKCS#7 / RSA signatures of attestation certificates.
 
 ## Where the growth landed
 
-Counting functions per subsystem shows the engine is mature and the new code is concentrated in feature
-areas, not the storage core:
+Counted in the project's function catalogue (17134: 3,929 functions; 26100.8115: 5,787), the growth includes new
+feature code and embedded libraries:
 
-| Subsystem | v3.4 | v3.14 | Change |
-|-----------|------|-------|--------|
-| Encryption (EFS) | 2 | 182 | +9,000% |
-| Heat engine (tiering) | 2 | 55 | +2,650% |
-| Snapshots | 6 | 24 | +300% |
-| Streams | 56 | 105 | +88% |
-| Containers | 101 | 184 | +82% |
-| Allocator | 100 | 168 | +68% |
-| Volume management | 125 | 184 | +47% |
-| Logging | 95 | 112 | +18% |
-| Deduplication | 0 | 7 | New |
-| B+-tree (core) | 240 | 252 | +5% |
-| Integrity / Checkpoint / Transactions | stable | stable | <10% |
+| Code (rule) | 17134 | 26100.8115 |
+|-------------|-------|------------|
+| EFS (names starting `Efs` or `Edp`) | 0 | 157 |
+| ZSTD and LZ4 libraries (names starting `ZSTD`, `LZ4`) | 0 | 296 |
+| Heat engine and its lists (names containing "heat") | 2 | 83 |
+| Deduplication (names containing "dedup") | 0 | 8 |
+| Table sets (`CmsTableSetBase`, `TmsTableSet`) | 0 | 89 |
+| B+-tree class `CmsBPlusTable` | 186 | 160 |
+| Restart (`CmsRestarter`) | 29 | 28 |
 
-The storage core — the [B+-tree node](../structures/btree_node.md) layer, integrity, checkpoint, and
-transactions — changed by less than 10%, which is *why* the on-disk layout of those structures is stable
-across versions. The explosive growth is in encryption (2 to 182 functions) and the
-[heat engine](tiering.md) (2 to 55), confirming that EFS and tiering are the headline v3.14 features and
-that their on-disk artifacts (the [$EFS](../attributes/EFS.md) attribute, the heat-tracking tables) appear
-only from the builds that carry the code.
+Per-class counts also move when classes are merged or renamed: `CmsCrc32` and `CmsCrc64` (96 functions on 17134) are
+gone on 26100.8115, where `CmsChecksum` does their work, and `CmsAllocator` (1 → 106) took over `CmsGlobalAllocator`
+and `CmsAllocatorBase` (85 on 17134). So the counts show where named code is, not how much an on-disk structure
+changed. Two of the additions have on-disk artifacts, which appear only on volumes written by the builds that carry the code:
+EFS (the [$EFS](../attributes/EFS.md) attribute) and the heat engine (the
+[heat engine table](../structures/system_oids.md#heat-engine-table-oid-0x30)).
 
 ## How requests enter: the IRP handler set
 
-Every file operation reaches the driver as an I/O Request Packet (IRP), tagged with a *major function code*.
-The set of codes a driver routes is itself a capability fingerprint. v3.4 handles 18 major functions; v3.14
-adds two — `IRP_MJ_QUERY_EA` and `IRP_MJ_SET_EA` — and those two are the driver-level signature of
-**WSL Extended Attribute support**: the code that reads and writes the [`$LXUID`/`$LXGID`/`$LXMOD`/`$LXDEV`](wsl_metadata.md)
-attributes. A volume whose driver lacks the EA handlers cannot have produced WSL metadata.
+Every file operation reaches the driver as an I/O Request Packet (IRP), tagged with a *major function code*. The set of
+codes a driver routes shows what the driver can do. v3.4 handles 18 major functions; v3.14 adds two,
+`IRP_MJ_QUERY_EA` and `IRP_MJ_SET_EA`, and those two show **WSL Extended Attribute
+support**: the code that reads and writes the [`$LXUID`/`$LXGID`/`$LXMOD`/`$LXDEV`](wsl_metadata.md) attributes. A
+volume whose driver lacks the EA handlers cannot have produced WSL metadata.
 
 The codes that are resolved to a single named handler in the PDB are the two control-path entries; the rest
 are dispatched internally through the lower layers (see
@@ -116,14 +121,14 @@ IRP-level trace is not a complete record of activity — a read served from cach
 
 The lower-layer [Minstore engine](architecture.md#the-lower-layer-cmsms-minstore) is organized as a set of
 C++ classes whose method counts can be read straight from the symbol tables. The tables below give method
-counts per class for **Win10 v3.4 / Win11 v3.14 RTM / Insider**; every class name, method ownership, and
-count is verified against the function catalog.
+counts per class for **Win10 v3.4 (17134) / Win11 v3.14 (26100.8115) / Insider (29574)**; every class name, method
+ownership, and count is verified against the function catalog.
 
 ### B+-tree infrastructure
 
 | Class | v3.4 | v3.14 | Insider | Role |
 |-------|------|-------|---------|------|
-| `CmsTable` | 16 | 17 | 14 | B+-tree **base** class — owns the row operations `FindRow` / `InsertRow` / `DeleteRow` (there is no `ModifyRow` in any build) |
+| `CmsTable` | 16 | 17 | 14 | B+-tree **base** class — owns the row operations `FindRow` / `InsertRow` / `DeleteRow` / `UpdateRow` (there is no `ModifyRow` in any build) |
 | `CmsBPlusTable` | 186 | 160 | 166 | B+-tree layer over `CmsTable` — adds iteration: `FindFirstIndexEntry` / `FindNextIndexEntry` |
 | `CmsTableCursor` | 2 | 2 | 2 | Cursor / iterator |
 | `CmsFailoverBPlusTable` | 47 | 27 | 27 | Redundant B+-tree for dual-copy tables (see [redundancy](redundancy.md)) |
@@ -131,7 +136,7 @@ count is verified against the function catalog.
 | `CmsSchemaTable` | 7 | 6 | 5 | Table [schema](../structures/schema_table.md) definitions + key comparison |
 | `CmsDurableLog` | 43 | 40 | 40 | Persistent B+-tree management |
 
-The split is worth internalising: the row primitives (`FindRow` / `InsertRow` / `DeleteRow`) live on the
+The row primitives (`FindRow` / `InsertRow` / `DeleteRow` / `UpdateRow`) live on the
 base class `CmsTable`, and `CmsBPlusTable` layers the tree-walk iteration on top. This is the code that
 reads and writes every [B+-tree node](../structures/btree_node.md) on the volume.
 
@@ -160,42 +165,47 @@ documented from the on-disk side on the [Allocators](../structures/allocators.md
 | `CmsChecksum` | 4 | 11 | 13 | Unified polymorphic checksum class (v3.14+; CRC32-C/CRC64 via ClMul + XXH64) |
 
 v3.14 consolidated dozens of per-page-type checksum templates plus the `CmsChecksumNone` stubs into one
-polymorphic `CmsChecksum` class. The existence of `CmsChecksumNone` in v3.4 — a `VerifyChecksum` that always
-returns TRUE — is the code-level explanation for why a v3.4 volume formatted without integrity does not
-detect metadata corruption. The full integrity picture is on
+polymorphic `CmsChecksum` class. In v3.4, `CmsChecksumNone` — a `VerifyChecksum` that always returns TRUE — is
+the type-0 entry of the stream checksum table; metadata pages are checked by the CRC64 or CRC32-C entry of the
+metadata checksum table that their page reference names. All the checksums are described on
 [checksum architecture](checksum_architecture.md).
 
 ### Volume and checkpoint classes
 
 | Class | v3.4 | v3.14 | Insider | Role |
 |-------|------|-------|---------|------|
-| `CmsVolume` | 143 | 180 | 179 | Volume-level state; also owns the checkpoint ops (`ValidateCheckpointRecord` / `ChooseCheckpointRecord`) — there is **no** separate `CmsVolumeCheckpoint` class |
+| `CmsVolume` | 143 | 180 | 179 | Volume-level state; also owns the checkpoint ops (`ReadLatestCheckpoint`, `ValidateCheckpointRecord`, `ChooseCheckpointRecord`) — there is **no** separate `CmsVolumeCheckpoint` class |
 | `CmsRestarter` | 29 | 28 | 28 | Crash recovery via log replay |
 | `CmsTransactionContext` | 29 | 27 | 26 | Transaction boundaries |
 | `CmsLogRedoQueue` | 33 | 39 | 37 | Transaction-log redo I/O |
 | `CmsTxMemLog` | 6 | 7 | 7 | In-memory transaction log |
 
-The checkpoint validation that selects which [checkpoint](../structures/chkp.md) to trust at mount lives on
-`CmsVolume`, and crash recovery (`CmsRestarter` replaying the log) plus the redo-queue classes
-(`CmsLogRedoQueue` / `CmsTxMemLog`) are the engine behind the [transaction / crash-consistency](transactions_crash_consistency.md)
-model. The log-record layout they produce is on the [MLog](../structures/mlog.md) page.
+The checkpoint validation that selects which [checkpoint](../structures/chkp.md) to trust at mount lives on `CmsVolume`
+(the choice is made in `ReadLatestCheckpoint`), and crash recovery (`CmsRestarter` replaying the log) plus the
+redo-queue classes (`CmsLogRedoQueue` / `CmsTxMemLog`) are the engine behind the
+[transaction / crash-consistency](transactions_crash_consistency.md) model. The log-record layout they produce is on the
+[MLog](../structures/mlog.md) page.
 
 ## Configuration registers on disk
 
 Several on-disk fields act as runtime configuration registers — the driver reads them at mount to decide
-which structures and behaviors are live. They are the bridge between the code above and the bytes on the
-platter:
+which structures and behaviors are live. They connect the code above to the bytes on
+disk:
 
 | Field | Offset | Role | Detail |
 |-------|--------|------|--------|
 | CHKP flags | CHKP + 0x78 | Feature-activation register | Decoded bits select which structures/behaviors are live |
-| VBR checksum selector | VBR + 0x2A | Metadata verification mode | 0x0000 = None (CRC32-C only), 0x0002 = CRC64, 0x0004 = SHA-256 |
-| VBR volume flags | VBR + 0x2C | Format-time configuration | 0x06 (Win10) vs 0x66 (Win11 native) |
-| CHKP page ref size | CHKP + 0x5C | Page-reference format selector | 104, 48, or 72 bytes |
+| VBR checksum algorithm selector | VBR + 0x2A | Metadata checksum type | read only when the volume flags carry 0x40 (0x0002 = CRC64, 0x0004 = SHA-256); without 0x40 the volume uses CRC64; 17134 never reads it |
+| VBR volume flags | VBR + 0x2C | Run-time flags, two format bits | written at run time (a writable mount sets 0x02, among others); its bits 0x20 and 0x40 come from the format; 0x06 (Win10) vs 0x66 (Win11 native) on the volumes measured |
+| CHKP page reference size | CHKP + 0x5C | Size of the checkpoint's root page references | 104, 48, or 72 bytes |
 
-The VBR format-time fields (0x2A, 0x2C, 0x48) are **never** modified during an upgrade — which is what makes
-them reliable [version-detection](version_detection.md) markers even on a volume that has been upgraded in
-place. Full decode tables are on the [VBR](../structures/vbr.md) and [Checkpoint](../structures/chkp.md)
+Of the VBR fields, the checksum selector (0x2A) and the Extended GUID (0x48) are format-time: no boot-sector write
+path of refs.sys 26100.9444 assigns them (`refsutil fixboot` rewrites both), and they kept their values across the two
+upgrades measured (3.4 to 3.14 and 3.9 to 3.14) — which is what makes them
+[version-detection](version_detection.md) markers on a volume upgraded in place.
+
+The volume flags (0x2C) are written at run time; their format bits 0x20 and 0x40 kept their values across the same
+two upgrades. Full decode tables are on the [VBR](../structures/vbr.md) and [Checkpoint](../structures/chkp.md)
 pages.
 
 ## Insider-only subsystems
@@ -205,19 +215,21 @@ the direction of ReFS development:
 
 | Subsystem | Marker | Purpose |
 |-----------|--------|---------|
-| Boot-volume support | ~50+ functions | Lets ReFS host the system volume and paging file — the first bootable ReFS. |
-| Volume attestation | `CmsVolumeAttestation` (40 methods, **0 in v3.14 RTM**) | Binds the volume identity to a TPM-backed measurement to detect offline tampering (`Attest*` methods). |
+| Boot-volume support | ~50+ functions | Lets ReFS host the system volume — the first bootable ReFS (the test corpus holds the C: drive of an Insider 29574 machine). |
+| Volume attestation | `CmsVolumeAttestation` (40 methods, **0 in 26100.8115**) | Binds the volume identity to a TPM-backed measurement to detect offline tampering (`Attest*` methods). |
 
 Two classes that *look* Insider-only are not, and getting this right matters for dating a volume:
-`CmsRollbackProtection` (NVRAM checkpoint-clock rollback detection) is present in **v3.14 RTM (14 methods)**
-and Insider (13), and `CmsVolumeHeatEngine` is **v3.14 RTM (24)** / Insider (20). Neither is exclusive to the
-Insider build. The embedded cryptographic libraries the Insider subsystems rely on (SymCrypt, MinCrypt) are
-present in the Insider binary.
+
+- `CmsRollbackProtection` (NVRAM checkpoint-clock rollback detection) is present in **26100.8115 (14 methods)** and
+  Insider (13);
+- `CmsVolumeHeatEngine` is in **26100.8115 (24)** and Insider (20).
+
+Neither is exclusive to the Insider build. The embedded cryptographic libraries the Insider subsystems rely on
+(SymCrypt, MinCrypt) are present in the Insider binary.
 
 ## Cross-references
 
-- [Driver Transitions](driver_transitions.md) — which driver function changes a file's placement or its data residency, per build
-
+- [Driver Evolution](driver_evolution.md) — which driver function changes a file's placement or its data residency, per build
 - [Driver Architecture](architecture.md) — the two-layer model and three-tier IRP dispatch this page measures
 - [Version Evolution](version_evolution.md) — the per-version structural changes the subsystem growth produces
 - [Checksum Architecture](checksum_architecture.md) — how the `CmsChecksum` consolidation appears on disk
@@ -229,13 +241,17 @@ present in the Insider binary.
 
 ## Evidence
 
-The binary inventory, import tables, embedded-library set, subsystem counts, IRP handler set, Minstore class
-tables, and Insider subsystems are all from static analysis of the three `refs.sys` builds with full PDB
-symbols (E2). The Minstore class names, method ownership, and per-build method counts were
-rebuilt and catalog-verified against `function_catalog.csv` (audit 3); the named handlers
-(`RefsCommonCreate`, `RefsCommonCleanup`), the row primitives (`FindRow` / `InsertRow` / `DeleteRow`), the
-checkpoint ops (`ValidateCheckpointRecord` / `ChooseCheckpointRecord`), and the checksum stub
-(`CmsChecksumNone::VerifyChecksum`) are all catalog-verified. The configuration-register offsets are
-raw-disk corroborated (RD). The "Insider-only" corrections to `CmsRollbackProtection` and
-`CmsVolumeHeatEngine` are catalog-verified (audit 3). The remaining field-level statements on this page are registered as **FS_VBR_RA_011**, **GN_ARCH_006**, **GN_ARCH_SA_002**, **GN_BIN_SA_001**, **GN_HEAT_SA_001**, **GN_IMP_SA_001**, **GN_INS_SA_002**, **GN_KSR_SA_001** — each with its own evidence tier and witness in the claim register. See [how this was verified](../methodology.md) to
+- **Static analysis** of the three `refs.sys` builds with their PDB symbols gives the binary inventory, import tables,
+  embedded-library set, subsystem counts, IRP handler set, Minstore class tables, and Insider subsystems.
+- **Catalog-verified** against `function_catalog.csv`: the Minstore class names, method ownership and per-build method
+  counts; the named handlers (`RefsCommonCreate`, `RefsCommonCleanup`); the row primitives (`FindRow` / `InsertRow` /
+  `DeleteRow` / `UpdateRow`); the checkpoint ops (`ReadLatestCheckpoint`, `ValidateCheckpointRecord`,
+  `ChooseCheckpointRecord`); `CmsChecksumNone::VerifyChecksum`; and the presence of `CmsRollbackProtection` and
+  `CmsVolumeHeatEngine` outside the Insider build.
+- **On disk:** the configuration-register offsets are corroborated across the corpus.
+
+See [how this was verified](../methodology.md) to
 trace these to the exact builds and measurements in `analysis/`.
+
+<!-- findings: FS_VBR_RA_011, GN_ARCH_006, GN_ARCH_SA_002, GN_BIN_SA_001, GN_HEAT_SA_001, GN_IMP_SA_001,
+               GN_INS_SA_002, GN_KSR_SA_001 -->

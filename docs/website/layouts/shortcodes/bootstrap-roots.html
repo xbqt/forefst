@@ -41,8 +41,8 @@
   <rect class="bg" x="0" y="0" width="920" height="652"/>
 
   <text class="ttl" x="45" y="38">ReFS bootstrap chain</text>
-  <text class="sub" x="45" y="60">Every address on the volume is virtual. Nothing resolves until the Container Table is loaded, and it can only be reached</text>
-  <text class="sub" x="45" y="77">through this fixed chain.</text>
+  <text class="sub" x="45" y="60">Past the checkpoint, the tables are found by virtual addresses, except the three roots read directly: a virtual</text>
+  <text class="sub" x="45" y="77">address resolves only once the Container Table is loaded, and the Container Table is reached through this fixed chain.</text>
 
   <rect class="box" x="65" y="102" width="175" height="58" rx="3"/>
   <text class="name" x="80" y="125">GPT</text>
@@ -98,7 +98,7 @@
 
   <rect class="box" x="279" y="332" width="172" height="42" rx="3"/>
   <text class="ridx" x="290" y="349">#5</text>
-  <text class="rname" x="290" y="365">Object ID (dup)</text>
+  <text class="rname" x="290" y="365">Object ID (copy 2)</text>
 
   <rect class="box" x="469" y="332" width="172" height="42" rx="3"/>
   <text class="ridx" x="480" y="349">#6</text>
@@ -110,11 +110,11 @@
 
   <rect class="boxhi" x="89" y="390" width="172" height="42" rx="3"/>
   <text class="ridx" x="100" y="407">#8</text>
-  <text class="rname" x="100" y="423">Container Table (dup)</text>
+  <text class="rname" x="100" y="423">Container Table (copy 2)</text>
 
   <rect class="box" x="279" y="390" width="172" height="42" rx="3"/>
   <text class="ridx" x="290" y="407">#9</text>
-  <text class="rname" x="290" y="423">Schema Table (dup)</text>
+  <text class="rname" x="290" y="423">Schema Table (copy 2)</text>
 
   <rect class="box" x="469" y="390" width="172" height="42" rx="3"/>
   <text class="ridx" x="480" y="407">#10</text>
@@ -153,11 +153,11 @@
   <a xlink:href="{{ "structures/allocators/" | relURL }}" href="{{ "structures/allocators/" | relURL }}"><title>Container Allocator</title><rect class="hit" x="469" y="274" width="172" height="42" rx="3"/></a>
   <a xlink:href="{{ "structures/schema_table/" | relURL }}" href="{{ "structures/schema_table/" | relURL }}"><title>Schema Table</title><rect class="hit" x="659" y="274" width="172" height="42" rx="3"/></a>
   <a xlink:href="{{ "structures/parent_child_table/" | relURL }}" href="{{ "structures/parent_child_table/" | relURL }}"><title>Parent-Child Table</title><rect class="hit" x="89" y="332" width="172" height="42" rx="3"/></a>
-  <a xlink:href="{{ "structures/object_table/" | relURL }}" href="{{ "structures/object_table/" | relURL }}"><title>Object ID (dup)</title><rect class="hit" x="279" y="332" width="172" height="42" rx="3"/></a>
+  <a xlink:href="{{ "structures/object_table/" | relURL }}" href="{{ "structures/object_table/" | relURL }}"><title>Object ID (second copy)</title><rect class="hit" x="279" y="332" width="172" height="42" rx="3"/></a>
   <a xlink:href="{{ "structures/block_refcount/" | relURL }}" href="{{ "structures/block_refcount/" | relURL }}"><title>Block Refcount</title><rect class="hit" x="469" y="332" width="172" height="42" rx="3"/></a>
   <a xlink:href="{{ "structures/container_table/" | relURL }}" href="{{ "structures/container_table/" | relURL }}"><title>Container Table</title><rect class="hit" x="659" y="332" width="172" height="42" rx="3"/></a>
-  <a xlink:href="{{ "structures/container_table/" | relURL }}" href="{{ "structures/container_table/" | relURL }}"><title>Container Table (dup)</title><rect class="hit" x="89" y="390" width="172" height="42" rx="3"/></a>
-  <a xlink:href="{{ "structures/schema_table/" | relURL }}" href="{{ "structures/schema_table/" | relURL }}"><title>Schema Table (dup)</title><rect class="hit" x="279" y="390" width="172" height="42" rx="3"/></a>
+  <a xlink:href="{{ "structures/container_table/" | relURL }}" href="{{ "structures/container_table/" | relURL }}"><title>Container Table (second copy)</title><rect class="hit" x="89" y="390" width="172" height="42" rx="3"/></a>
+  <a xlink:href="{{ "structures/schema_table/" | relURL }}" href="{{ "structures/schema_table/" | relURL }}"><title>Schema Table (second copy)</title><rect class="hit" x="279" y="390" width="172" height="42" rx="3"/></a>
   <a xlink:href="{{ "structures/container_index/" | relURL }}" href="{{ "structures/container_index/" | relURL }}"><title>Container Index</title><rect class="hit" x="469" y="390" width="172" height="42" rx="3"/></a>
   <a xlink:href="{{ "structures/integrity_state/" | relURL }}" href="{{ "structures/integrity_state/" | relURL }}"><title>Integrity State</title><rect class="hit" x="659" y="390" width="172" height="42" rx="3"/></a>
   <a xlink:href="{{ "structures/allocators/" | relURL }}" href="{{ "structures/allocators/" | relURL }}"><title>Small Allocator</title><rect class="hit" x="89" y="448" width="172" height="42" rx="3"/></a>

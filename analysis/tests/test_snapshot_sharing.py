@@ -32,9 +32,16 @@ def _patch(monkeypatch, streams):
     back = {vals[sub]: streams[sub] for sub in streams}
     monkeypatch.setattr(F, "parse_resident_btree_rows", lambda vd, ctx=None: rows)
     monkeypatch.setattr(F, "le32", lambda b, o: F.SNAP_DATA_DESC if o == 4 else 0)
-    # signature mirrors the real one, which takes an optional translator (E85)
+    # signature mirrors the real one, which takes an optional translator (E85) and, since 1.14.0 (N128), the flags: a
+    # stubbed run is a WRITTEN one (flags 0x50), so the readers that now skip never-written runs read it as before
     monkeypatch.setattr(F, "parse_snapshot_data_entry",
-                        lambda v, ncl=None, tr=None: _stream(0, back[bytes(v)]))
+                        lambda v, ncl=None, tr=None, with_flags=False, **kw: _flags(_stream(0, back[bytes(v)]),
+                                                                                    with_flags))
+
+
+def _flags(entry, with_flags):
+    size, alloc, exts = entry
+    return (size, alloc, [tuple(x) + (0x50,) for x in exts] if with_flags else exts)
 
 
 def test_newest_snapshot_wins_for_the_current_stream(monkeypatch):

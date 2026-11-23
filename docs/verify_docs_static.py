@@ -12,8 +12,8 @@ Four kinds of use are legitimate and exempt:
   * driver symbol names (`RefsConvertToNonResident`, `RefsResidentWrite`, ...) and code identifiers
     (`is_resident`, `IsResident`) — these are names, not prose;
   * anything inside backticks — quoted output and identifiers;
-  * the pages that *define* or *compare* the term: the residency concept page, the glossary, and the
-    NTFS comparison, where "resident" is NTFS's own vocabulary;
+  * the pages that *define* or *compare* the term: the glossary and the NTFS comparison, where "resident" is
+    NTFS's own vocabulary, and the page on driver transitions, which names the conflation to separate it;
   * the changelog, which records what was said before it was corrected.
 
 Usage:  python3 docs/verify_docs_static.py [docs_dir]
@@ -33,10 +33,11 @@ SYMBOL = re.compile(
     re.I)
 BARE = re.compile(r"\b(non-resident|resident)\b", re.I)
 
+# E14 (1.14.0): the residency concept page is no longer exempt by name -- an exemption let any new use on it pass
+# unseen. Its uses are pinned in residency_vocab_baseline.txt like every other page's, until its rewrite (D12).
 EXEMPT = {
-    "concepts/resident_storage.md",   # the page that defines the term
     "concepts/ntfs_comparison.md",    # NTFS's own vocabulary
-    "concepts/driver_transitions.md", # names the conflation in order to separate it
+    "concepts/driver_evolution.md",   # names the conflation in order to separate it (was driver_transitions.md)
     "glossary.md",                    # defines it, and points at the replacements
     "changelog.md",                   # records prior wording
 }

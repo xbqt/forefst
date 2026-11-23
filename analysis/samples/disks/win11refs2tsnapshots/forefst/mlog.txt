@@ -2,38 +2,42 @@
 # ----------------------------------------------------------------------------
 ==============================================================================
 ReFS MLog Analysis — win11refs2tsnapshots.raw
-ReFS v3.14 | cluster_size=0x1000 | objects=47
+ReFS 3.14 | cluster_size=4096 | objects=47
 ==============================================================================
 
 ==============================================================================
 MLog Control Area
 ==============================================================================
-  Control PLCN:      0x31
+  Control PLCN:      0x31  (copy 1, in use: the newer of the two copies that pass refs.sys's checks)
   Signature:         MLog
-  Format magic:      0x3832ddbf (per-volume format/log-instance constant; changes after a reformat)
-  Version:           1
-  Sector size:       0x1000
+  Format magic:      0x3832ddbf (written from the volume's signature, which refs.sys derives from
+                     the superblock's volume GUID; a reformat changes it)
+  Header +0x8:       01000000 (4 bytes, raw: refs.sys writes 1 here and does not read it)
+  Log block size:    4 KiB
   UUID:              9c6d6a27-cb84-45b7-9f7a-d56532ce5aea
   Sequence:          138
-  Write counter:     2
-  Flags:             0x1
-  Total entries:     0
-  Generation:        2275
-  Data area:         0x8000 - 0x48000 (262144 clusters)
-  LSN oldest:        0x8e3.1
-  Dispatch table:    v3.14 (44 opcodes)
+  Log open count:    2
+  Log flags:         0x1
+  Log version:       1 (payload +0x40: refs.sys opens a log only when it is 1)
+  Data area:         0x8000 - 0x48000 (262144 clusters; 262144 log blocks of 4 KiB)
+  Log start:         0x00000001000008e3 (generation 1, offset 0x8e3)
+  Log end:           0x00000001000008e3 (generation 1, offset 0x8e3)
+  Host info:         264 (payload +0x44: refs.sys writes the checkpoint virtual clock minus 1 here
+                     when it advances the log start)
+  Dispatch table:    the ReFS 3.14 table (45 opcodes: 0x0-0x2b, and 0x2d, which of the builds read
+                     only Insider 29683 dispatches; per build: `mlog --info`)
 
 ==============================================================================
 Data Area Summary
 ==============================================================================
-  Total pages:       262144
+  Log blocks:        262144
   zero                 259870  ( 99.1%)
   MLog                   2274  (  0.9%)
 
 ==============================================================================
 Redo Records
 ==============================================================================
-  Total records:      18850
+  Redo records:       18850
   Transaction starts: 9273
   Transaction commits: 9273
 
@@ -46,15 +50,16 @@ Redo Records
 Record Integrity
 ==============================================================================
   Every log record carries an 8-byte integrity value covering the record itself. The
-  driver recomputes it before replaying the record; forefst recomputes it the same way,
-  so a torn or altered record shows up here. It is an integrity check, not a signature:
-  it catches damage and byte-level edits, it is not proof of authenticity.
+  driver recomputes it before replaying the record; forefst recomputes it the same way.
+  A single flipped bit or byte always changes it, but it is the XOR of the record's 32-bit
+  words: any reordering of those words, or changes whose XOR cancels, keep the value. It
+  is an integrity check, not a signature, and not proof of authenticity.
 
-  Records checked:    2274
-  Verified:           2274
-  Failed:             0
+  Log records checked: 2274
+  Verified:            2274
+  Failed:              0
   Control copy 0 (PLCN 0x30): verified
-  Control copy 1 (PLCN 0x31): verified
+  Control copy 1 (PLCN 0x31): verified (in use)
 
 ==============================================================================
 Opcode Frequency
@@ -62,27 +67,27 @@ Opcode Frequency
 
   Opcode   Count      %  Name                                    
   ──────  ──────  ─────  ────────────────────────────────────────
-  0x0000     405    2.1  OpenTableFromTablePath
-  0x0001    2451   13.0  RedoInsertRow
-  0x0002    1950   10.3  RedoDeleteRow
-  0x0003    1427    7.6  RedoUpdateRow
-  0x0004    4976   26.4  RedoUpdateDataWithRoot
-  0x0005     124    0.7  RedoReparentTable
-  0x0006    1779    9.4  RedoAllocate
-  0x0007     726    3.9  RedoFree
-  0x0008     613    3.3  RedoSetRangeState
-  0x000a      73    0.4  RedoDuplicateExtents
-  0x000d     108    0.6  CmsBPlusTable::SetIntegrityInformation
-  0x000e      94    0.5  RedoSetParentId
-  0x000f     729    3.9  RedoDeleteTable
-  0x0010     671    3.6  CmsBPlusTable::SetObjectRecordPayload
-  0x0012      26    0.1  RedoMoveContainer
-  0x001e       1    0.0  CmsTableSetBase::PrepareEntryForMerge
-  0x001f    2281   12.1  RedoUpdateStreamSummary
-  0x0020     403    2.1  CmsStream::UpdateStreamUserPayload
-  0x0021      11    0.1  RedoStreamPersistFastRunInsertion
-  0x0024       1    0.0  RedoTableSetCommitMerge
-  0x0026       1    0.0  RedoTableSetStrongRefMerge
+  0x0        405    2.1  OpenTableFromTablePath
+  0x1       2451   13.0  RedoInsertRow
+  0x2       1950   10.3  RedoDeleteRow
+  0x3       1427    7.6  RedoUpdateRow
+  0x4       4976   26.4  RedoUpdateDataWithRoot
+  0x5        124    0.7  RedoReparentTable
+  0x6       1779    9.4  RedoAllocate
+  0x7        726    3.9  RedoFree
+  0x8        613    3.3  RedoSetRangeState
+  0xa         73    0.4  RedoDuplicateExtents
+  0xd        108    0.6  CmsBPlusTable::SetIntegrityInformation
+  0xe         94    0.5  RedoSetParentId
+  0xf        729    3.9  RedoDeleteTable
+  0x10       671    3.6  CmsBPlusTable::SetObjectRecordPayload
+  0x12        26    0.1  NoHandler:TreeUpdateRecord
+  0x1e         1    0.0  CmsTableSetBase::PrepareEntryForMerge
+  0x1f      2281   12.1  RedoUpdateStreamSummary
+  0x20       403    2.1  CmsStream::UpdateStreamUserPayload
+  0x21        11    0.1  RedoStreamPersistFastRunInsertion
+  0x24         1    0.0  RedoTableSetCommitMerge
+  0x26         1    0.0  RedoTableSetStrongRefMerge
 
   Category               Count      %
   ────────────────────  ──────  ─────
@@ -93,6 +98,6 @@ Opcode Frequency
   integrity                108    0.6
   namespace                 94    0.5
   dedup                     73    0.4
-  container                 26    0.1
+  tree update               26    0.1
   tableset                   3    0.0
 

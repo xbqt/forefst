@@ -24,6 +24,11 @@ For each such file the oracle requires one of:
 Anything else fails: a difference outside disclosed runs is invented content; a refusal without a reason
 is silent loss.
 
+N565 (1.14.0): WC-3 carves no map of a file that is still live (`RecoverabilityCode` live_file_map: the clusters may
+hold its current content; carving an earlier version of a live file is planned for a later release), and those were
+nearly all the carves this oracle judged (1.13.1 on the sample: 318 judged; 1.14.0: 1). For those records the oracle
+checks 1.14.0's contract instead: no carve file, and the reason stated (`NoCarveReason`).
+
   python3 analysis/verification/carve_oracle.py --images DIR [--tool PATH]
 """
 import argparse, csv, hashlib, io, json, os, re, shutil, subprocess, sys, tempfile
@@ -105,18 +110,32 @@ def main():
     try:
         run(tool, img, "export", "deleted", "--carve", work)
         man = json.load(open(os.path.join(work, "recovery_manifest.json"), encoding="utf-8"))
-        entries = man["records"]           # "entries" is the COUNT; the per-file records are under "records"
+        # N565 (1.14.0): the manifest's keys are the index's (N317: `Records`, `FileName`, `RecoverabilityCode`, ...;
+        # `is_resident` no longer written); read by the 1.13.1 names the oracle raised KeyError on the 1.14.0 tool.
+        # Both forms are read, so it runs against either release.
+        def g(m, new, old):
+            return m.get(new, m.get(old))
+        entries = g(man, "Records", "records")   # "Entries" is the COUNT; the per-file records are under "Records"
         tally = {"equal": 0, "differs_only_in_disclosed_runs": 0, "refused_with_reason": 0,
                  "FAIL_undisclosed_difference": 0, "FAIL_silent_refusal": 0, "no_usable_twin": 0}
+        livemap = {"live_map_not_carved_stated": 0, "FAIL_live_map_carved": 0, "FAIL_live_map_silent": 0}
         fails = []
         cs = 4096
         for m in entries:
-            if m.get("is_resident") or m.get("recoverable") != "extent_backed":
+            if g(m, "RecoverabilityCode", "recoverable") == "live_file_map":
+                if g(m, "ContentFile", "content_file"):
+                    livemap["FAIL_live_map_carved"] += 1; fails.append(("a live file's map carved", g(m, "FileName", "name")))
+                elif not m.get("NoCarveReason"):
+                    livemap["FAIL_live_map_silent"] += 1; fails.append(("a live file's map, no reason", g(m, "FileName", "name")))
+                else:
+                    livemap["live_map_not_carved_stated"] += 1
+                continue
+            if m.get("is_resident") or g(m, "RecoverabilityCode", "recoverable") != "extent_backed":
                 continue
             # a refused carve has no carved size; without the declared one it could never be matched, and a
             # refusal that cannot be matched is one the oracle silently never judges
-            size = m.get("carved_declared_size") or m.get("declared_size") or 0
-            cands = live.get((m.get("name"), size)) or []
+            size = g(m, "CarvedDeclaredSize", "carved_declared_size") or g(m, "DeclaredSize", "declared_size") or 0
+            cands = live.get((g(m, "FileName", "name"), size)) or []
             cands = [(k, p) for k, p in cands if k in hist and written_once(hist[k])]
             if len(cands) != 1:
                 tally["no_usable_twin"] += 1
@@ -128,25 +147,25 @@ def main():
                 tally["no_usable_twin"] += 1
                 continue
             twin = open(tw, "rb").read(); os.remove(tw)
-            cf = m.get("content_file")
+            cf = g(m, "ContentFile", "content_file")
             if not cf:
-                if m.get("refused_all_unwritten"):
+                if g(m, "RefusedAllUnwritten", "refused_all_unwritten"):
                     tally["refused_with_reason"] += 1
                 else:
-                    tally["FAIL_silent_refusal"] += 1; fails.append(("silent refusal", m.get("name")))
+                    tally["FAIL_silent_refusal"] += 1; fails.append(("silent refusal", g(m, "FileName", "name")))
                 continue
             carve = open(os.path.join(work, cf), "rb").read()
             if carve == twin:
                 tally["equal"] += 1
                 continue
             allowed = set()
-            for fv, n in (m.get("unwritten_runs") or []) + (m.get("hole_runs") or []):
+            for fv, n in (g(m, "UnwrittenRuns", "unwritten_runs") or []) + (g(m, "HoleRuns", "hole_runs") or []):
                 allowed.update(range(fv * cs, (fv + n) * cs))       # both are "this version held no data here"
             bad = [i for i in range(min(len(carve), len(twin))) if carve[i] != twin[i]
                    and not (i in allowed and carve[i] == 0)]
             if bad or len(carve) != len(twin):
                 tally["FAIL_undisclosed_difference"] += 1
-                fails.append(("differs outside disclosed runs (%d byte(s))" % len(bad), m.get("name")))
+                fails.append(("differs outside disclosed runs (%d byte(s))" % len(bad), g(m, "FileName", "name")))
             else:
                 tally["differs_only_in_disclosed_runs"] += 1
     finally:
@@ -155,9 +174,16 @@ def main():
         print("  FAIL %-44s %s" % (why, n))
     judged = sum(v for k, v in tally.items() if k != "no_usable_twin")
     print("  " + "  ".join("%s=%d" % kv for kv in tally.items()))
-    bad = tally["FAIL_undisclosed_difference"] + tally["FAIL_silent_refusal"]
+    print("  " + "  ".join("%s=%d" % kv for kv in livemap.items()))
+    bad = tally["FAIL_undisclosed_difference"] + tally["FAIL_silent_refusal"] + livemap["FAIL_live_map_carved"] \
+        + livemap["FAIL_live_map_silent"]
+    if judged == 0 and not livemap["live_map_not_carved_stated"]:
+        bad = 1                                   # N565: a run that judged no carve has checked nothing
+        print("  FAIL no carve judged (%d manifest record(s), %d extent-backed): the oracle checked nothing"
+              % (len(entries), sum(1 for m in entries if g(m, "RecoverabilityCode", "recoverable") == "extent_backed")))
     print("carve oracle: %s -- %d carve(s) judged against a live twin whose data Windows' journal shows "
-          "written once, %d fail" % ("FAIL" if bad else "PASS", judged, bad))
+          "written once, %d live file map(s) not carved with the reason stated, %d fail"
+          % ("FAIL" if bad else "PASS", judged, livemap["live_map_not_carved_stated"], bad))
     return 1 if bad else 0
 
 

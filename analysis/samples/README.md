@@ -10,7 +10,7 @@ Reference disk images and reproducible tool output, so you can see exactly what 
 Curated structure-analysis output showing how the same structures (boot / checkpoint / attributes) look
 **across ReFS versions, checksum types, and the cross-version upgrade** — `bootstrap/`, `checksum_variants/`,
 `cross_version_upgrade/`, `file_attributes/`, `version_evolution/`. See `corpus/README.md` and
-`corpus/corpus_description.md` (the full 118-image corpus table).
+`corpus/corpus_description.md` (the corpus table, from the measured manifests).
 
 ### `disks/` — full per-image bundles
 
@@ -20,9 +20,9 @@ provenance and a complete set of tool output:
 | Image | Format | Showcases |
 |-------|--------|-----------|
 | `win11refs2tspecials` | 4 KiB clusters · CRC64 | hard links, symbolic links, alternate data streams (`-HeavySpcials`) |
-| `wininsiderrefs8gtest2` | **64 KiB clusters · SHA-256** | the format variant (224-byte container rows) + an integrity-streams directory; Insider Server build |
+| `wininsiderrefs8gtest2` | **64 KiB clusters · SHA-256** | the format variant (224-byte container rows) + a `testintegrity` directory (no file in it carries an integrity stream); Insider Server build |
 | `win11refs2tsnapshots` | 4 KiB clusters · CRC64 | ReFS **stream snapshots** (`refsutil streamsnapshot`) |
-| `win11refstestmftecmd` | 4 KiB clusters · CRC64 | active **USN change journal** (6 805 records) + its `fsutil usn readjournal` export |
+| `win11refstestmftecmd` | 4 KiB clusters · CRC64 | active **USN change journal** (9 371 records) + its `fsutil usn readjournal` export |
 
 Each `disks/<image>/` contains:
 

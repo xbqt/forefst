@@ -1,0 +1,576 @@
+{
+ "id": "si_refs_win11refstestmftecmd",
+ "generated_by": "analysis/tools/analysis_scripts/gen_hex_figures.py",
+ "decoded_by": "forefst 1.14.0 (forefstdev/forefst.py)",
+ "title": "ReFS: the same file's $STANDARD_INFORMATION (124 bytes, format 3.14), read with forefst.",
+ "image": {
+  "name": "win11refstestmftecmd.raw",
+  "step": "step5",
+  "listed_as": "analysis/rawdisk/disks/step5/win11refstestmftecmd.raw",
+  "size": 4294967296
+ },
+ "offset": 21144592,
+ "offset_hex": "0x142a410",
+ "length": 124,
+ "bytes": "9cf4ef990bfdda019cf4ef990bfdda01e039fbf887eadc019cf4ef990bfdda01200000000800000084e88e340100000080000000000000008000000000000000a0dc0c000000000087a724b686eadc010000000000000000090000000000000000000000000000000000000000000000010000000000000000000000",
+ "note": "The bytes are the $STANDARD_INFORMATION of `testspecials/dir_romeo_413583/dir_kilo_704584/dir_report_123351/xbpt_quebec_cache_515604.cfg` (value+0x28 of its record, 124 bytes). Not coloured: nothing.",
+ "fields": [
+  {
+   "off": "0x00",
+   "len": 8,
+   "name": "Creation time",
+   "frame": null,
+   "group": null,
+   "bytes": "9c f4 ef 99 0b fd da 01",
+   "value": "2024-09-02T07:42:02.9958300Z",
+   "decoder": "forefst.ft_iso",
+   "slot": 0,
+   "link": {
+    "page": "attributes/STANDARD_INFORMATION.md",
+    "anchor": "value-layout-format-314"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x08",
+   "len": 8,
+   "name": "Modification time",
+   "frame": null,
+   "group": null,
+   "bytes": "9c f4 ef 99 0b fd da 01",
+   "value": "2024-09-02T07:42:02.9958300Z",
+   "decoder": "forefst.ft_iso",
+   "slot": 1,
+   "link": {
+    "page": "attributes/STANDARD_INFORMATION.md",
+    "anchor": "value-layout-format-314"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x10",
+   "len": 8,
+   "name": "Metadata change time",
+   "frame": null,
+   "group": null,
+   "bytes": "e0 39 fb f8 87 ea dc 01",
+   "value": "2026-05-23T07:44:23.2970720Z",
+   "decoder": "forefst.ft_iso",
+   "slot": 2,
+   "link": {
+    "page": "attributes/STANDARD_INFORMATION.md",
+    "anchor": "value-layout-format-314"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x18",
+   "len": 8,
+   "name": "Last access time",
+   "frame": null,
+   "group": null,
+   "bytes": "9c f4 ef 99 0b fd da 01",
+   "value": "2024-09-02T07:42:02.9958300Z",
+   "decoder": "forefst.ft_iso",
+   "slot": 3,
+   "link": {
+    "page": "attributes/STANDARD_INFORMATION.md",
+    "anchor": "value-layout-format-314"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x20",
+   "len": 4,
+   "name": "File attributes",
+   "frame": null,
+   "group": null,
+   "bytes": "20 00 00 00",
+   "value": "0x00000020",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 4,
+   "link": {
+    "page": "attributes/STANDARD_INFORMATION.md",
+    "anchor": "value-layout-format-314"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x24",
+   "len": 4,
+   "name": "Internal flags",
+   "frame": null,
+   "group": null,
+   "bytes": "08 00 00 00",
+   "value": "0x00000008",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 5,
+   "link": {
+    "page": "attributes/STANDARD_INFORMATION.md",
+    "anchor": "value-layout-format-314"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x28",
+   "len": 8,
+   "name": "Security ID",
+   "frame": null,
+   "group": null,
+   "bytes": "84 e8 8e 34 01 00 00 00",
+   "value": "0x00000001348ee884",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 6,
+   "link": {
+    "page": "attributes/STANDARD_INFORMATION.md",
+    "anchor": "value-layout-format-314"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x30",
+   "len": 8,
+   "name": "File size",
+   "frame": null,
+   "group": null,
+   "bytes": "80 00 00 00 00 00 00 00",
+   "value": "0x80 (128) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 7,
+   "link": {
+    "page": "attributes/STANDARD_INFORMATION.md",
+    "anchor": "value-layout-format-314"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x38",
+   "len": 8,
+   "name": "Allocated size",
+   "frame": null,
+   "group": null,
+   "bytes": "80 00 00 00 00 00 00 00",
+   "value": "0x80 (128) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 0,
+   "link": {
+    "page": "attributes/STANDARD_INFORMATION.md",
+    "anchor": "value-layout-format-314"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x40",
+   "len": 8,
+   "name": "LastUsn",
+   "frame": null,
+   "group": null,
+   "bytes": "a0 dc 0c 00 00 00 00 00",
+   "value": "0x00000000000cdca0",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 1,
+   "link": {
+    "page": "attributes/STANDARD_INFORMATION.md",
+    "anchor": "value-layout-format-314"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x48",
+   "len": 8,
+   "name": "UsnJournalId",
+   "frame": null,
+   "group": null,
+   "bytes": "87 a7 24 b6 86 ea dc 01",
+   "value": "0x01dcea86b624a787",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 2,
+   "link": {
+    "page": "attributes/STANDARD_INFORMATION.md",
+    "anchor": "value-layout-format-314"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x50",
+   "len": 4,
+   "name": "PackedEaSize / ReparseTagLow16",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 00",
+   "value": "0 bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 3,
+   "link": {
+    "page": "attributes/STANDARD_INFORMATION.md",
+    "anchor": "value-layout-format-314"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x54",
+   "len": 4,
+   "name": "ReparseTag",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 00",
+   "value": "0x00000000",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 4,
+   "link": {
+    "page": "attributes/STANDARD_INFORMATION.md",
+    "anchor": "value-layout-format-314"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x58",
+   "len": 8,
+   "name": "NextFileId",
+   "frame": null,
+   "group": null,
+   "bytes": "09 00 00 00 00 00 00 00",
+   "value": "0x0000000000000009",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 5,
+   "link": {
+    "page": "attributes/STANDARD_INFORMATION.md",
+    "anchor": "value-layout-format-314"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x60",
+   "len": 8,
+   "name": "Reference ordinal",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 00 00 00 00 00",
+   "value": "0x0000000000000000",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 6,
+   "link": {
+    "page": "attributes/STANDARD_INFORMATION.md",
+    "anchor": "value-layout-format-314"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x68",
+   "len": 8,
+   "name": "Reference directory",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 00 00 00 00 00",
+   "value": "0x0000000000000000",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 7,
+   "link": {
+    "page": "attributes/STANDARD_INFORMATION.md",
+    "anchor": "value-layout-format-314"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x70",
+   "len": 4,
+   "name": "HardLinkCount",
+   "frame": null,
+   "group": null,
+   "bytes": "01 00 00 00",
+   "value": "1",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 0,
+   "link": {
+    "page": "attributes/STANDARD_INFORMATION.md",
+    "anchor": "value-layout-format-314"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x74",
+   "len": 8,
+   "name": "NextStreamSetId",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 00 00 00 00 00",
+   "value": "0x0000000000000000",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 1,
+   "link": {
+    "page": "attributes/STANDARD_INFORMATION.md",
+    "anchor": "value-layout-format-314"
+   },
+   "row": true,
+   "table": null
+  }
+ ],
+ "groups": [],
+ "rows": [
+  {
+   "o": "0000",
+   "h": [
+    [
+     0,
+     "9c f4 ef 99 0b fd da 01"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     1,
+     "9c f4 ef 99 0b fd da 01"
+    ]
+   ],
+   "a": [
+    [
+     0,
+     "........"
+    ],
+    [
+     1,
+     "........"
+    ]
+   ]
+  },
+  {
+   "o": "0010",
+   "h": [
+    [
+     2,
+     "e0 39 fb f8 87 ea dc 01"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     3,
+     "9c f4 ef 99 0b fd da 01"
+    ]
+   ],
+   "a": [
+    [
+     2,
+     ".9......"
+    ],
+    [
+     3,
+     "........"
+    ]
+   ]
+  },
+  {
+   "o": "0020",
+   "h": [
+    [
+     4,
+     "20 00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     5,
+     "08 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     6,
+     "84 e8 8e 34 01 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     4,
+     " ..."
+    ],
+    [
+     5,
+     "...."
+    ],
+    [
+     6,
+     "...4...."
+    ]
+   ]
+  },
+  {
+   "o": "0030",
+   "h": [
+    [
+     7,
+     "80 00 00 00 00 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     8,
+     "80 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     7,
+     "........"
+    ],
+    [
+     8,
+     "........"
+    ]
+   ]
+  },
+  {
+   "o": "0040",
+   "h": [
+    [
+     9,
+     "a0 dc 0c 00 00 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     10,
+     "87 a7 24 b6 86 ea dc 01"
+    ]
+   ],
+   "a": [
+    [
+     9,
+     "........"
+    ],
+    [
+     10,
+     "..$....."
+    ]
+   ]
+  },
+  {
+   "o": "0050",
+   "h": [
+    [
+     11,
+     "00 00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     12,
+     "00 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     13,
+     "09 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     11,
+     "...."
+    ],
+    [
+     12,
+     "...."
+    ],
+    [
+     13,
+     "........"
+    ]
+   ]
+  },
+  {
+   "o": "0060",
+   "h": [
+    [
+     14,
+     "00 00 00 00 00 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     15,
+     "00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     14,
+     "........"
+    ],
+    [
+     15,
+     "........"
+    ]
+   ]
+  },
+  {
+   "o": "0070",
+   "h": [
+    [
+     16,
+     "01 00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     17,
+     "00 00 00 00  00 00 00 00"
+    ],
+    [
+     -1,
+     "            "
+    ]
+   ],
+   "a": [
+    [
+     16,
+     "...."
+    ],
+    [
+     17,
+     "........"
+    ],
+    [
+     -1,
+     ""
+    ]
+   ]
+  }
+ ]
+}

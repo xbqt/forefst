@@ -1,5 +1,604 @@
 # Changelog
 
+## v1.14.0 — 2026-11-23 — the 1.13.1 known issues fixed, one name and one form for every field, and refsanalysis's last update
+
+**Everything here is relative to v1.13.1.** The work was planned as 1.13.2 and ships as 1.14.0 because it changes
+every machine output. It fixes every defect the 1.13.1 notes listed as a known issue, follows refs.sys's own rules
+where the tools kept rules of their own, and gives each field of both tools one name and each kind of value one
+form. **It is the last version with refsanalysis updates** (see [refsanalysis](#refsanalysis-its-last-update)).
+
+**What a script must change**, in short: every JSON key and CSV header has a new name (the measured old → new tables
+are in [Migrating between releases](tools/migration.md)); `files --json` is now the `files` CSV row; the `IsResident`
+column and `--filter resident` are gone; several conditions that exited 0 now exit 2, and arguments that were ignored
+now exit 1. The sections below say what changed and why.
+
+### Breaking changes
+
+- **One name for every field, in both tools.** Every JSON key and CSV header is written in one vocabulary: a fact
+  that `files` has takes its `files` column name in every command (`ObjectRef`, `FullPath`, `FileName`, `HomeOID`,
+  `FileID`, `Created` …); any other name is its words in PascalCase, acronyms in capitals (`OID`, `LCN`, `USN`, `GUID`,
+  `SID`). The tables, command by command, are in [Migrating between releases](tools/migration.md).
+- **`files --json` is the CSV row**: the same fields, names and values, typed, with `null` for an empty cell; 1.13.1
+  wrote a separate, smaller set of keys. The `files` CSV goes from 40 to 42 columns: **`IsResident` is removed** (the deprecated
+  alias kept since 1.10.0: it was `True` exactly when `DataResidency` is `inline`), and `FileAttributesHex`, `InternalFlagsHex`
+  and `ReparseTagHex` are added beside the names. **`--filter resident` is removed** and exits 1 naming its
+  replacement, `inline`.
+- **One form for each kind of value**, in every command and every format ([Value forms](tools/forefst.md#value-forms)):
+  a time in UTC ISO 8601 with all seven digits of the fraction and `Z`; a value the volume does not hold as `(none)` in
+  text, an empty cell in CSV and `null` in JSON; identifiers, LCNs, offsets, checksums and marker words in lower-case
+  hex, a string in JSON (`reparse --json` writes a tag once: `ReparseTag` / `ReparseTagHex`); a
+  flag word as the names of its bits plus a `…Hex` field with the word (a bit without a name written in hex among the
+  names); exact byte counts in machine output; `true` / `false` in CSV and JSON; `ReFS 3.14`, never `v3.14`.
+  `files`' `DACLSummary` writes each ACE as `security` does (`ALLOWED SYSTEM (S-1-5-18): FULL_CONTROL`), the ACEs
+  separated by `; ` (1.13.1: `ALLOWED:SYSTEM (S-1-5-18):FULL_CONTROL`, separated by ` | `).
+- **Exit codes.** A command now exits **2** for conditions it reported without a finding in 1.13.1 — among them a
+  superblock or checkpoint copy that fails its self-checksum, a Container Table that maps two containers onto
+  overlapping clusters, a re-created change journal, an MLog whose newest records are missing, a read error inside a
+  `deleted` scan, a byte range whose image-hole state could not be checked, and a file an export could not write. It
+  exits **1** where 1.13.1 ignored the input: a stray or unknown argument (16 commands accepted one silently), a format
+  the command does not write, two machine formats on one `usn` or `mlog` run, an unknown `export` subverb (1.13.1 wrote
+  a bundle), `deleted --carve` (it did nothing; carving is `export deleted DIR --carve`), a bundle written by
+  1.12.1–1.13.1, and `files --cow-before` with an image of another volume. The exit-code changes, each with its
+  condition: [Migrating between releases — exit codes](tools/migration.md#exit-codes-in-1140); among them, besides the
+  ones this list names: the checkpoint conditions that change what every command reads, a missing root directory or
+  required table (1 -> 2), the two Container Table copies differing beyond their flags word, an unreadable `extract`
+  cluster (1 -> 2), `snapshots --extract DIR --json` (0 -> 1) and a per-object bundle given as input (0 -> 1).
+- **What a bundle carries** is said -- in `manifest.json` (`Carries`), the export's last lines, the reader's banner and
+  `verify-bundle`: names, times, SIDs, `$I` paths, inline content and the free space of the metadata pages, the
+  journal's and the MLog's records when it holds them, and the source path and host. 1.13.1 stated the inline content
+  only.
+- **A bundle that does not carry a table's pages** (`export metadata --what`) is said to: the Container Table's copies
+  are "not carried by this bundle" (not copies that fail their check), and the container-mapping warning names the
+  bundle and that cause (not the reader's temporary file and a corrupt table). `extract` from a bundle says the bytes it
+  refuses are not in the bundle and to read the stream from the source image.
+- **Bundles carry a format number.** `export metadata` writes `BundleFormat` into `manifest.json`; `verify-bundle` and
+  the bundle reader refuse a bundle without it (written by 1.12.1–1.13.1) with a message, where they could misread it.
+  Export the bundle again with 1.14.0. A bundle 1.14.0 writes is read with 1.14.0: 1.13.1 stops on it with
+  `KeyError: 'cluster_size'`. A second `export metadata` into a directory that already holds a bundle is
+  written beside it (`<dir>_2`, `<dir>_3` …) and the path used is printed; 1.13.1 wrote into the same directory and
+  overwrote the first bundle's seal.
+- **Output files.** A machine-output FILE, and `extract -o FILE`, is written as `<FILE>.partial` (a short name beside it
+  when that name would be too long) and renamed when it is complete; a write that fails removes the partial file and
+  names FILE, where 1.13.1 could leave a truncated file under FILE's name. A FILE that is not a regular file (a device,
+  a FIFO, a process substitution) is written directly. Status lines (`Wrote …`) go to stderr.
+- **`export file PATH` and `export ads PATH:STREAM` write to disk**: `./<the file's name>` (a stream:
+  `<file>__<stream>`), or into `-o DIR/`, never over a file (`<name>.dupN`); the name follows the bulk exports' rule and
+  the stderr line gives the name on the volume when it differs; `-o FILE` as given, `-o -` the screen. 1.13.1 wrote to
+  the screen without `-o`. `extract` stays the screen command.
+- **`summary`'s text**: its title is `ReFS Volume Summary` (1.13.1 printed `fastsummary`'s, `ReFS Volume Fast Extended
+  Summary`). `Files:` counts each file once, with its residency words (`inline`, `extents`, `snapshot-shared` …), and
+  the names are on their own `Names:` line (one per file, plus one per extra name of a hard-linked file). The census
+  below it counts files too, each once and no directory: `Integrity files:` (1.13.1 `Integrity objects:`), `ADS host
+  files:` and the encrypted, compressed and snapshot counts; 1.13.1 counted names, and the directories carrying the bit
+  (on the public sample `win11refstestmftecmd`: files 1,507 → 1,225, integrity 559 → 340, ADS hosts 263 → 150).
+  `Containers mapped:` gives the containers the Container Table maps and how many lie outside the boot region (1.13.1
+  `Containers used: 62 / 63`, which read as usage). Each checkpoint copy's line gives the record's size and the copy's
+  role (in use, newest, superseded or tied). The image tail is on one line: 1.13.1 took the volume's length from the
+  image and called the tail space "beyond the last container" that no allocator tracks. Then `File contents: not
+  read`, and a closing rule. The text views and the help wrap
+  their prose at about 100 characters; data rows and the stderr lines are never wrapped. The rules between sections
+  are 78 characters wide (`specials` and `mlog --info` drew 68 and 70, refsanalysis 72 and 74); a table's underline keeps
+  its table's width.
+- **A count of one takes the singular** in the text of both tools (`1 file sharing 2 names`, `1 row`, `1 entry`,
+  `1 cluster`, `1 byte`): 1.13.1 printed `1 files`, `1 rows`, `1 entries` (on the public sample
+  `win11refs2tsnapshots`: `Hard-linked: 1 files sharing 2 names`).
+- **An export's statements** (what a command says about what it read) go to stderr when stdout carries the export and
+  to stdout when the export goes to a FILE, in `usn`, `mlog`, `timeline` and `timestomp` (`usn` with no journal
+  writes them to stderr in every machine mode, its empty document on stdout). With no journal to read,
+  `usn --csv` writes its header row alone and `usn --json` a document with no records; 1.13.1 wrote neither, only a sentence
+  on stdout, which a CSV reader reading stdout took for the header row.
+- **A closed pipe** (`| head`) that carries the output stops the run quietly and exits 2 if the run had recorded a
+  finding or a skip before the close, else 0; a closed pipe that carries only messages (stderr, or stdout when the
+  output goes to a FILE or a directory) no longer stops the run. 1.13.1 exited 120 whenever stderr was in the closed
+  pipe, and `files --csv FILE 2>&1 | head -1` never wrote FILE.
+- **MLog words** (`mlog`, `timeline`). The class a row derives from its records is the column `DerivedAction`, and the
+  outputs say it is derived, not read; `REPARENT` is now `TABLE_REPARENTED` (no pair of names is implied) and `WRITE`
+  is `DATA_OR_REPARSE_WRITE`. New: `TimeSource` (where a row's time comes from) and `PathToday` / `ParentPathToday`
+  (the path in the live tree now, which is not the path at the time of the event). A move or rename is read from the
+  file's own records (its name link replaced, or its table moved from the old name to the new): `RENAME`, `MOVE` (the
+  name kept) and the new `MOVE_AND_RENAME` (moved under a new name, as a deletion to the Recycle Bin is); `--parse`'s detail
+  gives a rename's old and new name and a move's directories, `--json` Entries every pair. Where those records are
+  absent (a ReFS 3.4 directory) the directories of the names decide, said as `names not paired`, and the new
+  `MOVE_OR_RENAME` says when they cannot. A name removed with no new name for it is
+  `ENTRY_REMOVE`; a new name no removal pairs with is `CREATE`. 1.13.1 printed `RENAME` for such a removal (files a lab
+  script deleted), `REPARENT` for renames the reparent record carries, `MOVE` for a move under a new name and `WRITE`
+  for a file created in a payload that also removes a row of the new file. A row shows its name in that name's own directory
+  and names a payload's other changes after `also`; `--json` Transactions add `Entries`. A record's `+0x20` is
+  the allocator clock: `mlog -v`'s column `AllocClock` and `--json`'s `AllocatorClock`, in decimal; `--json` adds
+  `InheritedTableOID`.
+- **`IsMoved` is no longer a yes/no value.** It says how it was decided: `false` (in its creation directory), the
+  values the change journal decides (`moved (change journal)`, `a hard link made here (change journal)`, `in its
+  creation directory (change journal)`), `moved (the record's reference)`, and where neither decides, `moved, or
+  hard-linked and the original name removed` or `undetermined` ([`files` column 42](tools/forefst.md#csv-output-fields)).
+- **`summary`'s `Volume modified` is `Last mount (rw)`**, and its keys are renamed with it: the field is the time of
+  the last mount that could write (E142), not a modification time.
+- **`timestomp`'s FUTURE signal is retired.** It compared a file's creation time with that same mount time, called
+  "the volume's last metadata write". The other signals and tiers are unchanged; `--min LOW` now shows the LOW tier.
+- **`timestomp`'s text** gives each row's evidence after its signals (`evidence:` the journal records, as
+  `usn:REASON@ObjectRef`, and the hard-link name, as `hardlink:PATH`, the signals rest on; the CSV and JSON carried it already), says from
+  when the journal can corroborate (its lowest surviving record and that record's time: a file changed before it
+  cannot be corroborated by it), and prints `Last mount (rw)` where 1.13.1 printed `Volume modified`. Its time column
+  is `Changed` (below).
+- **`deleted` writes every entry it prints as a row of every format, with its `Status`**, including the Trash rows,
+  the checkpoint comparison and the `--scan-pages` entries ([`deleted`](tools/forefst.md#deleted--the-deleted-file-view-list--recoverability)).
+- **`refsanalysis files`** gains an `ObjectRef` and a `Data` column, and its header names its columns.
+- **`details <directory> --json` names the `$SI` sizes for what they are**: `SI.DataSize` is `$SI+0x30`, an integer
+  (1.13.1 `si.si_field_0x30`, a hex string it called unpopulated), and `SI.AllocatedSize` is `$SI+0x38` (1.13.1
+  `si.datasize`). On a file's record they are its data size and allocated size; on a directory's own row both are 0.
+
+### The known issues of 1.13.1
+
+The 1.13.1 notes listed 21 known defects. Each is fixed:
+
+- **A superblock copy that fails its self-checksum** is a finding: `summary` and `integrity` name the copy and exit 2,
+  the volume GUID comes from a copy that verifies, and "payload is identical" is printed only when the copies were
+  compared and are.
+- **`integrity`'s superblock offsets** are from the start of the image, as `summary`'s, and its Redundancy section
+  says so; the boot sectors and the checkpoint copies are given their offsets too, each checkpoint copy with its role.
+- **The displays of a checkpoint** (the Checkpoint sections of `summary`, `fastsummary` and refsanalysis `summary` /
+  `summary++`, `integrity`'s header, refsanalysis `supb`'s marker, `chkp` and `containers`) show the copy in use,
+  chosen by refs.sys's rule (below).
+- **A checkpoint copy that fails its self-checksum** is labelled by its checksum state, never `valid`, and is a
+  finding (exit 2) also when both copies carry the same clock.
+- **`deleted`'s checkpoint comparison and the checkpoint hash** of `summary` / `fastsummary` use the copy refs.sys
+  would use; the hash covers the checkpoint record, one cluster (E118). The comparison names the other copy the
+  newer one when it is (the newest copy failed and an older one is in use), and states what `summary` says of the
+  copy it compares against -- a failed self-checksum, a checksum that cannot be verified, a copy refs.sys rejects, a
+  root 0xc, 7 or 8 that does not verify -- and exits 2 for it.
+- **refsanalysis `supb --verify`** prints a self-checksum row for every superblock and checkpoint copy;
+  `supb --verify` and `boot --verify` exit 2 on a row that fails. `chkp --verify` adds a self-checksum row for each
+  checkpoint copy it does not decode, and exits 2 when one fails.
+- **refsanalysis** exits 2 after skipping metadata it could not read, prints `unreadable` instead of `0 rows`, takes
+  the GUID from a copy that verifies, and its `forefst` passthrough returns forefst's exit code.
+- **`integrity --checksums`** names what it covered (the system tables and each object's root page) and does not
+  say "no tampering" of pages it did not check; `--fullchecksums` and `--verify-pages` now verify the child pages
+  below a file's extent index and below an embedded attribute index too. A clean verdict reads "VERIFIED — no
+  tampering or corruption detected in these pages (a checksum cannot prove the absence of a deliberate edit)".
+- **The Container Table** is checked: two containers mapped onto overlapping clusters are a condition of every
+  command (a warning and exit 2; `summary`, `dataruns`, `integrity` without `--checksums` and refsanalysis
+  `containers` agree), a row laid out unlike the volume's other rows is not translated through, and a page read
+  through the table that carries another address than the one asked for is recorded and not used. A container moved
+  with every digest covering it recomputed stays undetectable from the image, and the pages say so.
+- **Sizes and scan ranges** come from the volume's length, not the image's.
+- **An MLog whose newest records were destroyed** is a finding (exit 2), up to the log end its control area recorded
+  (the limit is stated in the Known issues). The finding counts the 4 KiB log blocks from the newest record to the log
+  end; an LSN's generation is not a count of laps (it also goes up when a log is begun anew at the same offset).
+- **`mlog`'s control-header labels**: `+0x18` is the log start and `+0x20` the log end, each as of the control area's
+  last write (E116); `+0x38` is the log's open count (E117).
+- **`summary`'s file counts** are given per residency category and sum to the total.
+- **A re-created change journal** is reported as a re-creation, with the boundary between the journals' records; a
+  missing range is stated as missing, without calling it destroyed.
+- **The FUTURE signal** is retired (above).
+- **`deleted` no longer lists a renamed file's old name as a deleted file** where the volume can tell: an entry's
+  identity is checked against the live tree and, for an embedded row, the change journal, and the entry says what
+  it is (`RENAMED`, `STILL PRESENT` …).
+- **A carve shorter than the file, or zero-filled over a gap of its extent map,** says so and counts the clusters; a
+  remnant that produces no carve says why.
+- **Carved integrity-stream data** is checked: every carved cluster whose map row carries a CRC-32C is compared with
+  it.
+- **`deleted` no longer says it carves**, and `deleted --carve` exits 1 naming `export deleted DIR --carve`.
+- **A read error during `deleted`'s slack or orphan-page scan** is a recorded skip: the coverage line states the
+  clusters read, and the command exits 2.
+- **Bulk exports record their renames**: `export resident-all`, `export recyclebin` and the other bulk exporters
+  write `export_index.csv` (ObjectRef, FullPath, ContentFile, SHA256, RenameReason); `export metadata` no longer
+  writes into an existing bundle (above).
+
+### Defects of 1.13.1 that its Known-issues list did not name
+
+Found after 1.13.1 was published; each is fixed in 1.14.0. What to re-check in work done with 1.13.1:
+
+- **`extract --id` could write another file's bytes and exit 0.** A name with the same ordinal in the directory asked
+  for -- a file moved into it, or a hard-link name placed in it -- stood in for the file: on `win11refs2tspecials`
+  `0x75e:0x3` wrote `hardlink_uniform_706791.bin` (218,785 bytes) instead of `lima_victor_148410.cfg` (413,666 bytes),
+  on `win11refs2tsnapshots` `0x731:0x2` wrote `xbpt_audit_echo_178867.tmp` instead of `xbpt_log_foxtrot_796125.ini`.
+  *Re-check:* extract again by path, or with 1.14.0, every file 1.13.1 extracted by `--id`, and compare the hashes.
+- **A bulk export that could not write a file exited 0.** The content files of `export resident-all` and the other
+  bulk exporters, `holes.json` and the recovery log warned and went on: into a read-only directory `export
+  resident-all` wrote nothing and exited 0. *Re-check:* an export made with 1.13.1 whose run printed a warning that a
+  file could not be written is incomplete, whatever its exit code.
+- **`security --audit` said `VERDICT: CLEAN` over an altered page.** With the security table's root page no longer
+  matching the digest the Object Table recorded for it, the descriptors' own hashes still passed: the audit warned and
+  exited 2 under a CLEAN verdict. The verdict is now `UNDETERMINED`, naming the page. *Re-check:* a CLEAN audit of 1.13.1
+  whose run warned that the page of object 0x530 does not match its recorded checksum.
+- **`usn --info` read the journal's entry from an altered page in silence.** When the root page of the system metadata
+  table (OID 0x520) did not match its digest, `usn --info` printed the entry, its extents and its records with no warning
+  and exited 0 (`summary` warned). It now warns, marks the entry and exits 2; every command that reads the journal's entry
+  verifies that page. *Re-check:* journal figures taken with 1.13.1 from a volume whose `summary` warned about the page of
+  object 0x520.
+- **`files` printed access-control data from an altered security table and exited 0.** It read the security table's
+  root page without the check against the digest the Object Table records for it, which `security --audit` and
+  `summary` make: with one bit of an access-control entry flipped from allowed to denied, `files --csv` and `--json`
+  (also from a bundle) printed the denied entry in `DACLSummary` with no warning. `details` read that page the same way,
+  and `export metadata` copied every system table's root page without checking it. Every table walk now verifies the
+  root page of the object it reads; `files` keeps the values it read, says on stderr that `SecurityId`, `OwnerSid`,
+  `GroupSid` and `DACLSummary` come from that page, and exits 2. *Re-check:* the security columns of a 1.13.1 listing of
+  a volume whose `security --audit` or `summary` named the page of object 0x530.
+- **An altered root page of a checkpoint table was read without a warning.** With one bit flipped in the root page
+  of the Medium Allocator, `summary` and `files --csv` exited 0 and said nothing; so did `files --csv` with the root
+  page of the Object Table's duplicate altered. Every command now checks, when it opens the volume, the root page of
+  each of the checkpoint's 13 tables against the digest the checkpoint copy in use records for it: the Medium and
+  Container Allocators, the Schema Table and its duplicate, the Parent-Child Table, Block RefCount, the Container
+  Index, Integrity State and the Object Table's duplicate, beside the Object Table, the Container Table and the Small
+  Allocator. A page that does not match, or cannot be verified, is named on stderr, the table is read as it is, and
+  the command exits 2. The duplicates of the Object Table and the Schema Table, which are not read, are named as any
+  backup copy that fails is: by `summary`, `fastsummary` and `integrity`, which exit 2 for them. *Re-check:* run
+  `summary` with 1.14.0 on a volume examined with 1.13.1.
+- **A hard-linked or moved file's stream snapshots were not listed.** `snapshots` and the `SnapshotCount` /
+  `SnapshotNames` columns read a file's snapshots from its name row only; the driver keeps a hard-linked or moved
+  file's snapshot rows in its backing record, so such a file showed none. They are now read from the backing; a file
+  with several names is listed once, its other names named. No volume of the test corpus holds such a file.
+  *Re-check:* the snapshots of a hard-linked or moved file in a 1.13.1 inventory.
+- **A change journal holding no record was said to have bytes beyond its last record.** With non-zero bytes in `$J`
+  and no record, `usn` called them ring space not yet written and gave no finding; nothing shows they are not records
+  that are lost or removed. They are now named as bytes of a journal that holds no record, and the command exits 2.
+  *Re-check:* a 1.13.1 `usn` run that printed "BEYOND the last record" and listed no record.
+- **A per-object metadata bundle read as a volume of 0 objects.** A bundle written with `--btree-mode per-object`
+  holds each object's pages without their addresses; read as input it gave a volume of 0 objects. It is now refused
+  as input with the reason (exit 1); `verify-bundle` still checks it. *Re-check:* any 1.13.1 result read from such a
+  bundle.
+- **An MLog with no record left read as complete.** The check of the newest records counted from the
+  newest record it found; with none left, `mlog --stats` printed "Log may be clean" and `summary --mlog` "none missing
+  (the log end checked)", and both exited 0. A data area that holds no record of the volume's log, below a log end that
+  says records were written, is now a finding (exit 2): the records are missing, and how many cannot be counted.
+  *Re-check:* a volume on which 1.13.1's `mlog` found no redo record.
+- **Bytes whose hole state could not be checked were written as checked.** On a host that cannot answer the hole query
+  (no `SEEK_DATA`), `export snapshots`, `export resident-all`, `export recyclebin`, and `extract` (its main path, and an extent-backed
+  ADS, a snapshot-shared file or a file whose extent map is held in its directory entry) wrote the bytes, also under
+  `--refuse-holes`, and exited 0; the bulk exports' `holes.json` said `none`. On `win11refs4gattributes`, `export
+  snapshots --refuse-holes` wrote its 4 versions that way. Where a stream was withheld for that reason (`export
+  metadata`'s `usn_J.bin`), stderr said its bytes would have come from image holes. Each is now `undeterminable`,
+  withheld under `--refuse-holes` with that cause given, and the command exits 2. *Re-check:* content exported or
+  extracted with 1.13.1 on a host without `SEEK_DATA`.
+- **Two statements of the 1.13.1 pages were wrong:** the MLog page said the commit flag (record +0x2C bit 1) is always
+  0 on disk -- it is set on the last record of each transaction; the timestomp page said a creation time backdated
+  below a snapshot of the same file is impossible -- one later than the snapshot is impossible, one below it is the
+  normal order, so a snapshot does not catch backdating. *Re-check:* a conclusion drawn from either sentence.
+- **Two labels of `timestomp`'s text misstated what it printed:** the column `Last real write` was the file's `$SI`
+  Changed time, which a stomp through the native API sets too (the column is now `Changed`); the legend gave
+  `ROUND_TIMESTAMPS` as `LOW only`, where the tier rule gives that signal alone INFO and never lets it raise a tier.
+  *Re-check:* a conclusion that took that column for the time the file was last written (every release from 1.8 on
+  printed it).
+
+### Verdicts that follow refs.sys
+
+- **The checkpoint in use is chosen as refs.sys chooses it**, by every command of both tools from one definition: the
+  copies in slot order, a copy that fails its self-checksum skipped, a switch only to a strictly greater clock at
+  `+0x60`, so a tie between two valid copies keeps slot 0 (read on 17134, 26100.8115 to .9549 and Insider 29574).
+- **A clock divergence** (`+0x10` against `+0x60`) on either checkpoint copy, in use or not, keeps exit 2 in every
+  command of both tools.
+- **The superblock**: when no copy passes its self-checksum, the volume is read from the primary, said, and exit 2;
+  a copy that passes refs.sys's tests but carries no `SUPB` signature is read, as the driver reads it, with the reason.
+- **The Container Table** is read from root 7, and from root 8 only when root 7 fails, as the driver does; the two
+  copies are compared row by row: a difference only in the rows' flags word is a note that leaves the exit code as
+  it is (6 of 117 corpus volumes, bits 0x2000 / 0x4000 set in root 7 only; E135), any other difference a redundancy
+  finding (exit 2).
+- **The checksum type** is the one refs.sys derives: CRC64 when the boot sector's flags lack 0x40, whatever the
+  selector byte `+0x2A` holds (E136). On the 16 corpus volumes in that state 1.13.1 printed `Checksum: none`. Type 5
+  is named XXH64 (it is reported as not verifiable: its seed is not read).
+- **A boot-sector container size of 0** (what `refsutil fixboot` writes) is a finding that names the value and the
+  driver's default, with exit 2 in the five commands that read it.
+- **A checkpoint whose record version is above the boot sector's** is a condition that changes what every command
+  reads (exit 2): refs.sys 26100 and Insider 29574 fail the mount after choosing it; the volume is read as it is.
+- **Checkpoint flag 0x400** is no longer called "metadata-checksum" (E141): it marks the record's rollback-protection
+  fields, an offset and a length at `+0x9C` / `+0xA0`, set from ReFS 3.13 (E158); flag 0x2000 marks Insider's
+  attestation HMAC at `+0xA4` / `+0xA8` (E159), and refsanalysis `chkp` names `+0x88` / `+0x8C` as the offset and
+  length of an area of the record, not a "data area end" and a "max root capacity" (E159). Checkpoint flags 0x010, 0x020, 0x040 and 0x100 are named as four separate features (E126).
+- **System tables kept in two copies** (0x7/0x8, 0x9/0xA, 0x500/0x501, 0x540/0x541) are named by their OIDs, not
+  "primary" and "duplicate": neither copy is either (E121, E129).
+
+### Content that came out wrong
+
+- **A directory without a path** (`usn`, `mlog`, `timeline`, `deleted`) is `<undetermined 0x…>` when the Object Table,
+  or the walk of the directory tree, was read only in part: whether it exists, or where it is, is not determined.
+  1.13.1 wrote `<oid 0x…>` (gone) or `<unlinked 0x…>` there.
+- **A file whose extent map is an index node** (Data Deduplication's `DedupIndex.db`, a sparse embedded `$DATA`) is
+  decoded and extracted (`dataruns` 762 → 763 of 763 decoded on the dedup volume); `extract` streams a file above
+  256 MiB to its output instead of holding it in memory.
+- **On a volume without hard-link support, a moved file's identity** (`ObjectRef`, `HomeOID`, `IsMoved`) is the
+  reference its record carries; 1.13.1 composed it from the directory the record sits in, which could give the
+  `ObjectRef` of another file (E144).
+- **`extract --id`** resolves a file in its own home directory only: a name with the same ordinal in another directory
+  no longer stands in for it.
+- **Two split-record backings with the same (home, file id)** resolve to no record, with a finding, instead of the
+  first match (0 such collisions on the corpus).
+- **v3.4 integrity streams** are verified (their CRC-32C is inline, E152).
+- **`integrity --checksums` and `extract` say what an integrity file's clusters without a CRC-32C are**: a run marked
+  never written holds no data (it reads as zeros; nothing to verify) and is counted on `Never written`; only a written
+  run without a CRC-32C is "NOT verified". On the corpus all 670,385 such clusters (2,469 files, 10 volumes) are never
+  written; the public sample's 46,723 among them.
+- **`extract` verifies the integrity stream of a hard-linked or moved file**: its checksums are read from the file's
+  own record (split out of its name row), as `integrity --checksums` reads them. 1.13.1 extracted such a file without
+  checking it and exited 0, whatever its bytes. An empty hard-linked or moved symlink is named with its tag and target,
+  as an embedded one is (1.13.1 said only that it is a reparse point).
+- **refsanalysis `files` and `attributes`** count each file once (980 files, not 1,333 names, on
+  `win11refs2tspecials`) and list a split file's named streams from its backing record (870 there, where 1.13.1 listed
+  109).
+- **`InternalFlags`** shows every bit that is set, bit 0x8 included (set on 583,088 of 586,970 non-zero values, the
+  3.14 inline-residency files); `$SI+0x24` bit 0x02 is decoded as `CaseSensitive` (E125).
+- **An extent node whose index names none of its rows** is read as a header that does not validate, not as a hole or
+  a cut map.
+- **A bulk export that cannot write a file exits 2.** It goes on with the other files, as 1.13.1 did, which exited 0.
+  When it cannot write its list of them (`_extract_failures.json`: a full, read-only or missing directory) or
+  `holes.json`, stderr says so and names the files or streams (the first 20); 1.13.1 pointed at the list it had not
+  written and said it had written `holes.json`. `export_index.csv`, the recovery log and `extract`'s `.holes.json`
+  that cannot be written exit 2 too.
+- **`extract` of a stream that owns no clusters** (`unallocated`: no allocation of its own and no snapshot to share)
+  writes its size in zeros, which is what every byte reads as, and says so; a regular output file holds them as a hole.
+  1.13.1 wrote nothing and exited 2. `export file` writes it the same way.
+- **`extract -o DIR`**, DIR an existing directory, is refused before anything is written; 1.13.1 wrote `DIR.holes.json`
+  beside the directory and then refused.
+- **An extent row whose flags declare a CRC64 per cluster** (0x100, which refs.sys writes and reads) is stepped over by
+  its own declared size, and its clusters are said to be not verified (`extract`, `integrity --checksums`); 1.13.1
+  ended the walk of the file's extents there. No corpus row carries one.
+- **An extent row's file VCN** is read as the 64-bit field refs.sys writes; eight readers took its low 32 bits.
+- **Labels that named a retired reading**: `summary`'s root list names the second copies `Object ID Table copy 2`,
+  `Container Table copy 2` and `Schema Table copy 2` (1.13.1 `… dup`; neither copy is a primary); a type-0x40 row is a
+  `Backing Record` (1.13.1 `Extent Descriptor`); OID 0x30 is the `Heat Engine Table` (1.13.1 `Session Activity
+  Table`); `deleted`'s slack scan says a deletion removes the row's index slot and marks the row (1.13.1: it removes
+  only the slot); `timestomp`'s legend says the journal recorded a basic-info change (not a deliberate one), that no
+  routine cause of two names' disagreement was observed on the corpus, that driver packages carry whole-second times,
+  and that legitimate time-setting comes from Windows servicing, installers and copies.
+- **Help text**: `search --filter` lists `inline` (not the removed `resident`); `snapshots --snapshot` with part of a
+  version name selects every version that contains it; `deleted --later-data` says the carve zero-fills those ranges
+  with or without it; `deleted`'s cost figures are the measured ones, and so is `--verify-pages`' (about 1.3x on a
+  command that walks the tree; the help said 3-6x); `dataruns` says an unallocated stream owns no clusters and reads as
+  zeros (not "never written").
+
+### Deleted files and carving
+
+- **`deleted` is rewritten**: an entry is identified by its name, creation time and kind, checked against the live
+  tree and, for an embedded row, the change journal; each entry has a status that says what it is.
+- **One carve plan per remnant**, shared by the verdict and the carve; the CRC check covers every cluster that has one.
+- **A live file's earlier extent map is not carved**: its clusters can hold the live file's current data. The entry
+  says so (`not carved: the same file is live`), and the inline bytes of a live file's earlier row are held back the
+  same way.
+- **Pages of an earlier ReFS volume** on the same disk are recognised only where their own LCNs name where they lie
+  (`deleted --earlier-volumes`); another signature alone also fires on a dedup index's pages or on never-written
+  leftovers (E124).
+- **The scan coverage lines** state the clusters read and how many of them are image holes, or that this could not be
+  checked on this host.
+- **A carve refusal states its reason** (a size of 0 B, no allocation with rows, sizes that disagree), and the carve
+  cover guard bounds its scan by the node header.
+- **`deleted` shows a table first**: for each page scan, every status by what can be recovered from its rows (bytes in
+  the row, carve possible, metadata only, directory, empty), then one line per entry -- what can be recovered, the
+  creation time, the name, the folder whose page held the row. `deleted -v` prints each entry's details as before.
+- **A Trash-table row's `ObjectRef` is the deleted object's own**: the row's key is the object's reference (a file's
+  `<directory>:<ordinal>`, a directory's `<oid>:0x0`); 1.13.1 printed the key's second half as the row's "OID", which
+  for a file is its directory.
+- **`help deleted`**: `deleted --full` writes nothing (only `export deleted DIR` carves); plain `deleted` is not
+  described as taking seconds (197.5 s and 401.0 s were measured on two Windows Insider system volumes).
+- **`files`, `search`, `details` and the body file lose a deleted mark that never fired** (`[DEL]`, "Is deleted", the
+  body file's ` (deleted)`, `files`' "(0 deleted)"): an object waiting in the Trash is already out of its
+  directory, so the walk never meets one.
+
+### The change journal and the MLog
+
+- **An MLog row's time is the latest time its records carry**, each record's value read where its form keeps its
+  times: a `$SI` update's four times, a directory index entry's four, an embedded record's `$SI`. 1.13.1 took the
+  first plausible time in a fixed order: a `$SI` update gave its Created and an index entry its Accessed (its change
+  time was never read), so the records of a call that set a file's times back carried the forged date. On 121 corpus
+  volumes 230,143 of 786,365 timed rows move, every one later; the rows dated before their volume was created go
+  from 58,235 to 25,316 (a copied file keeps its source's times). A payload merges up to 15 redo blocks (1.13.1's
+  help: 15 transactions).
+- **The MLog's schema list (`mlog --info`, `mlog --parse -v`) names tables**, by format era (a file's record table,
+  a directory's own-row table, a data stream's table …), not attributes.
+- **A re-created journal is a finding** (exit 2) even when no record is missing, and `usn` / `usn --info` state which
+  records belong to the current journal and which to an earlier one.
+- **`mlog --json`** writes each record once and streams it; 1.13.1 wrote every record twice and could run out of
+  memory on the largest logs.
+- **A redo record's table is the one refs.sys applies it to.** `mlog` no longer reads a record's `+0x20` as an
+  object id (E147: `+0x18` and `+0x20` are the volume's clocks when the record was added). A record without a table
+  path applies to the table the driver's redo pass keeps current, the previous record's (kept into a redo block that
+  continues a transaction);
+  1.13.1 took that table from another record carrying the same `+0x20` value, so a rename could be called a move into
+  an unrelated directory, and an alternate stream's creation a move. A name row is a directory's own entry only when
+  its table path has one component, and a row shows its name in that name row's own directory. Checked against two
+  independent operation logs: the 109 and 106 log payloads whose name rows pair with exactly one rename or move of
+  the log (of 456 and 242) are all classed as the logs' paths say. `mlog --parse -v` marks a table taken from an
+  earlier record `(inherited)`. A one-character name is read (1.13.1 skipped a 6-byte row key).
+- **Opcode 0x2D is a table deletion** (`DELETE`, named `RedoDeleteTable`): Insider 29683 logs every table deletion
+  with it, where the other builds read log 0x0F (E160); `mlog` and `timeline` say so on stderr when a log holds one.
+  Opcodes 0x25 and 0x2B are named by their handlers, `RedoTableSetWeakRefPurge` and
+  `RedoTableSetStrongRefMergeSingle` (E160), and `mlog --info` says which builds dispatch which values. `mlog`'s
+  `Dispatch table:` line gives the values the table names and, above 0x2B, which of the builds read dispatch them
+  (`45 opcodes: 0x0-0x2b, and 0x2d, which of the builds read only Insider 29683 dispatches`; 1.13.1 printed
+  `44 opcodes`).
+- **A name row in a directory's key form without a table path keeps its whole name**: 1.13.1 dropped its first six
+  characters (`System Volume Information` was printed ` Volume Information`).
+- **`usn`, `timeline` and `timestomp` read the journal faster**: a run of unwritten ring space is stepped over in one
+  search (204 s → 29 s over the 39 corpus journals, 990,528 records, with the same records, findings and notes).
+- **The journal's state** has one vocabulary in `summary`, `usn`, `timeline` and `timestomp`.
+- **`mlog --stats`' Record Integrity note** names what the check misses: the value is the XOR of the record's 32-bit
+  words, so a reordering of those words, or changes whose XOR cancels, keep it; a single changed bit or byte always
+  changes it (E78). 1.13.1 said it catches damage and byte-level edits (`help mlog`: damage and edits), with no
+  blind spot.
+
+### New
+
+- **What the output is**: `--list`, `--help` and each command's help say whether a command's output is read from the
+  volume or inferred or recovered (corroborate before relying on it): `mlog --parse`, `timeline`, `timestomp`,
+  `deleted`.
+- **`summary` counts the files read after their last change** (`Last access`; `FilesAccessedAfterChange` in JSON): an
+  Accessed time more than 1 s after both Modified and Changed says last-access updating seems to have been on; a
+  program can also set an Accessed time, and none says nothing. `details`, `help files` and `timeline` say when an
+  Accessed time is updated.
+- **`details` on a directory** gives an embedded file's size and attributes, as for a split file, and no empty
+  `Storage:` line for a subdirectory; `ads` explains its ObjectRef and residency columns.
+- **`refsanalysis bootedit repair`** restores a damaged boot-sector or superblock copy from a healthy sibling (never
+  from a copy that records another version); `--dry-run` shows the plan. Held back since 1.11.3, it ships now.
+- **`files --cow-before OLD`** is a comparison of two images of the same volume: one row per object that was created,
+  removed or changed, with the changed fields and their values before and after; images of two different volumes
+  are refused.
+- **`summary --mlog`** (or `summary -v`; refsanalysis `summary` too) adds an MLog section: the control copy in use and
+  whether it verifies, the log version and range, and the earlier-log and missing-record findings, built on `mlog`'s
+  code. Without the option the section says the log was not read: the pass over the log costs from 0.6 s to 38 s on
+  the corpus volumes.
+- **`usn --info` prints the checkpoint's journal cursor**: the change journal's position the checkpoint copy in use
+  keeps (its next USN, and the first USN and wrap fields of a wrapped journal), with the count of the current
+  journal's records at or past it, written after that checkpoint (none on the corpus). A copy without the area says
+  that the checkpoint does not say where the journal stood.
+- **`extract -o`** always writes `<file>.holes.json`, with status `none` when the file was checked and holds no hole.
+- **`deleted` and `dataruns` decode each shared home tree once per walk** (`dataruns --json` on winsider 161.0 →
+  119.9 s; no output changes on any corpus image).
+
+### refsanalysis: its last update
+
+**1.14.0 is the last version with refsanalysis updates.** refsanalysis is a lab tool; after this release it is not
+maintained, and a defect found in it later is listed as a known issue on its page. It runs only with the forefst of
+its own release, 1.14.0, and refuses another version, so no later forefst change can break it (and no later forefst
+fix reaches it). In this release it uses forefst's own checkpoint selection, superblock checks and exit-code rules
+(its copies of them are removed), and its `--verify` checks say `K check(s) FAILED (N/M passed)` and exit 2 when one
+fails; `refsanalysis all` exits 2 when a section does. With another forefst it writes one line naming both versions and
+exits 1. `containers -v`'s help names the columns it prints and `Total volume size` has the byte count; `attributes`
+writes a SecurityId as `0x103 (259)`, as forefst's `security` lines now do; `details` writes `USN: (none)` for a file
+with no journal record (it wrote `0` and a journal id of 0) and prints forefst's note under `Accessed:`; `boot` and
+`bootedit` write the volume flags as the word with its bits' names, a bit without a name last:
+`0x66 (WritableMount|HardLinksSupported|ChecksumSelectorRead|0x4)`.
+`details --json` carries the journal id and the packed EA size its text prints (`USNJournalID`, `PackedEASize`). `summary++` gives the volume-information row keyed 0x540 as the verify block's location (`Verify block: LCN …, N
+clusters`; `VerifyBlockLCN`, `VerifyBlockClusters`), not a schema count. `oid30` reads the heat engine's table: its
+generations, and each row's role from its key and size (1.13.1: "sessions", "IO counters", "Category A-H"). `schema`
+names the object schemas as the tables they describe, by format era (a file's record table, a directory's own-row
+table, a data stream's table), not as attributes.
+
+### Reference corrections
+
+The errata ship with the repository from this release (`analysis/errata.md`, E1–E165). Filed during this release:
+
+- **E116** — MLog control `+0x18` is the log start and `+0x20` the log end, each as of the last control-area write; `+0x18` is neither the log's tail nor where replay begins, and the "Generation" 1.13.1 printed is `+0x20`'s block offset.
+- **E117** — MLog control `+0x38` is a u32 log open count, not a write counter; each record's header `+0x20` carries it.
+- **E118** — A checkpoint record is one cluster on every geometry; only its allocation is a metadata page.
+- **E119** — The superblock primary is privileged: `+0x68` orders only the two backups, and only an extend bumps it.
+- **E120** — Container Table row `+0x20` counts allocated clusters, not free ones.
+- **E121** — OID 0x7/0x8 and 0x9/0xA are failover pairs: no copy is the "primary" or the "duplicate", and the driver reads 0x8 and 0xA first.
+- **E122** — `RefsIsBootSectorOurs` makes no version test, and its checksum runs to the boot sector's own length.
+- **E123** — Redo opcodes 0x12 and 0x15 call no handler in `PerformRedo`; 0x12 is a tree-update record.
+- **E124** — A page with another signature at +0x0C is an earlier volume's only at the address it names, in its own units; the LCN slots list one cluster on a 64 KiB page.
+- **E125** — `$SI+0x24` bit 0x02 marks a case-sensitive directory, not dedup / CoW.
+- **E126** — Checkpoint flags 0x010, 0x020, 0x040 and 0x100 are four separate features; only 0x010 is dedup.
+- **E127** — `refsutil fixboot` rewrites the volume flags (0x66 -> 0x04) and writes a valid boot-sector checksum; a container size of 0 is replaced by the driver.
+- **E128** — Boot-sector flags bit 0x20 is the hard-link support switch, not a "Win11 format" marker.
+- **E129** — OID 0x500 / 0x501 and 0x540 / 0x541 are failover pairs: neither copy is a "primary" or a "duplicate".
+- **E130** — The word at value+0x80 of the OID 0x520 children is the object's file id, not a "degenerate flag".
+- **E131** — `RefsLinkFileToSelf` adds no name: the IsMoved rule has no "keep-alive link" exception.
+- **E132** — A superblock copy's header clocks +0x10 / +0x18 are those of the moment the driver wrote that copy, not "0 (immutable)".
+- **E133** — A hard-linked file's names diverge on Changed routinely: the per-name cross-check is a Created test.
+- **E134** — `VersionCheck` compares with the volume's version from the boot sector, and its field is at +0x894 / +0x895 on Insider.
+- **E135** — The Container Table's two copies differ in bits 0x2000 and 0x4000 of the row flags, not in bit 0x4000 alone.
+- **E136** — The boot sector's checksum selector +0x2A is read only when its flags +0x2C carry 0x40.
+- **E137** — Container Table row `+0x28` is not decoded: it is not "free clusters".
+- **E138** — A boot-sector checksum selector of 0 is not a volume without metadata checksums.
+- **E139** — Container Table row +0x50 is k units of 16 bytes before the ranges, and +0x98 is the first range's u64 length.
+- **E140** — The 104-byte page reference is the checkpoint's root reference on 3.4-3.9, written at a fixed size; the root list decodes at that stride.
+- **E141** — 17134 checks a metadata page against its reference's checksum type: `CmsChecksumNone` is the stream table's type-0 object, and checkpoint flag 0x400 is not a verification switch.
+- **E142** — `$VOLUME_INFORMATION`+0xA0 is the time of the last mount that writes, not a modification time.
+- **E143** — A directory listing does not refresh a hard link's stale name; an open, a read and a close through that name do.
+- **E144** — On a volume without hard-link support a cross-directory move moves the whole record and leaves its reference at $SI+0x60 / +0x68.
+- **E145** — A delete goes through the Trash only when the object's data stream set holds two or more tables, not for every non-resident file or directory.
+- **E146** — A sparse hole's VLCN mirrors its file VCN on every hole row measured, so `VLCN == 0` fires on the holes at file VCN 0.
+- **E147** — A redo record's +0x18 and +0x20 are the volume's virtual and allocator clocks when the record was added: +0x20 is not an object id and not a table handle.
+- **E148** — The MLog control payload has no "Total entries" at +0x48 and no "Control UUID" at +0x50: +0x44 is the host info, the log instance's UUID is at +0x28.
+- **E149** — The two checkpoint copies usually, not always, decode to the same 13-root list, and their bytes differ in more than the clock and checksums.
+- **E150** — A Block Refcount entry is a 13-bit count of the references beyond the first: hard links and snapshots add none, and a range is shared at a count of 1.
+- **E151** — An extent node's bit-0x04 row is a slot its key index does not list, the index word is not reliably the file VCN, and +0x04 is the end of the rows.
+- **E152** — V3.4 integrity streams carry inline CRC-32C, and most integrity files also hold runs without one.
+- **E153** — The EA chain: the data-area size is the chain's length, the last entry's NextEntryOffset is its own size, and PackedEaSize is a u16.
+- **E154** — The checkpoint virtual clock counts checkpoints, not file operations or transactions.
+- **E155** — The first user OID is 0x701, and a gap in the OID sequence is a deletion or a failed creation.
+- **E156** — The volume-information driver stamp names the last writable mount's driver, not the highest; the label has no terminator.
+- **E157** — The USN truth layer: createjournal grows but never shrinks, a range from 0 is not proof of a re-creation, and the Change Journal's sub-records are two $J data records and the $Max.
+- **E158** — Checkpoint flag 0x400 marks a record that carries the rollback-protection fields: +0x9C and +0xA0 locate the blob, and are zero when there is none.
+- **E159** — The checkpoint record locates its optional areas by (offset, length) pairs: +0x88 / +0x8C is a 32-byte area (not a "data area end" and a "max root capacity"), and flag 0x2000 marks Insider's attestation HMAC at +0xA4 / +0xA8.
+- **E160** — The redo records' writers name opcodes 0x1A, 0x25 and 0x2B on 26100 too, and Insider 29683 logs a table deletion as 0x2D, not 0x0F.
+- **E161** — `$SI+0x70` is the file's link count as the driver last wrote it: 1 in an embedded record, the number of names in a split record's backing.
+- **E162** — The allocator covers the whole volume: its summary equals the volume's length on 117 of 117 corpus volumes; the 48 MiB once called "past the last container" is the image's bytes after the volume (corrects E74's coverage row).
+- **E163** — `PerformRedo`'s current table belongs to the redo queue and carries into a redo block that continues a transaction; it is not emptied at a block's start.
+- **E164** — `RefsLinkFileToSelf` copies no identity into each name: it runs once per file and re-parents the file's own table under the type-0x40 key {0x80000040, 0, file reference} (a key prefix, not a tag); each further name is written by `RefsAddLink` (amends E69's static sentence).
+- **E165** — A file's main `$DATA` is single-instance when its data is inline (key marker 0x80000001, subtype 0x0000) and multi-instance when it is in extents (0x80000002, subtype 0x000E); a record carries one form, never both (corrects the master's marker tables, which listed `$DATA` as multi-instance only).
+
+In the register (`analysis/reference_table.csv`): the clean-dismount row (on a cleanly dismounted volume the
+highest Object Table log position equals the checkpoint's `+0x70`) is `FS_CHKP_RA_017`; it shared
+`FS_CHKP_RA_012` with the checkpoint `+0x8C` row. The `static_scope` column names each `refs.sys` build one way
+(`win10`, `win11.8115` to `win11.9818`, `insider.29574`, `insider.29659`, `insider.29683`), where it used seven
+forms; `all`, which meant the six builds read at the time, is written out as those six, and 60 more rows have a
+scope: the builds whose function index holds every function the row cites. Eight confirmed rows now name the image
+and the file offset where their measurement can be checked (the MLog control payload, the Container Table's
+allocated count, the extent flags, the checkpoint's `+0x88` / `+0x8C` and record size, the change journal's tail).
+The checkpoint `+0x88` row lists every value measured (`0x370` on 3.10; `0x388`, `0x4D0` and `0x4D8` on some 3.14
+records) where it gave `0x380` for 3.14.
+
+### Corrections to earlier entries
+
+- **1.13.0 did not list its MLog framing fix** (E97). Since 1.13.0, `mlog` reads every merged redo block of a log
+  payload (up to 15) and gives each block the record budget its own header declares; 1.12.3 read 137 of the 746
+  records of `win11refsmini`. The commit flag 1.12.3 reported as absent is set on the last record of each
+  transaction (refs.sys `CmsMemLog::MergeTxLog`), and it is there on every block of the volumes measured.
+- **1.13.1's carve count** is corrected in place (258 → 237, not 258 → 272).
+- **1.13.0's hole contract** is corrected in place: the *cannot say* state reached `export deleted` and `export
+  metadata`, not every path; the other bulk exports and three branches of `extract` have it from 1.14.0.
+- **1.12.2's note on the driver stamp** is corrected in place (E156): the stamp names the driver of the last mount
+  that could write, not every driver that touched the volume.
+- **`timestomp`'s `ROUND_TIMESTAMPS` signal** was never listed here. It flags a file whose Created and Modified both
+  fall on a whole second; on its own it gives INFO and never raises a tier. It has been in `timestomp` since August
+  2026 (1.10.0, the earliest release copy at hand, carries it).
+- **1.13.0's migration table** was a file outside the published tree; it is now part of [Migrating between
+  releases](tools/migration.md#exit-codes-in-1130).
+
+### Documentation
+
+- A new first page, **ReFS Forensics 101**, and a **Value forms** section in the tool reference.
+- A new background page, **[What ReFS Is](concepts/what_is_refs.md)**: what ReFS is for and why Microsoft built it,
+  what it left out in 2012 and has gained since, where it is used (Windows Server, the client editions, Dev Drive)
+  and how it compares with ZFS, Btrfs and APFS, each fact with its source; the concepts index lists it and Forensics
+  101.
+- A new page, **[Internals](tools/internals.md)**: how the two tools read a volume, function by function, the rule
+  each step follows and the driver behaviour it comes from; a gate checks that every function it names exists.
+- [Driver builds analysed](methodology/driver_builds.md) records six more `refs.sys` builds read: 26100.9549, .9711,
+  .9818 and .9974 (no symbols are published for .9974: its machine code is compared with .9818's), and Insider 29659
+  and 29683. A page's build scope names them where its fact was read there.
+- `help extract` lists `-o FILE` / `--output FILE` and `--fill-holes`, and writes the reference `HomeOID:FileID`.
+- The one-line `files` entry in `forefst list` / `help` called a directory's identity "a directory's own OID"; it
+  is `OID:0x0`, the form `files`' own `ObjectRef` column writes.
+- `help details` and the tools page named `$DATA` among the sub-records a file's detail view prints; it does not --
+  the view lists ADS, `$EA`/WSL metadata and snapshots (a stream's own data is `dataruns`' command, not `details`').
+- `verify-bundle`'s three help forms print one text, its usage names the bundle directory, and `forefst verify-bundle
+  DIR` says the bundle comes first; `help files` no longer calls `files` the default subcommand (a bare run is
+  `summary`), `help mlog` names the CSV columns as written, `help summary` lost a missing space.
+- The Known issues are rewritten for 1.14.0: they now hold only what the tools do not read or check, each with what
+  to do.
+- The pages no longer carry finding ids or erratum numbers in their text; the knowledge map keeps each page's links.
+- The Methodology page, the README, About and CONTRIBUTING state the method as it is practised: each claim is
+  checked against the driver's code and the bytes on disk wherever both can be read, and the claim register records
+  which of the two supports it. They said every claim met both, and that no claim rests on a single image; the
+  register does not support either.
+- The Methodology page's version tables: the 3.7, 3.9 and 3.10 volumes are native formats of Windows 11 21H2, 22H2
+  and 23H2, whose drivers were not read (it said they are reached only by an upgrade); the twelve driver builds read
+  are listed; 64 KiB clusters are exercised on 3.4 and 3.14 only, and the metadata checksum by format.
+- Pages state what the work measured: the MLog page ties a mount to the Windows event log, shows the integrity check's
+  blind spot on an untouched volume, and gives what two of its classes stood for on the public sample; the journal page
+  says the USN, not the time, orders the writes; the file-ID page says only a creation uses up an ordinal; the
+  `$STANDARD_INFORMATION` page gives how rare case-sensitive directories are; the `$DATA` page no longer gives a
+  relationship for a field that was not measured.
+- The Methodology pages say what the register holds: a grade on each axis that was checked, each row's disk status
+  and origin, and that the register, the master reference and the errata together hold the findings (an erratum
+  overrides both); the worked example follows one finding with the register's own figures.
+- The Methodology page tells how the method grew, in six steps, each with the kind of error it catches: two
+  readings of one structure (the thesis), one protocol for every claim, the register and its errata, fixed outputs
+  and gates, reviews in other language-model sessions, and fixes that start from a failing test.
+- The checksum pages say what a checksum that recomputes shows: that a page holds what the volume recorded for it,
+  not that nobody edited it (the checksums are not keyed); and that the page references of a v3.4 volume carry CRC64
+  too, which the v3.4 driver checks when it reads a page from disk; the version pages give the 3.10 checksum
+  selector as a selector, not as the start of verification.
+- The hard-link pages say where the link count is kept (the file's own record), and the NTFS comparison says that a
+  file's reference, and the change journal's file ID, is its creation directory's object ID and an ordinal: a file
+  has no object ID of its own.
+- The Known issues add one for deleted files: an earlier version of a live file is not carved, and what the entry
+  says about where its clusters are now.
+- The samples page no longer says the 64 KiB sample holds integrity streams: its `testintegrity` directory holds no
+  file that carries one.
+- [Format support](format_support.md) counts a statement under a format only when a measurement on an image of
+  that format confirmed it. A statement read only from the driver, inferred, not yet tested on an image, or
+  contradicted by a measurement has its own column, and each area holds the statements about its structures.
+
 ## v1.13.1 — 2026-09-25 — a verdict that checked 127 of 55,586, and carves that were real
 
 **Everything here is relative to v1.13.0**, and it corrects two things that release shipped: a verdict
@@ -17,8 +616,11 @@ that claimed more than it had checked, and published evidence that was wrong.
   "every" only when they are equal, and treats any gap as a finding that sets the exit code.
 
 - **Deleted-content recovery gets 14 files back.** The same misstep made the carve path read valid extent
-  maps as broken ones and refuse the files. On that sample recovery goes **258 → 272** files, with **0
-  lost and 0 changed**; the 14 match their live twins where one exists.
+  maps as broken ones and refuse the files; the 14 match their live twins where one exists. *Corrected in
+  1.14.0:* this note first said recovery went "258 → 272 files, with 0 lost and 0 changed", which counts this
+  fix alone. With the next item, the release's net on that sample is **258 → 237**: 14 regained, and 35
+  refused because every run their rows describe is unwritten (20 of them differed from their live twin under
+  1.13.0, 3 equalled it, 11 have no twin, and 1 is still carved by another path); 3 carves changed content.
 
 - **A prior-version carve says what it zero-filled, on every path — and no longer reads what its row calls
   unwritten.** When a deleted remnant is an earlier version of a file, a range that version marks
@@ -107,7 +709,7 @@ audit could not say what the right answer was, the answer comes from a source ou
   share one directory walker, which terminates on a cyclic tree. The shipped sample bundles are regenerated from
   this release; the 1.13.0 bundles carried an empty `timestomp.csv` (its command was one the CLI rejects).
 
-**Known issues.** Defects found while planning 1.14 are in this release and in 1.13.0; they are listed, with what to do meanwhile, in [tools/forefst.md — Known issues in 1.13.1](tools/forefst.md#known-issues-in-1131).
+**Known issues.** Defects found while planning 1.14 are in this release and in 1.13.0; they were listed, with what to do meanwhile, in the section "Known issues in 1.13.1" of that release's `tools/forefst.md`. Release 1.14.0 fixes them: see [its entry](#the-known-issues-of-1131).
 
 **Output that changes** (the columns and keys do not): `integrity --checksums` figures on every volume with
 integrity streams; `files` `FileAttributes` on some split records and `AllocatedSize` on stale-cache rows; `usn` `path` for unlinked parents and root files; the `summary`
@@ -124,12 +726,14 @@ counts; `details` of a directory (`Record` / `Storage` / `File attrs` per child)
 ## v1.13.0 — 2026-09-22 — the audit response: wrong bytes, wrong verdicts, and the checks that could not fail
 
 **Everything here is relative to v1.12.3**, and it is the largest correctness release so far. It answers
-a 215-finding external audit: **every `wrong_bytes` finding (18) and every `wrong_verdict` finding (51)
+a 215-finding audit made in another language-model session, given only the published material (a blind audit, part of
+the project): **every `wrong_bytes` finding (18) and every `wrong_verdict` finding (51)
 is now addressed**, each with a failing case built first and a measurement after. `AUDIT_RESPONSE.md`
 lists all 215 with where the answer can be checked.
 
-Exit codes and several messages change. The migration table is in
-`analysis/reports/plan_v11_2026-09-18/MIGRATION_1.13.0.md`; the short version is that **rc 2 now means
+Exit codes and several messages change. The migration table is in [Migrating between
+releases](tools/migration.md#exit-codes-in-1130) (*corrected in 1.14.0:* this note first named a report file that
+the published tree does not hold); the short version is that **rc 2 now means
 "a finding, OR I could not certify this clean"**, and a command that could not do all its work no longer
 returns 0.
 
@@ -242,13 +846,14 @@ negative case passed, so this was missed detection, not over-flagging. Correlati
 file's identity, which survives renames and separates namesakes. On one ordinary volume this recovers
 **nine** true positives that were previously invisible; HIGH counts are unchanged on every other image.
 
-### The hole contract, kept everywhere
+### The hole contract, on more paths
 
 Hole coverage has three states — present, none, and *this host cannot say* — and the third was reported
 as the second on every path except `extract`'s main loop. A stream whose coverage was unknown was written
-under `--refuse-holes` and its sidecar said `none`. `holes.json` now carries `undeterminable`, and
-`export metadata` accepts `--refuse-holes` (it previously rejected it as an unknown option while writing
-content assembled from the volume).
+under `--refuse-holes` and its sidecar said `none`. `holes.json` now carries `undeterminable`, which `export
+deleted` and `export metadata` record (the other bulk exports and three branches of `extract` record it from
+1.14.0), and `export metadata` accepts `--refuse-holes` (it previously rejected it as an unknown option while
+writing content assembled from the volume).
 
 ### Reference corrections
 
@@ -347,8 +952,12 @@ The tagline, the coverage line on the home and about pages, the verification pag
 matrix all presented this project as covering **ReFS 3.4–3.15**. That was wrong.
 
 **3.14 is the newest format any released Windows writes.** A preview driver reports a maximum supported
-version of 3.15 and stamps that number into the volume's *driver* field once it has mounted it — which
-remains a useful signal that a preview build touched a volume. But no volume is *formatted* 3.15. The one
+version of 3.15 and stamps that number into the volume's *driver* field when it mounts the volume for
+writing. The field names the driver of the last writable mount: 3.15 there shows that the last mount that
+could write was by a preview driver, a later writable mount by a released driver replaces it, and a
+read-only mount leaves it, so its absence does not show that no preview build mounted the volume. *Corrected
+in 1.14.0 (E156):* this note first called the stamp "a useful signal that a preview build touched a volume".
+But no volume is *formatted* 3.15. The one
 image in the corpus that reported 3.15 is a v3.14 volume with a hand-edited version byte, built alongside a
 `6.66` twin to test how the tools handle an implausible version. A driver's maximum supported version had
 been read as a volume format.
@@ -381,7 +990,7 @@ correct — a higher version, or an impossible one — survives to be caught by 
 
 ### Which driver builds have been read
 
-New page: [Driver Builds Analysed](concepts/driver_builds.md) — the `refs.sys` builds behind the structural
+New page: [Driver Builds Analysed](methodology/driver_builds.md) — the `refs.sys` builds behind the structural
 claims on this site, and what changed between them. Six builds spanning ReFS 3.4 to 3.14 and an Insider
 build. Across the four 24H2 builds nothing on disk changed: the servicing updates rename functions, fold
 one into its caller, graduate feature flags, and add a range check. A volume written by any of them is read
@@ -1434,7 +2043,7 @@ byte-identical bar the version banner.**
 
 ## v1.7.1 — 2026-08-28 — follow-up-audit fixes: extraction robustness, caveat coverage, and de-duplication
 
-**A small hardening release answering an independent follow-up audit of v1.7.0. No change to what the tools report
+**A small hardening release answering a follow-up review of v1.7.0, made in another language-model session. No change to what the tools report
 on a valid volume (the 122-image regression corpus is byte-identical bar the version banner); the changes are error
 handling, surfaced caveats, and removing duplicated code between the two tools.**
 
@@ -1453,9 +2062,9 @@ handling, surfaced caveats, and removing duplicated code between the two tools.*
   `forefst` instead of carrying its own copies — verified behaviour-identical. (Genuinely divergent code between the
   two tools is deliberately left as-is.)
 
-## v1.7.0 — 2026-08-28 — hardening pass (external code-audit response): robustness, fidelity, and consistency
+## v1.7.0 — 2026-08-28 — hardening pass (code-review response): robustness, fidelity, and consistency
 
-**A hardening release answering an independent code audit. No change to what the tools report on a valid volume —
+**A hardening release answering a code review made in another language-model session. No change to what the tools report on a valid volume —
 the full 122-image regression corpus is byte-identical — with malformed input, filename fidelity, forensic
 timestamp recovery, and cross-command consistency all tightened.**
 

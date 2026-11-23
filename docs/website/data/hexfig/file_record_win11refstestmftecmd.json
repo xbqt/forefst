@@ -1,0 +1,1737 @@
+{
+ "id": "file_record_win11refstestmftecmd",
+ "generated_by": "analysis/tools/analysis_scripts/gen_hex_figures.py",
+ "decoded_by": "forefst 1.14.0 (forefstdev/forefst.py)",
+ "title": "An example record of a 128-byte file whose data is inline (440 bytes), read with forefst.",
+ "image": {
+  "name": "win11refstestmftecmd.raw",
+  "step": "step5",
+  "listed_as": "analysis/rawdisk/disks/step5/win11refstestmftecmd.raw",
+  "size": 4294967296
+ },
+ "offset": 21144552,
+ "offset_hex": "0x142a3e8",
+ "length": 440,
+ "bytes": "a80000002800010001000000e0010000e001000002000000000000000000000001000000000000009cf4ef990bfdda019cf4ef990bfdda01e039fbf887eadc019cf4ef990bfdda01200000000800000084e88e340100000080000000000000008000000000000000a0dc0c000000000087a724b686eadc01000000000000000009000000000000000000000000000000000000000000000001000000000000000000000000000000280000000801000004000000000200000c0100000100000000000000000000001001000000000000e00000001000100000002000bc000000bc00000000000000010000808000000000000000b00000000c000000300000000000000000000000800000000000000080000000000000008000000000000000800000000000000002000000474653415245504c41590000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002800ffff",
+ "note": "The bytes are the value of the type-0x30 row of `testspecials/dir_romeo_413583/dir_kilo_704584/dir_report_123351/xbpt_quebec_cache_515604.cfg` in directory 0x7cb (440 bytes; its data is inline). Not coloured: +0xA4 to +0xB3, +0xB6 to +0xB7, +0xC0 to +0xC7, +0xCC to +0xCF, +0x1AC to +0x1B3.",
+ "fields": [
+  {
+   "off": "0x00",
+   "len": 4,
+   "name": "Node offset",
+   "frame": null,
+   "group": null,
+   "bytes": "a8 00 00 00",
+   "value": "0xa8: the record's node begins at value+0xA8",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 0,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x04",
+   "len": 2,
+   "name": "Descriptor size",
+   "frame": null,
+   "group": null,
+   "bytes": "28 00",
+   "value": "0x28 (40 bytes)",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 1,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x06",
+   "len": 2,
+   "name": "Not decoded",
+   "frame": null,
+   "group": null,
+   "bytes": "01 00",
+   "value": "1",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 2,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x08",
+   "len": 4,
+   "name": "Flags",
+   "frame": null,
+   "group": null,
+   "bytes": "01 00 00 00",
+   "value": "0x1",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 3,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x0C",
+   "len": 4,
+   "name": "Schema id",
+   "frame": null,
+   "group": null,
+   "bytes": "e0 01 00 00",
+   "value": "0x1e0: a file's record table, format 3.11 or later",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 4,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x10",
+   "len": 4,
+   "name": "Schema id, copy",
+   "frame": null,
+   "group": null,
+   "bytes": "e0 01 00 00",
+   "value": "0x1e0",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 5,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x14",
+   "len": 2,
+   "name": "Checksum type",
+   "frame": null,
+   "group": null,
+   "bytes": "02 00",
+   "value": "2",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 6,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x16",
+   "len": 2,
+   "name": "Integrity",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00",
+   "value": "0 (none)",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 7,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x18",
+   "len": 8,
+   "name": "Leaf-page count",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 00 00 00 00 00",
+   "value": "0",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 0,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x20",
+   "len": 8,
+   "name": "Row count",
+   "frame": null,
+   "group": null,
+   "bytes": "01 00 00 00 00 00 00 00",
+   "value": "1: the record's sub-records",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 1,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x28",
+   "len": 8,
+   "name": "Creation time",
+   "frame": null,
+   "group": null,
+   "bytes": "9c f4 ef 99 0b fd da 01",
+   "value": "2024-09-02T07:42:02.9958300Z",
+   "decoder": "forefst._parse_si_full",
+   "slot": 2,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x30",
+   "len": 8,
+   "name": "Modification time",
+   "frame": null,
+   "group": null,
+   "bytes": "9c f4 ef 99 0b fd da 01",
+   "value": "2024-09-02T07:42:02.9958300Z",
+   "decoder": "forefst._parse_si_full",
+   "slot": 3,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x38",
+   "len": 8,
+   "name": "Metadata change time",
+   "frame": null,
+   "group": null,
+   "bytes": "e0 39 fb f8 87 ea dc 01",
+   "value": "2026-05-23T07:44:23.2970720Z",
+   "decoder": "forefst._parse_si_full",
+   "slot": 4,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x40",
+   "len": 8,
+   "name": "Last access time",
+   "frame": null,
+   "group": null,
+   "bytes": "9c f4 ef 99 0b fd da 01",
+   "value": "2024-09-02T07:42:02.9958300Z",
+   "decoder": "forefst._parse_si_full",
+   "slot": 5,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x48",
+   "len": 4,
+   "name": "File attributes",
+   "frame": null,
+   "group": null,
+   "bytes": "20 00 00 00",
+   "value": "0x20 (Archive)",
+   "decoder": "forefst.flag_text",
+   "slot": 6,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x4C",
+   "len": 4,
+   "name": "Internal flags",
+   "frame": null,
+   "group": null,
+   "bytes": "08 00 00 00",
+   "value": "0x8 (DataInRecord)",
+   "decoder": "forefst.internal_flags_str",
+   "slot": 7,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x50",
+   "len": 8,
+   "name": "Security ID",
+   "frame": null,
+   "group": null,
+   "bytes": "84 e8 8e 34 01 00 00 00",
+   "value": "0x1348ee884",
+   "decoder": "forefst._parse_si_full",
+   "slot": 0,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x58",
+   "len": 8,
+   "name": "File size",
+   "frame": null,
+   "group": null,
+   "bytes": "80 00 00 00 00 00 00 00",
+   "value": "0x80 (128) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 1,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x60",
+   "len": 8,
+   "name": "Allocated size",
+   "frame": null,
+   "group": null,
+   "bytes": "80 00 00 00 00 00 00 00",
+   "value": "0x80 (128) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 2,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x68",
+   "len": 8,
+   "name": "LastUsn",
+   "frame": null,
+   "group": null,
+   "bytes": "a0 dc 0c 00 00 00 00 00",
+   "value": "0xcdca0 (842912)",
+   "decoder": "forefst._parse_si_full",
+   "slot": 3,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x70",
+   "len": 8,
+   "name": "UsnJournalId",
+   "frame": null,
+   "group": null,
+   "bytes": "87 a7 24 b6 86 ea dc 01",
+   "value": "0x01dcea86b624a787 (as a FILETIME: 2026-05-23T07:35:21.6644999Z)",
+   "decoder": "forefst._parse_si_full",
+   "slot": 4,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x78",
+   "len": 8,
+   "name": "PackedEaSize / ReparseTag",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 00 00 00 00 00",
+   "value": "PackedEaSize 0; ReparseTag 0x00000000 (none)",
+   "decoder": "forefst._parse_si_full",
+   "slot": 5,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x80",
+   "len": 8,
+   "name": "NextFileId",
+   "frame": null,
+   "group": null,
+   "bytes": "09 00 00 00 00 00 00 00",
+   "value": "0x9: the file's reference is 0x7cb:0x9",
+   "decoder": "forefst._parse_si_full, forefst.embedded_record_ref",
+   "slot": 6,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x88",
+   "len": 8,
+   "name": "Reference ordinal",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 00 00 00 00 00",
+   "value": "0x0 (not set)",
+   "decoder": "forefst._parse_si_full",
+   "slot": 7,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x90",
+   "len": 8,
+   "name": "Reference directory",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 00 00 00 00 00",
+   "value": "0x0 (not set)",
+   "decoder": "forefst._parse_si_full",
+   "slot": 0,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x98",
+   "len": 4,
+   "name": "HardLinkCount",
+   "frame": null,
+   "group": null,
+   "bytes": "01 00 00 00",
+   "value": "1",
+   "decoder": "forefst._parse_si_full",
+   "slot": 1,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x9C",
+   "len": 8,
+   "name": "NextStreamSetId",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 00 00 00 00 00",
+   "value": "0x0",
+   "decoder": "forefst._parse_si_full",
+   "slot": 2,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0xB4",
+   "len": 1,
+   "name": "Node level",
+   "frame": "embedded node header+0x0C",
+   "group": "0xA8+",
+   "bytes": "00",
+   "value": "0 (a leaf)",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 3,
+   "link": {
+    "page": "structures/btree_node.md",
+    "anchor": "2-node-header"
+   },
+   "row": false,
+   "table": null
+  },
+  {
+   "off": "0xB5",
+   "len": 1,
+   "name": "Node flags",
+   "frame": "embedded node header+0x0D",
+   "group": "0xA8+",
+   "bytes": "02",
+   "value": "0x02 (bit 0 clear: not an index page)",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 4,
+   "link": {
+    "page": "structures/btree_node.md",
+    "anchor": "2-node-header"
+   },
+   "row": false,
+   "table": null
+  },
+  {
+   "off": "0xB8",
+   "len": 4,
+   "name": "Key-index array start",
+   "frame": "embedded node header+0x10",
+   "group": "0xA8+",
+   "bytes": "0c 01 00 00",
+   "value": "header+0x10C (value+0x1B4)",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 5,
+   "link": {
+    "page": "structures/btree_node.md",
+    "anchor": "2-node-header"
+   },
+   "row": false,
+   "table": null
+  },
+  {
+   "off": "0xBC",
+   "len": 4,
+   "name": "Row count",
+   "frame": "embedded node header+0x14",
+   "group": "0xA8+",
+   "bytes": "01 00 00 00",
+   "value": "1",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 6,
+   "link": {
+    "page": "structures/btree_node.md",
+    "anchor": "2-node-header"
+   },
+   "row": false,
+   "table": null
+  },
+  {
+   "off": "0xC8",
+   "len": 4,
+   "name": "Key-index array end",
+   "frame": "embedded node header+0x20",
+   "group": "0xA8+",
+   "bytes": "10 01 00 00",
+   "value": "header+0x110: (end - start) / 4 = 1, the row count",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 7,
+   "link": {
+    "page": "structures/btree_node.md",
+    "anchor": "2-node-header"
+   },
+   "row": false,
+   "table": null
+  },
+  {
+   "off": "0xD0",
+   "len": 16,
+   "name": "Row header",
+   "frame": "the $DATA row",
+   "group": "0xA8+",
+   "bytes": "e0 00 00 00 10 00 10 00 00 00 20 00 bc 00 00 00",
+   "value": "row 0xe0 bytes; key at +0x10 (16 bytes), value at +0x20 (0xbc (188) bytes)",
+   "decoder": "forefst.parse_resident_btree_rows",
+   "slot": 0,
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "b-tree-row-header--16-bytes"
+   },
+   "row": false,
+   "table": null
+  },
+  {
+   "off": "0xE0",
+   "len": 8,
+   "name": "Value length",
+   "frame": "$DATA key+0x00",
+   "group": "0xA8+",
+   "bytes": "bc 00 00 00 00 00 00 00",
+   "value": "0xbc (188) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 1,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": false,
+   "table": null
+  },
+  {
+   "off": "0xE8",
+   "len": 4,
+   "name": "Marker",
+   "frame": "$DATA key+0x08",
+   "group": "0xA8+",
+   "bytes": "01 00 00 80",
+   "value": "0x80000001 (single-instance)",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 2,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": false,
+   "table": null
+  },
+  {
+   "off": "0xEC",
+   "len": 2,
+   "name": "Type code",
+   "frame": "$DATA key+0x0C",
+   "group": "0xA8+",
+   "bytes": "80 00",
+   "value": "0x0080 ($DATA)",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 3,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": false,
+   "table": null
+  },
+  {
+   "off": "0xEE",
+   "len": 2,
+   "name": "Subtype",
+   "frame": "$DATA key+0x0E",
+   "group": "0xA8+",
+   "bytes": "00 00",
+   "value": "0x0000",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 4,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": false,
+   "table": null
+  },
+  {
+   "off": "0xF0",
+   "len": 4,
+   "name": "Padding",
+   "frame": "$DATA value+0x00",
+   "group": "0xA8+",
+   "bytes": "00 00 00 00",
+   "value": "0",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 5,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": false,
+   "table": null
+  },
+  {
+   "off": "0xF4",
+   "len": 4,
+   "name": "Data-area size",
+   "frame": "$DATA value+0x04",
+   "group": "0xA8+",
+   "bytes": "b0 00 00 00",
+   "value": "0xb0 (176): the value length - 12",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 6,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": false,
+   "table": null
+  },
+  {
+   "off": "0xF8",
+   "len": 4,
+   "name": "Content offset",
+   "frame": "$DATA value+0x08",
+   "group": "0xA8+",
+   "bytes": "0c 00 00 00",
+   "value": "0xc (12)",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 7,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": false,
+   "table": null
+  },
+  {
+   "off": "0xFC",
+   "len": 4,
+   "name": "Summary size",
+   "frame": "$DATA value+0x0C",
+   "group": "0xA8+",
+   "bytes": "30 00 00 00",
+   "value": "0x30 (48)",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 0,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": false,
+   "table": null
+  },
+  {
+   "off": "0x100",
+   "len": 8,
+   "name": "Reserved",
+   "frame": "$DATA value+0x10",
+   "group": "0xA8+",
+   "bytes": "00 00 00 00 00 00 00 00",
+   "value": "0",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": "z",
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": false,
+   "table": null
+  },
+  {
+   "off": "0x108",
+   "len": 8,
+   "name": "Allocated size",
+   "frame": "$DATA value+0x18",
+   "group": "0xA8+",
+   "bytes": "80 00 00 00 00 00 00 00",
+   "value": "0x80 (128) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 1,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": false,
+   "table": null
+  },
+  {
+   "off": "0x110",
+   "len": 8,
+   "name": "File size",
+   "frame": "$DATA value+0x20",
+   "group": "0xA8+",
+   "bytes": "80 00 00 00 00 00 00 00",
+   "value": "0x80 (128) bytes",
+   "decoder": "forefst._resident_data_sizes",
+   "slot": 2,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": false,
+   "table": null
+  },
+  {
+   "off": "0x118",
+   "len": 8,
+   "name": "Valid data length",
+   "frame": "$DATA value+0x28",
+   "group": "0xA8+",
+   "bytes": "80 00 00 00 00 00 00 00",
+   "value": "0x80 (128) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 3,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": false,
+   "table": null
+  },
+  {
+   "off": "0x120",
+   "len": 8,
+   "name": "Total allocated",
+   "frame": "$DATA value+0x30",
+   "group": "0xA8+",
+   "bytes": "80 00 00 00 00 00 00 00",
+   "value": "0x80 (128) bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 4,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": false,
+   "table": null
+  },
+  {
+   "off": "0x128",
+   "len": 2,
+   "name": "Checksum type",
+   "frame": "$DATA value+0x38",
+   "group": "0xA8+",
+   "bytes": "02 00",
+   "value": "2",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 5,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": false,
+   "table": null
+  },
+  {
+   "off": "0x12A",
+   "len": 2,
+   "name": "Integrity algorithm",
+   "frame": "$DATA value+0x3A",
+   "group": "0xA8+",
+   "bytes": "00 00",
+   "value": "0",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 6,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": false,
+   "table": null
+  },
+  {
+   "off": "0x12C",
+   "len": 128,
+   "name": "Inline content",
+   "frame": "$DATA value+0x3C",
+   "group": "0xA8+",
+   "bytes": "47 46 53 41 52 45 50 4c 41 59 00 00 00 00 00 00 …",
+   "value": "128 bytes: \"GFSAREPLAY\" then 118 zero bytes",
+   "decoder": "forefst.get_resident_data_content",
+   "slot": 7,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "inline-content--the-single-instance-record-format-311-and-later"
+   },
+   "row": false,
+   "table": null
+  },
+  {
+   "off": "0x1B4",
+   "len": 4,
+   "name": "Key index",
+   "frame": "the embedded node",
+   "group": "0xA8+",
+   "bytes": "28 00 ff ff",
+   "value": "1 entry: row at header+0x28, marker 0xffff",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 0,
+   "link": {
+    "page": "structures/btree_node.md",
+    "anchor": "4-key-index-sorted-offsets"
+   },
+   "row": false,
+   "table": null
+  }
+ ],
+ "groups": [
+  {
+   "id": "g0",
+   "cell": "0xA8+",
+   "name": "Embedded sub-record chain",
+   "len": 272,
+   "value": "the record's embedded node: its header, 1 row (the inline $DATA sub-record: a 16-byte row header, a 16-byte key and a 188-byte value that holds the 128 bytes of content) and its key index",
+   "members": "27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45 46 47 48 49",
+   "link": {
+    "page": "structures/directory_entries.md",
+    "anchor": "embedded-record-value-key_flags--0x01"
+   }
+  }
+ ],
+ "rows": [
+  {
+   "o": "0000",
+   "h": [
+    [
+     0,
+     "a8 00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     1,
+     "28 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     2,
+     "01 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     3,
+     "01 00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     4,
+     "e0 01 00 00"
+    ]
+   ],
+   "a": [
+    [
+     0,
+     "...."
+    ],
+    [
+     1,
+     "(."
+    ],
+    [
+     2,
+     ".."
+    ],
+    [
+     3,
+     "...."
+    ],
+    [
+     4,
+     "...."
+    ]
+   ]
+  },
+  {
+   "o": "0010",
+   "h": [
+    [
+     5,
+     "e0 01 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     6,
+     "02 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     7,
+     "00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     8,
+     "00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     5,
+     "...."
+    ],
+    [
+     6,
+     ".."
+    ],
+    [
+     7,
+     ".."
+    ],
+    [
+     8,
+     "........"
+    ]
+   ]
+  },
+  {
+   "o": "0020",
+   "h": [
+    [
+     9,
+     "01 00 00 00 00 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     10,
+     "9c f4 ef 99 0b fd da 01"
+    ]
+   ],
+   "a": [
+    [
+     9,
+     "........"
+    ],
+    [
+     10,
+     "........"
+    ]
+   ]
+  },
+  {
+   "o": "0030",
+   "h": [
+    [
+     11,
+     "9c f4 ef 99 0b fd da 01"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     12,
+     "e0 39 fb f8 87 ea dc 01"
+    ]
+   ],
+   "a": [
+    [
+     11,
+     "........"
+    ],
+    [
+     12,
+     ".9......"
+    ]
+   ]
+  },
+  {
+   "o": "0040",
+   "h": [
+    [
+     13,
+     "9c f4 ef 99 0b fd da 01"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     14,
+     "20 00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     15,
+     "08 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     13,
+     "........"
+    ],
+    [
+     14,
+     " ..."
+    ],
+    [
+     15,
+     "...."
+    ]
+   ]
+  },
+  {
+   "o": "0050",
+   "h": [
+    [
+     16,
+     "84 e8 8e 34 01 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     17,
+     "80 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     16,
+     "...4...."
+    ],
+    [
+     17,
+     "........"
+    ]
+   ]
+  },
+  {
+   "o": "0060",
+   "h": [
+    [
+     18,
+     "80 00 00 00 00 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     19,
+     "a0 dc 0c 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     18,
+     "........"
+    ],
+    [
+     19,
+     "........"
+    ]
+   ]
+  },
+  {
+   "o": "0070",
+   "h": [
+    [
+     20,
+     "87 a7 24 b6 86 ea dc 01"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     21,
+     "00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     20,
+     "..$....."
+    ],
+    [
+     21,
+     "........"
+    ]
+   ]
+  },
+  {
+   "o": "0080",
+   "h": [
+    [
+     22,
+     "09 00 00 00 00 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     23,
+     "00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     22,
+     "........"
+    ],
+    [
+     23,
+     "........"
+    ]
+   ]
+  },
+  {
+   "o": "0090",
+   "h": [
+    [
+     24,
+     "00 00 00 00 00 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     25,
+     "01 00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     26,
+     "00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     24,
+     "........"
+    ],
+    [
+     25,
+     "...."
+    ],
+    [
+     26,
+     "...."
+    ]
+   ]
+  },
+  {
+   "o": "00a0",
+   "h": [
+    [
+     26,
+     "00 00 00 00"
+    ],
+    [
+     -1,
+     " 00 00 00 00  28 00 00 00 08 01 00 00"
+    ]
+   ],
+   "a": [
+    [
+     26,
+     "...."
+    ],
+    [
+     -1,
+     "....(......."
+    ]
+   ]
+  },
+  {
+   "o": "00b0",
+   "h": [
+    [
+     -1,
+     "04 00 00 00 "
+    ],
+    [
+     27,
+     "00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     28,
+     "02"
+    ],
+    [
+     -1,
+     " 00 00  "
+    ],
+    [
+     29,
+     "0c 01 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     30,
+     "01 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     -1,
+     "...."
+    ],
+    [
+     27,
+     "."
+    ],
+    [
+     28,
+     "."
+    ],
+    [
+     -1,
+     ".."
+    ],
+    [
+     29,
+     "...."
+    ],
+    [
+     30,
+     "...."
+    ]
+   ]
+  },
+  {
+   "o": "00c0",
+   "h": [
+    [
+     -1,
+     "00 00 00 00 00 00 00 00  "
+    ],
+    [
+     31,
+     "10 01 00 00"
+    ],
+    [
+     -1,
+     " 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     -1,
+     "........"
+    ],
+    [
+     31,
+     "...."
+    ],
+    [
+     -1,
+     "...."
+    ]
+   ]
+  },
+  {
+   "o": "00d0",
+   "h": [
+    [
+     32,
+     "e0 00 00 00 10 00 10 00  00 00 20 00 bc 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     32,
+     ".......... ....."
+    ]
+   ]
+  },
+  {
+   "o": "00e0",
+   "h": [
+    [
+     33,
+     "bc 00 00 00 00 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     34,
+     "01 00 00 80"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     35,
+     "80 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     36,
+     "00 00"
+    ]
+   ],
+   "a": [
+    [
+     33,
+     "........"
+    ],
+    [
+     34,
+     "...."
+    ],
+    [
+     35,
+     ".."
+    ],
+    [
+     36,
+     ".."
+    ]
+   ]
+  },
+  {
+   "o": "00f0",
+   "h": [
+    [
+     37,
+     "00 00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     38,
+     "b0 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     39,
+     "0c 00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     40,
+     "30 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     37,
+     "...."
+    ],
+    [
+     38,
+     "...."
+    ],
+    [
+     39,
+     "...."
+    ],
+    [
+     40,
+     "0..."
+    ]
+   ]
+  },
+  {
+   "o": "0100",
+   "h": [
+    [
+     41,
+     "00 00 00 00 00 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     42,
+     "80 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     41,
+     "........"
+    ],
+    [
+     42,
+     "........"
+    ]
+   ]
+  },
+  {
+   "o": "0110",
+   "h": [
+    [
+     43,
+     "80 00 00 00 00 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     44,
+     "80 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     43,
+     "........"
+    ],
+    [
+     44,
+     "........"
+    ]
+   ]
+  },
+  {
+   "o": "0120",
+   "h": [
+    [
+     45,
+     "80 00 00 00 00 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     46,
+     "02 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     47,
+     "00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     48,
+     "47 46 53 41"
+    ]
+   ],
+   "a": [
+    [
+     45,
+     "........"
+    ],
+    [
+     46,
+     ".."
+    ],
+    [
+     47,
+     ".."
+    ],
+    [
+     48,
+     "GFSA"
+    ]
+   ]
+  },
+  {
+   "o": "0130",
+   "h": [
+    [
+     48,
+     "52 45 50 4c 41 59 00 00  00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     48,
+     "REPLAY.........."
+    ]
+   ]
+  },
+  {
+   "o": "0140",
+   "h": [
+    [
+     48,
+     "00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     48,
+     "................"
+    ]
+   ]
+  },
+  {
+   "o": "0150",
+   "h": [
+    [
+     48,
+     "00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     48,
+     "................"
+    ]
+   ]
+  },
+  {
+   "o": "0160",
+   "h": [
+    [
+     48,
+     "00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     48,
+     "................"
+    ]
+   ]
+  },
+  {
+   "o": "0170",
+   "h": [
+    [
+     48,
+     "00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     48,
+     "................"
+    ]
+   ]
+  },
+  {
+   "o": "0180",
+   "h": [
+    [
+     48,
+     "00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     48,
+     "................"
+    ]
+   ]
+  },
+  {
+   "o": "0190",
+   "h": [
+    [
+     48,
+     "00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     48,
+     "................"
+    ]
+   ]
+  },
+  {
+   "o": "01a0",
+   "h": [
+    [
+     48,
+     "00 00 00 00 00 00 00 00  00 00 00 00"
+    ],
+    [
+     -1,
+     " 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     48,
+     "............"
+    ],
+    [
+     -1,
+     "...."
+    ]
+   ]
+  },
+  {
+   "o": "01b0",
+   "h": [
+    [
+     -1,
+     "00 00 00 00 "
+    ],
+    [
+     49,
+     "28 00 ff ff"
+    ],
+    [
+     -1,
+     "                         "
+    ]
+   ],
+   "a": [
+    [
+     -1,
+     "...."
+    ],
+    [
+     49,
+     "(..."
+    ],
+    [
+     -1,
+     ""
+    ]
+   ]
+  }
+ ]
+}

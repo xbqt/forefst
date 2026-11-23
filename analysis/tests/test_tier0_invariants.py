@@ -124,7 +124,11 @@ def test_checkpoint_flag_tables_agree():
     (v3.10+)' vs 'native-Win11-format'). Once the constant is shared this
     becomes a permanent guard.
     """
-    assert F._CHKP_FLAG_BITS == R._CHKP_FLAG_BITS
+    # wave E E1 close (acceptance change, the same property): refsanalysis keeps no table of its own -- it names the
+    # flags with forefst's `chkp_flags_decoded` (N289), so the import that held forefst's table was unused (pyflakes)
+    assert getattr(R, "_CHKP_FLAG_BITS", F._CHKP_FLAG_BITS) is F._CHKP_FLAG_BITS
+    _src = open(R.__file__, encoding="utf-8").read()
+    assert "_forefst.chkp_flags_decoded(" in _src and "\n_CHKP_FLAG_BITS = " not in _src
 
 
 def test_known_oid_tables_agree():

@@ -4,11 +4,15 @@
 ReFS Timestamp-Anomaly (Timestomp) Detection
 ==============================================================================
   Image:           win11refstestmftecmd.raw  (ReFS 3.14)
-  Volume created:  2026-05-23 06:04:52
-  Volume modified: 2026-05-23 11:15:52
-  USN journal:     present (authoritative cross-check ON)
+  Volume created:  2026-05-23T06:04:52.2710301Z
+  Last mount (rw): 2026-05-23T11:15:52.2975673Z
+  USN journal:     Active; it starts at USN 0, dated 2026-05-23T07:38:44.2867313Z, its lowest
+                   surviving record.
+                   Files changed before 2026-05-23T07:38:44.2867313Z cannot be corroborated by it.
   Files examined:  1507
-  Flagged:         194  (HIGH 137 / MEDIUM 0 / LOW 0 / INFO 57 — INFO = ambiguous: a timestamp-preserving copy and a backdated creation produce the same signals; corroborate with USN)
+  Flagged:         194  (HIGH 137 / MEDIUM 0 / LOW 0 / INFO 57 — INFO = ambiguous: a
+                   timestamp-preserving copy and a backdated creation produce the same signals;
+                   corroborate with USN)
 
   This flags timestamps that LOOK anomalous — it is investigative INFORMATION, not proof of
   tampering. Weigh the BASIS of each row: a journal/hardlink signal is authoritative; an
@@ -16,309 +20,311 @@ ReFS Timestamp-Anomaly (Timestomp) Detection
   copies/restores. Tiers, exactly as timestomp_verdict() decides them:
     HIGH   — an AUTHORITATIVE corroboration: the change journal, or a disagreement between
              two of the file's own hard-link names. A count of intrinsic signals never reaches HIGH.
-    MEDIUM — CHANGE_LATE without PRE_FORMAT (created on THIS volume, metadata altered later),
-             or FUTURE (created after the volume's last metadata write).
+    MEDIUM — CHANGE_LATE without PRE_FORMAT (created on THIS volume, metadata altered later).
     INFO   — every signal present is one a timestamp-preserving copy also produces
              (PRE_FORMAT / CHANGE_LATE / CREATE_GT_MODIFY / ROUND_TIMESTAMPS), so a copy and a
              backdate are indistinguishable here however many of them fire.
-    LOW    — anything else.
+    LOW    — anything else (no current signal reaches it).
 
-  Conf   Basis         Claimed birth         Last real write       Path
+  Conf   Basis         Claimed birth                Changed                      Path
   ------------------------------------------------------------------------------------------------
-  HIGH   journal/link  2022-08-02 07:16:28   2026-05-23 07:34:02   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_romeo_output_531365.cfg
-         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2026-05-23 07:33:58   2026-05-23 07:34:01   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_hardlink_audit_219848.cfg
-         signals: HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2026-01-01 07:16:17   2026-05-23 07:38:51   test2/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_audit_echo_178867.tmp
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2024-08-03 07:17:33   2026-05-23 07:38:52   test2/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_zulu_india_473528.csv
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2024-11-23 07:17:31   2026-05-23 07:38:52   test2/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_whiskey_delta_922359.tmp
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2023-11-27 07:16:30   2026-05-23 07:38:49   test2/elvis_dir_index_149423/xbpt_beta_archive_985685.tmp
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-05-20 07:16:16   2026-05-23 07:38:48   test2/elvis_dir_index_149423/xbpt_zulu_kilo_319858.csv
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2021-05-18 07:16:04   2026-05-23 07:38:49   test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_backup_mike_407434.log
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2024-01-13 07:17:04   2026-05-23 07:38:50   test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_delta_echo_268401.csv
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2025-02-09 07:17:09   2026-05-23 07:38:51   test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_hardlink_echo_387599.ini
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2025-07-16 07:17:35   2026-05-23 07:38:52   test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_lima_victor_941030.cfg
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2025-04-02 07:16:24   2026-05-23 07:38:50   test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_sierra_echo_921063.xml
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2025-04-01 07:16:26   2026-05-23 07:38:51   test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_tango_echo_291736.csv
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-02-07 07:16:33   2026-05-23 07:38:48   test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_temp_sierra_130629.tmp
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2026-03-01 07:16:07   2026-05-23 07:38:50   test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_cache_zulu_259753.dat
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2023-08-26 07:16:12   2026-05-23 07:38:46   test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_delta_temp_981764.tmp
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2021-10-19 07:16:21   2026-05-23 07:38:48   test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_audit_config_255291.dat
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2024-06-07 07:17:11   2026-05-23 07:38:50   test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_zulu_trace_481495.md
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-06-17 07:16:38   2026-05-23 07:38:48   test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_backup_echo_585708.csv
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-08-02 07:16:28   2026-05-23 07:38:48   test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_romeo_output_531365.cfg
-         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2025-12-30 07:17:16   2026-05-23 07:38:51   test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_temp_mike_134457.bak
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2024-04-04 07:17:02   2026-05-23 07:38:52   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_delta_sierra_216359.bin
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-04-19 07:16:47   2026-05-23 07:38:49   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_yankee_foxtrot_727835.bak
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2021-09-26 07:16:24   2026-05-23 07:38:50   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_delta_cache_147912.bin
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2026-05-23 07:38:44   2026-05-23 07:38:47   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_hardlink_audit_219848.cfg
-         signals: HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2021-09-29 07:16:41   2026-05-23 07:38:50   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_report_audit_396522.txt
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2026-02-23 07:17:05   2026-05-23 07:38:50   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_alpha_victor_250409.ini
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2021-10-14 07:17:10   2026-05-23 07:38:50   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_audit_log_130131.ini
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2025-06-11 07:16:10   2026-05-23 07:38:48   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_beta_cache_861983.json
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2025-02-23 07:17:23   2026-05-23 07:38:51   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_romeo_gamma_831931.dat
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2025-03-31 07:17:11   2026-05-23 07:38:51   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_tango_victor_844323.json
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2024-05-06 07:17:31   2026-05-23 07:38:51   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899/xbpt_config_record_746941.dat
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2024-12-12 07:16:57   2026-05-23 07:38:51   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_index_uniform_409576.json
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2023-10-15 07:17:00   2026-05-23 07:38:50   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_victor_echo_578793.cfg
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2023-11-21 07:17:13   2026-05-23 07:38:51   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_zulu_output_293634.cfg
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-03-06 07:16:22   2026-05-23 07:38:51   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_cache_beta_265588.tmp
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-02-28 07:17:26   2026-05-23 07:38:51   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_index_temp_198731.cfg
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-12-26 07:16:15   2026-05-23 07:38:46   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_log_whiskey_169575.dat
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2024-10-16 07:17:27   2026-05-23 07:38:52   test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_quebec_audit_121864.cfg
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2025-04-08 07:17:35   2026-05-23 07:38:52   test2/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_temp_foxtrot_475776.md
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-06-11 07:16:28   2026-05-23 07:38:50   test2/elvis_dir_record_449015/xbpt_output_papa_412411.log
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2025-04-19 07:17:09   2026-05-23 07:38:50   test2/elvis_dir_victor_783323/xbpt_delta_echo_626074.json
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2025-12-01 07:17:11   2026-05-23 07:38:50   test2/elvis_dir_victor_783323/xbpt_record_mike_276675.tmp
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2025-05-12 07:17:04   2026-05-23 07:38:52   test2/elvis_dir_victor_783323/xbpt_report_quebec_867569.md
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-05-31 07:17:29   2026-05-23 07:38:51   test2/elvis_dir_victor_783323/xbpt_romeo_yankee_383561.cfg
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2021-10-04 07:16:49   2026-05-23 07:38:49   test2/elvis_dir_victor_783323/xbpt_trace_config_794136.tmp
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2025-09-04 07:16:57   2026-05-23 07:38:50   test2/elvis_dir_victor_783323/xbpt_yankee_output_781405.csv
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2021-10-15 07:17:19   2026-05-23 07:38:51   test2/xbpt_config_log_982725.bin
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2025-11-05 07:16:31   2026-05-23 07:38:52   test2/xbpt_foxtrot_config_966558.log
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2025-06-06 07:17:11   2026-05-23 07:38:51   test2/xbpt_index_india_423224.csv
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2025-08-11 07:17:32   2026-05-23 07:38:51   test2/xbpt_india_papa_801739.json
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2024-04-02 07:16:32   2026-05-23 07:38:49   test2/xbpt_india_temp_831504.csv
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-02-12 07:16:16   2026-05-23 07:38:47   test2/xbpt_yankee_audit_433793.xml
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2026-04-18 07:48:17   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/dir_zulu_312953/xbpt_hardlink_tango_212500.json
-         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2024-05-21 07:48:14   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/xbpt_record_cache_677917.dat
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-04-18 07:50:12   2026-05-23 07:53:54   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_oscar_342854/dir_archive_860003/xbpt_hardlink_backup_502262.bin
-         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2025-05-13 07:49:57   2026-05-23 07:53:53   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_report_930793/xbpt_output_temp_615727.cfg
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2023-02-21 07:48:51   2026-05-23 07:53:51   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_backup_240201/dir_draft_203180/dir_zulu_409792/xbpt_data_romeo_992013.json
-         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2026-05-23 07:53:48   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_backup_240201/dir_draft_203180/dir_zulu_409792/xbpt_papa_romeo_633083.bak
-         signals: HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2023-01-05 07:48:06   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_sync_430576/xbpt_hardlink_gamma_309164.dat
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2023-01-31 07:49:20   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/xbpt_config_cache_208102.md
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2024-05-21 07:48:14   2026-05-23 07:53:53   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/xbpt_hardlink_beta_501725.dat
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-07-05 07:48:05   2026-05-23 07:53:51   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/xbpt_hardlink_yankee_522047.bak
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-07-05 07:48:05   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_papa_189433/xbpt_data_whiskey_285684.bak
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-01-16 07:49:30   2026-05-23 07:53:53   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_papa_189433/xbpt_hardlink_beta_609618.bak
-         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2023-02-26 07:47:56   2026-05-23 07:53:53   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/dir_victor_956392/xbpt_hardlink_trace_249765.cfg
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2026-05-23 07:53:48   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/dir_victor_956392/xbpt_victor_romeo_168253.bin
-         signals: HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2023-05-02 07:49:07   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/xbpt_zulu_index_584442.dat
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-01-16 07:49:30   2026-05-23 07:53:53   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_hardlink_mike_495558.bak
-         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2024-07-02 07:49:01   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_trace_cache_917768.txt
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2021-07-21 07:48:20   2026-05-23 07:53:52   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_cache_foxtrot_199130.bin
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2026-05-23 07:53:49   2026-05-23 07:53:50   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_hardlink_mike_286763.json
-         signals: HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2026-05-23 07:53:53   2026-05-23 07:53:53   testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_index_uniform_742905.csv
-         signals: HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2024-05-22 07:50:02   2026-05-23 07:53:53   testintegrity/dir_romeo_348517/dir_alpha_208192/dir_november_114124/xbpt_hardlink_victor_401815.log
-         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2023-01-05 07:48:06   2026-05-23 07:53:52   testintegrity/dir_romeo_348517/dir_alpha_208192/dir_yankee_687993/xbpt_hardlink_victor_889551.dat
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2023-02-26 07:47:56   2026-05-23 07:53:49   testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_record_index_333773.cfg
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2024-03-14 07:48:36   2026-05-23 07:53:51   testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_whiskey_kilo_696933.md
-         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2023-02-26 07:47:56   2026-05-23 07:53:53   testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/xbpt_hardlink_kilo_270086.cfg
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2026-05-23 07:53:48   2026-05-23 07:53:50   testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/xbpt_hardlink_yankee_831226.bak
-         signals: HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2023-08-09 07:47:55   2026-05-23 07:53:52   testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/dir_cache_820752/xbpt_hardlink_tango_632919.dat
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2023-08-09 07:47:55   2026-05-23 07:53:52   testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_log_alpha_992477.dat
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2024-11-17 07:48:36   2026-05-23 07:53:50   testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_oscar_audit_617257.json
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2024-07-02 07:49:01   2026-05-23 07:53:51   testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_hardlink_beta_222943.txt
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2026-04-18 07:48:17   2026-05-23 07:53:49   testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_hardlink_index_906427.json
-         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2025-05-28 07:50:04   2026-05-23 07:53:53   testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_hardlink_quebec_103258.csv
-         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2023-01-05 07:48:06   2026-05-23 07:53:53   testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_tango_lima_130282.dat
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-01-16 07:49:30   2026-05-23 07:53:53   testintegrity/dir_romeo_348517/xbpt_hardlink_india_193722.bak
-         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2026-05-23 07:53:52   2026-05-23 07:53:52   testintegrity/dir_romeo_348517/xbpt_lima_romeo_166139.log
-         signals: HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2022-05-22 07:48:52   2026-05-23 07:53:51   testintegrity/dir_romeo_348517/xbpt_tango_record_968896.md
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2023-01-05 07:48:06   2026-05-23 07:53:52   testintegrity/dir_tango_306249/xbpt_hardlink_whiskey_641860.dat
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2026-05-23 07:53:47   2026-05-23 07:53:50   testintegrity/xbpt_cache_draft_476266.md
-         signals: HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2021-07-21 07:48:20   2026-05-23 07:53:53   testintegrity/xbpt_foxtrot_kilo_188200.bin
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2026-04-18 07:48:17   2026-05-23 07:53:53   testintegrity/xbpt_gamma_data_633866.json
-         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2021-12-28 07:49:15   2026-05-23 07:53:53   testintegrity/xbpt_hardlink_backup_104228.log
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2021-07-21 07:48:20   2026-05-23 07:53:51   testintegrity/xbpt_hardlink_quebec_884679.bin
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2025-03-09 07:48:01   2026-05-23 07:53:50   testintegrity/xbpt_index_victor_598659.bak
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2024-02-04 07:47:54   2026-05-23 07:53:49   testintegrity/xbpt_india_lima_261899.json
-         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2023-01-05 07:48:06   2026-05-23 07:53:49   testintegrity/xbpt_india_yankee_623909.dat
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2021-12-28 07:49:15   2026-05-23 07:53:53   testintegrity/xbpt_uniform_kilo_835445.log
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-07-05 07:39:53   2026-05-23 07:44:21   testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_backup_delta_269905.xml
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-07-05 07:39:53   2026-05-23 07:44:21   testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_hardlink_delta_451055.xml
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-07-05 07:39:53   2026-05-23 07:44:21   testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_hardlink_draft_275004.xml
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2025-06-11 07:40:00   2026-05-23 07:44:23   testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_hardlink_kilo_974260.md
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-11-01 07:39:55   2026-05-23 07:44:19   testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/xbpt_archive_draft_753371.cfg
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2021-08-06 07:40:34   2026-05-23 07:44:20   testspecials/dir_echo_260113/xbpt_lima_audit_873256.log
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2021-11-15 07:39:56   2026-05-23 07:44:21   testspecials/dir_mike_420327/xbpt_hardlink_draft_104643.dat
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2021-12-11 07:40:20   2026-05-23 07:44:19   testspecials/dir_mike_420327/xbpt_hardlink_romeo_520215.json
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2025-10-27 07:42:06   2026-05-23 07:44:23   testspecials/dir_mike_420327/xbpt_hardlink_tango_580634.log
-         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2025-06-11 07:40:00   2026-05-23 07:44:23   testspecials/dir_romeo_413583/dir_audit_570908/dir_quebec_863524/xbpt_hardlink_config_636787.md
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-07-05 07:39:53   2026-05-23 07:44:21   testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_hardlink_archive_353087.xml
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2025-10-27 07:42:06   2026-05-23 07:44:23   testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_hardlink_data_733507.log
-         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-07-05 07:39:53   2026-05-23 07:44:19   testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_hardlink_kilo_790796.xml
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-07-16 07:41:15   2026-05-23 07:44:21   testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_index_kilo_795802.md
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2024-09-02 07:42:02   2026-05-23 07:44:23   testspecials/dir_romeo_413583/dir_kilo_704584/dir_report_123351/xbpt_quebec_cache_515604.cfg
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-07-05 07:39:53   2026-05-23 07:44:18   testspecials/dir_romeo_413583/dir_kilo_704584/dir_report_123351/xbpt_whiskey_report_114009.xml
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2023-03-25 07:40:58   2026-05-23 07:44:21   testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_mike_981731/xbpt_echo_beta_386853.csv
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-07-05 07:39:53   2026-05-23 07:44:22   testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_mike_981731/xbpt_hardlink_output_952583.xml
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-11-01 07:39:55   2026-05-23 07:44:17   testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_gamma_421188/dir_uniform_641683/dir_echo_253572/xbpt_hardlink_quebec_835914.cfg
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2023-07-08 07:39:50   2026-05-23 07:44:20   testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_gamma_421188/xbpt_trace_kilo_387263.ini
-         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2021-11-15 07:39:56   2026-05-23 07:44:21   testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_zulu_992329/xbpt_hardlink_whiskey_429484.dat
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-07-05 07:39:53   2026-05-23 07:44:18   testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/xbpt_hardlink_oscar_805467.xml
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2021-12-11 07:40:20   2026-05-23 07:44:19   testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_sierra_120452/xbpt_oscar_yankee_456045.json
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-07-05 07:39:53   2026-05-23 07:44:19   testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_sync_673137/xbpt_tango_backup_348569.xml
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2024-12-22 07:39:57   2026-05-23 07:44:20   testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/xbpt_audit_romeo_148759.xml
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2025-10-27 07:42:06   2026-05-23 07:44:23   testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_delta_alpha_671390.log
-         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2023-12-31 07:39:56   2026-05-23 07:44:22   testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_hardlink_foxtrot_415497.bin
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-07-05 07:39:53   2026-05-23 07:44:19   testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_lima_trace_312755.xml
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2025-06-11 07:40:00   2026-05-23 07:44:19   testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_zulu_backup_178692.md
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-11-01 07:39:55   2026-05-23 07:44:19   testspecials/dir_romeo_413583/xbpt_hardlink_draft_744338.cfg
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-06-08 07:41:16   2026-05-23 07:44:21   testspecials/dir_romeo_413583/xbpt_hardlink_tango_845190.ini
-         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-07-05 07:39:53   2026-05-23 07:44:19   testspecials/dir_romeo_413583/xbpt_hardlink_temp_924985.xml
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2024-12-22 07:39:57   2026-05-23 07:44:22   testspecials/xbpt_archive_record_237501.xml
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2024-12-22 07:39:57   2026-05-23 07:44:22   testspecials/xbpt_hardlink_archive_469036.xml
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2026-05-23 07:44:16   2026-05-23 07:44:22   testspecials/xbpt_hardlink_romeo_125439.log
-         signals: HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2022-07-05 07:39:53   2026-05-23 07:44:18   testspecials/xbpt_hardlink_tango_460823.xml
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2022-11-01 07:39:55   2026-05-23 07:44:21   testspecials/xbpt_mike_mike_872519.cfg
-         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
-  HIGH   journal/link  2021-11-15 07:39:56   2026-05-23 07:44:18   testspecials/xbpt_uniform_beta_276130.dat
-         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH
+  HIGH   journal/link  2022-08-02T07:16:28.1705690Z 2026-05-23T07:34:02.0123753Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_romeo_output_531365.cfg
+         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH   evidence: hardlink:test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_hardlink_audit_219848.cfg
+  HIGH   journal/link  2026-05-23T07:33:58.7196982Z 2026-05-23T07:34:01.0429129Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_hardlink_audit_219848.cfg
+         signals: HARDLINK_MACB_MISMATCH   evidence: hardlink:test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_romeo_output_531365.cfg
+  HIGH   journal/link  2026-01-01T07:16:17.1671215Z 2026-05-23T07:38:51.6323343Z test2/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_audit_echo_178867.tmp
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x782:0x2, usn:FILE_CREATE@0x782:0x2
+  HIGH   journal/link  2024-08-03T07:17:33.0580290Z 2026-05-23T07:38:52.0221762Z test2/elvis_dir_index_149423/elvis_dir_victor_121923/elvis_dir_hotel_670324/elvis_dir_output_358165/xbpt_zulu_india_473528.csv
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7a8:0x4, usn:FILE_CREATE@0x7a8:0x4
+  HIGH   journal/link  2024-11-23T07:17:31.6060620Z 2026-05-23T07:38:52.0178709Z test2/elvis_dir_index_149423/elvis_dir_victor_121923/xbpt_whiskey_delta_922359.tmp
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x78f:0x2, usn:FILE_CREATE@0x78f:0x2
+  HIGH   journal/link  2023-11-27T07:16:30.1657183Z 2026-05-23T07:38:49.4308322Z test2/elvis_dir_index_149423/xbpt_beta_archive_985685.tmp
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x77b:0x19, usn:FILE_CREATE@0x77b:0x19
+  HIGH   journal/link  2022-05-20T07:16:16.7264974Z 2026-05-23T07:38:48.8245114Z test2/elvis_dir_index_149423/xbpt_zulu_kilo_319858.csv
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x788:0x5, usn:FILE_CREATE@0x788:0x5
+  HIGH   journal/link  2021-05-18T07:16:04.9990009Z 2026-05-23T07:38:49.6375645Z test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_backup_mike_407434.log
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x779:0x3, usn:FILE_CREATE@0x779:0x3
+  HIGH   journal/link  2024-01-13T07:17:04.4473965Z 2026-05-23T07:38:50.5819419Z test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_delta_echo_268401.csv
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x787:0xe, usn:FILE_CREATE@0x787:0xe
+  HIGH   journal/link  2025-02-09T07:17:09.6819863Z 2026-05-23T07:38:51.9759861Z test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_hardlink_echo_387599.ini
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x786:0xb, usn:FILE_CREATE@0x786:0xb
+  HIGH   journal/link  2025-07-16T07:17:35.7846153Z 2026-05-23T07:38:52.1625819Z test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_lima_victor_941030.cfg
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x787:0x1d, usn:FILE_CREATE@0x787:0x1d
+  HIGH   journal/link  2025-04-02T07:16:24.8031332Z 2026-05-23T07:38:50.0366093Z test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_sierra_echo_921063.xml
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x78c:0x6, usn:FILE_CREATE@0x78c:0x6
+  HIGH   journal/link  2025-04-01T07:16:26.2947244Z 2026-05-23T07:38:51.3288977Z test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_tango_echo_291736.csv
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x788:0x3, usn:FILE_CREATE@0x788:0x3
+  HIGH   journal/link  2022-02-07T07:16:33.0361865Z 2026-05-23T07:38:48.3361595Z test2/elvis_dir_papa_805353/elvis_dir_november_478580/xbpt_temp_sierra_130629.tmp
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x787:0x8, usn:FILE_CREATE@0x787:0x8
+  HIGH   journal/link  2026-03-01T07:16:07.6076372Z 2026-05-23T07:38:50.6076503Z test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_cache_zulu_259753.dat
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x77b:0x6, usn:FILE_CREATE@0x77b:0x6
+  HIGH   journal/link  2023-08-26T07:16:12.5023383Z 2026-05-23T07:38:46.1738919Z test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_beta_984608/xbpt_delta_temp_981764.tmp
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x782:0x3, usn:FILE_CREATE@0x782:0x3
+  HIGH   journal/link  2021-10-19T07:16:21.7425212Z 2026-05-23T07:38:48.0240713Z test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_audit_config_255291.dat
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x77a:0x5, usn:FILE_CREATE@0x77a:0x5
+  HIGH   journal/link  2024-06-07T07:17:11.2423573Z 2026-05-23T07:38:50.9932658Z test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/elvis_dir_record_901264/xbpt_zulu_trace_481495.md
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x789:0x3, usn:FILE_CREATE@0x789:0x3
+  HIGH   journal/link  2022-06-17T07:16:38.2016426Z 2026-05-23T07:38:48.7763068Z test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_backup_echo_585708.csv
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x788:0x6, usn:FILE_CREATE@0x788:0x6
+  HIGH   journal/link  2022-08-02T07:16:28.1705690Z 2026-05-23T07:38:48.2085439Z test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_romeo_output_531365.cfg
+         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: hardlink:test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_hardlink_audit_219848.cfg, usn:BASIC_INFO_CHANGE@0x77a:0x8, usn:FILE_CREATE@0x77a:0x8
+  HIGH   journal/link  2025-12-30T07:17:16.4645071Z 2026-05-23T07:38:51.2345194Z test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_temp_mike_134457.bak
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x788:0xd, usn:FILE_CREATE@0x788:0xd
+  HIGH   journal/link  2024-04-04T07:17:02.6780853Z 2026-05-23T07:38:52.2674814Z test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_delta_sierra_216359.bin
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x77b:0x1a, usn:FILE_CREATE@0x77b:0x1a
+  HIGH   journal/link  2022-04-19T07:16:47.0726903Z 2026-05-23T07:38:49.4168770Z test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_config_541148/xbpt_yankee_foxtrot_727835.bak
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x77b:0x15, usn:FILE_CREATE@0x77b:0x15
+  HIGH   journal/link  2021-09-26T07:16:24.5409194Z 2026-05-23T07:38:50.9171647Z test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_delta_cache_147912.bin
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x782:0x5, usn:FILE_CREATE@0x782:0x5
+  HIGH   journal/link  2026-05-23T07:38:44.8990978Z 2026-05-23T07:38:47.2530156Z test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_hardlink_audit_219848.cfg
+         signals: HARDLINK_MACB_MISMATCH   evidence: hardlink:test2/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_romeo_output_531365.cfg
+  HIGH   journal/link  2021-09-29T07:16:41.2004512Z 2026-05-23T07:38:50.4586039Z test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_report_audit_396522.txt
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x779:0xc, usn:FILE_CREATE@0x779:0xc
+  HIGH   journal/link  2026-02-23T07:17:05.2859306Z 2026-05-23T07:38:50.6923564Z test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_alpha_victor_250409.ini
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x77d:0xc, usn:FILE_CREATE@0x77d:0xc
+  HIGH   journal/link  2021-10-14T07:17:10.8947266Z 2026-05-23T07:38:50.9792913Z test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_audit_log_130131.ini
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x77d:0x14, usn:FILE_CREATE@0x77d:0x14
+  HIGH   journal/link  2025-06-11T07:16:10.1388255Z 2026-05-23T07:38:48.6680919Z test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_beta_cache_861983.json
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x77b:0x8, usn:FILE_CREATE@0x77b:0x8
+  HIGH   journal/link  2025-02-23T07:17:23.7743638Z 2026-05-23T07:38:51.5680011Z test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_romeo_gamma_831931.dat
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x77d:0xb, usn:FILE_CREATE@0x77d:0xb
+  HIGH   journal/link  2025-03-31T07:17:11.8319740Z 2026-05-23T07:38:51.0233499Z test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_tango_victor_844323.json
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x77d:0x11, usn:FILE_CREATE@0x77d:0x11
+  HIGH   journal/link  2024-05-06T07:17:31.2960857Z 2026-05-23T07:38:51.9556812Z test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/elvis_dir_quebec_218899/xbpt_config_record_746941.dat
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x779:0x6, usn:FILE_CREATE@0x779:0x6
+  HIGH   journal/link  2024-12-12T07:16:57.7860609Z 2026-05-23T07:38:51.8496480Z test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_index_uniform_409576.json
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x77a:0x10, usn:FILE_CREATE@0x77a:0x10
+  HIGH   journal/link  2023-10-15T07:17:00.9306544Z 2026-05-23T07:38:50.3322153Z test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_victor_echo_578793.cfg
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x77a:0xf, usn:FILE_CREATE@0x77a:0xf
+  HIGH   journal/link  2023-11-21T07:17:13.8768248Z 2026-05-23T07:38:51.1101455Z test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_603462/xbpt_zulu_output_293634.cfg
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x77a:0x6, usn:FILE_CREATE@0x77a:0x6
+  HIGH   journal/link  2022-03-06T07:16:22.2090777Z 2026-05-23T07:38:51.4639664Z test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_cache_beta_265588.tmp
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x77e:0x5, usn:FILE_CREATE@0x77e:0x5
+  HIGH   journal/link  2022-02-28T07:17:26.7141564Z 2026-05-23T07:38:51.7050397Z test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_index_temp_198731.cfg
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x77e:0x12, usn:FILE_CREATE@0x77e:0x12
+  HIGH   journal/link  2022-12-26T07:16:15.5489447Z 2026-05-23T07:38:46.5094953Z test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_log_whiskey_169575.dat
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x77e:0x4, usn:FILE_CREATE@0x77e:0x4
+  HIGH   journal/link  2024-10-16T07:17:27.5521698Z 2026-05-23T07:38:52.1507711Z test2/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/xbpt_quebec_audit_121864.cfg
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x77e:0xd, usn:FILE_CREATE@0x77e:0xd
+  HIGH   journal/link  2025-04-08T07:17:35.0852677Z 2026-05-23T07:38:52.1422227Z test2/elvis_dir_record_449015/elvis_dir_papa_104235/xbpt_temp_foxtrot_475776.md
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x798:0xf, usn:FILE_CREATE@0x798:0xf
+  HIGH   journal/link  2022-06-11T07:16:28.0969336Z 2026-05-23T07:38:50.7063334Z test2/elvis_dir_record_449015/xbpt_output_papa_412411.log
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x786:0x4, usn:FILE_CREATE@0x786:0x4
+  HIGH   journal/link  2025-04-19T07:17:09.2149813Z 2026-05-23T07:38:50.8786511Z test2/elvis_dir_victor_783323/xbpt_delta_echo_626074.json
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x78e:0x6, usn:FILE_CREATE@0x78e:0x6
+  HIGH   journal/link  2025-12-01T07:17:11.3472066Z 2026-05-23T07:38:50.9975603Z test2/elvis_dir_victor_783323/xbpt_record_mike_276675.tmp
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x78e:0x7, usn:FILE_CREATE@0x78e:0x7
+  HIGH   journal/link  2025-05-12T07:17:04.3504532Z 2026-05-23T07:38:52.2450271Z test2/elvis_dir_victor_783323/xbpt_report_quebec_867569.md
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x77f:0x3, usn:FILE_CREATE@0x77f:0x3
+  HIGH   journal/link  2022-05-31T07:17:29.8718970Z 2026-05-23T07:38:51.8892362Z test2/elvis_dir_victor_783323/xbpt_romeo_yankee_383561.cfg
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x78e:0x15, usn:FILE_CREATE@0x78e:0x15
+  HIGH   journal/link  2021-10-04T07:16:49.6636174Z 2026-05-23T07:38:49.5636676Z test2/elvis_dir_victor_783323/xbpt_trace_config_794136.tmp
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x78e:0x8, usn:FILE_CREATE@0x78e:0x8
+  HIGH   journal/link  2025-09-04T07:16:57.5507155Z 2026-05-23T07:38:50.0751760Z test2/elvis_dir_victor_783323/xbpt_yankee_output_781405.csv
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x78e:0x9, usn:FILE_CREATE@0x78e:0x9
+  HIGH   journal/link  2021-10-15T07:17:19.9400574Z 2026-05-23T07:38:51.4339619Z test2/xbpt_config_log_982725.bin
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x779:0x21, usn:FILE_CREATE@0x779:0x21
+  HIGH   journal/link  2025-11-05T07:16:31.4941888Z 2026-05-23T07:38:52.0038738Z test2/xbpt_foxtrot_config_966558.log
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x779:0x11, usn:FILE_CREATE@0x779:0x11
+  HIGH   journal/link  2025-06-06T07:17:11.5639166Z 2026-05-23T07:38:51.0072607Z test2/xbpt_index_india_423224.csv
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x779:0x15, usn:FILE_CREATE@0x779:0x15
+  HIGH   journal/link  2025-08-11T07:17:32.2206252Z 2026-05-23T07:38:51.9898965Z test2/xbpt_india_papa_801739.json
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x779:0x18, usn:FILE_CREATE@0x779:0x18
+  HIGH   journal/link  2024-04-02T07:16:32.8669648Z 2026-05-23T07:38:49.9807982Z test2/xbpt_india_temp_831504.csv
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x77d:0x6, usn:FILE_CREATE@0x77d:0x6
+  HIGH   journal/link  2022-02-12T07:16:16.9171874Z 2026-05-23T07:38:47.6369655Z test2/xbpt_yankee_audit_433793.xml
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x779:0xa, usn:FILE_CREATE@0x779:0xa
+  HIGH   journal/link  2026-04-18T07:48:17.5764349Z 2026-05-23T07:53:52.1263986Z testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/dir_zulu_312953/xbpt_hardlink_tango_212500.json
+         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: hardlink:testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_hardlink_index_906427.json, usn:BASIC_INFO_CHANGE@0x818:0x5, usn:FILE_CREATE@0x818:0x5
+  HIGH   journal/link  2024-05-21T07:48:14.2696615Z 2026-05-23T07:53:52.7238859Z testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/xbpt_record_cache_677917.dat
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x824:0x2, usn:FILE_CREATE@0x824:0x2
+  HIGH   journal/link  2022-04-18T07:50:12.7492965Z 2026-05-23T07:53:54.0520382Z testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_oscar_342854/dir_archive_860003/xbpt_hardlink_backup_502262.bin
+         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: hardlink:testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/dir_victor_956392/xbpt_victor_romeo_168253.bin, usn:BASIC_INFO_CHANGE@0x81a:0xc, usn:FILE_CREATE@0x81a:0xc
+  HIGH   journal/link  2025-05-13T07:49:57.5108010Z 2026-05-23T07:53:53.6826595Z testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_report_930793/xbpt_output_temp_615727.cfg
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x853:0x9, usn:FILE_CREATE@0x853:0x9
+  HIGH   journal/link  2023-02-21T07:48:51.7961185Z 2026-05-23T07:53:51.4339680Z testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_backup_240201/dir_draft_203180/dir_zulu_409792/xbpt_data_romeo_992013.json
+         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: hardlink:testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_hardlink_mike_286763.json, usn:BASIC_INFO_CHANGE@0x830:0x2, usn:FILE_CREATE@0x830:0x2
+  HIGH   journal/link  2026-05-23T07:53:48.3189682Z 2026-05-23T07:53:52.1542806Z testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_backup_240201/dir_draft_203180/dir_zulu_409792/xbpt_papa_romeo_633083.bak
+         signals: HARDLINK_MACB_MISMATCH   evidence: hardlink:testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_papa_189433/xbpt_hardlink_beta_609618.bak
+  HIGH   journal/link  2023-01-05T07:48:06.2771465Z 2026-05-23T07:53:52.3150113Z testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_sync_430576/xbpt_hardlink_gamma_309164.dat
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x818:0x2, usn:FILE_CREATE@0x818:0x2
+  HIGH   journal/link  2023-01-31T07:49:20.8972367Z 2026-05-23T07:53:52.5786740Z testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/xbpt_config_cache_208102.md
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x82d:0x4, usn:FILE_CREATE@0x82d:0x4
+  HIGH   journal/link  2024-05-21T07:48:14.2696615Z 2026-05-23T07:53:53.8724694Z testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/xbpt_hardlink_beta_501725.dat
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x824:0x2, usn:FILE_CREATE@0x824:0x2
+  HIGH   journal/link  2022-07-05T07:48:05.2918184Z 2026-05-23T07:53:51.5079119Z testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/xbpt_hardlink_yankee_522047.bak
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x818:0x9, usn:FILE_CREATE@0x818:0x9
+  HIGH   journal/link  2022-07-05T07:48:05.2918184Z 2026-05-23T07:53:52.6304475Z testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_papa_189433/xbpt_data_whiskey_285684.bak
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x818:0x9, usn:FILE_CREATE@0x818:0x9
+  HIGH   journal/link  2022-01-16T07:49:30.5102166Z 2026-05-23T07:53:53.4489677Z testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_papa_189433/xbpt_hardlink_beta_609618.bak
+         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: hardlink:testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_backup_240201/dir_draft_203180/dir_zulu_409792/xbpt_papa_romeo_633083.bak, usn:BASIC_INFO_CHANGE@0x819:0xd, usn:FILE_CREATE@0x819:0xd
+  HIGH   journal/link  2023-02-26T07:47:56.0806063Z 2026-05-23T07:53:53.0556701Z testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/dir_victor_956392/xbpt_hardlink_trace_249765.cfg
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x81a:0x2, usn:FILE_CREATE@0x81a:0x2
+  HIGH   journal/link  2026-05-23T07:53:48.1618545Z 2026-05-23T07:53:52.1360867Z testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/dir_victor_956392/xbpt_victor_romeo_168253.bin
+         signals: HARDLINK_MACB_MISMATCH   evidence: hardlink:testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_oscar_342854/dir_archive_860003/xbpt_hardlink_backup_502262.bin
+  HIGH   journal/link  2023-05-02T07:49:07.6961909Z 2026-05-23T07:53:52.1446207Z testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/dir_quebec_957455/xbpt_zulu_index_584442.dat
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x856:0x3, usn:FILE_CREATE@0x856:0x3
+  HIGH   journal/link  2022-01-16T07:49:30.5102166Z 2026-05-23T07:53:53.9425697Z testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_hardlink_mike_495558.bak
+         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: hardlink:testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_backup_240201/dir_draft_203180/dir_zulu_409792/xbpt_papa_romeo_633083.bak, usn:BASIC_INFO_CHANGE@0x819:0xd, usn:FILE_CREATE@0x819:0xd
+  HIGH   journal/link  2024-07-02T07:49:01.4024530Z 2026-05-23T07:53:52.3627034Z testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_914766/xbpt_trace_cache_917768.txt
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x81f:0x7, usn:FILE_CREATE@0x81f:0x7
+  HIGH   journal/link  2021-07-21T07:48:20.2597787Z 2026-05-23T07:53:52.2069301Z testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_cache_foxtrot_199130.bin
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x818:0x4, usn:FILE_CREATE@0x818:0x4
+  HIGH   journal/link  2026-05-23T07:53:49.7117665Z 2026-05-23T07:53:50.5294442Z testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_hardlink_mike_286763.json
+         signals: HARDLINK_MACB_MISMATCH   evidence: hardlink:testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_backup_240201/dir_draft_203180/dir_zulu_409792/xbpt_data_romeo_992013.json
+  HIGH   journal/link  2026-05-23T07:53:53.0492796Z 2026-05-23T07:53:53.0492796Z testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_index_uniform_742905.csv
+         signals: HARDLINK_MACB_MISMATCH   evidence: hardlink:testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_hardlink_quebec_103258.csv
+  HIGH   journal/link  2024-05-22T07:50:02.5451521Z 2026-05-23T07:53:53.7791737Z testintegrity/dir_romeo_348517/dir_alpha_208192/dir_november_114124/xbpt_hardlink_victor_401815.log
+         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: hardlink:testintegrity/dir_romeo_348517/xbpt_lima_romeo_166139.log, usn:BASIC_INFO_CHANGE@0x81d:0xe, usn:FILE_CREATE@0x81d:0xe
+  HIGH   journal/link  2023-01-05T07:48:06.2771465Z 2026-05-23T07:53:52.2285496Z testintegrity/dir_romeo_348517/dir_alpha_208192/dir_yankee_687993/xbpt_hardlink_victor_889551.dat
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x818:0x2, usn:FILE_CREATE@0x818:0x2
+  HIGH   journal/link  2023-02-26T07:47:56.0806063Z 2026-05-23T07:53:49.5903174Z testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_record_index_333773.cfg
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x81a:0x2, usn:FILE_CREATE@0x81a:0x2
+  HIGH   journal/link  2024-03-14T07:48:36.0809930Z 2026-05-23T07:53:51.2957369Z testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_whiskey_kilo_696933.md
+         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: hardlink:testintegrity/xbpt_cache_draft_476266.md, usn:BASIC_INFO_CHANGE@0x81a:0x4, usn:FILE_CREATE@0x81a:0x4
+  HIGH   journal/link  2023-02-26T07:47:56.0806063Z 2026-05-23T07:53:53.5980045Z testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/xbpt_hardlink_kilo_270086.cfg
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x81a:0x2, usn:FILE_CREATE@0x81a:0x2
+  HIGH   journal/link  2026-05-23T07:53:48.3189682Z 2026-05-23T07:53:50.7943696Z testintegrity/dir_romeo_348517/dir_lima_228687/dir_india_641930/xbpt_hardlink_yankee_831226.bak
+         signals: HARDLINK_MACB_MISMATCH   evidence: hardlink:testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_backup_240201/dir_draft_203180/dir_zulu_409792/xbpt_papa_romeo_633083.bak
+  HIGH   journal/link  2023-08-09T07:47:55.9304243Z 2026-05-23T07:53:52.0322222Z testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/dir_cache_820752/xbpt_hardlink_tango_632919.dat
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x81c:0x3, usn:FILE_CREATE@0x81c:0x3
+  HIGH   journal/link  2023-08-09T07:47:55.9304243Z 2026-05-23T07:53:52.0172858Z testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_log_alpha_992477.dat
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x81c:0x3, usn:FILE_CREATE@0x81c:0x3
+  HIGH   journal/link  2024-11-17T07:48:36.4542502Z 2026-05-23T07:53:50.9069423Z testintegrity/dir_romeo_348517/dir_lima_228687/dir_kilo_987907/xbpt_oscar_audit_617257.json
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x81c:0xe, usn:FILE_CREATE@0x81c:0xe
+  HIGH   journal/link  2024-07-02T07:49:01.4024530Z 2026-05-23T07:53:51.8834056Z testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_hardlink_beta_222943.txt
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x81f:0x7, usn:FILE_CREATE@0x81f:0x7
+  HIGH   journal/link  2026-04-18T07:48:17.5764349Z 2026-05-23T07:53:49.8085939Z testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_hardlink_index_906427.json
+         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: hardlink:testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/dir_zulu_312953/xbpt_hardlink_tango_212500.json, usn:BASIC_INFO_CHANGE@0x818:0x5, usn:FILE_CREATE@0x818:0x5
+  HIGH   journal/link  2025-05-28T07:50:04.4124940Z 2026-05-23T07:53:53.8295459Z testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_hardlink_quebec_103258.csv
+         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: hardlink:testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/xbpt_index_uniform_742905.csv, usn:BASIC_INFO_CHANGE@0x819:0x17, usn:FILE_CREATE@0x819:0x17
+  HIGH   journal/link  2023-01-05T07:48:06.2771465Z 2026-05-23T07:53:53.1760927Z testintegrity/dir_romeo_348517/dir_lima_228687/xbpt_tango_lima_130282.dat
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x818:0x2, usn:FILE_CREATE@0x818:0x2
+  HIGH   journal/link  2022-01-16T07:49:30.5102166Z 2026-05-23T07:53:53.4489677Z testintegrity/dir_romeo_348517/xbpt_hardlink_india_193722.bak
+         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: hardlink:testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_yankee_672946/dir_uniform_735193/dir_backup_240201/dir_draft_203180/dir_zulu_409792/xbpt_papa_romeo_633083.bak, usn:BASIC_INFO_CHANGE@0x819:0xd, usn:FILE_CREATE@0x819:0xd
+  HIGH   journal/link  2026-05-23T07:53:52.4066027Z 2026-05-23T07:53:52.6646941Z testintegrity/dir_romeo_348517/xbpt_lima_romeo_166139.log
+         signals: HARDLINK_MACB_MISMATCH   evidence: hardlink:testintegrity/dir_romeo_348517/dir_alpha_208192/dir_november_114124/xbpt_hardlink_victor_401815.log
+  HIGH   journal/link  2022-05-22T07:48:52.6035153Z 2026-05-23T07:53:51.4640051Z testintegrity/dir_romeo_348517/xbpt_tango_record_968896.md
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x81d:0xc, usn:FILE_CREATE@0x81d:0xc
+  HIGH   journal/link  2023-01-05T07:48:06.2771465Z 2026-05-23T07:53:52.2285496Z testintegrity/dir_tango_306249/xbpt_hardlink_whiskey_641860.dat
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x818:0x2, usn:FILE_CREATE@0x818:0x2
+  HIGH   journal/link  2026-05-23T07:53:47.0697072Z 2026-05-23T07:53:50.8104339Z testintegrity/xbpt_cache_draft_476266.md
+         signals: HARDLINK_MACB_MISMATCH   evidence: hardlink:testintegrity/dir_romeo_348517/dir_alpha_208192/xbpt_whiskey_kilo_696933.md
+  HIGH   journal/link  2021-07-21T07:48:20.2597787Z 2026-05-23T07:53:53.8414028Z testintegrity/xbpt_foxtrot_kilo_188200.bin
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x818:0x4, usn:FILE_CREATE@0x818:0x4
+  HIGH   journal/link  2026-04-18T07:48:17.5764349Z 2026-05-23T07:53:53.0127542Z testintegrity/xbpt_gamma_data_633866.json
+         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: hardlink:testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/dir_zulu_312953/xbpt_hardlink_tango_212500.json, usn:BASIC_INFO_CHANGE@0x818:0x5, usn:FILE_CREATE@0x818:0x5
+  HIGH   journal/link  2021-12-28T07:49:15.7102859Z 2026-05-23T07:53:53.4262973Z testintegrity/xbpt_hardlink_backup_104228.log
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x818:0x8, usn:FILE_CREATE@0x818:0x8
+  HIGH   journal/link  2021-07-21T07:48:20.2597787Z 2026-05-23T07:53:51.5831360Z testintegrity/xbpt_hardlink_quebec_884679.bin
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x818:0x4, usn:FILE_CREATE@0x818:0x4
+  HIGH   journal/link  2025-03-09T07:48:01.6277114Z 2026-05-23T07:53:50.2907769Z testintegrity/xbpt_index_victor_598659.bak
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x818:0x6, usn:FILE_CREATE@0x818:0x6
+  HIGH   journal/link  2024-02-04T07:47:54.7029483Z 2026-05-23T07:53:49.3511891Z testintegrity/xbpt_india_lima_261899.json
+         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: hardlink:testintegrity/dir_gamma_404999/dir_whiskey_550421/dir_sierra_463915/dir_kilo_863699/dir_zulu_312953/xbpt_hardlink_tango_212500.json, usn:BASIC_INFO_CHANGE@0x818:0x5, usn:FILE_CREATE@0x818:0x5
+  HIGH   journal/link  2023-01-05T07:48:06.2771465Z 2026-05-23T07:53:49.1864538Z testintegrity/xbpt_india_yankee_623909.dat
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x818:0x2, usn:FILE_CREATE@0x818:0x2
+  HIGH   journal/link  2021-12-28T07:49:15.7102859Z 2026-05-23T07:53:53.6247131Z testintegrity/xbpt_uniform_kilo_835445.log
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x818:0x8, usn:FILE_CREATE@0x818:0x8
+  HIGH   journal/link  2022-07-05T07:39:53.6949650Z 2026-05-23T07:44:21.3778171Z testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_backup_delta_269905.xml
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7b3:0x5, usn:FILE_CREATE@0x7b3:0x5
+  HIGH   journal/link  2022-07-05T07:39:53.6949650Z 2026-05-23T07:44:21.3778171Z testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_hardlink_delta_451055.xml
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7b3:0x5, usn:FILE_CREATE@0x7b3:0x5
+  HIGH   journal/link  2022-07-05T07:39:53.6949650Z 2026-05-23T07:44:21.6343145Z testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_hardlink_draft_275004.xml
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7b3:0x5, usn:FILE_CREATE@0x7b3:0x5
+  HIGH   journal/link  2025-06-11T07:40:00.3811963Z 2026-05-23T07:44:23.7886096Z testspecials/dir_echo_260113/dir_november_183663/dir_record_577164/xbpt_hardlink_kilo_974260.md
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7b3:0xa, usn:FILE_CREATE@0x7b3:0xa
+  HIGH   journal/link  2022-11-01T07:39:55.9753592Z 2026-05-23T07:44:19.9763047Z testspecials/dir_echo_260113/dir_november_183663/dir_yankee_438871/dir_uniform_194637/xbpt_archive_draft_753371.cfg
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7bc:0x2, usn:FILE_CREATE@0x7bc:0x2
+  HIGH   journal/link  2021-08-06T07:40:34.7983918Z 2026-05-23T07:44:20.0251442Z testspecials/dir_echo_260113/xbpt_lima_audit_873256.log
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7c6:0x4, usn:FILE_CREATE@0x7c6:0x4
+  HIGH   journal/link  2021-11-15T07:39:56.5828316Z 2026-05-23T07:44:21.5279019Z testspecials/dir_mike_420327/xbpt_hardlink_draft_104643.dat
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7b3:0x10, usn:FILE_CREATE@0x7b3:0x10
+  HIGH   journal/link  2021-12-11T07:40:20.4680388Z 2026-05-23T07:44:19.9045236Z testspecials/dir_mike_420327/xbpt_hardlink_romeo_520215.json
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7c0:0x7, usn:FILE_CREATE@0x7c0:0x7
+  HIGH   journal/link  2025-10-27T07:42:06.6262111Z 2026-05-23T07:44:23.4803654Z testspecials/dir_mike_420327/xbpt_hardlink_tango_580634.log
+         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: hardlink:testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_hardlink_data_733507.log, usn:BASIC_INFO_CHANGE@0x7b7:0x6, usn:FILE_CREATE@0x7b7:0x6
+  HIGH   journal/link  2025-06-11T07:40:00.3811963Z 2026-05-23T07:44:23.7886096Z testspecials/dir_romeo_413583/dir_audit_570908/dir_quebec_863524/xbpt_hardlink_config_636787.md
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7b3:0xa, usn:FILE_CREATE@0x7b3:0xa
+  HIGH   journal/link  2022-07-05T07:39:53.6949650Z 2026-05-23T07:44:21.3778171Z testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_hardlink_archive_353087.xml
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7b3:0x5, usn:FILE_CREATE@0x7b3:0x5
+  HIGH   journal/link  2025-10-27T07:42:06.6262111Z 2026-05-23T07:44:23.3617978Z testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_hardlink_data_733507.log
+         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: hardlink:testspecials/dir_mike_420327/xbpt_hardlink_tango_580634.log, usn:BASIC_INFO_CHANGE@0x7b7:0x6, usn:FILE_CREATE@0x7b7:0x6
+  HIGH   journal/link  2022-07-05T07:39:53.6949650Z 2026-05-23T07:44:19.0068783Z testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_hardlink_kilo_790796.xml
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7b3:0x5, usn:FILE_CREATE@0x7b3:0x5
+  HIGH   journal/link  2022-07-16T07:41:15.7544397Z 2026-05-23T07:44:21.7948829Z testspecials/dir_romeo_413583/dir_kilo_704584/dir_audit_890453/dir_report_815374/xbpt_index_kilo_795802.md
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7bf:0x2, usn:FILE_CREATE@0x7bf:0x2
+  HIGH   journal/link  2024-09-02T07:42:02.9958300Z 2026-05-23T07:44:23.2970720Z testspecials/dir_romeo_413583/dir_kilo_704584/dir_report_123351/xbpt_quebec_cache_515604.cfg
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7cb:0x9, usn:FILE_CREATE@0x7cb:0x9
+  HIGH   journal/link  2022-07-05T07:39:53.6949650Z 2026-05-23T07:44:18.8369375Z testspecials/dir_romeo_413583/dir_kilo_704584/dir_report_123351/xbpt_whiskey_report_114009.xml
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7b3:0x5, usn:FILE_CREATE@0x7b3:0x5
+  HIGH   journal/link  2023-03-25T07:40:58.6276029Z 2026-05-23T07:44:21.1209329Z testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_mike_981731/xbpt_echo_beta_386853.csv
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7c2:0x2, usn:FILE_CREATE@0x7c2:0x2
+  HIGH   journal/link  2022-07-05T07:39:53.6949650Z 2026-05-23T07:44:22.6108738Z testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_mike_981731/xbpt_hardlink_output_952583.xml
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7b3:0x5, usn:FILE_CREATE@0x7b3:0x5
+  HIGH   journal/link  2022-11-01T07:39:55.9753592Z 2026-05-23T07:44:17.3178885Z testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_gamma_421188/dir_uniform_641683/dir_echo_253572/xbpt_hardlink_quebec_835914.cfg
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7bc:0x2, usn:FILE_CREATE@0x7bc:0x2
+  HIGH   journal/link  2023-07-08T07:39:50.3757394Z 2026-05-23T07:44:20.9590993Z testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_gamma_421188/xbpt_trace_kilo_387263.ini
+         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: hardlink:testspecials/dir_romeo_413583/xbpt_hardlink_tango_845190.ini, usn:BASIC_INFO_CHANGE@0x7b7:0x7, usn:FILE_CREATE@0x7b7:0x7
+  HIGH   journal/link  2021-11-15T07:39:56.5828316Z 2026-05-23T07:44:21.5279019Z testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_zulu_992329/xbpt_hardlink_whiskey_429484.dat
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7b3:0x10, usn:FILE_CREATE@0x7b3:0x10
+  HIGH   journal/link  2022-07-05T07:39:53.6949650Z 2026-05-23T07:44:18.4104936Z testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/xbpt_hardlink_oscar_805467.xml
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7b3:0x5, usn:FILE_CREATE@0x7b3:0x5
+  HIGH   journal/link  2021-12-11T07:40:20.4680388Z 2026-05-23T07:44:19.9045236Z testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_sierra_120452/xbpt_oscar_yankee_456045.json
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7c0:0x7, usn:FILE_CREATE@0x7c0:0x7
+  HIGH   journal/link  2022-07-05T07:39:53.6949650Z 2026-05-23T07:44:19.2441035Z testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_sync_673137/xbpt_tango_backup_348569.xml
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7b3:0x5, usn:FILE_CREATE@0x7b3:0x5
+  HIGH   journal/link  2024-12-22T07:39:57.2819341Z 2026-05-23T07:44:20.3578412Z testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/xbpt_audit_romeo_148759.xml
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7b3:0x9, usn:FILE_CREATE@0x7b3:0x9
+  HIGH   journal/link  2025-10-27T07:42:06.6262111Z 2026-05-23T07:44:23.4803654Z testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_delta_alpha_671390.log
+         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: hardlink:testspecials/dir_mike_420327/xbpt_hardlink_tango_580634.log, usn:BASIC_INFO_CHANGE@0x7b7:0x6, usn:FILE_CREATE@0x7b7:0x6
+  HIGH   journal/link  2023-12-31T07:39:56.9762934Z 2026-05-23T07:44:22.4184274Z testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_hardlink_foxtrot_415497.bin
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7b3:0x3, usn:FILE_CREATE@0x7b3:0x3
+  HIGH   journal/link  2022-07-05T07:39:53.6949650Z 2026-05-23T07:44:19.9524584Z testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_lima_trace_312755.xml
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7b3:0x5, usn:FILE_CREATE@0x7b3:0x5
+  HIGH   journal/link  2025-06-11T07:40:00.3811963Z 2026-05-23T07:44:19.7262062Z testspecials/dir_romeo_413583/dir_kilo_704584/xbpt_zulu_backup_178692.md
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7b3:0xa, usn:FILE_CREATE@0x7b3:0xa
+  HIGH   journal/link  2022-11-01T07:39:55.9753592Z 2026-05-23T07:44:19.9372941Z testspecials/dir_romeo_413583/xbpt_hardlink_draft_744338.cfg
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7bc:0x2, usn:FILE_CREATE@0x7bc:0x2
+  HIGH   journal/link  2022-06-08T07:41:16.5693667Z 2026-05-23T07:44:21.8284422Z testspecials/dir_romeo_413583/xbpt_hardlink_tango_845190.ini
+         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: hardlink:testspecials/dir_romeo_413583/dir_kilo_704584/dir_temp_947981/dir_papa_141573/dir_temp_742939/dir_gamma_421188/xbpt_trace_kilo_387263.ini, usn:BASIC_INFO_CHANGE@0x7b7:0x7, usn:FILE_CREATE@0x7b7:0x7
+  HIGH   journal/link  2022-07-05T07:39:53.6949650Z 2026-05-23T07:44:19.0068783Z testspecials/dir_romeo_413583/xbpt_hardlink_temp_924985.xml
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7b3:0x5, usn:FILE_CREATE@0x7b3:0x5
+  HIGH   journal/link  2024-12-22T07:39:57.2819341Z 2026-05-23T07:44:22.0017840Z testspecials/xbpt_archive_record_237501.xml
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7b3:0x9, usn:FILE_CREATE@0x7b3:0x9
+  HIGH   journal/link  2024-12-22T07:39:57.2819341Z 2026-05-23T07:44:22.3967675Z testspecials/xbpt_hardlink_archive_469036.xml
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7b3:0x9, usn:FILE_CREATE@0x7b3:0x9
+  HIGH   journal/link  2026-05-23T07:44:16.2902405Z 2026-05-23T07:44:22.2283869Z testspecials/xbpt_hardlink_romeo_125439.log
+         signals: HARDLINK_MACB_MISMATCH   evidence: hardlink:testspecials/dir_mike_420327/xbpt_hardlink_tango_580634.log
+  HIGH   journal/link  2022-07-05T07:39:53.6949650Z 2026-05-23T07:44:18.4104936Z testspecials/xbpt_hardlink_tango_460823.xml
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7b3:0x5, usn:FILE_CREATE@0x7b3:0x5
+  HIGH   journal/link  2022-11-01T07:39:55.9753592Z 2026-05-23T07:44:21.5072373Z testspecials/xbpt_mike_mike_872519.cfg
+         signals: PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7bc:0x2, usn:FILE_CREATE@0x7bc:0x2
+  HIGH   journal/link  2021-11-15T07:39:56.5828316Z 2026-05-23T07:44:18.5878789Z testspecials/xbpt_uniform_beta_276130.dat
+         signals: CHANGE_LATE, PRE_FORMAT, USN_BASIC_INFO_CHANGE, USN_CREATE_MISMATCH   evidence: usn:BASIC_INFO_CHANGE@0x7b3:0x10, usn:FILE_CREATE@0x7b3:0x10
 
-  (0 MEDIUM + 0 LOW + 57 INFO row(s) hidden — `--min MEDIUM` / `--min LOW` / `--min INFO` to show; CSV/JSON already include every tier.)
+  (0 MEDIUM + 0 LOW + 57 INFO row(s) hidden — `--min MEDIUM` / `--min LOW` / `--min INFO` to show;
+  CSV/JSON already include every tier.)
 
-  Signal legend  (AUTHORITATIVE = independent evidence · HEURISTIC = suggestive $SI-only):
+  Signal legend  (AUTHORITATIVE = a second structure: the change journal or another name's entry ·
+                  HEURISTIC = suggestive, from the $SI alone):
     [AUTHORITATIVE]
-      USN_BASIC_INFO_CHANGE  the USN journal recorded a deliberate basic-info edit (no content change)
+      USN_BASIC_INFO_CHANGE  the USN journal recorded a basic-info change (no content change)
       USN_CREATE_MISMATCH    $SI created differs from the FILE_CREATE journal record (true birth known)
       HARDLINK_MACB_MISMATCH one hard-link name's $SI created diverges from another's (ReFS per-name
-                             MACB). Nothing routine produces this; which name is authentic is NOT
-                             established, and its absence means nothing
+                             MACB). No routine cause was observed on the corpus; which name is
+                             authentic is NOT established, and its absence means nothing
     [HEURISTIC — $SI only, corroborate]
       CHANGE_LATE            $SI change-time post-dates created/modified (SetFileTime/PowerShell/.NET
                              can't reach change-time) — defeated by a native-API/raw-disk stomp
-      PRE_FORMAT / FUTURE    created before the volume existed / after its last write
+      PRE_FORMAT             created before the volume existed
       CREATE_GT_MODIFY       created after last write
       ROUND_TIMESTAMPS       created AND modified are whole-second (.0000000) — a tool often sets a
-                             date with no sub-second time; LOW only (driver packages / archive
-                             extraction also produce whole-second times)
-  Note: PRE_FORMAT / CHANGE_LATE / CREATE_GT_MODIFY also fire on a legitimate
-  timestamp-preserving copy (robocopy /COPY:T, a restore, an archive extraction) — and
-  equally on a deliberately backdated creation. That pair alone is INFO: ambiguous, not
-  cleared. The one intrinsic signal that reaches HIGH is HARDLINK_MACB_MISMATCH, which a
-  copy cannot produce; corroborate anything below HIGH with the USN journal.
+                             date with no sub-second time; alone it is INFO and it never raises a
+                             tier (driver packages also carry whole-second times)
+  Note: PRE_FORMAT / CHANGE_LATE / CREATE_GT_MODIFY also fire on legitimate time-setting —
+  Windows servicing and installers write files with their package dates, a copy keeps its
+  source's times — and equally on a deliberately backdated creation. PRE_FORMAT with
+  CHANGE_LATE alone is INFO: ambiguous, not cleared. The one $SI signal that reaches HIGH is
+  HARDLINK_MACB_MISMATCH, which a copy cannot produce; corroborate anything below HIGH with
+  the USN journal.

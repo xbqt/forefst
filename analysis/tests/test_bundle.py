@@ -21,6 +21,9 @@ import pytest
 HERE = os.path.dirname(os.path.abspath(__file__))
 from _repo import REPO                                   # layout-independent; see _repo.py
 TOOL = os.path.join(REPO, "forefst.py")
+sys.path.insert(0, REPO)
+import forefst as F                                      # noqa: E402  (the bundle manifest's key table)
+from conftest import jdoc                                # noqa: E402  (K21: internal names)
 WORKSPACE = os.path.dirname(REPO)                        # .../refs
 
 
@@ -93,7 +96,7 @@ def test_verify_bundle_passes_on_a_whole_bundle(bundle):
 def test_bundle_states_that_it_carries_inline_content(bundle):
     """A 'metadata' bundle holds every inline stream, so it must say so rather than imply otherwise."""
     _img, bdir = bundle
-    man = json.load(open(os.path.join(bdir, "manifest.json")))
+    man = jdoc(json.load(open(os.path.join(bdir, "manifest.json"))), F._BUNDLE_KEYS)
     assert "inline_content" in man, "manifest does not declare its inline content"
     r = run(bdir, "summary", "-q")
     assert "inline" in r.stderr.lower(), "the banner does not warn that inline content travels with it"
@@ -101,7 +104,7 @@ def test_bundle_states_that_it_carries_inline_content(bundle):
 
 def test_manifest_records_where_it_came_from(bundle):
     _img, bdir = bundle
-    prov = json.load(open(os.path.join(bdir, "manifest.json")))["provenance"]
+    prov = jdoc(json.load(open(os.path.join(bdir, "manifest.json"))), F._BUNDLE_KEYS)["provenance"]
     for key in ("tool_version", "source_path", "source_content_pin", "exported_utc", "host"):
         assert prov.get(key), f"provenance is missing {key}"
 
@@ -232,7 +235,7 @@ def test_manifest_inline_bytes_match_the_listing_when_there_are_no_ads(bundle):
     is a definitional difference, not a disagreement -- comparing raw counts would fail spuriously.
     """
     _img, bdir = bundle
-    man = json.load(open(os.path.join(bdir, "manifest.json")))
+    man = jdoc(json.load(open(os.path.join(bdir, "manifest.json"))), F._BUNDLE_KEYS)
     ic = man["inline_content"]
     rows = _csv_rows(bdir)
     inline = [x for x in rows if x.get("DataResidency") == "inline"]
@@ -260,7 +263,7 @@ def test_manifest_inline_count_includes_alternate_data_streams(tmp_path):
     out = str(tmp_path / "b")
     r = run(img, "export", "metadata", out)
     assert r.returncode == 0, r.stderr[-400:]
-    ic = json.load(open(os.path.join(out, "manifest.json")))["inline_content"]
+    ic = jdoc(json.load(open(os.path.join(out, "manifest.json"))), F._BUNDLE_KEYS)["inline_content"]
 
     rows = _csv_rows(out)
     assert any(x.get("ADSNames", "").strip() for x in rows), "this volume was expected to carry ADS"

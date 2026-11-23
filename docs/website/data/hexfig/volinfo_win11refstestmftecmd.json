@@ -1,0 +1,319 @@
+{
+ "id": "volinfo_win11refstestmftecmd",
+ "generated_by": "analysis/tools/analysis_scripts/gen_hex_figures.py",
+ "decoded_by": "forefst 1.14.0 (forefstdev/forefst.py)",
+ "title": "An example volume-information row (its populated bytes, +0x80 to +0xB1), read with forefst.",
+ "image": {
+  "name": "win11refstestmftecmd.raw",
+  "step": "step5",
+  "listed_as": "analysis/rawdisk/disks/step5/win11refstestmftecmd.raw",
+  "size": 4294967296
+ },
+ "offset": 65176056,
+ "offset_hex": "0x3e281f8",
+ "length": 50,
+ "bytes": "030e030e0000000000000000000000001df5f8117aeadc010000000000000000b90b3784a5eadc0100000000000000000000",
+ "note": "The bytes are value+0x80 to +0xB1 of the volume-information row (OID 0x500, key 0x520; 448 bytes): the rest of the value is zero on this volume. Not coloured: +0x8 to +0xF, +0x28 to +0x2F.",
+ "fields": [
+  {
+   "off": "0x80",
+   "len": 1,
+   "name": "Volume major version",
+   "frame": null,
+   "group": null,
+   "bytes": "03",
+   "value": "3",
+   "decoder": "forefst.volume_information_fields",
+   "slot": 0,
+   "link": {
+    "page": "attributes/VOLUME_INFORMATION.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x81",
+   "len": 1,
+   "name": "Volume minor version",
+   "frame": null,
+   "group": null,
+   "bytes": "0e",
+   "value": "14",
+   "decoder": "forefst.volume_information_fields",
+   "slot": 1,
+   "link": {
+    "page": "attributes/VOLUME_INFORMATION.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x82",
+   "len": 1,
+   "name": "Driver major version",
+   "frame": null,
+   "group": null,
+   "bytes": "03",
+   "value": "3",
+   "decoder": "forefst.volume_information_fields",
+   "slot": 2,
+   "link": {
+    "page": "attributes/VOLUME_INFORMATION.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x83",
+   "len": 1,
+   "name": "Driver minor version",
+   "frame": null,
+   "group": null,
+   "bytes": "0e",
+   "value": "14",
+   "decoder": "forefst.volume_information_fields",
+   "slot": 3,
+   "link": {
+    "page": "attributes/VOLUME_INFORMATION.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x84",
+   "len": 4,
+   "name": "Volume flags",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 00",
+   "value": "0x00000000",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 4,
+   "link": {
+    "page": "attributes/VOLUME_INFORMATION.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x90",
+   "len": 8,
+   "name": "Volume creation time",
+   "frame": null,
+   "group": null,
+   "bytes": "1d f5 f8 11 7a ea dc 01",
+   "value": "2026-05-23T06:04:52.2710301Z",
+   "decoder": "forefst.volume_information_fields",
+   "slot": 5,
+   "link": {
+    "page": "attributes/VOLUME_INFORMATION.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x98",
+   "len": 8,
+   "name": "Secondary FILETIME slot",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 00 00 00 00 00",
+   "value": "0",
+   "decoder": "forefst.ft_iso",
+   "slot": 6,
+   "link": {
+    "page": "attributes/VOLUME_INFORMATION.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0xA0",
+   "len": 8,
+   "name": "Last mount (rw)",
+   "frame": null,
+   "group": null,
+   "bytes": "b9 0b 37 84 a5 ea dc 01",
+   "value": "2026-05-23T11:15:52.2975673Z",
+   "decoder": "forefst.volume_information_fields",
+   "slot": 7,
+   "link": {
+    "page": "attributes/VOLUME_INFORMATION.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0xB0",
+   "len": 2,
+   "name": "Upgrade word",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00",
+   "value": "0x0000",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 0,
+   "link": {
+    "page": "attributes/VOLUME_INFORMATION.md",
+    "anchor": "value-layout"
+   },
+   "row": true,
+   "table": null
+  }
+ ],
+ "groups": [],
+ "rows": [
+  {
+   "o": "0000",
+   "h": [
+    [
+     0,
+     "03"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     1,
+     "0e"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     2,
+     "03"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     3,
+     "0e"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     4,
+     "00 00 00 00"
+    ],
+    [
+     -1,
+     "  00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     0,
+     "."
+    ],
+    [
+     1,
+     "."
+    ],
+    [
+     2,
+     "."
+    ],
+    [
+     3,
+     "."
+    ],
+    [
+     4,
+     "...."
+    ],
+    [
+     -1,
+     "........"
+    ]
+   ]
+  },
+  {
+   "o": "0010",
+   "h": [
+    [
+     5,
+     "1d f5 f8 11 7a ea dc 01"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     6,
+     "00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     5,
+     "....z..."
+    ],
+    [
+     6,
+     "........"
+    ]
+   ]
+  },
+  {
+   "o": "0020",
+   "h": [
+    [
+     7,
+     "b9 0b 37 84 a5 ea dc 01"
+    ],
+    [
+     -1,
+     "  00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     7,
+     "..7....."
+    ],
+    [
+     -1,
+     "........"
+    ]
+   ]
+  },
+  {
+   "o": "0030",
+   "h": [
+    [
+     8,
+     "00 00"
+    ],
+    [
+     -1,
+     "                                           "
+    ]
+   ],
+   "a": [
+    [
+     8,
+     ".."
+    ],
+    [
+     -1,
+     ""
+    ]
+   ]
+  }
+ ]
+}

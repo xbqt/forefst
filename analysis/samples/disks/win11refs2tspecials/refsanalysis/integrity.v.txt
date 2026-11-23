@@ -3,7 +3,7 @@ ReFS Metadata Integrity Report
 ==============================================================================
   Image:           win11refs2tspecials.raw
   ReFS version:    3.14
-  Cluster size:    0x1000
+  Cluster size:    4 KiB
   Checksum type:   CRC64
   Checkpoint VC:   367
   Volume sig:      0x6dfbad7b
@@ -28,24 +28,26 @@ Page Statistics
 ------------------------------------------------------------------------------
 Page-reference checksums (parent -> child binding)
 ------------------------------------------------------------------------------
-  not checked — add `--checksums` (one 4-cluster read per object; ~27,000 on a real volume)
+  not checked — add `--checksums` (one 4-cluster read per object; about 27000 on a real volume)
   child pages inside the tree are a separate check: add `--verify-pages` to any command
-  to verify each metadata page it reads against its parent's digest (3-6x slower)
+  to verify each metadata page it reads against its parent's digest (about 1.3x slower)
 
 ------------------------------------------------------------------------------
 Redundancy / Backup Copies
 ------------------------------------------------------------------------------
-  Boot sector (primary):   LBA 0 — OK
-  Boot sector (backup):    LBA 4294836223 — present, identical to primary, checksum OK
-  Checkpoint [secondary]:   LCN 0x51eb04 — checksum OK, vclock=366
-  Checkpoint [PRIMARY  ]:   LCN 0x3d702ac — checksum OK, vclock=367
+  (offsets are ABSOLUTE in the image file; the partition starts at 0x1000000)
+  Boot sector (primary):   LBA 0 (offset 0x1000000) — checksum OK
+  Boot sector (backup):    LBA 4294836223 (offset 0x1fffcfffe00) — present, identical to primary, checksum OK
+  Checkpoint [secondary]:   LCN 0x51eb04 (offset 0x51fb04000) — checksum OK, vclock=366, superseded
+  Checkpoint [PRIMARY  ]:   LCN 0x3d702ac (offset 0x3d712ac000) — checksum OK, vclock=367, in use
   Superblock copies:       3 intact
-      [PRIMARY] LCN 0x1e (offset 0x1e000) — checksum OK
-      [backup ] LCN 0x1fffbffd (offset 0x1fffbffd000) — checksum OK
-      [backup ] LCN 0x1fffbffe (offset 0x1fffbffe000) — checksum OK
+      [PRIMARY] LCN 0x1e (offset 0x101e000) — checksum OK
+      [backup ] LCN 0x1fffbffd (offset 0x1fffcffd000) — checksum OK
+      [backup ] LCN 0x1fffbffe (offset 0x1fffcffe000) — checksum OK
 
 ------------------------------------------------------------------------------
-Verdict: PASS — all metadata pages structurally valid (run --checksums / --fullchecksums to verify CRC64/SHA-256)
+Verdict: PASS — all metadata pages structurally valid (run --checksums / --fullchecksums to verify
+         CRC64/SHA-256)
 ------------------------------------------------------------------------------
 
 ------------------------------------------------------------------------------

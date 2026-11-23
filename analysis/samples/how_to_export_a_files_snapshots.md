@@ -33,15 +33,24 @@ gives the same list.)
 
 ```
 $ forefst.py win11refs2tsnapshots.raw snapshots --file lasttest.txt --show
+...
   FILE testsnapshots/lasttest.txt
-    Resident:     1600 bytes
+    Created:      2026-05-16T17:34:52.0564658Z
+    Modified:     2026-05-16T17:35:57.4899352Z
+    Record value: 1600 bytes (the name row's value, which holds the versions)
     Snapshots:    2
-    [1] "sameaslastversion"
-        Stream size:   201 bytes
-    [2] "first"
-        Stream size:   ...
+
+    [1] "first"
+        Created:           2026-05-16T17:35:27.1111562Z
+        Stream size:       186 bytes
+    [2] "sameaslastversion"
+        Created:           2026-05-16T17:36:12.4158612Z
+        Stream size:       201 bytes
+
     Recovered content (2 version(s)):
-      [first] ... 'aaaaaaaa...'
+      [first] sub_id=0x1001 size=186 -> 186 bytes, 1 extent(s)
+          'aaaaaaaaaaaaaaaaaaaaaaaa\r\nsdsdsddlmkqsmldfksqmldkf\r\ndsqlkfsjfjlkfdsjskldjfklsjflddsf\r\naaaaaaaaaaaa\r\nqdskljdsqkljdsqkldjs'
+...
 ```
 
 `--show` recovers and previews each version's content so you can confirm which one you want.
@@ -51,8 +60,13 @@ $ forefst.py win11refs2tsnapshots.raw snapshots --file lasttest.txt --show
 
 ```
 $ forefst.py win11refs2tsnapshots.raw export snapshots ./versions/ --file lasttest.txt
-      -> wrote ./versions/testsnapshots_lasttest.txt__first
-      -> wrote ./versions/testsnapshots_lasttest.txt__sameaslastversion
+...
+    Recovered content (2 version(s)):
+      [first] sub_id=0x1001 size=186 -> 186 bytes, 1 extent(s)
+          -> wrote ./versions/testsnapshots_lasttest.txt__first
+      [sameaslastversion] sub_id=0x1002 size=201 -> 201 bytes, 1 extent(s)
+          -> wrote ./versions/testsnapshots_lasttest.txt__sameaslastversion
+[forefst] export index: ./versions/export_index.csv (2 file(s): source, file written, SHA-256)
 ```
 
 Each version is written to its **own file**, named `<path>__<snapshot-name>`. This is binary-safe —
@@ -61,9 +75,15 @@ a database page, an EXE) is written exactly as-is:
 
 ```
 $ ls ./versions/
+export_index.csv
+holes.json
 testsnapshots_lasttest.txt__first
 testsnapshots_lasttest.txt__sameaslastversion
 ```
+
+Beside the versions the export writes `export_index.csv` (each file's `ObjectRef`, the version it holds, the file
+written and its SHA-256) and `holes.json` (whether any byte was read from a range the image stores as a hole;
+here `"Status": "none"`). The stderr line names the index.
 
 If you omit the directory (`export snapshots --file lasttest.txt`), a timestamped
 `forefst_export_snapshots_<stamp>/` folder is created for you.

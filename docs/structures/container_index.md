@@ -1,12 +1,21 @@
 # Container Index
 
-The Container Index (root #10, table ID 0x0E, schema 0xe100) is an alternate index over the
-[Container Table](container_table.md), keyed by allocation state and free space rather than by
-sequential container ID. It lets the allocator answer free-space queries without scanning the entire
-Container Table. On a crash-consistent image it is an **empty B+-tree**: everything it would hold is
-derivable from the Container Table, and it is likely populated only transiently during allocation
-(unverified — no populated state was ever observed in the corpus) — so at checkpoint time there are no
-rows to read.
+The Container Index (root #10, table ID 0x0E, schema 0xe100) holds, per container, what its
+[Container Table](container_table.md) row does not: a compacted container's allocation bitmap and a compressed
+container's compression headers.
+
+Its key is {u64 container id, u32 index, u32 type}:
+
+- type 3 is a container's initial allocation bitmap;
+- type 7 its compression headers.
+
+Like the other tables it is journaled: inserting a container's compression headers is logged as redo opcode 0x1A
+(its writer, `InsertContainerCompressionHeaders`, read on 26100.9818 and Insider 29683).
+
+It is empty on every corpus volume measured, which matches the Container Table: no corpus container is compacted or
+compressed (no row carries flag 0x0008 or 0x0002).
+
+Driver: a static reading of refs.sys 26100.9444; the key and type 7 read twice, type 3 once.
 
 ## Identity and observed state
 
@@ -18,39 +27,43 @@ rows to read.
 | Addressing | Virtual (VLCN → PLCN via the Container Table) |
 | Failover pair | None |
 | Data rows | 0 on every analysed image (valid MSB+ root page, no leaf rows) |
-| Version presence | All versions, v3.4 → Insider |
+| Version presence | Every format, v3.4 to v3.14 |
 
-Because the table is empty on every checkpoint-consistent image, ReFS publishes **no key/value row
-layout** for it — there is nothing on disk to decode. The root page survives a version upgrade in place
-(its root LCN is unchanged across a v3.4 → v3.14 upgrade).
+No corpus volume holds a row, so the key above is the driver's alone, and the values of types 3 and 7 are not decoded
+here.
+
+The root page survives a version upgrade in place (its root LCN is unchanged across the v3.4 → v3.14 upgrade
+measured).
 
 ## Purpose
 
-The [Container Table](container_table.md) (roots #7/#8) is keyed by sequential container ID. The
-Container Index complements it with lookup **by state** — free, partially used, metadata, and so on —
-for the allocator subsystem. It appears to be a performance/index structure: everything it would hold is
-recomputable from the Container Table, which is consistent with a quiescent on-disk image showing it
-empty. Treat a populated Container Index as an in-flight allocation artifact, not a persistent forensic
-record.
+A Container Table row locates a container. The Container Index holds what some containers need beyond it:
+
+- for a compacted container (row flag 0x0008) refs.sys finds its clusters through the Container Index's type-3
+  bitmap: a cluster's place is the count of the bits set before it;
+- a compressed container (flag 0x0002) is read through its type-7 headers;
+- a container that needs a row the index does not have is flagged 0x0080 | 0x0800, and refs.sys refuses a container
+  with 0x0800.
+
+A populated Container Index is therefore evidence of compaction or compression, which no corpus volume shows.
 
 ## Cross-references
 
-- [Container Table](container_table.md) — the authoritative VLCN→PLCN map this index is derived from
-- [Allocators](allocators.md) — the three-tier allocator subsystem that consumes the index
+- [Container Table](container_table.md) — the VLCN→PLCN map; its row flags say when a container needs this index
+- [Allocators](allocators.md) — the three-tier allocator subsystem
 - [Checkpoint (CHKP)](chkp.md) — root #10 of the root-pointer list
 - [Schema Table](schema_table.md) — schema 0xe100
 
 ## Evidence
 
 Identity (root #10 / table ID 0x0E / schema 0xe100 / virtual addressing / no failover pair) and the
-empty-on-disk result are raw-disk verified across the corpus (RD) and corroborated in the driver (E2):
+empty-on-disk result are measured on the disk across the corpus and corroborated in the driver:
 `CmsVolumeContainer::InitializeIndex` (with the salvage-path twin `CsalvVolumeContainer::InitializeIndex`)
-builds the index, and the `CmsContainerRangeMap` class manages the in-memory container ranges it is
-derived from; the table name also appears as a binary string literal (E1). The 0-row state was
-re-confirmed by reading CHKP root #10 directly on v3.4 and v3.14 images — the root-index identity and
-its presence on both formats are **FS_CHKP_019** and **CT_CNTX_001**, both raw-disk confirmed on 3.4 and
-3.14. See
-[how this was verified](../methodology.md) to trace these to the exact images and measurements in
-`analysis/`.
+builds the index; the table name also appears as a binary string literal.
 
-Also registered for statements on this page: **GN_CROT_SA_001**.
+The 0-row state was re-confirmed by reading CHKP root #10 directly on v3.4 and v3.14 images. The key, the row types
+and the compacted-container lookup are a static reading of refs.sys (scopes above).
+
+See [how this was verified](../methodology.md) for the method.
+
+<!-- findings: CT_CNTX_001, FS_CHKP_019, GN_CROT_SA_001 -->

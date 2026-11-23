@@ -1,10 +1,10 @@
 # forefst win11refstestmftecmd.raw search test
 # ----------------------------------------------------------------------------
-ObjectRef      Type          Size  Data             Modified             Path
-─────────────  ────  ────────────  ───────────────  ───────────────────  ────────────────────────────────────────
-0x73f          Dir              0  —                2026-05-23 07:34:06  test
-0x779          Dir              0  —                2026-05-23 07:38:52  test2
-0x818          Dir              0  —                2026-05-23 07:55:54  testintegrity
-0x7b3          Dir              0  —                2026-05-23 07:44:23  testspecials
+ObjectRef      Type          Size  Data             Modified                      Path
+─────────────  ────  ────────────  ───────────────  ────────────────────────────  ────────────────────────────────────────
+0x73f:0x0      Dir              0  —                2026-05-23T07:34:06.0907976Z  test
+0x779:0x0      Dir              0  —                2026-05-23T07:38:52.3553049Z  test2
+0x818:0x0      Dir              0  —                2026-05-23T07:55:54.2408964Z  testintegrity
+0x7b3:0x0      Dir              0  —                2026-05-23T07:44:23.7671535Z  testspecials
 
 4 matches. Use `details <path>`, `details --id FileRef` (HomeOID:FileID) or `details --id OID` for full detail.

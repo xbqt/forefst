@@ -41,7 +41,7 @@ allocate-new-then-propagate CoW path).>
 
 ## Evidence
 
-<Prose: the driver functions (E2) and/or raw-disk measurements (RD) that back this page's claims; name the key finding IDs.>
+<Prose: the driver functions (E2) and/or raw-disk measurements (RD) that back this page's claims. The finding IDs go in the page's closing `<!-- findings: ... -->` comment, never in the prose (a gate checks it).>
 
 <!-- No provenance footer, and nothing to register by hand: a page's evidence is its ## Evidence
      section, its finding ids are the ids it cites, its audit date is its git history. -->

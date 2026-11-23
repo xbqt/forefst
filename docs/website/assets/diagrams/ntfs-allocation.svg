@@ -10,5 +10,5 @@
 <rect class="dg-box" x="430" y="92" width="70" height="40" rx="5"/><text class="dg-muted" x="465" y="116" text-anchor="middle" font-size="10.5">clusters</text>
 <rect class="dg-box" x="510" y="92" width="70" height="40" rx="5"/><text class="dg-muted" x="545" y="116" text-anchor="middle" font-size="10.5">clusters</text>
 <rect class="dg-box" x="590" y="92" width="70" height="40" rx="5"/><text class="dg-muted" x="625" y="116" text-anchor="middle" font-size="10.5">clusters</text>
-<text class="dg-muted" x="20" y="168" font-size="10.5">ReFS replaces the flat MFT with B+-tree objects keyed by Object ID — see Object Table.</text>
+<text class="dg-muted" x="20" y="168" font-size="10.5">ReFS has no MFT: a directory is an object found by its Object ID; a file's record is a row of a directory's table.</text>
 </svg>

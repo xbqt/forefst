@@ -5,7 +5,7 @@ ReFS Stream Snapshot Analysis
 ==============================================================================
   Image:        win11refs2tsnapshots.raw
   ReFS version: 3.14
-  Cluster size: 0x1000
+  Cluster size: 4 KiB
   Objects:      47
 
   Files with snapshots: 5
@@ -14,96 +14,106 @@ ReFS Stream Snapshot Analysis
 ------------------------------------------------------------------------------
 
   FILE testsnapshots/arg.txt
-    Created:      2026-05-16 16:55:20 UTC
-    Modified:     2026-05-16 17:12:30 UTC
-    Resident:     1096 bytes
+    Created:      2026-05-16T16:55:20.9805996Z
+    Modified:     2026-05-16T17:12:30.7302294Z
+    Record value: 1096 bytes (the name row's value, which holds the versions)
     Snapshots:    1
 
     [1] "test2"
-        Stream size:   11 bytes
-        Alloc size:    11 bytes
-        Snap alloc:    4096 bytes
-        Snapshot ID:   ?
-        Raw val len:   116
+        Created:           2026-05-16T17:00:20.7478367Z
+        Stream size:       11 bytes
+        Valid data length: 11 bytes
+        Allocated size:    4096 bytes
+        Data sub-id:       0x1002
+        Raw val len:       116
 
   FILE testsnapshots/lasttest.txt
-    Created:      2026-05-16 17:34:52 UTC
-    Modified:     2026-05-16 17:35:57 UTC
-    Resident:     1600 bytes
+    Created:      2026-05-16T17:34:52.0564658Z
+    Modified:     2026-05-16T17:35:57.4899352Z
+    Record value: 1600 bytes (the name row's value, which holds the versions)
     Snapshots:    2
 
     [1] "first"
-        Stream size:   186 bytes
-        Alloc size:    186 bytes
-        Snap alloc:    4096 bytes
-        Snapshot ID:   ?
-        Raw val len:   116
+        Created:           2026-05-16T17:35:27.1111562Z
+        Stream size:       186 bytes
+        Valid data length: 186 bytes
+        Allocated size:    4096 bytes
+        Data sub-id:       0x1001
+        Raw val len:       116
     [2] "sameaslastversion"
-        Stream size:   201 bytes
-        Alloc size:    201 bytes
-        Snap alloc:    4096 bytes
-        Snapshot ID:   ?
-        Raw val len:   116
+        Created:           2026-05-16T17:36:12.4158612Z
+        Stream size:       201 bytes
+        Valid data length: 201 bytes
+        Allocated size:    4096 bytes
+        Data sub-id:       0x1002
+        Raw val len:       116
 
   FILE testsnapshots/test.txt
-    Created:      2026-05-16 17:16:47 UTC
-    Modified:     2026-05-16 17:19:37 UTC
-    Resident:     2520 bytes
+    Created:      2026-05-16T17:16:47.9281343Z
+    Modified:     2026-05-16T17:19:37.0883235Z
+    Record value: 2520 bytes (the name row's value, which holds the versions)
     Snapshots:    4
 
     [1] "firstversion"
-        Stream size:   42 bytes
-        Alloc size:    42 bytes
-        Snap alloc:    4096 bytes
-        Snapshot ID:   ?
-        Raw val len:   116
+        Created:           2026-05-16T17:17:24.6759060Z
+        Stream size:       42 bytes
+        Valid data length: 42 bytes
+        Allocated size:    4096 bytes
+        Data sub-id:       0x1001
+        Raw val len:       116
     [2] "last"
-        Stream size:   5 bytes
-        Alloc size:    5 bytes
-        Snap alloc:    4096 bytes
-        Snapshot ID:   ?
-        Raw val len:   116
+        Created:           2026-05-16T17:21:02.4793050Z
+        Stream size:       5 bytes
+        Valid data length: 5 bytes
+        Allocated size:    4096 bytes
+        Data sub-id:       0x1004
+        Raw val len:       116
     [3] "v2"
-        Stream size:   65 bytes
-        Alloc size:    65 bytes
-        Snap alloc:    4096 bytes
-        Snapshot ID:   ?
-        Raw val len:   116
+        Created:           2026-05-16T17:18:40.0878017Z
+        Stream size:       65 bytes
+        Valid data length: 65 bytes
+        Allocated size:    4096 bytes
+        Data sub-id:       0x1002
+        Raw val len:       116
     [4] "v3"
-        Stream size:   92 bytes
-        Alloc size:    92 bytes
-        Snap alloc:    4096 bytes
-        Snapshot ID:   ?
-        Raw val len:   116
+        Created:           2026-05-16T17:19:06.8023967Z
+        Stream size:       92 bytes
+        Valid data length: 92 bytes
+        Allocated size:    4096 bytes
+        Data sub-id:       0x1003
+        Raw val len:       116
 
   FILE testsnapshots/testads.txt
-    Created:      2026-05-16 17:26:23 UTC
-    Modified:     2026-05-16 17:27:58 UTC
-    Resident:     1768 bytes
+    Created:      2026-05-16T17:26:23.9789438Z
+    Modified:     2026-05-16T17:27:58.0956492Z
+    Record value: 1768 bytes (the name row's value, which holds the versions)
     Snapshots:    1
 
     [1] "beforeads"
-        Stream size:   12 bytes
-        Alloc size:    12 bytes
-        Snap alloc:    4096 bytes
-        Snapshot ID:   ?
-        Raw val len:   116
+        Created:           2026-05-16T17:26:52.4266022Z
+        Stream size:       12 bytes
+        Valid data length: 12 bytes
+        Allocated size:    4096 bytes
+        Data sub-id:       0x1001
+        Raw val len:       116
 
   FILE testsnapshots/xbpt_beta_sierra_570651.json
-    Created:      2026-05-16 17:30:57 UTC
-    Modified:     2026-05-16 17:34:32 UTC
-    Resident:     1888 bytes
+    Created:      2026-05-16T17:30:57.2925347Z
+    Modified:     2026-05-16T17:34:32.1649542Z
+    Record value: 1888 bytes (the name row's value, which holds the versions)
     Snapshots:    2
 
     [1] "copiedversion"
-        Stream size:   71395 bytes
-        Alloc size:    71395 bytes
-        Snap alloc:    73728 bytes
-        Snapshot ID:   ?
-        Raw val len:   116
+        Created:           2026-05-16T17:31:26.6212822Z
+        Stream size:       71395 bytes
+        Valid data length: 71395 bytes
+        Allocated size:    73728 bytes
+        Data sub-id:       0x1001
+        Raw val len:       116
     [2] "versionmodified"
-        Stream size:   3202036 bytes
-        Alloc size:    3202036 bytes
-        Snap alloc:    3203072 bytes
-        Snapshot ID:   ?
-        Raw val len:   116
+        Created:           2026-05-16T17:34:05.5251271Z
+        Stream size:       3202036 bytes
+        Valid data length: 3202036 bytes
+        Allocated size:    3203072 bytes
+        Data sub-id:       0x1002
+        Raw val len:       116

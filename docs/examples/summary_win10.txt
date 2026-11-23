@@ -5,16 +5,17 @@ ReFS Volume Summary
   ReFS version:       3.4
   Volume GUID:        edc30f16-3c23-4a90-b075-cbe32d784c71
   Volume label:       win10refs2tspecials
-  Volume size:        2.0 TB
-  Cluster size:       0x1000 (4.0 KB)
-  Container size:     0x4000000 (64.0 MB)
-  Checksum:           None
-  Compression:        Not configured
+  Volume size:        2198956146688 bytes (2047.9 GiB)
+  Cluster size:       4 KiB
+  Container size:     64 MiB
+  Checksum:           CRC64 (the boot sector's checksum selector, +0x2a = 0x0, is not read: its flags, +0x2c = 0x6, lack 0x40, so refs.sys 26100 and Insider 29574 use CRC64)
+  Compression:        none
 
 ------------------------------------------------------------------------------
 Checkpoint
 ------------------------------------------------------------------------------
   Virtual clock:      61
+  Copy in use:        LCN 0x51eb04
   Flags:              0x2
   Containers mapped:  32767
 
@@ -22,11 +23,12 @@ Checkpoint
 File System Content
 ------------------------------------------------------------------------------
   Directories:        148
-  Files:              1035 (164 resident)
-  Total file size:    951.9 MB
+  Files:              1035 (1035 extents)
+  Names:              1035 (one per file: no file is hard-linked)
+  Total file size:    998181386 bytes (951.9 MiB)
   Security descs:     7
-  Oldest timestamp:   2021-05-18 07:16:04 UTC
-  Newest timestamp:   2026-05-16 12:07:35 UTC
+  Oldest timestamp:   2021-05-18T07:16:04.9990009Z
+  Newest timestamp:   2026-05-16T12:07:35.2154972Z
 
 ------------------------------------------------------------------------------
 Global Root Tables
@@ -36,11 +38,18 @@ Global Root Tables
   Container Allocator             165 rows
   Schema Table                     27 rows
   Parent-Child Table              149 rows
-  Object ID Table dup             160 rows
+  Object ID Table copy 2          160 rows
   Block RefCount                    0 rows
   Container Table               32767 rows
-  Container Table dup           32767 rows
-  Schema Table dup                 27 rows
+  Container Table copy 2        32767 rows
+  Schema Table copy 2              27 rows
   Container Index                   0 rows
   Integrity State                   3 rows
   Small Allocator                   8 rows
+
+------------------------------------------------------------------------------
+MLog
+------------------------------------------------------------------------------
+  not read: `summary --mlog` or `summary -v` reads it (one pass over the log's data area);
+  `mlog` lists the log's records
+

@@ -1,11 +1,15 @@
 # Parent-Child Table
 
-The Parent-Child Table (root #4, schema 0xe040) encodes the directory hierarchy. It
-records only directory-to-directory and directory-to-security-mapping relationships;
-regular files are not tracked. The first row is always **0x600 → 0x520** (root directory →
-the **FS Metadata** directory, the NTFS `$Extend` equivalent), confirming that system
-directories are tracked too. OID 0x520 is FS Metadata; OID 0x530 holds security
-descriptors.
+The Parent-Child Table (root #4, schema 0xe040) encodes the directory hierarchy.
+
+It records only directory-to-directory and directory-to-security-mapping relationships;
+regular files are not tracked.
+
+On every volume read, the first row is **0x600 → 0x520** (root directory → the **FS Metadata** directory, the
+NTFS `$Extend` equivalent), confirming that system directories are tracked too:
+
+- OID 0x520 is FS Metadata;
+- OID 0x530 holds security descriptors.
 
 ## Row Format -- 48 bytes
 
@@ -19,10 +23,10 @@ region.
 | 0x00 | 4 | Row size (u32) | Total byte size of the row = 0x30 (48) for this table; the next-row stride |
 | 0x04 | 2 | Key offset (u16) | Byte offset from row start to key |
 | 0x06 | 2 | Key length (u16) | 32 bytes |
-| 0x08 | 2 | Reserved (u16) | -- |
+| 0x08 | 2 | Flags (u16) | Bit `0x4`: the row was removed from the key index (see [B+-Tree Node](btree_node.md)) |
 | 0x0A | 2 | Value offset (u16) | Same as key offset |
 | 0x0C | 2 | Value length (u16) | 32 bytes |
-| 0x0E | 2 | Reserved (u16) | -- |
+| 0x0E | 2 | Reserved (u16) | 0 |
 
 ### Key/Value Region (32 bytes -- shared)
 
@@ -56,8 +60,7 @@ bitfield; see [Schema Table](schema_table.md)).
 The Parent-Child Table enables top-down directory traversal without reading individual
 directory B+-trees. Given a parent OID, all child directory OIDs can be found by scanning
 the table for matching ParentOID values. `CmsObjectTable::AddParentChildLink` adds a
-`[parent_OID, child_OID]` pair for every directory entry creation, which is what enables
-this reverse lookup.
+`[parent_OID, child_OID]` pair when a directory is created, which is what enables this reverse lookup.
 
 This table does **not** contain regular file entries -- only directory-to-directory links
 and directory-to-security-mapping links. To enumerate files within a directory, the
@@ -90,12 +93,17 @@ The header's first u32 is `30 00 00 00` = **Row size `0x30` (48 bytes)** — the
 
 The 32-byte key/value layout (Reserved/ParentOID/Reserved/ChildOID), the 48-byte total row
 size, the shared key/value overlap, the (ParentOID, ChildOID) sort order, and the zero
-quadwords at 0x00/0x10 are raw-disk decoded across the corpus (RD) and version-invariant
-v3.4–v3.14. The parent-child tracking mechanism is corroborated in the driver (E2):
+quadwords at 0x00/0x10 are decoded from the disk across the corpus and version-invariant
+v3.4–v3.14. The parent-child tracking mechanism is corroborated in the driver:
 `CmsObjectTable::AddParentChildLink`, `PreCowParentChildLink`, and
 `CmsObjectTable::DoomParentChild`. The value-overlaps-key
 behaviour is caller-side: `AddParentChildLink` passes the same 32-byte buffer as key and
 value, and `CmsHashTable::InitializeIndexEntry` collapses the duplicate by setting
 `value_offset = key_offset`; the schema `u32[7]=0x08` is the key-comparison-rules selector
-(`8 → CmsRulesPARENT_CHILD_LINK`), not a value-overlap bitfield. Findings: **FS_PCTB_RA_001**, **FS_PCHL_001**, **FS_OTBL_SA_010**. The remaining field-level statements on this page are registered as **FN_DTBL_004**, **FS_OTBL_004**, **GN_IENT_005** — each with its own evidence tier and witness in the claim register. See [how this was verified](../methodology.md) to trace these to the exact images
+(`8 → CmsRulesPARENT_CHILD_LINK`), not a value-overlap bitfield. These and the page's other field-level statements
+are registered findings, each with its own evidence tier and witness in the claim register.
+
+See [how this was verified](../methodology.md) to trace these to the exact images
 and measurements in `analysis/`.
+
+<!-- findings: FN_DTBL_004, FS_OTBL_004, FS_OTBL_SA_010, FS_PCHL_001, FS_PCTB_RA_001, GN_IENT_005 -->

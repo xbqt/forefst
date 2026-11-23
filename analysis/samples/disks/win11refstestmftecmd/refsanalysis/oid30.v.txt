@@ -4,24 +4,24 @@ Image: win11refstestmftecmd.raw  (ReFS 3.14, 250 objects)
 ==============================================================================
   OID 0x30: PRESENT at VLCN 0x12c04 / PLCN 0x2c04
   Total rows: 39
-  Sessions: 4
+  Generations: 4  (10-minute periods in which the volume had I/O)
 
-  Session: 2026-05-23 06:38:44 UTC
-    Sub-IDs: 0x0, 0x1, 0x5, 0x14, 0x15
+  Generation: 2026-05-23T06:38:44.0227101Z
+    Key +0x8: 0x0, 0x1, 0x5, 0x14, 0x15
 
-  Session: 2026-05-23 07:38:44 UTC
-    Sub-IDs: 0x0, 0x1, 0x5, 0x6, 0x7, 0x14, 0x15, 0x24
+  Generation: 2026-05-23T07:38:44.0846083Z
+    Key +0x8: 0x0, 0x1, 0x5, 0x6, 0x7, 0x14, 0x15, 0x24
 
-  Session: 2026-05-23 07:48:44 UTC
-    Sub-IDs: 0x0, 0x1, 0x5, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b
+  Generation: 2026-05-23T07:48:44.0987184Z
+    Key +0x8: 0x0, 0x1, 0x5, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b
 
-  Session: 2026-05-23 07:58:44 UTC
-    Sub-IDs: 0x0, 0x1, 0x5, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2f, 0x31, 0x33, 0x35, 0x37, 0x39
+  Generation: 2026-05-23T07:58:44.1124595Z
+    Key +0x8: 0x0, 0x1, 0x5, 0x26, 0x27, 0x28, 0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2f, 0x31, 0x33, 0x35, 0x37, 0x39
 
   ──────────────────────────────────────────────────────────────────────────
   Detailed rows:
 
-    Sub-ID 0x0 (Session summary) — 80 bytes (standard)
+    Key +0x8 0x0 (generation totals (+0x8 = 0)) — 80 bytes
       field[0]:            2 (0x2)
       field[1]:            2 (0x2)
       field[2]:            1 (0x1)
@@ -31,7 +31,7 @@ Image: win11refstestmftecmd.raw  (ReFS 3.14, 250 objects)
       field[6]:            2 (0x2)
       field[7]:            0 (0x0)
 
-    Sub-ID 0x1 (IO counters (detailed)) — 80 bytes (standard)
+    Key +0x8 0x1 (generation totals (+0x8 = 1)) — 80 bytes
       field[0]:          222 (0xde)
       field[1]:           17 (0x11)
       field[2]:            2 (0x2)
@@ -41,25 +41,25 @@ Image: win11refstestmftecmd.raw  (ReFS 3.14, 250 objects)
       field[6]:          206 (0xce)
       field[7]:            0 (0x0)
 
-    Sub-ID 0x5 (Category A) — 44 bytes (standard)
+    Key +0x8 0x5 (container 2, RWType bit 1) — 44 bytes
       field[0]:           16 (0x10)
       field[1]:            1 (0x1)
       field[2]:          296 (0x128)
-      trailing_u32: 65536 (0x10000)
+      map (u32 at +0x28): 65536 (0x10000)
 
-    Sub-ID 0x14 (Category D (v3.14+)) — 44 bytes (standard)
+    Key +0x8 0x14 (container 10, RWType bit 0) — 44 bytes
       field[0]:            2 (0x2)
       field[1]:            2 (0x2)
       field[2]:          296 (0x128)
-      trailing_u32: 1 (0x1)
+      map (u32 at +0x28): 1 (0x1)
 
-    Sub-ID 0x15 (Category E (v3.14+)) — 44 bytes (standard)
+    Key +0x8 0x15 (container 10, RWType bit 1) — 44 bytes
       field[0]:          206 (0xce)
       field[1]:           16 (0x10)
       field[2]:          296 (0x128)
-      trailing_u32: 1 (0x1)
+      map (u32 at +0x28): 1 (0x1)
 
-    Sub-ID 0x0 (Session summary) — 80 bytes (standard)
+    Key +0x8 0x0 (generation totals (+0x8 = 0)) — 80 bytes
       field[0]:         6831 (0x1aaf)
       field[1]:          760 (0x2f8)
       field[2]:            3 (0x3)
@@ -69,7 +69,7 @@ Image: win11refstestmftecmd.raw  (ReFS 3.14, 250 objects)
       field[6]:         4719 (0x126f)
       field[7]:            0 (0x0)
 
-    Sub-ID 0x1 (IO counters (detailed)) — 80 bytes (standard)
+    Key +0x8 0x1 (generation totals (+0x8 = 1)) — 80 bytes
       field[0]:          424 (0x1a8)
       field[1]:          343 (0x157)
       field[2]:            3 (0x3)
@@ -79,43 +79,43 @@ Image: win11refstestmftecmd.raw  (ReFS 3.14, 250 objects)
       field[6]:          159 (0x9f)
       field[7]:            0 (0x0)
 
-    Sub-ID 0x5 (Category A) — 44 bytes (standard)
+    Key +0x8 0x5 (container 2, RWType bit 1) — 44 bytes
       field[0]:          108 (0x6c)
       field[1]:           27 (0x1b)
       field[2]:          296 (0x128)
-      trailing_u32: 2127977362 (0x7ed65b92)
+      map (u32 at +0x28): 2127977362 (0x7ed65b92)
 
-    Sub-ID 0x6 (Category B) — 44 bytes (standard)
+    Key +0x8 0x6 (container 3, RWType bit 0) — 44 bytes
       field[0]:         2075 (0x81b)
       field[1]:          226 (0xe2)
       field[2]:          296 (0x128)
-      trailing_u32: 135561215 (0x8147fff)
+      map (u32 at +0x28): 135561215 (0x8147fff)
 
-    Sub-ID 0x7 (Category C) — 44 bytes (standard)
+    Key +0x8 0x7 (container 3, RWType bit 1) — 44 bytes
       field[0]:          159 (0x9f)
       field[1]:          159 (0x9f)
       field[2]:          296 (0x128)
-      trailing_u32: 134233981 (0x8003f7d)
+      map (u32 at +0x28): 134233981 (0x8003f7d)
 
-    Sub-ID 0x14 (Category D (v3.14+)) — 44 bytes (standard)
+    Key +0x8 0x14 (container 10, RWType bit 0) — 44 bytes
       field[0]:         4719 (0x126f)
       field[1]:          529 (0x211)
       field[2]:          296 (0x128)
-      trailing_u32: 4294967295 (0xffffffff)
+      map (u32 at +0x28): 4294967295 (0xffffffff)
 
-    Sub-ID 0x15 (Category E (v3.14+)) — 44 bytes (standard)
+    Key +0x8 0x15 (container 10, RWType bit 1) — 44 bytes
       field[0]:          157 (0x9d)
       field[1]:          157 (0x9d)
       field[2]:          296 (0x128)
-      trailing_u32: 2147483583 (0x7fffffbf)
+      map (u32 at +0x28): 2147483583 (0x7fffffbf)
 
-    Sub-ID 0x24 (Unknown (0x24)) — 44 bytes (standard)
+    Key +0x8 0x24 (container 18, RWType bit 0) — 44 bytes
       field[0]:           37 (0x25)
       field[1]:            5 (0x5)
       field[2]:          296 (0x128)
-      trailing_u32: 1 (0x1)
+      map (u32 at +0x28): 1 (0x1)
 
-    Sub-ID 0x0 (Session summary) — 80 bytes (standard)
+    Key +0x8 0x0 (generation totals (+0x8 = 0)) — 80 bytes
       field[0]:         9660 (0x25bc)
       field[1]:         1077 (0x435)
       field[2]:            3 (0x3)
@@ -125,7 +125,7 @@ Image: win11refstestmftecmd.raw  (ReFS 3.14, 250 objects)
       field[6]:         4848 (0x12f0)
       field[7]:            0 (0x0)
 
-    Sub-ID 0x1 (IO counters (detailed)) — 80 bytes (standard)
+    Key +0x8 0x1 (generation totals (+0x8 = 1)) — 80 bytes
       field[0]:          696 (0x2b8)
       field[1]:          537 (0x219)
       field[2]:            4 (0x4)
@@ -135,49 +135,49 @@ Image: win11refstestmftecmd.raw  (ReFS 3.14, 250 objects)
       field[6]:          212 (0xd4)
       field[7]:            0 (0x0)
 
-    Sub-ID 0x5 (Category A) — 44 bytes (standard)
+    Key +0x8 0x5 (container 2, RWType bit 1) — 44 bytes
       field[0]:          212 (0xd4)
       field[1]:           53 (0x35)
       field[2]:          296 (0x128)
-      trailing_u32: 2147287027 (0x7ffcfff3)
+      map (u32 at +0x28): 2147287027 (0x7ffcfff3)
 
-    Sub-ID 0x26 (Unknown (0x26)) — 44 bytes (standard)
+    Key +0x8 0x26 (container 19, RWType bit 0) — 44 bytes
       field[0]:         4848 (0x12f0)
       field[1]:          536 (0x218)
       field[2]:          296 (0x128)
-      trailing_u32: 4294966272 (0xfffffc00)
+      map (u32 at +0x28): 4294966272 (0xfffffc00)
 
-    Sub-ID 0x27 (Category H (v3.10)) — 44 bytes (standard)
+    Key +0x8 0x27 (container 19, RWType bit 1) — 44 bytes
       field[0]:          143 (0x8f)
       field[1]:          143 (0x8f)
       field[2]:          296 (0x128)
-      trailing_u32: 4294965248 (0xfffff800)
+      map (u32 at +0x28): 4294965248 (0xfffff800)
 
-    Sub-ID 0x28 (Unknown (0x28)) — 44 bytes (standard)
+    Key +0x8 0x28 (container 20, RWType bit 0) — 44 bytes
       field[0]:         4406 (0x1136)
       field[1]:          498 (0x1f2)
       field[2]:          296 (0x128)
-      trailing_u32: 2751463423 (0xa3ffffff)
+      map (u32 at +0x28): 2751463423 (0xa3ffffff)
 
-    Sub-ID 0x29 (Unknown (0x29)) — 44 bytes (standard)
+    Key +0x8 0x29 (container 20, RWType bit 1) — 44 bytes
       field[0]:          194 (0xc2)
       field[1]:          194 (0xc2)
       field[2]:          296 (0x128)
-      trailing_u32: 33554431 (0x1ffffff)
+      map (u32 at +0x28): 33554431 (0x1ffffff)
 
-    Sub-ID 0x2a (Unknown (0x2a)) — 44 bytes (standard)
+    Key +0x8 0x2a (container 21, RWType bit 0) — 44 bytes
       field[0]:          406 (0x196)
       field[1]:           43 (0x2b)
       field[2]:          296 (0x128)
-      trailing_u32: 960 (0x3c0)
+      map (u32 at +0x28): 960 (0x3c0)
 
-    Sub-ID 0x2b (Unknown (0x2b)) — 44 bytes (standard)
+    Key +0x8 0x2b (container 21, RWType bit 1) — 44 bytes
       field[0]:          147 (0x93)
       field[1]:          147 (0x93)
       field[2]:          296 (0x128)
-      trailing_u32: 704 (0x2c0)
+      map (u32 at +0x28): 704 (0x2c0)
 
-    Sub-ID 0x0 (Session summary) — 80 bytes (standard)
+    Key +0x8 0x0 (generation totals (+0x8 = 0)) — 80 bytes
       field[0]:         3293 (0xcdd)
       field[1]:          355 (0x163)
       field[2]:            4 (0x4)
@@ -187,7 +187,7 @@ Image: win11refstestmftecmd.raw  (ReFS 3.14, 250 objects)
       field[6]:         3019 (0xbcb)
       field[7]:            0 (0x0)
 
-    Sub-ID 0x1 (IO counters (detailed)) — 80 bytes (standard)
+    Key +0x8 0x1 (generation totals (+0x8 = 1)) — 80 bytes
       field[0]:        91308 (0x164ac)
       field[1]:          678 (0x2a6)
       field[2]:           11 (0xb)
@@ -197,92 +197,92 @@ Image: win11refstestmftecmd.raw  (ReFS 3.14, 250 objects)
       field[6]:        18791 (0x4967)
       field[7]:            0 (0x0)
 
-    Sub-ID 0x5 (Category A) — 44 bytes (standard)
+    Key +0x8 0x5 (container 2, RWType bit 1) — 44 bytes
       field[0]:          240 (0xf0)
       field[1]:           60 (0x3c)
       field[2]:          296 (0x128)
-      trailing_u32: 4026531839 (0xefffffff)
+      map (u32 at +0x28): 4026531839 (0xefffffff)
 
-    Sub-ID 0x26 (Unknown (0x26)) — 44 bytes (standard)
+    Key +0x8 0x26 (container 19, RWType bit 0) — 44 bytes
       field[0]:          155 (0x9b)
       field[1]:           17 (0x11)
       field[2]:          296 (0x128)
-      trailing_u32: 1782907904 (0x6a450400)
+      map (u32 at +0x28): 1782907904 (0x6a450400)
 
-    Sub-ID 0x27 (Category H (v3.10)) — 44 bytes (standard)
+    Key +0x8 0x27 (container 19, RWType bit 1) — 44 bytes
       field[0]:           33 (0x21)
       field[1]:           15 (0xf)
       field[2]:          296 (0x128)
-      trailing_u32: 1782907904 (0x6a450400)
+      map (u32 at +0x28): 1782907904 (0x6a450400)
 
-    Sub-ID 0x28 (Unknown (0x28)) — 44 bytes (standard)
+    Key +0x8 0x28 (container 20, RWType bit 0) — 44 bytes
       field[0]:          103 (0x67)
       field[1]:           11 (0xb)
       field[2]:          296 (0x128)
-      trailing_u32: 6692 (0x1a24)
+      map (u32 at +0x28): 6692 (0x1a24)
 
-    Sub-ID 0x29 (Unknown (0x29)) — 44 bytes (standard)
+    Key +0x8 0x29 (container 20, RWType bit 1) — 44 bytes
       field[0]:          374 (0x176)
       field[1]:            9 (0x9)
       field[2]:          296 (0x128)
-      trailing_u32: 6692 (0x1a24)
+      map (u32 at +0x28): 6692 (0x1a24)
 
-    Sub-ID 0x2a (Unknown (0x2a)) — 44 bytes (standard)
+    Key +0x8 0x2a (container 21, RWType bit 0) — 44 bytes
       field[0]:         3019 (0xbcb)
       field[1]:          326 (0x146)
       field[2]:          296 (0x128)
-      trailing_u32: 1073741312 (0x3ffffe00)
+      map (u32 at +0x28): 1073741312 (0x3ffffe00)
 
-    Sub-ID 0x2b (Unknown (0x2b)) — 44 bytes (standard)
+    Key +0x8 0x2b (container 21, RWType bit 1) — 44 bytes
       field[0]:         1257 (0x4e9)
       field[1]:          200 (0xc8)
       field[2]:          296 (0x128)
-      trailing_u32: 1073741312 (0x3ffffe00)
+      map (u32 at +0x28): 1073741312 (0x3ffffe00)
 
-    Sub-ID 0x2c (Unknown (0x2c)) — 44 bytes (standard)
+    Key +0x8 0x2c (container 22, RWType bit 0) — 44 bytes
       field[0]:           16 (0x10)
       field[1]:            1 (0x1)
       field[2]:          296 (0x128)
-      trailing_u32: 16 (0x10)
+      map (u32 at +0x28): 16 (0x10)
 
-    Sub-ID 0x2d (Unknown (0x2d)) — 44 bytes (standard)
+    Key +0x8 0x2d (container 22, RWType bit 1) — 44 bytes
       field[0]:            2 (0x2)
       field[1]:            2 (0x2)
       field[2]:          296 (0x128)
-      trailing_u32: 16 (0x10)
+      map (u32 at +0x28): 16 (0x10)
 
-    Sub-ID 0x2f (Unknown (0x2f)) — 44 bytes (standard)
+    Key +0x8 0x2f (container 23, RWType bit 1) — 44 bytes
       field[0]:            1 (0x1)
       field[1]:            1 (0x1)
       field[2]:          296 (0x128)
-      trailing_u32: 16 (0x10)
+      map (u32 at +0x28): 16 (0x10)
 
-    Sub-ID 0x31 (Unknown (0x31)) — 44 bytes (standard)
+    Key +0x8 0x31 (container 24, RWType bit 1) — 44 bytes
       field[0]:        15754 (0x3d8a)
       field[1]:           70 (0x46)
       field[2]:          296 (0x128)
-      trailing_u32: 4294967280 (0xfffffff0)
+      map (u32 at +0x28): 4294967280 (0xfffffff0)
 
-    Sub-ID 0x33 (Unknown (0x33)) — 44 bytes (standard)
+    Key +0x8 0x33 (container 25, RWType bit 1) — 44 bytes
       field[0]:        18044 (0x467c)
       field[1]:           81 (0x51)
       field[2]:          296 (0x128)
-      trailing_u32: 4294967295 (0xffffffff)
+      map (u32 at +0x28): 4294967295 (0xffffffff)
 
-    Sub-ID 0x35 (Unknown (0x35)) — 44 bytes (standard)
+    Key +0x8 0x35 (container 26, RWType bit 1) — 44 bytes
       field[0]:        18044 (0x467c)
       field[1]:           81 (0x51)
       field[2]:          296 (0x128)
-      trailing_u32: 4294967295 (0xffffffff)
+      map (u32 at +0x28): 4294967295 (0xffffffff)
 
-    Sub-ID 0x37 (Unknown (0x37)) — 44 bytes (standard)
+    Key +0x8 0x37 (container 27, RWType bit 1) — 44 bytes
       field[0]:        18791 (0x4967)
       field[1]:           82 (0x52)
       field[2]:          296 (0x128)
-      trailing_u32: 4294967295 (0xffffffff)
+      map (u32 at +0x28): 4294967295 (0xffffffff)
 
-    Sub-ID 0x39 (Unknown (0x39)) — 44 bytes (standard)
+    Key +0x8 0x39 (container 28, RWType bit 1) — 44 bytes
       field[0]:        18768 (0x4950)
       field[1]:           77 (0x4d)
       field[2]:          296 (0x128)
-      trailing_u32: 2147483647 (0x7fffffff)
+      map (u32 at +0x28): 2147483647 (0x7fffffff)

@@ -7,7 +7,7 @@ links, symbolic links, and alternate data streams on top of a baseline file-syst
 
 | ReFS version | Cluster size | Metadata checksum | Files / Dirs | Highlights |
 |--------------|--------------|-------------------|--------------|------------|
-| 3.14 | 4 KiB (16 KiB pages) | CRC64 | 1333 / 217 | 515 extra hard links · 344 reparse/symlink entries · alternate data streams |
+| 3.14 | 4 KiB (16 KiB pages) | CRC64 | 980 / 217 | 180 hard-linked files (533 names) · 344 files with a reparse point (508 names) · alternate data streams |
 
 Top-level directories: `test` (baseline replay), `testspecials`, `testspecials2` (the heavy runs).
 

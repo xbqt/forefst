@@ -8,6 +8,7 @@ Guiding property: no parser in either module may raise anything other than
 ValueError (or return a sentinel) when handed arbitrary bytes. A forensic tool is
 pointed at corrupt and hostile images by definition.
 """
+import hashlib
 import struct
 import signal
 import subprocess
@@ -100,7 +101,7 @@ def test_validation_and_partition_search_never_disagree(ntfs_then_refs_image):
 def test_parse_ct_page_terminates_on_a_cyclic_tree(tmp_image):
     """A container-table inner node pointing back at its own page must not fan out.
 
-    _walk already has the `visited` guard (E10); _parse_ct_page does not, and
+    _walk already has the `visited` guard (review E10); _parse_ct_page does not, and
     hangs. It is reached from bootstrap(), so every subcommand hangs with it.
     """
     cs = 4096
@@ -219,12 +220,20 @@ def test_parsers_raise_only_valueerror_on_garbage(tmp_image, payload):
 
 
 def test_parse_supb_clamps_an_implausible_reference_count(tmp_image):
-    """The E9 clamp already exists — lock it in."""
+    """The review E9 clamp already exists — lock it in."""
     cs = 4096
     data = bytearray(cs)
     data[0:4] = b"SUPB"
     struct.pack_into("<I", data, 0x70, 0x80)
     struct.pack_into("<I", data, 0x74, 0xFFFFFFFF)
+    # N335 (decision 27.5), a fixture correction: a superblock declares its self-descriptor (SUPB+0x78 offset, +0x7C
+    # length), and one that declares none (pointer 0/0) fails its self-checksum, as in the 26100 driver. This block
+    # declared none, so its verdict came from the old descriptor scan; it now declares one (SHA-256 over the cluster
+    # with the descriptor zeroed) and verifies, so the test exercises the clamp alone, as it always meant to.
+    d = 0xD0
+    struct.pack_into("<II", data, 0x78, d, 0x48)
+    data[d + 0x22] = 4; data[d + 0x23] = 8; struct.pack_into("<I", data, d + 0x24, 32)
+    data[d + 0x28:d + 0x48] = hashlib.sha256(bytes(data[:d]) + b"\0" * 0x48 + bytes(data[d + 0x48:])).digest()
     img = bytearray(0x1E * cs + cs)
     img[0x1E * cs:0x1E * cs + cs] = data
     path = tmp_image(bytes(img))

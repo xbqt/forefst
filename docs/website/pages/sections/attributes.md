@@ -1,8 +1,22 @@
-The per-attribute reference — the metadata an object can carry, by embedded type code.
+The attributes are the metadata a file or a directory carries: its times and file attributes, its content, its
+alternate data streams and snapshots, its reparse data, its extended attributes and its encryption metadata.
 
-The ones that matter most forensically: [$STANDARD_INFORMATION](STANDARD_INFORMATION.md) (timestamps, file
-attributes, the USN / LastUsn link) and [$DATA](DATA.md) (file content — inline bytes or on-disk
-extents). Unlike NTFS, ReFS has **no `$FILE_NAME` attribute** — a name is a directory-entry row, not a
-per-file attribute — and no 8.3 short-name twin; a directory's child index is the embedded
-[$I30_INDEX](I30_INDEX.md). Reparse points (symlinks / junctions), WSL / Linux metadata (`$LX*`), extended
-attributes, alternate data streams, stream snapshots, and EFS encryption metadata are documented here too.
+The two an examiner reads first are [$STANDARD_INFORMATION](STANDARD_INFORMATION.md) (the times, the file attributes,
+the change-journal link) and [$DATA](DATA.md) (the content: bytes inline in the record, or on-disk extents).
+
+ReFS has no `$FILE_NAME` attribute: a name is a row of its directory, and there is no 8.3 short name.
+
+How the attributes are organised, and where each one sits in a record: [Attributes](../concepts/attributes.md) in
+Concepts.
+
+<!-- site: after-list -->
+
+## A directory's own row, byte by byte
+
+Each attribute's bytes are in its own colour and link to its page.
+
+<!-- site: hexfig "attrmap_dir_win11refs2tspecials" "nocaption" -->
+
+## A file's record with two alternate data streams, byte by byte
+
+<!-- site: hexfig "attrmap_file_win11refs2tspecials" "nocaption" -->

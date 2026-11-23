@@ -1,0 +1,21 @@
+# The class of each register row no content page cites (KNOWLEDGE_MAP.md section 3, build_docs_index.py).
+# class: internal-only (no reader-facing statement to make) | undocumented (a page or paragraph is owed) |
+# duplicate (the same fact as a cited row). build_docs_index.py --check fails on an uncited row with no line here,
+# and on a line for a row that pages now cite.
+ref_id	class	reason
+FS_VINF_003	internal-only	contradicted prior-work claim (a backup block row at key 0x540): nothing to state
+MD_MISC_002	internal-only	a placeholder ("unknown metadata file, future work"), not a fact
+AP_WIPE_001	internal-only	a prior-work claim (wiping tools told apart by log opcode patterns) not tested here; no page states it until it is
+GN_XVER_SA_001	internal-only	function counts of the driver comparison: analysis statistics
+AP_LGFL_RA_003	internal-only	retracted (the log data area does not hold page images)
+MD_DATA_RA_003	duplicate	superseded by FN_LINK_002 (the type-0x30 value fields of a hard-linked file)
+GN_DTCT_RA_001	internal-only	a test result of the tools: a BitLocker or NTFS volume is refused as not ReFS
+MD_TS_RA_006	internal-only	the object layout of one lab image
+MD_SF_RA_001	internal-only	a lab procedure (how the sparse test files were made)
+MD_DEL_RA_002	internal-only	contradicted (an Explorer deletion's $R / $I records as first described)
+MD_ATTR_RA_001	internal-only	contradicted (a "complete" catalog of attribute values)
+FN_MISC_001	internal-only	prior work on format 1.2, outside the corpus
+GN_MISC_001	internal-only	a prior-work remark on format 3.2, outside the corpus
+GN_MISC_002	internal-only	a prior-work reference (format 1.2 read with EnCase)
+FS_OTBL_SA_008	internal-only	a driver call chain (RefsOpenFcbById) behind rows the pages cite
+MD_DATA_RA_026	internal-only	a defect of this project's reader, fixed in 1.10

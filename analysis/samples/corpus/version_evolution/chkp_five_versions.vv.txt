@@ -1,38 +1,43 @@
+# refsanalysis <image> chkp -vv, run on 5 images, one section each under "=== <image> ==="   (refsanalysis.py 1.14.0; gen_corpus_samples.sh)
+# ----------------------------------------------------------------------------
+
 === win1121h2test ===
+# refsanalysis win1121h2test.raw chkp -vv
 
 ==============================================================================
 ReFS Checkpoint Analysis with Container-Table Translation
 ==============================================================================
-  Image                          /workspace/refs/analysis/rawdisk/disks/step4/win1121h2test.raw
-  Image size                     4294967296 bytes (4.00 GiB)
-  CHKP SHA-256                   3ec035b9539e7f79a2c6b4b610f69e86e51f8644f9d72695b32159306dfee787
+  Image                          win1121h2test.raw
+  Image size                     4294967296 bytes (4 GiB)
+  CHKP SHA-256                   42216425b8c82aa21f2eaffea9c223eef6978c34347479bc6741a3f16fcf02e7 (1 cluster, 4 KiB)
   Partition start                0x1000000
-  Cluster size                   0x1000 (4096 bytes)
+  Cluster size                   4 KiB
   ReFS version                   3.7
-  Bytes per container            0x4000000 (64 MiB)
-  Clusters per container         0x4000 (16384)
+  Bytes per container            64 MiB
+  Clusters per container         16384
   GPT partition                  #2 'Basic data partition' LBA 32768-8386559 (4.0 GiB)
 
 SUPB
 ------------------------------------------------------------------------------
-  Volume GUID                    3f7a6d941dc1c44ca67b0294457ee85a
+  Volume GUID                    946d7a3f-c11d-4cc4-a67b-0294457ee85a
   Superblock version             1
   Checkpoint references          2
 
-CHKP (latest)
+CHKP (the copy in use)
 ------------------------------------------------------------------------------
   CHKP offset                    0x3874000
   Version echo                   (not set)
   Version                        3.7
   Virtual clock                  28
+  Page header clock              28
   Allocator clock                24
   Flags                          0x2
-  Indirect root list             False
+  Indirect root list             no
   Global root count              13
-  Root reference size            0x68 (104 bytes)
+  Root reference size            104 bytes
 
   Flag bits:
-    0x002 = always-set
+    0x2 = always-set
 
 Container Table
 ------------------------------------------------------------------------------
@@ -112,19 +117,19 @@ Container Table
 ==============================================================================
   Idx Table Name                  TableID     Root LCN Physical LCN    Sig Translation
   ----------------------------------------------------------------------------
-  0   Object ID Table                0x02      0x1062c        0x62c   MSB+ translated
-  1   Medium Allocator Table         0x21      0x50c00      0x18c00   MSB+ translated
-  2   Container Allocator Table      0x20      0x52400      0x1a400   MSB+ translated
-  3   Schema Table                   0x01      0x10044         0x44   MSB+ translated
-  4   Parent-Child Table             0x03      0x100f0         0xf0   MSB+ translated
-  5   Object ID Table dup            0x04      0x11028       0x1028   MSB+ translated
-  6   Block RefCount Table           0x05      0x5000c      0x1800c   MSB+ translated
-  7   Container Table                0x0b       0x4e00       0x4e00   MSB+ real (bootstrap)
-  8   Container Table dup            0x0c       0x7200       0x7200   MSB+ real (bootstrap)
-  9   Schema Table dup               0x06      0x10048         0x48   MSB+ translated
-  10  Container Index Table          0x0e      0x10034         0x34   MSB+ translated
-  11  Integrity State Table          0x0f      0x50008      0x18008   MSB+ translated
-  12  Small Allocator Table          0x22       0x4c00       0x4c00   MSB+ real (bootstrap)
+  0   Object ID Table                 0x2      0x1062c        0x62c   MSB+ translated
+  1   Medium Allocator               0x21      0x50c00      0x18c00   MSB+ translated
+  2   Container Allocator            0x20      0x52400      0x1a400   MSB+ translated
+  3   Schema Table                    0x1      0x10044         0x44   MSB+ translated
+  4   Parent-Child Table              0x3      0x100f0         0xf0   MSB+ translated
+  5   Object ID Table dup             0x4      0x11028       0x1028   MSB+ translated
+  6   Block RefCount                  0x5      0x5000c      0x1800c   MSB+ translated
+  7   Container Table                 0xb       0x4e00       0x4e00   MSB+ real (bootstrap)
+  8   Container Table dup             0xc       0x7200       0x7200   MSB+ real (bootstrap)
+  9   Schema Table dup                0x6      0x10048         0x48   MSB+ translated
+  10  Container Index                 0xe      0x10034         0x34   MSB+ translated
+  11  Integrity State                 0xf      0x50008      0x18008   MSB+ translated
+  12  Small Allocator                0x22       0x4c00       0x4c00   MSB+ real (bootstrap)
 
 Detailed root records
 ------------------------------------------------------------------------------
@@ -137,7 +142,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsObjectTable, GetGlobalTableRoot(0)
 
-  [1] Medium Allocator Table
+  [1] Medium Allocator
     Virtual LCN tuple:  0x50c00, 0x50c01, 0x50c02, 0x50c03
     Physical LCN tuple: 0x18c00, 0x18c01, 0x18c02, 0x18c03
     Absolute offset:    0x19c00000
@@ -145,7 +150,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsVolume::InitializeVolumeAllocator, root 1
 
-  [2] Container Allocator Table
+  [2] Container Allocator
     Virtual LCN tuple:  0x52400, 0x52401, 0x52402, 0x52403
     Physical LCN tuple: 0x1a400, 0x1a401, 0x1a402, 0x1a403
     Absolute offset:    0x1b400000
@@ -177,7 +182,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsObjectTable failover root, root 5
 
-  [6] Block RefCount Table
+  [6] Block RefCount
     Virtual LCN tuple:  0x5000c, 0x5000d, 0x5000e, 0x5000f
     Physical LCN tuple: 0x1800c, 0x1800d, 0x1800e, 0x1800f
     Absolute offset:    0x1900c000
@@ -209,7 +214,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsSchemaTable failover root, root 9
 
-  [10] Container Index Table
+  [10] Container Index
     Virtual LCN tuple:  0x10034, 0x10035, 0x10036, 0x10037
     Physical LCN tuple: 0x34, 0x35, 0x36, 0x37
     Absolute offset:    0x1034000
@@ -217,7 +222,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsVolumeContainer::InitializeIndex, root 10
 
-  [11] Integrity State Table
+  [11] Integrity State
     Virtual LCN tuple:  0x50008, 0x50009, 0x5000a, 0x5000b
     Physical LCN tuple: 0x18008, 0x18009, 0x1800a, 0x1800b
     Absolute offset:    0x19008000
@@ -225,7 +230,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsIntegrityState::GetIntegrityStateTable, root 11
 
-  [12] Small Allocator Table
+  [12] Small Allocator
     Virtual LCN tuple:  0x4c00, 0x4c01, 0x4c02, 0x4c03
     Physical LCN tuple: 0x4c00, 0x4c01, 0x4c02, 0x4c03
     Absolute offset:    0x5c00000
@@ -234,40 +239,42 @@ Detailed root records
     Evidence:           CmsVolume::InitializeGlobalSAATables, root 12
 
 === win1122h2test ===
+# refsanalysis win1122h2test.raw chkp -vv
 
 ==============================================================================
 ReFS Checkpoint Analysis with Container-Table Translation
 ==============================================================================
-  Image                          /workspace/refs/analysis/rawdisk/disks/step4/win1122h2test.raw
-  Image size                     4294967296 bytes (4.00 GiB)
-  CHKP SHA-256                   3e62f601c47e56ed5d7b06665db6ecd1f0a5619731b85f4988efde125e9d7dca
+  Image                          win1122h2test.raw
+  Image size                     4294967296 bytes (4 GiB)
+  CHKP SHA-256                   ca6475ede1709644c6f2fd1db82c5476cbdd6ad26fe82347150d5d5e6c5cd483 (1 cluster, 4 KiB)
   Partition start                0x1000000
-  Cluster size                   0x1000 (4096 bytes)
+  Cluster size                   4 KiB
   ReFS version                   3.9
-  Bytes per container            0x4000000 (64 MiB)
-  Clusters per container         0x4000 (16384)
+  Bytes per container            64 MiB
+  Clusters per container         16384
   GPT partition                  #2 'Basic data partition' LBA 32768-8386559 (4.0 GiB)
 
 SUPB
 ------------------------------------------------------------------------------
-  Volume GUID                    870828f527720e43a3387b5b4fff0545
+  Volume GUID                    f5280887-7227-430e-a338-7b5b4fff0545
   Superblock version             1
   Checkpoint references          2
 
-CHKP (latest)
+CHKP (the copy in use)
 ------------------------------------------------------------------------------
   CHKP offset                    0x1f3f4000
   Version echo                   (not set)
   Version                        3.9
   Virtual clock                  44
+  Page header clock              44
   Allocator clock                40
   Flags                          0x2
-  Indirect root list             False
+  Indirect root list             no
   Global root count              13
-  Root reference size            0x68 (104 bytes)
+  Root reference size            104 bytes
 
   Flag bits:
-    0x002 = always-set
+    0x2 = always-set
 
 Container Table
 ------------------------------------------------------------------------------
@@ -347,19 +354,19 @@ Container Table
 ==============================================================================
   Idx Table Name                  TableID     Root LCN Physical LCN    Sig Translation
   ----------------------------------------------------------------------------
-  0   Object ID Table                0x02      0x10e4c        0xe4c   MSB+ translated
-  1   Medium Allocator Table         0x21      0x51a04      0x19a04   MSB+ translated
-  2   Container Allocator Table      0x20      0x51000      0x19000   MSB+ translated
-  3   Schema Table                   0x01      0x10044         0x44   MSB+ translated
-  4   Parent-Child Table             0x03      0x13e14       0x3e14   MSB+ translated
-  5   Object ID Table dup            0x04      0x12e4c       0x2e4c   MSB+ translated
-  6   Block RefCount Table           0x05      0x5000c      0x1800c   MSB+ translated
-  7   Container Table                0x0b       0x7c00       0x7c00   MSB+ real (bootstrap)
-  8   Container Table dup            0x0c       0x4800       0x4800   MSB+ real (bootstrap)
-  9   Schema Table dup               0x06      0x10048         0x48   MSB+ translated
-  10  Container Index Table          0x0e      0x10034         0x34   MSB+ translated
-  11  Integrity State Table          0x0f      0x50008      0x18008   MSB+ translated
-  12  Small Allocator Table          0x22       0x7400       0x7400   MSB+ real (bootstrap)
+  0   Object ID Table                 0x2      0x10e4c        0xe4c   MSB+ translated
+  1   Medium Allocator               0x21      0x51a04      0x19a04   MSB+ translated
+  2   Container Allocator            0x20      0x51000      0x19000   MSB+ translated
+  3   Schema Table                    0x1      0x10044         0x44   MSB+ translated
+  4   Parent-Child Table              0x3      0x13e14       0x3e14   MSB+ translated
+  5   Object ID Table dup             0x4      0x12e4c       0x2e4c   MSB+ translated
+  6   Block RefCount                  0x5      0x5000c      0x1800c   MSB+ translated
+  7   Container Table                 0xb       0x7c00       0x7c00   MSB+ real (bootstrap)
+  8   Container Table dup             0xc       0x4800       0x4800   MSB+ real (bootstrap)
+  9   Schema Table dup                0x6      0x10048         0x48   MSB+ translated
+  10  Container Index                 0xe      0x10034         0x34   MSB+ translated
+  11  Integrity State                 0xf      0x50008      0x18008   MSB+ translated
+  12  Small Allocator                0x22       0x7400       0x7400   MSB+ real (bootstrap)
 
 Detailed root records
 ------------------------------------------------------------------------------
@@ -372,7 +379,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsObjectTable, GetGlobalTableRoot(0)
 
-  [1] Medium Allocator Table
+  [1] Medium Allocator
     Virtual LCN tuple:  0x51a04, 0x51a05, 0x51a06, 0x51a07
     Physical LCN tuple: 0x19a04, 0x19a05, 0x19a06, 0x19a07
     Absolute offset:    0x1aa04000
@@ -380,7 +387,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsVolume::InitializeVolumeAllocator, root 1
 
-  [2] Container Allocator Table
+  [2] Container Allocator
     Virtual LCN tuple:  0x51000, 0x51001, 0x51002, 0x51003
     Physical LCN tuple: 0x19000, 0x19001, 0x19002, 0x19003
     Absolute offset:    0x1a000000
@@ -412,7 +419,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsObjectTable failover root, root 5
 
-  [6] Block RefCount Table
+  [6] Block RefCount
     Virtual LCN tuple:  0x5000c, 0x5000d, 0x5000e, 0x5000f
     Physical LCN tuple: 0x1800c, 0x1800d, 0x1800e, 0x1800f
     Absolute offset:    0x1900c000
@@ -444,7 +451,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsSchemaTable failover root, root 9
 
-  [10] Container Index Table
+  [10] Container Index
     Virtual LCN tuple:  0x10034, 0x10035, 0x10036, 0x10037
     Physical LCN tuple: 0x34, 0x35, 0x36, 0x37
     Absolute offset:    0x1034000
@@ -452,7 +459,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsVolumeContainer::InitializeIndex, root 10
 
-  [11] Integrity State Table
+  [11] Integrity State
     Virtual LCN tuple:  0x50008, 0x50009, 0x5000a, 0x5000b
     Physical LCN tuple: 0x18008, 0x18009, 0x1800a, 0x1800b
     Absolute offset:    0x19008000
@@ -460,7 +467,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsIntegrityState::GetIntegrityStateTable, root 11
 
-  [12] Small Allocator Table
+  [12] Small Allocator
     Virtual LCN tuple:  0x7400, 0x7401, 0x7402, 0x7403
     Physical LCN tuple: 0x7400, 0x7401, 0x7402, 0x7403
     Absolute offset:    0x8400000
@@ -469,41 +476,43 @@ Detailed root records
     Evidence:           CmsVolume::InitializeGlobalSAATables, root 12
 
 === win1123h2test ===
+# refsanalysis win1123h2test.raw chkp -vv
 
 ==============================================================================
 ReFS Checkpoint Analysis with Container-Table Translation
 ==============================================================================
-  Image                          /workspace/refs/analysis/rawdisk/disks/step4/win1123h2test.raw
-  Image size                     4294967296 bytes (4.00 GiB)
-  CHKP SHA-256                   b39c1401620474d9020a6da11255f4f3afc8df359f98f6ab36c4ab03e12fee6b
+  Image                          win1123h2test.raw
+  Image size                     4294967296 bytes (4 GiB)
+  CHKP SHA-256                   21421590fb0854a19a8bb3df809a20d8bc0a44f3c305e7ed9e5d6ea8697305a8 (1 cluster, 4 KiB)
   Partition start                0x1000000
-  Cluster size                   0x1000 (4096 bytes)
+  Cluster size                   4 KiB
   ReFS version                   3.10
-  Bytes per container            0x4000000 (64 MiB)
-  Clusters per container         0x4000 (16384)
+  Bytes per container            64 MiB
+  Clusters per container         16384
   GPT partition                  #2 'Basic data partition' LBA 32768-8386559 (4.0 GiB)
 
 SUPB
 ------------------------------------------------------------------------------
-  Volume GUID                    d48cb746807e9d4aa7246b749789931d
+  Volume GUID                    46b78cd4-7e80-4a9d-a724-6b749789931d
   Superblock version             1
   Checkpoint references          2
 
-CHKP (latest)
+CHKP (the copy in use)
 ------------------------------------------------------------------------------
   CHKP offset                    0x3874000
   Version echo                   3.10
   Version                        3.10
   Virtual clock                  83
+  Page header clock              83
   Allocator clock                80
   Flags                          0x82
-  Indirect root list             False
+  Indirect root list             no
   Global root count              13
-  Root reference size            0x30 (48 bytes)
+  Root reference size            48 bytes
 
   Flag bits:
-    0x002 = always-set
-    0x080 = native-Win11-format
+    0x2 = always-set
+    0x80 = native-Win11-format (ReFS 3.10+)
 
 Container Table
 ------------------------------------------------------------------------------
@@ -583,19 +592,19 @@ Container Table
 ==============================================================================
   Idx Table Name                  TableID     Root LCN Physical LCN    Sig Translation
   ----------------------------------------------------------------------------
-  0   Object ID Table                0x02      0x10a0c        0xa0c   MSB+ translated
-  1   Medium Allocator Table         0x21      0x53c04      0x1bc04   MSB+ translated
-  2   Container Allocator Table      0x20      0x53a00      0x1ba00   MSB+ translated
-  3   Schema Table                   0x01      0x11e00       0x1e00   MSB+ translated
-  4   Parent-Child Table             0x03      0x12218       0x2218   MSB+ translated
-  5   Object ID Table dup            0x04      0x12610       0x2610   MSB+ translated
-  6   Block RefCount Table           0x05      0x5000c      0x1800c   MSB+ translated
-  7   Container Table                0x0b       0x4e00       0x4e00   MSB+ real (bootstrap)
-  8   Container Table dup            0x0c       0x7800       0x7800   MSB+ real (bootstrap)
-  9   Schema Table dup               0x06      0x10038         0x38   MSB+ translated
-  10  Container Index Table          0x0e      0x10034         0x34   MSB+ translated
-  11  Integrity State Table          0x0f      0x50008      0x18008   MSB+ translated
-  12  Small Allocator Table          0x22       0x6c00       0x6c00   MSB+ real (bootstrap)
+  0   Object ID Table                 0x2      0x10a0c        0xa0c   MSB+ translated
+  1   Medium Allocator               0x21      0x53c04      0x1bc04   MSB+ translated
+  2   Container Allocator            0x20      0x53a00      0x1ba00   MSB+ translated
+  3   Schema Table                    0x1      0x11e00       0x1e00   MSB+ translated
+  4   Parent-Child Table              0x3      0x12218       0x2218   MSB+ translated
+  5   Object ID Table dup             0x4      0x12610       0x2610   MSB+ translated
+  6   Block RefCount                  0x5      0x5000c      0x1800c   MSB+ translated
+  7   Container Table                 0xb       0x4e00       0x4e00   MSB+ real (bootstrap)
+  8   Container Table dup             0xc       0x7800       0x7800   MSB+ real (bootstrap)
+  9   Schema Table dup                0x6      0x10038         0x38   MSB+ translated
+  10  Container Index                 0xe      0x10034         0x34   MSB+ translated
+  11  Integrity State                 0xf      0x50008      0x18008   MSB+ translated
+  12  Small Allocator                0x22       0x6c00       0x6c00   MSB+ real (bootstrap)
 
 Detailed root records
 ------------------------------------------------------------------------------
@@ -608,7 +617,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsObjectTable, GetGlobalTableRoot(0)
 
-  [1] Medium Allocator Table
+  [1] Medium Allocator
     Virtual LCN tuple:  0x53c04, 0x53c05, 0x53c06, 0x53c07
     Physical LCN tuple: 0x1bc04, 0x1bc05, 0x1bc06, 0x1bc07
     Absolute offset:    0x1cc04000
@@ -616,7 +625,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsVolume::InitializeVolumeAllocator, root 1
 
-  [2] Container Allocator Table
+  [2] Container Allocator
     Virtual LCN tuple:  0x53a00, 0x53a01, 0x53a02, 0x53a03
     Physical LCN tuple: 0x1ba00, 0x1ba01, 0x1ba02, 0x1ba03
     Absolute offset:    0x1ca00000
@@ -648,7 +657,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsObjectTable failover root, root 5
 
-  [6] Block RefCount Table
+  [6] Block RefCount
     Virtual LCN tuple:  0x5000c, 0x5000d, 0x5000e, 0x5000f
     Physical LCN tuple: 0x1800c, 0x1800d, 0x1800e, 0x1800f
     Absolute offset:    0x1900c000
@@ -680,7 +689,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsSchemaTable failover root, root 9
 
-  [10] Container Index Table
+  [10] Container Index
     Virtual LCN tuple:  0x10034, 0x10035, 0x10036, 0x10037
     Physical LCN tuple: 0x34, 0x35, 0x36, 0x37
     Absolute offset:    0x1034000
@@ -688,7 +697,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsVolumeContainer::InitializeIndex, root 10
 
-  [11] Integrity State Table
+  [11] Integrity State
     Virtual LCN tuple:  0x50008, 0x50009, 0x5000a, 0x5000b
     Physical LCN tuple: 0x18008, 0x18009, 0x1800a, 0x1800b
     Absolute offset:    0x19008000
@@ -696,7 +705,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsIntegrityState::GetIntegrityStateTable, root 11
 
-  [12] Small Allocator Table
+  [12] Small Allocator
     Virtual LCN tuple:  0x6c00, 0x6c01, 0x6c02, 0x6c03
     Physical LCN tuple: 0x6c00, 0x6c01, 0x6c02, 0x6c03
     Absolute offset:    0x7c00000
@@ -705,43 +714,45 @@ Detailed root records
     Evidence:           CmsVolume::InitializeGlobalSAATables, root 12
 
 === win1122h2test_afteropenedwithinsider ===
+# refsanalysis win1122h2test_afteropenedwithinsider.raw chkp -vv
 
 ==============================================================================
 ReFS Checkpoint Analysis with Container-Table Translation
 ==============================================================================
-  Image                          /workspace/refs/analysis/rawdisk/disks/step4/win1122h2test_afteropenedwithinsider.raw
-  Image size                     4294967296 bytes (4.00 GiB)
-  CHKP SHA-256                   2167f70d29127d685bd1eb295fac34ebd200c94220522b78fef790eb49c83ce0
+  Image                          win1122h2test_afteropenedwithinsider.raw
+  Image size                     4294967296 bytes (4 GiB)
+  CHKP SHA-256                   3a188fc7f1d2d56cd93a471fb01e61e0aa9e10e55e10a2b03ae9ac22bc0ae085 (1 cluster, 4 KiB)
   Partition start                0x1000000
-  Cluster size                   0x1000 (4096 bytes)
+  Cluster size                   4 KiB
   ReFS version                   3.14
-  Bytes per container            0x4000000 (64 MiB)
-  Clusters per container         0x4000 (16384)
+  Bytes per container            64 MiB
+  Clusters per container         16384
   GPT partition                  #2 'Basic data partition' LBA 32768-8386559 (4.0 GiB)
 
 SUPB
 ------------------------------------------------------------------------------
-  Volume GUID                    870828f527720e43a3387b5b4fff0545
+  Volume GUID                    f5280887-7227-430e-a338-7b5b4fff0545
   Superblock version             1
   Checkpoint references          2
 
-CHKP (latest)
+CHKP (the copy in use)
 ------------------------------------------------------------------------------
   CHKP offset                    0x3874000
   Version echo                   (not set)
   Version                        3.14
   Virtual clock                  79
+  Page header clock              79
   Allocator clock                71
   Flags                          0x2602
-  Indirect root list             True
+  Indirect root list             yes
   Global root count              13
-  Root reference size            0x30 (48 bytes)
+  Root reference size            48 bytes
 
   Flag bits:
-    0x002 = always-set
+    0x2 = always-set
     0x200 = indirect-root-list
-    0x400 = metadata-checksum
-    0x2000 = insider-flag (Windows Insider build 29574+)
+    0x400 = rollback-protection fields (+0x9c offset / +0xa0 length; ReFS 3.13+)
+    0x2000 = attestation HMAC (+0xa4 offset / +0xa8 length; Insider 29574 / 29659 / 29683)
 
 Container Table
 ------------------------------------------------------------------------------
@@ -821,19 +832,19 @@ Container Table
 ==============================================================================
   Idx Table Name                  TableID     Root LCN Physical LCN    Sig Translation
   ----------------------------------------------------------------------------
-  0   Object ID Table                0x02      0x13e54       0x3e54   MSB+ translated
-  1   Medium Allocator Table         0x21      0x50000      0x18000   MSB+ translated
-  2   Container Allocator Table      0x20      0x51c00      0x19c00   MSB+ translated
-  3   Schema Table                   0x01      0x10e44        0xe44   MSB+ translated
-  4   Parent-Child Table             0x03      0x1345c       0x345c   MSB+ translated
-  5   Object ID Table dup            0x04      0x11664       0x1664   MSB+ translated
-  6   Block RefCount Table           0x05      0x50800      0x18800   MSB+ translated
-  7   Container Table                0x0b       0x5400       0x5400   MSB+ real (bootstrap)
-  8   Container Table dup            0x0c       0x6a00       0x6a00   MSB+ real (bootstrap)
-  9   Schema Table dup               0x06      0x1003c         0x3c   MSB+ translated
-  10  Container Index Table          0x0e      0x10034         0x34   MSB+ translated
-  11  Integrity State Table          0x0f      0x50008      0x18008   MSB+ translated
-  12  Small Allocator Table          0x22       0x6a04       0x6a04   MSB+ real (bootstrap)
+  0   Object ID Table                 0x2      0x13e54       0x3e54   MSB+ translated
+  1   Medium Allocator               0x21      0x50000      0x18000   MSB+ translated
+  2   Container Allocator            0x20      0x51c00      0x19c00   MSB+ translated
+  3   Schema Table                    0x1      0x10e44        0xe44   MSB+ translated
+  4   Parent-Child Table              0x3      0x1345c       0x345c   MSB+ translated
+  5   Object ID Table dup             0x4      0x11664       0x1664   MSB+ translated
+  6   Block RefCount                  0x5      0x50800      0x18800   MSB+ translated
+  7   Container Table                 0xb       0x5400       0x5400   MSB+ real (bootstrap)
+  8   Container Table dup             0xc       0x6a00       0x6a00   MSB+ real (bootstrap)
+  9   Schema Table dup                0x6      0x1003c         0x3c   MSB+ translated
+  10  Container Index                 0xe      0x10034         0x34   MSB+ translated
+  11  Integrity State                 0xf      0x50008      0x18008   MSB+ translated
+  12  Small Allocator                0x22       0x6a04       0x6a04   MSB+ real (bootstrap)
 
 Detailed root records
 ------------------------------------------------------------------------------
@@ -846,7 +857,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsObjectTable, GetGlobalTableRoot(0)
 
-  [1] Medium Allocator Table
+  [1] Medium Allocator
     Virtual LCN tuple:  0x50000, 0x50001, 0x50002, 0x50003
     Physical LCN tuple: 0x18000, 0x18001, 0x18002, 0x18003
     Absolute offset:    0x19000000
@@ -854,7 +865,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsVolume::InitializeVolumeAllocator, root 1
 
-  [2] Container Allocator Table
+  [2] Container Allocator
     Virtual LCN tuple:  0x51c00, 0x51c01, 0x51c02, 0x51c03
     Physical LCN tuple: 0x19c00, 0x19c01, 0x19c02, 0x19c03
     Absolute offset:    0x1ac00000
@@ -886,7 +897,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsObjectTable failover root, root 5
 
-  [6] Block RefCount Table
+  [6] Block RefCount
     Virtual LCN tuple:  0x50800, 0x50801, 0x50802, 0x50803
     Physical LCN tuple: 0x18800, 0x18801, 0x18802, 0x18803
     Absolute offset:    0x19800000
@@ -918,7 +929,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsSchemaTable failover root, root 9
 
-  [10] Container Index Table
+  [10] Container Index
     Virtual LCN tuple:  0x10034, 0x10035, 0x10036, 0x10037
     Physical LCN tuple: 0x34, 0x35, 0x36, 0x37
     Absolute offset:    0x1034000
@@ -926,7 +937,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsVolumeContainer::InitializeIndex, root 10
 
-  [11] Integrity State Table
+  [11] Integrity State
     Virtual LCN tuple:  0x50008, 0x50009, 0x5000a, 0x5000b
     Physical LCN tuple: 0x18008, 0x18009, 0x1800a, 0x1800b
     Absolute offset:    0x19008000
@@ -934,7 +945,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsIntegrityState::GetIntegrityStateTable, root 11
 
-  [12] Small Allocator Table
+  [12] Small Allocator
     Virtual LCN tuple:  0x6a04, 0x6a05, 0x6a06, 0x6a07
     Physical LCN tuple: 0x6a04, 0x6a05, 0x6a06, 0x6a07
     Absolute offset:    0x7a04000
@@ -943,44 +954,46 @@ Detailed root records
     Evidence:           CmsVolume::InitializeGlobalSAATables, root 12
 
 === wininsiderrefs8gtest2 ===
+# refsanalysis wininsiderrefs8gtest2.raw chkp -vv
 
 ==============================================================================
 ReFS Checkpoint Analysis with Container-Table Translation
 ==============================================================================
-  Image                          /workspace/refs/analysis/rawdisk/disks/step4/wininsiderrefs8gtest2.raw
-  Image size                     8589934592 bytes (8.00 GiB)
-  CHKP SHA-256                   7fd2ca804c2bf76b90980f6fb6ba137728cc31460af710fae2ed0790145fafe9
+  Image                          wininsiderrefs8gtest2.raw
+  Image size                     8589934592 bytes (8 GiB)
+  CHKP SHA-256                   86401c7abebf1062f11eaaa4bfb4d4d0ab325528234b74df4ee6ef45e0822bd1 (1 cluster, 64 KiB)
   Partition start                0x1000000
-  Cluster size                   0x10000 (65536 bytes)
+  Cluster size                   64 KiB
   ReFS version                   3.14
-  Bytes per container            0x4000000 (64 MiB)
-  Clusters per container         0x400 (1024)
+  Bytes per container            64 MiB
+  Clusters per container         1024
   GPT partition                  #2 'Basic data partition' LBA 32768-16775167 (8.0 GiB)
 
 SUPB
 ------------------------------------------------------------------------------
-  Volume GUID                    259fc0403f7f134888bee28be75c7526
+  Volume GUID                    40c09f25-7f3f-4813-88be-e28be75c7526
   Superblock version             1
   Checkpoint references          2
 
-CHKP (latest)
+CHKP (the copy in use)
 ------------------------------------------------------------------------------
   CHKP offset                    0x3e150000
   Version echo                   3.14
   Version                        3.14
   Virtual clock                  161
+  Page header clock              161
   Allocator clock                156
   Flags                          0x2682
-  Indirect root list             True
+  Indirect root list             yes
   Global root count              13
-  Root reference size            0x48 (72 bytes)
+  Root reference size            72 bytes
 
   Flag bits:
-    0x002 = always-set
-    0x080 = native-Win11-format
+    0x2 = always-set
+    0x80 = native-Win11-format (ReFS 3.10+)
     0x200 = indirect-root-list
-    0x400 = metadata-checksum
-    0x2000 = insider-flag (Windows Insider build 29574+)
+    0x400 = rollback-protection fields (+0x9c offset / +0xa0 length; ReFS 3.13+)
+    0x2000 = attestation HMAC (+0xa4 offset / +0xa8 length; Insider 29574 / 29659 / 29683)
 
 Container Table
 ------------------------------------------------------------------------------
@@ -1124,19 +1137,19 @@ Container Table
 ==============================================================================
   Idx Table Name                  TableID     Root LCN Physical LCN    Sig Translation
   ----------------------------------------------------------------------------
-  0   Object ID Table                0x02       0x102f         0x2f   MSB+ translated
-  1   Medium Allocator Table         0x21       0x8001       0x3001   MSB+ translated
-  2   Container Allocator Table      0x20       0x8004       0x3004   MSB+ translated
-  3   Schema Table                   0x01       0x1027         0x27   MSB+ translated
-  4   Parent-Child Table             0x03       0x1250        0x250   MSB+ translated
-  5   Object ID Table dup            0x04       0x1209        0x209   MSB+ translated
-  6   Block RefCount Table           0x05       0x8203       0x3203   MSB+ translated
-  7   Container Table                0x0b        0xa00        0xa00   MSB+ real (bootstrap)
-  8   Container Table dup            0x0c        0x802        0x802   MSB+ real (bootstrap)
-  9   Schema Table dup               0x06       0x1028         0x28   MSB+ translated
-  10  Container Index Table          0x0e       0x7802       0x2c02   MSB+ translated
-  11  Integrity State Table          0x0f       0x8002       0x3002   MSB+ translated
-  12  Small Allocator Table          0x22        0x803        0x803   MSB+ real (bootstrap)
+  0   Object ID Table                 0x2       0x102f         0x2f   MSB+ translated
+  1   Medium Allocator               0x21       0x8001       0x3001   MSB+ translated
+  2   Container Allocator            0x20       0x8004       0x3004   MSB+ translated
+  3   Schema Table                    0x1       0x1027         0x27   MSB+ translated
+  4   Parent-Child Table              0x3       0x1250        0x250   MSB+ translated
+  5   Object ID Table dup             0x4       0x1209        0x209   MSB+ translated
+  6   Block RefCount                  0x5       0x8203       0x3203   MSB+ translated
+  7   Container Table                 0xb        0xa00        0xa00   MSB+ real (bootstrap)
+  8   Container Table dup             0xc        0x802        0x802   MSB+ real (bootstrap)
+  9   Schema Table dup                0x6       0x1028         0x28   MSB+ translated
+  10  Container Index                 0xe       0x7802       0x2c02   MSB+ translated
+  11  Integrity State                 0xf       0x8002       0x3002   MSB+ translated
+  12  Small Allocator                0x22        0x803        0x803   MSB+ real (bootstrap)
 
 Detailed root records
 ------------------------------------------------------------------------------
@@ -1149,7 +1162,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsObjectTable, GetGlobalTableRoot(0)
 
-  [1] Medium Allocator Table
+  [1] Medium Allocator
     Virtual LCN tuple:  0x8001
     Physical LCN tuple: 0x3001
     Absolute offset:    0x31010000
@@ -1157,7 +1170,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsVolume::InitializeVolumeAllocator, root 1
 
-  [2] Container Allocator Table
+  [2] Container Allocator
     Virtual LCN tuple:  0x8004
     Physical LCN tuple: 0x3004
     Absolute offset:    0x31040000
@@ -1189,7 +1202,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsObjectTable failover root, root 5
 
-  [6] Block RefCount Table
+  [6] Block RefCount
     Virtual LCN tuple:  0x8203
     Physical LCN tuple: 0x3203
     Absolute offset:    0x33030000
@@ -1221,7 +1234,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsSchemaTable failover root, root 9
 
-  [10] Container Index Table
+  [10] Container Index
     Virtual LCN tuple:  0x7802
     Physical LCN tuple: 0x2c02
     Absolute offset:    0x2d020000
@@ -1229,7 +1242,7 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsVolumeContainer::InitializeIndex, root 10
 
-  [11] Integrity State Table
+  [11] Integrity State
     Virtual LCN tuple:  0x8002
     Physical LCN tuple: 0x3002
     Absolute offset:    0x31020000
@@ -1237,11 +1250,10 @@ Detailed root records
     Translation:        translated
     Evidence:           CmsIntegrityState::GetIntegrityStateTable, root 11
 
-  [12] Small Allocator Table
+  [12] Small Allocator
     Virtual LCN tuple:  0x803
     Physical LCN tuple: 0x803
     Absolute offset:    0x9030000
     Signature:          MSB+
     Translation:        real (bootstrap)
     Evidence:           CmsVolume::InitializeGlobalSAATables, root 12
-

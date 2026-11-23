@@ -5,5 +5,5 @@
 <rect class="dg-box" x="40" y="158" width="380" height="36" rx="6"/><text class="dg-text" x="230" y="181" text-anchor="middle" font-size="12">Volume / partition</text>
 <rect class="dg-box-accent" x="40" y="204" width="380" height="36" rx="6"/><text class="dg-accent" x="230" y="227" text-anchor="middle" font-size="12">Sectors</text>
 <rect class="dg-box" x="40" y="250" width="380" height="36" rx="6"/><text class="dg-text" x="230" y="273" text-anchor="middle" font-size="12">Physical disk</text>
-<text class="dg-muted" x="14" y="40" font-size="14" transform="rotate(90 14 150)">logical → physical</text>
+<line class="dg-dash" x1="8" y1="199" x2="452" y2="199"/><text class="dg-muted" x="18" y="107" font-size="12" text-anchor="middle" transform="rotate(-90 18 107)">logical</text><text class="dg-muted" x="18" y="245" font-size="12" text-anchor="middle" transform="rotate(-90 18 245)">physical</text>
 </svg>

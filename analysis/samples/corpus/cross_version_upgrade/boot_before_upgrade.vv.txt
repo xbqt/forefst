@@ -1,37 +1,42 @@
+# refsanalysis win10to11refs4g_beforewin11mount.raw boot -vv   (refsanalysis.py 1.14.0; gen_corpus_samples.sh)
+# ----------------------------------------------------------------------------
 
 ReFS Boot Sector / FSRS
-========================================================================
-Image:        /workspace/refs/analysis/rawdisk/disks/step3/win10to11refs4g_beforewin11mount.raw
-Image size:   4.0 GiB (4294967296 bytes)
+==============================================================================
+Image:        win10to11refs4g_beforewin11mount.raw
+Image size:   4294967296 bytes (4 GiB)
 VBR SHA-256:  33234595729c106491981aaf7a4657dff0644f728a30b4f2e25ef149f8f4cf68
 VBR offset:   0x1000000
 
 Interpreted values
-------------------------------------------------------------------------
-Field                 Value                                     
---------------------  ------------------------------------------
-fs_name               ReFS....                                  
-fsrs_identifier       FSRS                                      
-vbr_size              0x0200 (512)                              
-format_version        3.4                                       
-checksum_algorithm    0x0000 (None)                             
-format_instance_guid  (not set)                                 
-cluster_size          512 * 8 = 4096 (4.0 KiB)                  
-volume_size           8257536 * 512 = 4227858432 (3.9 GiB)      
-container_size        64.0 MiB (16384 clusters)                 
-container_count       63                                        
-volume_flags          0x00000006 [0x02=mounted, 0x04=valid-ReFS]
-volume_serial         0x4E1E15491E152B89                        
-checksum_stored       0xC91D                                    
-checksum_computed     0xC91D [OK]                               
+------------------------------------------------------------------------------
+Field                 Value                                                                           
+--------------------  --------------------------------------------------------------------------------
+fs_name               ReFS....                                                                        
+fsrs_identifier       FSRS                                                                            
+vbr_size              512                                                                             
+format_version        3.4                                                                             
+checksum_algorithm    0x0 (not read: flags bit 0x40 is clear, so refs.sys 26100 and Insider 29574 use 
+                      selector 2, CRC64; 17134 does not read +0x2a)                                   
+extended_guid         00000000-0000-0000-0000-000000000000 (none recorded: a volume formatted before  
+                      ReFS 3.10 carries none)                                                         
+cluster_size          512 * 8 = 4096 (4 KiB)                                                          
+volume_size           8257536 * 512 = 4227858432 (3.9 GiB)                                            
+container_size        64 MiB (16384 clusters)                                                         
+container_count       63                                                                              
+volume_flags          0x6 (WritableMount|0x4)                                                         
+volume_flags_meaning  0x2 set by a writable mount; 0x4 meaning not decoded                            
+volume_serial         0x4e1e15491e152b89                                                              
+checksum_stored       0xc91d                                                                          
+checksum_computed     0xc91d [OK]                                                                     
 
 Boot sector structure
-------------------------------------------------------------------------
+------------------------------------------------------------------------------
 Byte range  Description          Raw value                                      
 ----------  -------------------  -----------------------------------------------
-0x00-0x02   Jump instruction     00 00 00                                       
-0x03-0x0a   FS name (ReFS)       52 65 46 53 00 00 00 00                        
-0x0b-0x0f   Reserved             00 00 00 00 00                                 
+0x0-0x2     Jump instruction     00 00 00                                       
+0x3-0xa     FS name (ReFS)       52 65 46 53 00 00 00 00                        
+0xb-0xf     Reserved             00 00 00 00 00                                 
 0x10-0x13   FSRS identifier      46 53 52 53                                    
 0x14-0x15   VBR size             00 02                                          
 0x16-0x17   Checksum             1d c9                                          
@@ -47,29 +52,28 @@ Byte range  Description          Raw value
 0x48-0x57   Extended GUID        00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 
 Verbose calculations
-------------------------------------------------------------------------
+------------------------------------------------------------------------------
   VBR offset     = 0x1000000
   VBR SHA-256    = 33234595729c106491981aaf7a4657dff0644f728a30b4f2e25ef149f8f4cf68
 
-  cluster_size   = 512 * 8 = 4096 (4.0 KiB)
+  cluster_size   = 512 * 8 = 4096 (4 KiB)
   volume_size    = 8257536 * 512 = 4227858432 (3.9 GiB)
 
-  container_size = 0x4000000 (64.0 MiB)
+  container_size = 64 MiB
   clusters/cont  = 16384
   container_cnt  = 63
 
-  volume_flags   = 0x00000006
-  bits set       = 0x00000002, 0x00000004
-  meaning        = 0x02=mounted, 0x04=valid-ReFS
+  volume_flags   = 0x6 (WritableMount|0x4)
+  bits set       = 0x2, 0x4
+  meaning        = 0x2 set by a writable mount; 0x4 meaning not decoded
 
-  checksum algo  = ROR1+ADD over 0x03..512, skip 0x16-0x17
-  stored         = 0xC91D
-  computed       = 0xC91D
+  checksum algo  = ROR1+ADD over 0x3..512, skip 0x16-0x17
+  stored         = 0xc91d
+  computed       = 0xc91d
 
-  format GUID    = (not set)
-  (not set — Win10-formatted or fixboot-repaired)
+  format GUID    = 00000000-0000-0000-0000-000000000000 (none recorded: a volume formatted before ReFS 3.10 carries none)
 
   GPT partition  = #2 'Basic data partition'
   partition LBA  = 32768-8386559
-  partition size = 4277141504 (4.0 GiB)
+  partition size = 4277141504 bytes (4.0 GiB)
 

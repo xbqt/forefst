@@ -1,0 +1,31 @@
+{{- /* A second table of a byte figure's page, coloured by the same figure (hexfig.html): the marker
+       `<!-- site: hexfig-rows "id" "key" -->` on the line before the table (build.py wraps it). Each field of
+       data/hexfig/<id>.json whose `table` is "key" colours the one row whose Offset cell reads its offset (exactly one,
+       or the build fails); hovering the row marks the field's bytes in the figure and shows its example value there.
+       The figure itself must be on the same page (gen_hex_figures.py check_placement); its script serves both. */ -}}
+{{- $id := .Get 0 -}}
+{{- $key := .Get 1 -}}
+{{- $fig := index site.Data.hexfig $id -}}
+{{- if not $fig -}}
+  {{- errorf "hexfig-rows: no data/hexfig/%s.json (%s)" $id .Position -}}
+{{- end -}}
+{{- if not .Inner -}}
+  {{- errorf "hexfig-rows %s %s: no table after the marker (%s)" $id $key .Position -}}
+{{- end -}}
+{{- $html := .Page.RenderString (dict "display" "block") .Inner -}}
+{{- $n := 0 -}}
+{{- range $i, $f := $fig.fields -}}{{- if and (eq $f.table $key) (ne $f.row false) -}}
+  {{- $n = add $n 1 -}}
+  {{- $re := printf `<tr>(\s*)<td>%s</td>(\s*)<td>([^<]*)</td>(\s*)<td>` (replace $f.off "+" `\+`) -}}
+  {{- $hits := len (findRE $re $html) -}}
+  {{- if ne $hits 1 -}}
+    {{- errorf "hexfig-rows %s %s: field %s %s matches %d rows of the table, not 1" $id $key $f.off $f.name $hits -}}
+  {{- end -}}
+  {{- $html = replaceRE $re (printf `<tr class="hf-c%v" data-f="%d">${1}<td class="hf-k"><code>%s</code></td>${2}<td>${3}</td>${4}<td class="hf-k">` $f.slot $i $f.off) $html -}}
+{{- end -}}{{- end -}}
+{{- if eq $n 0 -}}
+  {{- errorf "hexfig-rows %s %s: the figure has no field for this table" $id $key -}}
+{{- end -}}
+<div class="hexfig hf-more" data-hexfig="{{ $id }}">
+{{ $html | replaceRE `^\s*<table>` `<table class="hf-table">` | safeHTML }}
+</div>

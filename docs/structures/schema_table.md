@@ -1,6 +1,8 @@
 # Schema Table
 
-The Schema Table (roots #3/#9, schema 0xe060) is self-describing: it contains one entry per table type used by the volume. Each entry fixes the key-comparison rules that let the generic B+-tree engine order rows without knowing their meaning.
+The Schema Table (roots #3/#9, schema 0xe060) is self-describing: it contains one entry per table type used by the volume.
+
+Each entry fixes the key-comparison rules that let the generic B+-tree engine order rows without knowing their meaning.
 
 ## Key format — 4 bytes
 
@@ -24,18 +26,20 @@ Each entry's value is an 80-byte definition (20 × u32) describing the table's l
 | `u32[6]` | +0x18 | Value-descriptor size (0x38, constant) |
 | `u32[7]` | +0x1C | Key-comparison-rules selector (see below) |
 | `u32[9]` | +0x24 | Self schema ID |
+| `u32[13]` | +0x34 | Root-data size: 0x80 for the file and directory record tables (the `$SI`: 124 bytes, 116 on 3.4), 0x60 for a data stream's table |
 | `u32[18]` | +0x48 | System flag (0x01) |
 
 The field that fixes "the key-comparison rules" is **`u32[7]` (byte +0x1C) — the key-comparison-rules selector**, a small enum (disk-observed 1..0x11 across schemas), **not a bitfield**. The driver bounds-checks it `< 0x15` and uses it to index a key-rules dispatch table. For 0xe040 (Parent-Child Table) it is `8` → `CmsRulesPARENT_CHILD_LINK`; for 0xe0c0 (Container Table) it is `10`; for 0xe130 (Heat Engine) it is `17`. The schema object is registered by `RegisterSchema`; the rules table is read by `GetKeyRulesInternal`.
 
 ## Total schema count
 
-Across all versions, there are **36 distinct schema IDs** (18 system + 18 attribute). Any single volume has fewer, since schemas are added and retired across versions.
+Across all versions, there are **36 distinct schema IDs**: 18 system schemas (0xe010 and up) and 18 schemas of object
+tables (below 0xe000). Any single volume has fewer, since schemas are added and retired across versions.
 
 ### Entry counts by version
 
-| Version | System schemas | Attribute schemas | Total |
-|---------|---------------|-------------------|-------|
+| Version | System schemas | Object-table schemas | Total |
+|---------|---------------|----------------------|-------|
 | v3.4 | 15 | 12 | 27 |
 | v3.7 | 15 | 15 | 30 |
 | v3.9 | 16 | 15 | 31 |
@@ -44,7 +48,12 @@ Across all versions, there are **36 distinct schema IDs** (18 system + 18 attrib
 | Insider | 14 | 16 | 30 |
 | Upgraded (union) | up to 18 | up to 18 | up to 36 |
 
-Totals are the on-disk schema-table leaf-row count (system ID ≥ 0xe000, attribute ID < 0xe000). The pre-3.14 attribute count includes **two legacy schemas `0x04` and `0x06`** (present on every v3.4–v3.10 volume, retired at v3.14): v3.4 = 0x04,0x06 + 0x110–0x1A0 (10) = 12; v3.7/v3.9/v3.10 = 0x04,0x06 + 13 = 15. Upgraded v3.4→v3.14 volumes keep 0x04/0x06, so a "union" volume can reach 36.
+Totals are the on-disk schema-table leaf-row count (system ID ≥ 0xe000, object-table ID < 0xe000).
+
+- The pre-3.14 count includes **two legacy schemas `0x04` and `0x06`**, present on every v3.4–v3.10 volume and
+  retired at v3.14.
+- v3.4 = 0x04, 0x06 + 0x110–0x1A0 (10) = 12; v3.7 / v3.9 / v3.10 = 0x04, 0x06 + 13 = 15.
+- Upgraded v3.4→v3.14 volumes keep 0x04 / 0x06, so a "union" volume can reach 36.
 
 ## System schemas (18 distinct)
 
@@ -66,73 +75,86 @@ Totals are the on-disk schema-table leaf-row count (system ID ≥ 0xe000, attrib
 | 0xe100 | Container Index | Container lookup by state (root 10) | v3.4-Insider |
 | 0xe110 | Read Cache Metadata | Read-ahead caching metadata | v3.4-Insider |
 | 0xe120 | Candidate Table (Dirty Range) | Dirty page tracking for checkpoint | v3.9-Insider |
-| 0xe130 | Heat Engine | Block tier classification (hot/warm/cold) | v3.10-Insider |
+| 0xe130 | Heat Engine | The heat engine's I/O metrics by 10-minute generation: the table of OID 0x30 | v3.10-Insider |
 | 0xe140 | Volume Attestation Table | TPM-bound attestation data | Insider only |
 
-## Attribute schemas (18 distinct)
+The names of 0xe050, 0xe070, 0xe0e0 and 0xe0f0 are inferred from their tables' structure; no symbol names them.
 
-| Schema ID | Embedded Type | Since | Attribute / Role |
-|-----------|--------------|-------|-----------------|
-| 0x110 | 0x10 | v3.4 | Directory Entry List |
-| 0x120 | 0x20 | v3.4 | File Stream |
-| 0x130 | 0x30 | v3.4 | $FILE_NAME — directory entry, keyed by the full long name (ReFS has **no** 8.3 short names) |
-| 0x140 | 0x40 | v3.4 | $FILE_NAME (long-name entries; the largest attribute population) |
-| 0x150 | 0x50 | v3.4 | $VOLUME_INFORMATION (label, version, flags) |
-| 0x160 | 0x60 | v3.4 | Reparse Index |
-| 0x170 | 0x70 | v3.4 | $REPARSE_POINT (per-file reparse data) |
-| 0x180 | 0x80 | v3.4 | $DATA (file data streams, extent references) |
-| 0x190 | 0x90 | v3.4 | $STANDARD_INFORMATION |
-| 0x1A0 | 0xA0 | v3.4 | $INDEX_ROOT |
-| 0x1B0 | 0xB0 | v3.7 | $SNAPSHOT (stream snapshot metadata) |
-| 0x1C0 | 0xC0 | v3.7 | $REPARSE_POINT (v3.7+ format) |
-| 0x1D0 | 0xD0 | v3.7 | $EA_INFORMATION |
-| 0x1E0 | 0xE0 | v3.14 | $EA body (WSL $LXUID/$LXGID/$LXMOD/$LXDEV) |
-| 0x1F0 | 0xF0 | v3.14 | $LOGGED_UTILITY_STREAM data |
-| 0x200 | 0x100 | v3.14 | $LOGGED_UTILITY_STREAM ($EFS metadata; the name $CBW4 in prior work is a fabrication, see [$EFS](../attributes/EFS.md)) |
-| 0x004 | -- | v3.4-v3.10 | Legacy fixed-format (descriptor_size=0x50) |
-| 0x006 | -- | v3.4-v3.10 | Legacy variable-format (anomalous properties) |
+## Object and table schemas (18 distinct)
 
-## Naming rule
+A schema describes a whole table: how its keys compare, the size of its root data, its flags. It does not describe an
+attribute. An attribute (`$DATA`, `$EA`, a reparse point ...) is a row of a table and has no schema of its own.
 
-For attribute schemas: **schema ID = embedded type code + 0x100**.
+Each file and each directory holds its own small table, embedded in a row (a file's in its name row or its backing
+record, a directory's in its own row, type 0x10); the row's value starts with the table's 40-byte descriptor, whose
++0x0C is the schema id below (see
+[Directory Entries](directory_entries.md#embedded-record-value-key_flags--0x01)). A data stream kept in extents has a
+table of its own, in its `$DATA` record.
 
-Example: embedded code 0x80 ($DATA) yields schema 0x180.
+| Schema ID | The table it describes | Versions present |
+|-----------|------------------------|------------------|
+| 0x180 | A file's record table, on a volume formatted below 3.6 | v3.4-Insider |
+| 0x1C0 | A file's record table, formats 3.6 to 3.10 | v3.7-Insider |
+| 0x1E0 | A file's record table, formats 3.11 and later | v3.14-Insider |
+| 0x190 | A directory's own-row table, formats below 3.6 | v3.4-Insider |
+| 0x1D0 | A directory's own-row table, formats 3.6 to 3.10 | v3.7-Insider |
+| 0x1F0 | A directory's own-row table, formats 3.11 and later | v3.14-Insider |
+| 0x1A0 | A data stream's table (the `$DATA` record in extent form), formats below 3.11 | v3.4-Insider |
+| 0x200 | A data stream's table, formats 3.11 and later | v3.14-Insider |
+| 0x130 | A directory: the B+-tree of its names (OID 0x520, the root 0x600 and every user directory) | v3.4-Insider |
+| 0x140 | The security-descriptor table (OID 0x530) | v3.4-Insider |
+| 0x150 | The volume-information tables (OIDs 0x500 / 0x501) | v3.4-Insider |
+| 0x160 | The reparse index (OIDs 0x540 / 0x541) | v3.4-Insider |
+| 0x110 / 0x170 / 0x120 | An older set for a file's record / a directory's own row / a data stream, used by the 17134 driver on a volume whose boot sector lacks flag 0x04 ([VBR](vbr.md)); no corpus object carries them | v3.4-Insider |
+| 0x1B0 | Registered with the shape of a file's record table; no driver code read uses it and no corpus object carries it: its role is not read | v3.7-Insider |
+| 0x004 | Legacy fixed-format (descriptor_size=0x50) | v3.4-v3.10 |
+| 0x006 | Legacy variable-format (anomalous properties) | v3.4-v3.10 |
 
-The `$FILE_NAME` schemas (0x130, 0x140) are retained-numbering entries that carry the directory-entry /
-long filename. **ReFS has no 8.3 short names** — there is no separate short-name entry and no short-name
-field (refs.sys has no 8.3-generation code; all `8dot3`/`ShortName` code lives in fsutil.exe; `fsutil file
-setshortname` returns "A local NTFS volume is required"). Directory entries carry only the long name. ReFS
-also does **not** duplicate the four MACB timestamps in a name entry the way NTFS does in `$FILE_NAME`, so
-the NTFS `$SI`-vs-`$FILE_NAME` timestomp cross-check does **not** exist on ReFS **for a single-named file**. A
-**hard-linked** file differs: each name is a separate type-0x30 row carrying its own MACB (value
-+0x10/+0x18/+0x20/+0x28), and those rows *can* diverge where NTFS's cannot — a ReFS-only,
-journal-independent lead (`FN_LINK_003`; forefst's `HARDLINK_MACB_MISMATCH` signal). Divergence is
-evidence; agreement clears nothing, because the file's own record takes the new time for every name at
-once and each row is a cache refreshed when its name is opened. *(The exact embedded-code
-mapping of 0x130/0x140 — the +0x100 rule vs. the 0x38/0x39 retained-numbering exception — is discussed in
-the thesis $FILE_NAME section; it is not resolved here.)*
+### Which id a record carries
 
-## Four concepts to keep separate
+The driver picks the file, directory and data-stream ids when it mounts the volume, from the volume's format version.
 
-1. **Attribute name** -- the Unicode string (`$STANDARD_INFORMATION`, `$DATA`)
-2. **Definition (Type) code** -- the in-driver lookup handle (e.g., 0x10 for $SI)
-3. **Embedded code** -- the on-disk key prefix (e.g., 0x90 for $SI)
-4. **Schema identifier** -- the Schema Table key (e.g., 0x190 for $SI)
+- A new object gets the ids of the volume's format.
+- An object created under an older format keeps its old id until it is opened on a volume of format 3.6 or later. The
+  driver then moves its table to the current id: it rewrites the id, or re-keys the table's rows when the key format
+  changed.
+- So a volume upgraded from 3.4 to 3.14 holds both: on the upgraded volumes of the test corpus, 1,221 file records and
+  199 directory own rows still carry an older id.
 
-The Definition code and Embedded code are independent numbering systems. For $DATA they coincide (both 0x80); for $STANDARD_INFORMATION they differ (0x10 vs 0x90).
+For an examiner, the id therefore says under which format an object was created or last converted, not what the
+object holds. A file record with schema 0x1E0 is an ordinary 3.11+ file; it does not mean the file has an extended
+attribute.
 
-## Schema names
+## Names, type codes and schemas
 
-These schema functions are version-independent — the schemas have always had the same function across v3.4 through Insider.
+Three numbering systems meet in a record. One is not derived from another:
 
-| Schema | Prior Name | Correct Name | Notes |
-|--------|-----------|-------------|-------|
-| 0x160 | "Security Descriptor" | **Reparse Index** | `InitializeReparseIndexTable` creates OIDs 0x540/0x541 with schema 0x160. |
-| 0x1B0 | "Index Root" | **$SNAPSHOT** | PDB symbol; introduced at v3.7 with snapshot support. |
+1. **Attribute name and type code**: the driver's attribute-definition table pairs each name with a type code (0x10
+   `$STANDARD_INFORMATION`, 0x80 `$DATA`, 0x90 `$INDEX_ROOT`, 0xB0 `$NAMED_DATA`, 0xC0 `$REPARSE_POINT`, 0xD0
+   `$EA_INFORMATION`, 0xE0 `$EA` ...). The type code is what a sub-record's key carries.
+2. **Row type**: the first u16 of a directory row's key (0x10 own row, 0x20 reverse index, 0x30 name, 0x40 backing
+   record).
+3. **Schema id**: the table a record or a system object is (the table above).
 
-Schema 0x160 indexes reparse points (symlinks, junctions, WSL device nodes) globally — it has no relationship to security descriptors. The actual security descriptors reside in OID 0x530, which is a schema-less stream-type table (see [Security Descriptors](security_descriptors.md)).
+The `$STANDARD_INFORMATION` is not a sub-record at all: it is the root data of the object's table, at value+0x28.
 
-The 36 distinct schema IDs were named using three sources: PDB symbols for 24, string literals for the attribute names, and structural inference for 4 legacy schemas.
+### Directory entries carry only the long name
+
+A directory's names are its type-0x30 rows, keyed by the full long name. **ReFS has no 8.3 short names**: there is no
+separate short-name entry and no short-name field (refs.sys has no 8.3-generation code; all `8dot3`/`ShortName` code
+lives in fsutil.exe; `fsutil file setshortname` returns "A local NTFS volume is required").
+
+ReFS also does **not** duplicate the four MACB timestamps in a name entry the way NTFS does in `$FILE_NAME`, so the
+NTFS `$SI`-vs-`$FILE_NAME` timestomp cross-check does **not** exist on ReFS **for a single-named file**.
+
+A **hard-linked** file differs: each name is a separate type-0x30 row carrying its own MACB (value
++0x10/+0x18/+0x20/+0x28), and those rows can diverge. This is a journal-independent lead (forefst's
+`HARDLINK_MACB_MISMATCH` signal).
+
+- A divergence of the names' Created times is evidence.
+- Their Changed times diverge routinely: a hard link added later carries the time it was added.
+- Agreement does not show that the times are genuine: the file's own record takes a new time for every name at once,
+  and each name's row is a copy refreshed when the file is opened, read and closed through that name.
 
 ## Failover
 
@@ -148,17 +170,29 @@ Root #3 (table ID 0x01) and root #9 (table ID 0x06) form a failover pair.
 
 ## Evidence
 
-The Schema Table identity (roots #3/#9, table IDs 0x01/0x06, schema 0xe060, virtual addressing) is decompiled
-from the `CmsSchemaTable` class (E2) and parsed on every analysed image (RD). The key/value layout and the
-`u32[7]` key-comparison-rules selector are decompiled from `RegisterSchema` / `GetKeyRulesInternal` (E2) and
-corroborated against the driver's baked-in schema table, which reproduces the disk values exactly (RD). `u32[7]` is a key-comparison-rules enum (disk-observed 1..0x11), bounds-checked `< 0x15` and used to index the key-rules dispatch table. The 36 distinct schema IDs, the per-version
-entry counts, and the naming corrections (0x160 = Reparse Index, 0x1B0 = $SNAPSHOT) are raw-disk re-measured
-across the corpus (RD) and named from PDB symbols and string literals (E1/E2). The "no 8.3 short names" and
-"no `$SI`-vs-`$FILE_NAME` timestomp cross-check for a single-named file" facts are decompiled (E2); the per-name
-hard-link exception (each name carries its own MACB, so hard-link names can diverge) is `FN_LINK_003` (RD). See
-[how this was verified](../methodology.md) to trace these to the exact images and measurements in `analysis/`.
+The Schema Table identity (roots #3/#9, table IDs 0x01/0x06, schema 0xe060, virtual addressing) is read in the
+`CmsSchemaTable` class of the driver and parsed on every analysed image. The key/value layout and the `u32[7]`
+key-comparison-rules selector are read in `RegisterSchema` / `GetKeyRulesInternal`; the rows on disk are the entries of the driver's
+own schema set (a data block, `RefsSchemaSet`), except words 15 / 16 of every row and the key type and a flag bit of
+the stream-set schemas 0x120 / 0x1A0 (why they differ is not read). `u32[7]` is a key-comparison-rules enum
+(disk-observed 1..0x11), bounds-checked `< 0x15` and used to index the key-rules dispatch table.
 
-Findings: **FS_SCHM_RA_008, FS_SECD_RA_003, FS_SCHM_RA_005, FS_SCHM_RA_010** (naming corrections 0x160/0x1B0), **MD_TS_RA_005, MD_UNSUP_RA_001** (no 8.3 short names), **FS_SCHM_001**,
-**FS_SCHM_RA_008** (36 schema IDs), **FS_PCTB_RA_001** (`u32[7]` key-rules selector).
+The measurements and readings behind the text:
 
-The remaining field-level statements on this page are registered as **FS_SCHM_RA_002**, **FS_SCHM_RA_003**, **FS_SCHM_RA_009**, **FS_SCHM_RA_011** — each with its own evidence tier and witness in the claim register.
+- The roles: the mount's three slots (file, data stream, directory) set by format version in `RefsMountVolume`, on
+  every driver build read (17134 to Insider 29683); the upgrade on open in `OpenRefsObjectForFcb` (26100.9444); 0x140 created for
+  OID 0x530 by `RefsSecurityInitialize`, 0x150 / 0x160 by `InitializeVolumeInfoTable` / `InitializeReparseIndexTable` (26100.9444);
+  0x110 / 0x120 / 0x170 used by 17134 only without the boot-sector flag 0x04.
+- On disk: every record of the 124 ReFS volumes of the corpus (820,293 records) carries its format's id, the older ids
+  only on volumes upgraded to 3.14; no object carries 0x110, 0x120, 0x170 or 0x1B0. The roots of OIDs 0x500, 0x520,
+  0x530, 0x540 and the user directories carry 0x150, 0x130, 0x140, 0x160 and 0x130 on a 3.4, a 3.7 and a 3.14 volume.
+  The data streams' `$DATA` records carry 0x1A0 on 3.7 and 3.10 and 0x200 on 3.14 (3,197 records).
+- The 36 distinct schema IDs and the per-version entry counts are re-measured across the corpus.
+- The "no 8.3 short names" and "no `$SI`-vs-`$FILE_NAME` timestomp cross-check for a single-named file" facts are
+  read in the driver; the per-name hard-link exception is measured on disk.
+
+The page is documented against the project's claim register. See [how this was verified](../methodology.md).
+
+<!-- findings: FN_LINK_003, FS_PCTB_RA_001, FS_SCHM_001, FS_SCHM_RA_002, FS_SCHM_RA_003, FS_SCHM_RA_005,
+               FS_SCHM_RA_008, FS_SCHM_RA_009, FS_SCHM_RA_010, FS_SCHM_RA_011, FS_SCHM_RA_012, FS_SCHM_RA_013,
+               FS_SECD_RA_003, FS_VBR_RA_015, GN_IDXR_RA_005, MD_TS_RA_005, MD_UNSUP_RA_001 -->

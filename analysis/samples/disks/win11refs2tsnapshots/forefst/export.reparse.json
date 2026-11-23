@@ -1,58 +1,66 @@
 {
-  "reparse_points": [
+  "Summary": {
+    "ReparsePointNames": 3,
+    "ReparsePointObjects": 3,
+    "Listed": 3
+  },
+  "ReparsePoints": [
     {
-      "name": "test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_symlink_gamma_582874.lnk",
-      "is_dir": false,
-      "file_attrs": 1056,
-      "has_reparse": true,
-      "reparse_data": {
-        "tag": 2684354572,
-        "tag_name": "IO_REPARSE_TAG_SYMLINK",
-        "data_len": 168,
-        "flags": 0,
-        "relative": false,
-        "substitute_name": "\\??\\K:\\test\\xbpt_foxtrot_india_714766.ini",
-        "print_name": "K:\\test\\xbpt_foxtrot_india_714766.ini"
+      "ObjectRef": "0x70b:0xa",
+      "FullPath": "test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_symlink_gamma_582874.lnk",
+      "IsDirectory": false,
+      "FileAttributes": "Archive|ReparsePoint",
+      "FileAttributesHex": "0x420",
+      "ReparseTag": "IO_REPARSE_TAG_SYMLINK",
+      "ReparseTagHex": "0xa000000c",
+      "ReparseTarget": "K:\\test\\xbpt_foxtrot_india_714766.ini",
+      "ReparseData": {
+        "DataLength": 168,
+        "Flags": "0x0",
+        "Relative": false,
+        "SubstituteName": "\\??\\K:\\test\\xbpt_foxtrot_india_714766.ini",
+        "PrintName": "K:\\test\\xbpt_foxtrot_india_714766.ini",
+        "FlagsHex": "0x0"
       },
-      "wsl_eas": {},
-      "reparse_target": "K:\\test\\xbpt_foxtrot_india_714766.ini",
-      "reparse_tag_value": 2684354572
+      "WSLEAs": null
     },
     {
-      "name": "test/xbpt_symlink_hotel_632659.lnk",
-      "is_dir": false,
-      "file_attrs": 1056,
-      "has_reparse": true,
-      "reparse_data": {
-        "tag": 2684354572,
-        "tag_name": "IO_REPARSE_TAG_SYMLINK",
-        "data_len": 524,
-        "flags": 0,
-        "relative": false,
-        "substitute_name": "\\??\\K:\\test\\elvis_dir_log_202031\\elvis_dir_record_340186\\elvis_dir_gamma_109016\\elvis_dir_config_541148\\xbpt_index_zulu_828859.bak",
-        "print_name": "K:\\test\\elvis_dir_log_202031\\elvis_dir_record_340186\\elvis_dir_gamma_109016\\elvis_dir_config_541148\\xbpt_index_zulu_828859.bak"
+      "ObjectRef": "0x702:0x1c",
+      "FullPath": "test/xbpt_symlink_hotel_632659.lnk",
+      "IsDirectory": false,
+      "FileAttributes": "Archive|ReparsePoint",
+      "FileAttributesHex": "0x420",
+      "ReparseTag": "IO_REPARSE_TAG_SYMLINK",
+      "ReparseTagHex": "0xa000000c",
+      "ReparseTarget": "K:\\test\\elvis_dir_log_202031\\elvis_dir_record_340186\\elvis_dir_gamma_109016\\elvis_dir_config_541148\\xbpt_index_zulu_828859.bak",
+      "ReparseData": {
+        "DataLength": 524,
+        "Flags": "0x0",
+        "Relative": false,
+        "SubstituteName": "\\??\\K:\\test\\elvis_dir_log_202031\\elvis_dir_record_340186\\elvis_dir_gamma_109016\\elvis_dir_config_541148\\xbpt_index_zulu_828859.bak",
+        "PrintName": "K:\\test\\elvis_dir_log_202031\\elvis_dir_record_340186\\elvis_dir_gamma_109016\\elvis_dir_config_541148\\xbpt_index_zulu_828859.bak",
+        "FlagsHex": "0x0"
       },
-      "wsl_eas": {},
-      "reparse_target": "K:\\test\\elvis_dir_log_202031\\elvis_dir_record_340186\\elvis_dir_gamma_109016\\elvis_dir_config_541148\\xbpt_index_zulu_828859.bak",
-      "reparse_tag_value": 2684354572
+      "WSLEAs": null
     },
     {
-      "name": "test/xbpt_symlink_output_831744.lnk",
-      "is_dir": false,
-      "file_attrs": 1056,
-      "has_reparse": true,
-      "reparse_data": {
-        "tag": 2684354572,
-        "tag_name": "IO_REPARSE_TAG_SYMLINK",
-        "data_len": 164,
-        "flags": 0,
-        "relative": false,
-        "substitute_name": "\\??\\K:\\test\\xbpt_yankee_audit_433793.xml",
-        "print_name": "K:\\test\\xbpt_yankee_audit_433793.xml"
+      "ObjectRef": "0x702:0x20",
+      "FullPath": "test/xbpt_symlink_output_831744.lnk",
+      "IsDirectory": false,
+      "FileAttributes": "Archive|ReparsePoint",
+      "FileAttributesHex": "0x420",
+      "ReparseTag": "IO_REPARSE_TAG_SYMLINK",
+      "ReparseTagHex": "0xa000000c",
+      "ReparseTarget": "K:\\test\\xbpt_yankee_audit_433793.xml",
+      "ReparseData": {
+        "DataLength": 164,
+        "Flags": "0x0",
+        "Relative": false,
+        "SubstituteName": "\\??\\K:\\test\\xbpt_yankee_audit_433793.xml",
+        "PrintName": "K:\\test\\xbpt_yankee_audit_433793.xml",
+        "FlagsHex": "0x0"
       },
-      "wsl_eas": {},
-      "reparse_target": "K:\\test\\xbpt_yankee_audit_433793.xml",
-      "reparse_tag_value": 2684354572
+      "WSLEAs": null
     }
   ]
 }

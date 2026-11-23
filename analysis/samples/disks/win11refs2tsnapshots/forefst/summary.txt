@@ -1,17 +1,18 @@
 # forefst win11refs2tsnapshots.raw summary -q
 # ----------------------------------------------------------------------------
 ==============================================================================
-ReFS Volume Fast Extended Summary
+ReFS Volume Summary
 ------------------------------------------------------------------------------
   Image:              win11refs2tsnapshots.raw
-  Image size:         2.0 TB
+  Image size:         2199023255552 bytes (2048 GiB)
+  Image tail:         50331648 bytes (48 MiB) after the volume, not read (47 MiB of it in partition #2)
   ReFS version:       3.14
   Volume GUID:        c2b2e9e9-007b-49bf-92ec-5690bfd86923
   Volume serial:      0x2c4a226f4a22364c
   Volume label:       win11refs2tsnapshots
-  Volume size:        2.0 TB
-  Cluster size:       0x1000 (4.0 KB)
-  Container size:     0x4000000 (64.0 MB)
+  Volume size:        2198956146688 bytes (2047.9 GiB)
+  Cluster size:       4 KiB
+  Container size:     64 MiB
   Checksum:           CRC64
 
 ------------------------------------------------------------------------------
@@ -22,17 +23,17 @@ Bootstrap structures
       2291b5b0537de224b6276c04b16c71ab73ee93f093bdc9b4acc2f695e2e9403f
   SUPB primary     LCN 0x1e (offset 0x101e000)  — checksum OK
       85cb53e7d4b181d5b5af37061bb9f8413167b968f11ef59287f075433f80ad20
-  CHKP primary     LCN 0x51eb04 (offset 0x51fb04000)  — checksum OK, vclock=265
-      5465bd87f960884e491773dacbb60368399de2f659a989b8a29e5783c3b025c1
+  CHKP primary     LCN 0x51eb04 (offset 0x51fb04000; 1 cluster, 4 KiB)  — checksum OK, vclock=265, in use
+      2972908a619b3e5733b4d6385d5a94fa6722b04eccebcd31b56f9dc82e43f7f7
 ------------------------------------------------------------------------------
-  VBR backup       LBA 4294836223 (off 0x1fffcfffe00)  — = primary, checksum OK
+  VBR backup       LBA 4294836223 (offset 0x1fffcfffe00)  — = primary, checksum OK
       2291b5b0537de224b6276c04b16c71ab73ee93f093bdc9b4acc2f695e2e9403f
   SUPB backup      LCN 0x1fffbffd (offset 0x1fffcffd000)  — checksum OK
       779acce44b55cc4ea944de330a74296ba2984a1ffa1034451c8f1c8f8cf1cc75
   SUPB backup      LCN 0x1fffbffe (offset 0x1fffcffe000)  — checksum OK
       d976253829e7c5e681d3176e1565102325ea40527548fd45f7d3b957ff358df2
-  CHKP secondary   LCN 0x3d702ac (offset 0x3d712ac000)  — checksum OK, vclock=264
-      c9d410b58d365ea8e28793895936e41417961d045d4da1ca704fd65a4c61aa08
+  CHKP secondary   LCN 0x3d702ac (offset 0x3d712ac000; 1 cluster, 4 KiB)  — checksum OK, vclock=264, superseded
+      c448568e80d593dcf9389876e35b5f1d28a47a9e021a211c9f0810bcca4823a2
 
 note: the SUPB copies hash differently by design (each carries its own LCN +
 self-checksum); their payload is identical — redundancy, not divergence.
@@ -42,10 +43,10 @@ Checkpoint
 ------------------------------------------------------------------------------
   Virtual clock:      265
   Flags:              0x682
-                        · 0x002 = always-set
-                        · 0x080 = native-Win11-format (v3.10+)
+                        · 0x2 = always-set
+                        · 0x80 = native-Win11-format (ReFS 3.10+)
                         · 0x200 = indirect-root-list
-                        · 0x400 = metadata-checksum (CRC64/SHA-256)
+                        · 0x400 = rollback-protection fields (+0x9c offset / +0xa0 length; ReFS 3.13+)
 
 ------------------------------------------------------------------------------
 Global Root Tables
@@ -55,13 +56,13 @@ Global Root Tables
   Container Allocator             165 rows
   Schema Table                     29 rows
   Parent-Child Table               35 rows
-  Object ID Table dup              47 rows
+  Object ID Table copy 2           47 rows
   Block RefCount                   21 rows
   Container Table               32767 rows
-  Container Table dup           32767 rows
-  Schema Table dup                 29 rows
+  Container Table copy 2        32767 rows
+  Schema Table copy 2              29 rows
   Container Index                   0 rows
-  Integrity State                   1 rows
+  Integrity State                   1 row
   Small Allocator                   8 rows
 
 ------------------------------------------------------------------------------
@@ -69,18 +70,16 @@ Volume Detail
 ------------------------------------------------------------------------------
   Volume version:     3.14
   Driver version:     3.14
-  Volume created:     2026-05-16 16:50:42.7888372
-  Volume modified:    2026-05-16 16:50:44.1722315
-  Volume state:       NATIVE v3.14
+  Volume created:     2026-05-16T16:50:42.7888372Z
+  Last mount (rw):    2026-05-16T16:50:44.1722315Z
+  Volume state:       NATIVE ReFS 3.14
   Security descs:     7
   Reparse index:      3 entries
   Trash table:        0 entries
-  Containers used:    32766 / 32767  (first maps to PLCN 0 = boot region)
-  Space used:         11.8 GB of 2.0 TB (0.6%) — 2.0 TB not allocated
+  Containers mapped:  32767 (32766 outside the boot region; the first is at PLCN 0x0)
+  Space used:         11.8 GiB of 2.0 TiB (0.6%) — 2.0 TiB not allocated
       • Windows reports less than this as free: it holds part of it in
         reserve, a share the volume does not record
-      • 48.0 MB lies beyond the last container,
-        so no allocator tracks it — it is neither used nor free
   FS Metadata:        no child entries
   USN Journal:        Inactive
 
@@ -88,16 +87,26 @@ Volume Detail
 File System Content (from directory walk)
 ------------------------------------------------------------------------------
   Directories:        34
-  Files:              270 (9 inline + 261 extent-backed)
-  Total file size:    432.6 MB
-  Oldest timestamp:   2021-05-18 07:16:04.9990009
-  Newest timestamp:   2026-05-16 17:35:57.4899352
+  Files:              269 (9 inline, 257 extents, 3 snapshot-shared)
+  Names:              270 (269 files, plus 1 more name: 1 hard-linked file has 2 names)
+  Total file size:    453583648 bytes (432.6 MiB)
+  Oldest timestamp:   2021-05-18T07:16:04.9990009Z
+  Newest timestamp:   2026-05-16T17:35:57.4899352Z
+  Last access:        20 files read after their last change: last-access updating seems to have been
+                      on at some time (a program can also set an Accessed time)
   Encrypted files:    0
-  Integrity objects:  0
+  Integrity files:    0
   Compressed files:   0
-  Hard-linked:        1 files sharing 2 names
+  Hard-linked:        1 file sharing 2 names
   Snapshot versions:  10 (across 5 files)
   ADS host files:     3
-  File data:          not examined — every figure above comes from metadata;
-                      `integrity` checks files that carry an integrity stream
+  File contents:      not read -- every figure above comes from the volume's metadata.
+                      `integrity --checksums` checks the files that carry an integrity stream.
 
+------------------------------------------------------------------------------
+MLog
+------------------------------------------------------------------------------
+  not read: `summary --mlog` or `summary -v` reads it (one pass over the log's data area);
+  `mlog` lists the log's records
+
+==============================================================================

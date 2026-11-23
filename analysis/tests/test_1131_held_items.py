@@ -1,4 +1,6 @@
 """1.13.1 item 7 -- the findings held at v1.13.0, each with the RED case that shows it on 1.13.0."""
+import re
+
 import forefst as F
 
 
@@ -13,12 +15,21 @@ def test_k172_an_unrecognised_reason_bit_is_shown_not_dropped():
     for b in F.USN_REASON_FLAGS:
         known |= b
     unk = next(1 << i for i in range(31) if not (1 << i) & known)
+    # acceptance 1.14.0 (K14 / K16): the residual bit in the names, unpadded (`FILE_CREATE|0x8`)
     for render in (F.usn_reason_to_short, F.usn_reason_to_str):
-        assert ("0x%08x" % unk) in render(0x100 | unk), render.__name__
+        assert ("0x%x" % unk) in render(0x100 | unk).split("|"), render.__name__
+
+
+def _fresh_registers(monkeypatch):
+    """N420 (LB55): empty run registers for one node, restored by monkeypatch. The K173 nodes' journal notes (an
+    expected data condition) went into the real `_SKIP_EXPECTED`, so the pytest process printed them at exit."""
+    for name in ("_FINDINGS", "_SKIP_NOTES", "_SKIP_EXPECTED", "_SKIP_FINDING"):
+        monkeypatch.setattr(F, name, type(getattr(F, name))())
 
 
 # K173 -- the "non-zero byte(s)" count added 8 per skipped WORD, zero bytes included, and blamed a torn record
-def test_k173_unparseable_journal_bytes_are_counted_as_bytes_not_words(capsys):
+def test_k173_unparseable_journal_bytes_are_counted_as_bytes_not_words(capsys, monkeypatch):
+    _fresh_registers(monkeypatch)                       # N420 (LB55): the note stays inside this node
     junk = bytes([0x41, 0, 0, 0, 0, 0, 0, 0]) * 3      # low u32 = 0x41: not a record length; 3 bytes non-zero
     F.parse_usn_records(junk + b"\0" * 4096)           # room enough that the scan reaches every junk word
     err = capsys.readouterr().err
@@ -58,13 +69,13 @@ def test_k086_walker_terminates_on_a_cyclic_tree(monkeypatch):
 # found no extents and the walker called every such file resident.
 def test_k098_size_is_read_and_the_extent_backed_verdict_survives():
     from test_image_holes_and_page_refs import _corpus_image
-    img = _corpus_image("win10refsmini.raw")
+    img = _corpus_image("step1/win10refsmini.raw")
     if img is None:
         import pytest
         pytest.skip("win10refsmini.raw not in this tree")
     f, ps, cs, tr, roots, obj_map, vmaj, vmin, _ = F.bootstrap(img, None)
     try:
-        ents = [e for e in F.walk_directory_tree(f, ps, cs, tr, obj_map, 0x600, F.DEFAULT_DEPTH, False, set())
+        ents = [e for e in F.walk_directory_tree(f, ps, cs, tr, obj_map, 0x600, F.DEFAULT_DEPTH, False)
                 if not e.get("is_dir")]
         assert len(ents) == 8
         assert all(e["file_size"] > 0 for e in ents), "K098: the v3.4 size is read, not 0"
@@ -135,7 +146,12 @@ def _k041_page(own_lcn, cs=4096):
     b[0:4] = b"CHKP"
     struct.pack_into("<Q", b, 0x20, own_lcn)                    # the header's self-reference
     b[0x200:0x210] = b"payload-payload!"
-    d = 0x50                                                     # self-descriptor: SHA-256, 32-byte digest
+    # N335 (decision 27.5), a fixture correction: a CHKP declares its self-descriptor in its header (CHKP+0x58 offset,
+    # +0x5C length), and one that declares none (pointer 0/0) fails its self-checksum, as in the 26100 driver. This
+    # page used to put its descriptor at +0x50, over the pointer, which then read 0/0 and sent the tool to its old
+    # descriptor scan; it now sits where a CHKP keeps it (+0xE0) and the header declares it.
+    d = 0xE0                                                     # self-descriptor: SHA-256, 32-byte digest
+    struct.pack_into("<II", b, 0x58, d, 0x48)                    # declared: offset 0xE0, length 0x48
     b[d + 0x22] = 4; b[d + 0x23] = 8; struct.pack_into("<I", b, d + 0x24, 32)
     z = bytearray(b); z[d:d + 0x48] = b"\0" * 0x48               # the window zeroed before hashing
     b[d + 0x28:d + 0x48] = hashlib.sha256(bytes(z)).digest()
@@ -170,10 +186,13 @@ def test_k072_a_live_but_unlinked_parent_is_not_labelled_gone():
 
 
 def test_k072_a_root_child_gets_the_same_leading_slash_as_every_other_path():
-    assert F._usn_full_path("/", "pagefile.sys") == "/pagefile.sys"             # 1.13.0: "pagefile.sys"
-    assert F._usn_full_path("/Users", "a.txt") == "/Users/a.txt"
+    # acceptance 1.14.0 (K22): every path in `files`' FullPath form -- no leading '/', the root '.', a root child its
+    # bare name (the one form K072 asked for, now without the slash); a '/' parent is the root too
+    assert F._usn_full_path(".", "pagefile.sys") == "pagefile.sys"
+    assert F._usn_full_path("/", "pagefile.sys") == "pagefile.sys"
+    assert F._usn_full_path("Users", "a.txt") == "Users/a.txt"
     assert F._usn_full_path("", "x") == "x"
-    assert F._usn_full_path("/", ".") == "/"                                    # the root's own records
+    assert F._usn_full_path(".", ".") == "."                                    # the root's own records
 
 
 # K066 -- `summary` printed the allocator's unallocated count as "free". Windows' own fsutil output for this
@@ -181,7 +200,7 @@ def test_k072_a_root_child_gets_the_same_leading_slash_as_every_other_path():
 def test_k066_used_is_windows_figure_and_the_rest_is_not_called_free():
     import os, subprocess, sys
     from test_image_holes_and_page_refs import _corpus_image
-    img = _corpus_image("win10refsmini.raw")
+    img = _corpus_image("step1/win10refsmini.raw")
     if img is None:
         import pytest
         pytest.skip("win10refsmini.raw not in this tree")
@@ -209,7 +228,7 @@ def test_k006_a_split_files_attributes_come_from_its_own_record():
         pytest.skip("win11refstestmftecmd.raw not in this tree")
     f, ps, cs, tr, roots, obj_map, vmaj, vmin, _ = F.bootstrap(img, None)
     try:
-        hit = [e for e in F.walk_directory_tree(f, ps, cs, tr, obj_map, 0x600, F.DEFAULT_DEPTH, True, set())
+        hit = [e for e in F.walk_directory_tree(f, ps, cs, tr, obj_map, 0x600, F.DEFAULT_DEPTH, True)
                if e.get("name") == "xbpt_hardlink_tango_460823.xml"]
     finally:
         f.close()
@@ -255,7 +274,8 @@ def test_a_split_file_with_inline_data_is_walked_as_inline_and_still_grouped():
 
 # K173, second pass (the sample-golden critic): a zero low half with written bytes after it, and the tail the loop
 # never reaches, were not counted -- 117 bytes on win11refstestmftecmd.
-def test_k173_half_zero_words_and_the_unscanned_tail_are_counted(capsys):
+def test_k173_half_zero_words_and_the_unscanned_tail_are_counted(capsys, monkeypatch):
+    _fresh_registers(monkeypatch)                       # N420 (LB55): the note stays inside this node
     half = bytes(4) + b"\x01\x02\x03\x00"                     # low u32 0, high half written: 3 non-zero bytes
     tail = b"\x00" * 16 + b"\x05" * 8                         # inside the last 80 bytes: 8 non-zero bytes
     F.parse_usn_records(b"\0" * 64 + half + b"\0" * 4096 + tail)
@@ -310,6 +330,13 @@ def test_integrity_translates_a_virtual_cluster_above_the_physical_count(monkeyp
     _, _, _, disk = _integrity_holder([(0x102, 0, 0)], [0])
     key, v, f, disk = _integrity_holder([(0x102, 0, F._crc32c(disk[2 * cs:3 * cs]))], [0])
     monkeypatch.setattr(F, "parse_resident_btree_rows", lambda vd, ctx=None: [(key, v)])
+    # C2 ST-L3 (the lead, 2026-10-24; REVIEW_C2_tests N-1): the physical count this node tests against is the disk's,
+    # len(disk) // cs clusters. Since wave C step C2 (B3) the tool reads the volume length from the boot sector, which
+    # this synthetic disk does not hold (its fill gave a count of 5.9e17, so the node no longer caught the defect).
+    # raising=False: tools from before C2 have no volume_clusters.
+    ncl = len(disk) // cs
+    monkeypatch.setattr(F, "volume_clusters", lambda f_, ps, cs_: ncl, raising=False)
+    monkeypatch.setattr(F, "_volume_ncl", lambda f_, ps, cs_: ncl, raising=False)
     r = F._verify_inline_integrity(f, 0, cs, _Tr(), b"x")
     assert r is not None and (r["checked"], r["ok"]) == (1, 1)   # 1.13.0: vlcn 0x102 >= 4 clusters -> dropped
 
@@ -412,12 +439,13 @@ def _sample_run(name, tool, *args):
 def test_timestomp_names_a_snapshot_shared_stream():
     import csv, io
     r = _sample_run("win11refs2tsnapshots.raw", "forefst.py", "timestomp", "--csv", "--all")
-    st = {row["path"]: row["storage"] for row in csv.DictReader(io.StringIO(r.stdout))}
-    assert st.get("testsnapshots/lasttest.txt") == "(snapshot-shared)", st.get("testsnapshots/lasttest.txt")
+    # acceptance 1.14.0 (N313 / N314): FullPath; storage split into its two axes, the data residency `snapshot-shared`
+    st = {row["FullPath"]: row["DataResidency"] for row in csv.DictReader(io.StringIO(r.stdout))}
+    assert st.get("testsnapshots/lasttest.txt") == "snapshot-shared", st.get("testsnapshots/lasttest.txt")
 
 
 def test_allocators_say_not_allocated_per_tier():
-    r = _sample_run("win10refsmini.raw", "refsanalysis.py", "allocators")
+    r = _sample_run("step1/win10refsmini.raw", "refsanalysis.py", "allocators")
     tier = [l for l in r.stdout.splitlines() if "from rows:" in l or "from summary:" in l]
     assert tier and all("not allocated" in l and " free " not in l for l in tier), tier
 
@@ -426,14 +454,16 @@ def test_timeline_fileref_is_one_files_history():
     import csv, io
     r = _sample_run("lab314_main.raw", "forefst.py", "timeline", "--fileref", "0x70b:0x7", "--csv")
     rows = list(csv.DictReader(io.StringIO(r.stdout)))
-    assert rows and {row["name"] for row in rows} == {"LAB_0906/t15/linked.bin", "LAB_0906/t15/linked_alias.bin"}
+    # acceptance 1.14.0 (Q-C): a row's path today (a USN row has none: its Name)
+    assert rows and {row["PathToday"] or row["Name"] for row in rows} == {"LAB_0906/t15/linked.bin",
+                                                                          "LAB_0906/t15/linked_alias.bin"}
     assert "leaves out MLog events" in r.stderr
 
 
 def test_timeline_oid_includes_the_si_events_of_files_filed_under_it():
     import csv, io
     r = _sample_run("lab314_main.raw", "forefst.py", "timeline", "--oid", "0x70b", "--source", "SI", "--csv")
-    names = {row["name"] for row in csv.DictReader(io.StringIO(r.stdout))}
+    names = {row["PathToday"] for row in csv.DictReader(io.StringIO(r.stdout))}      # acceptance 1.14.0 (Q-C)
     assert "LAB_0906/t15/linked.bin" in names          # 1.13.0: a file's $SI rows carried no oid and were dropped
 
 
@@ -483,7 +513,7 @@ def test_dataruns_reports_a_split_files_attributes_from_its_own_record_as_files_
         pytest.skip("win11refs2tspecials.raw not in this tree")
     f, ps, cs, tr, roots, obj_map, vmaj, vmin, _ = F.bootstrap(img, None)
     try:
-        walk = {e["path"]: e for e in F.walk_directory_tree(f, ps, cs, tr, obj_map, 0x600, F.DEFAULT_DEPTH, True, set())}
+        walk = {e["path"]: e for e in F.walk_directory_tree(f, ps, cs, tr, obj_map, 0x600, F.DEFAULT_DEPTH, True)}
         dirs = [("", 0x600)] + [(p, e["oid"]) for p, e in walk.items() if e.get("is_dir") and e.get("oid")]
         compared, differ = 0, []
         for dpath, doid in dirs:
@@ -507,7 +537,7 @@ def _specials_walk():
         pytest.skip("win11refs2tspecials.raw not in this tree")
     f, ps, cs, tr, roots, obj_map, vmaj, vmin, _ = F.bootstrap(img, None)
     try:
-        return {e["path"]: e for e in F.walk_directory_tree(f, ps, cs, tr, obj_map, 0x600, F.DEFAULT_DEPTH, True, set())}
+        return {e["path"]: e for e in F.walk_directory_tree(f, ps, cs, tr, obj_map, 0x600, F.DEFAULT_DEPTH, True)}
     finally:
         f.close()
 
@@ -531,7 +561,16 @@ def test_refsanalysis_attributes_storage_is_the_data_residency_files_reports():
     assert not wrong, (len(wrong), wrong[:3])
     split_inline = sum(1 for p, e in walk.items() if not e.get("is_dir") and files[p] == "inline"
                        and F._record_placement(e) == "split")
-    assert "Inline files:      %d" % sum(1 for v in files.values() if v == "inline") in r.stdout and split_inline > 0
+    # wave E E1 close (review RE1-4, acceptance change; the node's property is unchanged): `attributes`' summary counts
+    # files once each (by their FileRef, as `summary`), in `files_count_text`'s form -- the inline count is of files,
+    # no longer of names (its "Inline files:" line counted names)
+    objs = {}
+    for p, e in walk.items():
+        if not e.get("is_dir"):
+            objs.setdefault(F._object_key(e), files[p])
+    n_inline = sum(1 for v in objs.values() if v == "inline")
+    line = next(l for l in r.stdout.splitlines() if l.strip().startswith("Files:"))
+    assert re.search(r"\b%d inline\b" % n_inline, line) and split_inline > 0, (n_inline, line)
 
 
 def test_refsanalysis_details_says_a_split_files_inline_data_is_inline():
@@ -550,7 +589,8 @@ def test_search_storage_placeholder_is_the_data_residency(monkeypatch):
            "record_embedded": False, "data_form": "inline", "file_size": 5, "modify_time": 0}
     monkeypatch.setattr(F, "walk_directory_tree", lambda *a, **k: [row])
     m = F.cmd_search(None, 0, 4096, None, {}, 3, 14, "a.bin")
-    assert m[0]["oid"] == "(inline)" and m[0]["data"] == "inline", m[0]
+    # acceptance 1.14.0 (K1 / K20): a file has no OID of its own -- the field is absent (null), never a residency word
+    assert m[0]["oid"] is None and m[0]["data"] == "inline", m[0]
 
 
 def test_a_dash_after_an_output_flag_means_stdout_in_every_command():
@@ -597,7 +637,7 @@ def test_refsanalysis_details_prints_the_fileref_files_prints_for_an_embedded_fi
     p, e = next((p, e) for p, e in sorted(walk.items()) if not e.get("is_dir")
                 and F._record_placement(e) == "embedded" and F._data_residency(e) == "extents")
     out = _sample_run("win11refs2tspecials.raw", "refsanalysis.py", "details", p).stdout
-    ref = [l for l in out.splitlines() if l.strip().startswith("FileRef:")]
+    ref = [l for l in out.splitlines() if l.strip().startswith("ObjectRef:")]       # acceptance 1.14.0 (N497)
     assert ref and ref[0].split()[1] == F._file_ref(e), (p, ref, F._file_ref(e))
     assert ("relocated" in out) == (e.get("home_oid") != e.get("parent_oid")), out[:1500]
 
@@ -645,7 +685,7 @@ def test_extract_of_an_empty_extent_form_file_does_not_say_inline_form():
         pytest.skip("win11refstestmftecmd.raw not in this tree")
     f, ps, cs, tr, roots, obj_map, vmaj, vmin, _ = F.bootstrap(img, None)
     try:
-        p = next(e["path"] for e in F.walk_directory_tree(f, ps, cs, tr, obj_map, 0x600, F.DEFAULT_DEPTH, True, set())
+        p = next(e["path"] for e in F.walk_directory_tree(f, ps, cs, tr, obj_map, 0x600, F.DEFAULT_DEPTH, True)
                  if not e.get("is_dir") and not e.get("file_size") and F._record_placement(e) == "embedded"
                  and F._data_residency(e) == "extents")
     finally:

@@ -1,10 +1,11 @@
 # forefst win11refs2tsnapshots.raw specials ads
 # ----------------------------------------------------------------------------
 
-── ads  (3) — named data streams ──
-  STREAM                     RESIDENCY      HOST FILE
-    hidden_7357              inline         test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_romeo_gamma_831931.dat
-    hidden_1514              inline         test/xbpt_tango_archive_828215.dat
-    adstest                  extent-backed  testsnapshots/testads.txt
+── ads  (3 objects, 3 names) — named data streams ──
+  OBJECTREF = the host file's reference (HomeOID:FileID); RESIDENCY = where the stream's bytes are
+  OBJECTREF        STREAM                     RESIDENCY      HOST FILE
+  0x706:0xb        hidden_7357                inline         test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/xbpt_romeo_gamma_831931.dat
+  0x702:0xe        hidden_1514                inline         test/xbpt_tango_archive_828215.dat
+  0x73c:0x7        adstest                    extents        testsnapshots/testads.txt
 
   Extract one:  forefst IMG export ads "<file>:<stream>"

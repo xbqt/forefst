@@ -1,65 +1,62 @@
-# Worked Example: Enumerate Every Name of One Physical File (a Hard-Link Group)
+# Enumerate Every Name of One Physical File (a Hard-Link Group)
 
 **Goal:** given a ReFS image, recover the *complete* list of names that point at one
 physical file — and prove the reconstruction is correct by decoding the on-disk identity
-fields by hand, because ReFS stores **no explicit hard-link count anywhere**.
+fields by hand: the link count in the file's backing record gives the number of names, not
+the names themselves.
 
 ## Setup
 
-Image: a native ReFS 3.14 image (referred to below as `$IMG`).
-A **native ReFS 3.14** volume (`CHKP` flags `0x682`, the only state that supports hard
-links) built specifically as hard-link ground truth. `fsutil hardlink list` on the live
-volume reported:
+Image: `win11refs2gtargeted.raw`, a **native ReFS 3.14** volume of the test corpus, built specifically as hard-link
+ground truth (`CHKP` flags `0x682`; its boot-sector flags carry bit 0x20, which refs.sys reads as the volume's
+hard-link flag).
+
+`fsutil hardlink list` on the live volume reported:
 
 - `hltest_file1.txt` → **4 names** (`hltest_file1.txt`, `hltest_dir1/link1_to_file1.txt`,
  `hltest_dir1/link3_to_file1.txt`, `hltest_dir2/link2_to_file1.txt`)
 - `hltest_file2.txt` → **2 names** (`hltest_file2.txt`, `hltest_dir2/link_to_file2.txt`)
 - `survivor.txt` → **1 name** (the lone survivor of a deleted original)
 
-The whole job is to reproduce that list from metadata alone.
-
-```sh
-IMG=your_v3.14_image.raw
-```
+The task is to reproduce that list from metadata alone.
 
 ## Steps
 
-### Step 1 — Ask the tool: `forefst --jsonl`, then read `hard_link_count` / `hard_link_names`
+### Step 1 — Ask the tool: `files --jsonl`, then read `HardLinkCount` / `HardLinkNames`
 
-```sh
-python3 forefst.py "$IMG" files --jsonl | grep -i hltest
-```
-
-Relevant fields from the real output (one JSON object per directory entry; trimmed to the
-hard-link fields):
+The output (one JSON object per directory entry, in the order printed; the rows of the two directories are left
+out, and each file row is cut, `[...]`, to the fields used here, of its 42):
 
 ```text
-file_name "hltest_file1.txt" hard_link_count 4 hard_link_names [
- "hltest_dir1/link1_to_file1.txt", "hltest_dir1/link3_to_file1.txt",
- "hltest_dir2/link2_to_file1.txt", "hltest_file1.txt" ]
-file_name "hltest_dir1/link1_to_file1.txt" hard_link_count 4 (same 4 names)
-file_name "hltest_dir1/link3_to_file1.txt" hard_link_count 4 (same 4 names)
-file_name "hltest_dir2/link2_to_file1.txt" hard_link_count 4 (same 4 names)
-
-file_name "hltest_file2.txt" hard_link_count 2 hard_link_names [
- "hltest_dir2/link_to_file2.txt", "hltest_file2.txt" ]
-file_name "hltest_dir2/link_to_file2.txt" hard_link_count 2 (same 2 names)
-
-file_name "survivor.txt" hard_link_count 1 hard_link_names null
+$ forefst.py win11refs2gtargeted.raw files --jsonl | grep -i hltest
+[...]
+{"ObjectRef": "0x600:0x3", "FullPath": "hltest_dir1/link1_to_file1.txt", [...], "RecordPlacement": "split", "DataResidency": "inline", [...], "HardLinkCount": 4, "HardLinkNames": ["hltest_dir1/link1_to_file1.txt", "hltest_dir1/link3_to_file1.txt", "hltest_dir2/link2_to_file1.txt", "hltest_file1.txt"], [...]}
+{"ObjectRef": "0x600:0x3", "FullPath": "hltest_dir1/link3_to_file1.txt", [...], "RecordPlacement": "split", "DataResidency": "inline", [...], "HardLinkCount": 4, "HardLinkNames": ["hltest_dir1/link1_to_file1.txt", "hltest_dir1/link3_to_file1.txt", "hltest_dir2/link2_to_file1.txt", "hltest_file1.txt"], [...]}
+{"ObjectRef": "0x600:0x5", "FullPath": "hltest_dir1/survivor.txt", [...], "RecordPlacement": "split", "DataResidency": "inline", [...], "HardLinkCount": 1, "HardLinkNames": [], [...]}
+[...]
+{"ObjectRef": "0x600:0x3", "FullPath": "hltest_dir2/link2_to_file1.txt", [...], "RecordPlacement": "split", "DataResidency": "inline", [...], "HardLinkCount": 4, "HardLinkNames": ["hltest_dir1/link1_to_file1.txt", "hltest_dir1/link3_to_file1.txt", "hltest_dir2/link2_to_file1.txt", "hltest_file1.txt"], [...]}
+{"ObjectRef": "0x600:0x4", "FullPath": "hltest_dir2/link_to_file2.txt", [...], "RecordPlacement": "split", "DataResidency": "inline", [...], "HardLinkCount": 2, "HardLinkNames": ["hltest_dir2/link_to_file2.txt", "hltest_file2.txt"], [...]}
+{"ObjectRef": "0x600:0x3", "FullPath": "hltest_file1.txt", [...], "FileSize": 36, "Created": "2026-06-14T06:03:20.9010724Z", "Modified": "2026-06-14T06:03:20.9031113Z", [...], "RecordPlacement": "split", "DataResidency": "inline", [...], "HardLinkCount": 4, "HardLinkNames": ["hltest_dir1/link1_to_file1.txt", "hltest_dir1/link3_to_file1.txt", "hltest_dir2/link2_to_file1.txt", "hltest_file1.txt"], [...]}
+{"ObjectRef": "0x600:0x4", "FullPath": "hltest_file2.txt", [...], "FileSize": 36, "Created": "2026-06-14T06:03:20.9470439Z", "Modified": "2026-06-14T06:03:20.9470439Z", [...], "RecordPlacement": "split", "DataResidency": "inline", [...], "HardLinkCount": 2, "HardLinkNames": ["hltest_dir2/link_to_file2.txt", "hltest_file2.txt"], [...]}
 ```
 
-Every one of file1's 4 names carries the *same* `hard_link_count: 4` and the *same*
-`hard_link_names` array — the tool reports the whole group from any member. file2's two
-names both read `2`; `survivor.txt` reads `1` with `hard_link_names: null`. This reproduces
-`fsutil hardlink list` exactly (4 / 2 / 1). All seven rows share `"creation_dir_oid": "0x600"` — the directory
-they were created in — and none has an OID of its own (`"oid": null`): a file is identified by its
-`"file_ref"`, which is what the merged identity column shows.
+Every one of file1's 4 names carries the *same* `HardLinkCount` 4 and the *same* `HardLinkNames` array — the tool
+reports the whole group from any member. file2's two names both read `2`; `survivor.txt` reads `1` with an empty
+`HardLinkNames`. This reproduces `fsutil hardlink list` exactly (4 / 2 / 1).
 
-Note what `"is_resident": true` means here (it is the deprecated alias for `DataResidency == inline`). Creating a hard link moves the file's *record* out of the name row
-into a shared backing — that is what lets several names resolve to one object. It does **not** move the file's
-*bytes*: for a small file those stay inline, which is exactly what these rows report. Placement and residency
-are separate questions, so a hard-linked file showing **inline** data *and* a link count above one is not a
-contradiction (see [Hard Links](../concepts/hard_links.md) and
+All seven rows' `ObjectRef` begins with `0x600`, their `HomeOID` — the directory they were created in. A file has no
+OID of its own: it is identified by its `ObjectRef` (`HomeOID:FileID`), `0x600:0x3` for file1's four names and
+`0x600:0x4` for file2's two.
+
+Note what the rows' `"DataResidency": "inline"` beside `"RecordPlacement": "split"` means here.
+
+- Creating a hard link moves the file's *record* out of the name row into a shared backing — that is what lets
+  several names resolve to one object.
+- It does **not** move the file's *bytes*. On format 3.11 and later a small file's bytes stay inline, in the
+  backing, which is exactly what these rows report; on 3.10 and earlier a file's data is always in extents.
+
+Placement and residency are separate properties, so a hard-linked file showing **inline** data *and* a link count
+above one is not a contradiction (see [Hard Links](../concepts/hard_links.md) and
 [Record placement and data residency](../concepts/placement_and_residency.md)).
 
 ### Step 2 — Prove it by hand: decode the value, then resolve the content record
@@ -79,8 +76,7 @@ key_flags **0x02**, the index-entry layout, followed by the UTF-16LE name); its 
 +0x50: 00 00 00 00
 ```
 
-Decoded against the index-entry value layout
-([Directory Entries](../structures/directory_entries.md), C.3):
+Decoded against the index-entry value table in [Directory Entries](../structures/directory_entries.md):
 
 ```text
 +0x00 child ordinal = 3
@@ -91,42 +87,60 @@ Decoded against the index-entry value layout
 +0x40 attributes = 0x00000020 (Archive — directory bit 0x10000000 clear)
 ```
 
-These fields match the `hltest_file1.txt` JSONL row from Step 1 (`...20.9010724` /
-`...20.9031113`) to the tick, and size = 36 = the JSONL `file_size`. All four of file1's names
-carry the *same* `(ordinal 3, home 0x600)`. **But the real identity is the file's type-0x40
-stream, not these metadata fields:** the tool resolves each name to the candidate stream —
-local `(parent, file_id)` or home `(home, file_id)` — whose 0x40 size **equals the name's own
-size** (`value+0x38` = 36). Here all four reach the one stream at `(0x600, 3)` (size 36, via the
-home backref since these fsutil links have no local record). *That* is "same physical object."
-On these fsutil links the metadata happens to coincide, but it is **not** the general rule: on
-other images a hard link carries an `alloc=0` stub in its own dir, and the
-per-directory ordinal collides between distinct files, so the **size match** is what reliably
-identifies the shared physical stream (see [Hard Links](../concepts/hard_links.md)).
+These fields match the `hltest_file1.txt` JSONL row from Step 1 (its `Created` / `Modified`, `...20.9010724Z` /
+`...20.9031113Z`) to the tick, and size = 36 = the JSONL `FileSize`. All four of file1's names carry the *same*
+`(ordinal 3, home 0x600)`.
 
-One caveat about those `+0x10..+0x28` FILETIMEs: unlike NTFS — where every hard link shares
-one `$STANDARD_INFORMATION` and the four MACB timestamps cannot diverge — ReFS carries **one
-`$SI` timestamp set per name**. Each name's type-0x30 row holds its own Created / Modified /
-Changed / Accessed, so the four names of file1 read identically here only because they were
-created together and never touched individually. A name-scoped `SetFileTime` (open **one**
-path, set `CreationTimeUtc`) rewrites only that name's row (and the shared type-0x40 backing);
-the sibling names keep their original values. See Step 2b.
+**These two fields are the file's identity.** The file's type-0x40 backing record is keyed by them, and a home
+directory holds at most one backing per ordinal, so `(home 0x600, ordinal 3)` names exactly one object.
+
+- The tool resolves each name through that home key `(home, file_id)` and checks that the backing's size equals the
+  name's own cached size (`value+0x38` = 36).
+- Where a name's cached size is stale, it accepts the backing when the backing's type-0x39 back-pointers list that
+  name.
+- Here all four names reach the one backing at `(0x600, 3)`. That is what "same physical object" means here.
+
+What the pair does not allow is a lookup in the name's *own* directory: the ordinal is per directory, so a link's
+directory can hold a different file under the same ordinal (on the synthetic generator volumes a link's own
+directory even holds a type-0x40 row at that ordinal with alloc 0). That is why the tool goes through the home key
+(see [Hard Links](../concepts/hard_links.md)).
+
+One caveat about those `+0x10..+0x28` FILETIMEs. On NTFS every hard link shares one `$STANDARD_INFORMATION` (each
+link's `$FILE_NAME` has its own times). ReFS keeps one set of times in the file's own record, the backing, and each
+name's type-0x30 row holds a cached copy of them — Created / Modified / Changed / Accessed — refreshed for the name
+that was opened.
+
+Here the four names of file1 agree on Created, Modified and Accessed but **not on Changed** (`+0x20`; this row's
+`0x01dcfbc3a97e7566` is 06:04:29.5103846): each link's Changed is the moment it was added — the change journal's own
+HARD_LINK_CHANGE time for it — and `hltest_file1.txt`'s equals the last link's. A Changed-only difference is
+routine, not a stomp; a difference in **Created** is what to follow. See Step 2b.
 
 ### Step 2b — Compare the names' Created to catch a per-name timestomp
 
-Because each name carries its own Created, the group's names *can* disagree — where NTFS's
-hard links share a single `$SI` and cannot diverge at all. When their `value+0x10` FILETIMEs
-differ, that is evidence worth following: nothing routine produces it, and it is
-**journal-independent** (it holds even when `$UsnJrnl:$J` has wrapped or is absent).
+Because each name caches its own copy of Created, the group's names *can* disagree (NTFS's hard links share one
+`$SI`; each NTFS link has its own `$FILE_NAME`, with its own times).
+
+When their `value+0x10` FILETIMEs differ, that is evidence to follow up:
+
+- no routine cause of a Created difference has been observed (on the volumes whose journal was read, every file
+  whose names disagree on Created and that the journal holds carries a basic-information change);
+- it is **journal-independent**: it holds even when `$UsnJrnl:$J` has wrapped or is absent.
+
 `forefst`'s `timestomp` check emits a `HARDLINK_MACB_MISMATCH` signal on such a group.
 
-**Read the result carefully in both directions.** A lab measurement built a two-name file and
-called `SetFileTime` on one path: afterwards both name rows were byte-identical across their
-whole 84-byte value. The file's own record takes the new time for every name at once; each name's
-row is a cache of it that the driver refreshes only when *that* name is opened. So **names that agree
-tell you nothing** — agreement is what a stomp leaves behind once every name has been read, and also
-what an untouched file looks like. And the stale name is the one nobody opened, which is not the same
-as the one nobody forged: *which* name holds the true birth is not established. Treat a mismatch as a
-lead, not a verdict — and one that the next read destroys.
+**A difference is a lead, and an agreement proves nothing.** A lab measurement built a two-name file and called `SetFileTime`
+on one path: afterwards both name rows were byte-identical across their whole 84-byte value, because the lab's
+inventory pass had then opened both names.
+
+- The file's own record takes the new time for every name at once; each name's row is a cache of it that the driver
+  refreshes when the file is opened, read and closed through *that* name (a directory listing alone does not refresh
+  it).
+- So **names that agree tell you nothing** — agreement is what a stomp leaves behind once every name has been read,
+  and also what an untouched file looks like.
+- And the stale name is the one nobody opened, which is not the same as the one nobody forged: *which* name holds
+  the true birth is not established.
+
+Treat a mismatch as a lead to follow up, not as a conclusion. The next read through the stale name erases it.
 
 ### Step 3 — Confirm the two files resolve to different content records
 
@@ -141,55 +155,62 @@ its row header):
 +0x38 file size = 36
 ```
 
-file2 shares `home = 0x600` with file1 — both were created in the volume root — but its
-**ordinal is 4, not 3**, and its create/modify times differ. This is exactly why the home
-backref *alone* is insufficient: grouping by `home=0x600` would wrongly fuse file1, file2
-and survivor into one 7-member blob. Resolving each name to the
-**size-matched type-0x40 stream** `(owner-dir, file_id)` (here via the home backref, since
-these fsutil links have no local record) keeps file1's stream and file2's stream apart — the
-size-matched stream `(owner, file_id)` is the identity here, not the coinciding ordinal/fingerprint. See
-[Hard Links](../concepts/hard_links.md) (size-matched resolution; on other images a colliding
-ordinal can point at a different file, which the size match correctly separates).
+file2 shares `home = 0x600` with file1 — both were created in the volume root — but its **ordinal is 4, not 3**,
+and its create/modify times differ.
 
-### Step 4 — Why you must NOT read `$SI+0x70` ("HardLinkCount")
+This is exactly why the home backref *alone* is insufficient: grouping by `home=0x600` would wrongly merge file1,
+file2 and survivor into one group of 7 names. Resolving each name through its home key keeps file1's backing
+`(0x600, 3)` and file2's `(0x600, 4)` apart. The two files have the same size (36 bytes), so here it is the
+ordinal, under the shared home, that separates them; the size only confirms each match. See
+[Hard Links](../concepts/hard_links.md).
 
-Tempting shortcut: read the field literally named *HardLinkCount* at `$SI+0x70`. It is a
-trap. `$SI+0x70` is an **embedded-layout** field (offset within the key_flags 0x01 value),
-and these hard-linked files use the split-record layout (key_flags 0x02) — they have no `$SI+0x70`
-at all. Where it *does* exist, the driver writes it from a per-FCB scalar
-(`RefsComputeStandardInformationFromFcb` copies `$SI+0x70 <- FCB+0xB4`), so it reads **1**
-for every object — even on this very image, the one corpus volume that actually contains
-hard links. Across 525,165 dir entries / 111 images it was `> 1` in **zero** cases. Reading
-it would report "no hard links" on a volume that demonstrably has them.
+### Step 4 — Why the name row's `$SI+0x70` ("HardLinkCount") is not the count
+
+A shortcut that fails: reading the field the layout names *HardLinkCount* at `$SI+0x70` in a name row.
+
+- In a name row that holds the file's record (an embedded record, key_flags 0x01) it reads **1** on every such row
+  measured — 329,120 of 329,120 rows over 141 image paths — because a file with several names does not keep its
+  record there.
+- These hard-linked names use the index-entry layout (key_flags 0x02): their 84-byte value has no `$SI+0x70` field.
+
+The count is in the file's own record, its split-out type-0x40 backing: the driver keeps it in the file's FCB and
+writes it at `$SI+0x70` on every change of the file's names (`RefsConvertToStandardInfoLinkCount`). On this volume
+the three backings read **4 / 2 / 1**, as `fsutil` counts them; over 107,525 backings on 78 images it equals the
+number of size-matched names on 99.84 %.
+
+It gives the number of names, not the names: those come from the join of Step 1. A parser that reads the name row's
+copy reports "no hard links" on a volume that has them.
 
 ## What this tells you
 
-- **`forefst --jsonl` gives the whole group from any member.** `hard_link_count` and the
- `hard_link_names` array on any one of file1's four entries list all four names; the count
- reproduces `fsutil hardlink list` (4 / 2 / 1); independent all-disk validation is **0 over-merge
- across 110+ images**.
-- **The count is a derived join on the physical stream record**, not an on-disk counter and
- not a metadata tuple: the tool resolves each name to the type-0x40 stream — local
- `(parent, file_id)` or home `(home, file_id)` — whose 0x40 size **equals the name's own size**
- (`value+0x38`), and groups names sharing that stream's `(owner, file_id)`. The tool resolves each name to the type-0x40 stream whose 0x40 size **equals the name's own
- size**, because on other images distinct files collide on the per-directory ordinal and only the
- **size match** separates them.
+- **`files --jsonl` gives the whole group from any member.** `HardLinkCount` and the
+ `HardLinkNames` array on any one of file1's four entries list all four names; the count
+ reproduces `fsutil hardlink list` (4 / 2 / 1); checked against each name's own size over the corpus, the
+ grouping shows **0 over-merge across 110+ images**.
+- **The tool's count is a join on the file's backing record**, not a read of the backing's own counter
+ (`$SI+0x70`) and not a metadata tuple: the tool resolves each name through its home key `(home, file_id)`,
+ accepts the backing when its size equals the name's (`value+0x38`), or when its back-pointers list a name whose
+ cached size is stale, and groups the names of each backing.
 - **The decoded bytes match the tool output exactly** — ordinal 3 / home 0x600 / size 36 /
- the two FILETIMEs for file1 — so the reconstruction is verifiable end-to-end, not a
- black box.
-- **`value+0x08` (home-dir backref = 0x600) is provenance:** it records the directory the
+ the two FILETIMEs for file1 — so every step of the reconstruction can be
+ checked.
+- **`value+0x08` (home-dir backref = 0x600) records where the file was created:** it records the directory the
  file was *first created in* (here the volume root), and survives even after the file is
  hard-linked into `hltest_dir1` / `hltest_dir2` — a fact a live `dir` listing never shows.
-- **Never trust `$SI+0x70`.** It is an embedded-only decoy that is always 1; hard-linked
- files are split out and do not even carry it.
-- Hard links are a **native v3.14 signal** (this volume's `CHKP` flags = `0x682`). A
- multi-name split group on a v3.4 or *upgraded* volume would be anomalous.
+- **Read `$SI+0x70` from the backing, not the name row.** In an embedded record it reads 1; a
+ hard-linked file's record is split out into its backing, and the backing's `$SI+0x70` is
+ the number of its names.
+- Hard links need the volume's **hard-link flag**, boot-sector flags bit 0x20 (refs.sys reads it at mount). On the
+ corpus it is set on every volume formatted at 3.7 or later but one (whose boot sector `refsutil fixboot`
+ rewrote), and clear on 3.4 volumes and on those upgraded from 3.4. A multi-name split group on a volume without the
+ bit would be anomalous ([Hard Links](../concepts/hard_links.md)).
 
 ## See also
 
-- [Hard Links](../concepts/hard_links.md) — the identity-tuple join, the `$SI+0x70` decoy, and the v3.14 gating
-- [Directory Entries](../structures/directory_entries.md) — the type-0x30 key + the C.3 index-entry value layout decoded in Step 2
+- [Hard Links](../concepts/hard_links.md) — how a file's names are joined to one object, where `$SI+0x70` holds the
+  count, and the hard-link flag
+- [Directory Entries](../structures/directory_entries.md) — the type-0x30 key and the index-entry value layout decoded in Step 2
 - [Standard Information](../attributes/STANDARD_INFORMATION.md) — the `$SI+0x70` "HardLinkCount" field and the `$SI+0x58` NextFileId ordinal source
-- [Record placement and data residency](../concepts/placement_and_residency.md) — why hard-linking splits the record out of the name row, and why the data stays put
+- [Record placement and data residency](../concepts/placement_and_residency.md) — why hard-linking splits the record out of the name row, and why the data does not move
 - [Object Table](../structures/object_table.md) — resolving the `value+0x08` home backref OID
 - Master reference: `structure_reference.md` §J (Hard Links), §C.3 (index-entry value), §C.7 (`$SI+0x70`)

@@ -1,0 +1,393 @@
+{
+ "id": "si_ntfs_win11ntfstestmftecmd",
+ "generated_by": "analysis/tools/analysis_scripts/gen_hex_figures.py",
+ "decoded_by": "forefst 1.14.0 (forefstdev/forefst.py)",
+ "title": "NTFS: the $STANDARD_INFORMATION of a 128-byte file (72 bytes), read from its MFT record.",
+ "image": {
+  "name": "win11ntfstestmftecmd.raw",
+  "step": "step5",
+  "listed_as": "analysis/rawdisk/disks/step5/win11ntfstestmftecmd.raw",
+  "size": 4294967296
+ },
+ "offset": 1091459152,
+ "offset_hex": "0x410e5850",
+ "length": 72,
+ "bytes": "9cf4ef990bfdda019cf4ef990bfdda01e1475ba587eadc019cf4ef990bfdda01200000000000000000000000000000000000000011010000000000000000000048140b0000000000",
+ "note": "The bytes are the 72-byte resident $STANDARD_INFORMATION of `xbpt_quebec_cache_515604.cfg` in its MFT record, on the NTFS twin volume. Not coloured: nothing.",
+ "fields": [
+  {
+   "off": "0x00",
+   "len": 8,
+   "name": "Creation time",
+   "frame": null,
+   "group": null,
+   "bytes": "9c f4 ef 99 0b fd da 01",
+   "value": "2024-09-02T07:42:02.9958300Z",
+   "decoder": "gen_hex_figures._ntfs_si (the MFT, read by hand)",
+   "slot": 0,
+   "link": {
+    "page": "concepts/ntfs_comparison.md",
+    "anchor": "the-two-layouts-field-by-field"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x08",
+   "len": 8,
+   "name": "Modification time",
+   "frame": null,
+   "group": null,
+   "bytes": "9c f4 ef 99 0b fd da 01",
+   "value": "2024-09-02T07:42:02.9958300Z",
+   "decoder": "gen_hex_figures._ntfs_si (the MFT, read by hand)",
+   "slot": 1,
+   "link": {
+    "page": "concepts/ntfs_comparison.md",
+    "anchor": "the-two-layouts-field-by-field"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x10",
+   "len": 8,
+   "name": "MFT change time",
+   "frame": null,
+   "group": null,
+   "bytes": "e1 47 5b a5 87 ea dc 01",
+   "value": "2026-05-23T07:42:02.9979617Z",
+   "decoder": "gen_hex_figures._ntfs_si (the MFT, read by hand)",
+   "slot": 2,
+   "link": {
+    "page": "concepts/ntfs_comparison.md",
+    "anchor": "the-two-layouts-field-by-field"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x18",
+   "len": 8,
+   "name": "Access time",
+   "frame": null,
+   "group": null,
+   "bytes": "9c f4 ef 99 0b fd da 01",
+   "value": "2024-09-02T07:42:02.9958300Z",
+   "decoder": "gen_hex_figures._ntfs_si (the MFT, read by hand)",
+   "slot": 3,
+   "link": {
+    "page": "concepts/ntfs_comparison.md",
+    "anchor": "the-two-layouts-field-by-field"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x20",
+   "len": 4,
+   "name": "File attributes",
+   "frame": null,
+   "group": null,
+   "bytes": "20 00 00 00",
+   "value": "0x00000020",
+   "decoder": "gen_hex_figures._ntfs_si (the MFT, read by hand)",
+   "slot": 4,
+   "link": {
+    "page": "concepts/ntfs_comparison.md",
+    "anchor": "the-two-layouts-field-by-field"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x24",
+   "len": 4,
+   "name": "Maximum versions",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 00",
+   "value": "0x00000000",
+   "decoder": "gen_hex_figures._ntfs_si (the MFT, read by hand)",
+   "slot": 5,
+   "link": {
+    "page": "concepts/ntfs_comparison.md",
+    "anchor": "the-two-layouts-field-by-field"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x28",
+   "len": 4,
+   "name": "Version number",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 00",
+   "value": "0x00000000",
+   "decoder": "gen_hex_figures._ntfs_si (the MFT, read by hand)",
+   "slot": 6,
+   "link": {
+    "page": "concepts/ntfs_comparison.md",
+    "anchor": "the-two-layouts-field-by-field"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x2C",
+   "len": 4,
+   "name": "Class ID",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 00",
+   "value": "0x00000000",
+   "decoder": "gen_hex_figures._ntfs_si (the MFT, read by hand)",
+   "slot": 7,
+   "link": {
+    "page": "concepts/ntfs_comparison.md",
+    "anchor": "the-two-layouts-field-by-field"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x30",
+   "len": 4,
+   "name": "Owner ID",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 00",
+   "value": "0x00000000",
+   "decoder": "gen_hex_figures._ntfs_si (the MFT, read by hand)",
+   "slot": 0,
+   "link": {
+    "page": "concepts/ntfs_comparison.md",
+    "anchor": "the-two-layouts-field-by-field"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x34",
+   "len": 4,
+   "name": "Security ID",
+   "frame": null,
+   "group": null,
+   "bytes": "11 01 00 00",
+   "value": "0x00000111",
+   "decoder": "gen_hex_figures._ntfs_si (the MFT, read by hand)",
+   "slot": 1,
+   "link": {
+    "page": "concepts/ntfs_comparison.md",
+    "anchor": "the-two-layouts-field-by-field"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x38",
+   "len": 8,
+   "name": "Quota charged",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 00 00 00 00 00",
+   "value": "0x0000000000000000",
+   "decoder": "gen_hex_figures._ntfs_si (the MFT, read by hand)",
+   "slot": 2,
+   "link": {
+    "page": "concepts/ntfs_comparison.md",
+    "anchor": "the-two-layouts-field-by-field"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x40",
+   "len": 8,
+   "name": "USN",
+   "frame": null,
+   "group": null,
+   "bytes": "48 14 0b 00 00 00 00 00",
+   "value": "0x00000000000b1448",
+   "decoder": "gen_hex_figures._ntfs_si (the MFT, read by hand)",
+   "slot": 3,
+   "link": {
+    "page": "concepts/ntfs_comparison.md",
+    "anchor": "the-two-layouts-field-by-field"
+   },
+   "row": true,
+   "table": null
+  }
+ ],
+ "groups": [],
+ "rows": [
+  {
+   "o": "0000",
+   "h": [
+    [
+     0,
+     "9c f4 ef 99 0b fd da 01"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     1,
+     "9c f4 ef 99 0b fd da 01"
+    ]
+   ],
+   "a": [
+    [
+     0,
+     "........"
+    ],
+    [
+     1,
+     "........"
+    ]
+   ]
+  },
+  {
+   "o": "0010",
+   "h": [
+    [
+     2,
+     "e1 47 5b a5 87 ea dc 01"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     3,
+     "9c f4 ef 99 0b fd da 01"
+    ]
+   ],
+   "a": [
+    [
+     2,
+     ".G[....."
+    ],
+    [
+     3,
+     "........"
+    ]
+   ]
+  },
+  {
+   "o": "0020",
+   "h": [
+    [
+     4,
+     "20 00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     5,
+     "00 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     6,
+     "00 00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     7,
+     "00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     4,
+     " ..."
+    ],
+    [
+     5,
+     "...."
+    ],
+    [
+     6,
+     "...."
+    ],
+    [
+     7,
+     "...."
+    ]
+   ]
+  },
+  {
+   "o": "0030",
+   "h": [
+    [
+     8,
+     "00 00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     9,
+     "11 01 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     10,
+     "00 00 00 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     8,
+     "...."
+    ],
+    [
+     9,
+     "...."
+    ],
+    [
+     10,
+     "........"
+    ]
+   ]
+  },
+  {
+   "o": "0040",
+   "h": [
+    [
+     11,
+     "48 14 0b 00 00 00 00 00"
+    ],
+    [
+     -1,
+     "                         "
+    ]
+   ],
+   "a": [
+    [
+     11,
+     "H......."
+    ],
+    [
+     -1,
+     ""
+    ]
+   ]
+  }
+ ]
+}

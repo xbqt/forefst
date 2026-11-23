@@ -43,7 +43,10 @@ def test_report_extract_failures_indexes_and_warns(tmp_path, capsys):
     assert capsys.readouterr().err == ""
     assert not (tmp_path / "_extract_failures.json").exists()
     # records to the index + warns to stderr when something failed
+    f0, v0 = len(F._FINDINGS), len(F._VIEW_FINDINGS)
     F._report_extract_failures([{"path": "x", "name": "x", "error": "File name too long"}], str(tmp_path))
+    assert len(F._FINDINGS) == f0 + 1                    # N570: a file not written is a finding (exit 2)
+    del F._FINDINGS[f0:], F._VIEW_FINDINGS[v0:]          # ... this test's, not the session's
     err = capsys.readouterr().err
     assert "could not be written" in err
     idx = tmp_path / "_extract_failures.json"

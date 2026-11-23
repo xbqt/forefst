@@ -1,60 +1,77 @@
 # How the Analysis Was Done, and How Every Claim Was Validated
 
-This is the page behind every other page. The structure, attribute, and concept references state facts in
-clean prose, and record their **finding IDs** and evidence grades in a prose `## Evidence` section on
-each page, against the central claim register. This page
-explains where those facts come from, the standard each had to meet, and exactly how to follow any one of them to the byte-level
-measurement and decompiled code it rests on. Nothing in this reference is asserted on authority — every
-load-bearing claim is traceable to evidence you can re-inspect in the project's `analysis/` tree.
+This page describes the evidence behind every other page. The structure, attribute, and concept references state facts in
+clean prose:
+
+- each page's `## Evidence` section says what was read or measured for it, with the precise counts;
+- each page names the **finding IDs** it rests on in a closing comment the [knowledge map](KNOWLEDGE_MAP.md) reads;
+- each finding's evidence grades are in the central claim register.
+
+This page explains where those facts come from, the standard each had to meet, and how to follow any one of them to
+the byte-level measurement and decompiled code it rests on.
+
+Nothing in this reference rests on authority alone: every claim a page relies on has a row in the claim register, with
+its grades and, where one is recorded, its witness. The published `analysis/` tree holds the register, the errata
+and the June 2026 claim audit with its proofs; the decompilations and many of the lab outputs behind the rows are
+not published.
 
 ## 1. The dual-evidence principle
 
-A structural claim is accepted only when **two independent sources agree**: the **decompiled driver code**
-(what `refs.sys` is written to do) and the **raw on-disk bytes** (what a real volume actually contains). A
-claim the code implies but the disk cannot show — or a byte pattern the code does not explain — is **held
-back**, not published as fact. This is the single rule the whole method serves: code can mislead (dead
-paths, version drift), and disk can mislead (one image is not the population); requiring both, across many
-images and several builds, is what makes a claim trustworthy.
+A structural claim is checked against **two independent sources** wherever both can be read: the **decompiled
+driver code** (what `refs.sys` is written to do) and the **raw on-disk bytes** (what a real volume actually
+contains). Where only one can be read — a code path no image here exercises, a format with no driver of its own
+to read — or where the claim is an inference, the claim rests on what there is, and the register records which
+of the two supports it (section 5). This is the aim the whole method serves: code can mislead (dead paths,
+version drift), and disk can mislead (one image is not the population); both, across many images and several
+builds, is what makes a claim trustworthy.
 
 ## 2. Static analysis — the driver
 
-`refs.sys` was decompiled in Ghidra with full PDB symbols across **four builds** spanning the ReFS
-versions, so a fact can be checked for where it appeared and how it changed:
+`refs.sys` was decompiled in Ghidra across **twelve builds** spanning the ReFS versions, eleven of them with
+Microsoft's published PDB symbols, so a fact can be checked for where it appeared and how it changed:
 
-| Build | Windows | ReFS | Functions |
-|-------|---------|------|-----------|
-| `refs.sys` Win10 17134 (1803) | Win10 | v3.4 | 3,959 |
-| `refs.sys` Win11 26100 (24H2 RTM) | Win11 | v3.14 | 5,818 |
-| `refs.sys` Win11 26100.8521 (24H2 servicing) | Win11 | v3.14 | 5,807 |
-| `refs.sys` Insider 29574 | Insider | v3.14+ | 6,430 |
+| Build | Windows | ReFS | Read |
+|-------|---------|------|------|
+| `refs.sys` 17134 (Win10 1803) | Win10 | v3.4 | decompiled, symbols |
+| `refs.sys` 26100.8115, .8521, .8972, .9444, .9549 (Win11 24H2) | Win11 | v3.14 | decompiled, symbols |
+| `refs.sys` 26100.9711, .9818 (Win11, 26100 line) | Win11 | v3.14 | decompiled, symbols |
+| `refs.sys` 26100.9974 (Win11, 26100 line) | Win11 | v3.14 | machine code compared with .9818 (no symbols published) |
+| `refs.sys` Insider 29574, 29659, 29683 | Insider | v3.14+ | decompiled, symbols |
+
+Which of these builds also wrote test volumes, and which were read only, is in
+[Driver builds](methodology/driver_builds.md).
 
 `refsutil.exe` (the Microsoft utility, Windows 10 17134 + Windows 11 26100) was decompiled alongside as a
 cross-check on structure semantics. Static findings are graded **E1** (a string literal in the binary),
 **E2** (decompiled code or a PDB symbol), or **E3** (a structural inference the code supports but does not
 state outright).
 
-Note the version coverage: Microsoft ships `refs.sys` in only **two on-disk eras — 3.4 and 3.14** — so those
-are the builds read statically. The intermediate on-disk versions (**3.7, 3.9, 3.10**) have no separate
-driver of their own; Windows produces them only by upgrading a volume, so they are validated **on disk
-only** (§3), not by static analysis.
+Note the version coverage: the builds read are those that write formats **3.4 and 3.14**. The formats in between
+(**3.7, 3.9, 3.10**) are written by Windows 11 21H2, 22H2 and 23H2, whose drivers were not read, so they are
+validated **on disk only** (§3), not by static analysis.
 
 ## 3. Raw-disk analysis — the corpus
 
-Static reading was confirmed against a **controlled corpus of 110+ parseable ReFS images** built in a lab,
-spanning the five production versions (v3.4, v3.7, v3.9, v3.10, v3.14) plus an Insider build, **both
-cluster sizes** (4 KiB / 64 KiB), and **all three metadata-checksum algorithms** (CRC32-C, CRC64,
-SHA-256), with six non-ReFS negative controls (NTFS / BitLocker / blank) to catch false positives. Images
+Static reading was confirmed against a **controlled corpus of 124 readable ReFS images** (97 distinct once byte-identical copies are set aside) built in a lab,
+spanning the five production versions (v3.4, v3.7, v3.9, v3.10, v3.14) plus an Insider build, with **both
+cluster sizes** (4 KiB / 64 KiB) on v3.4 and v3.14 (the v3.7, v3.9 and v3.10 volumes use 4 KiB) and each **metadata
+checksum** (CRC64 on every format, SHA-256 on four v3.14 volumes formatted with it), and five
+unreadable images kept as negative controls (three NTFS volumes, two BitLocker-encrypted ReFS volumes) to catch
+false positives. Images
 were generated by scripted workloads (file creation, deletion, snapshots, encryption, WSL metadata, hard
 links, compression) so that a given on-disk feature could be produced on demand and then read back.
 
-**The generator records what it did, on the volume itself.** Each scripted workload writes a log of every
-action it performed — the path, the feature exercised, the intended size and content marker — as an ordinary
-file *inside* the volume it is building. That log is written by the generator at creation time, so reading it
-back out with the tools under test gives a ground truth that **none of this project's analysis produced**: a
-decoded value can be compared against what the workload actually wrote, rather than against another reading
-of the same bytes. It is the strongest check available here, and it is what settles a disagreement between
-two plausible interpretations — for example confirming that a recovered file is exactly the 400 bytes of a
-repeated marker the generator wrote, and not a plausible-looking mis-parse.
+**The generator records what it did.** Each scripted workload writes a log of every action it performed — the
+path, the feature exercised, the intended size and content marker. The lab procedure writes that log as an
+ordinary file *inside* the volume it is building; on some images (the 21H2 and 22H2 runs, and the public samples)
+it was written to the host instead.
+
+That log is written by the generator at creation time, so it gives a ground truth that **none of this project's
+analysis produced**: a decoded value can be compared against what the workload actually wrote, rather than against
+another reading of the same bytes. It is the strongest check available here, and it is what settles a
+disagreement between two plausible interpretations — for example confirming that the inline content the tool
+reads for a file is exactly the 400 bytes of a repeated marker the generator wrote, and not a plausible-looking
+mis-parse.
 
 A caution that goes with it: a census taken with the tools *is* circular, and can only ever show consistency.
 When a measurement is used to establish a fact rather than to check one, it is stated as such, and the
@@ -65,23 +82,27 @@ The on-disk versions tested, and how each is obtained (pairs with the driver-bui
 | ReFS version | First shipped in | In the corpus | Statically-analysed driver |
 |--------------|------------------|---------------|----------------------------|
 | 3.4  | Windows 10 1803 (17134) | native format  | yes — 17134 |
-| 3.7  | Windows 11 21H2 (22000) | upgraded volume | disk only |
-| 3.9  | Windows 11 22H2 (22621) | upgraded volume | disk only |
-| 3.10 | Windows 11 23H2 (22631) | upgraded volume | disk only |
-| 3.14 | Windows 11 24H2 (26100) | native format  | yes — 26100 / 26100.8521 |
-| 3.14+ | Windows Insider (29574) | native format  | yes — 29574 |
+| 3.7  | Windows 11 21H2 (22000) | native format | disk only |
+| 3.9  | Windows 11 22H2 (22621) | native format | disk only |
+| 3.10 | Windows 11 23H2 (22631) | native format | disk only |
+| 3.14 | Windows 11 24H2 (26100) | native format, and upgraded from 3.4 and 3.9 | yes — 26100.8115 to .9974 |
+| 3.14 | Windows Insider (29574) | native format  | yes — 29574, 29659, 29683 |
 
-Windows never writes 3.7/3.9/3.10 fresh — they exist only as the result of upgrading an older volume — so
-those rows are validated on disk rather than by a driver of their own.
+The 3.7 and 3.9 volumes were formatted fresh by Windows 11 22000 and 22621 (the lab's `Format-Volume` transcripts;
+their backup boot sector equals the primary), and the 3.10 volumes carry the boot-sector flags of a 3.10 format
+(0x66, with bit 0x40), not those an upgrade leaves. No 3.7, 3.9 or 3.10 driver was read, so those rows are validated
+on disk rather than by a driver of their own.
 
 Claims were established by an **experimental cycle**: form a hypothesis from the static reading, decode the
 relevant bytes on one image, then **re-measure across the whole corpus**. A fact is **RD** (raw-disk
-verified) only when it holds at corpus scale — e.g. "X at offset Y on N/N images" — not from a single
-observation. Counts in the register's notes (e.g. *112/112*, *409,514 files*) are these corpus measures.
+verified) when it has been measured on disk: most RD facts hold at corpus scale — e.g. "X at offset Y on N/N
+images" — and the register names those measured on a single image. Counts in the register's notes (e.g.
+*976 of 976 rows*, *409,514 files*) are these corpus measures.
 
 ## 4. Evidence levels
 
-Every claim carries one or more grades, recorded in the central claim register and summarized in each page's `## Evidence` section:
+The grades are recorded per claim in the claim register, on each axis that was checked; a claim not yet checked on
+an axis says so there:
 
 | Level | Meaning |
 |-------|---------|
@@ -90,52 +111,75 @@ Every claim carries one or more grades, recorded in the central claim register a
 | **E3** | Structural inference (code-supported, not stated) |
 | **RD** | Raw-disk verified — measured across the corpus |
 
-Load-bearing claims prefer **E2 + RD** — confirmed in both the code and the bytes.
+The claims the pages rely on aim for **E2 + RD**: confirmed in both the code and the bytes.
 
 ## 5. The claim register — `reference_table.csv`
 
-Every claim is one row in **`analysis/reference_table.csv`** (489 rows), keyed by a stable **finding ID**
-of the form `<CATEGORY>_<STRUCTURE>[_RA|_SA]_<NNN>` (e.g. `FS_CHKP_RA_001`, `MD_SI_RA_015`,
-`GN_ALLC_SA_001`). The categories map to Carrier's five data categories (`FS` file system, `CT` content,
+Every finding is one row in **`analysis/reference_table.csv`** (503 rows), keyed by a stable **finding ID**,
+normally of the form `<CATEGORY>_<STRUCTURE>[_RA|_SA]_<NNN>`. The categories map to Carrier's five data categories (`FS` file system, `CT` content,
 `MD` metadata, `FN` file name, `AP` application), plus `GN` for general/cross-cutting findings; `RA` marks a raw-disk-anchored finding,
 `SA` a static-analysis-anchored one. Each row records the claim, its source, the **static** status + notes,
 the **raw-disk** status + notes, and the evidence level — so the row alone tells you *what* was claimed and
-*how both axes were checked*. A claim's status is one of **CONFIRMED** (prior work independently verified),
-**CORRECTED** (a prior claim fixed), **ENRICHED** (extended/decoded further), **NEW** (absent from prior
-literature), or **CONTRADICTED** (prior work shown wrong).
+*how both axes were checked*. Each row also states what the disk says of the claim: **CONFIRMED**, **INFERRED**
+(not measured directly), **NOT_TESTED**, **CONTRADICTED**, **REFUTED**, **NOT_APPLICABLE**, or **UNSTATED** (no
+status recorded); where the claim comes from: prior work, this project, or a correction of prior work; and the
+builds and formats it was checked on.
 
-This register is the single, complete central reference; the docs cite **only** these finding IDs.
+The register, the byte-level master reference and the errata together hold the findings, and an erratum overrides
+both. The pages name no finding ID in their text: each records the findings it rests on in a comment the
+[knowledge map](KNOWLEDGE_MAP.md) reads.
 
 ## 6. The verification protocol
 
 Beyond first acceptance, structural claims are held to a three-axis re-verification (documented in
 `analysis/reports/audit/README.md`): **(a)** decompile the function that implements the fact,
 **(b)** re-measure it across **all** corpus images, **(c)** check it adversarially — try to refute it, and
-let the bytes (not an assumed offset) pick the structure frame. A change is accepted only when the static
-and the all-disk axes agree. The verification scripts ship under `analysis/reports/` (for example
-`verify_tool_tables.py`, which runs against a fresh clone), and every claim's per-axis proof is recorded
-under `analysis/reports/audit/`.
+let the bytes, not an assumed offset, show which structure is being read. A change is accepted only when the static
+and the all-disk axes agree; where only one axis can be read, the register records the one that supports it.
+
+The verification scripts ship under `analysis/reports/` (for example `verify_tool_tables.py`, which runs against a
+fresh clone), and the per-axis proofs of the claims audited in June 2026 (409 findings) are recorded under
+`analysis/reports/audit/`.
+
+The same directory keeps the project's own reviews over time (`analysis/reports/README.md`, oldest first).
+
+- Two self-validations of July 2026 re-audited releases 3.5.0 and 3.6.0 with the project's own instruments and
+  reported the tools sound (`SELF_VALIDATION_v3.5.0_2026-07-01.md`, `SELF_VALIDATION_v3.6.0_2026-07-04.md`).
+- The reviews that followed found what they had missed: the blind audit of September 2026 recorded 215 findings
+  against release 1.12.3. Those reviews were other language-model sessions, run with other models or in other
+  contexts and given only the published material or a package prepared for the review, as part of the project; no
+  person or organisation outside the project reviewed it.
+- The answer to that audit is kept beside them: `AUDIT_RESPONSE.md` (every finding and where its answer can be
+  checked) and `WRONG_VERDICT_COVERAGE.md` (the findings of a wrong verdict).
+
+A review by the project is therefore one check among others, never a certificate, and a check counts only once it
+has been shown catching a planted error.
 
 ## 7. How a claim was validated — the lifecycle, by example
 
-Take the per-file USN link (finding `MD_SI_RA_015` / the `LastUsn` field):
+Take the per-file USN link (the `LastUsn` field):
 
-1. **Hypothesis** (static): the driver writes a USN offset into each file's `$STANDARD_INFORMATION`.
-2. **Decompile** (E2): the write path is identified in `refs.sys`; `LastUsn` sits at `$SI+0x40`.
-3. **Decode on disk** (RD): the field is read at that offset on a journaling volume.
-4. **Re-measure across the corpus**: `LastUsn` → the named `$UsnJrnl:$J` record matches on **14/14** then
-   **13,550/13,550** in-window files once the full journal is read (E71); it is zero exactly when the journal is inactive.
-5. **Adversarial check**: a rival reading ("$SI+0x30 is the USN") is tested and **refuted** on disk (0 of
-   32,629 own-rows), and retired as an erratum.
+1. **Hypothesis** (static): the driver records, in each file's `$STANDARD_INFORMATION`, where the file's latest
+   change-journal record is.
+2. **Decompile** (E2): the journal write path (`RefsWriteFcbUsnRecordToJournal` -> `RefsPartialSetStandardInfo`)
+   writes 16 bytes at `$SI+0x40` when it writes the file's journal record: `LastUsn` and, at `+0x48`, the journal's
+   id.
+3. **Decode on disk** (RD): the two fields are read at those offsets on journaling volumes.
+4. **Re-measure across the corpus**: every `LastUsn` value is 8-byte aligned, as the offsets of journal records
+   are, each volume carries a single journal id, and the fields are non-zero only on the volumes with
+   an active journal (on the images measured).
+5. **Adversarial check**: a rival reading ("`$SI+0x30` holds the USN offset") is tested and **refuted** on disk
+   (the slot is 0 in every directory own row measured, and in a file's record it holds a cached copy of the file
+   size), and retired as an erratum.
 6. **Register**: the row is marked CONFIRMED, E2 + RD, with the counts and the report in its notes.
 
-That trail — hypothesis → code → disk → all-disk → adversarial → register — is what stands behind a
-finding ID.
+A finding ID follows this sequence, where each step applies: hypothesis → code → disk → all-disk → adversarial
+check → register.
 
 ## 8. How to link a fact to its verified evidence
 
-This is the recipe a reader follows from any page to the proof. Take a **finding ID** from a page's
-`## Evidence` section (e.g. `FS_CHKP_RA_001`) and walk the
+This is the recipe a reader follows from any page to the proof. Take a **finding ID** from the page's row in the
+[knowledge map](KNOWLEDGE_MAP.md), which lists the findings each page rests on, and walk the
 chain — all of it ships in `analysis/`:
 
 > **Going the other way — [KNOWLEDGE_MAP.md](KNOWLEDGE_MAP.md).** The chain below runs from a finding to its
@@ -153,20 +197,19 @@ chain — all of it ships in `analysis/`:
    proof, and its raw-disk proof, in one place.
 4. **`analysis/reports/audit/proofs/static/` and `proofs/validation/`** — the actual measured evidence
    (parser output, all-disk validation matrices).
-5. **`analysis/reports/`** — the dated measurement runs (the full corpus walks, with the images and
-   commands used). The byte-level layout itself is the corresponding **`structures/`** page.
+5. **`analysis/reports/`** — dated validation runs (June and July 2026, with the commands used) and the project's
+   reviews. The byte-level layout itself is the corresponding **`structures/`** page.
 
-The audited core (409 findings) carries the full chain through step 4; a smaller set of post-thesis
-findings is recorded in the register (step 1) with its measurement in the dated reports (step 5). Either
-way, every finding ID resolves to a claim, its evidence grade, and the measurement behind it — without that
+The audited core (409 findings) carries the full chain through step 4. The findings added after it are recorded
+in the register (step 1); the corpus walks behind most of them are in the project's dated reports, which this
+tree does not publish. Either way, every finding ID resolves to a claim and its evidence grades — without that
 detail cluttering the description page.
 
 ### What the audit gate does and does not cover
 
-The "0 byte-layout failures" result audits the **claim register** — the finding rows. It does **not** audit
+The June 2026 claim audit's "0 byte-layout failures" result audits the **claim register** — the finding rows. It does **not** audit
 the prose on these pages. A page can therefore drift out of step with a register row that has since been
-corrected by an erratum, and the gate will not notice. That is not hypothetical: an external review of
-v1.8.0 found three such pages, where the register or the disk already disagreed with what the page said
+corrected by an erratum, and the gate will not notice. This has happened: a review of v1.8.0 in another session found three such pages, where the register or the disk already disagreed with what the page said
 (checkpoint root pointers, the meaning of `key_flags`, and `$OBJ_LINK` cardinality). All three are now
 reconciled, and each correction carries the corpus-wide measurement behind it.
 
@@ -177,22 +220,35 @@ errata wins**, and the disagreement is a bug in the page worth reporting.
 
 The analysis revised prior work and itself: the errata record corrections made during and after the
 original study (a mislabeled field, a wrong offset, an over-claim refuted on disk). Where an erratum
-changed a fact, the change is folded into the relevant `reference_table.csv` row and reflected on the docs
-page — so the reference always states the current, corrected fact, and the correction history lives in the
-register and the dated reports rather than in the prose.
+changed a fact, the change is folded into the relevant `reference_table.csv` row and the docs pages, which state
+the current, corrected fact; a page still disagreeing with an erratum is a bug to report (section 8). The
+correction history lives in the errata (`analysis/errata.md`), the register's notes and the changelog, rather
+than in the prose. A release gate checks that every change to a finding's
+claim, status or build scope since the previous release names the record behind it.
 
 ## 10. Scope and limitations
 
-The corpus covers ReFS v3.4 through v3.14 plus the Insider preview; facts are versioned where they change.
+The corpus covers the ReFS formats 3.4, 3.7, 3.9, 3.10 and 3.14 (no 3.11 to 3.13 volume exists), including
+volumes formatted by an Insider build. Facts are versioned where a change is known; many statements carry no
+recorded format scope (see [Format support](format_support.md)).
 A fact graded **E3** is code-supported inference, not a measurement; a fact graded only **RD** is observed
-but not pinned to a single driver function. Where neither axis could settle a question it is recorded as an
-open question, not asserted. No claim here depends on a single image.
+but not pinned to a single driver function. Where neither axis settles a question it is listed as an open
+question, and a statement resting on neither is graded as such in the register. Some findings record a single
+image as their disk witness; the register gives each finding's evidence.
 
-## 11. A note on tooling
+## 11. LLM-assisted work
 
 The analysis was **LLM-assisted**: a large language model was used to accelerate systematic coverage —
 reading across thousands of decompiled functions and corpus images and proposing where a fact might live —
-**under** the dual-evidence discipline above. Every claim the model surfaced was independently confirmed
-against the decompiled code and the raw disk before it entered the register; the model accelerated the
-search, it did not establish facts. The forensic tools (`forefst.py`, `refsanalysis.py`) are conventional
+**within** the dual-evidence method above. Every claim the model surfaced was checked against the
+decompiled code, the raw disk, or both, and the register records which; the model accelerated the search, it
+did not establish facts. The forensic tools (`forefst.py`, `refsanalysis.py`) are conventional
 Python and reproduce the on-disk measurements directly.
+
+## Evidence
+
+The counts behind the lifecycle example of section 7: every `LastUsn` value is 8-byte aligned on 717 of 717; the
+rival reading of `$SI+0x30` was refuted on the type-0x10 own rows, non-zero on 0 of 32,629.
+
+<!-- findings: FS_CHKP_RA_001, GN_ALLC_SA_001, MD_SI_RA_015
+     errata: E71 -->

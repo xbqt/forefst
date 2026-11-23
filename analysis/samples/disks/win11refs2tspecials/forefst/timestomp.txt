@@ -4,11 +4,13 @@
 ReFS Timestamp-Anomaly (Timestomp) Detection
 ==============================================================================
   Image:           win11refs2tspecials.raw  (ReFS 3.14)
-  Volume created:  2026-05-16 16:30:38
-  Volume modified: 2026-05-16 16:30:39
-  USN journal:     absent or unreadable (intrinsic signals only)
+  Volume created:  2026-05-16T16:30:38.0330750Z
+  Last mount (rw): 2026-05-16T16:30:39.3691609Z
+  USN journal:     Inactive (intrinsic signals only)
   Files examined:  1333
-  Flagged:         119  (HIGH 24 / MEDIUM 0 / LOW 0 / INFO 95 — INFO = ambiguous: a timestamp-preserving copy and a backdated creation produce the same signals; corroborate with USN)
+  Flagged:         119  (HIGH 24 / MEDIUM 0 / LOW 0 / INFO 95 — INFO = ambiguous: a
+                   timestamp-preserving copy and a backdated creation produce the same signals;
+                   corroborate with USN)
 
   This flags timestamps that LOOK anomalous — it is investigative INFORMATION, not proof of
   tampering. Weigh the BASIS of each row: a journal/hardlink signal is authoritative; an
@@ -16,83 +18,85 @@ ReFS Timestamp-Anomaly (Timestomp) Detection
   copies/restores. Tiers, exactly as timestomp_verdict() decides them:
     HIGH   — an AUTHORITATIVE corroboration: the change journal, or a disagreement between
              two of the file's own hard-link names. A count of intrinsic signals never reaches HIGH.
-    MEDIUM — CHANGE_LATE without PRE_FORMAT (created on THIS volume, metadata altered later),
-             or FUTURE (created after the volume's last metadata write).
+    MEDIUM — CHANGE_LATE without PRE_FORMAT (created on THIS volume, metadata altered later).
     INFO   — every signal present is one a timestamp-preserving copy also produces
              (PRE_FORMAT / CHANGE_LATE / CREATE_GT_MODIFY / ROUND_TIMESTAMPS), so a copy and a
              backdate are indistinguishable here however many of them fire.
-    LOW    — anything else.
+    LOW    — anything else (no current signal reaches it).
 
-  Conf   Basis         Claimed birth         Last real write       Path
+  Conf   Basis         Claimed birth                Changed                      Path
   ------------------------------------------------------------------------------------------------
-  HIGH   journal/link  2022-08-02 07:16:28   2026-05-16 16:41:30   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_romeo_output_531365.cfg
-         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2026-05-16 16:41:26   2026-05-16 16:41:29   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_hardlink_audit_219848.cfg
-         signals: HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2022-05-05 16:35:30   2026-05-16 16:37:15   testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_output_296985.csv
-         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2026-05-16 16:34:27   2026-05-16 16:35:10   testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/dir_yankee_435831/hardlink_data_386321.txt
-         signals: HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2022-05-05 16:35:30   2026-05-16 16:35:30   testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416/papa_victor_867137.csv
-         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2022-05-05 16:35:30   2026-05-16 16:36:14   testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/dir_india_917272/dir_tango_488439/alpha_papa_542985.csv
-         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2022-05-05 16:35:30   2026-05-16 16:35:30   testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/hardlink_hotel_423014.csv
-         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2022-05-05 16:35:30   2026-05-16 16:36:14   testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/hardlink_audit_733110.csv
-         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2022-05-05 16:35:30   2026-05-16 16:36:14   testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/hardlink_quebec_170707.csv
-         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2023-10-26 16:36:16   2026-05-16 16:36:17   testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/foxtrot_data_307933.txt
-         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2022-05-05 16:35:30   2026-05-16 16:37:15   testspecials/dir_november_947335/dir_india_538407/hardlink_config_676528.csv
-         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2022-05-05 16:35:30   2026-05-16 16:36:14   testspecials/dir_november_947335/dir_sync_924581/hardlink_november_224111.csv
-         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2022-05-05 16:35:30   2026-05-16 16:36:14   testspecials/foxtrot_romeo_101133.csv
-         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2022-08-11 16:34:51   2026-05-16 16:34:53   testspecials/hardlink_mike_576693.csv
-         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2024-02-23 16:34:40   2026-05-16 16:34:44   testspecials/hardlink_uniform_425955.csv
-         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2022-10-13 16:40:23   2026-05-16 16:40:23   testspecials2/dir_kilo_616914/dir_index_179689/dir_yankee_777638/hardlink_log_206798.log
-         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2022-10-13 16:40:23   2026-05-16 16:40:23   testspecials2/dir_kilo_616914/dir_papa_668661/hardlink_romeo_734888.log
-         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2026-05-16 16:37:43   2026-05-16 16:40:06   testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_papa_820469/dir_papa_622200/hardlink_cache_824366.log
-         signals: HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2026-05-16 16:37:43   2026-05-16 16:40:06   testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/hardlink_output_553502.log
-         signals: HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2022-10-13 16:40:23   2026-05-16 16:40:23   testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/dir_echo_972255/hardlink_log_887909.log
-         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2022-10-13 16:40:23   2026-05-16 16:40:23   testspecials2/dir_oscar_397968/dir_zulu_210476/hardlink_hotel_135884.log
-         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2026-05-16 16:37:43   2026-05-16 16:40:06   testspecials2/dir_oscar_397968/output_yankee_438536.log
-         signals: HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2022-10-13 16:40:23   2026-05-16 16:40:23   testspecials2/hardlink_uniform_628960.log
-         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2022-10-13 16:40:23   2026-05-16 16:40:23   testspecials2/trace_trace_495265.log
-         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH
+  HIGH   journal/link  2022-08-02T07:16:28.1705690Z 2026-05-16T16:41:30.3005024Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_romeo_output_531365.cfg
+         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH   evidence: hardlink:test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_hardlink_audit_219848.cfg
+  HIGH   journal/link  2026-05-16T16:41:26.3099064Z 2026-05-16T16:41:29.1273008Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_hardlink_audit_219848.cfg
+         signals: HARDLINK_MACB_MISMATCH   evidence: hardlink:test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_romeo_output_531365.cfg
+  HIGH   journal/link  2022-05-05T16:35:30.1639807Z 2026-05-16T16:37:15.8274254Z testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_output_296985.csv
+         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH   evidence: hardlink:testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416/papa_victor_867137.csv
+  HIGH   journal/link  2026-05-16T16:34:27.9335156Z 2026-05-16T16:35:10.9892889Z testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/dir_yankee_435831/hardlink_data_386321.txt
+         signals: HARDLINK_MACB_MISMATCH   evidence: hardlink:testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/foxtrot_data_307933.txt
+  HIGH   journal/link  2022-05-05T16:35:30.1639807Z 2026-05-16T16:35:30.1639807Z testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_india_623599/dir_index_446416/papa_victor_867137.csv
+         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH   evidence: hardlink:testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_output_296985.csv
+  HIGH   journal/link  2022-05-05T16:35:30.1639807Z 2026-05-16T16:36:14.8658976Z testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/dir_india_917272/dir_tango_488439/alpha_papa_542985.csv
+         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH   evidence: hardlink:testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_output_296985.csv
+  HIGH   journal/link  2022-05-05T16:35:30.1639807Z 2026-05-16T16:35:30.1639807Z testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_romeo_851778/hardlink_hotel_423014.csv
+         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH   evidence: hardlink:testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_output_296985.csv
+  HIGH   journal/link  2022-05-05T16:35:30.1639807Z 2026-05-16T16:36:14.8658976Z testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/hardlink_audit_733110.csv
+         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH   evidence: hardlink:testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_output_296985.csv
+  HIGH   journal/link  2022-05-05T16:35:30.1639807Z 2026-05-16T16:36:14.8658976Z testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_yankee_391369/hardlink_quebec_170707.csv
+         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH   evidence: hardlink:testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_output_296985.csv
+  HIGH   journal/link  2023-10-26T16:36:16.6683805Z 2026-05-16T16:36:17.7998669Z testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/foxtrot_data_307933.txt
+         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH   evidence: hardlink:testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_config_356395/dir_yankee_435831/hardlink_data_386321.txt
+  HIGH   journal/link  2022-05-05T16:35:30.1639807Z 2026-05-16T16:37:15.8274254Z testspecials/dir_november_947335/dir_india_538407/hardlink_config_676528.csv
+         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH   evidence: hardlink:testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_output_296985.csv
+  HIGH   journal/link  2022-05-05T16:35:30.1639807Z 2026-05-16T16:36:14.8658976Z testspecials/dir_november_947335/dir_sync_924581/hardlink_november_224111.csv
+         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH   evidence: hardlink:testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_output_296985.csv
+  HIGH   journal/link  2022-05-05T16:35:30.1639807Z 2026-05-16T16:36:14.8658976Z testspecials/foxtrot_romeo_101133.csv
+         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH   evidence: hardlink:testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_output_296985.csv
+  HIGH   journal/link  2022-08-11T16:34:51.3252344Z 2026-05-16T16:34:53.3123683Z testspecials/hardlink_mike_576693.csv
+         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH   evidence: hardlink:testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_output_296985.csv
+  HIGH   journal/link  2024-02-23T16:34:40.8904388Z 2026-05-16T16:34:44.3326880Z testspecials/hardlink_uniform_425955.csv
+         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH   evidence: hardlink:testspecials/dir_gamma_163068/dir_echo_659970/dir_cache_507104/dir_archive_409111/hardlink_output_296985.csv
+  HIGH   journal/link  2022-10-13T16:40:23.5831746Z 2026-05-16T16:40:23.5831746Z testspecials2/dir_kilo_616914/dir_index_179689/dir_yankee_777638/hardlink_log_206798.log
+         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH   evidence: hardlink:testspecials2/dir_kilo_616914/dir_papa_668661/hardlink_romeo_734888.log
+  HIGH   journal/link  2022-10-13T16:40:23.5831746Z 2026-05-16T16:40:23.5831746Z testspecials2/dir_kilo_616914/dir_papa_668661/hardlink_romeo_734888.log
+         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH   evidence: hardlink:testspecials2/dir_kilo_616914/dir_index_179689/dir_yankee_777638/hardlink_log_206798.log
+  HIGH   journal/link  2026-05-16T16:37:43.0288811Z 2026-05-16T16:40:06.3190753Z testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_papa_820469/dir_papa_622200/hardlink_cache_824366.log
+         signals: HARDLINK_MACB_MISMATCH   evidence: hardlink:testspecials2/dir_kilo_616914/dir_index_179689/dir_yankee_777638/hardlink_log_206798.log
+  HIGH   journal/link  2026-05-16T16:37:43.0288811Z 2026-05-16T16:40:06.3190753Z testspecials2/dir_kilo_616914/dir_victor_389261/dir_yankee_150988/dir_temp_241630/hardlink_output_553502.log
+         signals: HARDLINK_MACB_MISMATCH   evidence: hardlink:testspecials2/dir_kilo_616914/dir_index_179689/dir_yankee_777638/hardlink_log_206798.log
+  HIGH   journal/link  2022-10-13T16:40:23.5831746Z 2026-05-16T16:40:23.5831746Z testspecials2/dir_oscar_397968/dir_romeo_329803/dir_audit_460776/dir_alpha_968646/dir_echo_972255/hardlink_log_887909.log
+         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH   evidence: hardlink:testspecials2/dir_kilo_616914/dir_index_179689/dir_yankee_777638/hardlink_log_206798.log
+  HIGH   journal/link  2022-10-13T16:40:23.5831746Z 2026-05-16T16:40:23.5831746Z testspecials2/dir_oscar_397968/dir_zulu_210476/hardlink_hotel_135884.log
+         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH   evidence: hardlink:testspecials2/dir_kilo_616914/dir_index_179689/dir_yankee_777638/hardlink_log_206798.log
+  HIGH   journal/link  2026-05-16T16:37:43.0288811Z 2026-05-16T16:40:06.3190753Z testspecials2/dir_oscar_397968/output_yankee_438536.log
+         signals: HARDLINK_MACB_MISMATCH   evidence: hardlink:testspecials2/dir_kilo_616914/dir_index_179689/dir_yankee_777638/hardlink_log_206798.log
+  HIGH   journal/link  2022-10-13T16:40:23.5831746Z 2026-05-16T16:40:23.5831746Z testspecials2/hardlink_uniform_628960.log
+         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH   evidence: hardlink:testspecials2/dir_kilo_616914/dir_index_179689/dir_yankee_777638/hardlink_log_206798.log
+  HIGH   journal/link  2022-10-13T16:40:23.5831746Z 2026-05-16T16:40:23.5831746Z testspecials2/trace_trace_495265.log
+         signals: CHANGE_LATE, PRE_FORMAT, HARDLINK_MACB_MISMATCH   evidence: hardlink:testspecials2/dir_kilo_616914/dir_index_179689/dir_yankee_777638/hardlink_log_206798.log
 
-  (0 MEDIUM + 0 LOW + 95 INFO row(s) hidden — `--min MEDIUM` / `--min LOW` / `--min INFO` to show; CSV/JSON already include every tier.)
+  (0 MEDIUM + 0 LOW + 95 INFO row(s) hidden — `--min MEDIUM` / `--min LOW` / `--min INFO` to show;
+  CSV/JSON already include every tier.)
 
-  Signal legend  (AUTHORITATIVE = independent evidence · HEURISTIC = suggestive $SI-only):
+  Signal legend  (AUTHORITATIVE = a second structure: the change journal or another name's entry ·
+                  HEURISTIC = suggestive, from the $SI alone):
     [AUTHORITATIVE]
-      USN_BASIC_INFO_CHANGE  the USN journal recorded a deliberate basic-info edit (no content change)
+      USN_BASIC_INFO_CHANGE  the USN journal recorded a basic-info change (no content change)
       USN_CREATE_MISMATCH    $SI created differs from the FILE_CREATE journal record (true birth known)
       HARDLINK_MACB_MISMATCH one hard-link name's $SI created diverges from another's (ReFS per-name
-                             MACB). Nothing routine produces this; which name is authentic is NOT
-                             established, and its absence means nothing
+                             MACB). No routine cause was observed on the corpus; which name is
+                             authentic is NOT established, and its absence means nothing
     [HEURISTIC — $SI only, corroborate]
       CHANGE_LATE            $SI change-time post-dates created/modified (SetFileTime/PowerShell/.NET
                              can't reach change-time) — defeated by a native-API/raw-disk stomp
-      PRE_FORMAT / FUTURE    created before the volume existed / after its last write
+      PRE_FORMAT             created before the volume existed
       CREATE_GT_MODIFY       created after last write
       ROUND_TIMESTAMPS       created AND modified are whole-second (.0000000) — a tool often sets a
-                             date with no sub-second time; LOW only (driver packages / archive
-                             extraction also produce whole-second times)
-  Note: PRE_FORMAT / CHANGE_LATE / CREATE_GT_MODIFY also fire on a legitimate
-  timestamp-preserving copy (robocopy /COPY:T, a restore, an archive extraction) — and
-  equally on a deliberately backdated creation. That pair alone is INFO: ambiguous, not
-  cleared. The one intrinsic signal that reaches HIGH is HARDLINK_MACB_MISMATCH, which a
-  copy cannot produce; corroborate anything below HIGH with the USN journal.
+                             date with no sub-second time; alone it is INFO and it never raises a
+                             tier (driver packages also carry whole-second times)
+  Note: PRE_FORMAT / CHANGE_LATE / CREATE_GT_MODIFY also fire on legitimate time-setting —
+  Windows servicing and installers write files with their package dates, a copy keeps its
+  source's times — and equally on a deliberately backdated creation. PRE_FORMAT with
+  CHANGE_LATE alone is INFO: ambiguous, not cleared. The one $SI signal that reaches HIGH is
+  HARDLINK_MACB_MISMATCH, which a copy cannot produce; corroborate anything below HIGH with
+  the USN journal.

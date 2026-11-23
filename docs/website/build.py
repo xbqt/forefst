@@ -18,7 +18,8 @@ This script assembles content/ from them:
     repository traceability — only the generated site is de-jargoned.
   * derives each page's title from its first `# H1` and a sort key that IGNORES a leading `$`
   * groups the Concepts into subsections (General first)
-  * folds the worked examples under Tools
+  * publishes the worked examples as pages of Tools, in the groups of TOOL_GROUPS (each at /tools/examples/<name>/)
+  * generates Tools > Releases from the changelog's release headings (releases_page)
   * drops the `$CBW4` page and its inline mentions (a debunked prior-work name)
   * unwraps links to files the site does not publish (README, knowledge map, CONTRIBUTING, …)
 
@@ -54,20 +55,20 @@ EXCLUDE = {"README.md"}
 UNPUBLISHED = {"readme.md", "knowledge_map.md", "contributing.md", "changelog.md",
                "test_baseline_images.md", "methodology.md"}
 
-# Ordered subsections for grouped sections (concepts, structures). Each page is placed in the first
-# group that lists it; a page listed nowhere falls into the LAST group. Order WITHIN a group follows
-# its file list here (emitted as the page `sort` key). Edit freely — this only drives site grouping.
+# Ordered subsections for grouped sections (concepts, structures, tools). Each page is placed in the first
+# group that lists it; a page listed nowhere falls into the LAST group (tools: see TOOL_FALLBACK). Order WITHIN a
+# group follows its file list here (emitted as the page `sort` key). Edit freely — this only drives site grouping.
 CONCEPT_GROUPS = [
     ("Background & context", [
-        "file_systems.md", "windows_file_systems.md", "carrier_categories.md",
+        "file_systems.md", "windows_file_systems.md", "what_is_refs.md", "carrier_categories.md",
     ]),
     ("General", [
         "ntfs_comparison.md", "version_detection.md", "version_evolution.md", "architecture.md",
-        "driver_architecture.md",
+        "driver_architecture.md", "driver_evolution.md",
     ]),
     ("On-disk mechanics", [
         "bootstrap_chain.md", "virtual_addressing.md", "cluster_page_size.md",
-        "resident_storage.md", "copy_on_write.md", "allocation_space_mgmt.md",
+        "placement_and_residency.md", "copy_on_write.md", "allocation_space_mgmt.md",
         "transactions_crash_consistency.md",
     ]),
     ("Integrity & redundancy", [
@@ -80,7 +81,7 @@ CONCEPT_GROUPS = [
     ]),
     ("Forensics & recovery", [
         "deletion_recovery.md", "what_survives.md", "timestomp_detection.md", "artifact_timeline.md",
-        "forensic_analysis_workflow.md", "tool_artifact_map.md",
+        "forensic_analysis_workflow.md",
     ]),
 ]
 STRUCTURE_GROUPS = [
@@ -101,7 +102,38 @@ STRUCTURE_GROUPS = [
         "usn_journal.md", "mlog.md",
     ]),
 ]
-SECTION_GROUPS = {"concepts": CONCEPT_GROUPS, "structures": STRUCTURE_GROUPS}
+# Tools: the help page, the pages around it, then the worked examples. The theme's menu shows a section's groups
+# flat, one heading each, and lists only the section's own pages under them, so the examples (docs/examples/) are
+# published as pages of tools/ (each keeps its /tools/examples/<name>/ address, see EXAMPLE_URL) and their three
+# groups follow the two tools groups. A page listed nowhere goes to TOOL_FALLBACK (docs/tools/) or
+# EXAMPLE_FALLBACK (docs/examples/), never to the last group. A listed page that does not exist is skipped.
+TOOL_GROUPS = [
+    ("Main", ["forefst.md", "tool_artifact_map.md"]),
+    ("Details", ["internals.md", "refsanalysis.md", "metadata_bundles.md", "releases.md"]),
+    ("Examples", ["first_examination.md", "know_the_volume.md", "identify_each_file.md", "read_the_times.md",
+                  "follow_the_history.md", "look_for_deleted_files.md", "check_integrity.md"]),
+    ("To go deeper", [
+        "find_a_deleted_file.md", "track_a_file_across_moves.md", "read_a_hard_link_group.md",
+        "detect_timestomping.md", "recover_credentials_and_prior_versions.md", "identify_native_vs_upgraded.md",
+        "read_wsl_files.md", "read_the_change_journal.md",
+    ]),
+    ("By hand", ["decode_vbr_by_hand.md"]),
+]
+TOOL_FALLBACK, EXAMPLE_FALLBACK = "Details", "To go deeper"
+EXAMPLE_URL = "/tools/examples/{}/"
+# Merged or moved pages (RC3a, the maintainer's n1-n5 / j1, 2026-11-21): docs path of the page now -> the site
+# addresses it replaces. Hugo writes a redirect page at each old address, so a bookmark or an outside link still works.
+PAGE_ALIASES = {
+    "concepts/placement_and_residency.md": ["/concepts/resident_storage/"],
+    "concepts/driver_evolution.md": ["/concepts/driver_transitions/"],
+    "methodology/driver_builds.md": ["/concepts/driver_builds/"],
+    "tools/metadata_bundles.md": ["/concepts/metadata_bundles/"],
+    "tools/tool_artifact_map.md": ["/concepts/tool_artifact_map/"],
+}
+# Pages built and linked but kept out of the section menus (the maintainer, n10: reached from the Releases page)
+MENU_HIDDEN = {"tools/migration.md", "tools/known_issues.md"}
+SECTION_GROUPS = {"concepts": CONCEPT_GROUPS, "structures": STRUCTURE_GROUPS, "tools": TOOL_GROUPS}
+SECTION_FALLBACK = {"tools": TOOL_FALLBACK}
 
 # Per-section meta descriptions for SEO — emitted into each section _index front matter
 # (drives <meta name="description"> + Open Graph on the section landing pages).
@@ -112,13 +144,15 @@ SECTION_DESCRIPTIONS = {
     "tools":      "forefst.py and refsanalysis.py — open-source, pure-Python forensic and structural analysis for ReFS volumes.",
 }
 
-def grouping_for(basename, groups):
-    """(group_name, group_order_index, sort_within_group) for a page in a grouped section."""
+def grouping_for(basename, groups, fallback=None):
+    """(group_name, group_order_index, sort_within_group) for a page in a grouped section. A page listed nowhere goes
+    to the group named `fallback` (sorted after that group's listed pages), else to the LAST group."""
     for gi, (g, files) in enumerate(groups):
         if basename in files:
             return g, gi, files.index(basename)
-    last = len(groups) - 1
-    return groups[last][0], last, 99
+    names = [g for g, _ in groups]
+    fi = names.index(fallback) if fallback in names else len(groups) - 1
+    return groups[fi][0], fi, 99
 
 # Each page may carry one or more figures (svg, caption), inserted after the lead paragraph.
 # SVGs live in website/assets/diagrams/ and are inlined + themed by the image render hook.
@@ -131,7 +165,6 @@ DIAGRAMS = {
     "version_evolution.md":   [("version-timeline.svg",     "ReFS on-disk versions, 3.4 → 3.14 (with the two-stage 3.10→3.14 transition).")],
     "architecture.md":        [("volume-overview.svg",      "Structural overview of a ReFS 3.14 volume: how the metadata structures reference each other."),
                                ("two-layer.svg",            "The two layers of ReFS: the Minstore B+-tree engine below, the object/file layer above.")],
-    "resident_storage.md":    [("resident-nonresident.svg", "Resident (inline) vs non-resident (extent-mapped) storage of a file's content.")],
     "ntfs_comparison.md":     [("ntfs-allocation.svg",      "The NTFS model for contrast: a directory entry points to an MFT record holding metadata and data runs.")],
     "hard_links.md":          [("namespace-graph.svg",      "A tree namespace vs a directed-graph namespace — what hard links turn the file system into.")],
     "deletion_recovery.md":   [("ntfs-deletion.svg",        "The NTFS deletion baseline: the three steps that leave content recoverable.")],
@@ -252,14 +285,16 @@ def dejargon(text):
     for pat, repl in _EV_SUBS:
         s = re.sub(pat, repl, s)
 
-    # 1) copula -> "confirmed", preserving the subject -----------------------------------
-    s = re.sub(r'\b(is|are)\s+the\s+subjects?\s+of\s+findings?\s+' + _IDLIST, r'\1 confirmed', s)  # "is the subject of finding X" -> "is confirmed"
-    s = re.sub(r'\b(is|are)\s+findings?\s+' + _IDLIST + r'\s*(?:\(\s*' + _GR + r'[^()]*\))?', r'\1 confirmed', s)
-    s = re.sub(r'\b(is|are)\s+' + _IDLIST + r'\s*(?:\(\s*' + _GR + r'[^()]*\))?(?=\s*[.;,)])', r'\1 confirmed', s)
-    s = re.sub(r'\b(is|are)\s+' + _GR + r'\s*:', r'\1 confirmed in the driver:', s)
+    # 1) copula + a CONFIRMING grade -> "confirmed", preserving the subject ----------------
+    # Only E2 (decompiled driver) and RD (measured on disk) say "confirmed". A copula followed by a finding id, a master
+    # section or any other grade (E1 string, E3 inference) is NOT rewritten: the id-strip below would leave "is." and
+    # an E1/E3 grade would stay as a token, and verify_site.py fails on both (DANGLE / LEAK) -- the page must say in
+    # words what the claim rests on. (RC3: the id and master-section copula rewrites matched no page and turned any
+    # claim into "confirmed" whatever its status; removed with this rule.)
+    s = re.sub(r'\b(is|are)\s+E2\s*:', r'\1 confirmed in the driver:', s)
     s = re.sub(r'\b(is|are)\s+RD\b(?=\s+(?:on|across|for|from|in)\b)', r'\1 confirmed', s)  # "are RD on X" -> "are confirmed on X" (no double "on")
     s = re.sub(r'\b(is|are)\s+RD\b', r'\1 confirmed on disk', s)         # "is RD" / "are RD."
-    s = re.sub(r'\b(is|are)\s+(?:' + GRADE + r')\b', r'\1 confirmed', s) # "are E2+RD." "is E2 (`Fn`)"
+    s = re.sub(r'\b(is|are)\s+E2(?:\+RD)?\b', r'\1 confirmed', s)        # "are E2+RD." "is E2 (`Fn`)"
 
     # 2) drop remaining evidence parentheticals & inline ids -----------------------------
     s = re.sub(r'\(\s*' + _GR + r'\s*[—:\-]\s*', '(', s)                 # "(E2 — `Fn`)" -> "(`Fn`)"
@@ -287,11 +322,10 @@ def dejargon(text):
     # standalone grades left after a connector ("plus RD on the images" -> "plus confirmed on the images", not "…on disk on…")
     s = re.sub(r'\b(and|plus|,|;)\s+RD\b(?=\s+(?:on|across|for|from|in)\b)', r'\1 confirmed', s)
     s = re.sub(r'\b(and|plus|,|;)\s+RD\b(?=\s)', r'\1 confirmed on disk', s)
-    s = re.sub(r'\b(and|plus|,|;)\s+(?:' + GRADE + r')\b(?=\s)', r'\1 confirmed', s)
+    s = re.sub(r'\b(and|plus|,|;)\s+E2(?:\+RD)?\b(?=\s)', r'\1 confirmed', s)   # E2 only (see step 1); matched no page in RC3
     s = re.sub(r',\s+with\s*([.;])', r'\1', s)                           # "…Callback`, with." (id list removed) -> "…Callback`."
 
     # 3) master section refs, errata, internal register codes ----------------------------
-    s = re.sub(r'\b(is|are)\s+(?:master\s+)?' + _SEC, r'\1 confirmed', s)  # "X is master §G.1." -> "X is confirmed."
     s = re.sub(r'\*\*\s*' + _SEC + r'\s*\*\*', '', s)                      # bold section refs "**§C.7**"
     s = re.sub(r'\bMaster thesis appendix\s+', '', s)
     s = re.sub(r"\bthe master's\b", 'the', s)
@@ -323,7 +357,10 @@ def dejargon(text):
     return _unmask(s, store)
 
 
-def strip_footer(t):       return FOOTER_RE.sub("\n", t).rstrip() + "\n"
+# RC1-docs G9 (N117 / N552): a page's closing findings comment holds the register ids the page rests on, kept out
+# of its text; the knowledge map reads it from the source, the site drops it (before the id regexes run).
+FINDINGS_RE = re.compile(r"\n*<!-- findings:.*?-->\n*", re.S)
+def strip_footer(t):       return FOOTER_RE.sub("\n", FINDINGS_RE.sub("\n", t)).rstrip() + "\n"
 def first_h1(t):           m = H1_RE.search(t); return m.group(1).strip() if m else None
 def yaml_escape(s):        return s.replace('\\', '\\\\').replace('"', '\\"')
 def sort_key(title):       return re.sub(r"^[^0-9A-Za-z]+", "", title).lower()
@@ -427,11 +464,42 @@ def inject_diagram(body, basename):
     return "\n\n".join(parts)
 
 
-def transform(src_path, group=None, weight=None, sort=None):
-    raw = open(src_path, encoding="utf-8").read()
+# RC3 (1.14.0): a shortcode a docs page needs is written as an HTML comment, `<!-- site: hexfig "vbr_x" -->`, which
+# GitHub hides; the site build turns it into the shortcode (`{{< hexfig "vbr_x" >}}`). Only the shortcodes of this site.
+SITE_SHORTCODE_RE = re.compile(r'<!--\s*site:\s*((?:hexfig|attribute-map|bootstrap-roots)\b[^>]*?)\s*-->')
+
+
+# A byte figure's marker on the line before a markdown table: the figure takes that table as its own (the shortcode
+# colours the Offset and Field cells of each row that names a field), so the page's table is the figure's table.
+# `hexfig-rows "id" "key"` before a SECOND table of the page gives it to the same figure (its fields of table "key").
+HEXFIG_TABLE_RE = re.compile(r'<!--\s*site:\s*(hexfig(?:-rows)?\b[^>]*?)\s*-->[ \t]*\n(?:[ \t]*\n)*((?:[ \t]*\|[^\n]*\n)+)')
+
+
+# RC3a (n6): a figure placed where the page wants it, `<!-- site: diagram "name.svg" "caption" -->` (GitHub hides it):
+# the site build writes the image there, and the image hook inlines the SVG from assets/diagrams/ as for DIAGRAMS.
+DIAGRAM_MARK_RE = re.compile(r'<!--\s*site:\s*diagram\s+"([^"]+\.svg)"\s+"([^"]+)"\s*-->')
+
+
+def site_shortcodes(body):
+    body = DIAGRAM_MARK_RE.sub(lambda m: "![%s](%s)" % (m.group(2), m.group(1)), body)
+    body = HEXFIG_TABLE_RE.sub(lambda m: "{{< %s >}}\n%s{{< /%s >}}\n" % (m.group(1), m.group(2), m.group(1).split()[0]),
+                              body)
+    return SITE_SHORTCODE_RE.sub(lambda m: "{{< %s %s>}}" % (m.group(1), "/" if m.group(1).startswith("hexfig") else ""),
+                                 body)
+
+
+# RC3 (1.14.0): a page's one-line summary for its section list and its <meta description>, written by hand as
+# `<!-- site: description "..." -->` (invisible on GitHub); without it the first prose paragraph is used.
+SITE_DESC_RE = re.compile(r'<!--\s*site:\s*description\s+"([^"]+)"\s*-->[ \t]*\n?')
+
+
+def transform(src_path, group=None, weight=None, sort=None, url=None):
+    raw = site_shortcodes(open(src_path, encoding="utf-8").read())
+    m = SITE_DESC_RE.search(raw)
+    raw = SITE_DESC_RE.sub("", raw)
     body = dejargon(scrub_cbw4(unwrap_unpublished_links(strip_footer(raw))))
     body = _drop_empty_table_cols(body)
-    desc = lead_description(body)
+    desc = " ".join(m.group(1).split()) if m else lead_description(body)
     body = inject_diagram(body, os.path.basename(src_path))
     title = first_h1(body) or os.path.splitext(os.path.basename(src_path))[0].replace("_", " ").title()
     sort_val = sort if sort is not None else sort_key(title)
@@ -442,6 +510,12 @@ def transform(src_path, group=None, weight=None, sort=None):
         fm.append(f'group: "{yaml_escape(group)}"')
     if weight is not None:
         fm.append(f'weight: {weight}')
+    if url is not None:
+        fm.append(f'url: "{yaml_escape(url)}"')
+    old_urls = PAGE_ALIASES.get(os.path.relpath(src_path, DOCS).replace(os.sep, "/"))
+    if old_urls:
+        # RC3a (2026-11-21): a merged or moved page keeps its old address(es) as redirects
+        fm.append("aliases: [" + ", ".join(f'"{u}"' for u in old_urls) + "]")
     fm.append('---\n\n')
     return title, "\n".join(fm) + body
 
@@ -449,6 +523,53 @@ def transform(src_path, group=None, weight=None, sort=None):
 def write(path, text):
     os.makedirs(os.path.dirname(path), exist_ok=True)
     open(path, "w", encoding="utf-8").write(text)
+
+
+# `## vX.Y.Z — YYYY-MM-DD — title`: a release heading of docs/changelog.md (the pre-1.0 development entries have
+# another form and are not releases)
+RELEASE_RE = re.compile(r"^## v(\d+)\.(\d+)\.(\d+) — (\d{4}-\d{2}-\d{2}) — (.+?)\s*$", re.M)
+
+
+def _site_param(name, default):
+    """A [params] value of hugo.toml (a plain "string" one), or `default`."""
+    try:
+        m = re.search(r'(?m)^\s*' + re.escape(name) + r'\s*=\s*"([^"]*)"', open(os.path.join(HERE, "hugo.toml"),
+                                                                            encoding="utf-8").read())
+    except OSError:
+        m = None
+    return m.group(1) if m else default
+
+
+def releases_page():
+    """tools/releases.md: a table of the changelog's release headings, newest first (release | date | main change =
+    the heading's title). None when the changelog is absent; build.py stops when it holds no release heading."""
+    cl = os.path.join(DOCS, "changelog.md")
+    if not os.path.isfile(cl):
+        return None
+    rows = sorted(((int(a), int(b), int(c), d, t) for a, b, c, d, t in RELEASE_RE.findall(open(cl, encoding="utf-8").read())),
+                  reverse=True)
+    if not rows:
+        sys.exit("build.py: docs/changelog.md has no `## vX.Y.Z — date — title` heading: the Releases page would be empty")
+    blob = _site_param("github_blob", "https://github.com/xbqt/forefst/blob/main")
+    def cell(t):
+        t = t.replace("|", "\\|")
+        return t[:1].upper() + t[1:] if t[:1].islower() else t
+    body = ["# Releases", "",
+            "Every release of `forefst.py` and `refsanalysis.py`, newest first: its date and its main change. The "
+            f"[changelog]({blob}/docs/changelog.md) says what changed in each release and why, and "
+            "[Migrating between releases](migration.md) lists what a script that reads the tools' output must "
+            "change.", "",
+            "[Known issues](known_issues.md) lists the known limits of the current release that can change what "
+            "an examiner reports, with what to do about each.", "",
+            "| Release | Date | Main change |", "|---------|------|-------------|"]
+    body += [f"| {a}.{b}.{c} | {d} | {cell(t)} |" for a, b, c, d, t in rows]
+    newest = rows[0]
+    desc = (f"Every release of forefst.py and refsanalysis.py, newest first, from {newest[0]}.{newest[1]}.{newest[2]} "
+            f"({newest[3]}): its date and its main change.")
+    grp, gw, si = grouping_for("releases.md", TOOL_GROUPS, TOOL_FALLBACK)
+    fm = ['---', 'title: "Releases"', f'sort: "{si:02d}"', f'description: "{yaml_escape(desc)}"',
+          f'group: "{yaml_escape(grp)}"', f'weight: {gw}', '---', '', '']
+    return "\n".join(fm) + "\n".join(body) + "\n"
 
 
 def listed_md(d):
@@ -462,7 +583,9 @@ def section_index_body(sec, extra=""):
     """Intro for a section: from website/pages/sections/<sec>.md if present, else a default line."""
     p = os.path.join(SECTION_PAGES, f"{sec}.md")
     if os.path.isfile(p):
-        return open(p, encoding="utf-8").read().rstrip() + "\n" + extra
+        body = site_shortcodes(open(p, encoding="utf-8").read())                        # RC3: hexfig markers
+        body = re.sub(r'<!--\s*site:\s*after-list\s*-->', "\n\n@@after-list@@\n\n", body)  # list.html splits here
+        return body.rstrip() + "\n" + extra
     return f"{sec.capitalize()}.\n" + extra
 
 
@@ -517,6 +640,9 @@ def build():
             fm.append(f'description: "{yaml_escape(SECTION_DESCRIPTIONS[sec])}"')
         if groups:
             fm.append("groups: [" + ", ".join(f'"{g}"' for g, _ in groups) + "]")
+        if sec == "tools":
+            # the examples' former landing page; its address now redirects to the Tools page that lists them
+            fm.append('aliases: ["/tools/examples/"]')
         fm.append("---\n\n")
         write(os.path.join(CONTENT, sec, "_index.md"), "\n".join(fm) + section_index_body(sec))
 
@@ -524,7 +650,9 @@ def build():
         for src in listed_md(os.path.join(DOCS, sec)):
             base = os.path.basename(src)
             if groups:
-                grp, gw, si = grouping_for(base, groups)
+                grp, gw, si = grouping_for(base, groups, SECTION_FALLBACK.get(sec))
+                if f"{sec}/{base}" in MENU_HIDDEN:
+                    grp = "(not in the menu)"       # a group the section does not list: built, linked, not in a menu
                 _, text = transform(src, group=grp, weight=gw, sort=f"{si:02d}")
             else:
                 _, text = transform(src)
@@ -532,16 +660,26 @@ def build():
             n += 1
         counts[sec] = n
 
-    # Examples folded under Tools
+    # Examples folded under Tools: pages of tools/ in the groups of TOOL_GROUPS, each at /tools/examples/<name>/
     nex = 0
-    if os.path.isdir(os.path.join(DOCS, "examples")):
-        write(os.path.join(CONTENT, "tools", "examples", "_index.md"),
-              '---\ntitle: "Examples"\nweight: 90\n---\n\nWorked, end-to-end forensic walkthroughs.\n')
-        for src in listed_md(os.path.join(DOCS, "examples")):
-            _, text = transform(src)
-            write(os.path.join(CONTENT, "tools", "examples", os.path.basename(src)), text)
-            nex += 1
+    for src in listed_md(os.path.join(DOCS, "examples")):
+        base = os.path.basename(src)
+        if os.path.exists(os.path.join(DOCS, "tools", base)):
+            sys.exit(f"build.py: examples/{base} and tools/{base} would be the same page of tools/: rename one")
+        grp, gw, si = grouping_for(base, TOOL_GROUPS, EXAMPLE_FALLBACK)
+        _, text = transform(src, group=grp, weight=gw, sort=f"{si:02d}",
+                            url=EXAMPLE_URL.format(os.path.splitext(base)[0]))
+        write(os.path.join(CONTENT, "tools", base), text)
+        nex += 1
     counts["tools(examples)"] = nex
+
+    # Releases: one row per release heading of the changelog, generated so it cannot drift from it
+    if os.path.exists(os.path.join(DOCS, "tools", "releases.md")):
+        sys.exit("build.py: docs/tools/releases.md exists, but the Releases page is generated from the changelog: remove it")
+    rel = releases_page()
+    if rel:
+        write(os.path.join(CONTENT, "tools", "releases.md"), rel)
+        counts["tools(releases)"] = 1
 
     # Glossary
     gl = os.path.join(DOCS, "glossary.md")
@@ -558,13 +696,23 @@ def build():
         write(os.path.join(CONTENT, "format_support.md"), text)
 
     # Home + About (site-only Markdown)
-    # NOTE: pages/forensics_101.md is intentionally kept in the repo but NOT published yet (no copy here,
-    # no nav entry, no inbound link). Re-add it to this list + a menu entry in hugo.toml to publish it.
-    #
-    for src, dst in [("home.md", "_index.md"), ("about.md", "about.md"), ("verification.md", "verification.md")]:
+    for src, dst in [("home.md", "_index.md"), ("about.md", "about.md")]:
         p = os.path.join(PAGES, src)
         if os.path.isfile(p):
             shutil.copyfile(p, os.path.join(CONTENT, dst))
+
+    # Methodology (RC3a, the maintainer's n1): a section. Its landing page is the site-only pages/verification.md (its
+    # address stays /verification/); its sub-pages are docs/methodology/*.md ("Driver builds analysed"), listed in the
+    # section's sidebar and below the landing page's text.
+    p = os.path.join(PAGES, "verification.md")
+    if os.path.isfile(p):
+        write(os.path.join(CONTENT, "verification", "_index.md"), open(p, encoding="utf-8").read())
+    nm = 0
+    for i, src in enumerate(listed_md(os.path.join(DOCS, "methodology"))):
+        _, text = transform(src, sort=f"{i:02d}")
+        write(os.path.join(CONTENT, "verification", os.path.basename(src)), text)
+        nm += 1
+    counts["verification"] = nm
 
     print("content/ generated:")
     for k, v in counts.items():

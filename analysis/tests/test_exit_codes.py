@@ -22,6 +22,8 @@ import pytest
 # tests/ lives at analysis/tests/, so the repo root is THREE levels up (tests -> analysis -> repo).
 from _repo import REPO                                   # layout-independent; see _repo.py
 FOREFST = os.path.join(REPO, "forefst.py")
+sys.path.insert(0, REPO)
+from conftest import jdoc                                # noqa: E402  (K21: internal names)
 
 EXIT_OK = 0            # success / no finding
 EXIT_ERROR = 1        # unreadable/unparseable input, invalid argument/target, die()
@@ -50,10 +52,16 @@ def _corpus_root():
 
 
 def _find(name):
+    """N386 (LB6): a step path, or a basename that occurs once in the corpus; a basename that exists twice is
+    refused (AmbiguousImageName), never resolved to whichever copy the glob meets first."""
     root = _corpus_root()
     if not root:
         return None
-    hits = glob.glob(os.path.join(root, "**", name), recursive=True)
+    hits = sorted(glob.glob(os.path.join(root, "**", name), recursive=True))
+    if len(hits) > 1:
+        from test_image_holes_and_page_refs import AmbiguousImageName
+        raise AmbiguousImageName("the image name %r exists %d times in the corpus (%s): address it by its step path"
+                                 % (name, len(hits), ", ".join(os.path.relpath(h, root) for h in hits)))
     return hits[0] if hits else None
 
 
@@ -65,7 +73,8 @@ def _rc(image, *args):
 
 @pytest.fixture(scope="module")
 def refs_image():
-    p = _find("win11refs8g.raw")
+    # N386 / LB20: the clean volume these nodes mean, by its step path (step6's copy exits 2 since G3, decision 31)
+    p = _find("step2/win11refs8g.raw")
     if not p:
         pytest.skip("no ReFS corpus image available")
     return p
@@ -161,9 +170,9 @@ def test_bulk_export_exit_agrees_with_its_sidecar(refs_image, tmp_path, what):
                         capture_output=True, timeout=1800).returncode
     sidecar = out / "holes.json"
     assert sidecar.exists(), f"export {what} wrote no holes.json — 'checked and clean' must be recorded"
-    doc = json.loads(sidecar.read_text())
-    assert doc["status"] in ("holes_present", "none")
-    if doc["status"] == "holes_present":
+    doc = jdoc(json.loads(sidecar.read_text()))                         # K21: internal names
+    assert doc["Status"] in ("holes_present", "none")                       # K21 (acceptance 1.14.0)
+    if doc["Status"] == "holes_present":
         assert rc == EXIT_2, f"export {what} found holes but did not exit 2"
         assert doc["streams_with_holes"] > 0 and doc["hole_bytes"] > 0
     else:
@@ -179,12 +188,12 @@ def test_refuse_holes_writes_nothing_it_flagged(refs_image, tmp_path):
                    capture_output=True, timeout=1800)
     subprocess.run([sys.executable, FOREFST, refs_image, "export", "deleted", str(strict), "--carve",
                     "--refuse-holes"], capture_output=True, timeout=1800)
-    a = json.loads((plain / "holes.json").read_text())
-    b = json.loads((strict / "holes.json").read_text())
-    assert a["streams_with_holes"] == b["streams_with_holes"], \
+    a = jdoc(json.loads((plain / "holes.json").read_text()))
+    b = jdoc(json.loads((strict / "holes.json").read_text()))
+    assert a["StreamsWithHoles"] == b["StreamsWithHoles"], \
         "the same streams must be FLAGGED with and without --refuse-holes"
-    assert len(b["refused"]) == b["streams_with_holes"], \
+    assert len(b["Refused"]) == b["StreamsWithHoles"], \
         "--refuse-holes must refuse exactly the flagged streams"
-    assert a["refused"] == [], "without the flag nothing may be refused"
-    for rel in b["refused"]:
+    assert a["Refused"] == [], "without the flag nothing may be refused"      # K21 (1.14.0): the sidecar's keys
+    for rel in b["Refused"]:
         assert not (strict / rel).exists(), f"{rel} was refused but written anyway"

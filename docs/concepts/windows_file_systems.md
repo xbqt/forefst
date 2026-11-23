@@ -1,15 +1,18 @@
 # Windows File Systems
 
-Before a single ReFS byte is ever read off disk, the volume has already passed through half a dozen
-Windows kernel layers, and an analyst who does not know that path can misread what `refs.sys` actually
-controls and what the kernel does *around* it. ReFS is not a self-contained program — it is a
-**file-system driver (FSD)** plugged into the Windows I/O model, sharing the same request packets,
-caching, security checks, and mount machinery as NTFS. This page traces the path a file operation takes
-from an application call down to the disk, and pins down exactly where `refs.sys` enters that path — the
-boundary between behavior the kernel owns (and you cannot blame on ReFS) and behavior the ReFS driver
-owns (which the rest of these pages decode). The internal model of `refs.sys` itself — its two layers and
-the dispatch within them — is on the [Driver Architecture](architecture.md) page; this page is the layer
-*above* it.
+A file operation on a ReFS volume passes through several Windows kernel layers before `refs.sys` reads anything
+from disk. An analyst who does not know that path can misread what `refs.sys` controls and what the kernel does
+*around* it.
+
+ReFS is a **file-system driver (FSD)** inside the Windows I/O model,
+sharing the same request packets, caching, security checks, and mount machinery as NTFS.
+
+This page traces the path a file operation takes from an application call down to the disk, and shows exactly
+where `refs.sys` enters that path. Before that point the kernel does the work, not ReFS; after it the ReFS driver
+does, and the rest of these pages decode that part.
+
+The internal model of `refs.sys` itself — its two layers and the dispatch within them — is on the
+[Driver Architecture](architecture.md) page; this page is the layer *above* it.
 
 ## Two privilege levels
 
@@ -21,10 +24,12 @@ cannot be tampered with:
 - **Kernel mode** — the OS core and device drivers manage memory, hardware, and privileged requests. This
   is where `refs.sys` lives.
 
-A file operation *begins* in user mode but is always *serviced* in kernel mode. The forensic consequence
-is that no user-mode tool — including the high-level Windows file APIs and PowerShell — can reach a field
-that the FSD chooses not to expose, which is precisely why some ReFS metadata (the metadata-change time,
-the on-disk attribute layout) is invisible to ordinary tools and only recoverable by reading the disk.
+A file operation *begins* in user mode but is always *serviced* in kernel mode. The forensic consequence is that a
+user-mode tool sees only what the FSD exposes, through the API the tool calls:
+
+- the on-disk attribute layout is visible only by reading the disk;
+- the metadata-change time is not shown by PowerShell `Get-Item` (it is readable through
+  `GetFileInformationByHandleEx`, and from the disk).
 
 ## The path of a file operation
 
@@ -45,8 +50,8 @@ observed, redirected, or denied:
 9. The FSD completes processing and associates the file object with an **FCB** (File Control Block).
 10. A **handle** is returned to the application.
 
-The single most useful boundary to fix in your mind is step 7: everything above it is generic Windows
-plumbing identical for every file system, and everything that depends on *ReFS structure* happens at or
+The boundary to remember is step 7: everything above it is generic Windows code, identical for every
+file system, and everything that depends on *ReFS structure* happens at or
 below it, inside `refs.sys`. The chain that the ReFS driver then runs to locate its own on-disk roots is
 the [bootstrap chain](bootstrap_chain.md).
 
@@ -72,10 +77,10 @@ contract between the kernel and the FSD:
 | `IRP_MJ_CLEANUP` | Last handle closed |
 | `IRP_MJ_CLOSE` | Last reference released |
 
-The IRP code is the seam between this page and the driver internals: each code enters `refs.sys` through
+The IRP code connects this page to the driver internals: each code enters `refs.sys` through
 its three-tier dispatch and is handled by a `RefsFsd*` entry point, then a `RefsCommon*` worker — for
 example `IRP_MJ_CREATE` reaches `RefsCommonCreate` and `IRP_MJ_CLEANUP` reaches `RefsCommonCleanup`. Which
-codes a build routes is itself a capability fingerprint (the two EA codes are the WSL-metadata signature),
+codes a build routes shows what the build can do (the two EA codes mark WSL-metadata support),
 a point developed on the [Driver Interface](driver_architecture.md) and
 [Architecture §Three-tier IRP dispatch](architecture.md#three-tier-irp-dispatch) pages. One caveat for
 any IRP-level reasoning: the Fast I/O path lets some cached operations bypass IRP creation entirely, so an
@@ -137,10 +142,15 @@ step that makes `refs.sys` the owner of a given volume:
 
 If *no* file system recognizes the volume, Windows assigns the **RAW** file-system driver, which offers
 sector-level access only — which is exactly the state an analyst works in when reading a ReFS image on a
-host whose `refs.sys` cannot mount it. ReFS recognition turns on the on-disk format markers the
-[VBR](../structures/vbr.md) carries (`RefsIsBootSectorOurs` performs the signature and version check;
-`InitializeVcbFromBootSector` extracts the geometry into the VCB), and a version mismatch — a v3.4 driver
-meeting a native v3.14 volume — is one way mounting fails. The on-disk side of what the driver reads at
+host whose `refs.sys` cannot mount it.
+
+ReFS recognition turns on the on-disk format markers the [VBR](../structures/vbr.md) carries:
+
+- `RefsIsBootSectorOurs` checks the signature, the declared sizes and the boot-sector checksum — it makes no version
+  test;
+- `InitializeVcbFromBootSector` extracts the geometry into the VCB;
+- `RefsMountVolume` tests the version (major 3, minor up to 4 on 17134, up to 14 on 26100.9444), which is why a v3.4
+  driver meeting a native v3.14 volume fails to mount it. The on-disk side of what the driver reads at
 mount is the [bootstrap chain](bootstrap_chain.md), and the format markers that gate recognition are the
 [version-detection](version_detection.md) fields.
 
@@ -159,9 +169,9 @@ not on-disk data, and they vanish when the volume unmounts:
 The nesting is **VCB → FCB → SCB → CCB**, and it mirrors the on-disk model closely enough to be a useful
 reading aid: an FCB corresponds to a file's B+-tree entry, and an SCB to one of that entry's streams,
 which is why a file with [alternate data streams](../attributes/NAMED_DATA.md) holds several SCBs under one
-FCB. Crucially, the on-disk `$STANDARD_INFORMATION` is *derived from* the FCB at write time, so several
-fields the analyst sees on disk are really snapshots of these runtime structures — a relationship the
-[`$STANDARD_INFORMATION`](../attributes/STANDARD_INFORMATION.md) page exploits when interpreting fields
+FCB. The on-disk `$STANDARD_INFORMATION` is *derived from* the FCB at write time, so several
+fields the analyst sees on disk are copies of these runtime structures. The
+[`$STANDARD_INFORMATION`](../attributes/STANDARD_INFORMATION.md) page uses this when interpreting fields
 whose source is an in-memory FCB bit.
 
 ## NTFS and ReFS as peer drivers
@@ -179,7 +189,7 @@ The difference is entirely internal:
 - **ReFS** associates file state with **B+-tree entries** managed by the **Minstore** storage engine — there
   is no flat metadata table to scan.
 
-That one structural choice is the root of nearly every ReFS-specific forensic difference — addressing,
+Nearly every ReFS-specific forensic difference follows from that one structural choice: addressing,
 residency, slack, snapshots, the change journal — each enumerated on the
 [NTFS vs ReFS](ntfs_comparison.md) page. The internal organisation of `refs.sys` that produces the B+-tree
 format — the Refs/Minstore two-layer split and the three-tier IRP dispatch within it — is the subject of
@@ -195,8 +205,8 @@ Resolving a path happens at two levels, and only the second is ReFS's responsibi
    `$INDEX` B-tree entries; ReFS walks Minstore B+-tree rows in each
    [directory's own tree](../structures/directory_entries.md).
 
-Windows also redirects the namespace through **reparse points**, and ReFS supports them from its earliest
-version:
+Windows also redirects the namespace through **reparse points**, and ReFS supports them on every format read here
+(3.4 onwards):
 
 - **Symbolic links** — path-based indirection to another file or directory.
 - **Junctions** — redirect directory traversal to another location.
@@ -212,7 +222,7 @@ capability.
 - [Driver Architecture](architecture.md) — the internal two-layer (`Refs*` / Minstore) model and the
   three-tier IRP dispatch *inside* `refs.sys`, one layer below this page
 - [Driver Interface](driver_architecture.md) — the IRP handler set as a per-build capability fingerprint
-- [NTFS vs ReFS](ntfs_comparison.md) — how the MFT-vs-B+-tree choice ripples into every forensic difference
+- [NTFS vs ReFS](ntfs_comparison.md) — how the MFT-vs-B+-tree choice leads to each forensic difference
 - [File Systems](file_systems.md) — the general file-system vocabulary (clusters, extents, consistency)
   this page sits above
 - [Bootstrap Chain](bootstrap_chain.md) — what `refs.sys` reads off disk at mount, after recognition
@@ -231,13 +241,18 @@ capability.
 
 The Windows I/O model components on this page (I/O Manager, IRP, Object Manager, SRM, Filter Manager, Cache
 Manager, VCB/VPB mounting) are standard documented kernel behavior, not ReFS-specific claims. The
-ReFS-specific facts it asserts are confirmed in the decompiled driver (E2): the three-tier IRP dispatch
+ReFS-specific facts it asserts are confirmed in the decompiled driver: the three-tier IRP dispatch
 (`RefsFsd*` exception frame → `RefsCommon*` logic → `Cms*` storage, with `RefsFsdDispatchSwitch` routing
 the less common codes and `RefsExceptionFilter` guarding faults) and its handler counts (18 on v3.4, 20 on
 v3.14) are catalog-verified; the named IRP handlers `RefsCommonCreate` (`IRP_MJ_CREATE`) and
 `RefsCommonCleanup` (`IRP_MJ_CLEANUP`) are catalog-verified; the in-memory control-block hierarchy
 VCB → FCB → SCB → CCB is catalog-verified; and the recognition/mount functions `RefsIsBootSectorOurs`
-(signature + version check) and `InitializeVcbFromBootSector` (geometry into the VCB) are catalog-verified
-boot/mount functions. The Refs-vs-Minstore namespace partition that makes ReFS a peer driver is master
-§G.1. Also registered for statements on this page: **GN_HIER_SA_001**. See [how this was verified](../methodology.md) to trace these to the exact builds and measurements in
+(signature, sizes and checksum; no version test) and `InitializeVcbFromBootSector` (geometry into the VCB) are
+catalog-verified boot/mount functions, the version test in `RefsMountVolume` read on 17134 and 26100.9444. The Refs-vs-Minstore namespace partition that makes ReFS a peer driver is in the master
+reference (driver architecture). Each is a registered finding with its own evidence tier and witness in the claim
+register.
+
+See [how this was verified](../methodology.md) to trace these to the exact builds and measurements in
 `analysis/`.
+
+<!-- findings: GN_HIER_SA_001 -->

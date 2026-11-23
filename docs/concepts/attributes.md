@@ -1,253 +1,309 @@
 # Attributes
+<!-- site: description "Where ReFS keeps a file's and a directory's attributes: the records they sit in, the sub-record set, and how to tell a genuine attribute from noise." -->
 
-In NTFS every piece of a file — its name, its timestamps, its data, its security — is an *attribute*,
-and a parser that knows how to walk the attribute list can read the whole file. ReFS keeps the same
-vocabulary (`$STANDARD_INFORMATION`, `$FILE_NAME`, `$DATA`, `$REPARSE_POINT`, `$EA`) but stores
-attributes in a fundamentally different shape: not a flat list inside one record, but **two nested
-levels of B+-tree**. The outer level is the object's own B+-tree, located through the
-[Object Table](../structures/object_table.md); the inner level is a *mini B+-tree* embedded inside a
-single value. A tool that does not understand both levels will see a file's name and timestamps and miss
-its data streams, its alternate data streams, its reparse target, and its extended attributes entirely.
-This page explains the two-level model, how to tell a genuine attribute from a coincidence in the bytes,
-and where each attribute physically lives.
+In NTFS a file's metadata is a list of typed attributes inside its MFT record, and a parser that walks that list
+reads the whole file. ReFS keeps the idea and many of the names (`$STANDARD_INFORMATION`, `$DATA`,
+`$REPARSE_POINT`, `$EA`), but not the shape: there is no flat list in one record.
 
-## Two levels, and why
+ReFS stores attributes on **two levels of B+-tree**. A tool that reads only the outer level sees a file's name and
+times, and misses its data stream, its alternate data streams, its reparse data and its extended attributes.
 
-ReFS gives every **directory and system object** its own B+-tree; a file has none — a file's rows live inside a directory's tree. The rows of that tree are keyed, and the **first two bytes of
-the key** name what the row is. For user objects (OID ≥ 0x600) there are only **four** outer key types,
-and that small set is the whole top-level attribute vocabulary:
+This page explains the two levels, where each attribute sits, and how to tell a genuine attribute from bytes that
+only look like one.
 
-| Key type | What it is | Forensic role |
-|----------|-----------|---------------|
-| 0x10 | `$STANDARD_INFORMATION` + the embedded sub-record tree | timestamps, flags, security ID — and the container for everything in level 2 |
-| 0x20 | [FileId Index](../structures/reverse_index.md) | per-object FileId → identity index (Format A = child name; Format B = home-dir back-reference) — recovers a file's name / home dir if its 0x30 row is lost |
-| 0x30 | `$FILE_NAME` / [directory entries](../structures/directory_entries.md) | the child names a directory holds |
-| 0x40 | [Extent Descriptors](../structures/extent_descriptors.md) | the data-run allocation of a non-resident file |
+## Two levels
 
-No user object ever has an outer key of 0x80, 0x90, 0xA0, 0xB0, 0xC0, 0xD0, 0xE0, 0xF0, or 0x100 — those
-codes only ever appear one level down. This matters because an NTFS-trained eye expects `$DATA` (0x80) or
-`$REPARSE_POINT` (0xC0) to be siblings of `$FILE_NAME` in the same record. In ReFS they are not. They are
-**sub-records nested inside a value**, and you reach them by descending.
+- **The outer level.** A directory or a system object has its own B+-tree, found by its object ID (OID) through
+  the [Object Table](../structures/object_table.md). A file has no tree and no OID of its own: its record is a row
+  of a directory's tree.
+- **The inner level.** A record holds the object's `$STANDARD_INFORMATION` at `value+0x28`, then a small B+-tree
+  whose root node sits inside the same value. The rows of that inner tree are the attributes (the *sub-records*).
+  When they outgrow that one node, its rows move to child pages ([below](#when-the-attribute-set-outgrows-one-node)).
 
-The descent happens in two places. The type-0x10 value carries `$SI` followed by an *embedded mini
-B+-tree*, and the resident type-0x30 directory value carries the same embedded tree after its own header.
-Both use one shared row format (described under [Resident Storage](resident_storage.md) and on the
-[directory entries](../structures/directory_entries.md) page). The rows of that inner tree are the second
-level of the attribute system — the level that actually holds the file's content and most of its
-metadata.
+The first two bytes of a row's key name the row's type. A user directory's tree (OID 0x600 and above) holds four:
 
-## The genuine sub-record set, and the trap
+| Row type | What it is |
+|----------|------------|
+| 0x10 | The directory's **own row**: its `$STANDARD_INFORMATION` and its own attributes |
+| 0x20 | The [FileId reverse index](../structures/reverse_index.md): a FileId mapped to a name or to a home directory |
+| 0x30 | A [directory entry](../structures/directory_entries.md), one per child name. When the row embeds the file's record (key flags 0x01), its value **is** the file's record |
+| 0x40 | A **backing record**: the record of a file split out of its name row by a move or a hard link (key flags 0x02 in the name row), kept in the file's home directory |
 
-A raw scan that just looks for known type codes in the value bytes will lie to you. ASCII fragments of
-file content and structural rows of system objects can land a plausible-looking byte (0x00, 0x01, a
-two-character string interpreted as `0x322d`) exactly where a type code would sit. The discriminator that
-removes this noise is the **instance marker**: from v3.7 onward, every genuine embedded sub-record key
-carries a 4-byte marker immediately before its type code.
+No row of a directory's tree has a type from 0x80 to 0x100: those codes are attributes, one level down, inside a
+record.
 
-- **0x80000001 — single-instance (SI):** at most one of this attribute per file.
-- **0x80000002 — multi-instance (MI):** zero or more per file (a file can have many `$DATA` streams).
+So a record, and the attributes in it, sits in one of three places:
 
-**Always gate on the marker before trusting a type code.** Under strict marker gating the spurious codes
-vanish and the genuine set collapses to **exactly ten** type codes — no more, no less:
+- a directory's own row (type 0x10);
+- a file's name row (type 0x30), while the record is embedded there;
+- a file's backing record (type 0x40), once a move or a hard link has split the record out.
 
-| Type | Attribute | Instance | What it stores |
-|------|-----------|----------|----------------|
-| 0x38 (v3.4) / 0x39 (v3.7+) | [`$OBJ_LINK`](../attributes/OBJ_LINK.md) | MI | the file/dir name plus its parent OID |
-| 0x80 | [`$DATA`](../attributes/DATA.md) | SI + MI | default and named data streams |
-| 0x90 | [`$I30_INDEX`](../attributes/I30_INDEX.md) | MI | the `$I30` directory-index configuration |
-| 0xB0 | [`$SNAPSHOT` / `$NAMED_DATA`](../attributes/SNAPSHOT.md) | MI | snapshots and alternate data streams (ADS) |
-| 0xC0 | [`$REPARSE_POINT`](../attributes/REPARSE.md) | SI | symlinks, junctions, mount points |
-| 0xD0 | [`$EA_INFORMATION`](../attributes/EA_INFORMATION.md) | SI | extended-attribute size header |
-| 0xE0 | `$EA` | SI | the extended-attribute body (WSL `$LX*`) |
-| 0xF0 | `$LOGGED_UTILITY_STREAM` | SI | USN-journal `$Max` metadata (see below) |
-| 0x100 | [`$EFS`](../attributes/EFS.md) | MI | encryption metadata |
+Where the record sits says nothing about where the file's bytes are: in either place, `$DATA` holds them inline or
+points to extents.
 
-On v3.4 there are no markers at all: the type code is stored directly as a 32-bit value in the same
-position, and a v3.4 parser must gate on the type-code *enum* instead. The marker scheme is the v3.7
-generation's addition.
-
-Three codes look like they belong in this set but never do. They are **not** embedded sub-records, and a
-marker-gated scan finds zero of them as type-0x10 or type-0x30 rows:
-
-| Type | Name | Where it actually lives |
-|------|------|-------------------------|
-| 0x50 | [`$VOLUME_INFORMATION`](../attributes/VOLUME_INFORMATION.md) | volume-level metadata, never a per-file row |
-| 0x60 | Reparse Index | the table-level reparse-tag index on a system OID |
-| 0xA0 | `$INDEX_ROOT` | handled at object-create time by `RefsCheckValidAttributeAccess`, never persisted as a file sub-record |
-
-The genuine ten and the three non-members are confirmed by the driver's attribute-validation path
-(`RefsGetAttributeTypeCode`, `RefsGetAttributeDefinition`, `RefsCheckValidAttributeAccess`) and by a
-marker-gated scan of the raw-disk corpus.
-
-### The 0xF0 case is not a mystery stream
-
-`$LOGGED_UTILITY_STREAM` (type 0xF0) is sometimes filed as an "unknown logged-utility stream." It is not.
-It is the **USN journal `$Max` metadata** — a single-instance sub-record on the Change Journal file under
-the system object OID 0x520, holding the journal's maximum size (the familiar `fsutil usn createjournal`
-sizes such as 128 MB or 32 MB).
-
-Its layout is known and is worth stating here, because the pages that mention `$Max` never give a field
-offset. The sub-record content is 64 B or 72 B and opens with a 12-byte wrapper (`u32@+0x00` = 0,
-`u32@+0x04` = 0x20 payload length, `u32@+0x08` = 0x0C payload offset), followed by **four `u64`** at content
-`+0x0C`, `+0x14`, `+0x1C`, `+0x24`: **MaximumSize**, **AllocationDelta**, **UsnJournalID**, **LowestValidUsn**.
-Measured on 5 journal volumes: MaximumSize equals the `$J` allocated size on 5/5 (0x2000000, 0x4000000 or
-0x8000000), AllocationDelta is 0 on 5/5, LowestValidUsn is 0 on 5/5, and the UsnJournalID is byte-identical
-to the value `fsutil` reports. It is created by `RefsSetupUsnJournal` and has existed since v3.4, but it
-is only present where the [USN journal](../structures/usn_journal.md) has actually been activated, which
-is why it is rare on disk. EFS, despite also being a "logged utility stream" in name, uses a *different*
-code path (type 0x100) — do not conflate the two.
+See [Record placement and data residency](placement_and_residency.md).
 
 ## Where each attribute physically lives
 
-The same attribute can be stored in three different places depending on the file's
-[residency](resident_storage.md), and knowing which place to read is half of parsing ReFS correctly:
+| Attribute | Type | A directory's own row (0x10) | A file's record (its name row 0x30, or its backing 0x40) |
+|-----------|------|------------------------------|-----------------------------------------------------------|
+| [`$STANDARD_INFORMATION`](../attributes/STANDARD_INFORMATION.md) | none: the fixed region at `value+0x28` | yes | yes |
+| [`$OBJ_LINK`](../attributes/OBJ_LINK.md) | 0x39 (0x38 on 3.4) | one row per name | in a backing only, one row per name; an embedded record has none |
+| [`$I30_INDEX`](../attributes/I30_INDEX.md) | 0x90 | exactly one | — |
+| [`$DATA`](../attributes/DATA.md) | 0x80 | — | the main data stream: the bytes inline, or the extent map |
+| [`$NAMED_DATA`](../attributes/NAMED_DATA.md) | 0xB0 | — | one row per alternate data stream |
+| [`$SNAPSHOT`](../attributes/SNAPSHOT.md) | 0xB0 | — | one row per stream snapshot |
+| [`$REPARSE_POINT`](../attributes/REPARSE_POINT.md) | 0xC0 | a junction or a directory symlink | a symlink, a mount point or a WSL special file (in a backing: see below) |
+| [`$EA_INFORMATION` and `$EA`](../attributes/EA_INFORMATION.md) | 0xD0 and 0xE0 | yes, rarely | yes, as one pair |
+| [`$EFS`](../attributes/EFS.md) | 0x100 | not measured | an encrypted file's record, as the named stream `$EFS` |
 
-| Attribute | In the type-0x10 value | In a resident type-0x30 value | When non-resident |
-|-----------|------------------------|-------------------------------|-------------------|
-| `$SI` | always (inline, before the embedded tree) | N/A | N/A |
-| `$OBJ_LINK` | always (0x38/0x39) | N/A | N/A |
-| `$I30_INDEX` | always (0x90) | N/A | N/A |
-| `$DATA` | never | SI + MI (0x80) | content via type-0x40 [extents](../structures/extent_descriptors.md) |
-| `$SNAPSHOT` | never | MI (0xB0) | content via type-0x40 extents |
-| `$REPARSE_POINT` | rare | SI (0xC0) | — |
-| `$EA_INFORMATION` | rare | SI (0xD0) | — |
-| `$EA` | rare | SI (0xE0) | — |
-| `$EFS` | never | MI (0x100) | — |
-| FileId index (0x20) | N/A | N/A | type 0x20 at the object level |
-| Extent descriptors | N/A | N/A | type 0x40 at the object level |
+"—": not found there on the volumes measured.
 
-The recurring pattern: a *directory's* attributes hang off its type-0x10 tree, while a *file's* content
-and stream attributes live in the resident type-0x30 directory entry the parent holds for it. A small
-file's `$DATA` is inline in that entry; a large file's `$DATA` is replaced by [extent
-descriptors](../structures/extent_descriptors.md) that point — through [virtual
-addressing](virtual_addressing.md) — at clusters elsewhere on the volume.
+- A split file's reparse data: on 3.14 the backing holds the whole reparse buffer; on 3.7 to 3.10 it holds only
+  the tag mirror, and the buffer itself is in older copy-on-write pages, not in the live tree.
+- `$DATA` takes one of two forms, never both: inline (single-instance, the bytes in the record) or in extents
+  (multi-instance rows that carry the extent map). Which one is a property of the stream, not of where the record
+  sits: a backing can hold its file's bytes inline.
+
+<!-- site: attribute-map -->
+
+Three attributes are kept on system objects, not on user files or directories:
+
+| Attribute | Where it lives |
+|-----------|----------------|
+| The change journal's parameters (type 0xF0, unnamed) | the Change Journal file, in the system directory OID 0x520, where a journal was activated ([below](#type-0xf0-the-change-journals-parameters)) |
+| [`$VOLUME_INFORMATION`](../attributes/VOLUME_INFORMATION.md) | the system table at OID 0x500, a failover pair with OID 0x501 |
+| The reparse-point index ([`$REPARSE`](../attributes/REPARSE.md)) | the system table at OID 0x540, a failover pair with OID 0x541 |
+
+## A genuine attribute, or noise: read the key form first
+
+A raw scan that looks for known type codes in the bytes of a value gives false results. Fragments of file content and the
+rows of system tables can put a plausible byte (0x00, 0x01, a two-character string read as `0x322d`) where a type
+code would sit.
+
+An attribute row's **key** tells a genuine row from noise, and it comes in two forms:
+
+- **The marker form**, written by a 3.7 or later driver: a 4-byte instance marker at `key+0x08`, the type code at
+  `key+0x0C`.
+  - `0x80000001`, **single-instance**: at most one per record.
+  - `0x80000002`, **multi-instance**: zero or more per record.
+- **The marker-less form**: the type code as a u32 at `key+0x08`, with no marker. It is used by:
+  - every key the 3.4 driver wrote, including those a volume keeps after an upgrade from 3.4;
+  - the 80-byte extent record of a large alternate data stream (`0x0003` at `key+0x08`).
+
+Read the key form first, then check the type code against the set below. A scan that keeps only marked keys drops
+every 3.4 row and every large-ADS extent record.
+
+The types found on disk in the marker form:
+
+| Type | Attribute | Marker | What it stores |
+|------|-----------|--------|----------------|
+| 0x39 | [`$OBJ_LINK`](../attributes/OBJ_LINK.md) | multi | a name and its parent directory's OID (0x38 on 3.4, with no marker) |
+| 0x80 | [`$DATA`](../attributes/DATA.md) | single, or multi | the main data stream. Single-instance: the bytes inline. Multi-instance: the extent map (sub-stream 0x1000), the stream-set record (0x8) and each snapshot version (0x1001 and up) |
+| 0x90 | [`$I30_INDEX`](../attributes/I30_INDEX.md) | multi | a directory's index template |
+| 0xB0 | [`$NAMED_DATA`](../attributes/NAMED_DATA.md) or [`$SNAPSHOT`](../attributes/SNAPSHOT.md) | multi | an alternate data stream, or a stream snapshot ([below](#snapshots-versus-ads-one-type-two-meanings)) |
+| 0xC0 | [`$REPARSE_POINT`](../attributes/REPARSE_POINT.md) | single | the reparse buffer |
+| 0xD0 | [`$EA_INFORMATION`](../attributes/EA_INFORMATION.md) | single | the extended attributes' size header |
+| 0xE0 | [`$EA`](../attributes/EA_INFORMATION.md) | single | the extended-attribute list (WSL's `$LX*` among them) |
+| 0xF0 | unnamed | single | the change journal's parameters ([below](#type-0xf0-the-change-journals-parameters)) |
+| 0x100 | [`$EFS`](../attributes/EFS.md) | multi | encryption metadata |
+
+These codes of the driver's attribute table never appear as a sub-record of a user object on the corpus volumes:
+
+| Type | Name (the driver's) | Where the information actually lives |
+|------|---------------------|--------------------------------------|
+| 0x50 | `$OBSOLETE` | not found on the corpus volumes |
+| 0x60 | `$VOLUME_NAME` | the volume label: a row (key 0x510) of the volume-information table at OID 0x500 / 0x501 |
+| 0x70 | [`$VOLUME_INFORMATION`](../attributes/VOLUME_INFORMATION.md) | the volume's version, flags and times: rows of the same table |
+| 0xA0 | `$INDEX_ALLOCATION` | nowhere on disk as a sub-record |
+
+The reparse-point index is not an attribute either: it is the system table at OID 0x540 / 0x541 (see
+[Reparse Index](../attributes/REPARSE.md)).
+
+The driver's own attribute-definition table (the one `RefsGetAttributeTypeCode` walks) names 15 types, from 0x10 to
+0xE0 (14 on 17134, which has no 0x39): 0x90 is `$INDEX_ROOT` there and 0xA0 `$INDEX_ALLOCATION`, as in NTFS. Types 0xF0 and 0x100 are not in it: each
+is created by its own code path, `RefsSetupUsnJournal` and `RefsCreateLoggedUtilityStream`.
+
+Two NTFS attributes have no ReFS counterpart:
+
+- `$FILE_NAME`: a name is a directory entry (a type-0x30 row), and there is no 8.3 short name;
+- `$OBJECT_ID`: object IDs are not supported on ReFS (`fsutil objectid` fails), and no such sub-record exists on
+  disk.
+
+### Type 0xF0: the change journal's parameters
+
+Type 0xF0 is an unnamed, single-instance attribute on the Change Journal file, in the system directory OID 0x520.
+
+- It holds the journal's `$Max` parameters: maximum size, allocation delta, journal id and lowest valid USN.
+- Its value is 44 bytes: a 12-byte wrapper, then the four u64 fields.
+- `RefsSetupUsnJournal` writes it when a journal is created, so it exists only on a volume whose
+  [USN journal](../structures/usn_journal.md) was activated. That is why it is rare.
+- It is not the logged utility stream: that is type 0x100, which carries `$EFS`.
+
+Its field layout is on the [USN Journal](../structures/usn_journal.md) page.
 
 ## The shared sub-record value header
 
-Every embedded sub-record value (types 0x80 through 0xE0, both SI and MI) opens with the same 12-byte
-prefix, which is how a parser can begin decoding any of them before it knows the specific type:
+Most sub-record values open with the same 12-byte prefix: types 0x90, 0xB0, 0xC0, 0xD0, 0xE0 and 0xF0, and the
+inline (single-instance) form of `$DATA`.
 
 | Offset | Size | Field | Value |
 |--------|------|-------|-------|
-| 0x00 | 4 | padding | always 0 |
-| 0x04 | 4 | data-area size | total value bytes minus 12 |
-| 0x08 | 4 | content offset | always 0x0C |
+| 0x00 | 4 | padding | 0, except on a type-0xB0 row, whose u16 at 0x02 is the attribute flags: bit 0x0400 a snapshot, bit 0x1000 a stream in extents, 0 on an inline alternate data stream |
+| 0x04 | 4 | data-area size | the value's size minus 12 |
+| 0x08 | 4 | content offset | 0x0C |
 
-Type-specific content then begins at value+0x0C:
+Two values do not open with it:
 
-| Type | Content at value+0x0C | Inline data at |
-|------|-----------------------|----------------|
-| 0x80 SI (`$DATA`) | 48-byte stream summary | value+0x3C (the file's bytes) |
-| 0x80 MI (`$DATA`) | does **not** use the common header — extent/allocation metadata instead | — |
-| 0xB0 (`$SNAPSHOT` / ADS) | 48-byte stream summary, same shape as SI `$DATA` | value+0x3C (the ADS bytes) |
-| 0xC0 (`$REPARSE_POINT`) | a `REPARSE_DATA_BUFFER` (reparse tag + data) | value+0x0C |
-| 0xD0 (`$EA_INFORMATION`) | PackedEaSize @0x0C (NTFS packed size, written to `$SI+0x50`) + serialized on-disk footprint @0x10, fixed 20B | — |
-| 0xE0 (`$EA`) | a `FILE_FULL_EA_INFORMATION` chain | value+0x0C |
+- the multi-instance (extent) form of `$DATA`, which opens with its own inner header (0x88 at `value+0x00` on the
+  extent-bearing record);
+- `$OBJ_LINK`, whose value repeats its key (see [below](#when-the-attribute-set-outgrows-one-node)).
 
-The one exception worth remembering is **MI `$DATA`**: it carries extent/allocation metadata, not the
-common header, so a parser must branch on the marker before assuming the 12-byte prefix is present. This
-value layout is stable across every version from v3.4 through Insider build 29574; only the *key* format
-changed (the v3.7 instance markers).
+So a parser reads the key form and the type first; only then can it tell whether the value opens with the prefix.
+On a 3.4 key, which has no marker to branch on, the u32 at `value+0x00` tells: 0x88 is the extent-bearing record.
+
+Type-specific content then begins at `value+0x0C`:
+
+| Type | Content at `value+0x0C` | Inline data at |
+|------|-------------------------|----------------|
+| 0x80, single-instance (`$DATA`) | a 48-byte stream summary | `value+0x3C` (the file's bytes) |
+| 0xB0 (`$NAMED_DATA` / `$SNAPSHOT`) | a 48-byte stream summary, the same shape as the inline `$DATA` | `value+0x3C` (the stream's bytes, when inline) |
+| 0xC0 (`$REPARSE_POINT`) | a `REPARSE_DATA_BUFFER` (reparse tag, then its data) | `value+0x0C` |
+| 0xD0 (`$EA_INFORMATION`) | PackedEaSize at 0x0C, the serialized on-disk size at 0x10; 20 bytes in all | — |
+| 0xE0 (`$EA`) | a `FILE_FULL_EA_INFORMATION` chain | `value+0x0C` |
+
+The 12-byte prefix is the same on every version, but several values change with the driver that wrote them:
+
+- the extent-bearing `$DATA` record: on 3.4 its size fields sit 4 bytes later, and its summary size is 0x1A0 before
+  3.14 and 0x200 from 3.14;
+- the `$I30_INDEX` template: 148 bytes on 3.4, 140 bytes from 3.7;
+- `$OBJ_LINK`: the 3.4 type-0x38 value has another shape than the 0x39 value.
+
+PackedEaSize is also copied to `$SI+0x50` on format 3.10 and later; on 3.4 to 3.9 that offset holds the low half of
+the reparse tag.
 
 ## Snapshots versus ADS: one type, two meanings
 
-Type 0xB0 does double duty — it is both a [snapshot](snapshots_versioning.md) and an alternate data
-stream — so a parser must decide which it is looking at. Two independent discriminators agree, and either
-can be used:
+Type 0xB0 has two uses: it is both a [stream snapshot](snapshots_versioning.md) and an alternate data stream.
+Two independent tests agree, and either can be used:
 
-1. **Stream-summary flags at value+0x10 (u16):** 0 means ADS, 2 means snapshot. The driver sets the bit
-   in `RefsCreateStreamSnapshot` (`StreamSummary |= 2`); `forefst.py` reads this.
-2. **Attribute flags at value+0x02 (u16):** bit 0x0400 (`HasSnapshot`) is set only on snapshots, and the
-   driver's `HasSnapshot` predicate reads it.
+1. **The stream-summary flags at `value+0x10` (u16):** 0 for an alternate data stream, 2 for a snapshot. The driver
+   sets the bit in `RefsCreateStreamSnapshot` (`StreamSummary |= 2`); `forefst.py` reads this.
+2. **The attribute flags at `value+0x02` (u16):** bit 0x0400 (`HasSnapshot`) is set only on a snapshot, and the
+   driver's `HasSnapshot` test reads it.
 
-For an ADS, the stream name is in the key starting at offset 16 (UTF-16LE). The corrected value layout is
-on the [`$SNAPSHOT`](../attributes/SNAPSHOT.md) page.
+An alternate data stream's name is in the key, in UTF-16LE: from `key+0x10` in the marker form, from `key+0x0C` in
+the 3.4 form.
+
+The full value layout is on the [`$SNAPSHOT`](../attributes/SNAPSHOT.md) page.
 
 ## WSL extended attributes
 
-When WSL stores Linux ownership and permissions on a ReFS file (the `-o metadata` mount), it does so
-through `$EA_INFORMATION` and `$EA` in the standard Windows `FILE_FULL_EA_INFORMATION` format — *not* in
-reparse data. The names a forensic tool should recognise:
+When WSL stores Linux ownership and permissions on a ReFS file (a DrvFs mount with `-o metadata`), it does so
+through `$EA_INFORMATION` and `$EA`, in the standard Windows `FILE_FULL_EA_INFORMATION` format, not in reparse
+data. The names a forensic tool should recognise:
 
 | EA name | Size | Meaning |
 |---------|------|---------|
 | `$LXUID` | 4 | Linux UID |
 | `$LXGID` | 4 | Linux GID |
-| `$LXMOD` | 4 | mode bits (file-type `S_IFMT` plus permissions) |
-| `$LXDEV` | 8 | device number (u32 major + u32 minor) — only on device nodes |
+| `$LXMOD` | 4 | mode bits (the file type, `S_IFMT`, plus the permissions) |
+| `$LXDEV` | 8 | device number (u32 major + u32 minor), only on device nodes |
 
-The file attribute flag `0x40000` marks the presence of extended attributes. Read it from the object's
-own `$SI` — the type-0x10 row for an embedded record, or the
-[type-0x40 backing record](../structures/extent_descriptors.md) at value+0x48 for a split one. The
-attribute copy cached in a type-0x30 index entry (value+0x40) is an **incomplete and occasionally
-divergent** copy. It is usually a lower bound — it drops bits the backing carries — but it is **not one
-strictly**: on **57 of 223,374** size-matched split names, over 8 images, the index copy sets a bit the
-backing lacks, and in every one of those cases the extra bit is the transient **Archive bit 0x20**. A tool that reads
-the directory entry alone reports no extended attributes for some files that have them. WSL
-special files (FIFOs, sockets, character/block devices) additionally appear as
-[reparse points](../structures/reparse_points.md) whose tag encodes the Linux file type, with the type
-also reflected in the upper bits of `$LXMOD`. See [WSL metadata](wsl_metadata.md) for the full mapping.
+The file attribute flag 0x40000 says that an object has extended attributes. Read it from the object's own record,
+at `value+0x48`:
 
-## A note on system objects
+- a directory: its type-0x10 own row;
+- a file whose record is embedded: its type-0x30 name row;
+- a file whose record is split: its [type-0x40 backing](../structures/directory_entries.md).
 
-System objects (OID < 0x600) reuse the key *position* for table-specific identifiers rather than
-attribute type codes: the Security Descriptors table (OID 0x530) keys on the SecurityId, the Reparse
-Index (OID 0x540/0x541) keys on a fixed 0x01, and the [Schema Table](../structures/schema_table.md) keys
-on a schema ID. These are not attributes — do not feed them through the attribute decoder.
+The attribute copy cached in a name row that points to a backing (`value+0x40` of a key-flags-0x02 row) is
+**incomplete, and occasionally divergent**:
 
-## Cross-references
+- it usually drops bits the backing carries, so it is a lower bound;
+- but not strictly: on a few dozen split names of the corpus it sets a bit the backing lacks, and that bit is
+  always the transient Archive bit 0x20.
 
-- [Resident Storage](resident_storage.md) — the embedded-tree row format and the inline-vs-extent decision
-- [Directory Entries](../structures/directory_entries.md) — the type-0x30 value that holds a file's resident attributes
-- [Object Table](../structures/object_table.md) — locates each object's top-level B+-tree
-- [Schema Table](../structures/schema_table.md) — the attribute-schema registry (0x110–0x200)
-- [Standard Information](../attributes/STANDARD_INFORMATION.md) — the `$SI` field layout in the type-0x10 value
-- [`$OBJ_LINK`](../attributes/OBJ_LINK.md) — name + parent-OID format of the always-present 0x38/0x39 sub-record
-- [`$DATA`](../attributes/DATA.md) and [`$SNAPSHOT`](../attributes/SNAPSHOT.md) — the 0x80 / 0xB0 stream sub-records
-- [`$EFS`](../attributes/EFS.md) — the 0x100 encryption sub-record
-- [Extent Descriptors](../structures/extent_descriptors.md) — where a non-resident file's `$DATA` content lives
-- [WSL metadata](wsl_metadata.md) — the `$LX*` extended-attribute mapping
+A tool that reads the directory entry alone reports no extended attributes for some files that have them.
+
+WSL special files (FIFOs, sockets, character and block devices) also appear as
+[reparse points](../structures/reparse_points.md) whose tag encodes the Linux file type; the type is also in the
+upper bits of `$LXMOD`.
+
+See [WSL metadata](wsl_metadata.md) for the full mapping.
 
 ## When the attribute set outgrows one node
 
-A file's attributes normally sit in one embedded node inside its record. When they no longer fit, that
-node becomes an **index node**: its level byte goes non-zero, and a row with an *empty key* points at a
-child page holding the rest. A parser that reads only the outer level then finds nothing and reports the
-file as having no attributes at all — confidently, and wrongly.
+A file's attributes normally sit in one embedded node inside its record. When they no longer fit, that node becomes
+an **index node**: its level byte goes non-zero, and a row with an *empty key* points at a child page holding the
+rest.
 
-Two NTFS names that have no ReFS structure behind them are worth stating: `$OBJECT_ID` has no schema
-slot (object identity *is* the OID, mapped by the Object Table), and `$INDEX_ROOT` is handled at
-object-create time and never persisted as a file sub-record.
+A parser that reads only the node inside the value then finds nothing, and wrongly reports that the file has no
+attributes.
 
-Inside an embedded node `key[0:8]` is the value length as a little-endian u64 — **1,441,268 of
-1,441,461 rows** over 141 images (193 exceptions).
+Inside an embedded node, `key[0:8]` is the value's length as a little-endian u64, on nearly every row measured (a
+few hundred exceptions).
 
-The second half of that — `key[8:]` being the start of the value, one buffer written once — is **true
-only of type `0x39` `$OBJ_LINK`**, and it is true of every one of them: **314,249 rows, all 0x39**. It
-does **not** hold for any other sub-record type, and those are the majority: `0x80 $DATA` 928,502 rows,
-`0x90 $I30_INDEX` 87,674, `0xD0` 49,353, `0xE0` 49,309, `0xB0` 5,828, `0xC0` 4,206, `0x03` 1,526, and the
-v3.4 `0x38 $OBJ_LINK` 523 — **1,127,212 rows where `key[8:]` is not the value**. Overlap is 21.8 % of
-embedded rows, not a property of the node form, so read the value from the value and never from `key[8:]`
-unless the row is a 0x39.
+`key[8:]` repeating the start of the value (one buffer written once) is true **only of type 0x39 `$OBJ_LINK`**, on
+every 0x39 row counted. It does **not** hold for the other sub-record types, which are the majority: 0x80 `$DATA`,
+0x90 `$I30_INDEX`, 0xD0, 0xE0, 0xB0, 0xC0, 0x03 and the 3.4 type-0x38 `$OBJ_LINK`. So read the value from the value,
+never from `key[8:]`, unless the row is a 0x39.
+
+## A note on system objects
+
+The system **tables** reuse the key position for their own identifiers, not attribute type codes. Do not feed their
+rows through an attribute decoder:
+
+- the Security Descriptors table (OID 0x530) keys on the SecurityId;
+- the reparse-point index (OID 0x540 / 0x541) keys on the reparse tag and the file's 128-bit reference, behind the
+  marker 0x80000001;
+- the [Schema Table](../structures/schema_table.md) keys on a schema id.
+
+OID 0x520 is different: it is an ordinary directory, and its Change Journal file carries real attributes (the type-0xF0
+parameters among them).
+
+## Cross-references
+
+- [Record placement and data residency](placement_and_residency.md): where a record sits, and where its bytes are
+- [Record placement and data residency](placement_and_residency.md): the embedded-tree row format and the inline-or-extents decision
+- [Directory Entries](../structures/directory_entries.md): the type-0x30 value, and the type-0x40 backing
+- [Object Table](../structures/object_table.md): locates each directory's and system object's B+-tree
+- [Schema Table](../structures/schema_table.md): the schemas of the tables (a file's record, a directory's own row, a data stream; the system tables)
+- [`$STANDARD_INFORMATION`](../attributes/STANDARD_INFORMATION.md): the `$SI` field layout (`value+0x28` of a record)
+- [`$OBJ_LINK`](../attributes/OBJ_LINK.md): the name and parent-OID row every directory and every split record carries
+- [`$DATA`](../attributes/DATA.md), [`$NAMED_DATA`](../attributes/NAMED_DATA.md) and
+  [`$SNAPSHOT`](../attributes/SNAPSHOT.md): the 0x80 and 0xB0 stream sub-records
+- [`$EFS`](../attributes/EFS.md): the 0x100 encryption sub-record
+- [Extent Records](../structures/extent_descriptors.md): the extent map inside an extent-form `$DATA`
+- [WSL metadata](wsl_metadata.md): the `$LX*` extended-attribute mapping
 
 ## Evidence
 
-The four outer key types and the ten genuine sub-record codes (with the 0x50/0x60/0xA0 non-members)
-are confirmed in the driver's attribute path — `RefsGetAttributeTypeCode`, `RefsGetAttributeDefinition`,
-`RefsCheckValidAttributeAccess` (E2) — and by a marker-gated raw-disk scan of the corpus (RD), which
-yields exactly this set with zero extras. The instance-marker scheme (0x80000001 / 0x80000002, v3.7+) and
-the per-type value formats are E2+RD. The 0xF0 = USN `$Max` identification is E2 (`RefsSetupUsnJournal`)
-plus RD on the images where the journal is active. The 0xB0 snapshot/ADS discriminators are E2
-(`RefsCreateStreamSnapshot`, `HasSnapshot`) confirmed across the snapshot/ADS corpus (RD). The directory
-attribute flag 0x10000000 is finding **MD_DDIR_005**. Findings: **FS_SNAP_RA_001** (the complete
-dual-marker taxonomy), **FS_SCHM_RA_005/006/007** (schemas 0x1B0–0x200), **MD_ATTR_005/008/010** (`$DATA`,
-`$REPARSE_POINT`, EA), **MD_ATTR_RA_003** (the 0x40000 EA-present flag) and **MD_ATTR_RA_019** (read it
-from the backing, not the index entry). Breadth is narrow and stated as measured: exactly one corpus
-volume carries extended attributes on split records, and on it the cached copy drops the bit for 8,141
-names and agrees for 14,207; the only two bits that ever differ between the two copies are 0x40000 and
-the transient Archive bit 0x20 — and 0x20 is the one that can go the *other* way, set in the index copy
-while the backing lacks it (57 names of 223,374 corpus-wide). Also registered for statements on this page: **MD_ATTR_006**. The multi-level embedded attribute tree is **MD_ATTR_RA_020**, the key/value overlap inside an embedded node is **MD_ATTR_RA_007**, and `$OBJECT_ID`'s absence of a schema slot is **MD_ATTR_004**. See
-[how this was verified](../methodology.md) to trace these to the exact images and measurements in
-`analysis/`.
+- The four row types of a user directory's tree are a census of the corpus's directory trees.
+- The sub-record types are a census of the embedded rows of the corpus. It is a lower bound: a set read in rows that
+  moved to child pages can only add to it.
+- The driver's attribute-definition table (the one `RefsGetAttributeTypeCode` walks) was read from the binaries of
+  seven builds, 17134 to Insider 29574: the same table on all of them, except that 17134 has no 0x39.
+- The instance-marker scheme and the two key forms, the per-type value formats and the 12-byte prefix are decompiled
+  (E2) and confirmed on disk (RD).
+- Type 0xF0 is created by `RefsSetupUsnJournal` (E2) and read on the volumes where the journal is active (RD).
+- The 0xB0 snapshot-or-ADS tests are E2 (`RefsCreateStreamSnapshot`, `HasSnapshot`) and agree on every snapshot row
+  of the corpus's ADS census (115 snapshot rows).
+- The extended-attribute bit, and the rule to read it from the backing and not from the name row's copy, are
+  registered findings. Two corpus volumes carry extended attributes on split records, both images of one real
+  Windows installation: there the name rows' copy misses the bit for 8,140 and 6,827 names. The only two bits that
+  ever differ between the two copies are 0x40000 and the Archive bit 0x20, and 0x20 is the one that can go the other
+  way: set in the name row's copy while the backing lacks it, on 57 of 223,374 size-matched split names over 8 images.
+- The counts behind the key rules: `key[0:8]` is the value length on 1,441,268 of 1,441,461 embedded rows over 141
+  images (193 exceptions); `key[8:]` is the start of the value on all 314,249 0x39 rows counted, and on none of the
+  others: 0x80 `$DATA` 928,502 rows, 0x90 `$I30_INDEX` 87,674, 0xD0 49,353, 0xE0 49,309, 0xB0 5,828, 0xC0 4,206,
+  0x03 1,526 and the 3.4 type-0x38 `$OBJ_LINK` 523, 1,127,212 rows in all (overlap on 21.8 % of embedded rows).
+- No sub-record of type 0x50, 0x60, 0x70 or 0xA0 occurs in a user object: a census of every directory own row, file
+  record and backing of the 124 ReFS volumes of the corpus, in both key forms (2026-11-21).
+- The multi-level embedded attribute tree and `$OBJECT_ID` not being supported are registered findings.
 
-The remaining field-level statements on this page are registered as **MD_ATTR_002**, **MD_ATTR_008**, **MD_ATTR_009**, **MD_ATTR_RA_004**, **MD_ATTR_RA_016** — each with its own evidence tier and witness in the claim register.
+See [how this was verified](../methodology.md) to trace these to the exact images and measurements in `analysis/`.
+
+<!-- findings: FS_SCHM_RA_005, FS_SNAP_RA_001, MD_ATTR_002, MD_ATTR_004, MD_ATTR_005, MD_ATTR_006,
+               MD_ATTR_008, MD_ATTR_009, MD_ATTR_RA_003, MD_ATTR_RA_004, MD_ATTR_RA_007, MD_ATTR_RA_016,
+               MD_ATTR_RA_019, MD_ATTR_RA_020, MD_DDIR_005, MD_UNSUP_RA_001, FS_REPS_RA_004, MD_USN_RA_004 -->

@@ -7,7 +7,7 @@ The **stream-snapshot** image: a baseline file-system tree plus ReFS stream snap
 
 | ReFS version | Cluster size | Metadata checksum | Files / Dirs | Highlights |
 |--------------|--------------|-------------------|--------------|------------|
-| 3.14 | 4 KiB (16 KiB pages) | CRC64 | 270 / 34 | 5 files carrying 10 stream snapshots |
+| 3.14 | 4 KiB (16 KiB pages) | CRC64 | 269 / 34 | 5 files carrying 10 stream snapshots |
 
 Top-level directories: `test` (baseline replay), `testsnapshots` (the `refsutil streamsnapshot`
 exercise).

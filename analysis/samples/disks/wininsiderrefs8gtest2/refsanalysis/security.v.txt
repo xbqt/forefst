@@ -6,13 +6,13 @@ ReFS Security Descriptors
 
   Total security descriptors: 7
 
-  [0] SecurityId: 0x10aa39b62, hash=0xaa39b62, gen=1 [hash OK]
+  [0] SecurityId: 0x10aa39b62 (4473461602), hash=0xaa39b62, gen=1 [hash OK]
     Revision: 1, Size: 76 bytes
-    Control:  0x9004 (SE_DACL_PRESENT, SE_DACL_PROTECTED, SE_SELF_RELATIVE)
+    Control:  0x9004 (SE_DACL_PRESENT|SE_DACL_PROTECTED|SE_SELF_RELATIVE)
     Owner:    BUILTIN\Administrators (S-1-5-32-544)
     Group:    SYSTEM (S-1-5-18)
     DACL (1 ACEs):
-      ACCESS_ALLOWED: SYSTEM (S-1-5-18) -> FULL_CONTROL
+      ALLOWED SYSTEM (S-1-5-18): FULL_CONTROL
     Raw SD hex (76 bytes):
       0000: 01 00 04 90 30 00 00 00 40 00 00 00 00 00 00 00  ....0...@.......
       0010: 14 00 00 00 02 00 1c 00 01 00 00 00 00 03 14 00  ................
@@ -20,14 +20,14 @@ ReFS Security Descriptors
       0030: 01 02 00 00 00 00 00 05 20 00 00 00 20 02 00 00  ........ ... ...
       0040: 01 01 00 00 00 00 00 05 12 00 00 00              ............
 
-  [1] SecurityId: 0x120902505, hash=0x20902505, gen=1 [hash OK]
+  [1] SecurityId: 0x120902505 (4841284869), hash=0x20902505, gen=1 [hash OK]
     Revision: 1, Size: 100 bytes
-    Control:  0x8004 (SE_DACL_PRESENT, SE_SELF_RELATIVE)
+    Control:  0x8004 (SE_DACL_PRESENT|SE_SELF_RELATIVE)
     Owner:    BUILTIN\Administrators (S-1-5-32-544)
     Group:    SYSTEM (S-1-5-18)
     DACL (2 ACEs):
-      ACCESS_ALLOWED: SYSTEM (S-1-5-18) -> FULL_CONTROL
-      ACCESS_ALLOWED: BUILTIN\Administrators (S-1-5-32-544) -> FULL_CONTROL
+      ALLOWED SYSTEM (S-1-5-18): FULL_CONTROL
+      ALLOWED BUILTIN\Administrators (S-1-5-32-544): FULL_CONTROL
     Raw SD hex (100 bytes):
       0000: 01 00 04 80 48 00 00 00 58 00 00 00 00 00 00 00  ....H...X.......
       0010: 14 00 00 00 02 00 34 00 02 00 00 00 00 00 14 00  ......4.........
@@ -37,13 +37,13 @@ ReFS Security Descriptors
       0050: 20 00 00 00 20 02 00 00 01 01 00 00 00 00 00 05   ... ...........
       0060: 12 00 00 00                                      ....
 
-  [2] SecurityId: 0x123d306f5, hash=0x23d306f5, gen=1 [hash OK]
+  [2] SecurityId: 0x123d306f5 (4895999733), hash=0x23d306f5, gen=1 [hash OK]
     Revision: 1, Size: 72 bytes
-    Control:  0x8004 (SE_DACL_PRESENT, SE_SELF_RELATIVE)
+    Control:  0x8004 (SE_DACL_PRESENT|SE_SELF_RELATIVE)
     Owner:    SYSTEM (S-1-5-18)
     Group:    SYSTEM (S-1-5-18)
     DACL (1 ACEs):
-      ACCESS_ALLOWED: SYSTEM (S-1-5-18) -> FULL_CONTROL
+      ALLOWED SYSTEM (S-1-5-18): FULL_CONTROL
     Raw SD hex (72 bytes):
       0000: 01 00 04 80 30 00 00 00 3c 00 00 00 00 00 00 00  ....0...<.......
       0010: 14 00 00 00 02 00 1c 00 01 00 00 00 00 00 14 00  ................
@@ -51,13 +51,13 @@ ReFS Security Descriptors
       0030: 01 01 00 00 00 00 00 05 12 00 00 00 01 01 00 00  ................
       0040: 00 00 00 05 12 00 00 00                          ........
 
-  [3] SecurityId: 0x123d387b5, hash=0x23d387b5, gen=1 [hash OK]
+  [3] SecurityId: 0x123d387b5 (4896032693), hash=0x23d387b5, gen=1 [hash OK]
     Revision: 1, Size: 72 bytes
-    Control:  0x9004 (SE_DACL_PRESENT, SE_DACL_PROTECTED, SE_SELF_RELATIVE)
+    Control:  0x9004 (SE_DACL_PRESENT|SE_DACL_PROTECTED|SE_SELF_RELATIVE)
     Owner:    SYSTEM (S-1-5-18)
     Group:    SYSTEM (S-1-5-18)
     DACL (1 ACEs):
-      ACCESS_ALLOWED: SYSTEM (S-1-5-18) -> FULL_CONTROL
+      ALLOWED SYSTEM (S-1-5-18): FULL_CONTROL
     Raw SD hex (72 bytes):
       0000: 01 00 04 90 30 00 00 00 3c 00 00 00 00 00 00 00  ....0...<.......
       0010: 14 00 00 00 02 00 1c 00 01 00 00 00 00 03 14 00  ................
@@ -65,20 +65,20 @@ ReFS Security Descriptors
       0030: 01 01 00 00 00 00 00 05 12 00 00 00 01 01 00 00  ................
       0040: 00 00 00 05 12 00 00 00                          ........
 
-  [4] SecurityId: 0x159eaaec4, hash=0x59eaaec4, gen=1 [hash OK]
+  [4] SecurityId: 0x159eaaec4 (5803519684), hash=0x59eaaec4, gen=1 [hash OK]
     Revision: 1, Size: 252 bytes
-    Control:  0x8004 (SE_DACL_PRESENT, SE_SELF_RELATIVE)
+    Control:  0x8004 (SE_DACL_PRESENT|SE_SELF_RELATIVE)
     Owner:    BUILTIN\Administrators (S-1-5-32-544)
     Group:    Domain Users (S-1-5-21-1381930129-1351690851-2600027751-513)
     DACL (8 ACEs):
-      ACCESS_ALLOWED: BUILTIN\Administrators (S-1-5-32-544) -> FULL_CONTROL
-      ACCESS_ALLOWED: SYSTEM (S-1-5-18) -> FULL_CONTROL
-      ACCESS_ALLOWED: BUILTIN\Administrators (S-1-5-32-544) -> FULL_CONTROL
-      ACCESS_ALLOWED: CREATOR OWNER (S-1-3-0) -> GENERIC_ALL
-      ACCESS_ALLOWED: BUILTIN\Users (S-1-5-32-545) -> READ_EXECUTE
-      ACCESS_ALLOWED: BUILTIN\Users (S-1-5-32-545) -> APPEND_DATA
-      ACCESS_ALLOWED: BUILTIN\Users (S-1-5-32-545) -> WRITE_DATA
-      ACCESS_ALLOWED: Everyone (S-1-1-0) -> READ_EXECUTE
+      ALLOWED BUILTIN\Administrators (S-1-5-32-544): FULL_CONTROL
+      ALLOWED SYSTEM (S-1-5-18): FULL_CONTROL
+      ALLOWED BUILTIN\Administrators (S-1-5-32-544): FULL_CONTROL
+      ALLOWED CREATOR OWNER (S-1-3-0): GENERIC_ALL
+      ALLOWED BUILTIN\Users (S-1-5-32-545): READ_EXECUTE
+      ALLOWED BUILTIN\Users (S-1-5-32-545): APPEND_DATA
+      ALLOWED BUILTIN\Users (S-1-5-32-545): WRITE_DATA
+      ALLOWED Everyone (S-1-1-0): READ_EXECUTE
     Raw SD hex (252 bytes):
       0000: 01 00 04 80 d0 00 00 00 e0 00 00 00 00 00 00 00  ................
       0010: 14 00 00 00 02 00 bc 00 08 00 00 00 00 03 18 00  ................
@@ -97,19 +97,19 @@ ReFS Security Descriptors
       00e0: 01 05 00 00 00 00 00 05 15 00 00 00 91 94 5e 52  ..............^R
       00f0: 63 2a 91 50 67 46 f9 9a 01 02 00 00              c*.PgF......
 
-  [5] SecurityId: 0x1c1c574ac, hash=0xc1c574ac, gen=1 [hash OK]
+  [5] SecurityId: 0x1c1c574ac (7545910444), hash=0xc1c574ac, gen=1 [hash OK]
     Revision: 1, Size: 212 bytes
-    Control:  0x8004 (SE_DACL_PRESENT, SE_SELF_RELATIVE)
+    Control:  0x8004 (SE_DACL_PRESENT|SE_SELF_RELATIVE)
     Owner:    BUILTIN\Administrators (S-1-5-32-544)
     Group:    SYSTEM (S-1-5-18)
     DACL (7 ACEs):
-      ACCESS_ALLOWED: BUILTIN\Administrators (S-1-5-32-544) -> FULL_CONTROL
-      ACCESS_ALLOWED: SYSTEM (S-1-5-18) -> FULL_CONTROL
-      ACCESS_ALLOWED: CREATOR OWNER (S-1-3-0) -> GENERIC_ALL
-      ACCESS_ALLOWED: BUILTIN\Users (S-1-5-32-545) -> READ_EXECUTE
-      ACCESS_ALLOWED: BUILTIN\Users (S-1-5-32-545) -> APPEND_DATA
-      ACCESS_ALLOWED: BUILTIN\Users (S-1-5-32-545) -> WRITE_DATA
-      ACCESS_ALLOWED: Everyone (S-1-1-0) -> READ_EXECUTE
+      ALLOWED BUILTIN\Administrators (S-1-5-32-544): FULL_CONTROL
+      ALLOWED SYSTEM (S-1-5-18): FULL_CONTROL
+      ALLOWED CREATOR OWNER (S-1-3-0): GENERIC_ALL
+      ALLOWED BUILTIN\Users (S-1-5-32-545): READ_EXECUTE
+      ALLOWED BUILTIN\Users (S-1-5-32-545): APPEND_DATA
+      ALLOWED BUILTIN\Users (S-1-5-32-545): WRITE_DATA
+      ALLOWED Everyone (S-1-1-0): READ_EXECUTE
     Raw SD hex (212 bytes):
       0000: 01 00 04 80 b8 00 00 00 c8 00 00 00 00 00 00 00  ................
       0010: 14 00 00 00 02 00 a4 00 07 00 00 00 00 03 18 00  ................
@@ -126,17 +126,17 @@ ReFS Security Descriptors
       00c0: 20 00 00 00 20 02 00 00 01 01 00 00 00 00 00 05   ... ...........
       00d0: 12 00 00 00                                      ....
 
-  [6] SecurityId: 0x1f9d18969, hash=0xf9d18969, gen=1 [hash OK]
+  [6] SecurityId: 0x1f9d18969 (8486226281), hash=0xf9d18969, gen=1 [hash OK]
     Revision: 1, Size: 184 bytes
-    Control:  0x8004 (SE_DACL_PRESENT, SE_SELF_RELATIVE)
+    Control:  0x8004 (SE_DACL_PRESENT|SE_SELF_RELATIVE)
     Owner:    BUILTIN\Administrators (S-1-5-32-544)
     Group:    Domain Users (S-1-5-21-1381930129-1351690851-2600027751-513)
     DACL (5 ACEs):
-      ACCESS_ALLOWED: BUILTIN\Administrators (S-1-5-32-544) -> FULL_CONTROL
-      ACCESS_ALLOWED: SYSTEM (S-1-5-18) -> FULL_CONTROL
-      ACCESS_ALLOWED: BUILTIN\Users (S-1-5-32-545) -> READ_EXECUTE
-      ACCESS_ALLOWED: BUILTIN\Users (S-1-5-32-545) -> WRITE_DATA
-      ACCESS_ALLOWED: Everyone (S-1-1-0) -> READ_EXECUTE
+      ALLOWED BUILTIN\Administrators (S-1-5-32-544): FULL_CONTROL
+      ALLOWED SYSTEM (S-1-5-18): FULL_CONTROL
+      ALLOWED BUILTIN\Users (S-1-5-32-545): READ_EXECUTE
+      ALLOWED BUILTIN\Users (S-1-5-32-545): WRITE_DATA
+      ALLOWED Everyone (S-1-1-0): READ_EXECUTE
     Raw SD hex (184 bytes):
       0000: 01 00 04 80 8c 00 00 00 9c 00 00 00 00 00 00 00  ................
       0010: 14 00 00 00 02 00 78 00 05 00 00 00 00 00 18 00  ......x.........

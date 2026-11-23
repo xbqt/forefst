@@ -4,11 +4,13 @@
 ReFS Timestamp-Anomaly (Timestomp) Detection
 ==============================================================================
   Image:           win11refs2tsnapshots.raw  (ReFS 3.14)
-  Volume created:  2026-05-16 16:50:42
-  Volume modified: 2026-05-16 16:50:44
-  USN journal:     absent or unreadable (intrinsic signals only)
+  Volume created:  2026-05-16T16:50:42.7888372Z
+  Last mount (rw): 2026-05-16T16:50:44.1722315Z
+  USN journal:     Inactive (intrinsic signals only)
   Files examined:  270
-  Flagged:         55  (HIGH 2 / MEDIUM 0 / LOW 0 / INFO 53 — INFO = ambiguous: a timestamp-preserving copy and a backdated creation produce the same signals; corroborate with USN)
+  Flagged:         55  (HIGH 2 / MEDIUM 0 / LOW 0 / INFO 53 — INFO = ambiguous: a
+                   timestamp-preserving copy and a backdated creation produce the same signals;
+                   corroborate with USN)
 
   This flags timestamps that LOOK anomalous — it is investigative INFORMATION, not proof of
   tampering. Weigh the BASIS of each row: a journal/hardlink signal is authoritative; an
@@ -16,39 +18,41 @@ ReFS Timestamp-Anomaly (Timestomp) Detection
   copies/restores. Tiers, exactly as timestomp_verdict() decides them:
     HIGH   — an AUTHORITATIVE corroboration: the change journal, or a disagreement between
              two of the file's own hard-link names. A count of intrinsic signals never reaches HIGH.
-    MEDIUM — CHANGE_LATE without PRE_FORMAT (created on THIS volume, metadata altered later),
-             or FUTURE (created after the volume's last metadata write).
+    MEDIUM — CHANGE_LATE without PRE_FORMAT (created on THIS volume, metadata altered later).
     INFO   — every signal present is one a timestamp-preserving copy also produces
              (PRE_FORMAT / CHANGE_LATE / CREATE_GT_MODIFY / ROUND_TIMESTAMPS), so a copy and a
              backdate are indistinguishable here however many of them fire.
-    LOW    — anything else.
+    LOW    — anything else (no current signal reaches it).
 
-  Conf   Basis         Claimed birth         Last real write       Path
+  Conf   Basis         Claimed birth                Changed                      Path
   ------------------------------------------------------------------------------------------------
-  HIGH   journal/link  2022-08-02 07:16:28   2026-05-16 16:51:56   test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_romeo_output_531365.cfg
-         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH
-  HIGH   journal/link  2026-05-16 16:51:51   2026-05-16 16:51:54   test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_hardlink_audit_219848.cfg
-         signals: HARDLINK_MACB_MISMATCH
+  HIGH   journal/link  2022-08-02T07:16:28.1705690Z 2026-05-16T16:51:56.4199355Z test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_romeo_output_531365.cfg
+         signals: PRE_FORMAT, HARDLINK_MACB_MISMATCH   evidence: hardlink:test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_hardlink_audit_219848.cfg
+  HIGH   journal/link  2026-05-16T16:51:51.1077294Z 2026-05-16T16:51:54.8200316Z test/elvis_dir_record_449015/elvis_dir_papa_104235/elvis_dir_sync_718743/elvis_dir_gamma_109016/elvis_dir_zulu_984398/elvis_dir_cache_558805/xbpt_hardlink_audit_219848.cfg
+         signals: HARDLINK_MACB_MISMATCH   evidence: hardlink:test/elvis_dir_record_449015/elvis_dir_lima_252141/elvis_dir_oscar_306778/xbpt_romeo_output_531365.cfg
 
-  (0 MEDIUM + 0 LOW + 53 INFO row(s) hidden — `--min MEDIUM` / `--min LOW` / `--min INFO` to show; CSV/JSON already include every tier.)
+  (0 MEDIUM + 0 LOW + 53 INFO row(s) hidden — `--min MEDIUM` / `--min LOW` / `--min INFO` to show;
+  CSV/JSON already include every tier.)
 
-  Signal legend  (AUTHORITATIVE = independent evidence · HEURISTIC = suggestive $SI-only):
+  Signal legend  (AUTHORITATIVE = a second structure: the change journal or another name's entry ·
+                  HEURISTIC = suggestive, from the $SI alone):
     [AUTHORITATIVE]
-      USN_BASIC_INFO_CHANGE  the USN journal recorded a deliberate basic-info edit (no content change)
+      USN_BASIC_INFO_CHANGE  the USN journal recorded a basic-info change (no content change)
       USN_CREATE_MISMATCH    $SI created differs from the FILE_CREATE journal record (true birth known)
       HARDLINK_MACB_MISMATCH one hard-link name's $SI created diverges from another's (ReFS per-name
-                             MACB). Nothing routine produces this; which name is authentic is NOT
-                             established, and its absence means nothing
+                             MACB). No routine cause was observed on the corpus; which name is
+                             authentic is NOT established, and its absence means nothing
     [HEURISTIC — $SI only, corroborate]
       CHANGE_LATE            $SI change-time post-dates created/modified (SetFileTime/PowerShell/.NET
                              can't reach change-time) — defeated by a native-API/raw-disk stomp
-      PRE_FORMAT / FUTURE    created before the volume existed / after its last write
+      PRE_FORMAT             created before the volume existed
       CREATE_GT_MODIFY       created after last write
       ROUND_TIMESTAMPS       created AND modified are whole-second (.0000000) — a tool often sets a
-                             date with no sub-second time; LOW only (driver packages / archive
-                             extraction also produce whole-second times)
-  Note: PRE_FORMAT / CHANGE_LATE / CREATE_GT_MODIFY also fire on a legitimate
-  timestamp-preserving copy (robocopy /COPY:T, a restore, an archive extraction) — and
-  equally on a deliberately backdated creation. That pair alone is INFO: ambiguous, not
-  cleared. The one intrinsic signal that reaches HIGH is HARDLINK_MACB_MISMATCH, which a
-  copy cannot produce; corroborate anything below HIGH with the USN journal.
+                             date with no sub-second time; alone it is INFO and it never raises a
+                             tier (driver packages also carry whole-second times)
+  Note: PRE_FORMAT / CHANGE_LATE / CREATE_GT_MODIFY also fire on legitimate time-setting —
+  Windows servicing and installers write files with their package dates, a copy keeps its
+  source's times — and equally on a deliberately backdated creation. PRE_FORMAT with
+  CHANGE_LATE alone is INFO: ambiguous, not cleared. The one $SI signal that reaches HIGH is
+  HARDLINK_MACB_MISMATCH, which a copy cannot produce; corroborate anything below HIGH with
+  the USN journal.

@@ -32,7 +32,8 @@ def register(path=None):
 def pages(tree):
     docs = os.path.join(tree, "docs")
     for dp, _d, fs in os.walk(docs):
-        if "website" in dp or "_templates" in dp:
+        # N592: only website/content/ is generated (build.py); website/pages/ holds hand-written published pages
+        if os.path.join("website", "content") in dp or "_templates" in dp:
             continue
         for fn in sorted(fs):
             if fn.endswith(".md"):

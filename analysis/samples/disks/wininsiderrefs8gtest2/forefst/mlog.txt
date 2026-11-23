@@ -2,38 +2,42 @@
 # ----------------------------------------------------------------------------
 ==============================================================================
 ReFS MLog Analysis — wininsiderrefs8gtest2.raw
-ReFS v3.14 | cluster_size=0x10000 | objects=132
+ReFS 3.14 | cluster_size=65536 | objects=132
 ==============================================================================
 
 ==============================================================================
 MLog Control Area
 ==============================================================================
-  Control PLCN:      0x2c00
+  Control PLCN:      0x2c00  (copy 0, in use: the newer of the two copies that pass refs.sys's checks)
   Signature:         MLog
-  Format magic:      0xa5440275 (per-volume format/log-instance constant; changes after a reformat)
-  Version:           1
-  Sector size:       0x1000
+  Format magic:      0xa5440275 (written from the volume's signature, which refs.sys derives from
+                     the superblock's volume GUID; a reformat changes it)
+  Header +0x8:       01000000 (4 bytes, raw: refs.sys writes 1 here and does not read it)
+  Log block size:    4 KiB
   UUID:              4bce2359-5aeb-4f96-a0c1-25486b5f08cc
   Sequence:          47
-  Write counter:     2
-  Flags:             0x1
-  Total entries:     0
-  Generation:        2040
-  Data area:         0xc000 - 0x2c000 (131072 clusters)
-  LSN oldest:        0x7f8.1
-  Dispatch table:    v3.14 (44 opcodes)
+  Log open count:    2
+  Log flags:         0x1
+  Log version:       1 (payload +0x40: refs.sys opens a log only when it is 1)
+  Data area:         0xc00 - 0x2c00 (8192 clusters; 131072 log blocks of 4 KiB)
+  Log start:         0x00000001000007f8 (generation 1, offset 0x7f8)
+  Log end:           0x00000001000007f8 (generation 1, offset 0x7f8)
+  Host info:         160 (payload +0x44: refs.sys writes the checkpoint virtual clock minus 1 here
+                     when it advances the log start)
+  Dispatch table:    the ReFS 3.14 table (45 opcodes: 0x0-0x2b, and 0x2d, which of the builds read
+                     only Insider 29683 dispatches; per build: `mlog --info`)
 
 ==============================================================================
 Data Area Summary
 ==============================================================================
-  Total pages:       131072
+  Log blocks:        131072
   zero                 129033  ( 98.4%)
   MLog                   2039  (  1.6%)
 
 ==============================================================================
 Redo Records
 ==============================================================================
-  Total records:      25044
+  Redo records:       25044
   Transaction starts: 13200
   Transaction commits: 13200
 
@@ -46,15 +50,16 @@ Redo Records
 Record Integrity
 ==============================================================================
   Every log record carries an 8-byte integrity value covering the record itself. The
-  driver recomputes it before replaying the record; forefst recomputes it the same way,
-  so a torn or altered record shows up here. It is an integrity check, not a signature:
-  it catches damage and byte-level edits, it is not proof of authenticity.
+  driver recomputes it before replaying the record; forefst recomputes it the same way.
+  A single flipped bit or byte always changes it, but it is the XOR of the record's 32-bit
+  words: any reordering of those words, or changes whose XOR cancels, keep the value. It
+  is an integrity check, not a signature, and not proof of authenticity.
 
-  Records checked:    2039
-  Verified:           2039
-  Failed:             0
-  Control copy 0 (PLCN 0x2c00): FAILED  stored=0xc22950c6 computed=0xa8630000
-  Control copy 1 (PLCN 0x2c01): FAILED  stored=0xc22950f8 computed=0xa87c0000
+  Log records checked: 2039
+  Verified:            2039
+  Failed:              0
+  Control copy 0 (PLCN 0x2c00): verified (in use)
+  Control copy 1 (PLCN 0x2c01): verified
 
 ==============================================================================
 Opcode Frequency
@@ -62,23 +67,23 @@ Opcode Frequency
 
   Opcode   Count      %  Name                                    
   ──────  ──────  ─────  ────────────────────────────────────────
-  0x0000     695    2.8  OpenTableFromTablePath
-  0x0001    5056   20.2  RedoInsertRow
-  0x0002    2096    8.4  RedoDeleteRow
-  0x0003    3039   12.1  RedoUpdateRow
-  0x0004    6765   27.0  RedoUpdateDataWithRoot
-  0x0005     239    1.0  RedoReparentTable
-  0x0006    1572    6.3  RedoAllocate
-  0x0007     400    1.6  RedoFree
-  0x0008     726    2.9  RedoSetRangeState
-  0x000a      80    0.3  RedoDuplicateExtents
-  0x000d     129    0.5  CmsBPlusTable::SetIntegrityInformation
-  0x000e     223    0.9  RedoSetParentId
-  0x000f     261    1.0  RedoDeleteTable
-  0x0010     874    3.5  CmsBPlusTable::SetObjectRecordPayload
-  0x0012      50    0.2  RedoMoveContainer
-  0x001f    2236    8.9  RedoUpdateStreamSummary
-  0x0020     603    2.4  CmsStream::UpdateStreamUserPayload
+  0x0        695    2.8  OpenTableFromTablePath
+  0x1       5056   20.2  RedoInsertRow
+  0x2       2096    8.4  RedoDeleteRow
+  0x3       3039   12.1  RedoUpdateRow
+  0x4       6765   27.0  RedoUpdateDataWithRoot
+  0x5        239    1.0  RedoReparentTable
+  0x6       1572    6.3  RedoAllocate
+  0x7        400    1.6  RedoFree
+  0x8        726    2.9  RedoSetRangeState
+  0xa         80    0.3  RedoDuplicateExtents
+  0xd        129    0.5  CmsBPlusTable::SetIntegrityInformation
+  0xe        223    0.9  RedoSetParentId
+  0xf        261    1.0  RedoDeleteTable
+  0x10       874    3.5  CmsBPlusTable::SetObjectRecordPayload
+  0x12        50    0.2  NoHandler:TreeUpdateRecord
+  0x1f      2236    8.9  RedoUpdateStreamSummary
+  0x20       603    2.4  CmsStream::UpdateStreamUserPayload
 
   Category               Count      %
   ────────────────────  ──────  ─────
@@ -89,5 +94,5 @@ Opcode Frequency
   namespace                223    0.9
   integrity                129    0.5
   dedup                     80    0.3
-  container                 50    0.2
+  tree update               50    0.2
 

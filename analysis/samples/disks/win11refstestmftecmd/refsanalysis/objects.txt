@@ -6,17 +6,17 @@ Total objects: 250
   OID      Name                             Root LCN
   --------------------------------------------------
   0x7      Upcase Table                      0x50020
-  0x8      Upcase Table (dup)                0x5001c
+  0x8      Upcase Table                      0x5001c
   0x9      Logfile Information Table         0x50078
-  0xa      Logfile Information (dup)         0x50074
+  0xa      Logfile Information Table         0x50074
   0xd      Trash Table                       0x5007c
-  0x30     Session Activity Table            0x12c04
+  0x30     Heat Engine Table                 0x12c04
   0x500    Volume Information                0x12e28
-  0x501    Volume Information (dup)          0x12e38
+  0x501    Volume Information                0x12e38
   0x520    FS Metadata                       0x13600
   0x530    Security Descriptor Stream        0x12200
   0x540    Reparse Point Index               0x12a2c
-  0x541    Reparse Point Index (dup)         0x10e34
+  0x541    Reparse Point Index               0x10e34
   0x600    Root Directory                    0x1360c
   0x701    Directory/File (0x701)            0x10200
   0x702    Directory/File (0x702)            0x12404

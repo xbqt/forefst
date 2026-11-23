@@ -1,9 +1,9 @@
 # forefst win11refs2tspecials.raw search test
 # ----------------------------------------------------------------------------
-ObjectRef      Type          Size  Data             Modified             Path
-─────────────  ────  ────────────  ───────────────  ───────────────────  ────────────────────────────────────────
-0x7e5          Dir              0  —                2026-05-16 16:41:35  test
-0x702          Dir              0  —                2026-05-16 16:37:08  testspecials
-0x775          Dir              0  —                2026-05-16 16:40:45  testspecials2
+ObjectRef      Type          Size  Data             Modified                      Path
+─────────────  ────  ────────────  ───────────────  ────────────────────────────  ────────────────────────────────────────
+0x7e5:0x0      Dir              0  —                2026-05-16T16:41:35.0489831Z  test
+0x702:0x0      Dir              0  —                2026-05-16T16:37:08.5895203Z  testspecials
+0x775:0x0      Dir              0  —                2026-05-16T16:40:45.5048856Z  testspecials2
 
 3 matches. Use `details <path>`, `details --id FileRef` (HomeOID:FileID) or `details --id OID` for full detail.

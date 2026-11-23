@@ -2,13 +2,14 @@
 
 The **format-variant** image: created under a Windows Insider Server build (29574) with **64 KiB
 clusters and SHA-256 metadata checksums** — the combination that grows container-table rows to
-224 bytes and changes page-reference sizing. Also carries an integrity-streams directory.
+224 bytes and changes page-reference sizing. Also carries a directory named `testintegrity` (292 entries), but no
+file on the volume carries an integrity stream (`summary`: Integrity files: 0).
 
 ## At a glance (read directly from the image)
 
 | ReFS version | Cluster size | Metadata checksum | Files / Dirs | Highlights |
 |--------------|--------------|-------------------|--------------|------------|
-| 3.14 | 64 KiB (64 KiB pages) | SHA-256 | 776 / 118 | 64 KiB clusters · SHA-256 checksums · `testintegrity` directory · 232 extra hard links |
+| 3.14 | 64 KiB (64 KiB pages) | SHA-256 | 621 / 118 | 64 KiB clusters · SHA-256 checksums · a `testintegrity` directory (no integrity-stream file) · 92 hard-linked files (247 names) |
 
 Top-level directories: `testspecials` (heavy run), `testintegrity` (baseline replay with integrity
 streams enabled on the directory).

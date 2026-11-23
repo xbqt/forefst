@@ -3,7 +3,7 @@ ReFS Object ID Table
 ==============================================================================
   Image:            win11refs2tsnapshots.raw
   Partition start:  0x1000000
-  Cluster size:     0x1000
+  Cluster size:     4 KiB
   ReFS version:     3.14
   CPC:              0x4000 (shift=15)
   Container entries:32767
@@ -15,17 +15,17 @@ Total objects: 47
   OID      Name                             Root LCN Physical LCN    Sig Extra
   ----------------------------------------------------------------------------
   0x7      Upcase Table                      0x10050         0x50   MSB+      
-  0x8      Upcase Table (dup)                0x1004c         0x4c   MSB+      
+  0x8      Upcase Table                      0x1004c         0x4c   MSB+      
   0x9      Logfile Information Table         0x100a8         0xa8   MSB+      
-  0xa      Logfile Information (dup)         0x100a4         0xa4   MSB+      
+  0xa      Logfile Information Table         0x100a4         0xa4   MSB+      
   0xd      Trash Table                       0x100ac         0xac   MSB+      
-  0x30     Session Activity Table            0x11604       0x1604   MSB+      
+  0x30     Heat Engine Table                 0x11604       0x1604   MSB+      
   0x500    Volume Information                0x10e00        0xe00   MSB+      
-  0x501    Volume Information (dup)          0x11200       0x1200   MSB+      
+  0x501    Volume Information                0x11200       0x1200   MSB+      
   0x520    FS Metadata                       0x12a00       0x2a00   MSB+    +8
   0x530    Security Descriptor Stream        0x10600        0x600   MSB+      
   0x540    Reparse Point Index               0x11010       0x1010   MSB+      
-  0x541    Reparse Point Index (dup)         0x13a28       0x3a28   MSB+      
+  0x541    Reparse Point Index               0x13a28       0x3a28   MSB+      
   0x600    Root Directory                    0x13800       0x3800   MSB+    +8
   0x701    Directory/File (0x701)            0x13e00       0x3e00   MSB+    +8
   0x702    Directory/File (0x702)            0x11608       0x1608   MSB+    +8
@@ -74,7 +74,7 @@ Detailed object entries
     Value size: 80 bytes (standard=80, extra=0)
     u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x0 0x0 0x0
 
-  OID 0x8 — Upcase Table (dup)
+  OID 0x8 — Upcase Table
     Key (raw):  00000000000000000800000000000000
     VLCN tuple: [0x1004c, 0x1004d, 0x1004e, 0x1004f]
     PLCN tuple: [0x4c, 0x4d, 0x4e, 0x4f]
@@ -92,7 +92,7 @@ Detailed object entries
     Value size: 80 bytes (standard=80, extra=0)
     u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x0 0x0 0x0
 
-  OID 0xa — Logfile Information (dup)
+  OID 0xa — Logfile Information Table
     Key (raw):  00000000000000000a00000000000000
     VLCN tuple: [0x100a4, 0x100a5, 0x100a6, 0x100a7]
     PLCN tuple: [0xa4, 0xa5, 0xa6, 0xa7]
@@ -110,7 +110,7 @@ Detailed object entries
     Value size: 80 bytes (standard=80, extra=0)
     u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x0 0x2 0x0
 
-  OID 0x30 — Session Activity Table
+  OID 0x30 — Heat Engine Table
     Key (raw):  00000000000000003000000000000000
     VLCN tuple: [0x11604, 0x11605, 0x11606, 0x11607]
     PLCN tuple: [0x1604, 0x1605, 0x1606, 0x1607]
@@ -128,7 +128,7 @@ Detailed object entries
     Value size: 80 bytes (standard=80, extra=0)
     u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x0 0xa 0x1
 
-  OID 0x501 — Volume Information (dup)
+  OID 0x501 — Volume Information
     Key (raw):  00000000000000000105000000000000
     VLCN tuple: [0x11200, 0x11201, 0x11202, 0x11203]
     PLCN tuple: [0x1200, 0x1201, 0x1202, 0x1203]
@@ -166,7 +166,7 @@ Detailed object entries
     Value size: 80 bytes (standard=80, extra=0)
     u32[0..7]:  0x2 0x0 0x18 0x30 0x50 0x0 0x7ff 0x1
 
-  OID 0x541 — Reparse Point Index (dup)
+  OID 0x541 — Reparse Point Index
     Key (raw):  00000000000000004105000000000000
     VLCN tuple: [0x13a28, 0x13a29, 0x13a2a, 0x13a2b]
     PLCN tuple: [0x3a28, 0x3a29, 0x3a2a, 0x3a2b]

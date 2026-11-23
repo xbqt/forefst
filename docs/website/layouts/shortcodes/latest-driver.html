@@ -1,0 +1,8 @@
+{{- /* The newest refs.sys builds read for this site, from ONE setting: hugo.toml [params] latest_driver_read.
+       Update that value when a newer build is read (the builds read: forclaude/reference/driver_register.md).
+       Used inline in a sentence of pages/home.md. The build stops when the setting is missing. */ -}}
+{{- with site.Params.latest_driver_read -}}
+<span class="latest-driver">{{ . }}</span>
+{{- else -}}
+{{- errorf "latest-driver shortcode: hugo.toml [params] latest_driver_read is not set (used in %s)" .Page.File.Path -}}
+{{- end -}}

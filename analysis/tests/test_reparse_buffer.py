@@ -44,7 +44,7 @@ def test_mount_point_with_only_a_substitute_name_returns_it():
 
 
 def test_unknown_tag_degrades_to_the_tag_name_not_a_crash():
-    assert F._reparse_buffer_target(struct.pack("<IHH", 0xA0001234, 0, 0)) == "0xA0001234"
+    assert F._reparse_buffer_target(struct.pack("<IHH", 0xA0001234, 0, 0)) == "0xa0001234"   # K15 (1.14.0)
 
 
 def test_truncated_buffer_is_not_an_exception():

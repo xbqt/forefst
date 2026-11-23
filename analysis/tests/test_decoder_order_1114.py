@@ -53,9 +53,13 @@ def _image(name):
     root = _corpus_root()
     if not root:
         pytest.skip("no image corpus here (a clone ships none)")
-    hits = glob.glob(os.path.join(root, "**", name), recursive=True)
+    hits = sorted(glob.glob(os.path.join(root, "**", name), recursive=True))
     if not hits:
         pytest.skip("corpus image not present: " + name)
+    if len(hits) > 1:                       # N386 (LB6): a duplicated bare basename is refused, not resolved
+        from test_image_holes_and_page_refs import AmbiguousImageName
+        raise AmbiguousImageName("the image name %r exists %d times in the corpus (%s): address it by its step path"
+                                 % (name, len(hits), ", ".join(os.path.relpath(h, root) for h in hits)))
     return hits[0]
 
 

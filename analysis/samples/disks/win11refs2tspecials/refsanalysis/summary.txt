@@ -5,16 +5,17 @@ ReFS Volume Summary
   ReFS version:       3.14
   Volume GUID:        4d712af4-c2f8-4ec8-986d-ba05ef28f86b
   Volume label:       win11refs2tspecials
-  Volume size:        2.0 TB
-  Cluster size:       0x1000 (4.0 KB)
-  Container size:     0x4000000 (64.0 MB)
+  Volume size:        2198956146688 bytes (2047.9 GiB)
+  Cluster size:       4 KiB
+  Container size:     64 MiB
   Checksum:           CRC64
-  Compression:        None
+  Compression:        none
 
 ------------------------------------------------------------------------------
 Checkpoint
 ------------------------------------------------------------------------------
   Virtual clock:      367
+  Copy in use:        LCN 0x3d702ac
   Flags:              0x682
   Containers mapped:  32767
 
@@ -22,11 +23,12 @@ Checkpoint
 File System Content
 ------------------------------------------------------------------------------
   Directories:        217
-  Files:              1333 (535 inline + 798 extent-backed)
-  Total file size:    520.7 MB
+  Files:              980 (364 inline, 616 extents)
+  Names:              1333 (980 files, plus 353 more names: 180 hard-linked files have 533 names)
+  Total file size:    545959382 bytes (520.7 MiB)
   Security descs:     8
-  Oldest timestamp:   2021-05-18 07:16:04 UTC
-  Newest timestamp:   2026-05-16 16:41:35 UTC
+  Oldest timestamp:   2021-05-18T07:16:04.9990009Z
+  Newest timestamp:   2026-05-16T16:41:35.0548102Z
 
 ------------------------------------------------------------------------------
 Global Root Tables
@@ -36,11 +38,18 @@ Global Root Tables
   Container Allocator             165 rows
   Schema Table                     29 rows
   Parent-Child Table              218 rows
-  Object ID Table dup             230 rows
+  Object ID Table copy 2          230 rows
   Block RefCount                   35 rows
   Container Table               32767 rows
-  Container Table dup           32767 rows
-  Schema Table dup                 29 rows
+  Container Table copy 2        32767 rows
+  Schema Table copy 2              29 rows
   Container Index                   0 rows
-  Integrity State                   1 rows
+  Integrity State                   1 row
   Small Allocator                   8 rows
+
+------------------------------------------------------------------------------
+MLog
+------------------------------------------------------------------------------
+  not read: `summary --mlog` or `summary -v` reads it (one pass over the log's data area);
+  `mlog` lists the log's records
+

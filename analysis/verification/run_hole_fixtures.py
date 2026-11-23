@@ -12,6 +12,7 @@ apparent for ~2 GB of data), punch one cluster, run `extract`, delete the carve.
 """
 import glob
 import hashlib
+import json
 import os
 import subprocess
 import sys
@@ -83,6 +84,17 @@ def carve(src, dst):
                 pos = de
     finally:
         os.close(fd)
+
+
+def _sidecar_state(path):
+    """`nosidecar`, or `sidecar(<Status>)` (N536, 1.14.0: since B12 a clean file gets a sidecar too, Status "none",
+    so the expectation names the status, not only the file's presence)."""
+    if not os.path.exists(path):
+        return "nosidecar"
+    try:
+        return "sidecar(%s)" % json.load(open(path, encoding="utf-8")).get("Status")
+    except (OSError, ValueError) as e:
+        return "sidecar(unreadable: %s)" % e
 
 
 def _locate(image):
@@ -188,7 +200,7 @@ def main():
                 got_rc = subprocess.run(cmd, capture_output=True, timeout=3600).returncode
                 got = "%d:%s:%s" % (got_rc,
                                     "written" if os.path.exists(out) else "none",
-                                    "sidecar" if os.path.exists(out + ".holes.json") else "nosidecar")
+                                    _sidecar_state(out + ".holes.json"))
                 if got != expect:
                     failures.append(f"{fid} [{producer}, {mode}]: expected {expect}, got {got}")
         finally:

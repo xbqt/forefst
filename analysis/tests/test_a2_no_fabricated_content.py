@@ -45,7 +45,7 @@ def test_a_snapshot_substream_that_will_not_parse_raises(monkeypatch):
     v[4:8] = F.SNAP_DATA_DESC.to_bytes(4, "little")
     monkeypatch.setattr(F, "parse_resident_btree_rows", lambda vd, ctx: [(bytes(k), bytes(v))])
 
-    def boom(v_, ncl, tr):
+    def boom(v_, ncl, tr, **kw):            # 1.14.0 (N128): the readers ask for the flags too
         raise _Boom("stream unparseable")
     monkeypatch.setattr(F, "parse_snapshot_data_entry", boom)
     with pytest.raises(F.IncompleteEvidence):
@@ -84,7 +84,8 @@ def recoverable(monkeypatch):
     cs = 4096
     k, v = _holder(cs)
     monkeypatch.setattr(F, "parse_resident_btree_rows", lambda vd, ctx: [(k, v)])
-    monkeypatch.setattr(F, "_decode_inline_extents", lambda *a, **kw: [(0, 5, 1)])
+    monkeypatch.setattr(F, "_decode_inline_extents",       # a written run (flags 0x50) when the flags are asked (N128)
+                        lambda *a, **kw: [(0, 5, 1, 0x50)] if kw.get("with_flags") else [(0, 5, 1)])
     monkeypatch.setattr(F, "_volume_ncl", lambda *a, **kw: 1 << 20)
     return io.BytesIO(b"\x00" * (16 * cs)), cs, v
 
@@ -142,7 +143,8 @@ def test_a_shared_block_that_will_not_translate_defers(monkeypatch):
     v[0x38:0x40] = (2 * cs).to_bytes(8, "little")     # stream = 2 clusters
     v[0x48:0x50] = (cs).to_bytes(8, "little")         # allocated = 1 cluster -> VCN 1 is not owned
     monkeypatch.setattr(F, "parse_resident_btree_rows", lambda vd, ctx: [(bytes(k), bytes(v))])
-    monkeypatch.setattr(F, "_decode_inline_extents", lambda *a, **kw: [(0, 5, 1)])
+    monkeypatch.setattr(F, "_decode_inline_extents",       # a written run (flags 0x50) when the flags are asked (N128)
+                        lambda *a, **kw: [(0, 5, 1, 0x50)] if kw.get("with_flags") else [(0, 5, 1)])
     monkeypatch.setattr(F, "_volume_ncl", lambda *a, **kw: 1 << 20)
     fh = io.BytesIO(b"\x00" * (16 * cs))
 
@@ -205,13 +207,14 @@ def test_undeterminable_hole_coverage_is_not_reported_as_no_holes(monkeypatch):
 
 
 def test_extract_branches_on_none_before_truthiness():
-    """The `is None` branch must come BEFORE `if _hranges:`, or the two collapse again."""
+    """The undeterminable case (`_hranges is None`) must not collapse into "no holes". Since 1.14.0 (N208, decision 23)
+    the main path hands it to the one content exit as its own state (`undet=_hranges is None`, while `ranges` takes
+    `_hranges or None`), and that exit refuses under --refuse-holes when coverage could not be checked; the behaviour is
+    asserted in test_1132_d2_carve_extract.py (test_n208_*)."""
     import inspect
     src = inspect.getsource(F.cmd_extract)
-    i_none = src.index("if _hranges is None:")
-    i_truthy = src.index("if _hranges:")
-    assert i_none < i_truthy, "the undeterminable case must be handled before the truthiness test"
-    assert "--refuse-holes: hole coverage is undeterminable" in src, \
+    assert "undet=_hranges is None" in src, "the undeterminable case is not passed to the content exit as its own state"
+    assert "--refuse-holes: hole coverage could not be checked" in src, \
         "the strict flag must refuse when coverage cannot be confirmed"
 
 
@@ -249,7 +252,8 @@ def test_a_deferral_is_recorded_and_named(monkeypatch):
     v[0x38:0x40] = (cs).to_bytes(8, "little")
     v[0x48:0x50] = (cs).to_bytes(8, "little")
     monkeypatch.setattr(F, "parse_resident_btree_rows", lambda vd, ctx: [(bytes(k), bytes(v))])
-    monkeypatch.setattr(F, "_decode_inline_extents", lambda *a, **kw: [(0, 5, 1)])
+    monkeypatch.setattr(F, "_decode_inline_extents",       # a written run (flags 0x50) when the flags are asked (N128)
+                        lambda *a, **kw: [(0, 5, 1, 0x50)] if kw.get("with_flags") else [(0, 5, 1)])
     monkeypatch.setattr(F, "_volume_ncl", lambda *a, **kw: 1 << 20)
 
     def boom(*a, **kw):

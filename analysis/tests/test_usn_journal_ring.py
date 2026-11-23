@@ -86,12 +86,36 @@ def test_non_zero_unparseable_bytes_inside_the_written_span_are_a_skip():
     F._SKIP_NOTES.clear()
 
 
-def test_alloc_omitted_means_no_invariant_check():
-    """Existing call sites pass no allocation and must behave exactly as before."""
-    F._SKIP_NOTES.clear()
+def _fresh_registers(monkeypatch):
+    """N420 (LB55): empty run registers for one node, restored by monkeypatch, so a report made here neither reaches
+    the process's at-exit print nor hides behind an earlier node's."""
+    for name in ("_FINDINGS", "_SKIP_NOTES", "_SKIP_EXPECTED", "_SKIP_FINDING"):
+        monkeypatch.setattr(F, name, type(getattr(F, name))())
+
+
+def test_alloc_omitted_means_no_invariant_check(monkeypatch, capsys):
+    """Existing call sites pass no allocation and must behave exactly as before: no USN-offset check, so no report of a
+    record whose USN is not its offset.
+
+    N420 (LB55): this node looked for the report among `_SKIP_NOTES`' KEYS, which are (stage, exception name) and never
+    hold a message -- and since N403 the report is a finding, not a skip -- so it could not fail. It now looks where the
+    report is made (the findings and stderr), on fresh registers, and a planted control shows the reader sees it: the
+    same buffer parsed WITH the allocation reports the record."""
     buf = bytearray(0x8000)
     r = _rec(0x999)
     buf[0x100:0x100 + len(r)] = r
+
+    def reported():
+        err = capsys.readouterr().err
+        return [t for t in F._findings() if "journal offset" in t] + \
+            [ln for ln in err.splitlines() if "journal offset" in ln]
+
+    _fresh_registers(monkeypatch)
+    recs = F.parse_usn_records(bytes(buf), alloc=0x8000)
+    assert len(recs) == 1 and reported(), "the planted control: with the allocation, the record whose USN (0x999) is " \
+        "not its offset (0x100) is reported -- so the reader below can see a report"
+    _fresh_registers(monkeypatch)
     recs = F.parse_usn_records(bytes(buf))
     assert len(recs) == 1
-    assert not any("not their journal offset" in str(k) for k in F._SKIP_NOTES)
+    got = reported()
+    assert not got, "no allocation was passed, so no USN-offset check is made: %r" % got[:2]

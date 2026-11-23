@@ -136,12 +136,17 @@ DANGEROUS_PREFIXES = ["=", "+", "-", "@", "\t", "\r"]
 
 
 @pytest.mark.parametrize("prefix", DANGEROUS_PREFIXES)
-def test_csv_cells_never_start_with_a_formula_prefix(prefix):
+def test_csv_cells_never_start_with_a_formula_prefix(prefix, monkeypatch):
     """A filename on the evidence volume must not become a formula in Excel.
 
     The examiner opens files.csv in a spreadsheet; a file named
     `=cmd|'/c calc'!A1` on the suspect volume is a code-execution path.
+
+    N420 (LB55): `emit_csv` counts every unguarded formula-lead cell in the module's `_CSV_FORMULA_SEEN`, which the
+    tool prints at exit; these 6 nodes wrote 4 such cells each into the pytest process's counter, the suite's closing
+    "24 CSV cell(s) begin with a spreadsheet formula character" line. The counter is this node's own now.
     """
+    monkeypatch.setattr(F, "_CSV_FORMULA_SEEN", 0)
     payload = prefix + "cmd|'/c calc.exe'!A1"
     rec = {"path": payload, "parent_path": ".", "parent_oid": 0x600,
            "name": payload, "oid": 0, "is_dir": False, "is_resident": True,

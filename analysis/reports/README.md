@@ -1,9 +1,21 @@
-# Reports (generated)
+# Reports: the project's validation record, oldest first
 
-> **`CERTIFICATION.md`** is the one **authored** file here — the forefst soundness certification (v3.5.0, 2026-07-01): the verdict, what was delivered, the verification gates, and the audit trail. Everything else in this directory is machine-regenerated evidence.
+This directory keeps how the tools, the reference and the documentation were checked over time. Each entry is dated
+and says what it covered; a later entry does not erase an earlier one, which stays as part of the method's history
+(the Methodology page, *How the method grew*). Record paths that point outside this repository name the project's
+working records.
 
-Machine-regenerated verification outputs — **not** authored documentation. They are overwritten on every gate
-run; treat them as the latest evidence snapshot, not a stable reference.
+| When | What | Files |
+|---|---|---|
+| June-July 2026 | four audits: references and central findings, the analysis tree, the documentation, the tools | [`audit/`](audit/README.md) |
+| June-July 2026 | generated verification reports and the scripts that wrote them | `report_*.txt`, `verify_*.py`, below |
+| 2026-07-01, 2026-07-04 | two self-validations of releases 3.5.0 and 3.6.0, with the project's own instruments, which reported the tools sound; the reviews that followed (other language-model sessions, part of the project) found what they had missed | [`SELF_VALIDATION_v3.5.0_2026-07-01.md`](SELF_VALIDATION_v3.5.0_2026-07-01.md), [`SELF_VALIDATION_v3.6.0_2026-07-04.md`](SELF_VALIDATION_v3.6.0_2026-07-04.md) |
+| September-November 2026 | the answer to the blind audit of release 1.12.3 (215 findings): every finding and where its answer can be checked, and the wrong-verdict findings, generated at release 1.14.0 from evidence that can fail (a test, a battery case, an oracle probe, an erratum) | [`AUDIT_RESPONSE.md`](AUDIT_RESPONSE.md), [`WRONG_VERDICT_COVERAGE.md`](WRONG_VERDICT_COVERAGE.md) |
+
+## June-July 2026: the generated reports
+
+Machine-generated verification outputs — **not** authored documentation. They were written in June-July 2026 by the
+scripts below and have not been regenerated since: a dated snapshot of the checks of that time, not a current result.
 
 | File | Produced by | What it shows |
 |------|-------------|---------------|
@@ -26,7 +38,7 @@ alongside the two above (`--calibrate` proves it fires on planted errors).
 
 Three more scripts in this directory verify reference-table claims directly: `verify_static.py` produces `report_static_verification.txt` (above); `verify_usn_claims.py` (USN / Change-Journal claims) and `verify_not_tested.py` (the remaining both-`NOT_TESTED` entries) are **stdout-only** and write no report file here.
 
-## The `audit/` subdirectory
+## June-July 2026: the `audit/` subdirectory
 
 Where the reports above are machine-regenerated gate output, [`audit/`](audit/README.md) holds the
 **authored audit deliverables** — the record of how the published knowledge and tools were validated
