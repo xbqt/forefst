@@ -1,18 +1,10 @@
-# forefst.py help
+# forefst.py in long
 
-ReFS forensic analysis tool. `forefst.py` lists per-file metadata (CSV, JSON, JSON Lines or a body file) from a raw
-image of a ReFS disk or partition, or from an `export metadata` bundle.
+The full reference of `forefst.py`: every command, its options and what it prints. [forefst.py in short](forefst_short.md)
+has what it does, a quick start and every command on one line.
 
-On top of the listing it has commands for:
-
-- the USN journal and the MLog transaction log;
-- super-timelines and timestamp-anomaly detection (both experimental);
-- file extraction, deleted files and snapshots;
-- security descriptors, reparse points and integrity checking;
-- a metadata export.
-
-> **Known issues in 1.14.0.** The limits of this release that can change what an examiner reports, each with what to do,
-> are on their own page: [Known issues in 1.14.0](known_issues.md).
+> **Known issues in 1.14.1.** The limits of this release that can change what an examiner reports, each with what to do,
+> are on their own page: [Known issues in 1.14.1](known_issues.md).
 
 ## Invocation
 
@@ -49,26 +41,6 @@ The subcommand token comes **after** the image path. Options every command share
 > **Version support:** validated mainly on ReFS 3.14; the formats 3.4, 3.7, 3.9 and 3.10 are read too (no 3.11-3.13
 > volume was available to test). Some enriched fields (e.g. the target of a symlink whose record is split) may be
 > incomplete on 3.4–3.10.
-
-## Quick Start
-
-```sh
-forefst.py disk.raw                                   # volume summary (the default view)
-forefst.py disk.raw files                             # CSV file listing to stdout
-forefst.py disk.raw files --csv listing.csv          # … to a file
-forefst.py disk.raw files --json                      # JSON array
-forefst.py disk.raw files --body timeline.body       # body file for mactime
-forefst.py disk.raw files --filter ea                 # only EA-bearing files
-forefst.py disk.raw deleted                           # list deleted files and whether each is recoverable
-forefst.py disk.raw summary                           # full volume triage report
-forefst.py disk.raw search .docx                     # names containing ".docx"
-forefst.py disk.raw details /dir/file.txt             # everything about one file
-forefst.py disk.raw usn --stats                       # change-journal activity summary
-forefst.py disk.raw timeline --fast --limit 50        # first 50 USN + MLog events (no $SI times)
-forefst.py disk.raw security --audit                  # tamper-check security descriptors
-```
-
----
 
 ## Native subcommands
 
@@ -225,23 +197,26 @@ forefst.py disk.raw deleted --search secret           # search deleted objects
 Full record for a single file, directory or object: timestamps, attributes (incl. EA), SecurityId/owner, USN,
 reparse target, and — where the record carries them — the inline sub-records (ADS, $EA / WSL metadata, snapshots).
 
-Address a file by `/path` or by its FileRef (`--id HomeOID:FileID`); a directory or system object by `/path` or
-`0xOID` (files have no OID of their own). `--path` / `--id` are the explicit forms.
+Address it by path, or by id: a file by its FileRef (`HomeOID:FileID`, as `files` prints it in `ObjectRef`), a
+directory or system object by its OID (files have no OID of their own). The target is read as an id when it reads as
+one (`0x705`, `0x703:0x2e`), and as a path from the root otherwise, with or without its leading slash. `--path` and
+`--id` are the explicit forms; a name that reads as an id is reached with `--path` (`--path /0x705`).
 
 Its `Is moved` line is decided as `files`' `IsMoved` column is, from the change journal's records where the volume
 has one.
 
 | Option | Description |
 |--------|-------------|
-| `/path` or `0xOID` | (positional) leading `/` ⇒ path, `0x` prefix ⇒ OID |
+| `PATH` or `ID` | (positional) an id when it reads as one (an OID `0x705`, a FileRef `0x703:0x2e`), a path from the root otherwise (`/dir/file.txt`, `dir/file.txt`) |
 | `--path P` | address by path |
-| `--id ID` | address by identity: an OID (`0x703`) or a FileRef `HomeOID:FileID` (`0x703:0x2e`); `--OID`, `--FileRef` and `--oid` mean the same |
+| `--id ID` | address by id, an OID or a FileRef: an OID (`0x703`) or a FileRef `HomeOID:FileID` (`0x703:0x2e`) |
 | `--json [FILE]` | the full record as JSON — for a directory, its on-disk structure |
 | `--csv` / `--jsonl [FILE]` | one row in the `files` schema (the same columns, so it concatenates) |
 
 ```sh
 forefst.py disk.raw details /wsltests/lxsymlink       # a reparse/WSL file by path
 forefst.py disk.raw details 0x705                      # a directory object by OID
+forefst.py disk.raw details 0x703:0x2e                 # a file by its FileRef, no path needed
 forefst.py disk.raw details /dir/file.txt --json
 ```
 
@@ -262,6 +237,7 @@ The whole journal is read: every allocated extent of `$J` is parsed. Bare `usn` 
 | `-v, --verbose` | with `--list`: add RecLen/Version/StreamOffset per record |
 | `--info` | journal metadata instead of records ($J extents, $Max, record count), the journal's health, and the checkpoint's journal cursor |
 | `--stats` | activity summary: reason-code distribution, busiest files, time range (what bare `usn` shows) |
+| `--id ID` | only the records of one object: a file's FileRef `HomeOID:FileID` (`0x703:0x2e`), or a directory's OID (`0x703`, its records carry `0x703:0x0`); with the summary, `--list`, `--csv` or `--json`. The journal's state is still checked over every record |
 | `--csv [FILE]` | export all records to a 19-column CSV: `USN`, `Timestamp`, `Reason`, `ReasonHex`, `FileName`, `IsDirectory`, `ObjectRef`, `HomeOID`, `FileID`, `ParentOID`, `FullPath`, `FileAttributes`, `FileAttributesHex`, `RecordLength`, `SecurityId`, `SourceInfo`, `SourceInfoHex`, `ParentFileID`, `StreamOffset` |
 | `--json [FILE]` | one document: `Journal` (the `$Max` fields, the `$J` runs and sizes), `RecordCount`, `Records` (each with the CSV's keys) |
 
@@ -379,7 +355,7 @@ table deletion with it and which refuse it. The `Dispatch table:` line of the te
 volume's format selects, how many values it names and, for a value above 0x2b, which of the builds read dispatch it;
 `mlog --info` lists the table per build.
 
-See [MLog](../structures/mlog.md#concrete-actions--grouping-redo-opcodes-into-what-a-user-did).
+See [MLog redo records](../structures/mlog_redo.md#concrete-actions--grouping-redo-opcodes-into-what-a-user-did).
 
 | Option | Description |
 |--------|-------------|
@@ -389,6 +365,7 @@ See [MLog](../structures/mlog.md#concrete-actions--grouping-redo-opcodes-into-wh
 | `--raw-scan` | per-page raw dump instead of the data-area summary |
 | `--info` | the static opcode/action reference text (every opcode with its mnemonic and handler), then the control area's statements; no record is read |
 | `--earlier-logs` | show only the records of earlier logs, in any mode above: another format magic is an earlier volume's log (the disk was formatted again), the volume's signature with another UUID an earlier log of this volume (the log was created again); each record carries its case (CSV/JSON `EarlierLogOf`: `earlier volume` / `this volume`, with the log's `FormatMagic` and `UUID`; in text `(an earlier volume's log)` / `(an earlier log of this volume)`); exit 0 |
+| `--id ID` | with `--parse`, `--csv` or `--json`: only the log payloads whose records name one object -- a directory's table (its OID), or a file's rows, by its file id (a FileId row, a backing, in its home directory: exact) or by one of its names (the names the live tree and the change journal give it); each row says which (`MatchedBy` in CSV and JSON, `{by ...; Seq n}` in the text, with the row's place in the whole log), and stderr counts them. A row kept by a name can be another object that had the same name in the same directory |
 | `--csv [FILE]` | one row per log payload: `Seq`, `Timestamp`, `TimeSource`, `DerivedAction`, `PathToday`, `ParentPathToday`, `Name`, `OID`, `Opcodes`, `OpcodesHex`, `RecordCount`, `PLCN`, `Block` |
 | `--json [FILE]` | one document: `ReFSVersion`, `View`, `LogInstance`, `Control`, `ControlCopies`, `MLogInfo`, `EarlierLogs`, `DataArea`, `Integrity`, `Records` (each redo record once: its place, `PLCN` / `Block` / `BlockIndex` / `RecordOffset`, its fields, and what was read from its key, `TargetOID` / `Key` / `Time`; `AllocatorClock`, the record's +0x20 in decimal; `InheritedTableOID`, for a record without a table path the current table it applies to, derived, else null) and `Transactions` (one per log payload, with the CSV row's fields; `Opcodes` / `OpcodesHex` are lists; it refers to its records by their positions in `Records`, from 0: `FirstRecordIndex` with `RecordCount` when they are contiguous, else `RecordIndices`; `Entries`: `Pairs`, the moves and renames read -- `Kind`, `OldParentOID`, `OldName`, `NewParentOID`, `NewName` -- and `Removed` / `Added`, the names no pair takes); the document is written as a stream, so memory does not grow with the log |
 
@@ -469,7 +446,7 @@ The **MLog** events use the same concrete-action classifier as `mlog --parse` ab
 | `--source S` | keep only one source: `USN` / `MLOG` / `SI` |
 | `--file SUB` | keep events whose path today (a USN row: its name) contains SUB; an MLog row's path is the directory the row names, as `mlog` gives it, so the file names a payload's records hold are listed by `mlog --parse` |
 | `--oid O` | keep the events filed under object O (0x hex or decimal): a directory's own events and those of the files created in it. The `OID` column (below the table) says where each event is filed |
-| `--fileref H:F` | keep one object's events, by its reference as `files` prints `ObjectRef` (`HomeOID:FileID` for a file, `OID:0x0` for a directory): its `$SI` timestamps under every name, and its USN records. MLog events name a directory, not a file, and are left out — with a note saying so |
+| `--id ID` | keep one object's events, by its id: a file's FileRef `HomeOID:FileID` (`files`' `ObjectRef`), a directory's OID (its rows carry `OID:0x0`): its `$SI` timestamps under every name, its USN records, and the MLog rows whose records name it: by its table (a directory), by its file id or by one of its names (a file), each row saying which; a name can be another object's that had the same name in the same directory |
 | `--limit N` | keep only the first N events after filtering/sorting |
 | `--depth N` | max recursion depth for the $SI walk (default: full) |
 
@@ -480,8 +457,9 @@ The `OID` column says where each event is filed:
 - for MLog, the directory the row names (as `mlog --parse` gives it).
 
 A file stays filed under its home directory after it is moved, or named again by a hard link elsewhere, so `--oid` of
-its *current* parent does not select it. Use `--fileref` or `--file` for one file's `$SI` and USN events; neither
-finds its MLog events, which are filed under a directory (`mlog --csv` and its name column give them).
+its *current* parent does not select it. Use `--id` for one file's `$SI`, USN and MLog events, or `--file`; an MLog
+row `--file` finds is filed under a directory, as `mlog` gives it. With `--id` too, an MLog row is listed under the
+table its log payload changed (its OID and path), which can be the parent directory's table, not the object's own.
 
 What `timeline` states, and the exit code (with `--csv`/`--json`/`--jsonl` every statement goes to stderr when stdout carries the export, to stdout when it goes to a FILE):
 
@@ -500,7 +478,7 @@ forefst.py disk.raw timeline --fast --limit 50         # quick USN+MLog timeline
 forefst.py disk.raw timeline --csv > timeline.csv      # full super-timeline (CSV)
 forefst.py disk.raw timeline --file hello.txt          # one file's $SI and USN events
 forefst.py disk.raw timeline --source USN --oid 0x701  # USN events of directory 0x701 and of the files created in it
-forefst.py disk.raw timeline --fileref 0x701:0x2        # one file's $SI and USN history
+forefst.py disk.raw timeline --id 0x701:0x2             # one file's $SI, USN and MLog history
 ```
 
 ### `timestomp` — timestamp-anomaly detection
@@ -1139,7 +1117,7 @@ The bytes are reported against the image's holes as `extract` reports them: see
 | `export resident-all [dir]` | every file whose bytes are inline, and every snapshot-shared file, to a folder, tree preserved (0-byte and extent-backed files are skipped), with an `export_index.csv` |
 | `export snapshots [dir]` | every stream-snapshot version — same as `snapshots --extract` (aliases: `snapshot`, `prior-versions`), with an `export_index.csv`; `--json` is refused here (exit 1): `snapshots --json` lists the versions |
 | `export deleted [dir] [--carve] [--rows\|--rows-only]` | recover deleted remnants — an index (`deleted_files.csv`/`.json`), the decoded inline files in `content/`, with `--carve` also `.carved` files (extent-backed), a `recovery_manifest.json` and a recovery log; the raw `.row` remnants only with `--rows` or `--rows-only` |
-| `export recyclebin [dir]` | surviving `$R` payloads, named by their decoded original filename, with an `export_index.csv` naming each payload's `$R` file |
+| `export recyclebin [dir]` | surviving `$R` payloads, named by their decoded original filename, and each payload's named streams beside it as `<name>__<stream>` (a `Zone.Identifier`, for example), with an `export_index.csv` naming each one's `$R` file (a stream as `$R...:<stream>`); a recycled folder is named on stderr with its file count, and its files are not written (exit 2; `export file <path>` writes each) |
 | `export metadata <dir>` (or `-o <dir>`) | the hash-verified metadata bundle (`--what vbr,chkp,supb,mlog,usn,btree` · `--btree-mode packed\|per-object` · `--max-scan N`) |
 | `<bundle-dir> <subcommand>` | read a bundle back — pass the directory where you would pass an image; see [metadata bundles](metadata_bundles.md) |
 | `<bundle-dir> verify-bundle` | check a bundle is whole (seal, manifest, indexes, rehydration); exit 0 when it is whole and reading its bootstrap structures recorded no finding, 2 when it is not whole or a finding was recorded (the report names each). It does not make the redundancy checks of `summary` and `integrity` (a checkpoint copy not in use, a backup boot sector or a superblock copy that fails its checksum): run `summary` on the bundle for those |

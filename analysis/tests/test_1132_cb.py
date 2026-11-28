@@ -569,7 +569,9 @@ def test_we6_timeline_states_the_mlog_rows_without_a_time():
     # predates the volume any more (the old rule read a forged Created or an index entry's Accessed); the rows that
     # still do are files whose every time is older than the volume (package dates), on the two system drives
     r = _run(FOREFST, _img("step7/winsiderv2.raw"), "timeline", "--source", "MLOG")
-    assert re.search(r"\b7 MLog row\(s\) carry no time: the time derived for each is earlier than the volume's "
+    # F5 (1.14.1): 4 of the 7 were partial-row UpdateRows dated by a file's inline bytes (1974 / 1988 / 2003); they are
+    # not dated now (analysis/reports/v1.14.1/F5/f5_rows_changed.tsv, winsiderv2 blocks 0x3c9d2, 0x41229, 0x4122d, 0x44c50)
+    assert re.search(r"\b3 MLog row\(s\) carry no time: the time derived for each is earlier than the volume's "
                      r"creation", r.stdout), r.stdout[:3000]
     assert "are not compared with the volume's creation time" not in r.stdout
 

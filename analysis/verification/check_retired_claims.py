@@ -198,6 +198,18 @@ def main():
                                   "`$SNAPSHOT` / schema 0x1B0 is gated **v3.7+** (the version-gating matrix lists 0x1B0 as present from v3.7 through Insider)."),
         "schema-0x1f0-max": ("USN_RECORD_V3 (128-bit FileIDs); $Max at schema 0x1F0 |",
                              "| Schema 0x1F0 | `$LOGGED_UTILITY_STREAM` (USN `$Max` metadata) |"),
+        # 1.14.1 D1 (2026-11-27, N676 / N679): E167's sweep missed the table form; the pages and the master verbatim
+        "schema-attr-names": ("| 0x1B0 | $SNAPSHOT | — | Y | Y | Y | Y | Y |",
+                              "| 0x200 | $EFS | — | — | — | — | Y | Y |",
+                              "attaches to a file, registered as **attribute schemas**. The set grew from **12 attribute schemas** in",
+                              "Stored via attribute schemas: $EA\\_INFORMATION (0x1D0) for packed/unpacked sizes; $EA (0x1E0) for EA body."),
+        # E182 (1.14.1, 2026-11-27, N682): the pages as they stood (DATA.md and extent_descriptors.md as published in
+        # 1.14.0; the 1.14.1 dev sentence of item W)
+        "data-version-count": ("| 0x50 | 8 | Version count + sparse flag | low 31 bits = version count (1 for a single-version stream); bit 31 = a sparse flag in prior work, never observed set |",
+                               "| 0x50 | 8 | Version count + sparse flag (u64) | low31 = stream version count (=1 for a single-version file, N for an N-version snapshotted file); bit 31 = sparse flag |"),
+        "data-v34-flags-0x54": "| 0x54 | 8 | Version count + sparse flag | as at 0x50 from 3.7 |",
+        "data-only-sparse-files": ("attribute 0x200, no extent): `+0x50` reads `0x80000001`, a version count of 1 with bit 31 set. No other sparse file is in the corpus.",
+                                   "the corpus's only sparse files; clear on the 31,678 stream records of the census, which held none."),
         # U (2026-11-21, N665): the pages as they stood before the U round
         'vinfo-0x540-schema-count': ('| 0x540 | 16 bytes — schema count (u32) at +0x00, flags (u32) at +0x04, a u32 (=1, purpose unknown) at +0x08 |',
                                      # RC3b item 11: refsanalysis `summary --plus`, as 1.13.1 / RC3 printed it

@@ -1,4 +1,10 @@
-# How the Knowledge and Tools Were Audited
+# How the Knowledge and Tools Were Audited (June 2026, archived)
+
+> **Archived.** This is the audit of June 2026: it checked the register as it stood then (409 rows) and the tools of
+> that time. It is not a statement about the current release. The later work found what it missed: 72 of its 174
+> `CONFIRMED-ALLDISK` verdicts have no passing image in its own `proof_index.csv`, one row it passed on 112 of 112
+> images is false, and the blind audit of September 2026 recorded 215 findings against release 1.12.3. The current
+> state of each finding is its register row; a new audit of the register is planned for release 1.14.2.
 
 This project's published knowledge (the docs + their central reference) and its forensic tools were validated by
 **four distinct audits**. All of them gate on **ground truth** — raw-disk bytes (and, for the tools' baked-in

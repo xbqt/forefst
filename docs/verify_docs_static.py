@@ -29,6 +29,7 @@ SYMBOL = re.compile(
     r"Refs[A-Za-z]*Resident[A-Za-z]*"      # driver symbols
     r"|RESIDENT_STREAM\w*|NON_RESIDENT_MAX_VALUE"
     r"|_reported_resident|is_resident|IsResident"
+    r"|\bresident-all\b"                    # 1.14.1: the `export` subverb's name, as the tool's --list prints it
     r"|`[^`]*`",                            # anything in backticks
     re.I)
 BARE = re.compile(r"\b(non-resident|resident)\b", re.I)

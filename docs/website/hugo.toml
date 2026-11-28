@@ -27,8 +27,8 @@ enableEmoji = true
   # The newest refs.sys builds read (forclaude/reference/driver_register.md, "Builds"): shown on the home page by the
   # latest-driver shortcode. ONE place: update it when a newer build is read.
   latest_driver_read = "refs.sys 26100.9974 (Windows 11, 26100) and 29683 (Windows Insider)"
-  tool_version = "1.14.0"                            # footer version stamp — bump at each release
-  build_date = "23.11.2026"                            # last docs generation (DD.MM.YYYY) — stamped by build.py
+  tool_version = "1.14.1"                            # footer version stamp — bump at each release
+  build_date = "28.11.2026"                            # last docs generation (DD.MM.YYYY) — stamped by build.py
 
 [markup]
   [markup.goldmark.renderer]

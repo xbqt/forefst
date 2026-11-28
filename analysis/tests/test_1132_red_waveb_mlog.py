@@ -4486,14 +4486,25 @@ def test_n423_control_the_same_volume_with_its_table_raises_no_such_finding_on_i
                                                                                        N423_IMAGE) + _ctx(rc, out, err))
 
 
-@pytest.mark.parametrize("src", ["usn", "fileref"])
+@pytest.mark.parametrize("src", ["usn"])
 def test_n423_control_timeline_says_nothing_of_the_mlog_when_it_does_not_read_it(monkeypatch, tmp_path, src):
-    """Not a RED. `--source USN` and `--fileref` leave the MLog source unread (as for every MLog finding): no N423
-    statement and no exit 2 from it."""
-    args = ("--source", "USN") if src == "usn" else ("--fileref", "0x701:0x2")
+    """Not a RED. `--source USN` leaves the MLog source unread (as for every MLog finding): no N423 statement and no
+    exit 2 from it. (`--fileref` was the second case until 1.14.1, when it began to read the MLog: the next test.)"""
+    args = ("--source", "USN")
     rc, out, err = _n423_inproc(monkeypatch, _n421_dated_log(tmp_path, "n423_" + src), "timeline", "--fast", *args)
     _keep(rc == 0 and not n423_statements(out + "\n" + err), "`timeline %s` reads no MLog" % " ".join(args)
           + _ctx(rc, out, err))
+
+
+def test_n423_timeline_fileref_reads_the_mlog_so_states_the_missing_table_and_exits_2(monkeypatch, tmp_path):
+    """U12 (1.14.1): `timeline --fileref` / `--id` merges the log payloads that name the object, so it reads the MLog:
+    over an Object Table that holds neither copy of the Logfile Information Table it states it and exits 2, as
+    `timeline` does."""
+    args = ("--fileref", "0x701:0x2")
+    rc, out, err = _n423_inproc(monkeypatch, _n421_dated_log(tmp_path, "n423_fileref"), "timeline", "--fast", *args)
+    said = n423_statements(out + "\n" + err)
+    assert rc == 2 and said, "`timeline %s` reads the MLog since 1.14.1: exit 2 (exit %s) and the statement (%s)" % (
+        " ".join(args), rc, "found" if said else "none") + _ctx(rc, out, err)
 
 
 def test_n423_export_metadata_names_the_missing_table_not_no_mlog_on_image_win11refsmini(monkeypatch, tmp_path):

@@ -1,7 +1,7 @@
 <!-- Generated from the project's working errata, which are not in this repository. Do not edit this copy by hand: every change is made in the working errata. -->
 # Post-Thesis Errata
 
-These are the corrections made to this project's ReFS reference, numbered E1 to E181. The first ones
+These are the corrections made to this project's ReFS reference, numbered E1 to E182. The first ones
 correct the master's thesis the project started from; the later ones correct the reference pages, the
 claim register (`reference_table.csv`, next to this file) and the tools. An erratum wins over the text it
 corrects, and a later erratum over an earlier one it supersedes.
@@ -3601,6 +3601,12 @@ register rows above, `docs/structures/schema_table.md`, the attribute pages' "Sc
 the two tools' label tables (1.14.0, with their own changelog and output-change entries). A retired-claim canary keeps
 "schema = type + 0x100" out. Register: FS_SCHM_RA_005, FS_SCHM_RA_007, FS_SCHM_RA_008, MD_ATTR_010 restated; new
 FS_SCHM_RA_012 (the eras, the upgrade on open) and FS_SCHM_RA_013 (the system tables' schemas).
+**Sweep, 2026-11-27 (1.14.1 D1; RUNNING_LOG N676, N679):** the attribute reading survived in places this erratum's
+sweep did not reach, corrected now: the "Schema version-gating matrix" of `docs/concepts/version_evolution.md` (names
+0x1B0-0x200 after attributes) and four more sentences there, `docs/concepts/architecture.md` (the "attribute schemas"
+paragraph), `docs/README.md`; master §B.4 (the entry counts: header, totals sentence), §F.2 ("18 attribute") and the `$EA`
+storage line; register FS_SCHM_RA_006 (description, notes), MD_ATTR_008 (description, notes), MD_ATTR_006 (notes), FS_SCHM_RA_010 (notes: 0x160 is on v3.4 too, 9 of 9 v3.4 corpus entries).
+A retired-claim row keeps the table form out.
 
 <a id="e168"></a>
 ## E168 (1.14.0, RC3a; filed 2026-11-21; N158; NOTES.md S1-S4, S11, S12, D2; `RC1D/rc3a/D6_D7_ANALYSIS.md` d6.1; supersedes E45's framing, corrects E26's name for $SI+0x38) — an object's record is an embedded B+-tree table: a 40-byte `_SmsIndexRoot` descriptor, the `$SI` as the table's root data, then the node of its attributes; on a file, `$SI+0x30` is the data size and `$SI+0x38` the allocated size
@@ -4116,3 +4122,45 @@ FS_DEL_RA_005, master §I, `docs/examples/find_a_deleted_file.md`; the tool's pr
 **Amended again the same day (RUNNING_LOG N669, the Y trace).** The directory entry's +0x44 was read on the 84-byte
 form only (`z3_followup.py` reads values of 0x4C bytes or more): the 2,140 tagged entries are all 84-byte entries, 260
 of them on 3.10 volumes, not "2,140 84-byte and 260 72-byte"; the 72-byte form was not read. Master §C.3.
+
+<a id="e182"></a>
+## E182 (1.14.1; filed 2026-11-27; RUNNING_LOG N682; `analysis/reports/v1.14.1/DATA50/FINDINGS.md`, `census_payload.py`, `census_payload.jsonl`, `census_summary.txt`, `witness_offsets.py`) — `$DATA` +0x50 is the stream's flags word: bit 31 sparse, bit 30 encrypted; its low bits are not a version count, and on 3.4 the word is at +0x28
+
+**What was said.** Master §C.6 (MI `$DATA` sub-record header): "+0x50 (v3.4: 0x54) | 8 | Version count (low 31) +
+sparse flag (bit 31) | u64", low 31 bits the stream's version count ("1 for non-snapshotted files, N for N-version
+snapshotted files"), bit 31 a sparse flag "per finding #307", never observed set; register MD_DATA_RA_011 the same;
+`docs/attributes/DATA.md` and `docs/structures/extent_descriptors.md` the same, the 3.4 field at +0x54. In 1.14.1 item W
+(dev only, never published) the register, the master and DATA.md added that the two sparse files of
+`win11refs4gattributestest2` carry bit 31 and are "the corpus's only sparse files" -- false: E114 counts 53 sparse
+files, the master names `lab314_main/t18_sparse.bin`.
+
+**What is true.**
+- The value is an embedded table root: `D = value + u16(+0x04)` (0x28), and the stream's 4-byte user payload is at
+  `D + u16(D+4)` in the layout 26100.x and Insider 29574 write for 3.7+ records, or at D in the other
+  (`CmsStream::InitializeStreamTablePayload`, `PersistStreamTablePayloadToDataWithRoot`, 26100.9818 :109117 / :107379;
+  `PersistStreamTablePayloadToDataWithRoot` is the same code on 26100.8115; on Insider 29574, :212054, it allows a
+  summary up to 0x38 bytes). +0x2C reads 0x28 on every 3.7+
+  record, so the word is +0x50 there; it is 4 bytes, not 8.
+- Its high 16 bits are the stream's attribute flags: bit 31 is set when the stream is made sparse and cleared when it is
+  made not sparse (`RefsChangeStreamSparsenessAndBlob`, :189766 / :189769, which also sets the file's 0x200 attribute);
+  bit 30 when it is encrypted (`RefsEncryptStream` :401287) and cleared on decryption (`RefsSetEncryption` :403041); bit 29
+  when the sparseness function's fourth argument is nonzero (:189773), which the driver passes only on a volume on SMR
+  storage (`RefsSetFileStrictlySequential` :423292, `RefsReplaceDataAttribute` :395935; amended 2026-11-28 after an
+  independent second reading, `DATA50/FINDINGS.md` section 2.4). The same writes on 26100.8115 and Insider 29574.
+- On the corpus (124 ReFS volumes, every `$DATA` row of every file record): 166,950 current streams of 3.7-3.14 and 144
+  snapshot versions; bit 31 set on exactly the 130 records (25 images) whose file carries the sparse attribute; bit 30
+  on exactly the 33 (12 images) whose file carries the encrypted attribute; bit 29 and every other high bit on none. The low 16 bits are 1 on every record, snapshot versions included. The writers read set byte 0 to 1 at creation
+  and none changes it: the low bits are not decoded, and "version count" is withdrawn (the June 2026 census's 16 values
+  other than 1 are not found again; its script was not kept).
+- 3.4: the 17134 driver keeps the word first (`RefsChangeStreamSparsenessAndBlob` rewrites 0x2C bytes from D, the flags at
+  D+2, :172946; `MsFindEmbeddedDataWithRoot` :17386): +0x28 reads 0x00000001 on all 2,638 records of the 3.4 form (8
+  volumes 3.4, 3 upgraded volumes keeping the 3.4 key), and +0x50 / +0x54 read 0 on all. No 3.4 volume holds a sparse
+  or encrypted file: on 3.4 the bits rest on the driver alone.
+- Witnesses (read back at their file offsets): `win11refs4gattributestest2.raw` sparse.dat +0x50 at 0x10306c8 =
+  `01000080`, encrypted.txt +0x50 at 0x3c04d98 = `01000040`; `win10refs110g.raw` IndexerVolumeGuid (3.4 form) +0x28
+  at 0x1030820 = `01000000`, +0x54 at 0x103084c = 0 (re-read 2026-11-28; the register cites the same).
+
+**Scope.** Static: 26100.9818 (the lead), the same functions on 26100.8115 and Insider 29574, 17134 for 3.4. Disk: the 124
+corpus.lst ReFS volumes; on the four `win11refs2tmillionsofactions` images 6 metadata pages are holes in the image file
+and their records are not counted. No tool reads the field. **Corrects** master §C.6; register MD_DATA_RA_011;
+`docs/attributes/DATA.md`, `docs/structures/extent_descriptors.md`; the retired readings are 7j rows.

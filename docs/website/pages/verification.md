@@ -192,6 +192,6 @@ in the source repository:
   page, the findings behind it and their evidence level; for each finding, every page that cites it; and
   the register rows no page cites yet. Useful for checking that a correction reached all of them, and for
   seeing what is measured but not yet written up.
-- **[Claim audit record, June 2026](https://github.com/xbqt/forefst/blob/main/analysis/reports/audit/README.md)** —
-  the project's own first audit of every claim, with its per-claim dossiers and proofs; the current evidence of
-  each finding is its register row.
+- **[Claim audit record, June 2026 (archived)](https://github.com/xbqt/forefst/blob/main/analysis/reports/archive/2026-06_claim_audit/README.md)** —
+  the project's own first audit of every claim of that time (409 rows), with its per-claim dossiers and proofs; it
+  does not describe the current release: the current evidence of each finding is its register row.

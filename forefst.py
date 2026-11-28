@@ -310,7 +310,7 @@ def validate_image(path, die_fn=None, partition_start=None):
 
 # ─── Constants ────────────────────────────────────────────────────────
 PROG = "forefst"
-VERSION = "1.14.0"
+VERSION = "1.14.1"
 # Phase 3 (4.D): directory walks default to FULL depth (no artificial cap); `--depth N` overrides. The real
 # recursion depth equals the actual directory nesting (ReFS trees are shallow — tens of levels), so this
 # constant is never the binding limit; it just means "don't truncate". main() also raises the interpreter
@@ -8196,17 +8196,24 @@ def _mlog_extract_timestamp(rec, rs, opcode, tpl, vc, vbase):
     The payload's row takes the latest of its records (`_mlog_resolve_txn`). Measured old against new on 121 corpus
     volumes (`analysis/reports/v1.13.2/RC1D/rc3a/rc3b/r1b_mlog_time.py`, `r1b_final.json`): 230,143 of 786,365 timed
     rows move, every one later, none loses its time; rows dated before their volume's creation 58,235 -> 25,316 (a copy
-    keeps its source's times); rows after the volume information's last write 164 -> 164."""
+    keeps its source's times); rows after the volume information's last write 164 -> 164.
+    F5 (1.14.1, the auditor's F5): an UpdateRow is dated only when it rewrites a whole row, and then by the row's key; a
+    row the value's form does not place a time in is not dated (no fallback offsets): the fallback +0xA0, +0x90, +0x30,
+    +0x28, +0x08, +0x00 ran on every update and read a file's inline bytes as a time
+    (`analysis/reports/v1.14.1/F5/`)."""
     if opcode == 0x01 and vc >= 2:
         v1p = vbase + 8
         if v1p + 8 <= rs:
             v1_off = le32(rec, v1p)
             v1_len = le32(rec, v1p + 4)
             if v1_off + v1_len <= rs and v1_len >= 0x48:
-                # a 72 / 84-byte value that holds no time at the entry's offsets is not an index entry (50 inserts of
-                # 72 bytes with four values on win11refs15t64k): read it at the record offsets, as every other value
+                # F5 (1.14.1): the record offsets only on a row whose value holds a record there -- a name row's
+                # embedded record or a directory's own row (key type 0x30 / 0x10: its $SI from +0x28). A 72 / 84-byte
+                # value that holds no time at the entry's offsets is not read at the record offsets: on the corpus
+                # those are FileId rows (key type 0x20), which hold a name or a reference, no time
+                key = _mlog_row_key_type(rec, rs, vbase)
                 best = ((v1_len in (72, 84) and _mlog_latest_time(rec, v1_off, _MLOG_ENTRY_TIMES))
-                        or _mlog_latest_time(rec, v1_off, _MLOG_RECORD_TIMES))
+                        or (key in (0x10, 0x30) and _mlog_latest_time(rec, v1_off, _MLOG_RECORD_TIMES)))
                 if best:
                     return best
     if opcode == 0x04 and vc >= 1:
@@ -8217,28 +8224,45 @@ def _mlog_extract_timestamp(rec, rs, opcode, tpl, vc, vbase):
                 best = _mlog_latest_time(rec, v0_off, range(0, min(v0_len - 7, 0x20), 8))
                 if best:
                     return best
-    if opcode == 0x03 and vc >= 2:
+    if opcode == 0x03 and vc == 2:
+        # F5 (1.14.1, the auditor's F5): only a WHOLE-row update (value 0 the key, value 1 the row) is dated. With a third
+        # value, RedoUpdateRow passes it to CmsBPlusTable::UpdateInIndex as the offset in the row where value 1 goes
+        # (26100.9818): value 1 is a fragment -- on the corpus a size field (+0x10) or a file's inline bytes (+0x3C) of
+        # a $DATA or named-stream row -- and a time read from it was the file's content (2081-11-18 on the public
+        # Insider sample, bytes 8-15 of a .cfg file). A whole row is read by its key, at the offsets its form holds
+        # times: the volume-information row (0x0520) its write time +0xA0, then its format time +0x90 (K059); a name
+        # row's embedded record or a directory's own row (0x30 / 0x10) its $SI times; an index entry (72 / 84 bytes)
+        # its entry times. No other row is dated.
         v1p = vbase + 8
         if v1p + 8 <= rs:
             v1_off = le32(rec, v1p)
             v1_len = le32(rec, v1p + 4)
-            if vc == 2 and v1_len in (72, 84) and v1_off + v1_len <= rs:
-                best = _mlog_latest_time(rec, v1_off, _MLOG_ENTRY_TIMES)
-                if best:
-                    return best
-            if v1_off + v1_len <= rs and v1_len >= 0x20:
-                # K059: `+0x90` was tried FIRST and it is the volume's FORMAT time, so every
-                # volume-information update inherited the moment the volume was created rather than the
-                # moment it was written -- 23 MLog events on lab314_main_step3_dirty all carried
-                # 2026-09-06 16:17:19, which is exactly `Volume created`. `+0xA0` is the written
-                # modify/mount time; the last record's value matches `Last mount (rw)` to the
-                # hundredth of a second. Ask for the write time first.
-                for off in (0xa0, 0x90, 0x30, 0x28, 0x08, 0x00):
-                    if off + 8 <= v1_len:
-                        val = le64(rec, v1_off + off)
-                        if _FT_MIN < val < _FT_MAX:
-                            return val
+            if v1_off + v1_len <= rs:
+                key = _mlog_row_key_type(rec, rs, vbase)
+                if v1_len in (72, 84):
+                    best = _mlog_latest_time(rec, v1_off, _MLOG_ENTRY_TIMES)
+                    if best:
+                        return best
+                if key == 0x0520:
+                    for off in (0xa0, 0x90):
+                        if off + 8 <= v1_len:
+                            val = le64(rec, v1_off + off)
+                            if _FT_MIN < val < _FT_MAX:
+                                return val
+                elif key in (0x10, 0x30) and v1_len >= 0x48:
+                    best = _mlog_latest_time(rec, v1_off, _MLOG_RECORD_TIMES)
+                    if best:
+                        return best
     return 0
+
+
+def _mlog_row_key_type(rec, rs, vbase):
+    """F5 (1.14.1): the u16 that opens a row record's value 0 (its row key) -- 0x30 a name row, 0x10 a directory's own
+    row, 0x20 a FileId row, 0x0520 the volume-information row -- or None when the record holds no such value."""
+    if vbase + 8 > rs:
+        return None
+    v0_off, v0_len = le32(rec, vbase), le32(rec, vbase + 4)
+    return le16(rec, v0_off) if v0_len >= 2 and v0_off + 2 <= rs else None
 
 
 # N260 / LB4a (1.14.0): the handlers whose name the canonical table (forclaude/intelligence/redo_opcode_complete.md)
@@ -8403,7 +8427,109 @@ def parse_mlog_deep_record(rec_bytes, redo_ops):
                          _mlog_row_key(rec_bytes[k_off:k_off + k_len]) if k_off + k_len <= rs else ("other",))
     r["timestamp"] = _mlog_extract_timestamp(rec_bytes, rs, opcode, tpl,
                                               val_count, vbase)
+    r["id_keys"] = _mlog_record_keys(rec_bytes, rs, opcode, tpl, val_count)       # U12 (1.14.1): `mlog --id`
     return r
+
+
+def _mlog_id_key(b):
+    """U12 (1.14.1): a row key as `mlog --id` matches it -- `_mlog_row_key`'s forms, and a FileId row's (u32 0x80000020,
+    u32 0, u64 the file id, u64 0) as ("fid", file id, None)."""
+    k = _mlog_row_key(b)
+    if k[0] == "other" and len(b) >= 16 and le32(b, 0) == 0x80000020:
+        return ("fid", le64(b, 8), None)
+    return k
+
+
+def _mlog_record_keys(rb, rs, opcode, tpl, vc):
+    """U12 (1.14.1): the rows of a DIRECTORY's table this record names -- the key-path component after the table's (the
+    row whose own table the record changes: a name row, a backing, a directory's own row; read from +12, as a reparent's
+    is) and, on a row record of the table itself (path of one component, or none: the previous record's table), its
+    value 0. Each as `_mlog_id_key` gives it; a key of another form is left out."""
+    out = []
+    if tpl >= 2:
+        o, n = le32(rb, 0x40), le32(rb, 0x44)
+        if o + n <= rs and n > 12:
+            out.append(_mlog_id_key(rb[o + 12:o + n]))
+    elif opcode in (0x01, 0x02, 0x03) and vc >= 1:
+        vb = 0x38 + 8 * tpl
+        if vb + 8 <= rs:
+            o, n = le32(rb, vb), le32(rb, vb + 4)
+            if o + n <= rs and n >= 6:
+                out.append(_mlog_id_key(rb[o:o + n]))
+    return [k for k in out if k[0] != "other"]
+
+
+def mlog_id_matcher(f, ps, cs, tr, obj_map, ref, usn_records=None):
+    """U12 (1.14.1, the maintainer 2026-11-27: "results from details, usn, mlog for an element, based on its id"): a
+    function txn -> how its records name the object `ref` = (home OID, file id), or None -- and the names it matches.
+
+    A directory (file id 0): the records that change its table ("table"): exact, a record names its table.
+    A file: a record that names, in its home directory's table, a row keyed by its file id (a FileId row, a backing:
+    "id", exact), or a name row of one of its names in the directory that held it ("name": the names the live tree
+    gives it and those the change journal's records with its FileRef carry, a rename's old name included). A name match
+    can be another object that had the same name in the same directory: it is labelled as one."""
+    home, fid = ref
+    if fid == 0:
+        def match(txn):
+            cur = 0
+            for r in txn["records"]:
+                if r.get("tpl", 0) >= 1 and r.get("target_oid"):
+                    cur = r["target_oid"]
+                if cur == home:
+                    return "table"
+            return None
+        return match, set()
+    names = set()
+    for e in walk_directory_tree(f, ps, cs, tr, obj_map, 0x600, DEFAULT_DEPTH, False):
+        if not e.get("is_dir") and e.get("home_oid") == home and e.get("file_id") == fid and e.get("name"):
+            names.add((e.get("parent_oid") or 0, e["name"]))
+    for u in usn_records or ():
+        if (u.file_oid, u.file_idx) == ref and getattr(u, "filename", "") and getattr(u, "parent_oid", 0):
+            names.add((u.parent_oid, u.filename))
+
+    def match(txn):
+        cur, kind = 0, None
+        for r in txn["records"]:
+            if r.get("tpl", 0) >= 1 and r.get("target_oid"):
+                cur = r["target_oid"]
+            for k in r.get("id_keys") or ():
+                if k[0] == "fid" and k[1] == fid and (cur == home or k[2] == home):
+                    return "id"
+                if k[0] == "name" and (cur, k[1]) in names:
+                    kind = "name"
+        return kind
+    return match, names
+
+
+def mlog_id_setup(f, ps, cs, tr, obj_map, ref):
+    """U12 (1.14.1): `mlog_id_matcher` for `ref`, its names read in a HELD reading (`_held_reading`): what the journal
+    and the walk it reads meet is not this run's -- `usn` and `files` state it. (match, names)."""
+    with _held_reading():
+        recs = []
+        if ref[1]:
+            vd, _m = locate_change_journal(f, ps, cs, tr, obj_map)
+            if vd is not None:
+                st = parse_usn_journal_streams(vd, cs, tr)
+                if st["j_extents"]:
+                    j = read_usn_j_stream(f, ps, cs, st["j_extents"], st["j_stream_size"])
+                    jh, jw = _usn_j_holes(f, ps, cs, st["j_extents"])
+                    recs = parse_usn_records(j, alloc=len(j), holes=jh, holes_where=jw)
+        match, names = mlog_id_matcher(f, ps, cs, tr, obj_map, ref, recs)
+    return match, names
+
+
+_MLOG_MATCH_WORDS = {"table": "its table", "id": "its file id", "name": "one of its names"}
+
+
+def mlog_id_statement(ref_txt, ref, counts, total, names):
+    """U12 (1.14.1): the one line `mlog --id` / `timeline --id` say about the rows kept."""
+    by = ", ".join("%d by %s" % (n, _MLOG_MATCH_WORDS[k]) for k, n in sorted(counts.items()) if n)
+    txt = "--id %s: %s of %s%s" % (ref_txt, count_noun(sum(counts.values()), "log payload row"), total,
+                                   " (%s)" % by if by else "")
+    if ref[1] and counts.get("name"):
+        txt += ("; a row kept by a name can be another object that had the same name in the same directory "
+                "(%s searched)" % count_noun(len(names), "name"))
+    return txt
 
 
 def _mlog_name_exact(raw):
@@ -15041,7 +15167,7 @@ def cmd_mlog(image, remaining, partition_start):
 
     _check_unknown_flags(remaining,
                          {"-v", "--verbose", "--parse", "--stats", "--raw-scan", "--info", "--earlier-logs"},
-                         {"--csv", "--json"})
+                         {"--csv", "--json", "--id"})
     verbose = "-v" in remaining or "--verbose" in remaining
     do_parse = "--parse" in remaining
     do_stats = "--stats" in remaining
@@ -15063,6 +15189,16 @@ def cmd_mlog(image, remaining, partition_start):
         die("mlog: give one of --csv, --json, --parse and --info (--parse may go with --csv or --json)")
     mode = ("info" if do_info else "csv" if csv_arg is not None else "json" if do_json
             else "parse" if do_parse else "view")
+    # U12 (1.14.1): `--id` keeps the log payloads whose records name one object (`mlog_id_matcher`); each row says how
+    mlog_ref = mlog_ref_txt = None
+    if "--id" in remaining:
+        _i = remaining.index("--id")
+        if _i + 1 >= len(remaining) or remaining[_i + 1].startswith("-"):
+            die("mlog --id: give an id, an OID (0x703) or a FileRef HomeOID:FileID (0x703:0x2e)")
+        mlog_ref_txt = remaining[_i + 1]
+        mlog_ref = _parse_id_ref(mlog_ref_txt)
+        if mode not in ("csv", "json", "parse"):
+            die("mlog: --id selects log payload rows: give it with --parse, --csv or --json")
     export = mode in ("csv", "json")
     # N545 (1.14.0; the maintainer's rule (b), 2026-11-12): an export's statements go to stderr when stdout carries the
     # export, to stdout when the export goes to a FILE -- as `usn`, `timeline`'s journal source and `timestomp` do
@@ -15125,6 +15261,8 @@ def cmd_mlog(image, remaining, partition_start):
         split = MLogSplit(ctrl, earlier=earlier_view, magic=vmagic)
         if mode in ("csv", "parse"):
             oid_paths = build_oid_path_map(f, ps, cs, tr, obj_map)
+            id_match = mlog_id_setup(f, ps, cs, tr, obj_map, mlog_ref) if mlog_ref else None
+            id_counts = {}
             # Stream the log data area: extract_mlog_transactions consumes the block generator in a
             # single linear pass, so the 1 GiB of log blocks is never materialized, and the redo-record
             # list (unused on this path) is not built — this is what fixes the large-log OOM.
@@ -15179,18 +15317,29 @@ def cmd_mlog(image, remaining, partition_start):
             n_starts = sum(1 for txn in txns for r in txn["records"] if r["txn_start"])
             if mode == "csv":
                 say(lines)
-                ts_written = [0]
-                cols = MLOG_CSV_COLUMNS + (["FormatMagic", "UUID", "EarlierLogOf"] if earlier_view else [])
+                ts_written, rows_written, starts_written = [0], [0], [0]      # the rows written (--id keeps some)
+                cols = (MLOG_CSV_COLUMNS + (["FormatMagic", "UUID", "EarlierLogOf"] if earlier_view else [])
+                        + (["MatchedBy"] if id_match else []))
 
                 def _write_csv(out):
                     w = _csv.writer(out)
                     w.writerow(cols)
                     for i, txn in enumerate(txns, 1):
+                        _by = id_match[0](txn) if id_match else None
+                        if id_match:
+                            id_counts["_total"] = i
+                            if not _by:
+                                continue
+                            id_counts[_by] = id_counts.get(_by, 0) + 1
                         t = _mlog_resolve_txn(txn, oid_paths, f, ps, cs, obj_map)
                         if t["ts_str"]:
                             ts_written[0] += 1
+                        rows_written[0] += 1
+                        starts_written[0] += sum(1 for r in txn["records"] if r["txn_start"])
                         row = (_mlog_row(i, t, txn["instance"], split.case(txn["instance"])) if earlier_view
                                else _mlog_row(i, t))
+                        if id_match:
+                            row["MatchedBy"] = _MLOG_MATCH_WORDS[_by]
                         w.writerow(_csv_row([";".join(row[c]) if isinstance(row[c], list) else row[c]
                                              for c in cols]))
                 if csv_arg == "-":
@@ -15203,7 +15352,11 @@ def cmd_mlog(image, remaining, partition_start):
                     # C57: the rows are log PAYLOADS; a payload can merge up to 15 redo blocks
                     print("Wrote %d log payload(s) (%d transaction starts) to %s (%d carry an embedded time — the "
                           "rest have an empty Timestamp column and do not appear in `timeline --source MLOG`)."
-                          % (len(txns), n_starts, csv_arg, ts_written[0]), file=sys.stderr)        # N326
+                          % (rows_written[0], starts_written[0], csv_arg, ts_written[0]), file=sys.stderr)  # N326
+                if id_match:                                                            # U12 (1.14.1)
+                    print("[%s] mlog %s" % (PROG, mlog_id_statement(
+                        mlog_ref_txt, mlog_ref, {k: v for k, v in id_counts.items() if k != "_total"},
+                        id_counts.get("_total", 0), id_match[1])), file=sys.stderr)
             else:
                 print("Building OID → path map …")
                 print("  %s resolved" % count_noun(len(oid_paths), "path"))
@@ -15239,7 +15392,13 @@ def cmd_mlog(image, remaining, partition_start):
                     action_counts = {}
                     ts_count = 0
                     undetermined = {}            # N431: per action (MOVE, RENAME), the rows printed with both sets
-                    for txn in txns:
+                    for _seq, txn in enumerate(txns, 1):
+                        _by = id_match[0](txn) if id_match else None
+                        if id_match:
+                            id_counts["_total"] = _seq
+                            if not _by:
+                                continue
+                            id_counts[_by] = id_counts.get(_by, 0) + 1
                         t = _mlog_resolve_txn(txn, oid_paths, f, ps, cs, obj_map)
                         action = t["action"]
                         action_counts[action] = action_counts.get(action, 0) + 1
@@ -15250,7 +15409,8 @@ def cmd_mlog(image, remaining, partition_start):
                         ts_part = "  %s" % t["ts_str"] if t["ts_str"] else ""
                         detail_part = "  (%s)" % t["op_detail"] if t["op_detail"] else ""
                         case_part = "  [%s]" % case_text(txn["instance"]) if earlier_view else ""     # LB53
-                        print("  [%-12s] %s%s%s%s" % (action, t["label"], detail_part, ts_part, case_part))
+                        by_part = "  {by %s; Seq %d}" % (_MLOG_MATCH_WORDS[_by], _seq) if id_match else ""   # U12
+                        print("  [%-12s] %s%s%s%s%s" % (action, t["label"], detail_part, ts_part, case_part, by_part))
                         if verbose:
                             # -v: per-record byte-level PROOF — opcode, table OID, and the exact PLCN+offset
                             # where the record lives, so an analyst can verify any field against the raw disk.
@@ -15295,6 +15455,10 @@ def cmd_mlog(image, remaining, partition_start):
                                     detail = " (%s)" % ", ".join(detail_parts) if detail_parts else ""
                                     print('      name: "%s"%s' % (r["filename"], detail))
                         print()
+                    if id_match:                                                        # U12 (1.14.1)
+                        _wprint("  " + mlog_id_statement(mlog_ref_txt, mlog_ref,
+                                                         {k: v for k, v in id_counts.items() if k != "_total"},
+                                                         id_counts.get("_total", 0), id_match[1]))
                     print("-" * W)
                     print("Action summary")
                     print("  File operations (what a user did):")
@@ -15333,6 +15497,7 @@ def cmd_mlog(image, remaining, partition_start):
                 say(["MLog: %d log record(s) fail their own integrity check (torn or altered): see "
                      "Integrity.Failures." % iv["failed"]])
             oid_paths = build_oid_path_map(f, ps, cs, tr, obj_map)
+            id_match = mlog_id_setup(f, ps, cs, tr, obj_map, mlog_ref) if mlog_ref else None      # U12 (1.14.1)
             jc = None
             if ctrl:
                 _k = (("Signature", "signature", None), ("FormatMagic", "format_magic", "0x%08x"),
@@ -15387,9 +15552,14 @@ def cmd_mlog(image, remaining, partition_start):
                     first += len(recs)
                     for txn in extract_mlog_transactions([p], redo_ops, _st):
                         seq += 1
+                        _by = id_match[0](txn) if id_match else None
+                        if id_match and not _by:
+                            continue
                         t = _mlog_resolve_txn(txn, oid_paths, f, ps, cs, obj_map)
                         row = (_mlog_row(seq, t, txn["instance"], split.case(txn["instance"])) if earlier_view
                                else _mlog_row(seq, t))
+                        if id_match:
+                            row["MatchedBy"] = _MLOG_MATCH_WORDS[_by]
                         for k in ("Timestamp", "TimeSource", "PathToday", "ParentPathToday", "Name", "OID"):
                             row[k] = row[k] or None                     # K20 A: absent is null in JSON, '' in CSV
                         row.update(mlog_record_refs(at[r["rec_off"]] for r in txn["records"]))
@@ -15801,7 +15971,7 @@ def _usn_checkpoint_cursor(f, ps, cs, chkp_lcns, records, st=None):
 
 
 def cmd_usn(image, remaining, partition_start):
-    _check_unknown_flags(remaining, {"-v", "--verbose", "--stats", "--info", "--list"}, {"--csv", "--json"})
+    _check_unknown_flags(remaining, {"-v", "--verbose", "--stats", "--info", "--list"}, {"--csv", "--json", "--id"})
     verbose = "-v" in remaining or "--verbose" in remaining
     do_stats = "--stats" in remaining
     do_json = "--json" in remaining
@@ -15814,6 +15984,19 @@ def cmd_usn(image, remaining, partition_start):
             csv_arg = remaining[i + 1] if i + 1 < len(remaining) and not remaining[i + 1].startswith("-") else "-"
         elif a == "--json":
             json_arg = remaining[i + 1] if i + 1 < len(remaining) and not remaining[i + 1].startswith("-") else "-"
+
+    # U12 (1.14.1, the maintainer 2026-11-27: "usn, i would like to make a search based on a fileref"): `--id` keeps the
+    # records of ONE object -- a file's FileRef HomeOID:FileID, or a directory's OID (its records carry OID:0) -- for
+    # the list, the statistics and the exports; the journal's state is still checked over every record
+    usn_id = usn_id_txt = None
+    if "--id" in remaining:
+        _i = remaining.index("--id")
+        if _i + 1 >= len(remaining) or remaining[_i + 1].startswith("-"):
+            die("usn --id: give an id, an OID (0x703) or a FileRef HomeOID:FileID (0x703:0x2e)")
+        usn_id_txt = remaining[_i + 1]
+        usn_id = _parse_id_ref(usn_id_txt)
+        if do_info:
+            die("usn: --id selects the records to list, count or export; --info describes the whole journal")
 
     # Phase 3 §5: bare `usn` shows the STATS SUMMARY (mirrors `mlog`) — dumping every record (often tens of
     # thousands of lines) is not a useful default. `usn --list` (or `-v`) prints the on-screen record list;
@@ -15894,6 +16077,11 @@ def cmd_usn(image, remaining, partition_start):
         # inferred with none seen. Unwrapped journals are already in USN order, so this is a no-op
         # for them (verified: 0 descending steps on every other corpus journal).
         records.sort(key=lambda r: r.usn)
+        all_records = records
+        if usn_id is not None:
+            records = [r for r in all_records if (r.file_oid, r.file_idx) == usn_id]
+            print(f"[{PROG}] usn --id {usn_id_txt}: {len(records)} of {count_noun(len(all_records), 'record')} carry this "
+                  f"file reference", file=sys.stderr)
         journal_meta = parse_usn_journal_metadata(streams, f, ps, cs)
 
         oid_paths = build_oid_path_map(f, ps, cs, tr, obj_map)
@@ -15905,7 +16093,7 @@ def cmd_usn(image, remaining, partition_start):
             the boundary between two numberings or instances (decisions 30, 31), records missing against their own
             instance's pointers (A10, S2), an empty $J (N131) -- and exits 2 where it is a finding, as `usn --info`
             does. stderr when stdout carries the export. True when something was said on the output."""
-            _st = _usn_journal_report(f, ps, cs, tr, obj_map, records, journal_meta.get("journal_id"), j_data,
+            _st = _usn_journal_report(f, ps, cs, tr, obj_map, all_records, journal_meta.get("journal_id"), j_data,
                                       len(j_data), _jh, _jw, indent=indent,
                                       file=sys.stderr if to_stderr else None)
             _jstate["st"] = _st                                   # RC3b D2: the cursor compares the current journal only
@@ -16145,14 +16333,20 @@ def cmd_timeline(image, remaining, partition_start):
     # Phase-2: --csv/--json/--jsonl [FILE] (stdout if no FILE). Pulled out before the command's own parser.
     out_fmt, out_dest, remaining = _extract_output_fmt(remaining)
     args = _parse_args(remaining, flags=["--no-si", "--fast", "-v", "--verbose"],
-                       valued=["--file", "--oid", "--fileref", "--limit", "--source", "--depth"], max_rest=0)
+                       valued=["--file", "--oid", "--id", "--fileref", "--limit", "--source", "--depth"], max_rest=0)
     skip_si = args["no_si"] or args["fast"]   # --fast is a friendly alias for --no-si
     verbose = args["v"] or args["verbose"]    # -v: show the FULL name/path (no truncation)
     si_depth = _int_arg(args["depth"], "--depth") if args["depth"] else DEFAULT_DEPTH
     name_filter = args["file"].lower() if args["file"] else None
     oid_filter = _int_arg(args["oid"], "--oid", 0) if args["oid"] else None
     fileref_filter = None
-    if args["fileref"]:
+    # U12 (1.14.1): `--id` keeps ONE object's rows -- a file's FileRef HomeOID:FileID, or a directory's OID (its rows carry
+    # OID:0, N256) -- the id `details` and `usn` take; `--fileref` stays accepted, not documented (U1)
+    if args["id"] and args["fileref"]:
+        die("timeline: give --id or --fileref, not both (they are the same filter)")
+    if args["id"]:
+        fileref_filter = _parse_id_ref(args["id"])
+    elif args["fileref"]:
         _fr = args["fileref"].split(":")
         if len(_fr) != 2:
             die("--fileref wants HOMEOID:FILEID, as `files` prints ObjectRef (e.g. 0x701:0x2)")
@@ -16253,15 +16447,13 @@ def cmd_timeline(image, remaining, partition_start):
             # N423 / LB61: no Logfile Information Table (neither OID 0x9 nor 0xA): a finding of the MLog source, stated
             # below (`mlog_control_statements`) when the source is read; 1.13.1 left the source out and said nothing
             mlog_info = mlog_no_table_info(obj_map)
-        if mlog_info and fileref_filter:
-            # an MLog transaction names the directory whose tree it changed, not one file: it cannot be tied to a
-            # FileRef, so --fileref leaves those events out -- and says so rather than returning fewer silently
-            if src_filter in (None, "MLOG"):
-                # I2 (1.14.0): the note sent the reader to --file, but MLog rows are filed under a directory's path, so --file
-                # finds few of them (1,842 of 1,945 names missed on the public sample); `mlog --parse` lists the names
-                print(f"[{PROG}] note: --fileref leaves out MLog events: a transaction names the directory whose "
-                      f"tree it changed, not one file (`mlog --parse` lists the file names its records hold)",
-                      file=sys.stderr)
+        tl_id_match, tl_id_counts = None, {}
+        if mlog_info and fileref_filter and src_filter in (None, "MLOG"):
+            # U12 (1.14.1): an MLog row is kept when its records name the object -- a directory's table, a row keyed by
+            # a file's id, or one of the file's names (`mlog_id_matcher`); each kept row says how. 1.14.0 left every
+            # MLog event out of `--fileref`
+            tl_id_match = mlog_id_setup(f, ps, cs, tr, obj_map, fileref_filter)
+        elif mlog_info and fileref_filter:
             mlog_info = None
         elif mlog_info and name_filter and src_filter in (None, "MLOG"):
             # I2: say what --file matches in the MLog source
@@ -16297,11 +16489,18 @@ def cmd_timeline(image, remaining, partition_start):
             for txn in extract_mlog_transactions(
                     _split.pages(scan_mlog_data_area(f, ps, cs, tr, mlog_info, ctrl)), redo_ops):
                 _n2d += sum(1 for r in txn["records"] if r["opcode"] == 0x2D)
+                _by = tl_id_match[0](txn) if tl_id_match else None
+                if tl_id_match:
+                    tl_id_counts["_total"] = tl_id_counts.get("_total", 0) + 1
+                    if not _by:
+                        continue
+                    tl_id_counts[_by] = tl_id_counts.get(_by, 0) + 1
                 t = _mlog_resolve_txn(txn, oid_paths, f, ps, cs, obj_map)
+                _by_txt = " [by %s]" % _MLOG_MATCH_WORDS[_by] if _by else ""                   # U12 (1.14.1)
                 if t["timestamp"]:
-                    mts = t["timestamp"]; action = t["action"] + " (derived)"              # P8
+                    mts = t["timestamp"]; action = t["action"] + " (derived)" + _by_txt     # P8
                     if _vol_create and mts < _vol_create - TS_MARGIN_100NS:
-                        mts = 0; action = t["action"] + " (derived) [MLog time unreliable]"; mlog_undated += 1
+                        mts = 0; action = t["action"] + " (derived) [MLog time unreliable]" + _by_txt; mlog_undated += 1
                     # Q-C (1.14.0): `mlog`'s Name and PathToday (the row's object: the entry, or the directory itself)
                     _ev = (mts, "MLog", t["oid"], t["full_path"] or t["name"], action, t["name"], t["full_path"])
                     events.append(_ev)
@@ -16310,6 +16509,11 @@ def cmd_timeline(image, remaining, partition_start):
                 else:
                     # I1 / LB28: a payload with no time is not a row; the rows it would have been are counted
                     undated_events.append((0, "MLog", t["oid"], t["full_path"] or t["name"], t["action"]))
+            if tl_id_match:
+                print("[%s] timeline %s" % (PROG, mlog_id_statement(
+                    "%s" % ("0x%x:0x%x" % fileref_filter), fileref_filter,
+                    {k: v for k, v in tl_id_counts.items() if k != "_total"}, tl_id_counts.get("_total", 0),
+                    tl_id_match[1])), file=sys.stderr)
             if mlog_undated:
                 counts["mlog_undated"] = mlog_undated
             _redo_print_0x2d_note([{"opcode": 0x2D}] * _n2d, redo_ops)     # N554 (j): as `mlog` states it
@@ -16319,6 +16523,8 @@ def cmd_timeline(image, remaining, partition_start):
                 _old = MLogSplit(ctrl, earlier=True, magic=_vmagic)
                 for txn in extract_mlog_transactions(
                         _old.pages(scan_mlog_data_area(f, ps, cs, tr, mlog_info, ctrl)), redo_ops):
+                    if tl_id_match and not tl_id_match[0](txn):
+                        continue                                                       # U12 (1.14.1)
                     t = _mlog_resolve_txn(txn, oid_paths, f, ps, cs, obj_map)
                     if t["timestamp"]:
                         old_events.append(((t["timestamp"], "MLog", t["oid"], t["full_path"] or t["name"], t["action"]),
@@ -16433,7 +16639,7 @@ def cmd_timeline(image, remaining, partition_start):
                     print("  NOTE: no USN events — no record could be read from the journal's $J stream.")
                 print("        Timeline below is $SI + MLog only.")
             elif counts.get("usn_read"):
-                print("  NOTE: no USN event matches --fileref (the journal holds %d record(s))." % counts["usn_read"])
+                print("  NOTE: no USN event matches --id (the journal holds %d record(s))." % counts["usn_read"])
             else:
                 # N257 (1.14.0): the state in `summary`'s words
                 print("  NOTE: USN Journal: %s — timeline is $SI + MLog only."
@@ -18425,6 +18631,11 @@ def cmd_timestomp(image, remaining, partition_start):
         return 0
     finally:
         f.close()
+
+# U1 (1.14.1): the form of an id typed as `details`' target -- an OID, or a FileRef HomeOID:FileID, 0x-hex (the ordinal also
+# decimal), as `files` prints ObjectRef. Anything else is a path.
+_ID_TARGET = re.compile(r"^0[xX][0-9a-fA-F]+(?::(?:0[xX][0-9a-fA-F]+|[0-9]+))?$")
+
 
 def _parse_id_ref(id_str):
     """Parse a `--id HomeOid:FileId` reference (e.g. 0x3069:0x2) into (home_oid, file_id) ints (4.F). Both
@@ -27841,7 +28052,7 @@ SUBCOMMANDS = {
                    "directory the file was CREATED in, which a move does not change",
     "summary":     "Extended volume summary — full directory walk + all metrics",
     "search":      "Search files/directories by name (PATTERN; add --regex)  [alias: find]",
-    "details":     "All attributes for one object — a file by /path, a directory/system object by /path or 0xOID (/path | 0xOID | --path | --oid)",
+    "details":     "All attributes for one object — by path, or by id: a file's FileRef, a directory's or system object's OID (PATH | ID | --path | --id)",
 }
 # Still callable + documented (`fastsummary --help`), but hidden from --list/overview to reduce option
 # overload — `summary` is a strict content superset. (Q7.)
@@ -27998,6 +28209,9 @@ def cmd_export_recyclebin(image, remaining, partition_start):
         written = 0; _rb_failures = []   # audit 4.1
         # map $R name -> its content by walking each SID dir's $R rows through _analyze_dir_extents
         r_content = {}
+        r_streams = {}                   # U14: (sid, $R name) -> [(stream, bytes or None, hole mark, ObjectRef, path, storage)]
+        r_folders = {}                   # U14: (sid, $R name) -> (files inside, its path on the volume)
+        streams_written = 0
         def collect(dir_oid, sid, path):
             for info in _analyze_dir_extents(f, ps, cs, tr, obj_map, dir_oid):
                 if info["name"].startswith("$R"):
@@ -28010,11 +28224,33 @@ def cmd_export_recyclebin(image, remaining, partition_start):
                     if c:
                         # the mark travels with the bytes; N319: so do the $R file's ObjectRef and path (the index)
                         r_content[(sid, info["name"])] = (c, _hm, info.get("object_ref"), path + "/" + info["name"])
+                    # U14 (1.14.1, the maintainer 2026-11-27: "what about ads? i think i have ZoneIdentifier"): the payload's
+                    # named streams, read as `export ads` reads one (inline bytes, or its extents)
+                    for _ads in info.get("ads") or []:
+                        _shm = _hole_mark()
+                        if _ads.get("storage") == "inline":
+                            _sc = _ads.get("content")
+                        elif _ads.get("storage") == DATA_EXTENTS and _ads.get("extents"):
+                            _sc = _read_vlcn_extents(f, ps, cs, tr, _ads["extents"], _ads.get("stream_size", 0),
+                                                     _content_what="'%s:%s'" % (info["name"], _ads["name"]))
+                        else:
+                            _sc = None
+                        r_streams.setdefault((sid, info["name"]), []).append(
+                            (_ads["name"], _sc, _shm, info.get("object_ref"),
+                             "%s/%s:%s" % (path, info["name"], _ads["name"]), _ads.get("storage")))
             for kd, vd in walk_bplus(f, ps, cs, tr, obj_map[dir_oid], oid=dir_oid):
                 if len(kd) >= 4 and le16(kd, 0) == 0x30 and len(vd) >= 0x44 and (le32(vd, 0x40) & 0x10000000):
                     child = le64(vd, 0x08) if len(vd) >= 0x10 else 0
                     if child and child in obj_map:
                         nm = kd[4:].decode("utf-16-le", errors="replace").rstrip("\x00")
+                        if sid and nm.startswith("$R"):
+                            # U14 (1.14.1): a recycled FOLDER -- its files keep their own names inside it, so the $R
+                            # rule above does not take them; counted and stated below, not written (no corpus image
+                            # holds a non-empty one to test a writer against)
+                            _n = sum(1 for _e in walk_directory_tree(f, ps, cs, tr, obj_map, child, DEFAULT_DEPTH, False)
+                                     if not _e.get("is_dir"))
+                            r_folders[(sid, nm)] = (_n, path + "/" + nm)
+                            continue
                         collect(child, sid or nm, path + "/" + nm)
         collect(recycle_oid, "", "$RECYCLE.BIN")
         for r in recs:
@@ -28030,9 +28266,37 @@ def cmd_export_recyclebin(image, remaining, partition_start):
             if dest:
                 written += 1
                 _idx.written(dest, content, _why, _oref, _rpath)
+                # U14: each named stream beside its payload, `<name>__<stream>` (the `export ads` name), indexed
+                for _sn, _sc, _shm, _soref, _spath, _sst in r_streams.get((r["sid"], r["r_name"]), []):
+                    if not _sc:
+                        _rb_failures.append({"path": dest + "__" + _safe_filename(_sn), "name": _spath,
+                                             "error": "named stream (%s storage) with no readable content"
+                                             % (_sst or "unknown")})
+                        continue
+                    _sdest, _swhy = _idx.place(dest + "__" + _safe_filename(_sn))
+                    _sdest = _guarded_extract_write(_sdest, _sc, _rb_failures, holes_mark=_shm,
+                                                    what="recycled file %s:%s" % (r["r_name"], _sn))
+                    if _sdest:
+                        streams_written += 1
+                        _idx.written(_sdest, _sc, _swhy, _soref, _spath)
         _report_extract_failures(_rb_failures, out_dir)   # audit 4.1
         _idx.write()
-        print(f"[{PROG}] export recyclebin: wrote {written} recovered payload(s) to {out_dir}.", file=sys.stderr)
+        _folders_unwritten = 0
+        for (_sid, _rn), (_nf, _fp) in sorted(r_folders.items(), key=lambda kv: kv[1][1]):
+            _orig = next((r["meta"]["original_path"] for r in recs if r.get("meta") and r["sid"] == _sid
+                          and r["r_name"] == _rn), None)
+            _what = "recycled folder %s%s" % (_fp, " (was %s)" % _orig if _orig else "")
+            if _nf:
+                _folders_unwritten += 1
+                print(f"[{PROG}] export recyclebin: {_what}: {count_noun(_nf, 'file')} inside it NOT written by this "
+                      f"command -- `export file <path>` writes each by its path (`files` lists them)", file=sys.stderr)
+            else:
+                print(f"[{PROG}] export recyclebin: {_what}: empty, nothing to write", file=sys.stderr)
+        if _folders_unwritten:
+            _finding("output not written", "%s whose files this command does not write"
+                     % count_noun(_folders_unwritten, "recycled folder"))
+        print(f"[{PROG}] export recyclebin: wrote {written} recovered payload(s) and {streams_written} named stream(s) "
+              f"to {out_dir}.", file=sys.stderr)
         return _bulk_hole_finish(out_dir)
     finally:
         f.close()
@@ -28167,9 +28431,9 @@ EXPERIMENTAL_SUBCOMMANDS = ("timeline", "timestomp")
 
 # Delegated forensic subcommands (Phase 2) — own option parsing; routed before argparse.
 FORENSIC_SUBCOMMANDS = {
-    "usn":       "USN (Change) Journal parser — file change records (-v/--stats/--json/--info/--csv FILE)",
-    "mlog":      "MLog (durable log) parser — redo records and transactions (-v/--parse/--stats/--json/--raw-scan/--info)",
-    "timeline":  "Super-timeline (experimental) — merge USN + MLog + $SI MACB, sorted by time (--csv/--no-si/--file/--oid/--limit/--source/--depth)",
+    "usn":       "USN (Change) Journal parser — file change records (-v/--list/--stats/--id/--json/--info/--csv FILE)",
+    "mlog":      "MLog (durable log) parser — redo records and transactions (-v/--parse/--stats/--id/--json/--raw-scan/--info)",
+    "timeline":  "Super-timeline (experimental) — merge USN + MLog + $SI MACB, sorted by time (--csv/--no-si/--file/--oid/--id/--limit/--source/--depth)",
     "timestomp": "Timestamp-anomaly detection (experimental) — $SI MACB vs USN, flags back-dating (--all/--json/--csv/--min/--margin-days/--depth)",
     "extract":   "Extract a file's content to stdout — by full path (direct, any depth) or bare name (first match; --oid/--depth scope the name search)",
     "security":  "Security descriptors / ACLs per object (-v/--files/--json/--audit/--sid/--file)",
@@ -28321,20 +28585,20 @@ CMD_HELP = {
          ("deleted --search secret", "search deleted objects → use the `deleted` command")],
  },
  "details": {
-  "tag": "All attributes for ONE object — files by /path, directory/system objects by /path or 0xOID",
+  "tag": "All attributes for ONE object — by path, or by id (an OID or a FileRef)",
   "desc": ["Full record for a single file, directory or object: timestamps, attributes (incl. EA),",
            "SecurityId/owner, USN, reparse target, and — for a file whose record is embedded — its sub-records",
-           "(ADS, $EA/WSL metadata, snapshots). Address a file by /path; a directory or system object by /path or 0xOID (files have no OID)."],
-  "opts": [("/path", "(positional) e.g. /dir/file.txt — a leading slash means path"),
-           ("0xOID", "(positional) e.g. 0x705 — a 0x prefix means OID"),
-           ("--path P", "address by path (e.g. /dir/file.txt)"),
-           ("--id ID", "address by identity: an OID (0x703) or a FileRef HomeOID:FileID (0x703:0x2e)"),
-           ("", "aliases: --OID, --FileRef, --oid — all mean --id"),
+           "(ADS, $EA/WSL metadata, snapshots). Address it by path, or by id: a file by its FileRef (files have no OID),",
+           "a directory or system object by its OID."],
+  "opts": [("PATH | ID", "(positional) an id when it reads as one — an OID (0x705) or a FileRef (0x703:0x2e) —"),
+           ("", "otherwise a path from the root: /dir/file.txt or dir/file.txt"),
+           ("--path P", "address by path (also a name that reads as an id: --path /0x705)"),
+           ("--id ID", "address by id, an OID or a FileRef: an OID (0x703) or a FileRef HomeOID:FileID (0x703:0x2e)"),
            ("--json [FILE]", "the full record as JSON — for a directory, its on-disk structure"),
            ("--csv | --jsonl [FILE]", "one row in the `files` schema (same columns, so it concatenates)")],
   "ex": [("details /wsltests/lxsymlink", "inspect a reparse/WSL file by path"),
          ("details 0x705", "inspect a directory object by OID"),
-         ("details --FileRef 0x703:0x2e", "address a file by its reference — no path needed"),
+         ("details 0x703:0x2e", "a file by its FileRef — no path needed"),
          ("details /dir/file.txt --json", "machine-readable full record"),
          ("details /dir/file.txt --csv", "one row in the `files` column schema")],
  },
@@ -28356,6 +28620,8 @@ CMD_HELP = {
            ("-v, --verbose", "with --list: add RecLen/Version/StreamOffset per record"),
            ("--info", "journal metadata instead of records ($J extents, $Max, record count)"),
            ("--stats", "activity summary (this is also what bare `usn` shows)"),
+           ("--id ID", "only the records of one object: a file's FileRef HomeOID:FileID (0x703:0x2e), or a"),
+           ("", "directory's OID (0x703); with the summary, --list or --csv/--json"),
            ("--csv/--json [FILE]", "machine output to stdout or FILE: a %d-column CSV (%s; each "
                                    "JSON record has the same keys). SecurityId is 0 in every ReFS record; SourceInfo (with "
                                    "SourceInfoHex beside it) is 0 unless a process set USN source flags on its "
@@ -28363,7 +28629,8 @@ CMD_HELP = {
   "ex": [("usn", "the activity summary (`usn --list` lists every change record)"),
          ("usn --info", "journal layout & health"),
          ("usn --stats", "reason-code & busiest-file summary"),
-         ("usn --csv usn.csv", "export records to CSV")],
+         ("usn --csv usn.csv", "export records to CSV"),
+         ("usn --id 0x703:0x2e --list", "every change record of one file")],
  },
  "mlog": {
   "tag": "MLog (durable transaction log) — redo records & concrete actions",
@@ -28429,6 +28696,9 @@ CMD_HELP = {
            ("--earlier-logs", "show ONLY the records of earlier logs (another format magic: an earlier volume's"),
            ("", "log; the volume's signature with another UUID: an earlier log of this volume), in any mode above,"),
            ("", "each with its magic, UUID and case (CSV/JSON EarlierLogOf: earlier volume / this volume); exit 0"),
+           ("--id ID", "with --parse/--csv/--json: only the log payloads whose records name one object -- a directory's"),
+           ("", "table (its OID), or a file's rows by its file id or one of its names (its FileRef HomeOID:FileID);"),
+           ("", "each row says which (CSV/JSON MatchedBy); a name can be another object's that had it there"),
            ("--csv FILE", "export one row per log payload (%s) to CSV; `-` or no FILE = stdout"
             % ", ".join(out_key(c) for c in MLOG_CSV_COLUMNS)),                         # N529: the columns written
            ("--json", "emit ReFSVersion/View/LogInstance/Control/ControlCopies/MLogInfo/EarlierLogs/"),
@@ -28474,17 +28744,18 @@ CMD_HELP = {
            ("--file SUB", "keep events whose path today (a USN row: its name) contains SUB; an MLog row's path "
                           "is its object's, as `mlog` gives it"),
            ("--oid O", "keep the events filed under object O: a directory's own and those of the files created in it"),
-           ("", "(a file stays under its home directory after a move: use --fileref or --file for one file)"),
-           ("--fileref H:F", "keep one object's events, by its reference as `files` prints ObjectRef (HomeOID:FileID "
-                             "for a file, OID:0x0 for a directory);"),
-           ("", "$SI and USN -- MLog events name a directory, not a file, and are left out"),
+           ("", "(a file stays under its home directory after a move: use --id or --file for one file)"),
+           ("--id ID", "keep one object's events, by its id as `files` prints ObjectRef: HomeOID:FileID for a file, "
+                       "OID:0x0 for a directory (or its OID alone);"),
+           ("", "$SI, USN, and the MLog rows whose records name it -- by its table, its file id or one of its"),
+           ("", "names, each row says which (a name can be another object's that had it there)"),
            ("--limit N", "keep only the first N events after filtering+sorting"),
            ("--depth N", "cap the $SI-walk recursion depth (default: full)")],
   "ex": [("timeline --fast --limit 50", "first 50 USN+MLog events (quick)"),
          ("timeline --csv > timeline.csv", "full super-timeline as CSV"),
          ("timeline --file hello.txt", "all events touching hello.txt"),
          ("timeline --source USN --oid 0x701", "USN events of directory 0x701 and of the files created in it"),
-         ("timeline --fileref 0x701:0x2", "one file's $SI and USN history")],
+         ("timeline --id 0x701:0x2", "one file's $SI and USN history")],
  },
  "timestomp": {
   "tag": "Timestamp-anomaly detection — experimental/informational, not proof",
@@ -28774,7 +29045,8 @@ CMD_HELP = {
            ("snapshots [dir]", "each stream-snapshot version (alias: snapshot; auto-dir if omitted)"),
            ("deleted [dir] [--carve] [--rows|--rows-only]",
             "deleted remnants: an index + content/ (inline) [+ .carved extent-backed with --carve] + manifest [+ rows/ with --rows]"),
-           ("recyclebin [dir]", "surviving $R payloads, named by their decoded original filename (auto-dir if omitted)"),
+           ("recyclebin [dir]", "surviving $R payloads, named by their decoded original filename (auto-dir if omitted),"),
+           ("", "each payload's named streams beside it as <name>__<stream> (e.g. its Zone.Identifier)"),
            ("metadata -o <dir>", "the hash-verified metadata bundle (--what vbr,chkp,supb,mlog,usn,btree · --btree-mode packed|per-object)")],
   "ex": [("export file /dir/report.docx -o out.docx", "one file, saved"),
          ("export ads \"notes.txt:hidden\"", "one ADS -> ./notes.txt__hidden"),
@@ -29245,9 +29517,11 @@ def main():
     ap.add_argument("-v", "--verbose", action="store_true", help="summary: the same as --mlog")
     ap.add_argument("--path", default=None,
                     help="details: address the object by path (e.g. /dir/file.txt)")
-    ap.add_argument("--id", "--ID", "--FileRef", "--fileref", "--oid", "--OID", dest="id", default=None,
-                    help="details/export: address the object by identity — an OID (e.g. 0x703) or a FileRef "
-                         "HomeOID:FileID (e.g. 0x703:0x2e). --FileRef/--OID are aliases of --id.")
+    ap.add_argument("--id", dest="id", default=None,
+                    help="details/export: address the object by id, an OID or a FileRef: an OID (e.g. 0x703) or a "
+                         "FileRef HomeOID:FileID (e.g. 0x703:0x2e)")
+    # U1 (1.14.1, the maintainer 2026-11-27): the other spellings stay accepted, not documented
+    ap.add_argument("--ID", "--FileRef", "--fileref", "--oid", "--OID", dest="id", default=None, help=argparse.SUPPRESS)
     ap.add_argument("--regex", action="store_true",
                     help="search: treat PATTERN as a regular expression")
     ap.add_argument("--filter", default=None, metavar="CATEGORY",
@@ -29467,36 +29741,33 @@ def main():
     # details subcommand — inspect ONE object by OID, path, or reference (--id HomeOid:FileId)
     if args.command == "details":
         det_oid, det_path = None, None
-        # Two ways in: by PATH or by IDENTITY. `--id` (aliases --oid/--OID/--FileRef) takes either an OID or a
+        # Two ways in: by PATH or by IDENTITY. `--id` (undocumented aliases --oid/--OID/--FileRef) takes either an OID or a
         # FileRef, so there is no longer a separate --oid flag to confuse with it.
         if args.id is not None and args.path:
-            die("details: give --id (or --oid/--FileRef) OR --path, not both")
+            die("details: give --id OR --path, not both")
         if args.target is not None and (args.id is not None or args.path):
             die("details: give a target OR --id/--path, not both")
-        if args.id is not None:
-            _hoid, _fid = _parse_id_ref(args.id)
+        # U1 (1.14.1, the maintainer 2026-11-27: "Should detect that is fileref ... 2 options: paths or id"): a target is
+        # an identity when it reads as one -- an OID (0x7b3) or a FileRef HomeOID:FileID (0x7b3:0xc), what --id takes --
+        # and a path otherwise, from the root, with or without its leading slash (the auditor's O4: `extract` took
+        # `dir/file`, `details` refused it). A name that reads as an id is reached as /0x7b3 or with --path.
+        _id_text = args.id if args.id is not None else (
+            args.target if args.target is not None and _ID_TARGET.match(args.target) else None)
+        if _id_text is not None:
+            _hoid, _fid = _parse_id_ref(_id_text)
             if _fid == 0:
                 det_oid = _hoid
             else:
                 _ent = _resolve_id_entry(f, ps, cs, tr, obj_map, _hoid, _fid)
                 if _ent is None:
-                    _not_found_exit(f, f"no object for --id {args.id}")           # N339: exit 2 after a skip
+                    _not_found_exit(f, f"no object for id {_id_text}")           # N339: exit 2 after a skip
                 det_path = _ent["path"]
         elif args.path:
             det_path = args.path
         elif args.target is not None:
-            t = args.target
-            if t.startswith("/"):
-                det_path = t
-            elif t[:2].lower() == "0x":
-                try:
-                    det_oid = int(t, 16)
-                except ValueError:
-                    die(f"details: invalid OID {t!r}")
-            else:
-                die("details: target must start with '/' (path) or '0x' (OID), or use --path/--oid")
+            det_path = args.target if args.target.startswith("/") else "/" + args.target
         else:
-            die("details: provide a /path, a 0xOID, or --path/--oid")
+            die("details: provide a path, an id (an OID or a FileRef), or --path/--id")
         if det_oid is None:
             # path mode: a directory has its own OID (-> OID detail below); a FILE has none, so we
             # show its full record (F6) by walking to the matching entry (full enrichment, consistent

@@ -170,4 +170,4 @@ field.
 - It includes a boot-sector inspect and repair mode.
 - It is the companion for learning the format. It imports its parsing layer from `forefst.py`, so it is not an
   independent check of it.
-- 1.14.0 is its last update (see [its status](refsanalysis.md)).
+- 1.14.0 is its last release, and it runs only with forefst 1.14.0 (see [its status](refsanalysis.md)).

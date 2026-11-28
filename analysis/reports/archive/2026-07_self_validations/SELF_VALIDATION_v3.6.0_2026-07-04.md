@@ -3,7 +3,7 @@
 > **A self-validation, kept as part of the method's history.** In July 2026 the project re-audited its own tools
 > with its own instruments and reported them sound. The outside audits that followed found what these reviews had
 > missed: the blind audit of September 2026 recorded 215 findings against release 1.12.3, 207 of them on this
-> project's tools, pages and reference, answered in releases 1.13.0 to 1.14.0 ([`AUDIT_RESPONSE.md`](AUDIT_RESPONSE.md), and the
+> project's tools, pages and reference, answered in releases 1.13.0 to 1.14.0 ([`AUDIT_RESPONSE.md`](../2026-09_blind_audit_of_1.12.3/AUDIT_RESPONSE.md), and the
 > changelog). The text below is the July record; only its verdict wording has been changed.
 
 **Date:** 2026-07-04 · **Tools:** `forefst.py` + `refsanalysis.py` **v3.6.0** · **Supersedes:** the v3.5.0

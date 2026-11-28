@@ -99,7 +99,7 @@ STRUCTURE_GROUPS = [
         "trash_table.md",
     ]),
     ("Journals & logs", [
-        "usn_journal.md", "mlog.md",
+        "usn_journal.md", "mlog.md", "mlog_redo.md",
     ]),
 ]
 # Tools: the help page, the pages around it, then the worked examples. The theme's menu shows a section's groups
@@ -108,8 +108,10 @@ STRUCTURE_GROUPS = [
 # groups follow the two tools groups. A page listed nowhere goes to TOOL_FALLBACK (docs/tools/) or
 # EXAMPLE_FALLBACK (docs/examples/), never to the last group. A listed page that does not exist is skipped.
 TOOL_GROUPS = [
-    ("Main", ["forefst.md", "tool_artifact_map.md"]),
-    ("Details", ["internals.md", "refsanalysis.md", "metadata_bundles.md", "releases.md"]),
+    # S1 (1.14.1, the maintainer's menu: MAIN "forefst.py in short", "forefst.py in long"; then the other pages)
+    ("Main", ["forefst_short.md", "forefst.md"]),
+    ("Other information", ["internals.md", "tool_artifact_map.md", "refsanalysis.md", "metadata_bundles.md",
+                           "releases.md"]),
     ("Examples", ["first_examination.md", "know_the_volume.md", "identify_each_file.md", "read_the_times.md",
                   "follow_the_history.md", "look_for_deleted_files.md", "check_integrity.md"]),
     ("To go deeper", [
@@ -119,7 +121,7 @@ TOOL_GROUPS = [
     ]),
     ("By hand", ["decode_vbr_by_hand.md"]),
 ]
-TOOL_FALLBACK, EXAMPLE_FALLBACK = "Details", "To go deeper"
+TOOL_FALLBACK, EXAMPLE_FALLBACK = "Other information", "To go deeper"
 EXAMPLE_URL = "/tools/examples/{}/"
 # Merged or moved pages (RC3a, the maintainer's n1-n5 / j1, 2026-11-21): docs path of the page now -> the site
 # addresses it replaces. Hugo writes a redirect page at each old address, so a bookmark or an outside link still works.

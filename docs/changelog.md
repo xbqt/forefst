@@ -1,5 +1,71 @@
 # Changelog
 
+## v1.14.1 — 2026-11-28 — an MLog row dated by a file's content, one id for one object, and the pages split
+
+**Everything here is relative to v1.14.0.** It fixes the two findings and answers the four observations of the
+auditor's check of 1.14.0 as published (2026-11-25), and the maintainer's sixteen remarks on 1.14.0.
+
+### Fixed
+
+- **An MLog row could be dated by a file's content.** An UpdateRow redo record with three values rewrites part of a
+  row: refs.sys writes its second value at the offset its third value gives. 1.14.0 read a time from that fragment at
+  fixed offsets, so a small file's inline bytes became a row's time: on the public Insider sample, `timeline` and
+  `mlog --parse` dated a row 2081-11-18T20:20:59.9829808Z, the bytes 8-15 of a `.cfg` file. Such a record is not
+  dated now; an UpdateRow of a whole row is dated by its row's key (the volume-information row, a name row's record or a
+  directory's own row, an index entry), and an inserted row is read at the record's offsets only when it holds a
+  record there. Over the corpus, 232 of 886,813 MLog rows change, on five volumes; every one traces to such a record.
+  `mlog --json`, which gives each record its own time, also changes on 13 more volumes: 50 inserted rows that hold no
+  record are no longer dated there, and no row's time changes. 1.13.1 and 1.14.0 printed the same row.
+- **The MLog page described the old time rule.** Its "Timestamp extraction" section said "the first plausible
+  FILETIME", which the tool stopped doing in 1.14.0; it now states the rule the tool applies.
+- **`$DATA` +0x50 was described as a version count with a sparse flag.** It is the stream's 4-byte flags word: bit 31
+  is set when the stream is sparse and bit 30 when it is encrypted -- on exactly those files over the 124 test
+  volumes, and written so by refs.sys; the low 16 bits read 1 on every record and their meaning is not decoded. On
+  3.4 the word is at +0x28, before the sizes, not at +0x54. The *$DATA* and *Extent descriptors* pages say so; no
+  output of either tool read the field.
+- **`details <FileRef>`** failed (`invalid OID '0x7b3:0xc'`): the target is now read as an id when it reads as one (an
+  OID, or a FileRef `HomeOID:FileID`) and as a path otherwise, with or without its leading slash, as `extract` takes it.
+- **`export recyclebin` wrote no named stream:** each payload's streams (a `Zone.Identifier`, for example) are written
+  beside it as `<name>__<stream>`, each with its row in `export_index.csv`. A recycled folder is named with its file
+  count; its files are not written (a known issue: no test volume holds a non-empty one).
+- **The sync never published `analysis/lab/`:** the inventory script `Inventory_RefsVolume.ps1` and the lab pages of
+  November now ship, and the release gate compares the trees.
+- **Schemas named after attributes, again:** the schema version-gating matrix of *Version evolution* still named
+  0x1B0-0x200 after attributes, a reading retracted in 1.14.0; it, the *Architecture* paragraph and the index now name
+  the tables they describe.
+- **The file-creation call tree of *Architecture*** was not the call graph of any build read: it is redrawn from
+  refs.sys 10.0.26100.9818, and a file move is added beside it.
+
+### New
+
+- `usn --id ID`, `mlog --id ID` and `timeline --id ID`: the records of one object, by its id (a file's FileRef, a
+  directory's OID). A log payload is kept when its records name the object: a directory's table; a file's rows by its
+  file id (exact) or by one of its names, which can be another object's that had the same name in the same directory
+  -- each row says which. `timeline --id` now merges those MLog rows with the `$SI` and journal events (1.14.0 left
+  every MLog event out of `--fileref`). `details`, `usn`, `mlog` and `timeline` take the same id; `--path` and `--id`
+  are the documented options (`--oid`, `--fileref` and their capitalised forms are still accepted).
+- *Test images* (Methodology): every image the release is checked on, with what `summary` measures on it, generated.
+- *forefst.py in short*: what the tool does, a quick start, and every command on one line, generated from the tool;
+  the reference keeps the rest as *forefst.py in long*.
+- *MLog redo records*: the redo opcodes, the actions a payload groups and a row's time, split off the MLog page.
+- The release: the gate states the tool bytes it ran on, and the sync refuses tools other than the gated ones; the
+  gate also checks that the test suite collects in the published layout.
+
+### Changed
+
+- **refsanalysis does not run with forefst 1.14.1.** It stays the 1.14.0 file and runs only with forefst 1.14.0 (exit
+  1 otherwise): take both from the 1.14.0 release (tag `v1.14`) to use it. Its structure views are to move into a
+  forefst `structure` command. In the published tree the test suite (`analysis/tests/`) skips each test that runs
+  refsanalysis, with its refusal as the reason.
+- `forefst-tools.zip` is no longer published: the two tools are the files at the repository's root.
+- The validation reports of earlier releases moved to `analysis/reports/archive/`, each named by its date and what it
+  checked.
+
+### Known issues
+
+- *An MLog row's time*: two more cases written out (a record that rewrites a row without changing its times carries
+  the row's earlier times; a time a program set forward is the row's time).
+
 ## v1.14.0 — 2026-11-23 — the 1.13.1 known issues fixed, one name and one form for every field, and refsanalysis's last update
 
 **Everything here is relative to v1.13.1.** The work was planned as 1.13.2 and ships as 1.14.0 because it changes

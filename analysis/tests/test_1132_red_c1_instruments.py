@@ -69,7 +69,7 @@ REMOVED = {
 }
 LIVE_ROOTS = ("analysis/verification", "analysis/tools", "forefstdev/analysis", "forefstdev/scripts",
               "analysis/reports/v1.13.2/d42")
-HISTORY = re.compile(r"(?:^|/)(?:audit_oracle|P0\.5_audit_oracle/demo|tests|__pycache__|reports/audit)(?:/|$)"
+HISTORY = re.compile(r"(?:^|/)(?:audit_oracle|P0\.5_audit_oracle/demo|tests|__pycache__|reports/audit|reports/archive)(?:/|$)"
                      r"|plant_copy")
 REFS_MLOG = os.path.join(WS, "analysis", "tools", "analysis_scripts", "refs_mlog.py")
 CENSUS_ONE = os.path.join(WS, "analysis", "reports", "v1.13.2", "fixes", "waveB_prep_evidence", "census",

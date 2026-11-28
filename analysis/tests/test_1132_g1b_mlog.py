@@ -281,7 +281,8 @@ def test_golden_a_side_naming_several_directories_shows_both_sets(monkeypatch, t
     help_text = " ".join(F.CMD_HELP["mlog"]["desc"])
     docs = os.path.join(REPO, "docs")
     texts = {"help": help_text, "--info": F._MLOG_INFO_TEXT,
-             "mlog.md": open(os.path.join(docs, "structures", "mlog.md"), encoding="utf-8").read(),
+             # 1.14.1: the redo records, the actions and MOVE vs RENAME moved from mlog.md to mlog_redo.md
+             "mlog_redo.md": open(os.path.join(docs, "structures", "mlog_redo.md"), encoding="utf-8").read(),
              "forefst.md": open(os.path.join(docs, "tools", "forefst.md"), encoding="utf-8").read()}
     for k, t in texts.items():
         assert re.search(r"more than\s+one\s+directory,?\s+both\s+sets\s+are\s+shown", t), k

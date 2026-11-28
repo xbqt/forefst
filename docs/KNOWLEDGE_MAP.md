@@ -50,7 +50,8 @@ only, and the sync step regenerates.
 | [directory_entries.md](structures/directory_entries.md) | Directory entries (type 0x30) are B+-tree rows within a per-directory B+-tree. | FN_DTBL_002, FN_DTBL_006, FN_DTBL_007, FS_SCHM_RA_012, GN_IDXR_RA_005, GN_IENT_004, MD_ATTR_RA_008, MD_ATTR_RA_014, MD_DATA_RA_012, MD_DATA_RA_021, MD_FTBL_005, MD_SI_RA_017 |
 | [extent_descriptors.md](structures/extent_descriptors.md) | An extent record maps a run of a file's logical clusters (VCNs) to virtual cluster numbers (VLCNs). | CT_DRNT_001, CT_DRNT_002, CT_DRNT_003, CT_DRNT_RA_001, MD_ADS_RA_002, MD_DATA_RA_001, MD_DATA_RA_002, MD_DATA_RA_007, MD_DATA_RA_009, MD_DATA_RA_011, MD_DATA_RA_013, MD_DATA_RA_014, MD_DATA_RA_023, MD_DATA_RA_024, MD_DATA_RA_028, MD_DATA_RA_030, MD_SF_RA_004, MD_SF_RA_005, MD_SNAP_RA_003 |
 | [integrity_state.md](structures/integrity_state.md) | The Integrity State Table (root #11, table ID 0x0F, schema 0xe080) keeps an integrity state per range of the … | FS_CHKP_020 |
-| [mlog.md](structures/mlog.md) | The MLog implements write-ahead logging for atomic metadata updates. | AP_EVNT_001, AP_EVNT_002, AP_EVNT_003, AP_EVNT_004, AP_EVNT_005, AP_EVNT_006, AP_EVNT_007, AP_LGFL_003, AP_LGFL_004, AP_LGFL_RA_005, AP_LGFL_RA_006, AP_LGFL_RA_008, AP_LGFL_RA_010, AP_LGFL_RA_011, AP_LGFL_RA_012, AP_LGTB_001, AP_LGTB_002, AP_LGTB_003, AP_LGTB_005, AP_REDO_001, AP_REDO_002, AP_REDO_003, AP_REDO_004, AP_REDO_005, AP_REDO_006, AP_REDO_007, AP_REDO_008, AP_REDO_009, AP_REDO_010, AP_REDO_011, AP_REDO_012, AP_REDO_013, AP_REDO_014, AP_REDO_015, AP_REDO_016, AP_REDO_017, AP_REDO_018, AP_REDO_019, AP_REDO_020, AP_REDO_021, AP_REDO_022, AP_REDO_023, AP_REDO_024, AP_REDO_025, AP_REDO_026, AP_REDO_027, AP_REDO_028, AP_REDO_029, AP_REDO_030, AP_REDO_031, AP_REDO_032, AP_REDO_033, AP_REDO_034, AP_REDO_035, AP_REDO_036, AP_REDO_037, AP_REDO_038, AP_REDO_039, AP_REDO_040 |
+| [mlog.md](structures/mlog.md) | The MLog implements write-ahead logging for atomic metadata updates. | AP_LGFL_003, AP_LGFL_004, AP_LGFL_RA_005, AP_LGFL_RA_006, AP_LGFL_RA_008, AP_LGFL_RA_010, AP_LGFL_RA_011, AP_LGFL_RA_012, AP_LGTB_001, AP_LGTB_002, AP_LGTB_003, AP_LGTB_005 |
+| [mlog_redo.md](structures/mlog_redo.md) | The records the MLog holds, read for what they do: the redo opcodes and the driver handler each one … | AP_EVNT_001, AP_EVNT_002, AP_EVNT_003, AP_EVNT_004, AP_EVNT_005, AP_EVNT_006, AP_EVNT_007, AP_REDO_001, AP_REDO_002, AP_REDO_003, AP_REDO_004, AP_REDO_005, AP_REDO_006, AP_REDO_007, AP_REDO_008, AP_REDO_009, AP_REDO_010, AP_REDO_011, AP_REDO_012, AP_REDO_013, AP_REDO_014, AP_REDO_015, AP_REDO_016, AP_REDO_017, AP_REDO_018, AP_REDO_019, AP_REDO_020, AP_REDO_021, AP_REDO_022, AP_REDO_023, AP_REDO_024, AP_REDO_025, AP_REDO_026, AP_REDO_027, AP_REDO_028, AP_REDO_029, AP_REDO_030, AP_REDO_031, AP_REDO_032, AP_REDO_033, AP_REDO_034, AP_REDO_035, AP_REDO_036, AP_REDO_037, AP_REDO_038, AP_REDO_039, AP_REDO_040 |
 | [object_table.md](structures/object_table.md) | The Object Table (roots #0 and #5, schema 0xe030) is the master OID-to-table mapping. | FS_OTBL_001, FS_OTBL_002, FS_OTBL_RA_002, FS_OTBL_RA_007, FS_OTBL_RA_009, FS_OTBL_RA_010, FS_OTBL_SA_001, FS_OTBL_SA_003, FS_OTBL_SA_007, MD_ATTR_RA_005 |
 | [page_header.md](structures/page_header.md) | Every ReFS metadata page -- SUPB, CHKP, and MSB+ (B+-tree) -- begins with a common 80-byte header. | FS_SUPB_RA_001, FS_SUPB_RA_004, GN_PAGE_001, GN_PAGE_002, GN_PAGE_003, GN_PAGE_004, GN_PAGE_005, GN_PAGE_006, GN_PAGE_007, GN_PAGE_RA_001, GN_PAGE_RA_002 |
 | [page_references.md](structures/page_references.md) | A page reference binds a child page's address to a checksum of that child's contents. | FS_CHKP_004, FS_SUPB_006, FS_SUPB_RA_003, GN_PREF_002, GN_PREF_003, GN_PREF_RA_004 |
@@ -111,7 +112,8 @@ only, and the sync step regenerates.
 
 | Page | Topic | Findings cited on the page |
 |------|-------|----------------------------|
-| [forefst.md](tools/forefst.md) | ReFS forensic analysis tool. forefst.py lists per-file metadata (CSV, JSON, JSON Lines or a body file) from a raw … | — |
+| [forefst.md](tools/forefst.md) | The full reference of forefst.py: every command, its options and what it prints. | — |
+| [forefst_short.md](tools/forefst_short.md) | ReFS forensic analysis tool. forefst.py lists per-file metadata (CSV, JSON, JSON Lines or a body file) from a raw … | — |
 | [internals.md](tools/internals.md) | How forefst.py and refsanalysis.py are built: the order in which a volume is read, the functions that do each … | — |
 | [known_issues.md](tools/known_issues.md) | These are the known limits of this release that can change what an examiner reports: what the tools do not read or … | — |
 | [metadata_bundles.md](tools/metadata_bundles.md) | A bundle is what export metadata writes: a hash-sealed directory holding the structures of one ReFS … | — |
@@ -145,6 +147,7 @@ only, and the sync step regenerates.
 | Page | Topic | Findings cited on the page |
 |------|-------|----------------------------|
 | [driver_builds.md](methodology/driver_builds.md) | Every structural claim on this site is checked against the refs.sys driver as well as against disks. | — |
+| [test_images.md](methodology/test_images.md) | Every release is checked on a fixed list of disk images: the release gate reads each of them with every … | — |
 
 ## 2. Findings → the pages that cite them
 
@@ -161,13 +164,13 @@ pages stating one fact with *different numbers* — gates 7h and 7i check exactl
 | `AP_CHJN_002` | — | CONFIRMED |  | [usn_journal.md](structures/usn_journal.md) |
 | `AP_CHJN_003` | — | NOT_TESTED |  | [carrier_categories.md](concepts/carrier_categories.md) |
 | `AP_CHJN_004` | — | CONFIRMED |  | [usn_journal.md](structures/usn_journal.md) |
-| `AP_EVNT_001` | E2 | ENRICHED |  | [mlog.md](structures/mlog.md) |
-| `AP_EVNT_002` | E2 | CONFIRMED |  | [mlog.md](structures/mlog.md) |
-| `AP_EVNT_003` | — | NOT_TESTED |  | [mlog.md](structures/mlog.md) |
-| `AP_EVNT_004` | E2 | ENRICHED |  | [mlog.md](structures/mlog.md) |
-| `AP_EVNT_005` | E2 | CONFIRMED |  | [mlog.md](structures/mlog.md) |
-| `AP_EVNT_006` | E2 | ENRICHED |  | [mlog.md](structures/mlog.md) |
-| `AP_EVNT_007` | E2 | CONFIRMED |  | [mlog.md](structures/mlog.md) |
+| `AP_EVNT_001` | E2 | ENRICHED |  | [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_EVNT_002` | E2 | CONFIRMED |  | [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_EVNT_003` | — | NOT_TESTED |  | [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_EVNT_004` | E2 | ENRICHED |  | [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_EVNT_005` | E2 | CONFIRMED |  | [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_EVNT_006` | E2 | ENRICHED |  | [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_EVNT_007` | E2 | CONFIRMED |  | [mlog_redo.md](structures/mlog_redo.md) |
 | `AP_LGFL_001` | E1 | ENRICHED | 2 | [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [tool_artifact_map.md](tools/tool_artifact_map.md) |
 | `AP_LGFL_002` | E2 | CONFIRMED |  | [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md) |
 | `AP_LGFL_003` | E2 | CONFIRMED |  | [mlog.md](structures/mlog.md) |
@@ -188,46 +191,46 @@ pages stating one fact with *different numbers* — gates 7h and 7i check exactl
 | `AP_LGTB_003` | — | CONFIRMED |  | [mlog.md](structures/mlog.md) |
 | `AP_LGTB_004` | — | CONFIRMED |  | [tool_artifact_map.md](tools/tool_artifact_map.md) |
 | `AP_LGTB_005` | — | CONFIRMED |  | [mlog.md](structures/mlog.md) |
-| `AP_REDO_001` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_002` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_003` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_004` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_005` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_006` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_007` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_008` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_009` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_010` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_011` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_012` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_013` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_014` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_015` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_016` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_017` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_018` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_019` | E2 | NOT_TESTED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_020` | E2 | NOT_TESTED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_021` | E2 | NOT_TESTED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_022` | E2 | NOT_TESTED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_023` | E2 | NOT_TESTED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_024` | E2 | NOT_TESTED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_025` | E2 | NOT_TESTED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_026` | E2 | NOT_TESTED | 4 | [carrier_categories.md](concepts/carrier_categories.md), [compression.md](concepts/compression.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_027` | E2 | NOT_TESTED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_028` | E2 | NOT_TESTED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_029` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_030` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_031` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_032` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_033` | E2 | NOT_TESTED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_034` | E2 | NOT_TESTED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_035` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_036` | E2 | NOT_TESTED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_037` | E2 | INFERRED | 6 | [carrier_categories.md](concepts/carrier_categories.md), [compression.md](concepts/compression.md), [ntfs_comparison.md](concepts/ntfs_comparison.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [container_table.md](structures/container_table.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_038` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_039` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog.md](structures/mlog.md) |
-| `AP_REDO_040` | RD | CONFIRMED |  | [mlog.md](structures/mlog.md) |
+| `AP_REDO_001` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_002` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_003` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_004` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_005` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_006` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_007` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_008` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_009` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_010` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_011` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_012` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_013` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_014` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_015` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_016` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_017` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_018` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_019` | E2 | NOT_TESTED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_020` | E2 | NOT_TESTED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_021` | E2 | NOT_TESTED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_022` | E2 | NOT_TESTED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_023` | E2 | NOT_TESTED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_024` | E2 | NOT_TESTED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_025` | E2 | NOT_TESTED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_026` | E2 | NOT_TESTED | 4 | [carrier_categories.md](concepts/carrier_categories.md), [compression.md](concepts/compression.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_027` | E2 | NOT_TESTED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_028` | E2 | NOT_TESTED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_029` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_030` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_031` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_032` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_033` | E2 | NOT_TESTED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_034` | E2 | NOT_TESTED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_035` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_036` | E2 | NOT_TESTED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_037` | E2 | INFERRED | 6 | [carrier_categories.md](concepts/carrier_categories.md), [compression.md](concepts/compression.md), [ntfs_comparison.md](concepts/ntfs_comparison.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [container_table.md](structures/container_table.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_038` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_039` | E2 | INFERRED | 3 | [carrier_categories.md](concepts/carrier_categories.md), [transactions_crash_consistency.md](concepts/transactions_crash_consistency.md), [mlog_redo.md](structures/mlog_redo.md) |
+| `AP_REDO_040` | RD | CONFIRMED |  | [mlog_redo.md](structures/mlog_redo.md) |
 | `CT_ALLC_001` | E2 | INFERRED |  | [allocators.md](structures/allocators.md) |
 | `CT_ALLC_002` | E2 … | CONFIRMED |  | [chkp.md](structures/chkp.md) |
 | `CT_ALLC_003` | E2 | ENRICHED |  | [virtual_addressing.md](concepts/virtual_addressing.md) |
@@ -677,4 +680,4 @@ Rows read in register order. A mention in `changelog.md` does not count as docum
 | `MD_DATA_RA_026` | RD | CONFIRMED | internal-only: a defect of this project's reader, fixed in 1.10 |
 
 ---
-*Generated by `build_docs_index.py` — 95 pages indexed, 487 of 503 register rows cited, 163 cited on more than one page. The claim register is `analysis/reference_table.csv`.*
+*Generated by `build_docs_index.py` — 98 pages indexed, 487 of 503 register rows cited, 163 cited on more than one page. The claim register is `analysis/reference_table.csv`.*

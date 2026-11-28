@@ -20,6 +20,19 @@ New-Partition -DiskNumber 1 -UseMaximumSize -DriveLetter H
 Set-Partition -DiskNumber 1 -PartitionNumber 2 -NewDriveLetter H
 ```
 
+### Inventory (the last step before imaging)
+
+Record what Windows reports about every entry of the volume, then take the disk offline and image it, with nothing
+in between. Elevated Windows PowerShell 5.1; what the script records is in [`README.md`](README.md#before-imaging-record-the-ground-truth-inventory_refsvolumeps1).
+
+```powershell
+# Every entry: times, sizes, attributes, file id, links, streams, hashes; volume.txt; errors.txt
+.\Inventory_RefsVolume.ps1 -Drive H -Label mytest
+
+# Also the change journal (Windows' decode), owners and SDDL, and the stream snapshots of every file (slower)
+.\Inventory_RefsVolume.ps1 -Drive H -Label mytest -Journal -Security -Snapshots
+```
+
 ### Unmounting (Must Do Before Detach)
 
 ```powershell
@@ -45,11 +58,12 @@ Format-Volume -FileSystem ReFS -Confirm:$false -NewFileSystemLabel "label" -Driv
 Format-Volume -DriveLetter H -FileSystem ReFS -NewFileSystemLabel "64kclusters" `
  -Confirm:$false -AllocationUnitSize 64KB
 
-# SHA256 metadata checksums (instead of default CRC64)
+# SHA-256 metadata checksums (instead of the default CRC64)
 Format-Volume -DriveLetter H -FileSystem ReFS -NewFileSystemLabel "sha256" `
  -Confirm:$false -SHA256Checksums
 
-# Integrity streams enabled (adds per-file CRC32 data checksums)
+# Integrity streams on for new files: per-cluster data checksums, CRC32-C on a 4 KiB-cluster volume
+# (CRC64 on 64 KiB clusters, SHA-256 on a SHA-256 volume)
 Format-Volume -DriveLetter H -FileSystem ReFS -NewFileSystemLabel "integrity" `
  -Confirm:$false -SetIntegrityStreams 1
 
@@ -85,7 +99,7 @@ Format-Volume -FileSystem NTFS -Confirm:$false -NewFileSystemLabel "ntfstest" -D
 fsutil fsinfo refsinfo H:
 ```
 
-Sample output (Win11 24H2):
+Sample output (`win11refs2g`, formatted by Windows 11 24H2; abridged):
 ```
 Volume Serial Number: 0x944a29564a293680
 ReFS Version: 3.14
@@ -105,12 +119,15 @@ Data Checksum Type: CHECKSUM_TYPE_NONE
 fsutil fsinfo volumeinfo H:
 ```
 
-Reports supported features: Hard Links, POSIX Unlink/Rename, Stream Snapshots, Case-Sensitive Directories, EFS, Extended Attributes, Transactions (Insider only).
+Lists the capabilities the mounted volume reports, as `Supports ...` lines (Hard Links, POSIX-style Unlink and
+Rename, Stream Snapshots, Case-Sensitive Directories, Encrypted File System, Extended Attributes, ...); which lines
+appear depends on the Windows build and on the volume. `Supports Transactions` appeared in one recorded output: a
+volume mounted by Insider build 29574; no recorded output of a release build (ReFS 3.4 to 3.14) shows it.
 
 ### USN Journal
 
 ```powershell
-# Create a USN journal (v2 or v3)
+# Create the USN journal (m = maximum size, a = allocation delta, in bytes)
 fsutil usn createjournal m=0x800000 a=0x100000 H:
 
 # Query journal info
@@ -118,6 +135,13 @@ fsutil usn queryjournal H:
 
 # Read journal entries
 fsutil usn readjournal H: csv
+```
+
+### Hard Links
+
+```powershell
+# Every name of a file (one line per link)
+fsutil hardlink list H:\test\file.txt
 ```
 
 ### Case-Sensitive Directories
@@ -132,7 +156,9 @@ fsutil file queryCaseSensitiveInfo H:\mydir
 
 ## BitLocker Management
 
-Windows 11 auto-enables BitLocker on new volumes. Must disable before image analysis.
+The lab's Windows 11 VM has encrypted a lab disk by itself, with no step asking for it, while the disk was attached
+read-write: check the state before imaging (the inventory script records it and warns). An image of an encrypted
+volume is encrypted.
 
 ```powershell
 # Check BitLocker status on all volumes
@@ -162,6 +188,16 @@ Set-FileIntegrity H:\testintegrity -Enable $true
 Set-FileIntegrity H:\testintegrity -Enable $false
 ```
 
+## Stream Snapshots
+
+```powershell
+# Create a stream snapshot of a file, named "snap1"
+refsutil streamsnapshot /c "snap1" H:\test\file.txt
+
+# List every snapshot of a file
+refsutil streamsnapshot /l "*" H:\test\file.txt
+```
+
 ## Compression (Win11 ReFS)
 
 ```powershell
@@ -174,30 +210,36 @@ refsutil compression H: /c /level:9 /chunksize:32768 /algorithm:lz4
 # Configure ZSTD compression
 refsutil compression H: /c /level:13 /chunksize:262144 /algorithm:zstd
 
-# Enable dedup+compress
-Enable-ReFSDedup -Type DedupAndCompress
-Start-ReFSDedupJob
+# Enable dedup+compress, then run the job (the compression settings alone compress nothing)
+Enable-ReFSDedup -Volume H: -Type DedupAndCompress
+Start-ReFSDedupJob -Volume H:
 ```
 
-Compression configuration is stored in the Container Table root page header, not visible via fsutil. Only `refsutil compression /q` and raw disk analysis can read it.
+The volume's compression settings (format, level, chunk size) are shown by neither `fsutil fsinfo volumeinfo` nor
+`fsutil fsinfo refsinfo`; `refsutil compression /q` prints them, and on a ReFS 3.14 volume they are in the Container
+Table's root page (format at page offset 0xA4, level at 0xA6, chunk size at 0xA8). On the lab's compression test
+volume (Windows 11 24H2) these steps changed the settings and ran deduplication, but compressed 0 bytes.
 
 ## ReFS Salvage
 
 ```powershell
-# Diagnose without repair
-refsutil salvage -D H:
+# Diagnose without repair (the working directory receives its logs)
+refsutil salvage -D H: C:\tools\salvagelogs\
 
-# Quick + All scan (copies recoverable files)
-refsutil salvage -QA H: <outputdir> <logdir>
+# Quick scan, then copy every file found to <target dir> (the argument order as Microsoft documents it: check it
+# against refsutil's own help on your build)
+refsutil salvage -QA H: <working dir> <target dir>
 
-# Fix boot sector (DANGEROUS: zeroes container_size in VBR)
-refsutil fixboot H:
+# Rewrite the boot sector (CHANGES IT: on the one volume measured, it set the checksum selector, the serial number,
+# the container size and the Extended GUID to 0 and the volume flags 0x66 -> 0x04; a writable mount then writes the
+# 64 MiB default container size back). Image the volume first.
+refsutil fixboot H: <parameters>
 ```
 
 ## Registry Settings
 
 ```powershell
-# Enable last access time updates (default is disabled = 1)
+# Enable last-access time updates (the default, 1, leaves them disabled)
 Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" `
  -Name "RefsDisableLastAccessUpdate" -Value 0
 
@@ -254,14 +296,17 @@ sha256sum image.raw
 fdisk -l image.raw
 mmls image.raw
 
-# VBR at partition start (LBA 32768 * 512 = 0x1000000)
+# The offsets below are those of the lab images: GPT, the ReFS partition at LBA 32768 (512-byte sectors, byte
+# 0x1000000), 4 KiB clusters. Take the partition start from mmls / fdisk for any other image.
+
+# VBR at the partition start
 xxd -l 64 -s 0x1000000 image.raw
 
-# ReFS version at VBR+0x28
-xxd -l 4 -s 0x1000028 image.raw
-# 0x0304 = v3.4, 0x030E = v3.14
+# ReFS version: major at VBR+0x28, minor at VBR+0x29
+xxd -l 2 -s 0x1000028 image.raw
+# 03 04 = v3.4, 03 0e = v3.14
 
-# SUPB signature at partition_start + 30 * cluster_size
+# Superblock at LCN 0x1E: partition start + 30 * cluster size (0x1E000 with 4 KiB clusters)
 xxd -l 16 -s 0x101e000 image.raw
-# Should show "SUPB" (0x53555042)
+# The page starts with the signature "SUPB" (53 55 50 42)
 ```

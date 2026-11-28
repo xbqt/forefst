@@ -69,13 +69,12 @@ interpretation of the rows.
 
 The upper layer implements the Windows filesystem contract — IRP dispatch, control-block lifecycle (VCB,
 FCB, SCB, CCB), security enforcement, attribute interpretation, namespace resolution, and Cache Manager
-integration. It is also where the **attribute vocabulary** is defined: the set of typed records ReFS
-attaches to a file, registered as **attribute schemas**. The set grew from **12 attribute schemas** in
-v3.4 to **16** in v3.14 (18 distinct across all versions): the two legacy schemas (`0x04`/`0x06`) were
-retired at v3.14, and six were added across v3.7 and v3.14 — bringing stream snapshots (`$SNAPSHOT`),
-extended attributes (`$EA_INFORMATION`/`$EA`, the carrier for WSL's `$LXUID`/`$LXGID`/`$LXMOD`/`$LXDEV`
-Linux metadata), USN-journal metadata, and encryption (`$EFS`), plus a revised `$REPARSE_POINT` schema.
-The WSL `$LX*` values are EA *entries* inside `$EA`, not standalone attribute schemas.
+integration. It is also where the **attribute vocabulary** is defined: the typed records ReFS attaches to a
+file. An attribute is a row of the file's own table and has no schema of its own; the schema table describes the
+tables themselves, by kind and by the format that wrote them: **12 object-table schemas** on v3.4, **16** on v3.14
+(18 distinct across all versions). Volumes from 3.7 register three more (0x1B0–0x1D0), volumes from 3.14 three more
+(0x1E0–0x200), and the two legacy schemas (`0x04`/`0x06`) were retired at v3.14
+([Schema Table](../structures/schema_table.md)). The WSL `$LX*` values are EA *entries* inside `$EA`.
 
 A new attribute is a new key type in a B+-tree row, and code that never queries for it does not see it. This is how
 ReFS adds attributes without changing the row format. (An older driver still refuses a newer format version at mount:
@@ -133,37 +132,44 @@ transactions, and checkpoint commits. Tier 3 *is* the lower (Minstore) layer; ti
 ### A file creation, end to end
 
 A single `CreateFile` makes all three tiers visible at once, and shows the upper layer building the rows
-that the lower layer ultimately stores and commits:
+that the lower layer ultimately stores and commits. The tree is read from the Windows 11 driver `refs.sys`
+10.0.26100.9818 (the latest build read with Microsoft's symbols): each line is a call that the function above it
+makes in that build's code. The calls are not shown in the order they run, and only those that matter here are shown.
 
 ```text
-User: CreateFile("E:\folder\newfile.txt", ...)
+User: CreateFile("E:\folder\newfile.txt", CREATE_NEW, ...)       refs.sys 10.0.26100.9818
  │
- ├─ RefsFsdDispatchSwitch → RefsFspDispatch
- │   └─ RefsCommonCreate                          [Tier 2]
- │       ├─ EnsureDirectoryNormalizedName
- │       ├─ RefsAccessCheck
- │       ├─ RefsCreateNewFile
- │       │   ├─ RefsCreateFile
- │       │   │   ├─ MsCreateDurableChildTableFromTemplate   [Tier 3]
- │       │   │   ├─ RefsCreateFileId2
- │       │   │   └─ RefsBindMinstoreTransactionNoRaise
- │       │   ├─ RefsCreateDataAttribute
- │       │   │   ├─ CreateAttribute → MsInsertRow           [Tier 3]
- │       │   │   └─ RefsAllocateNonResidentDataAttribute
- │       │   ├─ RefsComputeStandardInformationFromFcb
- │       │   │   └─ RefsSetStandardInfo → MsUpdateDataWithRoot
- │       │   └─ RefsCreateDirectory
- │       │       └─ CreateOrOpenDirectoryTable
- │       ├─ RefsCreateFcb / RefsCreateScb
- │       └─ If encrypted: RefsEncryptStream
- │
- └─ RefsCheckpointCurrentTransaction
-     └─ RefsCommitCurrentTransaction → CommitTopLevelAction
+ └─ RefsFsdCreate                                        [Tier 1: IRP_MJ_CREATE]
+     └─ RefsCommonCreate                                 [Tier 2]
+         └─ RefsCreateNewFile
+             ├─ EnsureDirectoryNormalizedName
+             ├─ RefsAccessCheck
+             ├─ RefsCreateFcb / RefsCreateLcb / RefsCreateScb
+             ├─ RefsInitializeFileFromDisk
+             │   ├─ RefsBindMinstoreTransactionNoRaise
+             │   └─ RefsCreateFile                       (RefsCreateDirectory for a directory)
+             │       ├─ RefsComputeStandardInformationFromFcb
+             │       ├─ MsCreateDurableChildTableFromTemplate      [Tier 3]
+             │       ├─ RefsCreateFileId2 → MsInsertRow             [Tier 3]
+             │       └─ RefsPersistNextFileId
+             ├─ RefsCreateDataAttribute
+             │   └─ RefsAllocateNonResidentDataAttribute
+             ├─ RefsUpdateStandardInformation → RefsSetStandardInfo
+             ├─ RefsEncryptionCreateCallback             (an encrypted file)
+             ├─ RefsWriteUsnJournalChanges
+             └─ RefsCheckpointCurrentTransaction
+                 └─ RefsCommitCurrentTransaction
+                     └─ MsCommitTransaction              [Tier 3]
+                         └─ CmsTransactionContext::Commit
 ```
 
-Read top to bottom, the upper layer assembles the file's
-[$STANDARD_INFORMATION](../attributes/STANDARD_INFORMATION.md) and [$DATA](../attributes/DATA.md) records, and each
-`Ms*` call writes a row. `CommitTopLevelAction` commits the whole set of changes as one transaction:
+Read top to bottom, the upper layer builds the file: `RefsCreateFile` creates the file's own table from a template
+(`MsCreateDurableChildTableFromTemplate`), inserts the row that maps its file id (`RefsCreateFileId2`) and stores the
+directory's ordinal counter (`RefsPersistNextFileId`); `RefsCreateDataAttribute` gives it its
+[$DATA](../attributes/DATA.md), and `RefsUpdateStandardInformation` writes its
+[$STANDARD_INFORMATION](../attributes/STANDARD_INFORMATION.md). Each `Ms*` call writes a row.
+`RefsCheckpointCurrentTransaction` commits the whole set of changes as one transaction (below
+`CmsTransactionContext::Commit`, the calls go through function pointers):
 
 - its redo records reach the log ([MLog](../structures/mlog.md)), the last one carrying the commit flag;
 - the tree on disk changes when the next [checkpoint](../structures/chkp.md) is flushed;
@@ -171,6 +177,36 @@ Read top to bottom, the upper layer assembles the file's
 
 That split is the foundation of ReFS's crash consistency, covered under
 [transactions and crash consistency](transactions_crash_consistency.md).
+
+### A file move, end to end
+
+A move to another directory is a rename: `MoveFileEx`, or `SetFileInformationByHandle` with `FileRenameInfo`, sends
+the driver an `IRP_MJ_SET_INFORMATION`. Read from the same build:
+
+```text
+User: MoveFileEx("E:\folder\a.txt", "E:\other\a.txt", 0)        refs.sys 10.0.26100.9818
+ │
+ └─ RefsFsdSetInformation                                [Tier 1: IRP_MJ_SET_INFORMATION]
+     └─ RefsCommonSetInformation                         [Tier 2]
+         └─ RefsSetRenameInfo
+             ├─ RefsFindTargetElements / RefsLookupEntry
+             ├─ RefsCheckLinkForRename
+             ├─ RefsRemoveLink → RefsDeleteLinkInDirectory
+             ├─ RefsMoveFile
+             │   ├─ MsReparentChildTable                 [Tier 3]
+             │   ├─ RefsDeleteFileId2 / RefsCreateFileId2
+             │   └─ RefsPersistNextFileId
+             ├─ RefsAddLink → RefsAddNameToParent
+             ├─ RefsUpdateFileTimestampsForChange
+             └─ RefsCheckpointCurrentTransaction
+                 └─ RefsCommitCurrentTransaction → MsCommitTransaction   [Tier 3]
+```
+
+The name leaves the old directory (`RefsRemoveLink`) and is added to the new one (`RefsAddLink`); `RefsMoveFile`
+moves the file's table under its new parent (`MsReparentChildTable`) and replaces the row that maps its file id. The
+file id itself does not change: the FileRef keeps the directory the file was created in
+([File IDs](file_ids.md)). On a volume with hard-link support, the move also splits the file's record out of its name
+row, for good ([Record placement and data residency](placement_and_residency.md)).
 
 ## What changed from v3.4 to v3.14
 
@@ -217,13 +253,15 @@ the two metrics measure different things and must not be confused. The
 ## Evidence
 
 - **PDB symbols and decompilation** across the v3.4, v3.14 and Insider builds confirm the two-layer model, the
-  namespace partition, the Minstore API method ownership, the three-tier dispatch path, and the file-creation call
-  chain.
+  namespace partition, the Minstore API method ownership and the three-tier dispatch path.
+- **The file-creation and file-move call trees** are read on 26100.9818, every line a call that build's decompiled
+  code makes (Microsoft's symbols); the create's entry, `RefsFsdCreate` calling `RefsCommonCreate`, is the same on
+  Insider 29574.
 - **Catalog-verified** class and method ownership: `FindRow`/`InsertRow`/`DeleteRow`/`UpdateRow` belong to `CmsTable`
   (no `ModifyRow` in any build), checkpoint ops live on `CmsVolume` with no `CmsVolumeCheckpoint`, and log I/O is
   `CmsLogRedoQueue`/`CmsTxMemLog` with no `CmsLogFile`.
 - **On disk:** the B+-tree storage model and container translation are confirmed across the corpus.
-- **The attribute-schema growth** (12 → 16, 18 distinct) is confirmed both in the driver and on disk — the driver's
+- **The object-table schema growth** (12 → 16, 18 distinct) is confirmed both in the driver and on disk — the driver's
   schema roster and the schema-table row counts measured across the disk corpus.
 - **The function-body sizes** compared are 17134 against 26100.8115: `RefsCommonSetInformation` 4,365 → 5,039 bytes,
   `RefsCommonWrite` 14,068 → 12,543 bytes.

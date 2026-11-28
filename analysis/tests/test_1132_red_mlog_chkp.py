@@ -951,7 +951,7 @@ def md_row(lines, offset_re):
 
 # RED 1.13.2 C6: mlog.md:221-223 label +0x18 'LSN oldest', +0x20 'LSN (duplicate of +0x18)', +0x38 'Write counter' (8 B) -- green with the RC1-docs step (1.14.0; the strict xfail mark removed)
 def test_c6_mlog_md_control_payload_rows_carry_the_new_labels():
-    sec = md_section(repo_text("docs/structures/mlog.md"), r"(?i)control page")
+    sec = md_section(repo_text("docs/structures/mlog.md"), r"(?i)control (?:page|record) layout")
     r18, r20, r38 = md_row(sec, r"(?:payload\s*)?\+0x18"), md_row(sec, r"(?:payload\s*)?\+0x20"), \
         md_row(sec, r"(?:payload\s*)?\+0x38")
     assert re.search(r"(?i)\blog start\b", r18[2]), "+0x18 row: %r" % r18
@@ -965,7 +965,7 @@ def test_c6_mlog_md_control_payload_rows_carry_the_new_labels():
 def test_c6_mlog_md_record_and_control_page_header_0x20_is_the_open_count():
     text = repo_text("docs/structures/mlog.md")
     rec = md_row(md_section(text, r"(?i)Layer 1"), r"0x20")
-    ctl = md_row(md_section(text, r"(?i)control page"), r"0x20")
+    ctl = md_row(md_section(text, r"(?i)control (?:page|record) layout"), r"0x20")
     assert re.search(r"(?i)\bopen count\b", " ".join(rec[2:])), "record header +0x20: %r" % rec
     assert re.search(r"(?i)\bopen count\b", " ".join(ctl[2:])), "control-page header +0x20: %r" % ctl
     assert not re.search(r"(?i)increments each write|per-record counter", " ".join(rec + ctl)), (rec, ctl)

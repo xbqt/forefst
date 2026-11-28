@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document describes how to create ReFS disk images with specific configurations for analysis. The workflow is: create raw image on host, attach to VM, initialize/format inside Windows, populate with data, properly unmount, detach, and analyze on the host.
+This document describes how to create ReFS disk images with specific configurations for analysis. The workflow is: create raw image on host, attach to VM, initialize/format inside Windows, create the change journal, populate with data, properly unmount, detach, and analyze on the host.
 
 ## Step 1: Create the Raw Image on the Linux Host
 
@@ -39,7 +39,7 @@ New-Partition -DiskNumber 1 -UseMaximumSize -DriveLetter H
 ### Basic ReFS (default settings)
 
 ```powershell
-# Win10 (produces ReFS 3.4, no checksums)
+# Win10 (produces ReFS 3.4; metadata checksummed with CRC64, as on every format)
 Format-Volume -FileSystem ReFS -Confirm:$false -NewFileSystemLabel "win10refs8g" -DriveLetter H
 
 # Win11 (produces ReFS 3.14, CRC64 metadata checksums)
@@ -71,12 +71,12 @@ Increases page reference size from 0x30 to 0x48 bytes (24 extra bytes for SHA-25
 Format-Volume -DriveLetter H -FileSystem ReFS -NewFileSystemLabel "setintegritystreams0" `
  -Confirm:$false -SetIntegrityStreams 0
 
-# Integrity streams ON (enables per-file CRC32 data checksums)
+# Integrity streams ON for new files (per-cluster CRC32-C data checksums on a 4 KiB-cluster volume)
 Format-Volume -DriveLetter H -FileSystem ReFS -NewFileSystemLabel "setintegritystreams1" `
  -Confirm:$false -SetIntegrityStreams 1
 ```
 
-When integrity streams are ON, Data Checksum Type becomes CRC32. Without this flag, file data is never checksummed regardless of metadata checksum settings.
+With integrity streams ON, each data cluster of an integrity file is checksummed with the volume's data-checksum algorithm: CRC32-C (4 bytes) on 4 KiB-cluster volumes, CRC64 on 64 KiB-cluster volumes, SHA-256 on SHA-256 volumes. Without this flag, file data is never checksummed regardless of metadata checksum settings.
 
 ### Other Format Options
 
@@ -101,7 +101,7 @@ Format-Volume -DriveLetter H -FileSystem ReFS -NewFileSystemLabel "win11refs2t64
 
 ## Step 4: Disable BitLocker (Win11 Only)
 
-Windows 11 automatically enables BitLocker on new volumes. This must be disabled before the image can be analyzed:
+The lab's Windows 11 VM has encrypted a lab disk by itself, with no step asking for it, while the disk was attached read-write. Check the state, and decrypt before imaging: an image of an encrypted volume is encrypted.
 
 ```powershell
 # Check BitLocker status
@@ -118,7 +118,20 @@ Decryption takes time. Do not detach the disk until `VolumeStatus` shows `FullyD
 
 Win10 does not auto-enable BitLocker on data volumes. Insider Server also does not.
 
-## Step 5: Populate with Data
+## Step 5: Create the Change Journal (USN)
+
+A freshly formatted ReFS data volume has no change journal. Create it before populating the volume, so that the
+journal records the activity:
+
+```powershell
+fsutil usn createjournal m=134217728 a=16777216 H:    # 128 MiB maximum size, 16 MiB allocation delta
+fsutil usn queryjournal H:                            # check: the journal's ID, and its next USN (0 on a new journal)
+```
+
+These are the sizes used for the public sample `win11refstestmftecmd` (its `provenance/commands.md`). Leave the step
+out only for an image meant to show a volume without a journal.
+
+## Step 6: Populate with Data
 
 ### Using Generate-FSActivity
 
@@ -163,7 +176,7 @@ Set-FileIntegrity H:\testintegrity -Enable $true
 fsutil file setCaseSensitiveInfo H:\casesensitive enable
 ```
 
-## Step 6: Verify Before Detaching
+## Step 7: Verify Before Detaching
 
 ```powershell
 # Confirm ReFS version and settings
@@ -176,7 +189,7 @@ fsutil fsinfo volumeinfo H:
 Get-BitLockerVolume -MountPoint H
 ```
 
-## Step 7: Properly Unmount and Detach
+## Step 8: Properly Unmount and Detach
 
 Inside Windows (PowerShell as Administrator):
 
@@ -196,7 +209,7 @@ virsh detach-disk win11 sdr
 
 Both steps are critical. Skipping them can leave the volume dirty or unmountable.
 
-## Step 8: Verify on Host
+## Step 9: Verify on Host
 
 ```bash
 # Quick structural verification

@@ -153,15 +153,17 @@ other, never both.
 |--------|------|-------|-------------|
 | 0x00 | 4 | Inner header size (u32) | Typically 0x88 (all versions) |
 | 0x0C | 4 | Summary size (u32) | 0x200 on v3.14+, **0x1A0** on v3.4–v3.10 (the inline-form $DATA record uses 0x30) |
-| 0x2C | 4 | Data offset (u32) | 0x28 |
+| 0x2C | 2 | Flags offset (u16) | 0x28: the stream flags are at 0x28 + this value |
 | 0x30 | 8 | Total allocated (u64) | The file's whole allocation, blocks shared with a snapshot included |
 | 0x38 | 8 | Stream size (u64) | Logical file size |
 | 0x40 | 8 | Valid data length (u64) | -- |
 | 0x48 | 8 | Disk allocated (u64) | What this stream's own extents cover (see below) |
-| 0x50 | 8 | Version count + sparse flag (u64) | low31 = stream version count (=1 for a single-version file, N for an N-version snapshotted file); bit 31 = sparse flag |
+| 0x50 | 4 | Stream flags (u32) | bit 31 = the stream is sparse, bit 30 = it is encrypted ([$DATA](../attributes/DATA.md)); the low 16 bits read 1, not decoded |
+| 0x54 | 4 | (not decoded) | 0 |
 
 On **ReFS v3.4** the four size fields shift **+4** (total allocated 0x34, stream size **0x3C**, valid data
-length 0x44); the disk-allocated slot (0x4C) is 0 and the allocation is carried by the total-allocated field.
+length 0x44); the disk-allocated slot (0x4C) is 0 and the allocation is carried by the total-allocated field. The
+shift is the stream flags, which v3.4 keeps at 0x28, before the sizes.
 The inner header size (0x88) and the extent sub-record at +0x88 are unchanged across versions.
 
 A record of this form is extent-backed by its form, whatever `disk_alloc` says. On v3.7 and later, a
@@ -376,7 +378,7 @@ at file VCN 0 and one at file VCN 15; the uncovered range is the hole.
 
 The 24-byte extent entry, the integrity-stride flags, the inline CRC32-C element (polynomial 0x82f63b78), the sparse
 hole (flags bit 0x20), the retracted single-extent shortcut, the multi-instance $DATA sub-record, the snapshot
-extents' reuse of the format, the version-count field, the logical-versus-allocated signal, the `alloc_size = 0`
+extents' reuse of the format, the stream-flags field, the logical-versus-allocated signal, the `alloc_size = 0`
 case of a fully sparse file and the key shape of an extent-backed named stream's extent record (key offset
 `0x10`, key size `0x50`, attribute type `0x0003`) are registered findings, each with its evidence tier and witness in the claim register; so are
 the page's remaining field-level statements.

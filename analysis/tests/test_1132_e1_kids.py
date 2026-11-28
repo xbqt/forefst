@@ -182,6 +182,12 @@ def test_k059_a_volume_information_update_is_dated_when_it_was_written():
     formatted, written = _filetime(2026, 9, 6, 16, 17, 19), _filetime(2026, 9, 12, 17, 21, 28)
     vbase, v1_off, v1_len = 0x40, 0x80, 0xA8
     rec = bytearray(v1_off + v1_len)
+    # F5 (1.14.1): a whole-row UpdateRow is dated by its row's KEY (value 0); the volume-information row's key type is
+    # 0x0520 on the corpus (analysis/reports/v1.14.1/F5/f5_census_pass2.json: 2 values, a 448-byte row, tables 0x500 /
+    # 0x501). The fixture held no value 0 and was dated through the fallback offsets F5 removed
+    k_off = 0x70
+    struct.pack_into("<II", rec, vbase, k_off, 8)                      # the record's value 0: the key
+    struct.pack_into("<H", rec, k_off, 0x0520)
     struct.pack_into("<II", rec, vbase + 8, v1_off, v1_len)            # the record's value 1: offset, length
     struct.pack_into("<Q", rec, v1_off + 0x90, formatted)              # the volume's format time
     struct.pack_into("<Q", rec, v1_off + 0xA0, written)                # the time this update was written

@@ -22,12 +22,18 @@ import sys
 import tempfile
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-SOURCES = ("README.md", "docs/tools/forefst.md", "docs/tools/refsanalysis.md", "docs/tools/known_issues.md")   # RC3: its own page
+SOURCES = ("README.md", "docs/tools/forefst_short.md", "docs/tools/forefst.md", "docs/tools/refsanalysis.md", "docs/tools/known_issues.md")   # RC3: its own page
 IMAGE_TOKENS = ("disk.raw", "image.raw", "volume.raw", "refs.raw",
                 # the walkthrough pages tell the reader to set a shell variable first; without
                 # these the whole examples/ tree was silently skipped -- see BLOCK_SOURCES below.
                 "$IMG", "${IMG}", "<image>", "win11refsmini.raw")
 CMD = re.compile(r"\b((?:forefst|refsanalysis)\.py\s+[^\n`|]+)")
+# U3 (1.14.1): the lab pages (analysis/lab/*.md, mirrored from 1.14.1) name the host's image path itself
+LAB_IMAGE = re.compile(r"^/mnt/usb/disks/\S+\.raw$")
+
+
+def is_image(a):
+    return a in IMAGE_TOKENS or bool(LAB_IMAGE.match(a))
 # stderr signatures that mean "the CLI rejected this COMMAND LINE" -- a contract break. Deliberately does
 # NOT include a bare "error:", which also covers data-dependent failures ("file not found", "OID not found")
 # that are correct behaviour when an example written for a reader's own volume is run against a sample.
@@ -59,8 +65,11 @@ def shell_blocks(txt):
 
 
 def block_sources(tree):
-    """Every markdown page under docs/, plus the root README."""
+    """Every markdown page under docs/ and analysis/lab/ (U3, 1.14.1), plus the root README."""
     out = ["README.md"]
+    lab = os.path.join(tree, "analysis", "lab")
+    if os.path.isdir(lab):
+        out += [os.path.join("analysis", "lab", f) for f in sorted(os.listdir(lab)) if f.endswith(".md")]
     docs = os.path.join(tree, "docs")
     for dp, _d, fs in os.walk(docs):
         # N592: only website/content/ is generated (build.py); website/pages/ holds hand-written published pages
@@ -86,7 +95,7 @@ def examples(tree):
                 line = re.sub(r"\s+#.*$", "", line)
                 line = re.split(r"\s*[|>]\s*", line)[0].strip()
                 line = re.sub(r"^python3?\s+", "", line).strip()
-                if not line or not any(t in line for t in IMAGE_TOKENS):
+                if not line or not (any(t in line for t in IMAGE_TOKENS) or any(is_image(w) for w in line.split())):
                     continue
                 if re.search(r"<(?!image>)[A-Za-z_]+>", line):     # a placeholder we cannot resolve
                     continue
@@ -160,7 +169,7 @@ def main(tree=None):
                     redirect_next = False
                     continue
                 redirect_next = a in OUTFLAGS
-                args.append(img if a in IMAGE_TOKENS else a)
+                args.append(img if is_image(a) else a)
             try:
                 r = subprocess.run([sys.executable, tool] + args, capture_output=True, text=True,
                                    timeout=180, cwd=tmp)

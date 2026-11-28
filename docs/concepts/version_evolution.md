@@ -25,7 +25,7 @@ volume is at: the Windows release that formatted it, or the one that upgraded it
 | Version | Windows build | Release | Key change |
 |---------|--------------|---------|------------|
 | 3.4 | Win10 1803 | 2018 | Earliest version covered here |
-| 3.7 | Win11 21H2 | 2021 | +3 attribute schemas |
+| 3.7 | Win11 21H2 | 2021 | +3 object-table schemas |
 | 3.9 | Win11 22H2 | 2022 | +Candidate Table |
 | 3.10 | Win11 23H2 | 2023 | Compact page references, checksum selector in the boot sector, native-format marker |
 | 3.14 | Win11 24H2 | 2024 | Indirect root list, rollback-protection fields |
@@ -112,7 +112,7 @@ schemas appear.
 | CHKP flag 0x0400 | The record carries the rollback-protection fields (+0x9C / +0xA0); set on a volume of version 3.13 or later |
 | Rollback protection | `CmsRollbackProtection` — present in the 26100 and Insider drivers, absent from 17134 |
 | SHA-256 option | VBR 0x2A = 0x04, page reference size 72 bytes (0x48) — every SHA-256 volume measured is v3.14 |
-| Removed | Legacy schemas 0xe070, 0xe0e0; legacy attribute schemas 0x004, 0x006 |
+| Removed | Legacy schemas 0xe070, 0xe0e0; legacy object-table schemas 0x004, 0x006 |
 
 Two flags distinguish v3.14 from v3.10 in the [checkpoint](../structures/chkp.md):
 
@@ -130,8 +130,8 @@ offsets, never stored inline at `0x94`:
 Measured over the direct-mode checkpoint copies (flag 0x0200 clear) of the corpus: **every one** resolves when the
 13 words are read as offsets.
 
-The retirement of the 0x004 and 0x006 legacy attribute schemas is why a freshly formatted v3.14 volume has a smaller
-schema table than its predecessors even though it gained new attributes.
+The retirement of the 0x004 and 0x006 legacy schemas is why a freshly formatted v3.14 volume has a smaller
+schema table than its predecessors even though it gained three new table schemas.
 
 ### Insider-only features
 
@@ -174,19 +174,22 @@ These tables show which [schemas](../structures/schema_table.md) exist on each v
 these — but knowing the expected set is what lets you spot an upgraded volume (which carries the *union* of
 old and new) or a corrupted one.
 
-### Attribute schemas
+### Object-table schemas
 
-| Schema | Name | v3.4 | v3.7 | v3.9 | v3.10 | v3.14 | Insider |
-|--------|------|:----:|:----:|:----:|:-----:|:-----:|:-------:|
-| 0x004 | (legacy) | Y | Y | Y | Y | — | — |
-| 0x006 | (legacy) | Y | Y | Y | Y | — | — |
-| 0x110–0x1A0 | Core attributes | Y | Y | Y | Y | Y | Y |
-| 0x1B0 | $SNAPSHOT | — | Y | Y | Y | Y | Y |
-| 0x1C0 | $REPARSE_POINT | — | Y | Y | Y | Y | Y |
-| 0x1D0 | $EA_INFORMATION | — | Y | Y | Y | Y | Y |
-| 0x1E0 | $EA | — | — | — | — | Y | Y |
-| 0x1F0 | $LOGGED_UTILITY_STREAM | — | — | — | — | Y | Y |
-| 0x200 | $EFS | — | — | — | — | Y | Y |
+A schema describes a whole table, not an attribute: each file and each directory holds its own small table, and the
+schema id says which kind of table it is and under which format it was written.
+
+| Schema | The table it describes | v3.4 | v3.7 | v3.9 | v3.10 | v3.14 | Insider |
+|--------|------------------------|:----:|:----:|:----:|:-----:|:-----:|:-------:|
+| 0x004 | Legacy fixed-format | Y | Y | Y | Y | — | — |
+| 0x006 | Legacy variable-format | Y | Y | Y | Y | — | — |
+| 0x110–0x1A0 | A file's record (0x180), a directory's own row (0x190) and a data stream (0x1A0) below format 3.6; a directory's names (0x130); the security (0x140), volume-information (0x150) and reparse-index (0x160) tables; an older set (0x110, 0x120, 0x170) | Y | Y | Y | Y | Y | Y |
+| 0x1B0 | Registered with the shape of a file's record table; its role is not read | — | Y | Y | Y | Y | Y |
+| 0x1C0 | A file's record, formats 3.6 to 3.10 | — | Y | Y | Y | Y | Y |
+| 0x1D0 | A directory's own row, formats 3.6 to 3.10 | — | Y | Y | Y | Y | Y |
+| 0x1E0 | A file's record, formats 3.11 and later | — | — | — | — | Y | Y |
+| 0x1F0 | A directory's own row, formats 3.11 and later | — | — | — | — | Y | Y |
+| 0x200 | A data stream, formats 3.11 and later | — | — | — | — | Y | Y |
 
 ### System schemas
 
@@ -208,7 +211,7 @@ old and new) or a corrupted one.
 ### Schema table entry counts
 
 The leaf-row count of the schema table is itself a version signature. The dip at v3.14 (29, down from 30
-at v3.7) is real: v3.14 gains three attribute schemas but retires the two legacy attribute schemas
+at v3.7) is real: v3.14 gains three object-table schemas but retires the two legacy ones
 (0x004, 0x006) and several legacy system schemas, for a net loss of one row.
 
 | Version | System | Attribute | Total |
@@ -331,7 +334,7 @@ unlink and rename depend on the format was not read in the driver.)
 - **The CHKP flag composites** (0x002 / 0x082 / 0x682 / 0x602 / 0x2682) and the native-format-marker behaviour are
   measured on disk and corroborated by the checkpoint code path.
 - **The schema version-gating matrix** and the per-version entry counts are measured on disk: the v3.4 = 27 / v3.7 =
-  30 / v3.9 = 31 / v3.10 = 30 / v3.14 = 29 / Insider = 30 counts include the legacy 0x004 / 0x006 attribute schemas
+  30 / v3.9 = 31 / v3.10 = 30 / v3.14 = 29 / Insider = 30 counts include the legacy 0x004 / 0x006 object-table schemas
   (these counts are format-deterministic, but the v3.7/v3.9/v3.10 figures each rest on only 1–2 images).
 - **The heat engine table** (OID 0x30) as a v3.10+ marker is measured on disk (present on all 112 corpus volumes of
   3.10 and later, absent on the 12 of 3.4–3.9) and read in the driver.

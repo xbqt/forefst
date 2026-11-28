@@ -455,9 +455,15 @@ def test_timeline_fileref_is_one_files_history():
     r = _sample_run("lab314_main.raw", "forefst.py", "timeline", "--fileref", "0x70b:0x7", "--csv")
     rows = list(csv.DictReader(io.StringIO(r.stdout)))
     # acceptance 1.14.0 (Q-C): a row's path today (a USN row has none: its Name)
-    assert rows and {row["PathToday"] or row["Name"] for row in rows} == {"LAB_0906/t15/linked.bin",
-                                                                          "LAB_0906/t15/linked_alias.bin"}
-    assert "leaves out MLog events" in r.stderr
+    own = [row for row in rows if row["Source"] != "MLog"]
+    assert own and {row["PathToday"] or row["Name"] for row in own} == {"LAB_0906/t15/linked.bin",
+                                                                        "LAB_0906/t15/linked_alias.bin"}
+    # U12 (1.14.1): `--fileref` / `--id` merges the log payloads whose records name the file; a payload row shows its
+    # own table (it can be the parent's), and each says how it was kept
+    mlog = [row for row in rows if row["Source"] == "MLog"]
+    assert mlog and all(re.search(r"\[by (its file id|one of its names)\]$", row["Event"]) for row in mlog), mlog
+    assert re.search(r"timeline --id 0x70b:0x7: %d log payload rows of \d+ \(" % len(mlog), r.stderr), r.stderr[-800:]
+    assert "leaves out MLog events" not in r.stderr
 
 
 def test_timeline_oid_includes_the_si_events_of_files_filed_under_it():

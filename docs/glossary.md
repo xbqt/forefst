@@ -366,6 +366,18 @@ Key terms used throughout the ReFS documentation, listed alphabetically.
 
   See [Deletion Recovery](concepts/deletion_recovery.md).
 
+**Page**
+: A metadata page: a block that begins with the common 80-byte [page header](structures/page_header.md) — a
+  superblock or checkpoint copy (one cluster), or a B+-tree node (`MSB+`: 16 KiB on a 4 KiB-cluster volume, 64 KiB on
+  a 64 KiB one).
+
+  - In a page: every table row, a file's record among them, and with the record a small file's bytes when they are
+    stored inline (format 3.11 and later). The record is a row of a directory's table: of the directory that holds
+    the file's name or, for a file that was moved or hard-linked, a backing row in its home directory. A record whose
+    attribute table grew too large keeps its attributes in a child `MSB+` page.
+  - Not a page: the clusters that hold a file's data in extents, the boot sector, and the MLog, whose records sit in
+    4 KiB log blocks with a header of their own.
+
 **Page reference**
 : A pointer from a parent B+-tree page to a child that also carries the child's checksum — the Merkle link that makes
   the tree self-verifying.

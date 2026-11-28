@@ -146,7 +146,7 @@ Almost every first parser gets two properties wrong:
 
    Most log payloads carry a time, not all: system and allocator operations typically carry none.
 
-   See [Timestamp extraction](../structures/mlog.md#timestamp-extraction) on the MLog page for the per-opcode
+   See [Timestamp extraction](../structures/mlog_redo.md#timestamp-extraction) on the MLog redo-records page for the per-opcode
    offsets.
 
 2. **The CHKP virtual clock is an ordering, not a clock.** It is a monotone counter of checkpoint writes, held in the
@@ -319,7 +319,7 @@ The full signal/tier model, the base rates and their validation live on the
 
 | Need | Command |
 |------|---------|
-| Merged super-timeline | `forefst.py <image> timeline [--csv FILE] [--fileref HOME:ID] [--source USN\|MLog\|SI] [--fast]` |
+| Merged super-timeline | `forefst.py <image> timeline [--csv FILE] [--id HOME:ID] [--source USN\|MLog\|SI] [--fast]` |
 | Per-file MACB | `forefst.py <image> files` |
 | Timestamp-anomaly verdict | `forefst.py <image> timestomp` — the one surface that judges one |
 | Full cross-source timestomp verdict (adds USN) | `forefst.py <image> timestomp [--min HIGH] [--json] [--csv out.csv]` |

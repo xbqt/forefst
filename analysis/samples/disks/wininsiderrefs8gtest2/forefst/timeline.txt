@@ -3,7 +3,7 @@
 ==============================================================================
 ReFS Super-Timeline — wininsiderrefs8gtest2.raw
 ==============================================================================
-  Sources merged: USN=0  MLog=1983  $SI-MACB=3576  (sorted by time; rows are not joined across sources:
+  Sources merged: USN=0  MLog=1982  $SI-MACB=3576  (sorted by time; rows are not joined across sources:
                   a file is listed under its HOME directory's OID in $SI and USN -- the
                   FileRef high half, kept after a move or hard link -- and MLog the target OID)
   NOTE: USN Journal: Inactive — timeline is $SI + MLog only.
@@ -15,7 +15,7 @@ ReFS Super-Timeline — wininsiderrefs8gtest2.raw
           An MLog row's event is DERIVED from its records (`mlog --info`). A $SI or
           MLog row shows the live tree's path TODAY (PathToday), not the path at the event; a USN row
           the name its record carries (its path at the event is not read).
-  56 MLog row(s) are left out: their log payloads carry no embedded time (an undated payload cannot
+  57 MLog row(s) are left out: their log payloads carry no embedded time (an undated payload cannot
   be placed on a timeline; `mlog --parse` lists it).
 ------------------------------------------------------------------------------
   Timestamp (UTC)               Src    OID         Path today / USN name       Event

@@ -11,14 +11,15 @@ It also has a boot-sector editor and a repair command for the bootstrap copies (
 
 It imports its parsing layer from [`forefst.py`](forefst.md) and never modifies it.
 
-> **Status.** refsanalysis is a lab tool. 1.14.0 is its last update: it is not maintained after this release. It
-> runs only with the forefst of its own release: with another forefst it writes one line naming both versions and
-> exits 1 (the command does not run). A later release keeps forefst 1.14.0 beside it, in `refsanalysis_forefst/`,
-> and that copy is the one it imports.
+> **Status.** refsanalysis is a lab tool, and 1.14.0 is its last release. It runs only with forefst 1.14.0: with
+> another forefst it writes one line naming both versions and exits 1 (the command does not run), so it does not run
+> with a later forefst. To use it, take both tools from the 1.14.0 release (tag `v1.14`). Its structure views are
+> to move into forefst, as a `structure` command.
 
-> **Known issues in 1.14.0.** The one that concerns refsanalysis: compressed and compacted containers are not read
-> (`containers` lists them with the reason, and a read into one is a recorded skip). The full list, with what to do,
-> is in [Known issues in 1.14.0](known_issues.md).
+> **Known issues of refsanalysis 1.14.0.** Two: compressed and compacted containers are not read
+> (`containers` lists them with the reason, and a read into one is a recorded skip); and `objects` names every
+> Object Table entry from 0x700 up "Directory/File", where those entries are directories (a file has no object id). The full list, with what to do,
+> of forefst is in [Known issues in 1.14.1](known_issues.md).
 
 ## Invocation
 

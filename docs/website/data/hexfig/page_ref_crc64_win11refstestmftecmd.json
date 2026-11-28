@@ -1,0 +1,292 @@
+{
+ "id": "page_ref_crc64_win11refstestmftecmd",
+ "generated_by": "analysis/tools/analysis_scripts/gen_hex_figures.py",
+ "decoded_by": "forefst 1.14.1 (forefstdev/forefst.py)",
+ "title": "An example 48-byte page reference (CRC64): the checkpoint's reference to the Object ID Table's root, on a ReFS 3.14 volume (4 KiB clusters), read with forefst.",
+ "image": {
+  "name": "win11refstestmftecmd.raw",
+  "step": "step5",
+  "listed_as": "analysis/rawdisk/disks/step5/win11refstestmftecmd.raw",
+  "size": 4294967296
+ },
+ "offset": 524239120,
+ "offset_hex": "0x1f3f4110",
+ "length": 48,
+ "bytes": "043c010000000000053c010000000000063c010000000000073c01000000000000000208080000007f34fcf69d6a97b5",
+ "note": null,
+ "fields": [
+  {
+   "off": "0x00",
+   "len": 8,
+   "name": "LCN slot 0",
+   "frame": null,
+   "group": null,
+   "bytes": "04 3c 01 00 00 00 00 00",
+   "value": "0x13c04 (virtual: the Object ID Table's root page, translated by the Container Table)",
+   "decoder": "forefst.parse_chkp",
+   "slot": 0,
+   "link": {
+    "page": "structures/page_references.md",
+    "anchor": "48-bytes-0x30-crc64-every-inner-b-tree-row-and-a-checkpoints-root-references-from-refs-310"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x08",
+   "len": 8,
+   "name": "LCN slot 1",
+   "frame": null,
+   "group": null,
+   "bytes": "05 3c 01 00 00 00 00 00",
+   "value": "0x13c05",
+   "decoder": "forefst.parse_chkp",
+   "slot": 1,
+   "link": {
+    "page": "structures/page_references.md",
+    "anchor": "48-bytes-0x30-crc64-every-inner-b-tree-row-and-a-checkpoints-root-references-from-refs-310"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x10",
+   "len": 8,
+   "name": "LCN slot 2",
+   "frame": null,
+   "group": null,
+   "bytes": "06 3c 01 00 00 00 00 00",
+   "value": "0x13c06",
+   "decoder": "forefst.parse_chkp",
+   "slot": 2,
+   "link": {
+    "page": "structures/page_references.md",
+    "anchor": "48-bytes-0x30-crc64-every-inner-b-tree-row-and-a-checkpoints-root-references-from-refs-310"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x18",
+   "len": 8,
+   "name": "LCN slot 3",
+   "frame": null,
+   "group": null,
+   "bytes": "07 3c 01 00 00 00 00 00",
+   "value": "0x13c07",
+   "decoder": "forefst.parse_chkp",
+   "slot": 3,
+   "link": {
+    "page": "structures/page_references.md",
+    "anchor": "48-bytes-0x30-crc64-every-inner-b-tree-row-and-a-checkpoints-root-references-from-refs-310"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x20",
+   "len": 2,
+   "name": "Flags",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00",
+   "value": "0x0000",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 4,
+   "link": {
+    "page": "structures/page_references.md",
+    "anchor": "48-bytes-0x30-crc64-every-inner-b-tree-row-and-a-checkpoints-root-references-from-refs-310"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x22",
+   "len": 1,
+   "name": "Checksum type",
+   "frame": null,
+   "group": null,
+   "bytes": "02",
+   "value": "2: CRC-64/NVME",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 5,
+   "link": {
+    "page": "structures/page_references.md",
+    "anchor": "48-bytes-0x30-crc64-every-inner-b-tree-row-and-a-checkpoints-root-references-from-refs-310"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x23",
+   "len": 1,
+   "name": "Checksum data offset",
+   "frame": null,
+   "group": null,
+   "bytes": "08",
+   "value": "0x08",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 6,
+   "link": {
+    "page": "structures/page_references.md",
+    "anchor": "48-bytes-0x30-crc64-every-inner-b-tree-row-and-a-checkpoints-root-references-from-refs-310"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x24",
+   "len": 4,
+   "name": "Checksum data length",
+   "frame": null,
+   "group": null,
+   "bytes": "08 00 00 00",
+   "value": "8 bytes",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 7,
+   "link": {
+    "page": "structures/page_references.md",
+    "anchor": "48-bytes-0x30-crc64-every-inner-b-tree-row-and-a-checkpoints-root-references-from-refs-310"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x28",
+   "len": 8,
+   "name": "Checksum",
+   "frame": null,
+   "group": null,
+   "bytes": "7f 34 fc f6 9d 6a 97 b5",
+   "value": "7f 34 fc f6 9d 6a 97 b5",
+   "decoder": "bytes",
+   "slot": 0,
+   "link": {
+    "page": "structures/page_references.md",
+    "anchor": "48-bytes-0x30-crc64-every-inner-b-tree-row-and-a-checkpoints-root-references-from-refs-310"
+   },
+   "row": true,
+   "table": null
+  }
+ ],
+ "groups": [],
+ "rows": [
+  {
+   "o": "0000",
+   "h": [
+    [
+     0,
+     "04 3c 01 00 00 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     1,
+     "05 3c 01 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     0,
+     ".<......"
+    ],
+    [
+     1,
+     ".<......"
+    ]
+   ]
+  },
+  {
+   "o": "0010",
+   "h": [
+    [
+     2,
+     "06 3c 01 00 00 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     3,
+     "07 3c 01 00 00 00 00 00"
+    ]
+   ],
+   "a": [
+    [
+     2,
+     ".<......"
+    ],
+    [
+     3,
+     ".<......"
+    ]
+   ]
+  },
+  {
+   "o": "0020",
+   "h": [
+    [
+     4,
+     "00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     5,
+     "02"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     6,
+     "08"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     7,
+     "08 00 00 00"
+    ],
+    [
+     -1,
+     "  "
+    ],
+    [
+     8,
+     "7f 34 fc f6 9d 6a 97 b5"
+    ]
+   ],
+   "a": [
+    [
+     4,
+     ".."
+    ],
+    [
+     5,
+     "."
+    ],
+    [
+     6,
+     "."
+    ],
+    [
+     7,
+     "...."
+    ],
+    [
+     8,
+     ".4...j.."
+    ]
+   ]
+  }
+ ]
+}

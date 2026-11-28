@@ -18,7 +18,7 @@ It began as a master thesis, and combines:
 > - **[How this was verified](methodology.md)** — the dual-evidence methodology, evidence levels, and how to trace
 >   any claim to its provenance.
 
-**Known issues in 1.14.0:** the known limits that can change what an examiner reports (what the tools do not read or do not check), each with what to do — see [Known issues in 1.14.0](tools/known_issues.md).
+**Known issues in 1.14.1:** the known limits that can change what an examiner reports (what the tools do not read or do not check), each with what to do — see [Known issues in 1.14.0](tools/known_issues.md).
 
 **New to ReFS forensics?** Start with:
 
@@ -70,6 +70,7 @@ It began as a master thesis, and combines:
 | [Tiered Storage](concepts/tiering.md) | Fast/slow tier relocation and the heat engine |
 | [What ReFS Is](concepts/what_is_refs.md) | What ReFS is, why it exists, and where it is used |
 | [Driver builds analysed](methodology/driver_builds.md) | The `refs.sys` builds read, and how each one was read |
+| [Test images](methodology/test_images.md) | The disk images every release is checked on, and what each one is |
 | [Driver Evolution](concepts/driver_evolution.md) | What changed from one build to the next, and the functions that change a file's storage |
 | [Metadata bundle](tools/metadata_bundles.md) | What an `export metadata` bundle contains, and what it does not |
 | [File Systems](concepts/file_systems.md) | General file system background |
@@ -98,7 +99,7 @@ It began as a master thesis, and combines:
 | Page | Structure |
 |------|-----------|
 | [Object Table](structures/object_table.md) | OID-to-LCN mapping (roots 0/5) |
-| [Schema Table](structures/schema_table.md) | Key-comparison rules (roots 3/9); attribute schemas: 12 on v3.4, 16 on v3.14 (18 distinct across all versions) |
+| [Schema Table](structures/schema_table.md) | Key-comparison rules (roots 3/9); object-table schemas: 12 on v3.4, 16 on v3.14 (18 distinct across all versions) |
 | [Container Table](structures/container_table.md) | VLCN-to-PLCN translation (roots 7/8) |
 | [Parent-Child Table](structures/parent_child_table.md) | Directory hierarchy (root 4) |
 | [Allocators](structures/allocators.md) | Three-tier allocation: Medium (1), Container (2), Small (12) |
@@ -125,6 +126,7 @@ It began as a master thesis, and combines:
 | Page | Structure |
 |------|-----------|
 | [MLog](structures/mlog.md) | Metadata log (redo-only journaling) |
+| [MLog redo records](structures/mlog_redo.md) | What the log's records do: the redo opcodes, the actions a payload groups, a row's time |
 | [USN Journal](structures/usn_journal.md) | V3 format with 128-bit file IDs |
 
 ## Attributes
@@ -151,7 +153,8 @@ Byte-level detail pages: [$DATA](attributes/DATA.md) · [$STANDARD_INFORMATION](
 
 | Page | Tool |
 |------|------|
-| [forefst.py](tools/forefst.md) | Unified forensic tool — timeline-ready listings, deleted/CoW recovery, and the forensic suite (USN, MLog, timeline, timestomp, extract, security, reparse, deleted, recyclebin, snapshots, dataruns, integrity, export, specials) |
+| [forefst.py in short](tools/forefst_short.md) | What it does, a quick start, every command on one line |
+| [forefst.py in long](tools/forefst.md) | Unified forensic tool — timeline-ready listings, deleted/CoW recovery, and the forensic suite (USN, MLog, timeline, timestomp, extract, security, reparse, deleted, recyclebin, snapshots, dataruns, integrity, export, specials) |
 | [refsanalysis.py](tools/refsanalysis.md) | Structure / lab tool — decode one on-disk structure at a time (VBR, SUPB, CHKP, object/schema/container tables, …) |
 
 ## Examples

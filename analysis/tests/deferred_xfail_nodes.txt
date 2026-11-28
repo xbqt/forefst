@@ -36,3 +36,50 @@ analysis/tests/test_tier2_cli.py::test_sanitized_names_fit_the_filesystem_limit[
 #     in forefst; refsanalysis keeps thin wrappers that pass its own PROG, because each body reads the
 #     module-level program name. The test now compares BODIES, as its name always said.
 # Nothing in this file is deferred any more: every node left is a decision.
+#
+# ── DECIDED 1.14.1 — refsanalysis frozen at 1.14.0 ─────────────────────────────────────────────────
+# The maintainer, 2026-11-27: "we will integrate these commands to forefst. we will break refsanalysis just for 1 or 2
+# releases" (PLAN_1.14.1 section 4.2). refsanalysis.py is the 1.14.0 file and runs only with forefst 1.14.0; the dev
+# tree runs it with that forefst (refsanalysis_forefst/, never published), so these nodes, which check refsanalysis
+# TOGETHER WITH the dev forefst (the same objects, the same version, a fault planted in the dev forefst reaching
+# refsanalysis), cannot hold. The pair they tested is unchanged (verify.sh step 2 checks both files' SHA-256 against
+# 1.14.0) and passed them at the 1.14.0 gate. Each node is listed (a strict xfail: one that passes fails the run);
+# they leave this file when the `structure` command replaces refsanalysis's views.
+#@ refsanalysis frozen at 1.14.0 (decided 2026-11-27, PLAN_1.14.1 4.2): it runs with forefst 1.14.0, not with the forefst under test
+analysis/tests/test_1132_cb.py::test_c1_10_one_table_of_system_object_names
+analysis/tests/test_1132_e1a.py::test_n149_the_flag_counts_count_a_hard_linked_file_once[refsanalysis]
+analysis/tests/test_1132_e1a.py::test_n149_control_a_file_with_one_name[refsanalysis]
+analysis/tests/test_1132_e1a.py::test_n156_internal_flag_0x02_is_case_sensitive
+analysis/tests/test_1132_gateprep_n570.py::test_n570_a_restore_log_not_written_makes_bootedit_exit_2
+analysis/tests/test_1132_red_b2_wording.py::test_c3_control_inline_and_extents_only_already_sum_to_the_total[refsanalysis]
+analysis/tests/test_1132_red_b2_wording.py::test_c3_summary_counts_each_residency_category[refsanalysis]
+analysis/tests/test_1132_red_b2_wording.py::test_n149_summary_counts_each_file_once[refsanalysis]
+analysis/tests/test_1132_red_b2_wording.py::test_c3_control_summary_json_keeps_its_keys[refsanalysis]
+analysis/tests/test_1132_red_c1_mlog.py::test_n422_upcase_is_read_from_oid_0x8_first_on_image_win11refsmini
+analysis/tests/test_1132_red_c1_mlog.py::test_n422_upcase_mappings_come_from_oid_0x8_when_both_copies_read_on_image_win11refsmini
+analysis/tests/test_1132_red_c1_objtable.py::test_n358_ra_oid30_over_an_object_table_read_in_part_is_not_determined
+analysis/tests/test_1132_red_c1_objtable.py::test_n358_volume_information_over_an_object_table_read_in_part_is_not_determined
+analysis/tests/test_1132_red_c1_objtable.py::test_n427_parentchild_verify_over_a_table_read_in_part_is_not_determined
+analysis/tests/test_1132_red_c1_objtable.py::test_n427_ra_upcase_without_either_upcase_copy_is_a_finding
+analysis/tests/test_1132_red_g2_d27.py::test_n338_the_count_of_a_table_that_was_not_read_is_unreadable[reparse-zeroed-ra-summary-plus-image]
+analysis/tests/test_1132_red_g2_d27.py::test_n338_the_count_of_a_table_that_was_not_read_is_unreadable[reparse-raised-ra-summary-plus-image]
+analysis/tests/test_1132_red_g2_d27.py::test_n338_the_count_of_a_table_that_was_not_read_is_unreadable[security-zeroed-ra-summary-plus-image]
+analysis/tests/test_1132_red_g2_d27.py::test_n338_the_count_of_a_table_that_was_not_read_is_unreadable[security-raised-ra-summary-plus-image]
+analysis/tests/test_1132_red_g2_d27.py::test_n338_the_count_of_a_table_that_was_not_read_is_unreadable[trash-zeroed-ra-summary-plus-image]
+analysis/tests/test_1132_red_g2_d27.py::test_n338_the_count_of_a_table_that_was_not_read_is_unreadable[trash-raised-ra-summary-plus-image]
+analysis/tests/test_1132_red_g2c.py::test_n345_summary_plus_symlinks_over_an_unread_reparse_index_is_unreadable[zeroed-image]
+analysis/tests/test_1132_red_g2c.py::test_n345_summary_plus_symlinks_over_an_unread_reparse_index_is_unreadable[raised-image]
+analysis/tests/test_1132_red_g2c.py::test_n345_summary_json_schema_tables_over_an_unread_schema_root[synthetic-zeroed]
+analysis/tests/test_1132_red_g2c.py::test_n345_summary_json_schema_tables_over_an_unread_schema_root[synthetic-raised]
+analysis/tests/test_1132_red_g2c.py::test_n345_summary_json_schema_tables_over_an_unread_schema_root[image-zeroed]
+analysis/tests/test_1132_red_g2c.py::test_n345_summary_json_schema_tables_over_an_unread_schema_root[image-raised]
+analysis/tests/test_1132_red_group2b.py::test_a3w_an_exception_in_a_root_walk_is_unreadable_and_exits_2[synthetic-summary]
+analysis/tests/test_1132_red_group2b.py::test_a3w_an_exception_in_a_root_walk_is_unreadable_and_exits_2[synthetic-summary++]
+analysis/tests/test_1132_red_group2b.py::test_a3w_an_exception_in_a_root_walk_is_unreadable_and_exits_2[image-summary]
+analysis/tests/test_1132_red_group2b.py::test_a3w_an_exception_in_a_root_walk_is_unreadable_and_exits_2[image-summary++]
+analysis/tests/test_1132_red_group2b.py::test_a3w_control_the_runner_alone_changes_nothing[synthetic]
+analysis/tests/test_1132_red_group2b.py::test_a3w_control_the_runner_alone_changes_nothing[image]
+analysis/tests/test_1132_red_group2b.py::test_a3w_control_the_same_failure_on_the_schema_root_already_records_a_skip[synthetic]
+analysis/tests/test_1132_red_group2b.py::test_a3w_control_the_same_failure_on_the_schema_root_already_records_a_skip[image]
+analysis/tests/test_single_source.py::test_shared_helpers_are_single_source
+analysis/tests/test_tier0_invariants.py::test_the_two_tools_report_the_same_version

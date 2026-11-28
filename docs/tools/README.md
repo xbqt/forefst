@@ -57,7 +57,7 @@ or OID.
 
 Per-subcommand flags and examples are on the [forefst.py](forefst.md) and [refsanalysis.py](refsanalysis.md)
 pages, or from each tool's built-in `--help` (`forefst.py <image> <cmd> --help`). What the tools do not read or do not
-check in this release, with what to do: [Known issues in 1.14.0](known_issues.md). What a script that reads their
+check in this release, with what to do: [Known issues in 1.14.1](known_issues.md). What a script that reads their
 output must change from one release to the next: [Migrating between releases](migration.md).
 
 ## Constraints and provenance
@@ -74,7 +74,7 @@ What they write:
 Work on a copy of the evidence regardless.
 
 They are exercised across the same corpus the reference rests on. Every release runs a fixed set of commands on every
-image of that corpus (129 disk images for 1.14.0):
+image of that corpus (129 disk images for 1.14.1):
 
 - 36 `forefst.py` command lines (the `files` listings, `summary`, `deleted`, the USN and MLog commands, `timeline`,
   `timestomp`, `integrity` and others, most in text and JSON) and 17 `refsanalysis.py` ones;

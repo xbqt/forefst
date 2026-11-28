@@ -5,7 +5,7 @@ A page reference binds a child page's address to a checksum of that child's cont
 Every B+-tree parent stores a page reference for each child, chaining the whole metadata tree into a Merkle tree
 anchored at the [checkpoint](chkp.md).
 
-The page reference exists in three formats, which differ only in what follows the 0x28-byte header:
+The page reference exists in three sizes, which differ only in what follows the 0x28-byte header:
 
 - a B+-tree node's inner rows hold 48-byte (CRC64) or 72-byte (SHA-256) references;
 - a checkpoint stores its root references at the size it declares at `CHKP+0x5C`: from 3.10, 48 bytes, or 72 on a
@@ -13,38 +13,9 @@ The page reference exists in three formats, which differ only in what follows th
 
 Reading one at the wrong size misaligns every field that follows.
 
-## Format 1: 104 bytes (0x68) -- a checkpoint's root references, ReFS v3.4 through v3.9
+## 48 bytes (0x30), CRC64: every inner B+-tree row, and a checkpoint's root references from ReFS 3.10
 
-| Offset | Size | Field | Description |
-|--------|------|-------|-------------|
-| 0x00 | 8 | LCN slot 0 (u64) | First cluster of referenced page |
-| 0x08 | 8 | LCN slot 1 (u64) | Second cluster |
-| 0x10 | 8 | LCN slot 2 (u64) | Third cluster |
-| 0x18 | 8 | LCN slot 3 (u64) | Fourth cluster |
-| 0x20 | 2 | Flags (u16) | 0x0000 |
-| 0x22 | 1 | Checksum type (u8) | See Checksum Type Codes below |
-| 0x23 | 1 | Checksum data offset (u8) | 0x08 |
-| 0x24 | 4 | Checksum data length (u32) | 8 (CRC64) |
-| 0x28 | 8 | CRC64 checksum | Computed over the child page |
-| 0x30 | 56 | Padding | Zero-filled |
-
-**Total**: 104 bytes (0x68)
-
-On every corpus volume formatted at 3.4, 3.7 or 3.9, every root reference in the checkpoint in use is CRC64 with
-its digest at 0x28 matching the root page, and bytes 0x30–0x67 are zero.
-
-The Windows 10 driver (build 17134) writes the 104-byte size as a constant and copies each root reference at that
-size, whatever the digest length; no driver of ReFS 3.7 or 3.9 was read. The inner B+-tree rows on these volumes are
-48-byte references (Format 2).
-
-The same driver checks a page it reads from disk against the checksum type its reference declares: type 2 selects a
-CRC64 verifier that recomputes the digest over the page and compares it.
-
-Its `CmsChecksumNone` class, whose check always succeeds, is the type-0 entry of its *stream* checksum table
-(integrity streams), not a metadata verifier. This was read in the decompiled driver and again in its instructions;
-no test with a corrupted metadata page is held for that driver.
-
-## Format 2: 48 bytes (0x30) -- CRC64: inner rows on every version, checkpoint roots from v3.10
+<!-- site: hexfig "page_ref_crc64_win11refstestmftecmd" -->
 
 | Offset | Size | Field | Description |
 |--------|------|-------|-------------|
@@ -58,9 +29,11 @@ no test with a corrupted metadata page is held for that driver.
 | 0x24 | 4 | Checksum data length (u32) | 8 |
 | 0x28 | 8 | CRC64 checksum | Computed over the child page |
 
-**Total**: 48 bytes (0x30). Same as Format 1 with the padding removed.
+**Total**: 48 bytes (0x30).
 
-## Format 3: 72 bytes (0x48) -- ReFS v3.14 with SHA-256
+## 72 bytes (0x48), SHA-256: the same references on a SHA-256 volume (ReFS 3.14)
+
+<!-- site: hexfig "page_ref_sha256_wininsiderrefs8gtest2" -->
 
 | Offset | Size | Field | Description |
 |--------|------|-------|-------------|
@@ -75,6 +48,37 @@ no test with a corrupted metadata page is held for that driver.
 | 0x28 | 32 | SHA-256 digest | Computed over child page |
 
 **Total**: 72 bytes (0x48)
+
+## 104 bytes (0x68): a checkpoint's root references on a volume formatted at ReFS 3.4 to 3.9
+
+| Offset | Size | Field | Description |
+|--------|------|-------|-------------|
+| 0x00 | 8 | LCN slot 0 (u64) | First cluster of referenced page |
+| 0x08 | 8 | LCN slot 1 (u64) | Second cluster |
+| 0x10 | 8 | LCN slot 2 (u64) | Third cluster |
+| 0x18 | 8 | LCN slot 3 (u64) | Fourth cluster |
+| 0x20 | 2 | Flags (u16) | 0x0000 |
+| 0x22 | 1 | Checksum type (u8) | See Checksum Type Codes below |
+| 0x23 | 1 | Checksum data offset (u8) | 0x08 |
+| 0x24 | 4 | Checksum data length (u32) | 8 (CRC64) |
+| 0x28 | 8 | CRC64 checksum | Computed over the child page |
+| 0x30 | 56 | Padding | Zero-filled |
+
+**Total**: 104 bytes (0x68): the 48-byte reference followed by 56 zero bytes.
+
+On every corpus volume formatted at 3.4, 3.7 or 3.9, every root reference in the checkpoint in use is CRC64 with
+its digest at 0x28 matching the root page, and bytes 0x30–0x67 are zero.
+
+The Windows 10 driver (build 17134) writes the 104-byte size as a constant and copies each root reference at that
+size, whatever the digest length; no driver of ReFS 3.7 or 3.9 was read. The inner B+-tree rows on these volumes are
+48-byte references (above).
+
+The same driver checks a page it reads from disk against the checksum type its reference declares: type 2 selects a
+CRC64 verifier that recomputes the digest over the page and compares it.
+
+Its `CmsChecksumNone` class, whose check always succeeds, is the type-0 entry of its *stream* checksum table
+(integrity streams), not a metadata verifier. This was read in the decompiled driver and again in its instructions;
+no test with a corrupted metadata page is held for that driver.
 
 ## Checksum Type Codes (offset +0x22)
 
@@ -116,19 +120,19 @@ a few images.
 Because an Object-Table row's page reference begins at **value+0x20**, the LCN slots sit at
 value+0x20…0x38 and the checksum at **value+0x48**.
 
-## Format Selection Rule
+## Which size a reference has
 
 Every reference states its own digest length at 0x24. A checkpoint's root references are spaced at the size the
 [CHKP](chkp.md) declares at offset 0x5C; inner B+-tree rows follow the volume's checksum. Measured on the corpus:
 
 | Volume | [VBR](vbr.md) 0x2A | CHKP 0x5C (root references) | Inner rows |
 |--------|----------|-----------|------------|
-| Formatted at 3.4, 3.7 or 3.9 | 0x0000 (not read by the driver) | 0x68 | 48-byte (CRC64) |
-| **Upgraded from them to 3.14** | **0x0000 (not read by the driver)** | **0x30** | **48-byte (CRC64)** |
 | Formatted at 3.10 or later, CRC64 | 0x0002 | 0x30 | 48-byte (CRC64) |
 | Formatted at 3.14, SHA-256 | 0x0004 | 0x48 | 72-byte (SHA-256) |
+| **Upgraded to 3.14 from 3.4, 3.7 or 3.9** | **0x0000 (not read by the driver)** | **0x30** | **48-byte (CRC64)** |
+| Formatted at 3.4, 3.7 or 3.9 | 0x0000 (not read by the driver) | 0x68 | 48-byte (CRC64) |
 
-Readers most often get the second row wrong. A volume created at 3.4 and upgraded still carries `0x0000` at
+Readers most often get the upgraded volume wrong. A volume created at 3.4 and upgraded still carries `0x0000` at
 VBR 0x2A (it kept its value across both upgrades in the corpus) while its checkpoint has moved to the 48-byte CRC64
 reference.
 
@@ -142,12 +146,12 @@ See [VBR](vbr.md).
 
 ## Verification Behavior by Version
 
-| Property | Win10 (v3.4) | Win11 (v3.14) |
-|----------|-------------|---------------|
-| VBR 0x2A | 0x0000 (not read by the driver) | 0x0002 (CRC64) |
-| CHKP flags bit 0x400 | Not set | Set (the record carries the rollback-protection fields; refs.sys sets it on a volume of version 3.13 or later) |
-| Verification class | The CRC64 entry (`CmsCrc64`) of the metadata checksum table, chosen by the reference's type | `CmsChecksumBase` / `CmsSimpleChecksum` (a real CRC64 computation) |
-| CRC64 in page refs | Written; checked on a page read from disk *(read from the driver; no corruption test held)* | Written and verified |
+| Property | Win11 (v3.14) | Win10 (v3.4) |
+|----------|---------------|-------------|
+| VBR 0x2A | 0x0002 (CRC64) | 0x0000 (not read by the driver) |
+| CHKP flags bit 0x400 | Set (the record carries the rollback-protection fields; refs.sys sets it on a volume of version 3.13 or later) | Not set |
+| Verification class | `CmsChecksumBase` / `CmsSimpleChecksum` (a real CRC64 computation) | The CRC64 entry (`CmsCrc64`) of the metadata checksum table, chosen by the reference's type |
+| CRC64 in page refs | Written and verified | Written; checked on a page read from disk *(read from the driver; no corruption test held)* |
 
 On a volume upgraded from 3.4 or 3.9 to 3.14, VBR 0x2A stays 0x0000 and CHKP flag 0x0400 is set. Neither decides the
 checksum: the Windows 11 driver uses CRC64 because the boot sector's flags lack 0x40, and the Windows 10 driver checks

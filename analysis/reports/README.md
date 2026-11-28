@@ -1,59 +1,19 @@
-# Reports: the project's validation record, oldest first
+# Reports: the project's validation record
 
-This directory keeps how the tools, the reference and the documentation were checked over time. Each entry is dated
-and says what it covered; a later entry does not erase an earlier one, which stays as part of the method's history
-(the Methodology page, *How the method grew*). Record paths that point outside this repository name the project's
-working records.
+**What is current.** The register (`analysis/reference_table.csv`), the errata (`analysis/errata.md`), the
+documentation and the tools state what is true now. A new audit of the register, row by row, is planned for release
+1.14.2; it will be published here, with each row's June 2026 verdict beside its own.
 
-| When | What | Files |
+**What is archived.** Everything in [`archive/`](archive/README.md) checked an earlier release or an earlier register.
+Each folder is named by when it was made and what it checked, and is kept as it was, as part of the method's history
+(the Methodology page, *How the method grew*); a later record does not erase an earlier one. Record paths in them that
+point outside this repository name the project's working records.
+
+| When | What it checked | Folder |
 |---|---|---|
-| June-July 2026 | four audits: references and central findings, the analysis tree, the documentation, the tools | [`audit/`](audit/README.md) |
-| June-July 2026 | generated verification reports and the scripts that wrote them | `report_*.txt`, `verify_*.py`, below |
-| 2026-07-01, 2026-07-04 | two self-validations of releases 3.5.0 and 3.6.0, with the project's own instruments, which reported the tools sound; the reviews that followed (other language-model sessions, part of the project) found what they had missed | [`SELF_VALIDATION_v3.5.0_2026-07-01.md`](SELF_VALIDATION_v3.5.0_2026-07-01.md), [`SELF_VALIDATION_v3.6.0_2026-07-04.md`](SELF_VALIDATION_v3.6.0_2026-07-04.md) |
-| September-November 2026 | the answer to the blind audit of release 1.12.3 (215 findings): every finding and where its answer can be checked, and the wrong-verdict findings, generated at release 1.14.0 from evidence that can fail (a test, a battery case, an oracle probe, an erratum) | [`AUDIT_RESPONSE.md`](AUDIT_RESPONSE.md), [`WRONG_VERDICT_COVERAGE.md`](WRONG_VERDICT_COVERAGE.md) |
-
-## June-July 2026: the generated reports
-
-Machine-generated verification outputs — **not** authored documentation. They were written in June-July 2026 by the
-scripts below and have not been regenerated since: a dated snapshot of the checks of that time, not a current result.
-
-| File | Produced by | What it shows |
-|------|-------------|---------------|
-| `report_static_claims.txt` | `verify_static_claims.py` | Static-claim checks (function/symbol counts, version gating) — PASS/WARN/FAIL |
-| `report_tool_execution.txt` | `verify_docs_tools.py` | Tool execution log (commands, exit codes, timing) over the image corpus |
-| `report_tool_claims.txt` | `verify_docs_tools.py` | Tool-verified claim results — PASS/FAIL/SKIP |
-| `report_summary.txt` | manual roll-up | Pre-publication summary |
-| `report_static_verification.txt` | `verify_static.py` | Static-evidence pass over the reference-table `NOT_TESTED` entries (decompilation + function-catalog search) — PASS/WARN/FAIL |
-| `report_oid_0x520_*.txt` | ad-hoc probe (`investigate_oid_0x520.py`) | Historical OID 0x520 (Change Journal / FS Metadata directory) investigation |
-
-Regenerate (from the repo root): `python3 analysis/reports/verify_static_claims.py` and `python3 analysis/reports/verify_docs_tools.py`.
-
-> Regeneration runs only against the private disk corpus and the Ghidra / decompiled exports, which are **not** bundled in this repository; point the scripts at a local copy via `REFS_DISKS` / `REFS_CORPUS` / `REFS_GHIDRA` / `REFS_DECOMPILED` / `REFS_FUNC_CATALOG`.
->
-> The ~29,761-row function catalog is not bundled. `verify_static_claims.py` resolves it in order: `REFS_FUNC_CATALOG` → `forefst/analysis/function_catalog.csv` (drop a copy here) → `<corpus>/forclaude/intelligence/function_catalog.csv` (the workspace copy). If none is found it exits non-zero with a message naming the env override — it no longer aborts with a traceback.
-
-A third gate, **`verify_tool_tables.py`** (in this directory) — reference-table consistency, asserts the tools' embedded opcode/schema/
-OID/flag name maps against the master + decompilation), is **stdout-only** and writes no report file here; run it
-alongside the two above (`--calibrate` proves it fires on planted errors).
-
-Three more scripts in this directory verify reference-table claims directly: `verify_static.py` produces `report_static_verification.txt` (above); `verify_usn_claims.py` (USN / Change-Journal claims) and `verify_not_tested.py` (the remaining both-`NOT_TESTED` entries) are **stdout-only** and write no report file here.
-
-## June-July 2026: the `audit/` subdirectory
-
-Where the reports above are machine-regenerated gate output, [`audit/`](audit/README.md) holds the
-**authored audit deliverables** — the record of how the published knowledge and tools were validated
-against ground truth (raw-disk bytes + decompilation), adversarially and with calibrated instruments.
-It covers **four audits**: references & central findings, the analysis tree, the documentation, and
-the tools. Full account in [audit/README.md](audit/README.md); the key contents:
-
-| Path | What it is |
-|------|-----------|
-| `AUDIT_COMPLETE.md` | Headline result — 409/409 reference-table claims audited, 0 byte-layout failures |
-| `proof_index.csv` | Master crosswalk: each claim → class, verdict, static proof, disk validation, dossier |
-| `dossiers/<ref_id>.md` | Per-claim dossier — canonical claim, verdict, static + disk proof (one per claim) |
-| `proofs/static/` | Exported decompiled functions backing the static/decompilation claims |
-| `proofs/validation/<ref_id>.csv` | Per-claim **disk-corpus matrix**: one row per applicable image (`path,basename,group,result,value`). Header-only when a claim is proven by citation/decompilation rather than disk measurement — so ~285/411 are header-only by design, not missing data |
-| `audit_harness.py` + `specs.jsonl` | Regenerate every matrix/dossier/index from the authored specs (`python3 audit/audit_harness.py`) |
-| `tool_audit.md`, `analysis_consistency_audit.md` | The tool-correctness audit and analysis-tree consistency audit write-ups |
+| June 2026 | the claim register as it stood (409 rows), the analysis tree, the documentation and the tools of that time | [`archive/2026-06_claim_audit/`](archive/2026-06_claim_audit/README.md) |
+| June-July 2026 | generated verification reports and the scripts that wrote them | [`archive/2026-06_generated_reports/`](archive/2026-06_generated_reports/README.md) |
+| July 2026 | two self-validations, of releases 3.5.0 and 3.6.0 | [`archive/2026-07_self_validations/`](archive/2026-07_self_validations/README.md) |
+| September-November 2026 | the answer to the blind audit of release 1.12.3 (215 findings), generated at release 1.14.0 | [`archive/2026-09_blind_audit_of_1.12.3/`](archive/2026-09_blind_audit_of_1.12.3/README.md) |
 
 See also: [repo README](../../README.md)

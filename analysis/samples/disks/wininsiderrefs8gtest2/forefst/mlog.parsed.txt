@@ -637,7 +637,7 @@ MLog Log Payloads (parsed)
   [ALLOCATE    ] testspecials
     0x8 SET_RANGE_STATE; 0x8 SET_RANGE_STATE; 0x8 SET_RANGE_STATE; 0x6 ALLOCATE; 0x8 SET_RANGE_STATE; 0x8 SET_RANGE_STATE; 0x8 SET_RANGE_STATE; 0x6 ALLOCATE; 0x6 ALLOCATE; 0x8 SET_RANGE_STATE; 0x6 ALLOCATE; 0x3 UPDATE_ROW; 0x3 UPDATE_ROW; 0x8 SET_RANGE_STATE
 
-  [ALLOCATE    ] testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193  2081-11-18T20:20:59.9829808Z
+  [ALLOCATE    ] testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193
     0x6 ALLOCATE; 0x8 SET_RANGE_STATE; 0x8 SET_RANGE_STATE; 0x3 UPDATE_ROW; 0x8 SET_RANGE_STATE; 0x6 ALLOCATE; 0x6 ALLOCATE; 0x3 UPDATE_ROW; 0x8 SET_RANGE_STATE; 0x6 ALLOCATE; 0x8 SET_RANGE_STATE; 0x8 SET_RANGE_STATE; 0x3 UPDATE_ROW; 0x6 ALLOCATE
 
   [ALLOCATE    ] testspecials/dir_record_119518/dir_yankee_902047/dir_tango_893400/dir_backup_465193
@@ -8753,5 +8753,5 @@ Action summary
     INSERT                     3
     TREE_UPDATE                2
 
-  1983 of 2039 log payloads carry an embedded timestamp; only those appear in
+  1982 of 2039 log payloads carry an embedded timestamp; only those appear in
   `timeline --source MLOG` (an untimestamped payload cannot be placed on a timeline).

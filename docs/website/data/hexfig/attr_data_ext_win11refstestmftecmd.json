@@ -1,7 +1,7 @@
 {
  "id": "attr_data_ext_win11refstestmftecmd",
  "generated_by": "analysis/tools/analysis_scripts/gen_hex_figures.py",
- "decoded_by": "forefst 1.14.0 (forefstdev/forefst.py)",
+ "decoded_by": "forefst 1.14.1 (forefstdev/forefst.py)",
  "title": "An example extent-form $DATA value of a 71,395-byte file in two extents, read with forefst.",
  "image": {
   "name": "win11refstestmftecmd.raw",
@@ -13,7 +13,7 @@
  "offset_hex": "0x4225978",
  "length": 248,
  "bytes": "8800000028000100010000000002000000020000020000000000000000000000020000000000000000000000280000000020010000000000e316010000000000e31601000000000000200100000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000280000005800000010000000000e00006800000002000000000000000000000070000000000000009f8301000000000040001800010000000000000011000000b5b701000000000050001800000000000000000001000000000000000000000000000000000000004000000028000100",
- "note": "The bytes are the value of the sub-record 80000002/0080 of `test/xbpt_beta_sierra_570651.json`. Not coloured: +0x4 to +0xB, +0x10 to +0x2F, +0x58 to +0x93, +0x95 to +0x97, +0xA0 to +0xA7, +0xAC to +0xAF, +0xE0 to +0xEF.",
+ "note": "The bytes are the value of the sub-record 80000002/0080 of `test/xbpt_beta_sierra_570651.json`. Not coloured: +0x4 to +0xB, +0x10 to +0x2B, +0x2E to +0x2F, +0x58 to +0x93, +0x95 to +0x97, +0xA0 to +0xA7, +0xAC to +0xAF, +0xE0 to +0xEF.",
  "fields": [
   {
    "off": "0x00",
@@ -50,6 +50,23 @@
    "table": null
   },
   {
+   "off": "0x2C",
+   "len": 2,
+   "name": "Flags offset",
+   "frame": null,
+   "group": null,
+   "bytes": "28 00",
+   "value": "0x28 (40)",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 2,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "extent-metadata--the-multi-instance-record"
+   },
+   "row": true,
+   "table": null
+  },
+  {
    "off": "0x30",
    "len": 8,
    "name": "Total allocated",
@@ -58,7 +75,7 @@
    "bytes": "00 20 01 00 00 00 00 00",
    "value": "0x12000 (73728) bytes",
    "decoder": "forefst.le16/le32/le64",
-   "slot": 2,
+   "slot": 3,
    "link": {
     "page": "attributes/DATA.md",
     "anchor": "extent-metadata--the-multi-instance-record"
@@ -75,7 +92,7 @@
    "bytes": "e3 16 01 00 00 00 00 00",
    "value": "0x116e3 (71395) bytes",
    "decoder": "forefst.le16/le32/le64",
-   "slot": 3,
+   "slot": 4,
    "link": {
     "page": "attributes/DATA.md",
     "anchor": "extent-metadata--the-multi-instance-record"
@@ -92,7 +109,7 @@
    "bytes": "e3 16 01 00 00 00 00 00",
    "value": "0x116e3 (71395) bytes",
    "decoder": "forefst.le16/le32/le64",
-   "slot": 4,
+   "slot": 5,
    "link": {
     "page": "attributes/DATA.md",
     "anchor": "extent-metadata--the-multi-instance-record"
@@ -109,7 +126,7 @@
    "bytes": "00 20 01 00 00 00 00 00",
    "value": "0x12000 (73728) bytes",
    "decoder": "forefst.le16/le32/le64",
-   "slot": 5,
+   "slot": 6,
    "link": {
     "page": "attributes/DATA.md",
     "anchor": "extent-metadata--the-multi-instance-record"
@@ -119,14 +136,31 @@
   },
   {
    "off": "0x50",
-   "len": 8,
-   "name": "Version count + sparse flag",
+   "len": 4,
+   "name": "Stream flags",
    "frame": null,
    "group": null,
-   "bytes": "01 00 00 00 00 00 00 00",
-   "value": "1",
+   "bytes": "01 00 00 00",
+   "value": "0x00000001",
    "decoder": "forefst.le16/le32/le64",
-   "slot": 6,
+   "slot": 7,
+   "link": {
+    "page": "attributes/DATA.md",
+    "anchor": "extent-metadata--the-multi-instance-record"
+   },
+   "row": true,
+   "table": null
+  },
+  {
+   "off": "0x54",
+   "len": 4,
+   "name": "(not decoded)",
+   "frame": null,
+   "group": null,
+   "bytes": "00 00 00 00",
+   "value": "0x00000000",
+   "decoder": "forefst.le16/le32/le64",
+   "slot": 0,
    "link": {
     "page": "attributes/DATA.md",
     "anchor": "extent-metadata--the-multi-instance-record"
@@ -143,7 +177,7 @@
    "bytes": "00",
    "value": "0 (a leaf: its rows are extent records)",
    "decoder": "forefst.le16/le32/le64",
-   "slot": 7,
+   "slot": 1,
    "link": {
     "page": "structures/btree_node.md",
     "anchor": "2-node-header"
@@ -160,7 +194,7 @@
    "bytes": "68 00 00 00",
    "value": "header+0x68",
    "decoder": "forefst.le16/le32/le64",
-   "slot": 0,
+   "slot": 2,
    "link": {
     "page": "structures/btree_node.md",
     "anchor": "2-node-header"
@@ -177,7 +211,7 @@
    "bytes": "02 00 00 00",
    "value": "2",
    "decoder": "forefst.le16/le32/le64",
-   "slot": 1,
+   "slot": 3,
    "link": {
     "page": "structures/btree_node.md",
     "anchor": "2-node-header"
@@ -194,7 +228,7 @@
    "bytes": "70 00 00 00",
    "value": "header+0x70: (end - start) / 4 = 2, the row count",
    "decoder": "forefst.le16/le32/le64",
-   "slot": 2,
+   "slot": 4,
    "link": {
     "page": "structures/btree_node.md",
     "anchor": "2-node-header"
@@ -211,7 +245,7 @@
    "bytes": "b5 b7 01 00 00 00 00 00",
    "value": "0x1b7b5",
    "decoder": "forefst.le16/le32/le64",
-   "slot": 3,
+   "slot": 5,
    "link": {
     "page": "structures/extent_descriptors.md",
     "anchor": "extent-entry--24-bytes"
@@ -228,7 +262,7 @@
    "bytes": "50 00",
    "value": "0x0050",
    "decoder": "forefst.le16/le32/le64",
-   "slot": 4,
+   "slot": 6,
    "link": {
     "page": "structures/extent_descriptors.md",
     "anchor": "extent-entry--24-bytes"
@@ -245,7 +279,7 @@
    "bytes": "18 00",
    "value": "24 bytes",
    "decoder": "forefst.le16/le32/le64",
-   "slot": 5,
+   "slot": 7,
    "link": {
     "page": "structures/extent_descriptors.md",
     "anchor": "extent-entry--24-bytes"
@@ -262,7 +296,7 @@
    "bytes": "00 00 00 00 00 00 00 00",
    "value": "0",
    "decoder": "forefst.le16/le32/le64",
-   "slot": 6,
+   "slot": 0,
    "link": {
     "page": "structures/extent_descriptors.md",
     "anchor": "extent-entry--24-bytes"
@@ -279,7 +313,7 @@
    "bytes": "01 00 00 00",
    "value": "1 cluster",
    "decoder": "forefst.le16/le32/le64",
-   "slot": 7,
+   "slot": 1,
    "link": {
     "page": "structures/extent_descriptors.md",
     "anchor": "extent-entry--24-bytes"
@@ -296,7 +330,7 @@
    "bytes": "9f 83 01 00 00 00 00 00",
    "value": "0x1839f",
    "decoder": "forefst.le16/le32/le64",
-   "slot": 0,
+   "slot": 2,
    "link": {
     "page": "structures/extent_descriptors.md",
     "anchor": "extent-entry--24-bytes"
@@ -313,7 +347,7 @@
    "bytes": "40 00",
    "value": "0x0040",
    "decoder": "forefst.le16/le32/le64",
-   "slot": 1,
+   "slot": 3,
    "link": {
     "page": "structures/extent_descriptors.md",
     "anchor": "extent-entry--24-bytes"
@@ -330,7 +364,7 @@
    "bytes": "18 00",
    "value": "24 bytes",
    "decoder": "forefst.le16/le32/le64",
-   "slot": 2,
+   "slot": 4,
    "link": {
     "page": "structures/extent_descriptors.md",
     "anchor": "extent-entry--24-bytes"
@@ -347,7 +381,7 @@
    "bytes": "01 00 00 00 00 00 00 00",
    "value": "1",
    "decoder": "forefst.le16/le32/le64",
-   "slot": 3,
+   "slot": 5,
    "link": {
     "page": "structures/extent_descriptors.md",
     "anchor": "extent-entry--24-bytes"
@@ -364,7 +398,7 @@
    "bytes": "11 00 00 00",
    "value": "17 clusters",
    "decoder": "forefst.le16/le32/le64",
-   "slot": 4,
+   "slot": 6,
    "link": {
     "page": "structures/extent_descriptors.md",
     "anchor": "extent-entry--24-bytes"
@@ -381,7 +415,7 @@
    "bytes": "40 00 00 00 28 00 01 00",
    "value": "2 entries: record at header+0x40, key hint 0; record at header+0x28, key hint 1",
    "decoder": "forefst.le16/le32/le64",
-   "slot": 5,
+   "slot": 7,
    "link": {
     "page": "structures/btree_node.md",
     "anchor": "4-key-index-sorted-offsets"
@@ -397,7 +431,7 @@
    "name": "Extent map",
    "len": 112,
    "value": "a leaf node of 2 extent records (VCN 0: 1 cluster at VLCN 0x1b7b5, VCN 1: 17 clusters at VLCN 0x1839f)",
-   "members": "7 8 9 10 11 12 13 14 15 16 17 18 19 20 21",
+   "members": "9 10 11 12 13 14 15 16 17 18 19 20 21 22 23",
    "link": {
     "page": "attributes/DATA.md",
     "anchor": "extent-metadata--the-multi-instance-record"
@@ -456,13 +490,29 @@
    "h": [
     [
      -1,
-     "02 00 00 00 00 00 00 00  00 00 00 00 28 00 00 00"
+     "02 00 00 00 00 00 00 00  00 00 00 00 "
+    ],
+    [
+     2,
+     "28 00"
+    ],
+    [
+     -1,
+     " 00 00"
     ]
    ],
    "a": [
     [
      -1,
-     "............(..."
+     "............"
+    ],
+    [
+     2,
+     "(."
+    ],
+    [
+     -1,
+     ".."
     ]
    ]
   },
@@ -470,7 +520,7 @@
    "o": "0030",
    "h": [
     [
-     2,
+     3,
      "00 20 01 00 00 00 00 00"
     ],
     [
@@ -478,17 +528,17 @@
      "  "
     ],
     [
-     3,
+     4,
      "e3 16 01 00 00 00 00 00"
     ]
    ],
    "a": [
     [
-     2,
+     3,
      ". ......"
     ],
     [
-     3,
+     4,
      "........"
     ]
    ]
@@ -497,7 +547,7 @@
    "o": "0040",
    "h": [
     [
-     4,
+     5,
      "e3 16 01 00 00 00 00 00"
     ],
     [
@@ -505,17 +555,17 @@
      "  "
     ],
     [
-     5,
+     6,
      "00 20 01 00 00 00 00 00"
     ]
    ],
    "a": [
     [
-     4,
+     5,
      "........"
     ],
     [
-     5,
+     6,
      ". ......"
     ]
    ]
@@ -524,8 +574,16 @@
    "o": "0050",
    "h": [
     [
-     6,
-     "01 00 00 00 00 00 00 00"
+     7,
+     "01 00 00 00"
+    ],
+    [
+     -1,
+     " "
+    ],
+    [
+     8,
+     "00 00 00 00"
     ],
     [
      -1,
@@ -534,8 +592,12 @@
    ],
    "a": [
     [
-     6,
-     "........"
+     7,
+     "...."
+    ],
+    [
+     8,
+     "...."
     ],
     [
      -1,
@@ -596,7 +658,7 @@
      "10 00 00 00 "
     ],
     [
-     7,
+     9,
      "00"
     ],
     [
@@ -604,7 +666,7 @@
      " 0e 00 00  "
     ],
     [
-     8,
+     10,
      "68 00 00 00"
     ],
     [
@@ -612,7 +674,7 @@
      " "
     ],
     [
-     9,
+     11,
      "02 00 00 00"
     ]
    ],
@@ -622,7 +684,7 @@
      "...."
     ],
     [
-     7,
+     9,
      "."
     ],
     [
@@ -630,11 +692,11 @@
      "..."
     ],
     [
-     8,
+     10,
      "h..."
     ],
     [
-     9,
+     11,
      "...."
     ]
    ]
@@ -647,7 +709,7 @@
      "00 00 00 00 00 00 00 00  "
     ],
     [
-     10,
+     12,
      "70 00 00 00"
     ],
     [
@@ -661,7 +723,7 @@
      "........"
     ],
     [
-     10,
+     12,
      "p..."
     ],
     [
@@ -674,7 +736,7 @@
    "o": "00b0",
    "h": [
     [
-     16,
+     18,
      "9f 83 01 00 00 00 00 00"
     ],
     [
@@ -682,7 +744,7 @@
      "  "
     ],
     [
-     17,
+     19,
      "40 00"
     ],
     [
@@ -690,7 +752,7 @@
      " "
     ],
     [
-     18,
+     20,
      "18 00"
     ],
     [
@@ -698,25 +760,25 @@
      " "
     ],
     [
-     19,
+     21,
      "01 00 00 00"
     ]
    ],
    "a": [
     [
-     16,
+     18,
      "........"
     ],
     [
-     17,
+     19,
      "@."
     ],
     [
-     18,
+     20,
      ".."
     ],
     [
-     19,
+     21,
      "...."
     ]
    ]
@@ -725,7 +787,7 @@
    "o": "00c0",
    "h": [
     [
-     19,
+     21,
      "00 00 00 00"
     ],
     [
@@ -733,7 +795,7 @@
      " "
     ],
     [
-     20,
+     22,
      "11 00 00 00"
     ],
     [
@@ -741,21 +803,21 @@
      "  "
     ],
     [
-     11,
+     13,
      "b5 b7 01 00 00 00 00 00"
     ]
    ],
    "a": [
     [
-     19,
+     21,
      "...."
     ],
     [
-     20,
+     22,
      "...."
     ],
     [
-     11,
+     13,
      "........"
     ]
    ]
@@ -764,7 +826,7 @@
    "o": "00d0",
    "h": [
     [
-     12,
+     14,
      "50 00"
     ],
     [
@@ -772,7 +834,7 @@
      " "
     ],
     [
-     13,
+     15,
      "18 00"
     ],
     [
@@ -780,7 +842,7 @@
      " "
     ],
     [
-     14,
+     16,
      "00 00 00 00  00 00 00 00"
     ],
     [
@@ -788,25 +850,25 @@
      " "
     ],
     [
-     15,
+     17,
      "01 00 00 00"
     ]
    ],
    "a": [
     [
-     12,
+     14,
      "P."
     ],
     [
-     13,
+     15,
      ".."
     ],
     [
-     14,
+     16,
      "........"
     ],
     [
-     15,
+     17,
      "...."
     ]
    ]
@@ -830,7 +892,7 @@
    "o": "00f0",
    "h": [
     [
-     21,
+     23,
      "40 00 00 00 28 00 01 00"
     ],
     [
@@ -840,7 +902,7 @@
    ],
    "a": [
     [
-     21,
+     23,
      "@...(..."
     ],
     [

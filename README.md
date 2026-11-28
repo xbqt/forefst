@@ -11,7 +11,7 @@ The project consists of:
 
 And if you want a complete introduction to the project: <a href="https://xbpt.gitlab.io/refs/" target="_blank"><strong>xbpt.gitlab.io/refs</strong></a>.
 
-**Known issues in 1.14.0:** the known limits that can change what an examiner reports (what the tools do not read or do not check), each with what to do — see [docs/tools/known_issues.md](docs/tools/known_issues.md).
+**Known issues in 1.14.1:** the known limits that can change what an examiner reports (what the tools do not read or do not check), each with what to do — see [docs/tools/known_issues.md](docs/tools/known_issues.md).
 
 ## Quick start
 
@@ -144,6 +144,8 @@ ReFS deletion recovery has **five methods** — the Trash table, a checkpoint di
 ## refsanalysis.py — the analysis tool
 
 Where `forefst.py` answers *"what happened on this volume?"*, `refsanalysis.py` answers *"what does this structure look like?"* — it decodes one on-disk structure at a time: the boot chain (`boot`, `supb`, `chkp`), the B+-tree system tables (`objects`, `schema`, `containers`, `parentchild`, …), file-system content (`files`, `attributes`, `details`), quick volume overviews (`summary`, `summary++`, `all`), and boot-sector inspection/repair (`bootedit`). It is the companion for learning the format, validating the forensic tool, and adapting to new ReFS builds. Run `python3 refsanalysis.py <image> --list` for the full set with per-command options.
+
+1.14.0 is its last release: it runs only with forefst 1.14.0 and exits 1 with a later one, so to use it take both tools from the 1.14.0 release (tag `v1.14`). Its structure views are to move into `forefst`.
 
 ## How it was built
 

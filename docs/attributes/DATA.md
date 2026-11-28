@@ -120,11 +120,13 @@ Value (extent record), format 3.14 layout (the offsets hold from 3.7):
 |--------|------|-------|-------------|
 | 0x00 | 4 | Node offset | 0x88 (136) — all versions: where the extent map starts |
 | 0x0C | 4 | Schema id | the data stream's table: 0x200 on 3.14; 0x1A0 on 3.4 to 3.10 |
+| 0x2C | 2 | Flags offset | 0x28: the stream flags are at 0x28 + this value (0x50) |
 | 0x30 | 8 | Total allocated | |
 | 0x38 | 8 | Stream size | the stream size in this form (not the stream-flags field of the inline form) |
 | 0x40 | 8 | Valid data length | equal to the stream size on every non-empty record measured (3.7 to 3.14); nothing is decided from it |
 | 0x48 | 8 | Disk allocated | |
-| 0x50 | 8 | Version count + sparse flag | low 31 bits = version count (1 for a single-version stream); bit 31 = a sparse flag in prior work, never observed set |
+| 0x50 | 4 | Stream flags | bit 31 = the stream is sparse; bit 30 = the stream is encrypted; bit 29 = a flag the driver sets together with the file attribute 0x20000000, only on a volume on SMR storage (what it marks is not known; never seen set); the low 16 bits read 1 (their meaning is not decoded) |
+| 0x54 | 4 | (not decoded) | 0 on every record measured |
 | 0x88 | var | Extent map | a B+-tree node holding the extent records (below) |
 
 The extent map at `0x88` (the inner header size) is a B+-tree node: level at `+0x0C` (0 = leaf), row count at
@@ -146,11 +148,11 @@ bytes later:
 
 | Offset | Size | Field | Description |
 |--------|------|-------|-------------|
+| 0x28 | 4 | Stream flags | as at 0x50 from 3.7; the word comes before the sizes, which is why they sit 4 bytes later |
 | 0x34 | 8 | Total allocated | carries the allocation alone |
 | 0x3C | 8 | Stream size | |
 | 0x44 | 8 | Valid data length | |
 | 0x4C | 8 | Disk allocated | 0 |
-| 0x54 | 8 | Version count + sparse flag | as at 0x50 from 3.7 |
 
 The node offset (0x88), the schema id 0x1A0 and the extent map at `0x88` are as above.
 
@@ -192,7 +194,15 @@ The measurements behind the text:
 - Valid data length at `+0x40`: equal to the stream size on 75,112 of 75,112 non-empty records (3.7 to 3.14), never
   greater, never smaller.
 - The 3.4 key (14 bytes, no marker) and the +4 shift of the size fields are measured on the 3.4 corpus volumes.
-- The version count reads 1 on 31,662 of 31,678 stream records of a 3.14 and Insider census (the rest are
-  snapshotted multi-version streams); bit 31 is set on none of them, and the census held no sparse file with extents.
+- The stream flags, over every extent-form `$DATA` record of the 124 ReFS test volumes (six metadata pages of one 2 TB
+  volume, stored as holes in its four images, not read): bit 31 is set on exactly the 130 records (25 images) of files with
+  the sparse attribute, bit 30 on exactly the 33 (12 images) of encrypted files, no other high bit on any record. The
+  low 16 bits read 1 on all 166,950 current streams and 144 snapshot versions of 3.7 to 3.14, and on all 2,638 records
+  of the 3.4 form (at `+0x28`; `+0x50` and `+0x54` read 0 there). `+0x2C` reads 0x28 and `+0x54` reads 0 on every
+  record of 3.7 to 3.14. No 3.4 test volume holds a sparse or encrypted file. A file whose data is in the record has
+  no such word (four records of one sparse file in that form were measured).
+- refs.sys sets bit 31 when it makes a stream sparse and clears it when it makes it not sparse, and sets bit 30 when
+  it encrypts a stream and clears it when it decrypts it (read on 10.0.26100.8115, 10.0.26100.9818 and Insider
+  29574); the Windows 10 1803 driver (17134) keeps the word before the sizes.
 
 <!-- findings: MD_ATTR_RA_009, MD_DATA_RA_008, MD_DATA_RA_009, MD_DATA_RA_010, MD_DATA_RA_011, MD_DATA_RA_022, MD_DATA_RA_024, MD_DATA_RA_025, MD_DATA_RA_029, MD_SI_RA_002, MD_SI_RA_016 -->

@@ -63,6 +63,10 @@ If a `.raw.zst` is only ~130 bytes it is an LFS *pointer* — run `git lfs pull`
 so the decompressed `.raw` is sparse; copy it with `cp --sparse=always <image>.raw <dest>` so it never
 materialises its full nominal size (2 TiB / 8 GiB).
 
+**`refsanalysis/` is refsanalysis 1.14.0, run with forefst 1.14.0** (the pair of the v1.14 release): refsanalysis does
+not run with a later forefst, so these outputs stay those of 1.14.0 -- its forensic passthroughs (`timeline`, `mlog`, ...)
+included -- while `forefst/` is the current release. Each `manifest.md` names both versions.
+
 **Conventions in `refsanalysis/`:** `<sub>.txt` is the default run; `<sub>.vv.txt` /
 `<sub>.v.txt` is the fullest verbosity that adds detail (`-vv` for the 7 subcommands that support it,
 `-v` for the 8 that top out there); subcommands with no extra detail at higher verbosity have only

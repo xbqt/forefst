@@ -5,14 +5,14 @@ Every ReFS metadata page -- SUPB, CHKP, and MSB+ (B+-tree) -- begins with a comm
 This layout is identical across every format (v3.4 through v3.14, including the volumes Insider builds wrote) and
 configuration studied.
 
-MLog records also carry a signature at offset 0x00, `"MLog"`, but their header has a different layout (see
-[MLog](mlog.md)).
+The MLog is not made of pages: its records, one 4 KiB log block each, also carry a signature at offset 0x00,
+`"MLog"`, but their header has a layout of its own (see [MLog](mlog.md)).
 
 ## Field Layout (80 bytes)
 
 | Offset | Size | Field | Description |
 |--------|------|-------|-------------|
-| 0x00 | 4 | Signature (ASCII) | Page type: `"SUPB"`, `"CHKP"`, `"MSB+"`, or `"MLog"` |
+| 0x00 | 4 | Signature (ASCII) | Page type: `"SUPB"`, `"CHKP"` or `"MSB+"` |
 | 0x04 | 4 | Page header version (u32) | Always `0x00000002` |
 | 0x08 | 1 | Failed tree-update count (u8) | The volume's count of failed tree-update cycles since the last checkpoint, capped at 255; 0 on every page of the test corpus |
 | 0x09 | 3 | Reserved | 0 |
@@ -37,7 +37,6 @@ small integers.
 | `SUPB` | [Superblock](supb.md) | Fixed-location volume anchor pointing to checkpoints |
 | `CHKP` | [Checkpoint](chkp.md) | Atomic commit point holding the 13 root pointers |
 | `MSB+` | Minstore B+-tree page | A node of any B+-tree -- global table or per-object |
-| `MLog` | [Metadata log](mlog.md) | Write-ahead transaction log (different header layout) |
 
 ## Key Fields Explained
 

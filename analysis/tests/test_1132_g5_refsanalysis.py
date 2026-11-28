@@ -59,7 +59,8 @@ def test_d54_the_pinned_copy_beside_it_is_the_one_imported(tmp_path):
     shutil.copy(RA, str(tmp_path / "refsanalysis.py"))
     _forefst_with_version(str(tmp_path / "forefst.py"), "9.9.9")
     (tmp_path / "refsanalysis_forefst").mkdir()
-    shutil.copy(FOREFST, str(tmp_path / "refsanalysis_forefst" / "forefst.py"))
+    # 1.14.1: forefst is no longer refsanalysis's version, so the pin is a copy relabelled with refsanalysis's own
+    _forefst_with_version(str(tmp_path / "refsanalysis_forefst" / "forefst.py"), _version_of(RA))
     r = _run([str(tmp_path / "refsanalysis.py"), "--list"], cwd=str(tmp_path))
     assert r.returncode == 0 and "runs only with" not in r.stderr, (r.returncode, r.stderr[-600:])
 

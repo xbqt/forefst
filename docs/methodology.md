@@ -132,16 +132,17 @@ both. The pages name no finding ID in their text: each records the findings it r
 ## 6. The verification protocol
 
 Beyond first acceptance, structural claims are held to a three-axis re-verification (documented in
-`analysis/reports/audit/README.md`): **(a)** decompile the function that implements the fact,
+`analysis/reports/archive/2026-06_claim_audit/README.md`): **(a)** decompile the function that implements the fact,
 **(b)** re-measure it across **all** corpus images, **(c)** check it adversarially — try to refute it, and
 let the bytes, not an assumed offset, show which structure is being read. A change is accepted only when the static
 and the all-disk axes agree; where only one axis can be read, the register records the one that supports it.
 
-The verification scripts ship under `analysis/reports/` (for example `verify_tool_tables.py`, which runs against a
-fresh clone), and the per-axis proofs of the claims audited in June 2026 (409 findings) are recorded under
-`analysis/reports/audit/`.
+The per-axis proofs of the claims audited in June 2026 (the 409 rows the register had then) are kept under
+`analysis/reports/archive/2026-06_claim_audit/`, with the scripts of that time; a new audit of the register, row by
+row, is planned for release 1.14.2.
 
-The same directory keeps the project's own reviews over time (`analysis/reports/README.md`, oldest first).
+The same directory keeps the project's own reviews over time (`analysis/reports/README.md`; the earlier ones in
+`analysis/reports/archive/`, each named by its date and what it checked).
 
 - Two self-validations of July 2026 re-audited releases 3.5.0 and 3.6.0 with the project's own instruments and
   reported the tools sound (`SELF_VALIDATION_v3.5.0_2026-07-01.md`, `SELF_VALIDATION_v3.6.0_2026-07-04.md`).
@@ -191,14 +192,14 @@ chain — all of it ships in `analysis/`:
 
 1. **`analysis/reference_table.csv`** — find the row for that ID: the claim, the static status + notes, the
    raw-disk status + notes, and the evidence level. *(This row exists for every cited finding.)*
-2. **`analysis/reports/audit/proof_index.csv`** — the same ID → the all-disk verdict (e.g.
+2. **`analysis/reports/archive/2026-06_claim_audit/proof_index.csv`** — for a row of June 2026, the same ID → that audit's all-disk verdict (e.g.
    `CONFIRMED-ALLDISK 112/112`) and the paths to its proof artifacts.
-3. **`analysis/reports/audit/dossiers/<ID>.md`** — the per-claim dossier: the claim, its static-analysis
+3. **`analysis/reports/archive/2026-06_claim_audit/dossiers/<ID>.md`** — the per-claim dossier: the claim, its static-analysis
    proof, and its raw-disk proof, in one place.
-4. **`analysis/reports/audit/proofs/static/` and `proofs/validation/`** — the actual measured evidence
+4. **`analysis/reports/archive/2026-06_claim_audit/proofs/static/` and `proofs/validation/`** — the measured evidence of that time
    (parser output, all-disk validation matrices).
-5. **`analysis/reports/`** — dated validation runs (June and July 2026, with the commands used) and the project's
-   reviews. The byte-level layout itself is the corresponding **`structures/`** page.
+5. **`analysis/reports/`** — the project's reviews; the dated validation runs of June and July 2026, with the
+   commands used, are in its `archive/`. The byte-level layout itself is the corresponding **`structures/`** page.
 
 The audited core (409 findings) carries the full chain through step 4. The findings added after it are recorded
 in the register (step 1); the corpus walks behind most of them are in the project's dated reports, which this

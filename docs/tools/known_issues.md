@@ -1,4 +1,4 @@
-# Known issues in 1.14.0
+# Known issues in 1.14.1
 
 These are the known limits of this release that can change what an examiner reports: what the tools do not read or
 do not check.
@@ -6,6 +6,13 @@ do not check.
 Each item says what the output shows and what to do.
 
 **Coverage of the checks**
+
+- **`export recyclebin` does not write the files inside a recycled folder.** It writes each recycled file and its
+  named streams; a recycled folder is named, with how many files it holds, and the command exits 2 when it holds any.
+  No test volume holds a recycled folder with files in it, so the writer is not there yet.
+
+  What to do: list the folder's files with `files` (their paths are under the folder's `$R` name in `$RECYCLE.BIN`)
+  and write each with `export file <path>`.
 
 - **Compressed and compacted containers are not read.** A container whose Container Table row marks it compressed
   or compacted, or that is mapped by more than one range, is listed with the reason (`summary`, `integrity`,
@@ -59,9 +66,15 @@ Each item says what the output shows and what to do.
   What to do: do not read a clean result as proof that the journal was never re-created. Where an earlier image or
   collection of this volume recorded its `Journal ID`, compare it with the one `usn --info` prints.
 
-- **An MLog row's time is the latest time its log payload's records carry.** A payload can merge up to 15 redo blocks,
-  so the time on a `mlog --parse` or `timeline` MLog row can belong to another operation of the same payload. A rename
-  or delete that embeds no time takes the paired `$SI` update's time. Both outputs say so.
+- **An MLog row's time is a time its records wrote into the metadata, not the moment the log was written.** A record
+  is dated by the times its value holds (a `$SI`, an index entry, the volume information), and a `mlog --parse` or
+  `timeline` MLog row takes the latest time its log payload's records carry. So:
+  - a payload can merge up to 15 redo blocks, and the row's time can belong to another operation of the same payload;
+  - a record that rewrites a row without changing its times carries the row's earlier times: such a row is dated
+    before rows the log holds ahead of it;
+  - a time a program set forward is taken as the row's time;
+  - a rename or delete that embeds no time takes the paired `$SI` update's time; a record that writes only part of a
+    row (a file's inline bytes, its sizes) carries no time. Both outputs say so.
 
   What to do: do not date an operation from its MLog row alone; corroborate it with the file's `$SI` times or its USN
   records.

@@ -6,6 +6,21 @@ the exit codes, the machine-output names, and the forms of their values.
 The [changelog](../changelog.md) says why each change was made; this page lists what changed, release by release,
 the breaking changes first.
 
+## 1.14.0 → 1.14.1
+
+What a script that reads the output of 1.14.0 may notice. No column, key or default changed.
+
+| Command | What changed | What to do |
+|---|---|---|
+| `mlog --parse`, `mlog --csv`, `timeline` | An MLog row whose only time came from a record that rewrites part of a row (a file's inline bytes, its sizes), or from an inserted row that holds no record, has no time now, or the time of another of its records (232 of 886,813 rows over the test corpus, on five volumes) | Nothing, unless a script keyed on such a row's time |
+| `details` | A target that reads as an id (`0x705`, `0x703:0x2e`) is an id; any other target is a path from the root, with or without its leading slash (1.14.0 exited 1 on a FileRef and on a path without the slash). Two error texts changed: `give --id OR --path, not both`, `no object for id <id>` | A name that reads as an id is reached with `--path /0x705` |
+| `usn` | New `--id ID`: only that object's records (the list, the statistics, the exports); stderr says how many records carry it. `--id` with `--info` exits 1 | -- |
+| `mlog` | New `--id ID` (with `--parse`, `--csv` or `--json`): only the payloads whose records name the object; the CSV gains a `MatchedBy` column and the JSON a `MatchedBy` key when `--id` is given; stderr counts the rows kept | -- |
+| `timeline` | New `--id ID`, the same filter as `--fileref` (still accepted); with it, the MLog rows that name the object are kept (1.14.0 left them all out), their event text ending in `[by its table]`, `[by its file id]` or `[by one of its names]` | A script that filtered MLog rows out of `--fileref` output gets them now |
+| `export recyclebin` | Writes each payload's named streams as `<name>__<stream>`, with their rows in `export_index.csv`; names each recycled folder on stderr, and exits 2 when one holds files; its last line counts the streams | A script that counted the directory's files counts the stream files too |
+| `--list`, help | The one-line summaries of `details`, `usn` and `timeline`, and their help, name the new forms | -- |
+| refsanalysis | Exits 1 with forefst 1.14.1: `refsanalysis 1.14.0 runs only with forefst 1.14.0; this forefst is 1.14.1 (...)` | Use both tools of the 1.14.0 release (tag `v1.14`) for refsanalysis |
+
 ## 1.13.1 → 1.14.0
 
 Every machine output of both tools changes in 1.14.0. In short, a script must:

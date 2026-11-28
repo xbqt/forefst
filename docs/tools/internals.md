@@ -1,4 +1,4 @@
-# forefst internals
+# forefst.py internals
 
 How `forefst.py` and `refsanalysis.py` are built: the order in which a volume is read, the functions that do each
 step, the rule each one follows and why, and where that rule comes from in the ReFS driver. It is written for a
@@ -346,6 +346,16 @@ command on every corpus image:
   repository) and the development tools are run on the public samples; every output change since the last tag must
   be announced by a row of `output_changes.tsv` that points to its changelog or migration entry, and every row
   must match a change.
+
+## Changes in 1.14.1 that change how a result is reached
+
+| What | Where | Why |
+|---|---|---|
+| A redo record is dated only where its value's form holds a time: an UpdateRow of a whole row by its key (the volume-information row, a name row's record or a directory's own row, an index entry), an inserted row at the record offsets only when it holds a record | `_mlog_extract_timestamp`, `_mlog_row_key_type` | a three-value UpdateRow writes part of a row (`RedoUpdateRow` passes its third value to `UpdateInIndex` as the offset in the row), and the fixed-offset fallback read a file's inline bytes as a time |
+| `details`' target read as an id when it reads as one, as a path from the root otherwise | `_ID_TARGET` (the pattern), the `details` branch of `main` | a FileRef was refused, and a path without its leading slash, which `extract` takes |
+| `usn --id` filters the records shown and exported, not those the journal's state is checked over | `cmd_usn` | the state (a re-creation, records missing) is a fact of the whole journal |
+| `mlog --id` / `timeline --id` keep the log payloads whose records name the object: its table; a file's rows keyed by its file id in its home directory, or one of its names (from the live tree and its journal records) in a directory that held it | `mlog_id_matcher`, `mlog_id_setup` (a held reading: what it meets is not the run's), `_mlog_record_keys` | a record names a directory's table and, in it, a row: never the file itself |
+| `export recyclebin` reads each payload's named streams as `export ads` reads one, and counts a recycled folder's files | `cmd_export_recyclebin` | the streams were not written; a folder's files keep their own names, which the `$R` rule does not take |
 
 ## Changes in 1.14.0 that change how a result is reached
 
